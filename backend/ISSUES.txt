@@ -1,0 +1,8 @@
+REST API
+==========================
+- No permission checking done on the backend for some admin features
+
+Design
+==========================
+- Database design flaws
+- Admin can only belong to a single group?
