@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "deps": "yarn & yarn --cwd backend & yarn --cwd frontend",
+    "dev": "concurrently \"yarn --cwd backend dev\" \"yarn --cwd frontend dev\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

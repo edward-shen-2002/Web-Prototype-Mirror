@@ -2,17 +2,21 @@ import React from "react";
 
 import { Route, Redirect } from "react-router-dom";
 
-import { connect } from "react-redux";
+import { ROUTE_DASHBOARD, ROUTE_LOGIN } from "constants/routes";
 
-import { ROUTE_LOGIN } from "constants/routes";
+import { ONLINE, OFFLINE } from "constants/states";
 
-const mapStateToPrivillegedRouteProp = (state, ownProps) => ({ 
-  isAccessible: state.app.isOnline === ownProps.isOnline,
-  path: ownProps.path,
-  Component: ownProps.component
-});
-
-// Redirect any auth route to login when not logged in
-export let PrivillegedRoute = ({ path, Component, isAccessible }) => <Route path={path} render={(props) => isAccessible ? <Component {...props}/> : <Redirect to={ROUTE_LOGIN}/>}/>;
-
-PrivillegedRoute = connect(mapStateToPrivillegedRouteProp, null)(PrivillegedRoute);
+export const PrivillegedRoute = ({ isOnline, requiredState, path, Component }) => (
+  <Route 
+    path={path} 
+    render={(props) => {
+      if(isOnline && requiredState === OFFLINE) {
+        return <Redirect to={ROUTE_DASHBOARD}/>
+      } else if(!isOnline && requiredState === ONLINE) {
+        return <Redirect to={ROUTE_LOGIN}/>
+      }
+      
+      return <Component {...props}/>;
+    }}
+  />
+);

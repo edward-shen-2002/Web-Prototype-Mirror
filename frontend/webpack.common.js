@@ -4,17 +4,12 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   entry: path.join(__dirname, "/src/index.js"),
-  output: {
-    path: path.join(__dirname, "/dist"),
-    filename: "webpack.bundle.js",
-    publicPath: "/"
-  },
   resolve: {
     alias: {
       constants: path.join(__dirname, "/src/constants"),
       store: path.join(__dirname, "/src/store"),
+      tools: path.join(__dirname, "/src/tools"),
       // images: path.join(__dirname, "/src/images"),
-      // tools: path.join(__dirname, "/src/tools"),
       // actions: path.join(__dirname, "/src/store/actions"),
       // actionCreators: path.join(__dirname, "/src/store/actions/actionCreators"),
       // styles: path.join(__dirname, "/src/styles")
@@ -52,7 +47,7 @@ module.exports = {
     ]
   },
   node: {
-    fs: 'empty'
+    fs: "empty"
   },
   plugins: [
     new CleanWebpackPlugin(),

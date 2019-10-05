@@ -1,0 +1,8 @@
+Stateless (mostly)
+===========================
+- This app uses token-based authentication rather than sessions
+- The benefit of this is that the server does not have to store memory, which can be a problem when many users are present. Tokens are also used for authentication, which 
+  provides another layer of security.
+- The drawback of this is that subsequent requests will fetch the same authentication resources for authenticated routes
+- Another issue is where to store the token. There are multiple storages on the client side, but one of the simplest and better alternative would be sessions...
+  Although we still use sessions, token comes with authentication.

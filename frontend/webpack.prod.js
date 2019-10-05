@@ -8,6 +8,11 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 
 module.exports = merge(common, {
   mode: "production",
+  output: {
+    path: path.join(__dirname, "/dist"),
+    filename: "webpack.bundle.js",
+    publicPath: "/"
+  },
   devtool: "source-map",
   plugins: [
     new MiniCssExtractPlugin({

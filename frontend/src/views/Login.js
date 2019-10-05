@@ -28,7 +28,7 @@ const LoginForm = ({ handleLogin }) => (
     onSubmit={({ username, password }, { setSubmitting, setErrors }) => handleLogin(username, password, setErrors, setSubmitting)}
   >
     {({ handleSubmit, handleChange, values, errors }) => {
-      // Avoid space for username
+      // ? Avoid space for username 
       const handleKeyPress = (event) => {
         const SPACE = " ";
         if(event.key === SPACE) event.preventDefault();
