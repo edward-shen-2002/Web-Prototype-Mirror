@@ -87,8 +87,10 @@ export const userAuthenticationMiddleware = (req, res, next) => {
   })(req, res, next);
 };
 
-export const setupAuthentication = (passport, helpers) => {
+const setupAuthentication = (passport, helpers) => {
   userAuthentication(passport, helpers);
   loginAuthentication(passport, helpers);
   registerAuthentication(passport, helpers);
 };
+
+export default setupAuthentication;

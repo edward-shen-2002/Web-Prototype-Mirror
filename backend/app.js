@@ -20,7 +20,7 @@ const _init = async () => {
   app.use(passport.initialize());
 
   // Initialize database, authentication, routes, etc ...
-  serverSetup(app, passport);
+  await serverSetup(app, passport);
   
   app.listen(DEV_PORT, () => console.log(`App listening on port ${DEV_PORT}`));
 };
