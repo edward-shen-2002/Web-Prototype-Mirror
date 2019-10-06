@@ -5,7 +5,7 @@ import { json, urlencoded } from "body-parser";
 import cors from "cors";
 import passport from "passport";
 
-import { setupRouteGroups } from "./setup/routes";
+import serverSetup from "./setup";
 
 import { DEV_PORT } from "./config/constants";
 
@@ -19,8 +19,8 @@ const _init = async () => {
 
   app.use(passport.initialize());
 
-  // Initializes public, private, and other route groups
-  setupRouteGroups(app, passport);
+  // Initialize database, authentication, routes, etc ...
+  serverSetup(app, passport);
   
   app.listen(DEV_PORT, () => console.log(`App listening on port ${DEV_PORT}`));
 };
