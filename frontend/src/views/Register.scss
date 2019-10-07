@@ -1,6 +1,6 @@
 @import "~styles/mixins/layouts";
 
-.login {
+.register {
   @include center;
 
   &__container {
@@ -18,20 +18,10 @@
   &__field {
     margin-bottom: 10px !important;
   }
-}
-
-.loginButtonsMain {
-  margin-top: 5px;
-
-  &__button {
-    width: 50%;
-  }
   
-  &__login {
-    border-radius: 3px 0px 0px 3px !important;
-  }
+  &__button {
+    margin-top: 5px !important;
 
-  &__register {
-    border-radius: 0px 3px 3px 0px !important;
+    border-radius: 3px !important;
   }
 }

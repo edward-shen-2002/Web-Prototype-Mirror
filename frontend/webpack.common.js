@@ -9,10 +9,10 @@ module.exports = {
       constants: path.join(__dirname, "/src/constants"),
       store: path.join(__dirname, "/src/store"),
       tools: path.join(__dirname, "/src/tools"),
+      styles: path.join(__dirname, "/src/styles")
       // images: path.join(__dirname, "/src/images"),
       // actions: path.join(__dirname, "/src/store/actions"),
       // actionCreators: path.join(__dirname, "/src/store/actions/actionCreators"),
-      // styles: path.join(__dirname, "/src/styles")
     },
     extensions: ["*", ".js", ".jsx"]
   },

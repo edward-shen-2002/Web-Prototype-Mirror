@@ -2,11 +2,14 @@ import { Router } from "express";
 
 import { userAuthenticationMiddleware } from "./authentication";
 
+// Route controllers
+import loginController from "../controller/login";
+import registerController from "../controller/register";
+
 import { 
   ROUTE_GROUP_PUBLIC, 
   ROUTE_GROUP_AUTH
 } from "../config/constants";
-
 
 
 /**
@@ -27,13 +30,18 @@ const authRoutes = (helpers) => {
 const publicRoutes = (helpers) => {
   let router = new Router();
   
+  loginController({ router, ...helpers });
+  registerController({ router, ...helpers });
+
   return router;
 };
 
 // Routes are grouped to fully utilize shared middleware
-const setupRouteGroups = (app, passport, helpers) => {
+const setupRouteGroups = (helpers) => {
+  const { app } = helpers;
+  
   app.use(ROUTE_GROUP_PUBLIC, publicRoutes(helpers));
-  app.use(ROUTE_GROUP_AUTH, authRoutes(passport, helpers));
+  app.use(ROUTE_GROUP_AUTH, authRoutes(helpers));
 };
 
 export default setupRouteGroups;

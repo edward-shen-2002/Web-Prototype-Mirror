@@ -7,23 +7,23 @@ import { Switch, Route } from "react-router-dom";
 import { PrivillegedRoute } from "tools/routes";
 
 import { ONLINE, OFFLINE } from "constants/states";
-import { ROUTE_ROOT, ROUTE_DASHBOARD, ROUTE_LOGIN } from "constants/routes";
+import { ROUTE_ROOT, ROUTE_DASHBOARD, ROUTE_LOGIN, ROUTE_REGISTER } from "constants/routes";
 
-import Home from "./views/Home";
 import Login from "./views/Login";
+import Register from "./views/Register";
+
 import Dashboard from "./views/Dashboard";
 import NotFound from "./views/NotFound";
-
-import Navigation from "./navigation";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.scss";
 
 const AppContent = ({ isOnline }) => (
   <Switch>
-    <Route exact path={ROUTE_ROOT} component={Home}/>
+    <Route exact path={ROUTE_ROOT} component={(props) => isOnline ? <Redirect to={ROUTE_DASHBOARD}/> : <Login {...props} />}/>
 
     <PrivillegedRoute isOnline={isOnline} path={ROUTE_LOGIN} requiredState={OFFLINE} Component={Login}/>
+    <PrivillegedRoute isOnline={isOnline} path={ROUTE_REGISTER} requiredState={OFFLINE} Component={Register}/>
     <PrivillegedRoute isOnline={isOnline} path={ROUTE_DASHBOARD} requiredState={ONLINE} Component={Dashboard}/>
     
     <Route component={NotFound}/>
@@ -33,12 +33,7 @@ const AppContent = ({ isOnline }) => (
 const mapStateToProps = ({ app: { isOnline } }) => ({ isOnline });
 
 let App = ({ isOnline }) => {
-  return (
-    <div>
-      <Navigation/>
-      <AppContent isOnline={isOnline}/>
-    </div>
-  );
+  return <AppContent isOnline={isOnline}/>;
 };
 
 App = connect(mapStateToProps)(App);
