@@ -2,9 +2,10 @@ import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 
 import { Strategy as LocalStrategy } from "passport-local";
 
+import { secretOrKey } from "../config/jwt";
+
 import { 
   PASSPORT_JWT,
-  SECRET_KEY,
 
   ERROR_AUTH_FAIL,
   ERROR_DATABASE,
@@ -22,7 +23,7 @@ import {
  * This checks for the user's username in the token
  */
 const userAuthentication = ({ passport, UserModel }) => {
-  passport.use(PASSPORT_JWT, new JwtStrategy({ jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), secretOrKey: SECRET_KEY, session: false }, (payload, done) => {
+  passport.use(PASSPORT_JWT, new JwtStrategy({ jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), secretOrKey, session: false }, (payload, done) => {
     UserModel.findOne({ username: payload.id })
       // The user info will be found in req.user in routes
       // https://stackoverflow.com/questions/30796481/pass-user-info-in-routes-from-passport-strategies
@@ -63,7 +64,7 @@ const registerAuthentication = ({ passport, UserModel }) => {
 }
 
 export const userAuthenticationMiddleware = ({ passport }) => (req, res, next) => {
-  passport.authenticate(PASSPORT_JWT, { session: false }, (error, _user, info) => {
+  passport.authenticate(PASSPORT_JWT, { session: false }, (error, user, info) => {
     if(error) {
       console.error(ERROR_DATABASE, error);
       res.status(HTTP_ERROR_DATABASE).json({ default: error });
@@ -73,6 +74,7 @@ export const userAuthenticationMiddleware = ({ passport }) => (req, res, next) =
     
     // User found 
     } else {
+      res.locals.user = user;
       next();
     }
   })(req, res, next);

@@ -2,7 +2,8 @@ import { ROUTE_GET_RECONNECT } from "../config/constants";
 
 const reconnect = ({ router }) => {
   router.post(ROUTE_GET_RECONNECT, (req, res) => {
-    console.log("Reconnecting user!!")
+    const { user } = res.locals;
+    res.json({ message: "Successfully reconnected", data: { user } });
   }); 
 };
 
