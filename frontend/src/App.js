@@ -20,10 +20,18 @@ import Dashboard from "./views/Dashboard";
 import NotFound from "./views/NotFound";
 import Recovery from "./views/Recovery";
 
+import Navigation from "./navigation";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.scss";
 
-const AppContent = ({ isOnline }) => (
+const AppHeader = () => (
+  <div>
+    Header
+  </div>
+);
+
+const AppPageContent = ({ isOnline }) => (
   <Switch>
     <Route exact path={ROUTE_ROOT} component={(props) => isOnline ? <Redirect to={ROUTE_DASHBOARD}/> : <Login {...props} />}/>
 
@@ -35,6 +43,13 @@ const AppContent = ({ isOnline }) => (
     <Route component={NotFound}/>
   </Switch>
 );
+
+const AppPage = ({ isOnline }) => (
+  <div>
+    {isOnline && <AppHeader/>}
+    <AppPageContent isOnline={isOnline}/>
+  </div>
+); 
 
 const mapStateToProps = ({ app: { shouldReconnect, isOnline } }) => ({ shouldReconnect, isOnline });
 
@@ -54,7 +69,12 @@ let App = ({ shouldReconnect, isOnline, reconnect }) => {
     if(shouldReconnect) reconnect();
   }, [ shouldReconnect ]);
 
-  return <AppContent isOnline={isOnline}/>;
+  return (
+    <div className="app">
+      {isOnline && <Navigation/>}
+      <AppPage isOnline={isOnline}/>
+    </div>
+  );
 };
 
 App = connect(mapStateToProps, mapDispatchToProps)(App);

@@ -15,7 +15,7 @@ export const PrivillegedRoute = ({ isOnline, requiredState, path, Component }) =
       } else if(!isOnline && requiredState === ONLINE) {
         return <Redirect to={ROUTE_LOGIN}/>
       }
-      
+
       return <Component {...props}/>;
     }}
   />
