@@ -4,17 +4,20 @@ import passportLocalMongoose from "passport-local-mongoose";
 
 let userSchema = new Schema({
   username: { type: String, lowercase: true, unique: true, required: true },
+  
+  email: { type: String, unique: true, required: true },
 
   firstName: String,
   lastName: String,
+  
+  phoneNumber: String,
+
+  validated: { type: Boolean, required: true, default: false },
 
   createDate: { type: Date, default: Date.now, required: true },
   active: { type: Boolean, required: true, default: true },
 
-  // phoneNumber: String,
   // organization: { type: String, required: true },
-  // validated: { type: Boolean, required: true, default: false },
-  // email: { type: String, unique: true, required: true },
   // groupNumber: { type: Number, required: true },
   // permissions: { type: Array } 
 });

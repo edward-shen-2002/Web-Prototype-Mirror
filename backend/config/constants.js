@@ -14,6 +14,7 @@ export const ROUTE_GROUP_LDAP = "/ldap";
 // Routes
 export const ROUTE_POST_LOGIN = "/login";
 export const ROUTE_POST_REGISTER = "/register";
+export const ROUTE_GET_RECONNECT = "/reconnect";
 
 // Passport 
 export const PASSPORT_JWT = "jwt";

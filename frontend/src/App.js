@@ -1,19 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { connect } from "react-redux";
 
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 
+import { loadUserState } from "tools/redux";
+import { authAxios } from "tools/rest";
+import { findAndSaveToken } from "tools/storage";
 import { PrivillegedRoute } from "tools/routes";
 
 import { ONLINE, OFFLINE } from "constants/states";
-import { ROUTE_ROOT, ROUTE_DASHBOARD, ROUTE_LOGIN, ROUTE_REGISTER } from "constants/routes";
+import { REST_GET_RECONNECT } from "constants/rest";
+import { ROUTE_ROOT, ROUTE_DASHBOARD, ROUTE_LOGIN, ROUTE_REGISTER, ROUTE_RECOVERY } from "constants/routes";
 
 import Login from "./views/Login";
 import Register from "./views/Register";
 
 import Dashboard from "./views/Dashboard";
 import NotFound from "./views/NotFound";
+import Recovery from "./views/Recovery";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.scss";
@@ -25,17 +30,33 @@ const AppContent = ({ isOnline }) => (
     <PrivillegedRoute isOnline={isOnline} path={ROUTE_LOGIN} requiredState={OFFLINE} Component={Login}/>
     <PrivillegedRoute isOnline={isOnline} path={ROUTE_REGISTER} requiredState={OFFLINE} Component={Register}/>
     <PrivillegedRoute isOnline={isOnline} path={ROUTE_DASHBOARD} requiredState={ONLINE} Component={Dashboard}/>
+    <PrivillegedRoute isOnline={isOnline} path={ROUTE_RECOVERY} requiredState={OFFLINE} Component={Recovery}/>
     
     <Route component={NotFound}/>
   </Switch>
 );
 
-const mapStateToProps = ({ app: { isOnline } }) => ({ isOnline });
+const mapStateToProps = ({ app: { shouldReconnect, isOnline } }) => ({ shouldReconnect, isOnline });
 
-let App = ({ isOnline }) => {
+const mapDispatchToProps = (dispatch) => ({
+  reconnect: () => {
+    authAxios.post(REST_GET_RECONNECT)
+      .then(() => loadUserState(dispatch))
+      .catch((error) => console.log("error", error));
+  }
+});
+
+let App = ({ shouldReconnect, isOnline, reconnect }) => {
+  //Send a request to server with user's saved token, essentially login without replacing token
+  findAndSaveToken();
+
+  useEffect(() => {
+    if(shouldReconnect) reconnect();
+  }, [ shouldReconnect ]);
+
   return <AppContent isOnline={isOnline}/>;
 };
 
-App = connect(mapStateToProps)(App);
+App = connect(mapStateToProps, mapDispatchToProps)(App);
 
 export default App;

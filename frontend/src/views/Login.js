@@ -1,14 +1,19 @@
 import React from "react"
 
+import { connect } from "react-redux";
+
 import { Link } from "react-router-dom";
 
 import { Button, Paper, TextField } from "@material-ui/core";
 
 import { Formik } from "formik";
 
-import { publicAxios } from "tools/rest";
+import { loadUserState } from "tools/redux";
+import { publicAxios, setAxiosToken } from "tools/rest";
+import { saveToken } from "tools/storage";
 
-import { ROUTE_REGISTER } from "constants/routes";
+import { REST_POST_LOGIN } from "constants/rest";
+import { ROUTE_REGISTER, ROUTE_RECOVERY, ROUTE_DASHBOARD } from "constants/routes";
 
 import "./Login.scss";
 
@@ -25,17 +30,23 @@ const MainButtons = () => (
   </div>
 );
 
+const RecoveryButton = () => (
+  <Link to={ROUTE_RECOVERY}>
+    <Button size="small">Forgot Password?</Button>
+  </Link>
+);
+
 const LoginButtons = () => (
   <div>
-    <Button size="small">Forgot Password?</Button>
+    <RecoveryButton/>
     <MainButtons/>
   </div>
 );
 
 const LoginForm = ({ handleLogin }) => (
   <Formik
-    initialValues={{ username: "", password: "" }}
-    onSubmit={({ username, password }, { setSubmitting, setErrors }) => handleLogin(username, password, setErrors, setSubmitting)}
+    initialValues={{ username: "sampleuser1234", password: "password123@" }}
+    onSubmit={(values, { setSubmitting, setErrors }) => handleLogin(values, setErrors, setSubmitting)}
   >
     {({ handleSubmit, handleChange, values }) => (
       <Paper className="login__container">
@@ -43,7 +54,7 @@ const LoginForm = ({ handleLogin }) => (
           <h1>Login</h1>
           <p className="text-muted">Sign In to your account</p>
           <TextField className="login__field" label="Username" id="username" name="username" type="username" autoComplete="username" autoFocus={true} value={values.username} onChange={handleChange}/>
-          <TextField className="login__field" label="Password" id="password" name="password" type="password" autoComplete="current-password" autoFocus={true} value={values.password} onChange={handleChange}/>
+          <TextField className="login__field" label="Password" id="password" name="password" type="password" autoComplete="current-password" value={values.password} onChange={handleChange}/>
           <LoginButtons/>
         </form>
       </Paper>
@@ -51,23 +62,39 @@ const LoginForm = ({ handleLogin }) => (
   </Formik>
 );
 
+const mapStateToProps = ({ isOnline }) => ({ isOnline });
 
-// const loginRequest = (dispatch, username, password, setErrors, setSubmitting) => {
+const mapDispatchToProps = (dispatch) => ({
+  login: (isOnline, history, { username, password }, _setErrors, setSubmitting) => {
+    if(isOnline) {
+      history.push(ROUTE_DASHBOARD);
+    } else {
+      publicAxios.post(REST_POST_LOGIN, { username, password })
+        .then(({ data: { message, data: { token, user } } }) => {
+          console.log(message);
 
-// };
-
-const Login = () => {
-  const handleLogin = (username, password, setErrors, setSubmitting) => {
-    // Check if use is already logged in!
-    publicAxios.post("/login", { username, password })
-      .then((response) => console.log(response))
-      .catch((response) => console.log(response));
+          setAxiosToken(token);
+          saveToken(token);
+          loadUserState(dispatch);
+        })
+        .catch(({ response: { data } }) => {
+          console.error(data);
+          setSubmitting(false);
+        });
+    }
   }
+});
+
+let Login = ({ isOnline, history, login }) => {
+  const handleLogin = (values, setErrors, setSubmitting) => login(isOnline, history, values, setErrors, setSubmitting);
+
   return (
     <div className="login">
       <LoginForm handleLogin={handleLogin}/>
     </div>
   );
 };
+
+Login = connect(mapStateToProps, mapDispatchToProps)(Login);
 
 export default Login;

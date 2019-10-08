@@ -50,8 +50,9 @@ const loginAuthentication = ({ passport, UserModel }) => {
  * Checks the database for existing `username` and `email`. Usernames and emails must be unique.
  */
 const registerAuthentication = ({ passport, UserModel }) => {
-  passport.use(PASSPORT_REGISTER, new LocalStrategy({ passReqToCallback: true, session: false }, (_req, username, password, done) => {
-    UserModel.register({ username, active: true }, password, (error, result) => {
+  passport.use(PASSPORT_REGISTER, new LocalStrategy({ passReqToCallback: true, session: false }, (req, username, password, done) => {
+    const { email, firstName, lastName, phoneNumber } = req.body;
+    UserModel.register({ username, email, firstName, lastName, phoneNumber }, password, (error, result) => {
       if(error) {
         done(error);
       } else {
@@ -61,14 +62,14 @@ const registerAuthentication = ({ passport, UserModel }) => {
   }));
 }
 
-export const userAuthenticationMiddleware = (req, res, next) => {
+export const userAuthenticationMiddleware = ({ passport }) => (req, res, next) => {
   passport.authenticate(PASSPORT_JWT, { session: false }, (error, _user, info) => {
     if(error) {
-      console.error(ERROR_AUTH_FAIL, error);
-      res.status(HTTP_ERROR_AUTH_FAIL).json({ default: error });
+      console.error(ERROR_DATABASE, error);
+      res.status(HTTP_ERROR_DATABASE).json({ default: error });
     } else if(info) {
-      console.error(ERROR_DATABASE, info);
-      res.status(HTTP_ERROR_DATABASE).json({ default: info });
+      console.error(ERROR_AUTH_FAIL, info);
+      res.status(HTTP_ERROR_AUTH_FAIL).json({ default: info });
     
     // User found 
     } else {

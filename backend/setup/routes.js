@@ -5,6 +5,7 @@ import { userAuthenticationMiddleware } from "./authentication";
 // Route controllers
 import loginController from "../controller/login";
 import registerController from "../controller/register";
+import reconnectController from "../controller/reconnect";
 
 import { 
   ROUTE_GROUP_PUBLIC, 
@@ -15,11 +16,13 @@ import {
 /**
  * Routes which require user authentication -- must pass through the authentication middleware.
  */
-const authRoutes = (helpers) => {
+const authRoutes = ({ passport }) => {
   let router = new Router();
 
   // Authentication middleware -- All requests with the corresponsing app route must go through this middleware first
-  router.use(userAuthenticationMiddleware);
+  router.use(userAuthenticationMiddleware({ passport }));
+
+  reconnectController({ router });
 
   return router;
 };
