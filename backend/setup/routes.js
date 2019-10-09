@@ -39,6 +39,8 @@ const publicRoutes = (helpers) => {
   return router;
 };
 
+const adminRoutes = (helpers) => {};
+
 // Routes are grouped to fully utilize shared middleware
 const setupRouteGroups = (helpers) => {
   const { app } = helpers;

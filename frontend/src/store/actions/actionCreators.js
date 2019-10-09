@@ -21,3 +21,6 @@ export const SET_SHOULDRECONNECT = "SET_SHOULDRECONNECT";
 /**
  * Domain data: data that the application needs to show, use, or modify
  */
+
+export const UPDATE_ACCOUNT = "UPDATE_ACCOUNT";
+export const CLEAR_ACCOUNT = "CLEAR_ACCOUNT";

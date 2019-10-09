@@ -75,7 +75,7 @@ const mapDispatchToProps = (dispatch) => ({
 
           setAxiosToken(token);
           saveToken(token);
-          loadUserState(dispatch);
+          loadUserState(dispatch, user);
         })
         .catch(({ response: { data } }) => {
           console.error(data);

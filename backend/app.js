@@ -9,6 +9,8 @@ import serverSetup from "./setup";
 
 import { DEV_PORT } from "./config/constants";
 
+const logger = require("morgan");
+
 const _init = async () => {
   let app = express();
   
@@ -16,6 +18,8 @@ const _init = async () => {
   app.use(urlencoded({ extended: true }));
 
   app.use(cors());
+
+  app.use(logger("dev")); 
 
   app.use(passport.initialize());
 

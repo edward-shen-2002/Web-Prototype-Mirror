@@ -7,12 +7,12 @@ module.exports = {
   resolve: {
     alias: {
       constants: path.join(__dirname, "/src/constants"),
-      store: path.join(__dirname, "/src/store"),
-      tools: path.join(__dirname, "/src/tools"),
       styles: path.join(__dirname, "/src/styles"),
-      actionCreators: path.join(__dirname, "/src/store/actions/actionCreators"),
-      // images: path.join(__dirname, "/src/images"),
-      // actions: path.join(__dirname, "/src/store/actions"),
+      tools: path.join(__dirname, "/src/tools"),
+      images: path.join(__dirname, "/src/images"),
+      store: path.join(__dirname, "/src/store"),
+      actions: path.join(__dirname, "/src/store/actions"),
+      actionCreators: path.join(__dirname, "/src/store/actions/actionCreators")
     },
     extensions: ["*", ".js", ".jsx"]
   },

@@ -1,7 +1,17 @@
-@import '~font-awesome/css/font-awesome.min.css';
-@import './scss/style.scss';
+@import "~font-awesome/css/font-awesome.min.css";
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "./scss/style.scss";
 
 .app {
-  display: flex;
-  flex-flow: row nowrap;
+  &--online {
+    height: 100vh;
+  }
+
+  &__page {
+    height: 100%;
+
+    &--online {
+      display: flex;
+    }
+  }
 }
