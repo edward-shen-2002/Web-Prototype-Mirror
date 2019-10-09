@@ -160,7 +160,7 @@ const mapDispatchToProps = (dispatch) => ({
       history.push(ROUTE_DASHBOARD);
     } else {
       publicAxios.post(REST_POST_REGISTER, { username, password, email, firstName, lastName, phoneNumber })
-        .then((response) => loadUserState(dispatch))
+        .then(({ data: { data } }) => loadUserState(dispatch, data))
         .catch((error) => console.log(error))
         .finally(() => setSubmitting(false))
     }

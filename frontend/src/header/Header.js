@@ -44,8 +44,9 @@ const AccountMenuNav = ({ handleLogout }) => (
 
 const AppNavigation = ({ handleLogout }) => (
   <Toolbar className="appHeader__toolbar">
-    <AppSidebarToggler className="appHeader__toggle" display="lg"/>
-    <AppNavbarBrand full={{ src: logo, height: 48, alt: "MOH Logo" }} minimized={{ src: sygnet, height: 48, alt: "MOH Logo" }}/>
+    <AppSidebarToggler className="d-lg-none" display="md" mobile><i className="fa fa-bars"/></AppSidebarToggler>
+    <AppSidebarToggler className="d-md-down-none" display="lg"><i className="fa fa-bars"/></AppSidebarToggler>
+    <AppNavbarBrand full={{ src: logo, height: 48, alt: "MOH Logo" }}/>
     <AccountMenuNav handleLogout={handleLogout}/>
   </Toolbar>
 );

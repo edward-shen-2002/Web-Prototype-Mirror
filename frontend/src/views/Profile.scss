@@ -1,4 +1,5 @@
 .profile {
+  height: fit-content;
   width: 100%;
 
   margin: 20px;
@@ -7,5 +8,11 @@
 
   &__subtitle {
     color: #A4A4A4
+  }
+
+  &__field {
+    font-family: Roboto;
+    line-height: 15px;
+    color: #444444;
   }
 }

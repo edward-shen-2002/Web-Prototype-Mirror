@@ -4,6 +4,11 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   entry: path.join(__dirname, "/src/index.js"),
+  output: {
+    // path: path.join(__dirname, "/dist"),
+    // filename: "webpack.bundle.js",
+    publicPath: "/"
+  },
   resolve: {
     alias: {
       constants: path.join(__dirname, "/src/constants"),
@@ -21,9 +26,7 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader"
-        }
+        use: { loader: "babel-loader" }
       },
       {
         test: /\.(gif|png|jpe?g|svg)$/i,
@@ -33,10 +36,10 @@ module.exports = {
             loader: "image-webpack-loader",
             options: {
               bypassOnDebug: true,
-              disable: true,
-            },
-          },
-        ],
+              disable: true
+            }
+          }
+        ]
       },
       {
         test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,

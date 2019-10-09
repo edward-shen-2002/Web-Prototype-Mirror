@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import { Switch, Route, Redirect } from "react-router-dom";
 
-import { loadUserState } from "tools/redux";
+import { loadUserState, resetUserState } from "tools/redux";
 import { authAxios } from "tools/rest";
 import { findAndSaveToken } from "tools/storage";
 import { PrivillegedRoute } from "tools/routes";
@@ -28,7 +28,9 @@ const Profile = lazy(() => import("./views/Profile"));
 
 import Loading from "./Loading";
 
+
 import "./App.scss";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const AppPageContent = ({ isOnline }) => (
   <Suspense fallback={<Loading/>}>
@@ -46,24 +48,24 @@ const AppPageContent = ({ isOnline }) => (
   </Suspense>
 );
 
-const AppPage = ({ isOnline, location, history }) => (
+const AppPage = ({ isOnline, account: { permissions }, location, history }) => (
   <div className={`app__page ${isOnline ? "app__page--online" : "app_page--offline" }`}>
-    {isOnline && <Navigation location={location} history={history}/>}
+    {isOnline && <Navigation location={location} history={history} permissions={permissions}/>}
     <AppPageContent isOnline={isOnline}/>
   </div>
 ); 
 
-const mapStateToProps = ({ app: { shouldReconnect, isOnline } }) => ({ shouldReconnect, isOnline });
+const mapStateToProps = ({ app: { shouldReconnect, isOnline }, domain: { account } }) => ({ shouldReconnect, isOnline, account });
 
 const mapDispatchToProps = (dispatch) => ({
   reconnect: () => {
     authAxios.get(REST_GET_RECONNECT)
-      .then(({ data: { data: { user } } }) => loadUserState(dispatch, user))
-      .catch((error) => console.log("error", error));
+      .then(({ data: { data } }) => loadUserState(dispatch, data))
+      .catch(() => resetUserState(dispatch));
   }
 });
 
-let App = ({ shouldReconnect, isOnline, reconnect, location, history }) => {
+let App = ({ shouldReconnect, isOnline, account, reconnect, location, history }) => {
   //Send a request to server with user's saved token, essentially login without replacing token
   findAndSaveToken();
 
@@ -72,11 +74,11 @@ let App = ({ shouldReconnect, isOnline, reconnect, location, history }) => {
   }, [ shouldReconnect ]);
 
   const className = `app ${isOnline ? "app--online" : "app-offline"}`;
-
+  
   return (
     <div className={className}>
       {isOnline && <AppHeader/>}
-      <AppPage isOnline={isOnline} location={location} history={history}/>
+      <AppPage isOnline={isOnline} location={location} history={history} account={account}/>
     </div>
   );
 };

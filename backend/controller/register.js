@@ -1,3 +1,5 @@
+import { generateToken } from "../tools/jwt";
+
 import { PASSPORT_REGISTER, ROUTE_POST_REGISTER } from "../config/constants";
 
 const register = ({ router, passport }) => {
@@ -8,9 +10,8 @@ const register = ({ router, passport }) => {
         res.status(409).json({ message: "Database error", details: error });
       } else {
 
-        // TODO : do not send salt hash!!!
-        // TODO : generate jwt token
-        res.json({ message: "Successfully registered", data: user });
+        const token = generateToken(user.username);
+        res.json({ message: "Successfully registered", data: { user, token } });
       } 
     })(req, res);
   });

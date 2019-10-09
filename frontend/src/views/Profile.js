@@ -6,14 +6,16 @@ import { Fade, Paper, Typography } from "@material-ui/core";
 
 import "./Profile.scss";
 
+const Field = ({ label, value }) => <p className="profile__field"><strong>{label}</strong>: {value}</p>;
+
 const BasicInformation = ({ username, email, firstName, lastName, phoneNumber }) => (
   <div>
     <Typography className="profile__subtitle" variant="button" gutterBottom>Basic Information</Typography>
     <hr/>
-    <p>Username: {username}</p>
-    <p>Email Address: {email}</p>
-    <p>Name: {firstName} {lastName}</p>
-    <p>Phone Number: {phoneNumber}</p>
+    <Field label="Username" value={username}/>
+    <Field label="Email Address" value={email}/>
+    <Field label="Name" value={`${firstName} ${lastName}`}/>
+    <Field label="Phone Number" value={phoneNumber}/>
   </div>
 );
 
@@ -21,14 +23,13 @@ const AccountInformation = ({ validated, active, createDate }) => (
   <div>
     <Typography className="profile__subtitle" variant="button" gutterBottom>Account Information</Typography>
     <hr/>
-    <p>Active: {active}</p>
-    <p>Validated: {validated}</p>
-    <p>Creation Date: {createDate}</p>
+    <Field label="Active" value={active.toString()}/>
+    <Field label="Validated" value={validated.toString()}/>
+    <Field label="Creation Date" value={createDate}/>
   </div>
 );
 
 const mapStateToProps = ({ domain: { account } }) => ({ account });
-
 
 let Profile = ({ account: { username, email, firstName, lastName, phoneNumber, validated, active, createDate } }) => (
   <Fade in={true} timeout={500}>
@@ -36,6 +37,7 @@ let Profile = ({ account: { username, email, firstName, lastName, phoneNumber, v
       <Typography variant="h5" gutterBottom>My Profile</Typography>
       <hr/>
       <BasicInformation username={username} email={email} firstName={firstName} lastName={lastName} phoneNumber={phoneNumber}/>
+      <hr/>
       <AccountInformation validated={validated} active={active} createDate={createDate}/>
     </Paper>
   </Fade>

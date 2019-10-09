@@ -70,17 +70,12 @@ const mapDispatchToProps = (dispatch) => ({
       history.push(ROUTE_DASHBOARD);
     } else {
       publicAxios.post(REST_POST_LOGIN, { username, password })
-        .then(({ data: { message, data: { token, user } } }) => {
-          console.log(message);
-
+        .then(({ data: { data: { token, user } } }) => {
           setAxiosToken(token);
           saveToken(token);
           loadUserState(dispatch, user);
         })
-        .catch(({ response: { data } }) => {
-          console.error(data);
-          setSubmitting(false);
-        });
+        .catch(() => setSubmitting(false));
     }
   }
 });

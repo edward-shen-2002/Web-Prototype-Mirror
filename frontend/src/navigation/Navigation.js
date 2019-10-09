@@ -8,7 +8,7 @@ import {
   AppSidebarForm,
   AppSidebarHeader,
   AppSidebarMinimizer,
-  AppSidebarNav,
+  AppSidebarNav
 } from '@coreui/react';
 
 import "./Navigation.scss";
@@ -18,7 +18,7 @@ const Navigation = (props) => (
     <AppSidebarHeader/>
     <AppSidebarForm/>
     {/* Props required for react router */}
-    <AppSidebarNav navConfig={config} {...props}/>
+    <AppSidebarNav navConfig={config(props.permissions)} {...props}/>
     <AppSidebarFooter/>
     <AppSidebarMinimizer/>
   </AppSidebar>

@@ -25,8 +25,6 @@ import {
 const userAuthentication = ({ passport, UserModel }) => {
   passport.use(PASSPORT_JWT, new JwtStrategy({ jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), secretOrKey, session: false }, (payload, done) => {
     UserModel.findOne({ username: payload.id })
-      // The user info will be found in req.user in routes
-      // https://stackoverflow.com/questions/30796481/pass-user-info-in-routes-from-passport-strategies
       .then((user) => done(null, user ? user : false))
       .catch((error) => done(error, false));
     })

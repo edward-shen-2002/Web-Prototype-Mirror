@@ -11,15 +11,15 @@ let userSchema = new Schema({
   lastName: String,
   
   phoneNumber: String,
-
+  
   validated: { type: Boolean, required: true, default: false },
+  permissions: { type: Array, default: [] } ,
 
   createDate: { type: Date, default: Date.now, required: true },
   active: { type: Boolean, required: true, default: true },
 
   // organization: { type: String, required: true },
   // groupNumber: { type: Number, required: true },
-  // permissions: { type: Array } 
 });
 
 userSchema.plugin(passportLocalMongoose, {
