@@ -1,6 +1,6 @@
 import { createReducer } from "store/tools/setup";
 
-const defaultAccount = { username: "", email: "", firstName: "", lastName: "", active: true, validated: false, phoneNumber: "", createDate: "" };
+const defaultAccount = { username: "", email: "", firstName: "", lastName: "", active: true, validated: false, phoneNumber: "", createDate: "", permissions: [] };
 
 const updateAccount = (_state, { account }) => ({ ...defaultAccount, ...account });
 
