@@ -1,5 +1,8 @@
 Template manager
 Cell Data manager
+Organization manager
 User manager
 System manager
 Package manager
+
+Change permissions to roles

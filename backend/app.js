@@ -7,7 +7,7 @@ import passport from "passport";
 
 import serverSetup from "./setup";
 
-import { DEV_PORT } from "./config/constants";
+import { DEV_PORT } from "./config/express";
 
 const logger = require("morgan");
 

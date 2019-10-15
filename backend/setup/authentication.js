@@ -4,18 +4,8 @@ import { Strategy as LocalStrategy } from "passport-local";
 
 import { secretOrKey } from "../config/jwt";
 
-import { 
-  PASSPORT_JWT,
-
-  ERROR_AUTH_FAIL,
-  ERROR_DATABASE,
-
-  HTTP_ERROR_AUTH_FAIL,
-  HTTP_ERROR_DATABASE,
-  PASSPORT_LOGIN,
-  PASSPORT_REGISTER
-} from "../config/constants";
-
+import { ERROR_AUTH_FAIL, ERROR_DATABASE, HTTP_ERROR_AUTH_FAIL, HTTP_ERROR_DATABASE } from "../constants/rest";
+import { PASSPORT_JWT, PASSPORT_LOGIN, PASSPORT_REGISTER } from "../constants/passport"
 
 /**
  * User passport authentication.

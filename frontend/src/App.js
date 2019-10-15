@@ -1,4 +1,4 @@
-import React, { lazy, useEffect, Suspense } from "react";
+import React, { lazy, useEffect, useMemo, Suspense } from "react";
 
 import { connect } from "react-redux";
 
@@ -10,7 +10,7 @@ import { findAndSaveToken } from "tools/storage";
 import { PrivillegedRoute } from "tools/routes";
 
 import { ONLINE, OFFLINE } from "constants/states";
-import { REST_GET_RECONNECT } from "constants/rest";
+import { REST_POST_RECONNECT, HTTP_ERROR_INVALID_TOKEN } from "constants/rest";
 import { ROUTE_ROOT, ROUTE_DASHBOARD, ROUTE_LOGIN, ROUTE_PROFILE, ROUTE_REGISTER, ROUTE_RECOVERY } from "constants/routes";
 
 import Navigation from "./navigation";
@@ -30,7 +30,7 @@ import Loading from "./Loading";
 
 
 import "./App.scss";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const AppPageContent = ({ isOnline }) => (
   <Suspense fallback={<Loading/>}>
@@ -58,26 +58,41 @@ const AppPage = ({ isOnline, account: { permissions }, location, history }) => (
 const mapStateToProps = ({ app: { shouldReconnect, isOnline }, domain: { account } }) => ({ shouldReconnect, isOnline, account });
 
 const mapDispatchToProps = (dispatch) => ({
-  reconnect: () => {
-    authAxios.get(REST_GET_RECONNECT)
+  handleReconnect: () => {
+    authAxios.post(REST_POST_RECONNECT)
       .then(({ data: { data } }) => loadUserState(dispatch, data))
-      .catch(() => resetUserState(dispatch));
-  }
+      .catch((error) => console.error(error));
+  },
+  handleLogout: () => resetUserState(dispatch)
 });
 
-let App = ({ shouldReconnect, isOnline, account, reconnect, location, history }) => {
+let App = ({ shouldReconnect, isOnline, account, handleReconnect, handleLogout, location, history }) => {
+  // Set up auth middleware - only shared information among all auth requests must be present here to ensure functionality
+  // TODO : Check edge cases - Will 'isOnline' parameter work for all cases? When can it fail?
+  useMemo(() => {
+    const authErrorMiddleware = (error) => {
+      const { response: { status } } = error;
+      if(status === HTTP_ERROR_INVALID_TOKEN) handleLogout();
+      return Promise.reject(error);
+    };
+
+    const setAuthMiddleware = () => authAxios.interceptors.response.use(null, authErrorMiddleware);
+
+    if(isOnline) setAuthMiddleware();
+  }, [ isOnline ]);
+
   //Send a request to server with user's saved token, essentially login without replacing token
   findAndSaveToken();
 
   useEffect(() => {
-    if(shouldReconnect) reconnect();
+    if(shouldReconnect) handleReconnect();
   }, [ shouldReconnect ]);
 
   const className = `app ${isOnline ? "app--online" : "app-offline"}`;
   
   return (
     <div className={className}>
-      {isOnline && <AppHeader/>}
+      {isOnline && <AppHeader history={history}/>}
       <AppPage isOnline={isOnline} location={location} history={history} account={account}/>
     </div>
   );

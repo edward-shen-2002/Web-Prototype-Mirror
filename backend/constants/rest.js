@@ -1,11 +1,3 @@
-
-export const DEV_PORT = 3000;
-export const DATABASE_KEY = "mongodb://localhost:27017/mohltc-web-app";
-export const SECRET_KEY = "}edr42{sZUhG)-#7v5eDlZWhuR)U{g@aNjoo\Xiav\o`1uGVpncE-Ul";
-
-// export const DATABASE_TEST_KEY;
-// export const DATABASE_KEY;
-
 // Router groups - separated by auth or security
 export const ROUTE_GROUP_PUBLIC = "/public";
 export const ROUTE_GROUP_AUTH = "/jwt";
@@ -14,15 +6,8 @@ export const ROUTE_GROUP_LDAP = "/ldap";
 // Routes
 export const ROUTE_POST_LOGIN = "/login";
 export const ROUTE_POST_REGISTER = "/register";
-export const ROUTE_GET_RECONNECT = "/reconnect";
-
-// Passport 
-export const PASSPORT_JWT = "jwt";
-
-// ? Unsure if these are required!
-export const PASSPORT_REGISTER = "register";
-export const PASSPORT_LOGIN = "login";
-
+export const REST_POST_RECONNECT = "/reconnect";
+export const ROUTE_POST_LOGOUT = "/logout";
 /**
  * HTTP Error messages
  */

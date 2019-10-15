@@ -6,12 +6,9 @@ import { userAuthenticationMiddleware } from "./authentication";
 import loginController from "../controller/login";
 import registerController from "../controller/register";
 import reconnectController from "../controller/reconnect";
+import logoutController from "../controller/logout";
 
-import { 
-  ROUTE_GROUP_PUBLIC, 
-  ROUTE_GROUP_AUTH
-} from "../config/constants";
-
+import { ROUTE_GROUP_PUBLIC, ROUTE_GROUP_AUTH } from "../constants/rest";
 
 /**
  * Routes which require user authentication -- must pass through the authentication middleware.
@@ -23,6 +20,7 @@ const authRoutes = ({ passport }) => {
   router.use(userAuthenticationMiddleware({ passport }));
 
   reconnectController({ router });
+  logoutController({ router });
 
   return router;
 };
@@ -39,6 +37,9 @@ const publicRoutes = (helpers) => {
   return router;
 };
 
+/**
+ * Routes which require authentication -- and with the right roles/permissions
+ */
 const adminRoutes = (helpers) => {};
 
 // Routes are grouped to fully utilize shared middleware

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import { DATABASE_KEY } from "../config/constants";
+import { DATABASE_KEY } from "../config/database";
 
 /**
  * MongoDB set up.
