@@ -15,7 +15,7 @@ let userSchema = new Schema({
   validated: { type: Boolean, required: true, default: false },
   roles: { type: Array, default: [] },
 
-  createDate: { type: Date, default: Date.now, required: true },
+  creationDate: { type: Date, default: Date.now, required: true },
   active: { type: Boolean, required: true, default: true },
 
   // organization: { type: String, required: true },

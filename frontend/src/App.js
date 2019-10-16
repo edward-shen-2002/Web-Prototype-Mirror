@@ -11,13 +11,15 @@ import { PrivillegedRoute } from "tools/routes";
 
 import { ONLINE, OFFLINE } from "constants/states";
 import { REST_POST_RECONNECT, HTTP_ERROR_INVALID_TOKEN } from "constants/rest";
-import { ROUTE_ROOT, ROUTE_DASHBOARD, ROUTE_LOGIN, ROUTE_PROFILE, ROUTE_REGISTER, ROUTE_RECOVERY } from "constants/routes";
+import { ROUTE_ROOT, ROUTE_DASHBOARD, ROUTE_LOGIN, ROUTE_PROFILE, ROUTE_REGISTER, ROUTE_RECOVERY, ROUTE_ADMIN_USERS } from "constants/routes";
 
 import Navigation from "./navigation";
 import AppHeader from "./header";
 
 import Login from "./views/Login";
 import Register from "./views/Register";
+
+import Users from "./views/Users/Users";
 
 import Recovery from "./views/Recovery";
 import NotFound from "./views/NotFound";
@@ -42,6 +44,7 @@ const AppPageContent = ({ isOnline }) => (
       <PrivillegedRoute isOnline={isOnline} path={ROUTE_RECOVERY} requiredState={OFFLINE} Component={Recovery}/>
       <PrivillegedRoute isOnline={isOnline} path={ROUTE_DASHBOARD} requiredState={ONLINE} Component={Dashboard}/>
       <PrivillegedRoute isOnline={isOnline} path={ROUTE_PROFILE} requiredState={ONLINE} Component={Profile}/>
+      <PrivillegedRoute isOnline={isOnline} path={ROUTE_ADMIN_USERS} requiredState={ONLINE} Component={Users}/>
       
       <Route component={NotFound}/>
     </Switch>

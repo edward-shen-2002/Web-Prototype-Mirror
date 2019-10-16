@@ -4,6 +4,8 @@ import { Strategy as LocalStrategy } from "passport-local";
 
 import { secretOrKey } from "../config/jwt";
 
+import { ROLE_USER_MANAGER, ROLE_TEMPLATE_MANAGER, ROLE_DATA_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_PACKAGE_MANAGER } from "../constants/roles";
+
 import { ERROR_AUTH_FAIL, ERROR_DATABASE, HTTP_ERROR_AUTH_FAIL, HTTP_ERROR_DATABASE, HTTP_ERROR_UNAUTHORIZED } from "../constants/rest";
 import { PASSPORT_JWT, PASSPORT_LOGIN, PASSPORT_REGISTER } from "../constants/passport"
 
@@ -49,7 +51,7 @@ const registerAuthentication = ({ passport, UserModel }) => {
       }
     })
   }));
-}
+};
 
 /**
  * Authentication middleware which checks for valid tokens
@@ -71,34 +73,27 @@ export const userAuthenticationMiddleware = ({ passport }) => (req, res, next) =
   })(req, res, next);
 };
 
-/**
- * Admin middlewares - Validates roles before passing to routes performing role actions.
- */
-export const userRoleMiddleware = () => (_req, res, next) => {
+const adminRoleMiddleware = (_req, res, next, role) => {
   const { user: { roles } } = res.locals;
-  if(roles.find("USER_MANAGER")) {
+  if(roles.includes(role)) {
     next();
   } else {
     res.status(HTTP_ERROR_UNAUTHORIZED).json({ message: "You do not have the role to perform this action" });
   }
 };
 
-export const templateRoleMiddleware = (helpers) => (req, res, next) => {
+/**
+ * Admin middlewares - Validates roles before passing to routes performing role actions.
+ */
+export const userRoleMiddleware = () => (req, res, next) => adminRoleMiddleware(req, res, next, ROLE_USER_MANAGER);
 
-};
+// export const templateRoleMiddleware = () => adminRoleMiddleware(ROLE_TEMPLATE_MANAGER)
 
-export const dataRoleMiddleware = (helpers) => {
+// export const dataRoleMiddleware = () => adminRoleMiddleware(ROLE_DATA_MANAGER);
 
-};
+// export const packageRoleMiddleware = () => adminRoleMiddleware(ROLE_PACKAGE_MANAGER);
 
-export const packageRoleMiddleware = (helpers) => {
-
-};
-
-
-export const organizationRoleMiddleware = (helpers) => {
-
-};
+// export const organizationRoleMiddleware = () => adminRoleMiddleware(ROLE_ORGANIZATION_MANAGER);
 
 const setupAuthentication = (helpers) => {
   userAuthentication(helpers);

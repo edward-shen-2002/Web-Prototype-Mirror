@@ -1,13 +1,16 @@
-// Router groups - separated by auth or security
+// Router groups and routes- separated by auth or security
 export const ROUTE_GROUP_PUBLIC = "/public";
-export const ROUTE_GROUP_AUTH = "/jwt";
-export const ROUTE_GROUP_ADMIN = "/admin";
-
-// Routes
 export const ROUTE_POST_LOGIN = "/login";
 export const ROUTE_POST_REGISTER = "/register";
+
+export const ROUTE_GROUP_AUTH = "/jwt";
 export const ROUTE_POST_RECONNECT = "/reconnect";
 export const ROUTE_POST_LOGOUT = "/logout";
+
+export const ROUTE_GROUP_ADMIN = "/admin";
+
+export const ROUTE_GROUP_ADMIN_USER = `${ROUTE_GROUP_ADMIN}/user_manager`;
+export const ROUTE_POST_USERS = "/users";
 
 /**
  * HTTP Error messages

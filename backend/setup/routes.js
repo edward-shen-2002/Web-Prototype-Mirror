@@ -11,7 +11,7 @@ import logoutController from "../controller/auth/logout";
 // Admin controllers
 import usersController from "../controller/admin/users/users";
 
-import { ROUTE_GROUP_PUBLIC, ROUTE_GROUP_AUTH, ROUTE_GROUP_ADMIN } from "../constants/rest";
+import { ROUTE_GROUP_PUBLIC, ROUTE_GROUP_AUTH, ROUTE_GROUP_ADMIN, ROUTE_GROUP_ADMIN_USER } from "../constants/rest";
 
 /**
  * Routes which require user authentication -- must pass through the authentication middleware.
@@ -34,8 +34,8 @@ const authRoutes = ({ passport }) => {
 const publicRoutes = (helpers) => {
   let router = new Router();
   
-  loginController({ router, ...helpers });
-  registerController({ router, ...helpers });
+  loginController({ ...helpers, router });
+  registerController({ ...helpers, router });
 
   return router;
 };
@@ -56,7 +56,7 @@ const userRoleRoutes = (helpers) => {
   
   router.use(userRoleMiddleware());
 
-  usersController({ router });
+  usersController({ ...helpers, router });
 
   return router;
 };
@@ -71,6 +71,7 @@ const setupRouteGroups = (helpers) => {
   // Admin routes
   // ?Is separating roles to different routes necessary?
   app.use(ROUTE_GROUP_ADMIN, adminRoutes(helpers));
+  app.use(ROUTE_GROUP_ADMIN_USER, userRoleRoutes(helpers));
 };
 
 export default setupRouteGroups;
