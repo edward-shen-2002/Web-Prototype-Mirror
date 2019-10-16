@@ -1,13 +1,32 @@
 import axios from "axios";
 
-export const publicAxios = axios.create({ baseURL: "http://localhost:3000/public" });
+// TODO: Change local domain to work with production!!
 
-export const authAxios = axios.create({ baseURL: "http://localhost:3000/jwt" });
+const localhost = "http://localhost:3000";
 
-export const setAxiosToken = (token) => authAxios.defaults.headers.common = { ...authAxios.defaults.headers.common, Authorization: `Bearer ${token}` };
+export const publicAxios = axios.create({ baseURL: `${localhost}/public` });
 
-export const isAxiosTokenSet = () =>  typeof authAxios.defaults.headers.common.Authorization !== "undefined";
+export const authAxios = axios.create({ baseURL: `${localhost}/jwt` });
+
+export const adminUserRole = axios.create({ baseURL: `${localhost}/user_manager` });
+
+const _setAxiosToken = (routeAxios, token) => routeAxios.defaults.headers.common = { ...routeAxios.defaults.headers.common, Authorization: `Bearer ${token}` };
+
+// Token is the same for all requests - for a registered user
+export const setAxiosToken = (token) => {
+  _setAxiosToken(authAxios, token);
+  _setAxiosToken(adminUserRole, token);
+};
+
+const _isAxiostokenSet = (routeAxios) => typeof routeAxios.defaults.headers.common.Authorization !== "undefined";
+
+export const isAxiosTokenSet = () =>  _isAxiostokenSet(authAxios) && _isAxiostokenSet(adminUserRole);
+
+const _unsafeDeleteAxiosToken = (routeAxios) => delete routeAxios.defaults.headers.common.Authorization;
 
 export const deleteAxiosToken = () => {
-  if(isAxiosTokenSet()) delete authAxios.defaults.headers.common.Authorization;
+  if(isAxiosTokenSet()) {
+    _unsafeDeleteAxiosToken(authAxios);
+    _unsafeDeleteAxiosToken(adminUserRole);
+  }
 };
