@@ -29,7 +29,7 @@ const roleNavMap = {
     icon: "mdi mdi-account",
     children: [
       { name: "All Users", url: "/users", icon: "mdi mdi-account-multiple" },
-      { name: "Registration Requests", url: "/registrationRequest", icon: "mdi mdi-account" }
+      { name: "Registration", url: "/registration", icon: "mdi mdi-account" }
     ]
   },
   ORGANIZATION_MANAGER: {
@@ -42,13 +42,13 @@ const roleNavMap = {
   }
 };
 
-const createAdminNavigation = (permissions) => {
-  if(!permissions.length) return [];
+const createAdminNavigation = (roles) => {
+  if(!roles.length) return [];
 
   let adminNav = [ { title: true, name: "Admin" } ];
 
-  permissions.forEach((permission) => {
-    const roleNav = roleNavMap[permission];
+  roles.forEach((role) => {
+    const roleNav = roleNavMap[role];
     
     if(typeof roleNav !== "undefined") adminNav.push(roleNav);
   });
@@ -66,9 +66,9 @@ const createUserNavigation = () => {
   return [ userTitle, userProfile, userPackages ];
 };
 
-const config = (permissions) => {
+const config = (roles) => {
   const userNavigation = createUserNavigation();
-  const adminNavigation = createAdminNavigation(permissions);
+  const adminNavigation = createAdminNavigation(roles);
 
   return { items: [ ...userNavigation, ...adminNavigation ] };
 };

@@ -1,13 +1,14 @@
 // Router groups - separated by auth or security
 export const ROUTE_GROUP_PUBLIC = "/public";
 export const ROUTE_GROUP_AUTH = "/jwt";
-export const ROUTE_GROUP_LDAP = "/ldap";
+export const ROUTE_GROUP_ADMIN = "/admin";
 
 // Routes
 export const ROUTE_POST_LOGIN = "/login";
 export const ROUTE_POST_REGISTER = "/register";
-export const REST_POST_RECONNECT = "/reconnect";
+export const ROUTE_POST_RECONNECT = "/reconnect";
 export const ROUTE_POST_LOGOUT = "/logout";
+
 /**
  * HTTP Error messages
  */
@@ -29,5 +30,6 @@ export const HTTP_SUCCESS = 200;
 //Error codes
 export const HTTP_ERROR_SYNTAX = 400;
 export const HTTP_ERROR_AUTH_FAIL = 401;
+export const HTTP_ERROR_UNAUTHORIZED = 403;
 export const HTTP_ERROR_CONFLICT = 409;
 export const HTTP_ERROR_DATABASE = 500;

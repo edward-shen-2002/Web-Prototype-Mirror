@@ -48,9 +48,9 @@ const AppPageContent = ({ isOnline }) => (
   </Suspense>
 );
 
-const AppPage = ({ isOnline, account: { permissions }, location, history }) => (
+const AppPage = ({ isOnline, account: { roles }, location, history }) => (
   <div className={`app__page ${isOnline ? "app__page--online" : "app_page--offline" }`}>
-    {isOnline && <Navigation location={location} history={history} permissions={permissions}/>}
+    {isOnline && <Navigation location={location} history={history} roles={roles}/>}
     <AppPageContent isOnline={isOnline}/>
   </div>
 ); 

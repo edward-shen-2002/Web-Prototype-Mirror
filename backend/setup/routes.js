@@ -1,14 +1,17 @@
 import { Router } from "express";
 
-import { userAuthenticationMiddleware } from "./authentication";
+import { userAuthenticationMiddleware, userRoleMiddleware } from "./authentication";
 
 // Route controllers
-import loginController from "../controller/login";
-import registerController from "../controller/register";
-import reconnectController from "../controller/reconnect";
-import logoutController from "../controller/logout";
+import loginController from "../controller/public/login";
+import registerController from "../controller/public/register";
+import reconnectController from "../controller/auth/reconnect";
+import logoutController from "../controller/auth/logout";
 
-import { ROUTE_GROUP_PUBLIC, ROUTE_GROUP_AUTH } from "../constants/rest";
+// Admin controllers
+import usersController from "../controller/admin/users/users";
+
+import { ROUTE_GROUP_PUBLIC, ROUTE_GROUP_AUTH, ROUTE_GROUP_ADMIN } from "../constants/rest";
 
 /**
  * Routes which require user authentication -- must pass through the authentication middleware.
@@ -38,9 +41,25 @@ const publicRoutes = (helpers) => {
 };
 
 /**
- * Routes which require authentication -- and with the right roles/permissions
+ * Routes which require authentication -- config shared among all admin route groups
  */
-const adminRoutes = (helpers) => {};
+const adminRoutes = ({ passport }) => {
+  let router = new Router();
+
+  router.use(userAuthenticationMiddleware({ passport }));
+
+  return router;
+};
+
+const userRoleRoutes = (helpers) => {
+  let router = new Router();
+  
+  router.use(userRoleMiddleware());
+
+  usersController({ router });
+
+  return router;
+};
 
 // Routes are grouped to fully utilize shared middleware
 const setupRouteGroups = (helpers) => {
@@ -48,6 +67,10 @@ const setupRouteGroups = (helpers) => {
   
   app.use(ROUTE_GROUP_PUBLIC, publicRoutes(helpers));
   app.use(ROUTE_GROUP_AUTH, authRoutes(helpers));
+
+  // Admin routes
+  // ?Is separating roles to different routes necessary?
+  app.use(ROUTE_GROUP_ADMIN, adminRoutes(helpers));
 };
 
 export default setupRouteGroups;

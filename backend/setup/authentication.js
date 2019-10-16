@@ -4,7 +4,7 @@ import { Strategy as LocalStrategy } from "passport-local";
 
 import { secretOrKey } from "../config/jwt";
 
-import { ERROR_AUTH_FAIL, ERROR_DATABASE, HTTP_ERROR_AUTH_FAIL, HTTP_ERROR_DATABASE } from "../constants/rest";
+import { ERROR_AUTH_FAIL, ERROR_DATABASE, HTTP_ERROR_AUTH_FAIL, HTTP_ERROR_DATABASE, HTTP_ERROR_UNAUTHORIZED } from "../constants/rest";
 import { PASSPORT_JWT, PASSPORT_LOGIN, PASSPORT_REGISTER } from "../constants/passport"
 
 /**
@@ -30,7 +30,7 @@ const loginAuthentication = ({ passport, UserModel }) => {
         result ? done(null, result) : done(null, false, { message: "Unable to login user" });
       }
     })
-  }))
+  }));
 };
 
 /**
@@ -51,6 +51,9 @@ const registerAuthentication = ({ passport, UserModel }) => {
   }));
 }
 
+/**
+ * Authentication middleware which checks for valid tokens
+ */
 export const userAuthenticationMiddleware = ({ passport }) => (req, res, next) => {
   passport.authenticate(PASSPORT_JWT, { session: false }, (error, user, info) => {
     if(error) {
@@ -66,6 +69,35 @@ export const userAuthenticationMiddleware = ({ passport }) => (req, res, next) =
       next();
     }
   })(req, res, next);
+};
+
+/**
+ * Admin middlewares - Validates roles before passing to routes performing role actions.
+ */
+export const userRoleMiddleware = () => (_req, res, next) => {
+  const { user: { roles } } = res.locals;
+  if(roles.find("USER_MANAGER")) {
+    next();
+  } else {
+    res.status(HTTP_ERROR_UNAUTHORIZED).json({ message: "You do not have the role to perform this action" });
+  }
+};
+
+export const templateRoleMiddleware = (helpers) => (req, res, next) => {
+
+};
+
+export const dataRoleMiddleware = (helpers) => {
+
+};
+
+export const packageRoleMiddleware = (helpers) => {
+
+};
+
+
+export const organizationRoleMiddleware = (helpers) => {
+
 };
 
 const setupAuthentication = (helpers) => {

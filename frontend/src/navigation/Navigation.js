@@ -18,7 +18,7 @@ const Navigation = (props) => (
     <AppSidebarHeader/>
     <AppSidebarForm/>
     {/* Props required for react router */}
-    <AppSidebarNav navConfig={config(props.permissions)} {...props}/>
+    <AppSidebarNav navConfig={config(props.roles)} {...props}/>
     <AppSidebarFooter/>
     <AppSidebarMinimizer/>
   </AppSidebar>

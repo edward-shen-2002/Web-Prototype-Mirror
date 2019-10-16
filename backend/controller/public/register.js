@@ -1,7 +1,7 @@
-import { generateToken } from "../tools/jwt";
+import { generateToken } from "../../tools/jwt";
 
-import { PASSPORT_REGISTER } from "../constants/passport";
-import { ROUTE_POST_REGISTER } from "../constants/rest";
+import { PASSPORT_REGISTER } from "../../constants/passport";
+import { ROUTE_POST_REGISTER } from "../../constants/rest";
 
 const register = ({ router, passport }) => {
   router.post(ROUTE_POST_REGISTER, (req, res) => {

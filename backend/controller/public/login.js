@@ -1,7 +1,7 @@
-import { generateToken } from "../tools/jwt";
+import { generateToken } from "../../tools/jwt";
 
-import { PASSPORT_LOGIN } from "../constants/passport";
-import { ROUTE_POST_LOGIN } from "../constants/rest";
+import { PASSPORT_LOGIN } from "../../constants/passport";
+import { ROUTE_POST_LOGIN } from "../../constants/rest";
 
 const login = ({ router, passport }) => {
   router.post(ROUTE_POST_LOGIN, (req, res) => {

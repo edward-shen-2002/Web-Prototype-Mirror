@@ -13,7 +13,7 @@ let userSchema = new Schema({
   phoneNumber: String,
   
   validated: { type: Boolean, required: true, default: false },
-  permissions: { type: Array, default: [] },
+  roles: { type: Array, default: [] },
 
   createDate: { type: Date, default: Date.now, required: true },
   active: { type: Boolean, required: true, default: true },

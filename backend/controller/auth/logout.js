@@ -1,4 +1,4 @@
-import { ROUTE_POST_LOGOUT } from "../constants/rest";
+import { ROUTE_POST_LOGOUT } from "../../constants/rest";
 
 const logout = ({ router }) => {
   router.post(ROUTE_POST_LOGOUT, (_req, res) => {
