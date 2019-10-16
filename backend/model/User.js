@@ -11,8 +11,7 @@ let userSchema = new Schema({
   lastName: String,
   
   phoneNumber: String,
-  
-  validated: { type: Boolean, required: true, default: false },
+
   roles: { type: Array, default: [] },
 
   creationDate: { type: Date, default: Date.now, required: true },
