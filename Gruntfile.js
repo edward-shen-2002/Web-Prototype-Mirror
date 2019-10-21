@@ -1,8 +1,7 @@
-const { pivotal } = require("./config/cloud");
+const pivotal = require("./config/cloud/pivotal");
 
 module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-contrib-copy");
-  grunt.loadNpmTasks("grunt-contrib-compress");
   grunt.loadNpmTasks("grunt-contrib-clean");
   grunt.loadNpmTasks("grunt-run");
   grunt.loadNpmTasks("grunt-env");
@@ -14,19 +13,19 @@ module.exports = function (grunt) {
         files: [
           {
             expand: true,
-            cwd: "./backend",
-            src: [ "config/**", "controller/**", "models/**", "setup/**", "tools/**", "app.js", "index.js", "package.json", "yarn.lock" ],
+            cwd: "backend",
+            src: [ "controller/**", "constants/**", "models/**", "setup/**", "tools/**", "app.js", "index.js", "package.json", "yarn.lock" ],
             dest: "build/zip/"
           },
           {
             expand: true,
-            cwd: "../pivotal-config",
+            cwd: "..",
             src: [ "config/**" ],
             dest: "build/zip/"
           },
           {
             expand: true,
-            cwd: "./frontend/build",
+            cwd: "frontend/build",
             src: [ "**" ],
             dest: "build/zip/public/react"
           }
@@ -43,7 +42,16 @@ module.exports = function (grunt) {
     }
   });
 
+  // mkdir for zip archive
+  grunt.registerTask("mkdir", () => {
+    grunt.file.mkdir("build/zip/temp");
+    grunt.file.mkdir("build/zip/uploads");
+    grunt.file.mkdir("build/zip/public/react");
+  });
+
   grunt.registerTask("pivotal:build", [ "clean", "env:pivotal", "run:buildFrontend", "mkdir", "copy:main" ]);
   grunt.registerTask("pivotal:publish", [ "run:pivotal" ]);
   grunt.registerTask("build:pivotal", [ "pivotal:build", "pivotal:publish" ]);
+
+  grunt.registerTask("copy:files", [ "clean", "copy:main" ]);
 };

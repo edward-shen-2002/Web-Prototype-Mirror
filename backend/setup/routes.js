@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { userAuthenticationMiddleware, userRoleMiddleware } from "./authentication";
+import { userAuthenticationMiddleware, userRoleMiddleware, organizationRoleMiddleware, dataRoleMiddleware} from "./authentication";
 
 // Route controllers
 import loginController from "../controller/public/login";
@@ -11,7 +11,7 @@ import logoutController from "../controller/auth/logout";
 // Admin controllers
 import usersController from "../controller/admin/users/users";
 
-import { ROUTE_GROUP_PUBLIC, ROUTE_GROUP_AUTH, ROUTE_GROUP_ADMIN, ROUTE_GROUP_ADMIN_USER } from "../constants/rest";
+import { ROUTE_GROUP_PUBLIC, ROUTE_GROUP_AUTH, ROUTE_GROUP_ADMIN, ROUTE_GROUP_ADMIN_USER, ROUTE_GROUP_ADMIN_DATA} from "../constants/rest";
 
 /**
  * Routes which require user authentication -- must pass through the authentication middleware.
@@ -61,6 +61,22 @@ const userRoleRoutes = (helpers) => {
   return router;
 };
 
+const dataRoleRoutes = (helpers) => {
+  let router = new Router();
+
+  router.use(dataRoleMiddleware());
+
+  return router;
+};
+
+const organizationRoleRoutes = (helpers) => {
+  let router = new Router();
+
+  router.use(organizationRoleMiddleware());
+
+  return router;
+};
+
 // Routes are grouped to fully utilize shared middleware
 const setupRouteGroups = (helpers) => {
   const { app } = helpers;
@@ -72,6 +88,7 @@ const setupRouteGroups = (helpers) => {
   // ?Is separating roles to different routes necessary?
   app.use(ROUTE_GROUP_ADMIN, adminRoutes(helpers));
   app.use(ROUTE_GROUP_ADMIN_USER, userRoleRoutes(helpers));
+  app.use(ROUTE_GROUP_ADMIN_DATA, dataRoleRoutes(helpers));
 };
 
 export default setupRouteGroups;

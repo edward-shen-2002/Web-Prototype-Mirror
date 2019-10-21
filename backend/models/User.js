@@ -17,8 +17,7 @@ let userSchema = new Schema({
   creationDate: { type: Date, default: Date.now, required: true },
   active: { type: Boolean, required: true, default: true },
 
-  // organization: { type: String, required: true },
-  // groupNumber: { type: Number, required: true },
+  organization: { type: Array, default: [] }
 });
 
 userSchema.plugin(passportLocalMongoose, {

@@ -7,12 +7,12 @@ import passport from "passport";
 
 import serverSetup from "./setup";
 
-import { DEV_PORT } from "./config/express";
-
 const logger = require("morgan");
 
 const _init = async () => {
   let app = express();
+
+  app.set("port", process.env.PORT || 3000);
   
   app.use(json({ limit: "50mb" }));
   app.use(urlencoded({ extended: true }));
@@ -26,7 +26,7 @@ const _init = async () => {
   // Initialize database, authentication, routes, etc ...
   await serverSetup(app, passport);
   
-  app.listen(DEV_PORT, () => console.log(`App listening on port ${DEV_PORT}`));
+  app.listen(app.get("port"), () => console.log(`App listening on port ${app.get("port")}`));
 };
 
 _init();

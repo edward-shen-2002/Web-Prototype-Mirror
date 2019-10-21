@@ -6,7 +6,7 @@ import { secretOrKey } from "../config/jwt";
 
 import { ROLE_USER_MANAGER, ROLE_TEMPLATE_MANAGER, ROLE_DATA_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_PACKAGE_MANAGER } from "../constants/roles";
 
-import { ERROR_AUTH_FAIL, ERROR_DATABASE, HTTP_ERROR_AUTH_FAIL, HTTP_ERROR_DATABASE, HTTP_ERROR_UNAUTHORIZED } from "../constants/rest";
+import { MESSAGE_ERROR_AUTH_FAIL, MESSAGE_ERROR_DATABASE, HTTP_ERROR_AUTH_FAIL, HTTP_ERROR_DATABASE, HTTP_ERROR_UNAUTHORIZED } from "../constants/rest";
 import { PASSPORT_JWT, PASSPORT_LOGIN, PASSPORT_REGISTER } from "../constants/passport"
 
 /**
@@ -59,10 +59,10 @@ const registerAuthentication = ({ passport, UserModel }) => {
 export const userAuthenticationMiddleware = ({ passport }) => (req, res, next) => {
   passport.authenticate(PASSPORT_JWT, { session: false }, (error, user, info) => {
     if(error) {
-      console.error(ERROR_DATABASE, error);
+      console.error(MESSAGE_ERROR_DATABASE, error);
       res.status(HTTP_ERROR_DATABASE).json({ default: error });
     } else if(info) {
-      console.error(ERROR_AUTH_FAIL, info);
+      console.error(MESSAGE_ERROR_AUTH_FAIL, info);
       res.status(HTTP_ERROR_AUTH_FAIL).json({ default: info });
     
     // User found 
@@ -87,13 +87,13 @@ const adminRoleMiddleware = (_req, res, next, role) => {
  */
 export const userRoleMiddleware = () => (req, res, next) => adminRoleMiddleware(req, res, next, ROLE_USER_MANAGER);
 
+export const organizationRoleMiddleware = () => (req, res, next) => adminRoleMiddleware(req, res, next, ROLE_ORGANIZATION_MANAGER);
+
 // export const templateRoleMiddleware = () => adminRoleMiddleware(ROLE_TEMPLATE_MANAGER)
 
-// export const dataRoleMiddleware = () => adminRoleMiddleware(ROLE_DATA_MANAGER);
+export const dataRoleMiddleware = () => (req, res, next) => adminRoleMiddleware(req, res, next, ROLE_DATA_MANAGER);
 
 // export const packageRoleMiddleware = () => adminRoleMiddleware(ROLE_PACKAGE_MANAGER);
-
-// export const organizationRoleMiddleware = () => adminRoleMiddleware(ROLE_ORGANIZATION_MANAGER);
 
 const setupAuthentication = (helpers) => {
   userAuthentication(helpers);

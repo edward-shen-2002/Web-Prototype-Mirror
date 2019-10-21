@@ -1,7 +1,5 @@
-const pivotal = {
-  appName: 'adaptmohltcapp', // your pivotal app name
-  serverUrl: 'https://adaptmohltcapp.cfapps.io', // the route for this app
-  frontendUrl: 'https://adaptmohltcapp.cfapps.io/react',
+module.exports = {
+  appName: "mohltc123", 
+  serverUrl: "https://mohltc123.cfapps.io", 
+  frontendUrl: "https://mohltc123.cfapps.io/react"
 };
-
-export default pivotal;

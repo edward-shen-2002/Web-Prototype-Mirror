@@ -6,3 +6,9 @@ Stateless (mostly)
 - The drawback of this is that subsequent requests will fetch the same authentication resources for authenticated routes
 - Another issue is where to store the token. There are multiple storages on the client side, but one of the simplest and better alternative would be sessions...
   Although we still use sessions, token comes with authentication.
+
+Registration Requests
+===========================
+- Add a "Banned" or "Rejected" list of users
+- User managers can add or remove users from the list
+- Banned users cannot apply to organizations to which they are banned

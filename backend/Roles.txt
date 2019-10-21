@@ -2,5 +2,8 @@ Template manager
 Cell Data manager
 Organization manager
 User manager
-System manager
 Package manager
+
+Unsure: 
+Sector manager
+System manager

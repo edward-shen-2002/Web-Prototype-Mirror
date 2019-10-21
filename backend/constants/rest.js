@@ -1,33 +1,47 @@
-// Router groups and routes- separated by auth or security
+/* Router groups and routes- separated by auth or security */
 export const ROUTE_GROUP_PUBLIC = "/public";
-export const ROUTE_POST_LOGIN = "/login";
-export const ROUTE_POST_REGISTER = "/register";
+export const ROUTE_LOGIN = "/login";
+export const ROUTE_REGISTER = "/register";
 
 export const ROUTE_GROUP_AUTH = "/jwt";
-export const ROUTE_POST_RECONNECT = "/reconnect";
-export const ROUTE_POST_LOGOUT = "/logout";
+export const ROUTE_RECONNECT = "/reconnect";
+export const ROUTE_LOGOUT = "/logout";
 
 export const ROUTE_GROUP_ADMIN = "/admin";
 
 export const ROUTE_GROUP_ADMIN_USER = `${ROUTE_GROUP_ADMIN}/user_manager`;
-export const ROUTE_POST_USERS = "/users";
+export const ROUTE_ADMIN_USERS = "/users";
+export const ROUTE_ADMIN_USERS_UPDATE = `${ROUTE_ADMIN_USERS}/update`;
+export const ROUTE_ADMIN_USERS_CREATE = `${ROUTE_ADMIN_USERS}/createa`;
+export const ROUTE_ADMIN_USERS_DELETE = `${ROUTE_ADMIN_USERS}/delete`;
 
-/**
- * HTTP Error messages
- */
-export const ERROR_CREDENTIALS = "Incorrect username or password";
-export const ERROR_PASSWORD = "Incorrect password";
-export const ERROR_CONFLICT_PARAMS = "One or more params is/are already taken";
-export const ERROR_CONFLICT_USERNAME = "Username is already taken";
-export const ERROR_CONFLICT_EMAIL = "Email is already taken";
-export const ERROR_AUTH_FAIL = "User unauthorized";
-export const ERROR_DATABASE = "Unable to access database";
-export const ERROR_SYNTAX_PARAMS = "Invalid params syntax";
-export const ERROR_AUTH_PROCESS = "Error occured during authentication";
+export const ROUTE_GROUP_ADMIN_DATA = `${ROUTE_GROUP_ADMIN}/data_manager`;
+export const ROUTE_ADMIN_DATA = "/data";
+export const ROUTE_ADMIN_DATA_CREATE = `${ROUTE_ADMIN_DATA}/create`;
+export const ROUTE_ADMIN_DATA_UPDATE = `${ROUTE_ADMIN_DATA}/update`;
+export const ROUTE_ADMIN_DATA_DELETE = `${ROUTE_ADMIN_DATA}/delete`;
 
-/**
- * HTTP response status codes
- */
+/** HTTP Error messages */
+export const MESSAGE_ERROR_CREDENTIALS = "Incorrect username or password";
+export const MESSAGE_ERROR_DATABASE = "Error occured during database query";
+export const MESSAGE_ERROR_CONFLICT_PARAMS = "One or more params is/are already taken";
+export const MESSAGE_ERROR_AUTH_FAIL = "User unauthorized";
+
+// export const ERROR_PASSWORD = "Incorrect password";
+// export const ERROR_CONFLICT_USERNAME = "Username is already taken";
+// export const ERROR_CONFLICT_EMAIL = "Email is already taken";
+// export const ERROR_SYNTAX_PARAMS = "Invalid params syntax";
+// export const ERROR_AUTH_PROCESS = "Error occured during authentication";
+
+/** HTTP Success messages */
+export const MESSAGE_SUCCESS_REGISTRATION = "Successfully registered";
+export const MESSAGE_SUCCESS_LOGIN = "Successfully logged in";
+export const MESSAGE_SUCCESS_LOGOUT = "Successfully logged out";
+export const MESSAGE_SUCCESS_RECONNECT = "Successfully reconnected";
+export const MESSAGE_SUCCESS_USERS = "Successfully fetched users";
+export const MESSAGE_SUCCESS_USERS_DELETE = "Successfully deleted user";
+
+/** HTTP response status codes */
 //Success codes
 export const HTTP_SUCCESS = 200;
 //Error codes
