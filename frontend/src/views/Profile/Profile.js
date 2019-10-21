@@ -2,11 +2,17 @@ import React from "react";
 
 import { connect } from "react-redux";
 
-import { Fade, Paper, Typography } from "@material-ui/core";
+import { Fade, Paper, Typography, Chip } from "@material-ui/core";
+
+import uniqid from "uniqid";
 
 import "./Profile.scss";
 
-const Field = ({ label, value }) => <p className="profile__field"><strong>{label}</strong>: {value}</p>;
+const Field = ({ label, value }) => (
+  <div className="profile__field">
+    <strong>{label}</strong>: {value}
+  </div>
+);
 
 const BasicInformation = ({ username, email, firstName, lastName, phoneNumber }) => (
   <div>
@@ -24,8 +30,8 @@ const AccountInformation = ({ active, creationDate, roles }) => (
     <Typography className="profile__subtitle" variant="button" gutterBottom>Account Information</Typography>
     <hr/>
     <Field label="Active" value={active.toString()}/>
-    <Field label="Creation Date" value={creationDate}/>
-    <Field label="Roles" value={roles}/>
+    <Field label="Creation Date" value={<time>{new Date(creationDate).toLocaleString()}</time>}/>
+    <Field label="Roles" value={roles.map((role) => <Chip key={uniqid()} className="profile__role" variant="outlined" label={role}/>)}/>
   </div>
 );
 

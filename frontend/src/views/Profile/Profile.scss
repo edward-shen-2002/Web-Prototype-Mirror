@@ -12,7 +12,11 @@
 
   &__field {
     font-family: Roboto;
-    line-height: 15px;
+    padding: 7px;;
     color: #444444;
+  }
+
+  &__role {
+    margin: 0 3px 0 3px;
   }
 }

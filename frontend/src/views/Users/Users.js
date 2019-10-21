@@ -4,14 +4,13 @@ import { adminUserRoleAxios } from "tools/rest";
 
 import { REST_POST_ADMIN_USERS } from "constants/rest";
 
-import { FormControl, InputLabel, Select, Input, Checkbox, MenuItem, ListItemText } from "@material-ui/core";
-
 const MaterialTable = lazy(() => import("material-table"));
 
 import "./Users.scss";
 
 // TODO : Implement pagination
-// TODO : Style component
+// TODO : column editable function
+// TODO : Add data to the server
 const Users = () => {
   const [ users, setUsers ] = useState([]);
   const [ dataFetched, setDataFetched ] = useState(false);
@@ -19,31 +18,51 @@ const Users = () => {
   useEffect(() => {
     if(!dataFetched) {
       adminUserRoleAxios.post(REST_POST_ADMIN_USERS)
-        .then(({ data: { data: { users } } }) => {
-          // Add an editable field for editing
-          users = users.map((user) => ({ ...user, editable: false }));
-          setUsers(users);
-        })
+        .then(({ data: { data: { users } } }) => setUsers(users.map((user) => ({ ...user, password: "" }))))
         .catch((error) => console.error(error));
       
       setDataFetched(true);
     }
   });
-  
+
+  // Construct the table data
+  const columns = [
+    { title: "Username", field: "username" },
+    { title: "Email", field: "email" },
+    { title: "First Name", field: "firstName" },
+    { title: "Last Name", field: "lastName" },
+    { title: "Password", field: "password" },
+    { title: "Phone Number", field: "phoneNumber" },
+    { title: "Creation Date", field: "creationDate", type: "date", render: ({ creationDate }) => new Date(creationDate).toLocaleString() },
+    { title: "Active", field: "active", type: "boolean" }
+  ];
+
+  const handleRowAdd = (newUser) => new Promise((resolve, _reject) => {
+    setTimeout(() => {
+      resolve();
+      setUsers([ ...users, newUser ]);
+    }, 600);
+  });
+
+  const handleRowDelete = (oldUser) => new Promise((resolve, _reject) => {
+    setTimeout(() => {
+      resolve();
+    }, 1000);
+  });
+
+  const handleRowUpdate = (newUser, oldUser) => new Promise((resolve, _reject) => {
+    setTimeout(() => resolve(), 1000);
+  });
+
   return (
-    <div className="users">
+    <div className="usersPage">
       <MaterialTable
+        className="usersTable"
         title="All Users"
-        columns={[
-          { title: "Username", field: "username" },
-          { title: "Email", field: "email" },
-          { title: "First Name", field: "firstName" },
-          { title: "Last Name", field: "lastName" },
-          { title: "Phone Number", field: "phoneNumber" },
-          { title: "Creation Date", render: ({ creationDate }) => <time>{new Date(creationDate).toLocaleString()}</time> },
-          { title: "Active",  render: ({ active }) => <p>{active.toString()}</p> },
-        ]}
+        columns={columns}
         data={users}
+        editable={{ onRowAdd: handleRowAdd, onRowUpdate: handleRowUpdate, onRowDelete: handleRowDelete }}
+        options={{ actionsColumnIndex: -1 }}
       />
     </div>
   );

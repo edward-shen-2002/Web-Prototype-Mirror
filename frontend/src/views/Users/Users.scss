@@ -1,8 +1,9 @@
-.users {
-  height: fit-content;
-  width: 100%;
-
+.usersPage {
   margin: 20px;
+  width: 100%;;
 
-  padding: 20px;
+  &__table {
+    height: fit-content;
+    width: 100%;
+  }
 }

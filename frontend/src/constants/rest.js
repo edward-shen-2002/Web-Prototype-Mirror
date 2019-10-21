@@ -8,3 +8,4 @@ export const REST_POST_ADMIN_USERS = "/users";
 
 // HTTP error codes
 export const HTTP_ERROR_INVALID_TOKEN = 401;
+export const HTTP_ERROR_UNAUTHORIZED = 403;

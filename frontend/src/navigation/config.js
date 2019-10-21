@@ -1,43 +1,57 @@
+import { 
+  ROUTE_ADMIN_USER_USERS, 
+  ROUTE_ADMIN_USER_REGISTRATION,
+
+  ROUTE_ADMIN_DATA_DATAGROUP, 
+  ROUTE_ADMIN_DATA_ATTRIBUTES,
+  ROUTE_ADMIN_DATA_CATEGORIES,
+
+  ROUTE_ADMIN_PACKAGE_PACKAGES,
+
+  ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS ,
+  ROUTE_ADMIN_ORGANIZATION_TYPES
+} from "constants/routes";
+
 const roleNavMap = {
   TEMPLATE_MANAGER: {
     name: "Templates",
     icon: "mdi mdi-note-multiple",
     children: [
-      { name: "All Templates", url: "/workbooks/template", icon: "mdi mdi-table-large" },
-      { name: "Create Template", url: "/workbooks/create", icon: "mdi mdi-table-large-plus" }
+      { name: "All Templates", url: "/admin/workbooks/template", icon: "mdi mdi-table-large" },
+      { name: "Create Template", url: "/admin/workbooks/create", icon: "mdi mdi-table-large-plus" }
     ]
   },
   DATA_MANAGER: {
     name: "Cell Data",
     icon: "mdi mdi-buffer",
     children: [
-      { name: "Attributes", url: "/workbooks/attributes", icon: "mdi mdi-table-column" },
-      { name: "Categories", url: "/workbooks/categories", icon: "mdi mdi-table-row" },
-      { name: "Data Group", url: "/data/group", icon: "mdi mdi-checkbook" }
+      { name: "Attributes", url: ROUTE_ADMIN_DATA_ATTRIBUTES, icon: "mdi mdi-table-column" },
+      { name: "Categories", url: ROUTE_ADMIN_DATA_CATEGORIES, icon: "mdi mdi-table-row" },
+      { name: "Data Group", url: ROUTE_ADMIN_DATA_DATAGROUP, icon: "mdi mdi-checkbook" }
     ]
   },
   PACKAGE_MANAGER: {
     name: "Packages",
     icon: "mdi mdi-package-variant",
     children: [ 
-      { name: "All Packages", url: "/admin/packages", icon: "mdi mdi-package" },
-      { name: "Create Package", url: "/admin/packages/create", icon: "mdi mdi-shape-square-plus" }
+      { name: "All Packages", url: ROUTE_ADMIN_PACKAGE_PACKAGES, icon: "mdi mdi-package" },
+      // { name: "Create Package", url: "/admin/packages/create", icon: "mdi mdi-shape-square-plus" }
     ]
   },
   USER_MANAGER: {
     name: "Users",
     icon: "mdi mdi-account",
     children: [
-      { name: "All Users", url: "/users", icon: "mdi mdi-account-multiple" },
-      { name: "Registration", url: "/registration", icon: "mdi mdi-account" }
+      { name: "All Users", url: ROUTE_ADMIN_USER_USERS, icon: "mdi mdi-account-multiple" },
+      { name: "Registration", url: ROUTE_ADMIN_USER_REGISTRATION, icon: "mdi mdi-account" }
     ]
   },
   ORGANIZATION_MANAGER: {
     name: "Organizations",
     icon: "mdi mdi-account-group",
     children: [
-      { name: "Organizations", url: "/admin/organizations", icon: "mdi mdi-account-group" },
-      { name: "Organization Types", url: "/admin/orgtypes", icon: "mdi mdi-account-network" }
+      { name: "Organizations", url: ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS, icon: "mdi mdi-account-group" },
+      { name: "Organization Types", url: ROUTE_ADMIN_ORGANIZATION_TYPES, icon: "mdi mdi-account-network" }
     ]
   }
 };

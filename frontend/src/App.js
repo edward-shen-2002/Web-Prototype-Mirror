@@ -5,13 +5,14 @@ import { connect } from "react-redux";
 import { Switch, Route, Redirect } from "react-router-dom";
 
 import { loadUserState, resetUserState } from "tools/redux";
-import { authAxios } from "tools/rest";
+import { authAxios, adminUserRoleAxios, adminOrganizationRoleAxios } from "tools/rest";
 import { findAndSaveToken } from "tools/storage";
 import { PrivillegedRoute } from "tools/routes";
 
 import { ONLINE, OFFLINE } from "constants/states";
-import { REST_POST_RECONNECT, HTTP_ERROR_INVALID_TOKEN } from "constants/rest";
-import { ROUTE_ROOT, ROUTE_DASHBOARD, ROUTE_LOGIN, ROUTE_PROFILE, ROUTE_REGISTER, ROUTE_RECOVERY, ROUTE_ADMIN_USERS } from "constants/routes";
+import { ROLE_USER_MANAGER, ROLE_DATA_MANAGER, ROLE_ORGANIZATION_MANAGER } from "constants/roles";
+import { REST_POST_RECONNECT, HTTP_ERROR_INVALID_TOKEN, HTTP_ERROR_UNAUTHORIZED } from "constants/rest";
+import { ROUTE_ROOT, ROUTE_DASHBOARD, ROUTE_LOGIN, ROUTE_PROFILE, ROUTE_REGISTER, ROUTE_RECOVERY, ROUTE_ADMIN_USER_USERS, ROUTE_ADMIN_DATA_DATAGROUP, ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS } from "constants/routes";
 
 import Navigation from "./navigation";
 import AppHeader from "./header";
@@ -19,7 +20,9 @@ import AppHeader from "./header";
 import Login from "./views/Login";
 import Register from "./views/Register";
 
-import Users from "./views/Users/Users";
+import Users from "./views/Users";
+import DataGroup from "./views/DataGroup";
+import Organizations from "./views/Organizations";
 
 import Recovery from "./views/Recovery";
 import NotFound from "./views/NotFound";
@@ -30,7 +33,6 @@ const Profile = lazy(() => import("./views/Profile"));
 
 import Loading from "./Loading";
 
-
 import "./App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -39,13 +41,17 @@ const AppPageContent = ({ isOnline }) => (
     <Switch>
       <Route exact path={ROUTE_ROOT} component={(props) => isOnline ? <Redirect to={ROUTE_DASHBOARD}/> : <Login {...props} />}/>
 
-      <PrivillegedRoute isOnline={isOnline} path={ROUTE_LOGIN} requiredState={OFFLINE} Component={Login}/>
-      <PrivillegedRoute isOnline={isOnline} path={ROUTE_REGISTER} requiredState={OFFLINE} Component={Register}/>
-      <PrivillegedRoute isOnline={isOnline} path={ROUTE_RECOVERY} requiredState={OFFLINE} Component={Recovery}/>
-      <PrivillegedRoute isOnline={isOnline} path={ROUTE_DASHBOARD} requiredState={ONLINE} Component={Dashboard}/>
-      <PrivillegedRoute isOnline={isOnline} path={ROUTE_PROFILE} requiredState={ONLINE} Component={Profile}/>
-      <PrivillegedRoute isOnline={isOnline} path={ROUTE_ADMIN_USERS} requiredState={ONLINE} Component={Users}/>
-      
+      <PrivillegedRoute path={ROUTE_LOGIN} requiredState={OFFLINE} Component={Login}/>
+      <PrivillegedRoute path={ROUTE_REGISTER} requiredState={OFFLINE} Component={Register}/>
+      <PrivillegedRoute path={ROUTE_RECOVERY} requiredState={OFFLINE} Component={Recovery}/>
+      <PrivillegedRoute path={ROUTE_DASHBOARD} requiredState={ONLINE} Component={Dashboard}/>
+      <PrivillegedRoute path={ROUTE_PROFILE} requiredState={ONLINE} Component={Profile}/>
+
+      {/* Admin Routes */}
+      <PrivillegedRoute path={ROUTE_ADMIN_USER_USERS} requiredState={ONLINE} requiredRole={ROLE_USER_MANAGER} Component={Users}/>
+      <PrivillegedRoute path={ROUTE_ADMIN_DATA_DATAGROUP} requiredState={ONLINE} requiredRole={ROLE_DATA_MANAGER} Component={DataGroup}/>
+      <PrivillegedRoute path={ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS} requiredState={ONLINE} requiredRole={ROLE_ORGANIZATION_MANAGER} Component={Organizations}/>
+
       <Route component={NotFound}/>
     </Switch>
   </Suspense>
@@ -79,9 +85,25 @@ let App = ({ shouldReconnect, isOnline, account, handleReconnect, handleLogout, 
       return Promise.reject(error);
     };
 
-    const setAuthMiddleware = () => authAxios.interceptors.response.use(null, authErrorMiddleware);
+    // Redirect to dashboard when the user is not authorized... 
+    // TODO: Possibly fetch user data again since this may indicate that the user has an outdated server resource - Will be impossible if the token is invalid... Check if server sent back user data. Logout if invalid token
+    const adminErrorMiddleware = (error) => {
+      const { response: { status } } = error;
+      if(status === HTTP_ERROR_INVALID_TOKEN) {
+        handleLogout();
+      } else if(status === HTTP_ERROR_UNAUTHORIZED) {
+        history.push("/dashboard");
+      }
+      return Promise.reject(error);
+    };
 
-    if(isOnline) setAuthMiddleware();
+    const setMiddleware = (routeAxios, middleware) => routeAxios.interceptors.response.use(null, middleware);
+
+    if(isOnline) {
+      setMiddleware(authAxios, authErrorMiddleware);
+      setMiddleware(adminUserRoleAxios, adminErrorMiddleware);
+      setMiddleware(adminOrganizationRoleAxios, adminErrorMiddleware);
+    }
   }, [ isOnline ]);
 
   //Send a request to server with user's saved token, essentially login without replacing token

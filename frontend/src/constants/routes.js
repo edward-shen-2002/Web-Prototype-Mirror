@@ -4,4 +4,23 @@ export const ROUTE_LOGIN = "/login";
 export const ROUTE_REGISTER = "/register";
 export const ROUTE_RECOVERY = "/recovery";
 export const ROUTE_PROFILE = "/profile";
-export const ROUTE_ADMIN_USERS = "/users";
+
+// Admin routes
+export const ROUTE_ADMIN_ROOT = "/admin";
+
+export const ROUTE_ADMIN_USER = `${ROUTE_ADMIN_ROOT}/user_manager`;
+export const ROUTE_ADMIN_USER_USERS = `${ROUTE_ADMIN_USER}/users`;
+export const ROUTE_ADMIN_USER_REGISTRATION = `${ROUTE_ADMIN_USER}/registration`;
+
+export const ROUTE_ADMIN_DATA = `${ROUTE_ADMIN_ROOT}/data_manager`;
+export const ROUTE_ADMIN_DATA_DATAGROUP = `${ROUTE_ADMIN_DATA}/datagroup`;
+export const ROUTE_ADMIN_DATA_ATTRIBUTES = `${ROUTE_ADMIN_DATA}/attributes`;
+export const ROUTE_ADMIN_DATA_CATEGORIES = `${ROUTE_ADMIN_DATA}/categories`;
+
+export const ROUTE_ADMIN_PACKAGE = `${ROUTE_ADMIN_ROOT}/package_manager`;
+export const ROUTE_ADMIN_PACKAGE_PACKAGES = `${ROUTE_ADMIN_PACKAGE}/packages`;
+// Should create package be a dialog instead of a different page?
+
+export const ROUTE_ADMIN_ORGANIZATION = `${ROUTE_ADMIN_ROOT}/organization_manager`;
+export const ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS = `${ROUTE_ADMIN_ORGANIZATION}/organizations`;
+export const ROUTE_ADMIN_ORGANIZATION_TYPES = `${ROUTE_ADMIN_ORGANIZATION}/types`;

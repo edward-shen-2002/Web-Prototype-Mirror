@@ -1,5 +1,6 @@
 const common = require("./webpack.common");
 const merge = require("webpack-merge");
+const path = require("path");
 
 const TerserJSPlugin = require("terser-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -9,7 +10,7 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 module.exports = merge(common, {
   mode: "production",
   output: {
-    path: path.join(__dirname, "/dist"),
+    path: path.join(__dirname, "/build"),
     filename: "webpack.bundle.js",
     publicPath: "/"
   },
