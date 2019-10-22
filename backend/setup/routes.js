@@ -27,8 +27,6 @@ const authRoutes = ({ passport }) => {
   reconnectController({ router });
   logoutController({ router });
 
-  router.use(generalErrorHandler());
-
   return router;
 };
 
@@ -41,8 +39,6 @@ const publicRoutes = (helpers) => {
   loginController({ ...helpers, router });
   registerController({ ...helpers, router });
 
-  router.use(generalErrorHandler());
-  
   return router;
 };
 
@@ -54,8 +50,6 @@ const adminRoutes = ({ passport }) => {
 
   router.use(userAuthenticationMiddleware({ passport }));
 
-  router.use(generalErrorHandler());
-
   return router;
 };
 
@@ -65,8 +59,6 @@ const userRoleRoutes = (helpers) => {
   router.use(userRoleMiddleware());
 
   usersController({ ...helpers, router });
-
-  router.use(generalErrorHandler());
 
   return router;
 };
@@ -78,8 +70,6 @@ const dataRoleRoutes = (helpers) => {
 
   dataGroupsController({ ...helpers, router });
 
-  router.use(generalErrorHandler());
-
   return router;
 };
 
@@ -87,8 +77,6 @@ const organizationRoleRoutes = (helpers) => {
   let router = new Router();
 
   router.use(organizationRoleMiddleware());
-
-  router.use(generalErrorHandler());
 
   return router;
 };
@@ -102,9 +90,9 @@ const setupRouteGroups = (helpers) => {
 
   // Admin routes
   // ?Is separating roles to different routes necessary?
-  app.use(ROUTE_GROUP_ADMIN, adminRoutes(helpers));
-  app.use(ROUTE_GROUP_ADMIN_USER, userRoleRoutes(helpers));
-  app.use(ROUTE_GROUP_ADMIN_DATA, dataRoleRoutes(helpers));
+  app.use(ROUTE_GROUP_ADMIN, adminRoutes(helpers), generalErrorHandler());
+  app.use(ROUTE_GROUP_ADMIN_USER, userRoleRoutes(helpers), generalErrorHandler());
+  app.use(ROUTE_GROUP_ADMIN_DATA, dataRoleRoutes(helpers), generalErrorHandler());
 };
 
 export default setupRouteGroups;

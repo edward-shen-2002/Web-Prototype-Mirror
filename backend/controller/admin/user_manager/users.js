@@ -4,7 +4,7 @@ import { ROUTE_ADMIN_USERS, ROUTE_ADMIN_USERS_DELETE, MESSAGE_SUCCESS_USERS, MES
 // UserModel.estimateDocumentCount();
 // https://itnext.io/back-end-pagination-with-nodejs-expressjs-mongodb-mongoose-ejs-3566994356e0
 const users = ({ router, UserModel }) => {
-  router.post(ROUTE_ADMIN_USERS, (_req, res, next) => {
+  router.get(ROUTE_ADMIN_USERS, (_req, res, next) => {
     UserModel.find({})
       .then((users) => res.json({ message: MESSAGE_SUCCESS_USERS, data: { users } }))
       .catch(next);
@@ -13,7 +13,7 @@ const users = ({ router, UserModel }) => {
   router.delete(ROUTE_ADMIN_USERS_DELETE, (req, res, next) => {
     const { username } = req.body;
     UserModel.deleteOne({ username })
-      .then((user) => res.json({ message: MESSAGE_SUCCESS_USERS_DELETE }))
+      .then(() => res.json({ message: MESSAGE_SUCCESS_USERS_DELETE }))
       .catch(next);
   });
 };

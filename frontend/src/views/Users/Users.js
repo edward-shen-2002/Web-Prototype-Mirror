@@ -17,7 +17,7 @@ const Users = () => {
 
   useEffect(() => {
     if(!isDataFetched) {
-      adminUserRoleAxios.post(REST_ADMIN_USERS)
+      adminUserRoleAxios.get(REST_ADMIN_USERS)
         .then(({ data: { data: { users } } }) => setUsers(users.map((user) => ({ ...user, password: "" }))))
         .catch((error) => console.error(error));
       

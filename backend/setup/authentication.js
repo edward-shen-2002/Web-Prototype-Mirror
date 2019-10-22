@@ -99,7 +99,7 @@ export const dataRoleMiddleware = () => (req, res, next) => adminRoleMiddleware(
 
 // TODO : Handle other errors. Currently assumes database error occured previously.
 // Final errors route. To be used for handling errors that occur at the end of the router stack.
-export const generalErrorHandler = () => (error) => {
+export const generalErrorHandler = () => (error, _req, res, _next) => {
   res.status(HTTP_ERROR_DATABASE).json({ message: MESSAGE_ERROR_DATABASE, error });
 };
 
