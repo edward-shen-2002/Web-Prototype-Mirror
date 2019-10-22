@@ -9,7 +9,9 @@ import reconnectController from "../controller/auth/reconnect";
 import logoutController from "../controller/auth/logout";
 
 // Admin controllers
-import usersController from "../controller/admin/users/users";
+import usersController from "../controller/admin/user_manager/users";
+
+import dataGroupsController from "../controller/admin/data_manager/dataGroups";
 
 import { ROUTE_GROUP_PUBLIC, ROUTE_GROUP_AUTH, ROUTE_GROUP_ADMIN, ROUTE_GROUP_ADMIN_USER, ROUTE_GROUP_ADMIN_DATA} from "../constants/rest";
 
@@ -65,6 +67,8 @@ const dataRoleRoutes = (helpers) => {
   let router = new Router();
 
   router.use(dataRoleMiddleware());
+
+  dataGroupsController({ ...helpers, router });
 
   return router;
 };

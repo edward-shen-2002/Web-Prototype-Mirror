@@ -12,12 +12,13 @@ import { DATABASE_KEY } from "../config/database";
  *   wipeDatabase: default false
  *   createDummyUser: default false
  */
-const setupMongoose = async (options, { UserModel }) => {
+const setupMongoose = async (options, { UserModel, DataGroupModel }) => {
   const handleCreateDatabase = async () => {
     console.log("MongoDB: Creating collections in database");
     try {
 
       await UserModel.createCollection();
+      await DataGroupModel.createCollection();
 
       console.log("MongoDB: Successfully created collections");
     } catch(error) {

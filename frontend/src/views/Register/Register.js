@@ -11,7 +11,7 @@ import { Paper, TextField, Button } from "@material-ui/core";
 import { publicAxios } from "tools/rest";
 import { loadUserState } from "tools/redux";
 
-import { REST_POST_REGISTER } from "constants/rest";
+import { REST_REGISTER } from "constants/rest";
 import { ROUTE_LOGIN, ROUTE_DASHBOARD } from "constants/routes";
 
 import * as yup from "yup";
@@ -159,7 +159,7 @@ const mapDispatchToProps = (dispatch) => ({
     if(isOnline) {
       history.push(ROUTE_DASHBOARD);
     } else {
-      publicAxios.post(REST_POST_REGISTER, { username, password, email, firstName, lastName, phoneNumber })
+      publicAxios.post(REST_REGISTER, { username, password, email, firstName, lastName, phoneNumber })
         .then(({ data: { data } }) => loadUserState(dispatch, data))
         .catch((error) => console.log(error))
         .finally(() => setSubmitting(false))

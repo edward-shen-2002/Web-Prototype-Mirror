@@ -1,35 +1,32 @@
 import axios from "axios";
 
-const SERVER_LOCAL = "http://localhost:3000";
+import { SERVER_LOCAL, REST_GROUP_PUBLIC, REST_GROUP_AUTH, REST_GROUP_ADMIN_USER, REST_GROUP_ADMIN_DATA, REST_GROUP_ADMIN_ORGANIZATION } from "constants/rest";
 
 const SERVER_APP = process.env.NODE_ENV === "production" ? process.env.SERVER_URL : SERVER_LOCAL;
 
-export const publicAxios = axios.create({ baseURL: `${SERVER_APP}/public` });
+export const publicAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_PUBLIC}` });
 
-export const authAxios = axios.create({ baseURL: `${SERVER_APP}/jwt` });
+export const authAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_AUTH}` });
 
-export const adminUserRoleAxios = axios.create({ baseURL: `${SERVER_APP}/admin/user_manager` });
-export const adminOrganizationRoleAxios = axios.create({ baseURL: `${SERVER_APP}/admin/organization_manager` });
+export const adminUserRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_USER}` });
+
+export const adminDataRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_DATA}` });
+
+export const adminOrganizationRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_ORGANIZATION}` });
 
 const _setAxiosToken = (routeAxios, token) => routeAxios.defaults.headers.common = { ...routeAxios.defaults.headers.common, Authorization: `Bearer ${token}` };
 
+const tokenAxiosList = [ authAxios, adminUserRoleAxios, adminDataRoleAxios, adminOrganizationRoleAxios ];
+
 // Token is the same for all requests - representation of an authenticated registered user
-export const setAxiosToken = (token) => {
-  _setAxiosToken(authAxios, token);
-  _setAxiosToken(adminUserRoleAxios, token);
-  _setAxiosToken(adminOrganizationRoleAxios, token);
-};
+export const setAxiosToken = (token) => tokenAxiosList.forEach((routeAxios) => _setAxiosToken(routeAxios, token));
 
 const _isAxiostokenSet = (routeAxios) => typeof routeAxios.defaults.headers.common.Authorization !== "undefined";
 
-export const isAxiosTokenSet = () =>  _isAxiostokenSet(authAxios) && _isAxiostokenSet(adminUserRoleAxios) && _isAxiostokenSet(adminOrganizationRoleAxios);
+export const isAxiosTokenSet = () =>  tokenAxiosList.reduce((accumulator, routeAxios) => accumulator && _isAxiostokenSet(routeAxios), true);
 
 const _unsafeDeleteAxiosToken = (routeAxios) => delete routeAxios.defaults.headers.common.Authorization;
 
 export const deleteAxiosToken = () => {
-  if(isAxiosTokenSet()) {
-    _unsafeDeleteAxiosToken(authAxios);
-    _unsafeDeleteAxiosToken(adminUserRoleAxios);
-    _unsafeDeleteAxiosToken(adminOrganizationRoleAxios);
-  }
+  if(isAxiosTokenSet()) tokenAxiosList.forEach((routeAxios) => _unsafeDeleteAxiosToken(routeAxios));
 };

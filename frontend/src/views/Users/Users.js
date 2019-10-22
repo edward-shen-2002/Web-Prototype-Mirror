@@ -2,7 +2,7 @@ import React, { lazy, useEffect, useState } from "react";
 
 import { adminUserRoleAxios } from "tools/rest";
 
-import { REST_POST_ADMIN_USERS } from "constants/rest";
+import { REST_ADMIN_USERS } from "constants/rest";
 
 const MaterialTable = lazy(() => import("material-table"));
 
@@ -13,15 +13,15 @@ import "./Users.scss";
 // TODO : Add data to the server
 const Users = () => {
   const [ users, setUsers ] = useState([]);
-  const [ dataFetched, setDataFetched ] = useState(false);
+  const [ isDataFetched, setIsDataFetched ] = useState(false);
 
   useEffect(() => {
-    if(!dataFetched) {
-      adminUserRoleAxios.post(REST_POST_ADMIN_USERS)
+    if(!isDataFetched) {
+      adminUserRoleAxios.post(REST_ADMIN_USERS)
         .then(({ data: { data: { users } } }) => setUsers(users.map((user) => ({ ...user, password: "" }))))
         .catch((error) => console.error(error));
       
-      setDataFetched(true);
+      setIsDataFetched(true);
     }
   });
 

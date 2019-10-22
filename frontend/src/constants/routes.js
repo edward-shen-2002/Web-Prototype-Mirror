@@ -13,7 +13,7 @@ export const ROUTE_ADMIN_USER_USERS = `${ROUTE_ADMIN_USER}/users`;
 export const ROUTE_ADMIN_USER_REGISTRATION = `${ROUTE_ADMIN_USER}/registration`;
 
 export const ROUTE_ADMIN_DATA = `${ROUTE_ADMIN_ROOT}/data_manager`;
-export const ROUTE_ADMIN_DATA_DATAGROUP = `${ROUTE_ADMIN_DATA}/datagroup`;
+export const ROUTE_ADMIN_DATA_DATAGROUPS = `${ROUTE_ADMIN_DATA}/data_groups`;
 export const ROUTE_ADMIN_DATA_ATTRIBUTES = `${ROUTE_ADMIN_DATA}/attributes`;
 export const ROUTE_ADMIN_DATA_CATEGORIES = `${ROUTE_ADMIN_DATA}/categories`;
 

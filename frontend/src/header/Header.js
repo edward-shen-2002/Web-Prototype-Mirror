@@ -13,7 +13,7 @@ import { AppHeaderDropdown, AppSidebarToggler, AppNavbarBrand } from "@coreui/re
 import { AppBar, Toolbar } from "@material-ui/core";
 
 import { ROUTE_LOGIN } from "constants/routes";
-import { REST_POST_LOGOUT } from "constants/rest";
+import { REST_LOGOUT } from "constants/rest";
 
 import logo from "images/brand/ON_POS_LOGO_BLUE_RGB.svg";
 
@@ -69,7 +69,7 @@ const AppNavigation = ({ handleLogout }) => (
 
 const mapDispatchToProps = (dispatch, { history }) => ({ 
   handleLogout: () => {
-    authAxios.post(REST_POST_LOGOUT)
+    authAxios.post(REST_LOGOUT)
       .catch((error) => console.error(error))
       .finally(() => {
         resetUserState(dispatch);

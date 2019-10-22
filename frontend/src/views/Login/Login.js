@@ -12,7 +12,7 @@ import { loadUserState } from "tools/redux";
 import { publicAxios, setAxiosToken } from "tools/rest";
 import { saveToken } from "tools/storage";
 
-import { REST_POST_LOGIN } from "constants/rest";
+import { REST_LOGIN } from "constants/rest";
 import { ROUTE_REGISTER, ROUTE_RECOVERY, ROUTE_DASHBOARD } from "constants/routes";
 
 import "./Login.scss";
@@ -69,7 +69,7 @@ const mapDispatchToProps = (dispatch) => ({
     if(isOnline) {
       history.push(ROUTE_DASHBOARD);
     } else {
-      publicAxios.post(REST_POST_LOGIN, { username, password })
+      publicAxios.post(REST_LOGIN, { username, password })
         .then(({ data: { data: { token, user } } }) => {
           setAxiosToken(token);
           saveToken(token);

@@ -11,8 +11,8 @@ import { PrivillegedRoute } from "tools/routes";
 
 import { ONLINE, OFFLINE } from "constants/states";
 import { ROLE_USER_MANAGER, ROLE_DATA_MANAGER, ROLE_ORGANIZATION_MANAGER } from "constants/roles";
-import { REST_POST_RECONNECT, HTTP_ERROR_INVALID_TOKEN, HTTP_ERROR_UNAUTHORIZED } from "constants/rest";
-import { ROUTE_ROOT, ROUTE_DASHBOARD, ROUTE_LOGIN, ROUTE_PROFILE, ROUTE_REGISTER, ROUTE_RECOVERY, ROUTE_ADMIN_USER_USERS, ROUTE_ADMIN_DATA_DATAGROUP, ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS } from "constants/routes";
+import { REST_RECONNECT, HTTP_ERROR_INVALID_TOKEN, HTTP_ERROR_UNAUTHORIZED } from "constants/rest";
+import { ROUTE_ROOT, ROUTE_DASHBOARD, ROUTE_LOGIN, ROUTE_PROFILE, ROUTE_REGISTER, ROUTE_RECOVERY, ROUTE_ADMIN_USER_USERS, ROUTE_ADMIN_DATA_DATAGROUPS, ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS } from "constants/routes";
 
 import Navigation from "./navigation";
 import AppHeader from "./header";
@@ -21,7 +21,7 @@ import Login from "./views/Login";
 import Register from "./views/Register";
 
 import Users from "./views/Users";
-import DataGroup from "./views/DataGroup";
+import DataGroup from "./views/DataGroups";
 import Organizations from "./views/Organizations";
 
 import Recovery from "./views/Recovery";
@@ -49,7 +49,7 @@ const AppPageContent = ({ isOnline }) => (
 
       {/* Admin Routes */}
       <PrivillegedRoute path={ROUTE_ADMIN_USER_USERS} requiredState={ONLINE} requiredRole={ROLE_USER_MANAGER} Component={Users}/>
-      <PrivillegedRoute path={ROUTE_ADMIN_DATA_DATAGROUP} requiredState={ONLINE} requiredRole={ROLE_DATA_MANAGER} Component={DataGroup}/>
+      <PrivillegedRoute path={ROUTE_ADMIN_DATA_DATAGROUPS} requiredState={ONLINE} requiredRole={ROLE_DATA_MANAGER} Component={DataGroup}/>
       <PrivillegedRoute path={ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS} requiredState={ONLINE} requiredRole={ROLE_ORGANIZATION_MANAGER} Component={Organizations}/>
 
       <Route component={NotFound}/>
@@ -68,7 +68,7 @@ const mapStateToProps = ({ app: { shouldReconnect, isOnline }, domain: { account
 
 const mapDispatchToProps = (dispatch) => ({
   handleReconnect: () => {
-    authAxios.post(REST_POST_RECONNECT)
+    authAxios.post(REST_RECONNECT)
       .then(({ data: { data } }) => loadUserState(dispatch, data))
       .catch((error) => console.error(error));
   },
