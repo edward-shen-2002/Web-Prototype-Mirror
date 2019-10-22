@@ -6,11 +6,10 @@ import { ROUTE_LOGIN } from "../../constants/rest";
 import { MESSAGE_SUCCESS_LOGIN, MESSAGE_ERROR_CREDENTIALS } from "../../constants/rest";
 
 const login = ({ router, passport }) => {
-  router.post(ROUTE_LOGIN, (req, res) => {
+  router.post(ROUTE_LOGIN, (req, res, next) => {
     passport.authenticate(PASSPORT_LOGIN, (error, user, info) => {
       if(error) {
-        console.error(error);
-        res.status(500).json({ message: "Database error", details: error });
+        next(error);
       } else if(user) {
         user.hash = undefined;
         user.salt = undefined;
@@ -22,7 +21,7 @@ const login = ({ router, passport }) => {
         console.error(info);
         res.status(401).json({ message: MESSAGE_ERROR_CREDENTIALS, details: info });
       }
-    })(req, res);
+    })(req, res, next);
   });
 };
 

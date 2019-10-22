@@ -39,6 +39,8 @@ const loginAuthentication = ({ passport, UserModel }) => {
  * Passport authentication for Register. Receives a username, password, name, and email from the user's request.
  * 
  * Checks the database for existing `username` and `email`. Usernames and emails must be unique.
+ * 
+ * TODO: Specify conflicts!!!
  */
 const registerAuthentication = ({ passport, UserModel }) => {
   passport.use(PASSPORT_REGISTER, new LocalStrategy({ passReqToCallback: true, session: false }, (req, username, password, done) => {
@@ -94,6 +96,12 @@ export const organizationRoleMiddleware = () => (req, res, next) => adminRoleMid
 export const dataRoleMiddleware = () => (req, res, next) => adminRoleMiddleware(req, res, next, ROLE_DATA_MANAGER);
 
 // export const packageRoleMiddleware = () => adminRoleMiddleware(ROLE_PACKAGE_MANAGER);
+
+// TODO : Handle other errors. Currently assumes database error occured previously.
+// Final errors route. To be used for handling errors that occur at the end of the router stack.
+export const generalErrorHandler = () => (error) => {
+  res.status(HTTP_ERROR_DATABASE).json({ message: MESSAGE_ERROR_DATABASE, error });
+};
 
 const setupAuthentication = (helpers) => {
   userAuthentication(helpers);

@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { userAuthenticationMiddleware, userRoleMiddleware, organizationRoleMiddleware, dataRoleMiddleware} from "./authentication";
+import { userAuthenticationMiddleware, userRoleMiddleware, organizationRoleMiddleware, dataRoleMiddleware, generalErrorHandler} from "./authentication";
 
 // Route controllers
 import loginController from "../controller/public/login";
@@ -27,6 +27,8 @@ const authRoutes = ({ passport }) => {
   reconnectController({ router });
   logoutController({ router });
 
+  router.use(generalErrorHandler());
+
   return router;
 };
 
@@ -39,6 +41,8 @@ const publicRoutes = (helpers) => {
   loginController({ ...helpers, router });
   registerController({ ...helpers, router });
 
+  router.use(generalErrorHandler());
+  
   return router;
 };
 
@@ -50,6 +54,8 @@ const adminRoutes = ({ passport }) => {
 
   router.use(userAuthenticationMiddleware({ passport }));
 
+  router.use(generalErrorHandler());
+
   return router;
 };
 
@@ -59,6 +65,8 @@ const userRoleRoutes = (helpers) => {
   router.use(userRoleMiddleware());
 
   usersController({ ...helpers, router });
+
+  router.use(generalErrorHandler());
 
   return router;
 };
@@ -70,6 +78,8 @@ const dataRoleRoutes = (helpers) => {
 
   dataGroupsController({ ...helpers, router });
 
+  router.use(generalErrorHandler());
+
   return router;
 };
 
@@ -78,13 +88,15 @@ const organizationRoleRoutes = (helpers) => {
 
   router.use(organizationRoleMiddleware());
 
+  router.use(generalErrorHandler());
+
   return router;
 };
 
 // Routes are grouped to fully utilize shared middleware
 const setupRouteGroups = (helpers) => {
   const { app } = helpers;
-  
+
   app.use(ROUTE_GROUP_PUBLIC, publicRoutes(helpers));
   app.use(ROUTE_GROUP_AUTH, authRoutes(helpers));
 

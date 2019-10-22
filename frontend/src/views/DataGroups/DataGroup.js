@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 
-import { ROUTE_ADMIN_DATA_DATAGROUPS } from "constants/rest";
+import { REST_ADMIN_DATAGROUPS } from "constants/rest";
+
+import { adminDataRoleAxios } from "tools/rest";
 
 const DataGroup = () => {
   const [ group, setGroup ] = useState([]);
@@ -8,7 +10,9 @@ const DataGroup = () => {
 
   useEffect(() => {
     if(!isDataFetched) {
-      
+      adminDataRoleAxios.get(REST_ADMIN_DATAGROUPS)
+        .then(( { data: { data } }) => console.log(data))
+        .catch((error) => console.error(error));
       setIsDataFetched(true);
     }
   });
