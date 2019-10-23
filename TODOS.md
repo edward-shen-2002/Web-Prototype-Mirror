@@ -1,4 +1,5 @@
 # TODOS
 
-- [ ] Pagination
+- [ ] Users Pagination
 - [ ] Token blacklist
+- [ ] User validation (registration or user management)
