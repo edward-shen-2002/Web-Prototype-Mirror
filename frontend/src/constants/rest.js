@@ -14,15 +14,9 @@ export const REST_GROUP_ADMIN = "/admin";
 
 export const REST_GROUP_ADMIN_USER = `${REST_GROUP_ADMIN}/user_manager`;
 export const REST_ADMIN_USERS = "/users";
-export const REST_ADMIN_USERS_UPDATE = `${REST_ADMIN_USERS}/update`;
-export const REST_ADMIN_USERS_CREATE = `${REST_ADMIN_USERS}/createa`;
-export const REST_ADMIN_USERS_DELETE = `${REST_ADMIN_USERS}/delete`;
 
 export const REST_GROUP_ADMIN_DATA = `${REST_GROUP_ADMIN}/data_manager`;
 export const REST_ADMIN_DATAGROUPS = "/data_groups";
-export const REST_ADMIN_DATAGROUPS_CREATE = `${REST_ADMIN_DATAGROUPS}/create`;
-export const REST_ADMIN_DATAGROUPS_UPDATE = `${REST_ADMIN_DATAGROUPS}/update`;
-export const REST_ADMIN_DATAGROUPS_DELETE = `${REST_ADMIN_DATAGROUPS}/delete`;
 
 export const REST_GROUP_ADMIN_ORGANIZATION = `${REST_GROUP_ADMIN}/organization_manager`;
 

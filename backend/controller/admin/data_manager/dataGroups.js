@@ -1,6 +1,5 @@
 import { 
-  ROUTE_ADMIN_DATAGROUPS, 
-  ROUTE_ADMIN_DATAGROUPS_CREATE,
+  ROUTE_ADMIN_DATAGROUPS,
 
   MESSAGE_SUCCESS_DATAGROUPS,
 } from "../../../constants/rest";
@@ -13,7 +12,9 @@ const datagroups = ({ router, DataGroupModel }) => {
       .catch(next);
   });
 
-  router.post(ROUTE_ADMIN_DATAGROUPS_CREATE)
+  router.post(ROUTE_ADMIN_DATAGROUPS, (req, res, next) => {
+    
+  });
 };
 
 export default datagroups;

@@ -41,6 +41,7 @@ const loginAuthentication = ({ passport, UserModel }) => {
  * Checks the database for existing `username` and `email`. Usernames and emails must be unique.
  * 
  * TODO: Specify conflicts!!!
+ * TODO : Validate attributes!
  */
 const registerAuthentication = ({ passport, UserModel }) => {
   passport.use(PASSPORT_REGISTER, new LocalStrategy({ passReqToCallback: true, session: false }, (req, username, password, done) => {

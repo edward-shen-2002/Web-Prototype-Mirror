@@ -11,15 +11,9 @@ export const ROUTE_GROUP_ADMIN = "/admin";
 
 export const ROUTE_GROUP_ADMIN_USER = `${ROUTE_GROUP_ADMIN}/user_manager`;
 export const ROUTE_ADMIN_USERS = "/users";
-export const ROUTE_ADMIN_USERS_UPDATE = `${ROUTE_ADMIN_USERS}/update`;
-export const ROUTE_ADMIN_USERS_CREATE = `${ROUTE_ADMIN_USERS}/createa`;
-export const ROUTE_ADMIN_USERS_DELETE = `${ROUTE_ADMIN_USERS}/delete`;
 
 export const ROUTE_GROUP_ADMIN_DATA = `${ROUTE_GROUP_ADMIN}/data_manager`;
 export const ROUTE_ADMIN_DATAGROUPS = "/data_groups";
-export const ROUTE_ADMIN_DATAGROUPS_CREATE = `${ROUTE_ADMIN_DATAGROUPS}/create`;
-export const ROUTE_ADMIN_DATAGROUPS_UPDATE = `${ROUTE_ADMIN_DATAGROUPS}/update`;
-export const ROUTE_ADMIN_DATAGROUPS_DELETE = `${ROUTE_ADMIN_DATAGROUPS}/delete`;
 
 /** HTTP Error messages */
 export const MESSAGE_ERROR_CREDENTIALS = "Incorrect username or password";

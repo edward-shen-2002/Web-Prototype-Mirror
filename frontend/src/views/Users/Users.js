@@ -18,7 +18,7 @@ const Users = () => {
   useEffect(() => {
     if(!isDataFetched) {
       adminUserRoleAxios.get(REST_ADMIN_USERS)
-        .then(({ data: { data: { users } } }) => setUsers(users.map((user) => ({ ...user, password: "" }))))
+        .then(({ data: { data: { users } } }) => setUsers(users))
         .catch((error) => console.error(error));
       
       setIsDataFetched(true);
@@ -37,21 +37,50 @@ const Users = () => {
     { title: "Active", field: "active", type: "boolean" }
   ];
 
-  const handleRowAdd = (newUser) => new Promise((resolve, _reject) => {
+  const handleRowAdd = (newUser) => new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve();
-      setUsers([ ...users, newUser ]);
+      adminUserRoleAxios.post(REST_ADMIN_USERS, { newUser })
+      .then(() => {
+        newUser.password = undefined;
+
+        setUsers([ ...users, newUser ]);
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject();
+      });
     }, 600);
   });
 
-  const handleRowDelete = (oldUser) => new Promise((resolve, _reject) => {
+  const handleRowDelete = (oldUser) => new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve();
+      adminUserRoleAxios.delete(`${REST_ADMIN_USERS}/${oldUser.username}`)
+        .then((response) => {
+          const oldUserIndex = users.indexOf(oldUser);
+          setUsers([ ...users.slice(0, oldUserIndex), ...users.slice(oldUserIndex + 1) ]);
+          resolve();
+        })
+        .catch((error) => {
+          console.error(error);
+          reject();
+        });
     }, 1000);
   });
 
-  const handleRowUpdate = (newUser, oldUser) => new Promise((resolve, _reject) => {
-    setTimeout(() => resolve(), 1000);
+  const handleRowUpdate = (newUser, oldUser) => new Promise((resolve, reject) => {
+    setTimeout(() => {
+      adminUserRoleAxios.put(REST_ADMIN_USERS, { newUser, oldUser })
+        .then(() => {
+          const oldUserIndex = users.indexOf(oldUser);
+          setUsers([ ...users.slice(0, oldUserIndex), newUser, ...users.slice(oldUserIndex + 1) ]);
+          resolve();
+        })
+        .catch((error) => {
+          console.error(error);
+          reject();
+        })
+    }, 1000);
   });
 
   return (
