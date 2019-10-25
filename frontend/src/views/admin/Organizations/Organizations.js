@@ -7,7 +7,10 @@ const Organizations = () => {
   const [ isDataFetched, setIsDataFetched ] = useState(false);
 
   useEffect(() => {
-    if(!isDataFetched) {}
+    if(!isDataFetched) {
+      
+      setIsDataFetched(true);
+    }
   });
 
   return (

@@ -16,22 +16,20 @@ import { ROUTE_ROOT, ROUTE_DASHBOARD, ROUTE_LOGIN, ROUTE_PROFILE, ROUTE_REGISTER
 
 import Navigation from "./navigation";
 import AppHeader from "./header";
-
-import Login from "./views/Login";
-import Register from "./views/Register";
-
-import Users from "./views/Users";
-import DataGroup from "./views/DataGroups";
-import Organizations from "./views/Organizations";
-
-import Recovery from "./views/Recovery";
-import NotFound from "./views/NotFound";
-
-// Lazy load resource-consuming components
-const Dashboard = lazy(() => import("./views/Dashboard"));
-const Profile = lazy(() => import("./views/Profile"));
-
 import Loading from "./Loading";
+
+const Login = lazy(() => import("./views/public/Login"));
+const Register = lazy(() => import("./views/public/Register"));
+const Recovery = lazy(() => import("./views/public/Recovery"));
+
+const Users = lazy(() => import("./views/admin/Users"));
+const DataGroup = lazy(() => import("./views/admin/DataGroup"));
+const Organizations = lazy(() => import("./views/admin/Organizations"));
+
+const NotFound = lazy(() => import("./views/misc/NotFound"));
+
+const Dashboard = lazy(() => import("./views/user/Dashboard"));
+const Profile = lazy(() => import("./views/user/Profile"));
 
 import "./App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";

@@ -2,7 +2,9 @@ import React from "react";
 
 import { Link } from "react-router-dom";
 
-import { Paper, TextField, Button } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
+import TextField from "@material-ui/core/TextField";
 
 import { Formik } from "formik";
 
