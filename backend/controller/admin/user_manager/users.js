@@ -20,7 +20,6 @@ const users = ({ router, UserModel }) => {
       .catch(next);
   });
 
-  // TODO : validate user entry
   router.put(ROUTE_ADMIN_USERS, (req, res, next) => {
     const { oldUser: { username }, newUser } = req.body;
 

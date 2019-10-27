@@ -38,7 +38,37 @@ let userSchema = new Schema({
   
   phoneNumber: String,
 
-  roles: { type: Array, default: [] },
+  // ?roles: { role: { level, occupieedOrganizations, occupiedLhins } }
+  roles: { 
+    type: Object, 
+    default: { 
+      DATA_MANAGER: {
+        scope: "N/A",
+        LHINs: [],
+        organizations: []
+      }, 
+      TEMPLAGE_MANAGER: {
+        scope: "N/A",
+        LHINs: [],
+        organizations: []
+      }, 
+      PACKAGE_MANAGER: {
+        scope: "N/A",
+        LHINs: [],
+        organizations: []
+      }, 
+      USER_MANAGER: {
+        scope: "N/A",
+        LHINs: [],
+        organizations: []
+      }, 
+      ORGANIZATION_MANAGER: {
+        scope: "N/A",
+        LHINs: [],
+        organizations: []
+      }
+    } 
+  },
 
   creationDate: { type: Date, default: Date.now, required: true },
   active: { type: Boolean, required: true, default: true },
@@ -49,3 +79,13 @@ let userSchema = new Schema({
 userSchema.plugin(passportLocalMongoose, { findByUsername, passwordValidator });
 
 export default model("User", userSchema);
+
+// Template manager
+// Cell Data manager
+// Organization manager
+// User manager
+// Package manager
+
+// Unsure: 
+// Sector manager
+// System manager

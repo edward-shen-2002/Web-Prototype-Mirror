@@ -4,7 +4,7 @@ import { Strategy as LocalStrategy } from "passport-local";
 
 import { secretOrKey } from "../config/jwt";
 
-import { ROLE_USER_MANAGER, ROLE_TEMPLATE_MANAGER, ROLE_DATA_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_PACKAGE_MANAGER } from "../constants/roles";
+import { ROLE_USER_MANAGER, ROLE_TEMPLATE_MANAGER, ROLE_DATA_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_PACKAGE_MANAGER, ROLE_LEVEL_NOT_APPLICABLE } from "../constants/roles";
 
 import { MESSAGE_ERROR_AUTH_FAIL, MESSAGE_ERROR_DATABASE, HTTP_ERROR_AUTH_FAIL, HTTP_ERROR_DATABASE, HTTP_ERROR_UNAUTHORIZED, MESSAGE_ERROR_ROLE_UNAUTHORIZED, MESSAGE_ERROR_CREDENTIALS } from "../constants/rest";
 import { PASSPORT_JWT, PASSPORT_LOGIN, PASSPORT_REGISTER } from "../constants/passport"
@@ -74,10 +74,14 @@ export const userAuthenticationMiddleware = ({ passport }) => (req, res, next) =
 
 const adminRoleMiddleware = (_req, res, next, role) => {
   const { user: { roles } } = res.locals;
-  if(roles.includes(role)) {
-    next();
-  } else {
+
+  const roleData = roles[role];
+
+  if(roleData.scope === ROLE_LEVEL_NOT_APPLICABLE) {
     res.status(HTTP_ERROR_UNAUTHORIZED).json({ message: MESSAGE_ERROR_ROLE_UNAUTHORIZED });
+  } else {
+    res.locals.roleData = roleData;
+    next();
   }
 };
 

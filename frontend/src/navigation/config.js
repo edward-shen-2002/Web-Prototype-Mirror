@@ -12,13 +12,14 @@ import {
   ROUTE_ADMIN_ORGANIZATION_TYPES
 } from "constants/routes";
 
+import { ROLE_LEVEL_NOT_APPLICABLE } from "constants/roles";
+
 const roleNavMap = {
   TEMPLATE_MANAGER: {
     name: "Templates",
     icon: "mdi mdi-note-multiple",
     children: [
-      { name: "All Templates", url: "/admin/workbooks/template", icon: "mdi mdi-table-large" },
-      { name: "Create Template", url: "/admin/workbooks/create", icon: "mdi mdi-table-large-plus" }
+      { name: "Templates", url: "/admin/workbooks/template", icon: "mdi mdi-table-large" }
     ]
   },
   DATA_MANAGER: {
@@ -34,15 +35,14 @@ const roleNavMap = {
     name: "Packages",
     icon: "mdi mdi-package-variant",
     children: [ 
-      { name: "All Packages", url: ROUTE_ADMIN_PACKAGE_PACKAGES, icon: "mdi mdi-package" },
-      // { name: "Create Package", url: "/admin/packages/create", icon: "mdi mdi-shape-square-plus" }
+      { name: "Packages", url: ROUTE_ADMIN_PACKAGE_PACKAGES, icon: "mdi mdi-package" },
     ]
   },
   USER_MANAGER: {
     name: "Users",
     icon: "mdi mdi-account",
     children: [
-      { name: "All Users", url: ROUTE_ADMIN_USER_USERS, icon: "mdi mdi-account-multiple" },
+      { name: "Users", url: ROUTE_ADMIN_USER_USERS, icon: "mdi mdi-account-multiple" },
       { name: "Registration", url: ROUTE_ADMIN_USER_REGISTRATION, icon: "mdi mdi-account" }
     ]
   },
@@ -57,15 +57,15 @@ const roleNavMap = {
 };
 
 const createAdminNavigation = (roles) => {
-  if(!roles.length) return [];
-
   let adminNav = [ { title: true, name: "Admin" } ];
 
-  roles.forEach((role) => {
-    const roleNav = roleNavMap[role];
-    
-    if(typeof roleNav !== "undefined") adminNav.push(roleNav);
-  });
+  for(let role in roles) {
+    if(roles[role].scope !== ROLE_LEVEL_NOT_APPLICABLE) {
+      const roleNav = roleNavMap[role];
+
+      if(typeof roleNav !== "undefined") adminNav.push(roleNav);
+    }
+  }
 
   return adminNav;
 };
