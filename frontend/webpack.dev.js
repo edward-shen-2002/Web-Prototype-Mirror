@@ -3,6 +3,9 @@ const merge = require("webpack-merge");
 
 module.exports = merge(common, {
   mode: "development",
+  output: {
+    publicPath: "/"
+  },
   devtool: 'inline-source-map',
   devServer: {
     contentBase: ".",

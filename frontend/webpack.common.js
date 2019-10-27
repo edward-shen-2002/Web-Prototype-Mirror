@@ -4,11 +4,6 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   entry: path.join(__dirname, "/src/index.js"),
-  output: {
-    // path: path.join(__dirname, "/dist"),
-    // filename: "webpack.bundle.js",
-    publicPath: "/"
-  },
   resolve: {
     alias: {
       constants: path.join(__dirname, "/src/constants"),

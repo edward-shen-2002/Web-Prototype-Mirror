@@ -10,8 +10,9 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 module.exports = merge(common, {
   mode: "production",
   output: {
+    filename: "[name].bundle.js",
+    chunkFilename: "[name].bundle.js",
     path: path.join(__dirname, "/build"),
-    filename: "webpack.bundle.js",
     publicPath: process.env.PUBLIC_URL
   },
   devtool: "source-map",
