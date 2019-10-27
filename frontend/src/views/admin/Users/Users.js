@@ -9,8 +9,6 @@ const MaterialTable = lazy(() => import("material-table"));
 import "./Users.scss";
 
 // TODO : Implement pagination
-// TODO : column editable function
-// TODO : Add data to the server
 const Users = () => {
   const [ users, setUsers ] = useState([]);
   const [ isDataFetched, setIsDataFetched ] = useState(false);
@@ -18,7 +16,7 @@ const Users = () => {
   useEffect(() => {
     if(!isDataFetched) {
       adminUserRoleAxios.get(REST_ADMIN_USERS)
-        .then(({ data: { data: { users } } }) => setUsers(users))
+        .then(({ data: { data: { users } } }) => setUsers(users.map((user) => ({ ...user, password: "" }))))
         .catch((error) => console.error(error));
       
       setIsDataFetched(true);
@@ -33,7 +31,7 @@ const Users = () => {
     { title: "Last Name", field: "lastName" },
     { title: "Password", field: "password" },
     { title: "Phone Number", field: "phoneNumber" },
-    { title: "Creation Date", field: "creationDate", type: "date", render: ({ creationDate }) => new Date(creationDate).toLocaleString() },
+    { title: "Creation Date", field: "creationDate", type: "date", render: ({ creationDate }) => new Date(creationDate).toLocaleDateString() },
     { title: "Active", field: "active", type: "boolean" }
   ];
 
@@ -41,9 +39,7 @@ const Users = () => {
     setTimeout(() => {
       adminUserRoleAxios.post(REST_ADMIN_USERS, { newUser })
       .then(() => {
-        newUser.password = undefined;
-
-        setUsers([ ...users, newUser ]);
+        setUsers([ ...users, { ...newUser, password: "" } ]);
         resolve();
       })
       .catch((error) => {
@@ -56,7 +52,7 @@ const Users = () => {
   const handleRowDelete = (oldUser) => new Promise((resolve, reject) => {
     setTimeout(() => {
       adminUserRoleAxios.delete(`${REST_ADMIN_USERS}/${oldUser.username}`)
-        .then((response) => {
+        .then(() => {
           const oldUserIndex = users.indexOf(oldUser);
           setUsers([ ...users.slice(0, oldUserIndex), ...users.slice(oldUserIndex + 1) ]);
           resolve();
@@ -70,10 +66,11 @@ const Users = () => {
 
   const handleRowUpdate = (newUser, oldUser) => new Promise((resolve, reject) => {
     setTimeout(() => {
+      console.log(newUser);
       adminUserRoleAxios.put(REST_ADMIN_USERS, { newUser, oldUser })
         .then(() => {
           const oldUserIndex = users.indexOf(oldUser);
-          setUsers([ ...users.slice(0, oldUserIndex), newUser, ...users.slice(oldUserIndex + 1) ]);
+          setUsers([ ...users.slice(0, oldUserIndex), { ...newUser, password: "" }, ...users.slice(oldUserIndex + 1) ]);
           resolve();
         })
         .catch((error) => {

@@ -25,7 +25,15 @@ const users = ({ router, UserModel }) => {
     const { oldUser: { username }, newUser } = req.body;
 
     UserModel.findOneAndUpdate({ username }, newUser)
-      .then(() => res.json({ message: "Successfully updated user" }))
+      .then(async (user) => {
+        const newPassword = newUser.password;
+        if(newPassword) {
+          await user.setPassword(newPassword);
+          await user.save();
+        }
+
+        res.json({ message: "Successfully updated user" });
+      })
       .catch((error) => res.status(409).json({ message: "An error occured - possible conflict or database failure", error }))
   });
 
