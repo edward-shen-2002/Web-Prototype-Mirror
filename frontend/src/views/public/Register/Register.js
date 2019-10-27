@@ -51,7 +51,7 @@ const RegisterForm = ({ handleRegister }) => (
   <Formik
     validationSchema={registerSchema}
     // initialValues={{ username: "", email: "", firstName: "", lastName: "", phoneNumber: "", password: "", passwordConfirm: "" }}
-    initialValues={{ username: "sampleuser", email: "@ontario.ca", firstName: "", lastName: "", phoneNumber: "", password: "password123", passwordConfirm: "password123" }}
+    initialValues={{ username: "sampleuser", email: "@ontario.ca", firstName: "", lastName: "", phoneNumber: "", password: "password123@", passwordConfirm: "password123@" }}
     onSubmit={(values, { setSubmitting, setErrors }) => handleRegister(values, setErrors, setSubmitting)}
   >
     {({ handleSubmit, handleChange, handleBlur, values, errors, touched }) => (
@@ -152,14 +152,14 @@ const RegisterForm = ({ handleRegister }) => (
 );
 
 const mapStateToProps = ({ app: { isOnline } }) => ({ isOnline });
-
+// { username, password, email, firstName, lastName, phoneNumber }
 const mapDispatchToProps = (dispatch) => ({ 
 // Prevent user from registering when already logged in
-  register: (isOnline, history, { username, password, email, firstName, lastName, phoneNumber }, setErrors, setSubmitting) => {
+  register: (isOnline, history, newUser, setErrors, setSubmitting) => {
     if(isOnline) {
       history.push(ROUTE_DASHBOARD);
     } else {
-      publicAxios.post(REST_REGISTER, { username, password, email, firstName, lastName, phoneNumber })
+      publicAxios.post(REST_REGISTER, { newUser: { ...newUser, passwordConfirm: undefined } })
         .then(({ data: { data } }) => loadUserState(dispatch, data))
         .catch((error) => console.log(error))
         .finally(() => setSubmitting(false))

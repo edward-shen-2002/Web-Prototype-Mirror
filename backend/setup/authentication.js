@@ -6,7 +6,7 @@ import { secretOrKey } from "../config/jwt";
 
 import { ROLE_USER_MANAGER, ROLE_TEMPLATE_MANAGER, ROLE_DATA_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_PACKAGE_MANAGER } from "../constants/roles";
 
-import { MESSAGE_ERROR_AUTH_FAIL, MESSAGE_ERROR_DATABASE, HTTP_ERROR_AUTH_FAIL, HTTP_ERROR_DATABASE, HTTP_ERROR_UNAUTHORIZED } from "../constants/rest";
+import { MESSAGE_ERROR_AUTH_FAIL, MESSAGE_ERROR_DATABASE, HTTP_ERROR_AUTH_FAIL, HTTP_ERROR_DATABASE, HTTP_ERROR_UNAUTHORIZED, MESSAGE_ERROR_ROLE_UNAUTHORIZED, MESSAGE_ERROR_CREDENTIALS } from "../constants/rest";
 import { PASSPORT_JWT, PASSPORT_LOGIN, PASSPORT_REGISTER } from "../constants/passport"
 
 /**
@@ -29,7 +29,7 @@ const loginAuthentication = ({ passport, UserModel }) => {
       if(error) {
         done(error);
       } else {
-        result ? done(null, result) : done(null, false, { message: "Unable to login user" });
+        result ? done(null, result) : done(null, false, { message: MESSAGE_ERROR_CREDENTIALS });
       }
     })
   }));
@@ -44,15 +44,12 @@ const loginAuthentication = ({ passport, UserModel }) => {
  * TODO : Validate attributes!
  */
 const registerAuthentication = ({ passport, UserModel }) => {
-  passport.use(PASSPORT_REGISTER, new LocalStrategy({ passReqToCallback: true, session: false }, (req, username, password, done) => {
-    const { email, firstName, lastName, phoneNumber } = req.body;
-    UserModel.register({ username, email, firstName, lastName, phoneNumber }, password, (error, result) => {
-      if(error) {
-        done(error);
-      } else {
-        result ? done(null, result) : done(null, false, { message: "Unable to register user" });
-      }
-    })
+  passport.use(PASSPORT_REGISTER, new LocalStrategy({ passReqToCallback: true, session: false }, (req, _username, password, done) => {
+    const { newUser } = req.body;
+
+    UserModel.register({ ...newUser, password: undefined }, password)
+      .then((user) => done(null, user))
+      .catch(done);
   }));
 };
 
@@ -63,11 +60,10 @@ export const userAuthenticationMiddleware = ({ passport }) => (req, res, next) =
   passport.authenticate(PASSPORT_JWT, { session: false }, (error, user, info) => {
     if(error) {
       console.error(MESSAGE_ERROR_DATABASE, error);
-      res.status(HTTP_ERROR_DATABASE).json({ default: error });
+      res.status(HTTP_ERROR_DATABASE).json({ message: MESSAGE_ERROR_DATABASE });
     } else if(info) {
       console.error(MESSAGE_ERROR_AUTH_FAIL, info);
-      res.status(HTTP_ERROR_AUTH_FAIL).json({ default: info });
-    
+      res.status(HTTP_ERROR_AUTH_FAIL).json({ message: MESSAGE_ERROR_AUTH_FAIL, error: info });
     // User found 
     } else {
       res.locals.user = user;
@@ -81,7 +77,7 @@ const adminRoleMiddleware = (_req, res, next, role) => {
   if(roles.includes(role)) {
     next();
   } else {
-    res.status(HTTP_ERROR_UNAUTHORIZED).json({ message: "You do not have the role to perform this action" });
+    res.status(HTTP_ERROR_UNAUTHORIZED).json({ message: MESSAGE_ERROR_ROLE_UNAUTHORIZED });
   }
 };
 

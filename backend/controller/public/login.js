@@ -19,7 +19,7 @@ const login = ({ router, passport }) => {
         res.json({ message: MESSAGE_SUCCESS_LOGIN, data: { token, user } });
       } else {
         console.error(info);
-        res.status(401).json({ message: MESSAGE_ERROR_CREDENTIALS, details: info });
+        res.status(401).json({ message: MESSAGE_ERROR_CREDENTIALS, error: info });
       }
     })(req, res, next);
   });
