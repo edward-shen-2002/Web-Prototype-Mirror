@@ -7,6 +7,23 @@ import {
   MESSAGE_SUCCESS_USERS_DELETE 
 } from "../../../constants/rest";
 
+import { ROLE_LEVEL_ADMIN, ROLE_LEVEL_LHIN, ROLE_LEVEL_ORGANIZATION } from "../../../constants/roles";
+
+const organizationsFilter = (organizations) => organizations.map((organization) => {
+  let _filter = {};
+
+  _filter[`organizations.${organization}`] = { $exists: true };
+
+  return _filter;
+});
+
+const LHINsFilter = (LHINs) => LHINs.map((LHIN) => {
+  let _filter = {};
+
+  _filter[`LHINs.${LHIN}`] = { $exists: true };
+
+  return _filter;
+});
 
 // TODO : Limit search/fetch/actions by role scope
 // How to have pagination?
@@ -14,11 +31,35 @@ import {
 // https://itnext.io/back-end-pagination-with-nodejs-expressjs-mongodb-mongoose-ejs-3566994356e0
 const users = ({ router, UserModel }) => {
   router.get(ROUTE_ADMIN_USERS, (_req, res, next) => {
-    // const { roleData } = res.locals;
+    const { roleData } = res.locals;
+    let { scope, LHINs, organizations } = roleData;
 
-    UserModel.find({})
-      .then((users) => res.json({ message: MESSAGE_SUCCESS_USERS, data: { users } }))
-      .catch(next);
+    let shouldPerformQuery = true;
+    let filter;
+
+    if(scope === ROLE_LEVEL_ADMIN) {
+      filter = {};
+    } else if(scope === ROLE_LEVEL_LHIN) {
+      if(LHINs.length || organizations.length) {
+        filter = { $or: [ ...LHINsFilter(LHINs), ...organizationsFilter(organizations) ] };
+      } else {
+        shouldPerformQuery = false;
+      }
+    } else {
+      if(organizations.length) {
+        filter = { $or: [ ...organizationsFilter(organizations) ] };
+      } else {
+        shouldPerformQuery = false;
+      }
+    }
+
+    if(shouldPerformQuery) {
+      UserModel.find(filter)
+        .then((users) => res.json({ message: MESSAGE_SUCCESS_USERS, data: { users } }))
+        .catch(next);
+    } else {
+      res.json({ message: MESSAGE_SUCCESS_USERS, data: { users: [] } });
+    }
   });
 
   router.post(ROUTE_ADMIN_USERS, (req, res, next) => {

@@ -159,7 +159,7 @@ const mapDispatchToProps = (dispatch) => ({
     if(isOnline) {
       history.push(ROUTE_DASHBOARD);
     } else {
-      publicAxios.post(REST_REGISTER, { newUser: { ...newUser, passwordConfirm: undefined } })
+      publicAxios.post(REST_REGISTER, { ...newUser, passwordConfirm: undefined })
         .then(({ data: { data } }) => loadUserState(dispatch, data))
         .catch((error) => console.log(error))
         .finally(() => setSubmitting(false))

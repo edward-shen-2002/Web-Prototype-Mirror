@@ -51,7 +51,7 @@ const AppPageContent = ({ isOnline }) => (
       <PrivillegedRoute path={ROUTE_RECOVERY} requiredState={OFFLINE} Component={Recovery}/>
 
       {/* User Routes */}
-      <PrivillegedRoute path={ROUTE_DASHBOARD} requiredState={ONLINE} Component={Dashboard}/>
+      <PrivillegedRoute exact path={ROUTE_DASHBOARD} requiredState={ONLINE} Component={Dashboard}/>
       <PrivillegedRoute path={ROUTE_PROFILE} requiredState={ONLINE} Component={Profile}/>
 
       {/* Admin Routes */}

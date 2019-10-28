@@ -12,3 +12,10 @@ Registration Requests
 - Add a "Banned" or "Rejected" list of users
 - User managers can add or remove users from the list
 - Banned users cannot apply to organizations to which they are banned
+
+Production
+===========================
+- Process Manager: https://expressjs.com/en/advanced/pm.html
+- Security: https://expressjs.com/en/advanced/best-practice-security.html
+- Best Practices: https://expressjs.com/en/advanced/best-practice-performance.html
+- Health Checks and Graceful Shutdown: https://expressjs.com/en/advanced/healthcheck-graceful-shutdown.html

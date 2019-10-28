@@ -12,8 +12,9 @@ import { ONLINE, OFFLINE } from "constants/states";
 
 const mapStateToProps = ({ app: { isOnline, shouldReconnect }, domain: { account } }) => ({ isOnline, shouldReconnect, account });
 
-export let PrivillegedRoute = ({ isOnline, account, requiredRole, requiredState, path, Component }) => (
+export let PrivillegedRoute = ({ isOnline, account, requiredRole, requiredState, exact, path, Component }) => (
   <Route 
+    exact={exact}
     path={path} 
     render={(props) => {
       // Make username the parameter to determine if user is fetched for now...

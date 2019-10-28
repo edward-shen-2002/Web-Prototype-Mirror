@@ -40,6 +40,9 @@ let userSchema = new Schema({
   
   phoneNumber: String,
 
+  organizations: { type: Object, default: {} },
+  LHINs: { type: Object, default: {} },
+
   roles: { 
     type: Object, 
     default: { 
@@ -87,11 +90,9 @@ let userSchema = new Schema({
   },
 
   creationDate: { type: Date, default: Date.now, required: true },
-  active: { type: Boolean, required: true, default: true },
+  active: { type: Boolean, required: true, default: true }
+}, { minimize: false });
 
-  organization: { type: Array, default: [] }
-});
-
-userSchema.plugin(passportLocalMongoose, { findByUsername, passwordValidator });
+userSchema.plugin(passportLocalMongoose, { usernameUnique: false, findByUsername, passwordValidator });
 
 export default model("User", userSchema);

@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { connect } from "react-redux";
 
 import Fade from "@material-ui/core/Fade";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
+import Tooltip from "@material-ui/core/Tooltip";
 import Chip from "@material-ui/core/Chip";
 
 import uniqid from "uniqid";
+
+import { ROLE_LEVEL_ADMIN, ROLE_LEVEL_LHIN, ROLE_LEVEL_ORGANIZATION, ROLE_LEVEL_NOT_APPLICABLE, } from "constants/roles";
 
 import "./Profile.scss";
 
@@ -28,15 +31,54 @@ const BasicInformation = ({ username, email, firstName, lastName, phoneNumber })
   </div>
 );
 
-const AccountInformation = ({ active, creationDate, roles }) => (
+const TooltipTitle = ({ scope, LHINs, organizations }) => (
   <div>
-    <Typography className="profile__subtitle" variant="button" gutterBottom>Account Information</Typography>
-    <hr/>
-    <Field label="Active" value={active.toString()}/>
-    <Field label="Creation Date" value={<time>{new Date(creationDate).toLocaleString()}</time>}/>
-    <Field label="Roles" value={roles.map((role) => <Chip key={uniqid()} className="profile__role" variant="outlined" label={role}/>)}/>
+    <div>Scope: {scope}</div>
+    <div>LHINs: {LHINs}</div>
+    <div>Organizations: {organizations}</div>
   </div>
 );
+
+const AccountInformation = ({ active, creationDate, roles }) => {
+
+  const RelevantRoles = () => (
+    Object.keys(roles)
+      .filter(({ scope }) => scope !== ROLE_LEVEL_NOT_APPLICABLE)
+      .map((role) => {
+        let roleData = roles[role];
+        let { scope, LHINs, organizations } = roleData;
+
+        let color;
+
+        if(scope === ROLE_LEVEL_ADMIN) {
+          color = "primary";
+
+          LHINs = "*";
+          organizations = "*";
+        } else if(scope === ROLE_LEVEL_LHIN) {
+          color = "secondary";
+        } else {
+          color = "default";
+        }
+
+        return (
+          <Tooltip key={uniqid()} title={<TooltipTitle scope={scope} LHINs={LHINs} organizations={organizations}/>}>
+            <Chip className="profile__role" label={role} color={color}/>
+          </Tooltip>
+        );
+      })
+  );
+
+  return (
+    <div>
+      <Typography className="profile__subtitle" variant="button" gutterBottom>Account Information</Typography>
+      <hr/>
+      <Field label="Active" value={active.toString()}/>
+      <Field label="Creation Date" value={<time>{new Date(creationDate).toLocaleString()}</time>}/>
+      <Field label="Roles" value={<RelevantRoles/>}/>
+    </div>
+  );
+};
 
 const mapStateToProps = ({ domain: { account } }) => ({ account });
 

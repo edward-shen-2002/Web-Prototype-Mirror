@@ -45,7 +45,7 @@ const loginAuthentication = ({ passport, UserModel }) => {
  */
 const registerAuthentication = ({ passport, UserModel }) => {
   passport.use(PASSPORT_REGISTER, new LocalStrategy({ passReqToCallback: true, session: false }, (req, _username, password, done) => {
-    const { newUser } = req.body;
+    const newUser = req.body;
 
     UserModel.register({ ...newUser, password: undefined }, password)
       .then((user) => done(null, user))
