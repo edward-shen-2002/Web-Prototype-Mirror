@@ -7,10 +7,20 @@ import {
   MESSAGE_SUCCESS_USERS_DELETE 
 } from "../../../constants/rest";
 
+
+// TODO : Limit search/fetch/actions by role scope
 // How to have pagination?
 // UserModel.estimateDocumentCount();
 // https://itnext.io/back-end-pagination-with-nodejs-expressjs-mongodb-mongoose-ejs-3566994356e0
 const users = ({ router, UserModel }) => {
+  router.get(ROUTE_ADMIN_USERS, (_req, res, next) => {
+    // const { roleData } = res.locals;
+
+    UserModel.find({})
+      .then((users) => res.json({ message: MESSAGE_SUCCESS_USERS, data: { users } }))
+      .catch(next);
+  });
+
   router.post(ROUTE_ADMIN_USERS, (req, res, next) => {
     const { newUser } = req.body;
     const { password } = newUser;
@@ -34,12 +44,6 @@ const users = ({ router, UserModel }) => {
         res.json({ message: MESSAGE_SUCCESS_USERS_UPDATE });
       })
       .catch(next)
-  });
-
-  router.get(ROUTE_ADMIN_USERS, (_req, res, next) => {
-    UserModel.find({})
-      .then((users) => res.json({ message: MESSAGE_SUCCESS_USERS, data: { users } }))
-      .catch(next);
   });
 
   router.delete(`${ROUTE_ADMIN_USERS}/:username`, (req, res, next) => {

@@ -2,6 +2,8 @@ import { Schema, model } from "mongoose";
 
 import passportLocalMongoose from "passport-local-mongoose";
 
+import { ROLE_LEVEL_NOT_APPLICABLE } from "../../constants/roles";
+
 // TODO : Replace with https://github.com/dropbox/zxcvbn
 const passwordValidator = (password, cb) => {
   // Symbols by ASCII ranges (http://www.asciitable.com/)
@@ -38,32 +40,46 @@ let userSchema = new Schema({
   
   phoneNumber: String,
 
-  // ?roles: { role: { level, occupieedOrganizations, occupiedLhins } }
   roles: { 
     type: Object, 
     default: { 
-      DATA_MANAGER: {
-        scope: "N/A",
+      TEMPLATE_MANAGER: {
+        scope: ROLE_LEVEL_NOT_APPLICABLE,
         LHINs: [],
         organizations: []
       }, 
-      TEMPLAGE_MANAGER: {
-        scope: "N/A",
+      DATA_MANAGER: {
+        scope: ROLE_LEVEL_NOT_APPLICABLE,
         LHINs: [],
         organizations: []
       }, 
       PACKAGE_MANAGER: {
-        scope: "N/A",
+        scope: ROLE_LEVEL_NOT_APPLICABLE,
         LHINs: [],
         organizations: []
       }, 
       USER_MANAGER: {
-        scope: "N/A",
+        scope: ROLE_LEVEL_NOT_APPLICABLE,
         LHINs: [],
         organizations: []
       }, 
       ORGANIZATION_MANAGER: {
-        scope: "N/A",
+        scope: ROLE_LEVEL_NOT_APPLICABLE,
+        LHINs: [],
+        organizations: []
+      },
+      LHIN_MANAGER: {
+        scope: ROLE_LEVEL_NOT_APPLICABLE,
+        LHINs: [],
+        organizations: []
+      },
+      SECTOR_MANAGER: {
+        scope: ROLE_LEVEL_NOT_APPLICABLE,
+        LHINs: [],
+        organizations: []
+      },
+      SYSTEM_MANAGER: {
+        scope: ROLE_LEVEL_NOT_APPLICABLE,
         LHINs: [],
         organizations: []
       }
@@ -79,13 +95,3 @@ let userSchema = new Schema({
 userSchema.plugin(passportLocalMongoose, { findByUsername, passwordValidator });
 
 export default model("User", userSchema);
-
-// Template manager
-// Cell Data manager
-// Organization manager
-// User manager
-// Package manager
-
-// Unsure: 
-// Sector manager
-// System manager

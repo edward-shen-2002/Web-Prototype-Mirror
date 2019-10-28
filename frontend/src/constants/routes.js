@@ -24,3 +24,9 @@ export const ROUTE_ADMIN_PACKAGE_PACKAGES = `${ROUTE_ADMIN_PACKAGE}/packages`;
 export const ROUTE_ADMIN_ORGANIZATION = `${ROUTE_ADMIN_ROOT}/organization_manager`;
 export const ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS = `${ROUTE_ADMIN_ORGANIZATION}/organizations`;
 export const ROUTE_ADMIN_ORGANIZATION_TYPES = `${ROUTE_ADMIN_ORGANIZATION}/types`;
+
+export const ROUTE_ADMIN_LHIN = `${ROUTE_ADMIN_ROOT}/LHIN_manager`;
+export const ROUTE_ADMIN_LHIN_LHIN = `${ROUTE_ADMIN_LHIN}/LHINs`;
+
+export const ROUTE_ADMIN_SECTOR = `${ROUTE_ADMIN_ROOT}/sector_manager`;
+export const ROUTE_ADMIN_SECTOR_SECTOR = `${ROUTE_ADMIN_SECTOR}/sectors`;

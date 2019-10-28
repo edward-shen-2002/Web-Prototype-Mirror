@@ -9,7 +9,11 @@ import {
   ROUTE_ADMIN_PACKAGE_PACKAGES,
 
   ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS,
-  ROUTE_ADMIN_ORGANIZATION_TYPES
+  ROUTE_ADMIN_ORGANIZATION_TYPES,
+
+  ROUTE_ADMIN_LHIN_LHIN,
+
+  ROUTE_ADMIN_SECTOR_SECTOR
 } from "constants/routes";
 
 import { ROLE_LEVEL_NOT_APPLICABLE } from "constants/roles";
@@ -51,9 +55,23 @@ const roleNavMap = {
     icon: "mdi mdi-account-group",
     children: [
       { name: "Organizations", url: ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS, icon: "mdi mdi-account-group" },
-      { name: "Organization Types", url: ROUTE_ADMIN_ORGANIZATION_TYPES, icon: "mdi mdi-account-network" }
+      { name: "Types", url: ROUTE_ADMIN_ORGANIZATION_TYPES, icon: "mdi mdi-account-network" }
     ]
-  }
+  },
+  LHIN_MANAGER: {
+    name: "LHIN",
+    icon: "mdi mdi-account-group",
+    children: [
+      { name: "LHIN", url: ROUTE_ADMIN_LHIN_LHIN, icon: "mdi mdi-account-group" }
+    ]
+  },
+  SECTOR_MANAGER: {
+    name: "Sector",
+    icon: "mdi mdi-account-group",
+    children: [
+      { name: "Sector", url: ROUTE_ADMIN_SECTOR_SECTOR, icon: "mdi mdi-account-group" }
+    ]
+  },
 };
 
 const createAdminNavigation = (roles) => {
