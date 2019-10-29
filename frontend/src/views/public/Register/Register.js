@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { connect } from "react-redux";
 
@@ -6,7 +6,10 @@ import { Link } from "react-router-dom";
 
 import { Formik } from "formik";
 
-import { Paper, TextField, Button } from "@material-ui/core";
+import Paper from "@material-ui/core/Paper";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Slide from "@material-ui/core/Slide";
 
 import { publicAxios } from "tools/rest";
 import { loadUserState } from "tools/redux";
@@ -47,136 +50,156 @@ const LoginLinkButton = () => (
   </Link>
 );
 
-const RegisterForm = ({ handleRegister }) => (
-  <Formik
-    validationSchema={registerSchema}
-    // initialValues={{ username: "", email: "", firstName: "", lastName: "", phoneNumber: "", password: "", passwordConfirm: "" }}
-    initialValues={{ username: "sampleuser", email: "@ontario.ca", firstName: "", lastName: "", phoneNumber: "", password: "password123@", passwordConfirm: "password123@" }}
-    onSubmit={(values, { setSubmitting, setErrors }) => handleRegister(values, setErrors, setSubmitting)}
-  >
-    {({ handleSubmit, handleChange, handleBlur, values, errors, touched }) => (
-      <Paper className="register__container">
-        <form className="register__form" onSubmit={handleSubmit}>
-          <h1>Register</h1>
-          <TextField 
-            className="register__field" 
-            label="*Username" 
-            id="username" 
-            name="username" 
-            type="username" 
-            autoFocus={true} 
-            value={values.username} 
-            onChange={handleChange} 
-            error={touched.username && !!errors.username} 
-            helperText={touched.username && errors.username}
-            onBlur={handleBlur}
-          />
-          <TextField 
-            className="register__field" 
-            label="*Email" 
-            id="email" 
-            name="email" 
-            type="email" 
-            value={values.email} 
-            onChange={handleChange} 
-            error={touched.email && !!errors.email} 
-            helperText={touched.email && errors.email}
-            onBlur={handleBlur}
-          />
-          <TextField 
-            className="register__field" 
-            label="First Name" 
-            id="firstName" 
-            name="firstName" 
-            type="text" 
-            value={values.firstName} 
-            onChange={handleChange} 
-            error={touched.firstName && !!errors.firstName} 
-            helperText={touched.firstName && errors.firstName}
-            onBlur={handleBlur}
-          />
-          <TextField 
-            className="register__field" 
-            label="Last Name" 
-            id="lastName" 
-            name="lastName" 
-            type="text" 
-            value={values.lastName} 
-            onChange={handleChange} 
-            error={touched.lastName && !!errors.lastName} 
-            helperText={touched.lastName && errors.lastName}
-            onBlur={handleBlur}
-          />
-          <TextField 
-            className="register__field" 
-            label="Phone Number" 
-            id="phoneNumber" 
-            name="phoneNumber" 
-            type="tel" 
-            value={values.phoneNumber} 
-            onChange={handleChange} 
-            error={touched.phoneNumber && !!errors.phoneNumber} 
-            helperText={touched.phoneNumber && errors.phoneNumber}
-            onBlur={handleBlur}
-          />
-          <TextField 
-            className="register__field" 
-            label="*Password" 
-            id="password" 
-            name="password" 
-            type="password" 
-            value={values.password} 
-            onChange={handleChange} 
-            error={touched.password && !!errors.password} 
-            helperText={touched.password && errors.password}
-            onBlur={handleBlur}
-          />
-          <TextField 
-            className="register__field" 
-            label="*Confirm Password" 
-            id="passwordConfirm" 
-            name="passwordConfirm" 
-            type="password" 
-            value={values.passwordConfirm} 
-            onChange={handleChange} 
-            error={touched.passwordConfirm && !!errors.passwordConfirm} 
-            helperText={touched.passwordConfirm && errors.passwordConfirm}
-            onBlur={handleBlur}
-          />
-          <Button className="register__button" variant="contained" color="primary" type="submit">Register</Button>
-          <LoginLinkButton/>
-        </form>
-      </Paper>
-    )}
-  </Formik>
+const RegisterForm = ({ visisble, initialValues, handleRegister }) => (
+  <Slide direction="right" in={visisble} appear={false} mountOnEnter unmountOnExit>
+    <Formik
+      validationSchema={registerSchema}
+      // initialValues={{ username: "", email: "", firstName: "", lastName: "", phoneNumber: "", password: "", passwordConfirm: "" }}
+      initialValues={initialValues}
+      onSubmit={(values, { setSubmitting, setErrors }) => handleRegister(values, setErrors, setSubmitting)}
+      >
+      {({ handleSubmit, handleChange, handleBlur, values, errors, touched }) => (
+        <Paper className="register__container">
+          <form className="register__form" onSubmit={handleSubmit}>
+            <h1>Register</h1>
+            <TextField 
+              className="register__field" 
+              label="*Username" 
+              id="username" 
+              name="username" 
+              type="username" 
+              autoFocus={true} 
+              value={values.username} 
+              onChange={handleChange} 
+              error={touched.username && !!errors.username} 
+              helperText={touched.username && errors.username}
+              onBlur={handleBlur}
+              />
+            <TextField 
+              className="register__field" 
+              label="*Email" 
+              id="email" 
+              name="email" 
+              type="email" 
+              value={values.email} 
+              onChange={handleChange} 
+              error={touched.email && !!errors.email} 
+              helperText={touched.email && errors.email}
+              onBlur={handleBlur}
+            />
+            <TextField 
+              className="register__field" 
+              label="First Name" 
+              id="firstName" 
+              name="firstName" 
+              type="text" 
+              value={values.firstName} 
+              onChange={handleChange} 
+              error={touched.firstName && !!errors.firstName} 
+              helperText={touched.firstName && errors.firstName}
+              onBlur={handleBlur}
+            />
+            <TextField 
+              className="register__field" 
+              label="Last Name" 
+              id="lastName" 
+              name="lastName" 
+              type="text" 
+              value={values.lastName} 
+              onChange={handleChange} 
+              error={touched.lastName && !!errors.lastName} 
+              helperText={touched.lastName && errors.lastName}
+              onBlur={handleBlur}
+            />
+            <TextField 
+              className="register__field" 
+              label="Phone Number" 
+              id="phoneNumber" 
+              name="phoneNumber" 
+              type="tel" 
+              value={values.phoneNumber} 
+              onChange={handleChange} 
+              error={touched.phoneNumber && !!errors.phoneNumber} 
+              helperText={touched.phoneNumber && errors.phoneNumber}
+              onBlur={handleBlur}
+              />
+            <TextField 
+              className="register__field" 
+              label="*Password" 
+              id="password" 
+              name="password" 
+              type="password" 
+              value={values.password} 
+              onChange={handleChange} 
+              error={touched.password && !!errors.password} 
+              helperText={touched.password && errors.password}
+              onBlur={handleBlur}
+              />
+            <TextField 
+              className="register__field" 
+              label="*Confirm Password" 
+              id="passwordConfirm" 
+              name="passwordConfirm" 
+              type="password" 
+              value={values.passwordConfirm} 
+              onChange={handleChange} 
+              error={touched.passwordConfirm && !!errors.passwordConfirm} 
+              helperText={touched.passwordConfirm && errors.passwordConfirm}
+              onBlur={handleBlur}
+            />
+            <Button className="register__button" variant="contained" color="primary" type="submit">Register</Button>
+            <LoginLinkButton/>
+          </form>
+        </Paper>
+      )}
+    </Formik>
+  </Slide>
+);
+
+const EmailVerification = ({ registrationData: { email }, visisble, handleReturnToRegister }) => (
+  <Slide direction="left" in={visisble} mountOnEnter unmountOnExit>
+    <Paper>
+      <p>An email has been sent to {email}</p>
+      <Button onClick={handleReturnToRegister}>Go Back</Button>
+    </Paper>
+  </Slide>
 );
 
 const mapStateToProps = ({ app: { isOnline } }) => ({ isOnline });
 // { username, password, email, firstName, lastName, phoneNumber }
 const mapDispatchToProps = (dispatch) => ({ 
 // Prevent user from registering when already logged in
-  register: (isOnline, history, newUser, setErrors, setSubmitting) => {
+  register: (isOnline, history, newUser, setErrors, setSubmitting, setRegisterView, setRegistrationData) => {
     if(isOnline) {
       history.push(ROUTE_DASHBOARD);
     } else {
-      publicAxios.post(REST_REGISTER, { ...newUser, passwordConfirm: undefined })
-        .then(({ data: { data } }) => loadUserState(dispatch, data))
-        .catch((error) => console.log(error))
-        .finally(() => setSubmitting(false))
+      setRegistrationData(newUser);
+      setRegisterView(false);
+      // TODO : Store registration in a registration table. Do not store it in users table
+      // publicAxios.post(REST_REGISTER, { ...newUser, passwordConfirm: undefined })
+      //   .then(({ data: { data } }) => loadUserState(dispatch, data))
+      //   .catch((error) => console.log(error))
+      //   .finally(() => setSubmitting(false))
     }
   }
 });
 
 let Register = ({ isOnline, register, history }) => {
-  const handleRegister = (values, setErrors, setSubmitting) => register(isOnline, history, values, setErrors, setSubmitting);
+  const [ registerView, setRegisterView ] = useState(true);
+  const [ registrationData, setRegistrationData ] = useState({ username: "sampleuser", email: "e@ontario.ca", firstName: "", lastName: "", phoneNumber: "", password: "password123@", passwordConfirm: "password123@" });
+
+  const handleRegister = (values, setErrors, setSubmitting) => register(isOnline, history, values, setErrors, setSubmitting, setRegisterView, setRegistrationData);
+
+  const handleReturnToRegister = () => setRegisterView(true);
 
   return (
     <div className="register">
-      <RegisterForm isOnline={isOnline} handleRegister={handleRegister}/>
+      <RegisterForm initialValues={registrationData} visisble={registerView} handleRegister={handleRegister}/>
+      <EmailVerification registrationData={registrationData} visisble={!registerView} handleReturnToRegister={handleReturnToRegister}/>
     </div>
   ); 
 };
 
 Register = connect(mapStateToProps, mapDispatchToProps)(Register);
 
-export default Register
+export default Register;

@@ -84,7 +84,7 @@ const Users = () => {
     <div className="usersPage">
       <MaterialTable
         className="usersTable"
-        title="All Users"
+        title="Users"
         columns={columns}
         data={users}
         editable={{ onRowAdd: handleRowAdd, onRowUpdate: handleRowUpdate, onRowDelete: handleRowDelete }}
