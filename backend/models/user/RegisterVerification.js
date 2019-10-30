@@ -5,6 +5,8 @@ import { Schema, model } from "mongoose";
 /**
  * Expires in 7 days
  * ? Temporarily store password in plain-text. Once the admin approves the user, it turns into salt/hash in to another table for registered users
+ * 
+ * Expiry: https://stackoverflow.com/questions/22106271/mongoose-change-ttl-for-a-single-document
  */
 let registerVerificationSchema = new Schema({
   username: { type: String, lowercase: true, required: true },
@@ -18,6 +20,8 @@ let registerVerificationSchema = new Schema({
   phoneNumber: { type: String, default: "" },
 
   creationDate: { type: Date, default: Date.now, required: true }
-}, { createdAt: { type: Date, expires: 604800000 }, minimize: false });
+}, { timestamps: true, minimize: false });
+
+registerVerificationSchema.index({ createdAt: Date.now }, { expireAfterSeconds: 604800000 });
 
 export default model("RegisterVerification", registerVerificationSchema);
