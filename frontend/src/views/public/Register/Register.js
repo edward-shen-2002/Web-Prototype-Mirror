@@ -74,7 +74,7 @@ const RegisterForm = ({ visisble, initialValues, handleRegister }) => (
               error={touched.username && !!errors.username} 
               helperText={touched.username && errors.username}
               onBlur={handleBlur}
-              />
+            />
             <TextField 
               className="register__field" 
               label="*Email" 
@@ -176,10 +176,12 @@ const mapDispatchToProps = (dispatch) => ({
       setRegistrationData(newUser);
       setRegisterView(false);
       // TODO : Store registration in a registration table. Do not store it in users table
-      // publicAxios.post(REST_REGISTER, { ...newUser, passwordConfirm: undefined })
-      //   .then(({ data: { data } }) => loadUserState(dispatch, data))
-      //   .catch((error) => console.log(error))
-      //   .finally(() => setSubmitting(false))
+      publicAxios.post(REST_REGISTER, { ...newUser, passwordConfirm: undefined })
+        .then(({ data: { data } }) => {
+          // loadUserState(dispatch, data);
+        })
+        .catch((error) => console.log(error))
+        .finally(() => setSubmitting(false))
     }
   }
 });

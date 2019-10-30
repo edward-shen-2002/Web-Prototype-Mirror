@@ -3,7 +3,7 @@ import { generateToken } from "../../tools/jwt";
 import { PASSPORT_LOGIN } from "../../constants/passport";
 import { ROUTE_LOGIN } from "../../constants/rest";
 
-import { MESSAGE_SUCCESS_LOGIN, MESSAGE_ERROR_CREDENTIALS } from "../../constants/rest";
+import { MESSAGE_SUCCESS_LOGIN, MESSAGE_ERROR_CREDENTIALS } from "../../constants/messages";
 
 const login = ({ router, passport }) => {
   router.post(ROUTE_LOGIN, (req, res, next) => {

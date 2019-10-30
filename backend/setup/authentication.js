@@ -4,9 +4,13 @@ import { Strategy as LocalStrategy } from "passport-local";
 
 import { secretOrKey } from "../config/jwt";
 
+import { isObjectEmpty } from "../tools/misc";
+import { emailValidator, usernameValidator, passwordValidator, existingUsersValidator } from "../tools/validation";
+
 import { ROLE_USER_MANAGER, ROLE_TEMPLATE_MANAGER, ROLE_DATA_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_PACKAGE_MANAGER, ROLE_LEVEL_NOT_APPLICABLE } from "../constants/roles";
 
-import { MESSAGE_ERROR_AUTH_FAIL, MESSAGE_ERROR_DATABASE, HTTP_ERROR_AUTH_FAIL, HTTP_ERROR_DATABASE, HTTP_ERROR_UNAUTHORIZED, MESSAGE_ERROR_ROLE_UNAUTHORIZED, MESSAGE_ERROR_CREDENTIALS } from "../constants/rest";
+import { HTTP_ERROR_CONFLICT, HTTP_ERROR_AUTH_FAIL, HTTP_ERROR_DATABASE, HTTP_ERROR_UNAUTHORIZED } from "../constants/rest";
+import { MESSAGE_ERROR_HACKER, MESSAGE_ERROR_CONFLICT_USERNAME, MESSAGE_ERROR_CONFLICT_EMAIL, MESSAGE_ERROR_AUTH_FAIL, MESSAGE_ERROR_DATABASE, MESSAGE_ERROR_ROLE_UNAUTHORIZED, MESSAGE_ERROR_CREDENTIALS } from "../constants/messages";
 import { PASSPORT_JWT, PASSPORT_LOGIN, PASSPORT_REGISTER } from "../constants/passport"
 
 /**
@@ -39,17 +43,49 @@ const loginAuthentication = ({ passport, UserModel }) => {
  * Passport authentication for Register. Receives a username, password, name, and email from the user's request.
  * 
  * Checks the database for existing `username` and `email`. Usernames and emails must be unique.
- * 
- * TODO: Specify conflicts!!!
- * TODO : Validate attributes!
  */
-const registerAuthentication = ({ passport, UserModel }) => {
-  passport.use(PASSPORT_REGISTER, new LocalStrategy({ passReqToCallback: true, session: false }, (req, _username, password, done) => {
+const registerAuthentication = ({ passport, UserModel, RegistrationModel, RegisterVerificationModel }) => {
+  passport.use(PASSPORT_REGISTER, new LocalStrategy({ passReqToCallback: true, session: false }, async (req, username, password, done) => {
     const newUser = req.body;
+    const { email, roles } = newUser;
 
-    UserModel.register({ ...newUser, password: undefined }, password)
-      .then((user) => done(null, user))
-      .catch(done);
+    if(roles) return done({ error: MESSAGE_ERROR_HACKER });
+
+    const validatedUsername = usernameValidator(username);
+    const validatedEmail = emailValidator(email);
+    const validatedPassword = passwordValidator(password);
+
+    let error;
+
+    if(!validatedUsername.valid) {
+      error = { username: validatedUsername.error };
+    } else if(!validatedEmail.valid) {
+      error = { ...error, email: validatedEmail.error };
+    } else if(!validatedPassword.valid) {
+      error = { ...error, password: validatedPassword.error };
+    }
+
+    if(!error) {
+      try {
+        // Check for conflicts
+        const registeredUsersConflicts = await UserModel.find({ $or: [ { username }, { email }] });
+        const unapprovedRegisteredUsersConflicts = await RegistrationModel.find({ $or: [ { username }, { email }] });
+
+        const validatedRegisteredUsersConflicts = existingUsersValidator(registeredUsersConflicts, username, email);
+        const validatedUnapprovedRegisteredUsersConflicts = existingUsersValidator(unapprovedRegisteredUsersConflicts, username, email);
+
+        if(!validatedRegisteredUsersConflicts.valid || !validatedUnapprovedRegisteredUsersConflicts.valid) {
+          done({ ...validatedRegisteredUsersConflicts.error, ...validatedUnapprovedRegisteredUsersConflicts.error });
+        } else {
+          await RegisterVerificationModel.create({ ...newUser });
+          done();
+        }
+      } catch(error) {
+        done(error);
+      }
+    } else {
+      done(error);
+    }
   }));
 };
 

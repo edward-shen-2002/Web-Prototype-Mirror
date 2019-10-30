@@ -89,7 +89,8 @@ let userSchema = new Schema({
     } 
   },
 
-  creationDate: { type: Date, default: Date.now, required: true },
+  creationDate: { type: Date, required: true },
+  approvedDate: { type: Date, default: Date.now, required: true },
   active: { type: Boolean, required: true, default: true }
 }, { minimize: false });
 

@@ -1,7 +1,8 @@
-import { generateToken } from "../../tools/jwt";
+import nodemailer from "nodemailer";
 
 import { PASSPORT_REGISTER } from "../../constants/passport";
-import { ROUTE_REGISTER, MESSAGE_SUCCESS_REGISTRATION } from "../../constants/rest";
+import { ROUTE_REGISTER } from "../../constants/rest";
+import { MESSAGE_SUCCESS_REGISTRATION } from "../../constants/messages";
 
 const register = ({ router, passport }) => {
   router.post(ROUTE_REGISTER, (req, res, next) => {
@@ -10,9 +11,7 @@ const register = ({ router, passport }) => {
       if(error) {
         next(error);
       } else {
-        const token = generateToken(user.username);
-
-        res.json({ message: MESSAGE_SUCCESS_REGISTRATION, data: { user, token } });
+        res.json({ message: MESSAGE_SUCCESS_REGISTRATION });
       } 
     })(req, res, next);
   });

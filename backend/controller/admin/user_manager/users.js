@@ -1,11 +1,11 @@
-import { 
-  ROUTE_ADMIN_USERS, 
+import { ROUTE_ADMIN_USERS } from "../../../constants/rest";
 
+import { 
   MESSAGE_SUCCESS_USERS, 
   MESSAGE_SUCCESS_USERS_CREATE,
   MESSAGE_SUCCESS_USERS_UPDATE,
   MESSAGE_SUCCESS_USERS_DELETE 
-} from "../../../constants/rest";
+} from "../../../constants/messages";
 
 import { ROLE_LEVEL_ADMIN, ROLE_LEVEL_LHIN, ROLE_LEVEL_ORGANIZATION } from "../../../constants/roles";
 

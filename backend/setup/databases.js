@@ -12,13 +12,16 @@ import { DATABASE_KEY } from "../config/database";
  *   wipeDatabase: default false
  *   createDummyUser: default false
  */
-const setupMongoose = async (options, { UserModel, DataGroupModel }) => {
+const setupMongoose = async (options, { UserModel, DataGroupModel, OrganizationModel, RegistrationModel, RegisterVerificationModel }) => {
   const handleCreateDatabase = async () => {
     console.log("MongoDB: Creating collections in database");
     try {
 
       await UserModel.createCollection();
       await DataGroupModel.createCollection();
+      await OrganizationModel.createCollection();
+      await RegistrationModel.createCollection();
+      await RegisterVerificationModel.createCollection();
 
       console.log("MongoDB: Successfully created collections");
     } catch(error) {
@@ -39,8 +42,11 @@ const setupMongoose = async (options, { UserModel, DataGroupModel }) => {
     }
   };
 
+  // TODO: Create dummy data
   // Create or overwrite sample data in the database. The database must be already set up.
-  const handleCreateDummyUser = async () => {};
+  const handleCreateDummyUser = async () => {
+
+  };
 
   const init = async ({ createDatabase, wipeDatabase, createDummyUser }) => {
     console.log("MongoDB: Setting up database");

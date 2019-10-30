@@ -1,8 +1,6 @@
-import { 
-  ROUTE_ADMIN_DATAGROUPS,
+import { ROUTE_ADMIN_DATAGROUPS } from "../../../constants/rest";
 
-  MESSAGE_SUCCESS_DATAGROUPS,
-} from "../../../constants/rest";
+import { MESSAGE_SUCCESS_DATAGROUPS } from "../../../constants/messages";
 
 // TODO : Pagination
 const datagroups = ({ router, DataGroupModel }) => {
