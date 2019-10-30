@@ -88,6 +88,11 @@ const registerAuthentication = ({ passport, UserModel, RegistrationModel, Regist
   }));
 };
 
+// TODO!!
+export const verificationMiddleware = ({ UserModel, RegistrationModel, RegisterVerificationModel }) => (req, res, next) => {
+  next();
+};
+
 /**
  * Authentication middleware which checks for valid tokens
  */

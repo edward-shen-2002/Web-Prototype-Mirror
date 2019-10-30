@@ -1,7 +1,7 @@
 import { generateToken } from "../../tools/jwt";
 
 import { PASSPORT_LOGIN } from "../../constants/passport";
-import { ROUTE_LOGIN } from "../../constants/rest";
+import { ROUTE_LOGIN, HTTP_ERROR_AUTH_FAIL } from "../../constants/rest";
 
 import { MESSAGE_SUCCESS_LOGIN, MESSAGE_ERROR_CREDENTIALS } from "../../constants/messages";
 
@@ -19,7 +19,7 @@ const login = ({ router, passport }) => {
         res.json({ message: MESSAGE_SUCCESS_LOGIN, data: { token, user } });
       } else {
         console.error(info);
-        res.status(401).json({ message: MESSAGE_ERROR_CREDENTIALS, error: info });
+        res.status(HTTP_ERROR_AUTH_FAIL).json({ message: MESSAGE_ERROR_CREDENTIALS, error: info });
       }
     })(req, res, next);
   });

@@ -1,10 +1,15 @@
 const PORT = 3000;
-export const SERVER_LOCAL = `http://localhost:${PORT}`;
+const BACKEND_LOCAL = `http://localhost:${PORT}`;
+
+export const SERVER_APP = process.env.NODE_ENV === "production" ? process.env.SERVER_URL : BACKEND_LOCAL;
 
 /* Route groups and routes - separated by auth or security */
 export const REST_GROUP_PUBLIC = "/public";
 export const REST_LOGIN = "/login";
 export const REST_REGISTER = "/register";
+
+export const REST_GROUP_VERIFICATION = "/verification";
+export const REST_VERIFICATION = "/verification";
 
 export const REST_GROUP_AUTH = "/jwt";
 export const REST_RECONNECT = "/reconnect";

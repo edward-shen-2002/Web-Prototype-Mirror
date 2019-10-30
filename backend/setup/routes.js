@@ -1,19 +1,20 @@
 import { Router } from "express";
 
-import { userAuthenticationMiddleware, userRoleMiddleware, organizationRoleMiddleware, dataRoleMiddleware, generalErrorHandler} from "./authentication";
+import { userAuthenticationMiddleware, verificationMiddleware, userRoleMiddleware, organizationRoleMiddleware, dataRoleMiddleware, generalErrorHandler} from "./authentication";
 
 // Route controllers
 import loginController from "../controller/public/login";
 import registerController from "../controller/public/register";
 import reconnectController from "../controller/auth/reconnect";
 import logoutController from "../controller/auth/logout";
+import verificationController from "../controller/verification/verification";
 
 // Admin controllers
 import usersController from "../controller/admin/user_manager/users";
 
 import dataGroupsController from "../controller/admin/data_manager/dataGroups";
 
-import { ROUTE_GROUP_PUBLIC, ROUTE_GROUP_AUTH, ROUTE_GROUP_ADMIN, ROUTE_GROUP_ADMIN_USER, ROUTE_GROUP_ADMIN_DATA} from "../constants/rest";
+import { ROUTE_GROUP_PUBLIC, ROUTE_GROUP_AUTH, ROUTE_GROUP_ADMIN, ROUTE_GROUP_ADMIN_USER, ROUTE_GROUP_ADMIN_DATA, ROUTE_GROUP_VERIFICATION } from "../constants/rest";
 
 /**
  * Routes which require user authentication -- must pass through the authentication middleware.
@@ -31,7 +32,20 @@ const authRoutes = ({ passport }) => {
 };
 
 /**
- * Routes which do not require authentication.
+ * Registration verification
+ */
+const verificationRoutes = (helpers) => {
+  let router = new Router();
+
+  router.use(verificationMiddleware({ ...helpers }));
+  
+  verificationController({ ...helpers, router });
+
+  return router;
+};
+
+/**
+ * Routes which do not require logged in authentication.
  */
 const publicRoutes = (helpers) => {
   let router = new Router();
@@ -87,6 +101,8 @@ const setupRouteGroups = (helpers) => {
 
   app.use(ROUTE_GROUP_PUBLIC, publicRoutes(helpers));
   app.use(ROUTE_GROUP_AUTH, authRoutes(helpers));
+
+  app.use(ROUTE_GROUP_VERIFICATION, verificationRoutes(helpers));
 
   // Admin routes
   // ?Is separating roles to different routes necessary?

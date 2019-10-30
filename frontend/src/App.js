@@ -18,6 +18,7 @@ import {
   ROUTE_LOGIN, 
   ROUTE_PROFILE, 
   ROUTE_REGISTER, 
+  ROUTE_VERIFICATION,
   ROUTE_RECOVERY, 
   ROUTE_ADMIN_USER_USERS, 
   ROUTE_ADMIN_USER_REGISTRATION, 
@@ -26,13 +27,15 @@ import {
   ROUTE_ADMIN_PACKAGE_PACKAGES 
 } from "constants/routes";
 
-import Navigation from "./navigation";
-import AppHeader from "./header";
 import Loading from "./Loading";
+
+const Navigation = lazy(() => import("./Navigation"));
+const AppHeader = lazy(() => import("./Header"));
 
 // Public Views
 const Login = lazy(() => import("./views/public/Login"));
 const Register = lazy(() => import("./views/public/Register"));
+const Verification = lazy(() => import("./views/public/Verification"));
 const Recovery = lazy(() => import("./views/public/Recovery"));
 
 // Admin Views
@@ -62,6 +65,7 @@ const AppPageContent = ({ isOnline }) => (
       {/* Public Routes */}
       <PrivillegedRoute path={ROUTE_LOGIN} requiredState={OFFLINE} Component={Login}/>
       <PrivillegedRoute path={ROUTE_REGISTER} requiredState={OFFLINE} Component={Register}/>
+      <PrivillegedRoute path={ROUTE_VERIFICATION} requiredState={OFFLINE} Component={Verification}/>
       <PrivillegedRoute path={ROUTE_RECOVERY} requiredState={OFFLINE} Component={Recovery}/>
 
       {/* User Routes */}

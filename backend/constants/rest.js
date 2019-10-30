@@ -1,7 +1,16 @@
+const PORT = 3003;
+
+const FRONTEND_LOCAL = `http://localhost:${PORT}`;
+
+export const FRONTEND_SERVER = process.env.NODE_ENV === "production" ? process.env.PUBLIC_URL : FRONTEND_LOCAL;
+
 /* Router groups and routes- separated by auth or security */
 export const ROUTE_GROUP_PUBLIC = "/public";
 export const ROUTE_LOGIN = "/login";
 export const ROUTE_REGISTER = "/register";
+
+export const ROUTE_GROUP_VERIFICATION = "/verification";
+export const ROUTE_VERFICATION = "/verification";
 
 export const ROUTE_GROUP_AUTH = "/jwt";
 export const ROUTE_RECONNECT = "/reconnect";

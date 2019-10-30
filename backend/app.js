@@ -25,7 +25,7 @@ const _init = async () => {
 
   // Initialize database, authentication, routes, etc ...
   await serverSetup(app, passport);
-  
+
   app.listen(app.get("port"), () => console.log(`App listening on port ${app.get("port")}`));
 };
 

@@ -1,12 +1,12 @@
 import axios from "axios";
 
-import { SERVER_LOCAL, REST_GROUP_PUBLIC, REST_GROUP_AUTH, REST_GROUP_ADMIN_USER, REST_GROUP_ADMIN_DATA, REST_GROUP_ADMIN_ORGANIZATION } from "constants/rest";
-
-const SERVER_APP = process.env.NODE_ENV === "production" ? process.env.SERVER_URL : SERVER_LOCAL;
+import { SERVER_APP, REST_GROUP_PUBLIC, REST_GROUP_AUTH, REST_GROUP_ADMIN_USER, REST_GROUP_ADMIN_DATA, REST_GROUP_ADMIN_ORGANIZATION, REST_GROUP_VERIFICATION } from "constants/rest";
 
 export const publicAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_PUBLIC}` });
 
 export const authAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_AUTH}` });
+
+export const verificationAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_VERIFICATION}` });
 
 export const adminUserRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_USER}` });
 

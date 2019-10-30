@@ -1,0 +1,11 @@
+@import "~styles/mixins/layouts";
+
+.verificationContent {
+  width: 400px;
+  text-align: center;
+  padding: 20px;
+}
+
+.verificationContainer { 
+  @include center;
+}

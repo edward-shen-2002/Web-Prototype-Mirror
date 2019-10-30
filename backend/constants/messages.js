@@ -12,6 +12,7 @@ export const MESSAGE_ERROR_HACKER = "Please do not try and hack the website";
 // export const ERROR_AUTH_PROCESS = "Error occured during authentication";
 
 export const MESSAGE_SUCCESS_REGISTRATION = "Successfully registered";
+export const MESSAGE_SUCCESS_VERIFICATION = "Your account has been verified. A request has been sent to an admin. Please wait for an admin to approve your registration.";
 export const MESSAGE_SUCCESS_LOGIN = "Successfully logged in";
 export const MESSAGE_SUCCESS_LOGOUT = "Successfully logged out";
 export const MESSAGE_SUCCESS_RECONNECT = "Successfully reconnected";
