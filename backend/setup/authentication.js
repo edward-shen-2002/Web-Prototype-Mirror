@@ -77,8 +77,7 @@ const registerAuthentication = ({ passport, UserModel, RegistrationModel, Regist
         if(!validatedRegisteredUsersConflicts.valid || !validatedUnapprovedRegisteredUsersConflicts.valid) {
           done({ ...validatedRegisteredUsersConflicts.error, ...validatedUnapprovedRegisteredUsersConflicts.error });
         } else {
-          await RegisterVerificationModel.create({ ...newUser });
-          done();
+          done(null, newUser);
         }
       } catch(error) {
         done(error);
