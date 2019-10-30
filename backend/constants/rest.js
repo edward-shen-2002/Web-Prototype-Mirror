@@ -31,5 +31,6 @@ export const HTTP_SUCCESS = 200;
 export const HTTP_ERROR_SYNTAX = 400;
 export const HTTP_ERROR_AUTH_FAIL = 401;
 export const HTTP_ERROR_UNAUTHORIZED = 403;
+export const HTTP_ERROR_NOT_FOUND = 404;
 export const HTTP_ERROR_CONFLICT = 409;
 export const HTTP_ERROR_DATABASE = 500;

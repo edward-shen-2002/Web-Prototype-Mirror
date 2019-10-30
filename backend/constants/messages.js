@@ -4,6 +4,8 @@ export const MESSAGE_ERROR_CONFLICT_PARAMS = "One or more params is/are already 
 export const MESSAGE_ERROR_AUTH_FAIL = "User unauthorized";
 export const MESSAGE_ERROR_CONFLICT_EMAIL = "Email is already taken";
 export const MESSAGE_ERROR_CONFLICT_USERNAME = "Username is already taken";
+export const MESSAGE_ERROR_CONFLICT_VERIFICATION = "The username or email associated with this account has already been activated or taken";
+export const MESSAGE_ERROR_VERIFICATION_FAIL = "The account you are trying to activate has already been activated, does not exist, or has the activation period has expired";
 export const MESSAGE_ERROR_ROLE_UNAUTHORIZED = "You do not have the role to perform this action";
 export const MESSAGE_ERROR_HACKER = "Please do not try and hack the website";
 

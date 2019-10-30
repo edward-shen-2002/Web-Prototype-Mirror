@@ -24,21 +24,23 @@ const VerificationContent = ({ message, isDataFetched, handleGoToLogin, handleGo
   <Paper className="verificationContent">
     <p>{message}</p>
     {!isDataFetched && <CircularProgress/>}
-    <ReturnButtons handleGoToLogin={handleGoToLogin} handleGoToRegister={handleGoToRegister}/>
+    {isDataFetched && <ReturnButtons handleGoToLogin={handleGoToLogin} handleGoToRegister={handleGoToRegister}/>}
   </Paper>
 );
 
+// TODO : Possible issue with setTimeout and setIsDataFetched
 const Verification = ({ history, match: { params: { _id } } }) => {
   const [ isDataFetched, setIsDataFetched ] = useState(false);
   const [ message, setMessage ] = useState("Activating your account...");
 
   useEffect(() => {
-    if(!isDataFetched){
-      verificationAxios.get(`${REST_VERIFICATION}/${_id}`)
-        .then(({ data: { message } }) => setMessage(message))
-        .catch((error) => setMessage(JSON.stringify(error)));
-
-      setIsDataFetched(true);
+    if(!isDataFetched) {
+      setTimeout(() => {
+        verificationAxios.get(`${REST_VERIFICATION}/${_id}`)
+          .then(({ data: { message } }) => setMessage(message))
+          .catch(({ response: { data: { message } } }) => setMessage(message))
+        setIsDataFetched(true);
+      }, 3000); 
     }
   });
 

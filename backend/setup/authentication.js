@@ -9,8 +9,8 @@ import { emailValidator, usernameValidator, passwordValidator, existingUsersVali
 
 import { ROLE_USER_MANAGER, ROLE_TEMPLATE_MANAGER, ROLE_DATA_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_PACKAGE_MANAGER, ROLE_LEVEL_NOT_APPLICABLE } from "../constants/roles";
 
-import { HTTP_ERROR_CONFLICT, HTTP_ERROR_AUTH_FAIL, HTTP_ERROR_DATABASE, HTTP_ERROR_UNAUTHORIZED } from "../constants/rest";
-import { MESSAGE_ERROR_HACKER, MESSAGE_ERROR_CONFLICT_USERNAME, MESSAGE_ERROR_CONFLICT_EMAIL, MESSAGE_ERROR_AUTH_FAIL, MESSAGE_ERROR_DATABASE, MESSAGE_ERROR_ROLE_UNAUTHORIZED, MESSAGE_ERROR_CREDENTIALS } from "../constants/messages";
+import { HTTP_ERROR_CONFLICT, HTTP_ERROR_AUTH_FAIL, HTTP_ERROR_DATABASE, HTTP_ERROR_UNAUTHORIZED, HTTP_ERROR_NOT_FOUND } from "../constants/rest";
+import { MESSAGE_ERROR_HACKER, MESSAGE_ERROR_CONFLICT_VERIFICATION, MESSAGE_ERROR_VERIFICATION_FAIL, MESSAGE_ERROR_AUTH_FAIL, MESSAGE_ERROR_DATABASE, MESSAGE_ERROR_ROLE_UNAUTHORIZED, MESSAGE_ERROR_CREDENTIALS } from "../constants/messages";
 import { PASSPORT_JWT, PASSPORT_LOGIN, PASSPORT_REGISTER } from "../constants/passport"
 
 /**
@@ -44,7 +44,7 @@ const loginAuthentication = ({ passport, UserModel }) => {
  * 
  * Checks the database for existing `username` and `email`. Usernames and emails must be unique.
  */
-const registerAuthentication = ({ passport, UserModel, RegistrationModel, RegisterVerificationModel }) => {
+const registerAuthentication = ({ passport, UserModel, RegistrationModel }) => {
   passport.use(PASSPORT_REGISTER, new LocalStrategy({ passReqToCallback: true, session: false }, async (req, username, password, done) => {
     const newUser = req.body;
     const { email, roles } = newUser;
@@ -89,8 +89,37 @@ const registerAuthentication = ({ passport, UserModel, RegistrationModel, Regist
 };
 
 // TODO!!
-export const verificationMiddleware = ({ UserModel, RegistrationModel, RegisterVerificationModel }) => (req, res, next) => {
-  next();
+export const verificationMiddleware = ({ UserModel, RegistrationModel, RegisterVerificationModel }) => async (req, res, next) => {
+  const urlPaths = req.path.split("/");
+
+  if(urlPaths.length === 3) {
+    let _id = urlPaths[2];
+    try {
+      const userToVerify = await RegisterVerificationModel.findById(_id);
+
+      if(!userToVerify) return res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_VERIFICATION_FAIL });
+      
+      const { username, email } = userToVerify;
+
+      const registeredUsersConflicts = await UserModel.find({ $or: [ { username }, { email }] });
+      const unapprovedRegisteredUsersConflicts = await RegistrationModel.find({ $or: [ { username }, { email }] });
+
+      const validatedRegisteredUsersConflicts = existingUsersValidator(registeredUsersConflicts, username, email);
+      const validatedUnapprovedRegisteredUsersConflicts = existingUsersValidator(unapprovedRegisteredUsersConflicts, username, email);
+
+      if(!validatedRegisteredUsersConflicts.valid || !validatedUnapprovedRegisteredUsersConflicts.valid) {
+        res.status(HTTP_ERROR_CONFLICT).json({ message: MESSAGE_ERROR_CONFLICT_VERIFICATION, error: { ...validatedRegisteredUsersConflicts.error, ...validatedUnapprovedRegisteredUsersConflicts.error } });
+      } else {
+        res.locals.newUser = userToVerify.toObject();
+        next();
+      }
+    } catch(error) {
+      console.log(error);
+      res.status(HTTP_ERROR_DATABASE).json({ message: MESSAGE_ERROR_DATABASE, error });
+    }
+  } else {
+    res.status(HTTP_ERROR_NOT_FOUND).end();
+  }
 };
 
 /**
@@ -100,7 +129,7 @@ export const userAuthenticationMiddleware = ({ passport }) => (req, res, next) =
   passport.authenticate(PASSPORT_JWT, { session: false }, (error, user, info) => {
     if(error) {
       console.error(MESSAGE_ERROR_DATABASE, error);
-      res.status(HTTP_ERROR_DATABASE).json({ message: MESSAGE_ERROR_DATABASE });
+      res.status(HTTP_ERROR_DATABASE).json({ message: MESSAGE_ERROR_DATABASE, error });
     } else if(info) {
       console.error(MESSAGE_ERROR_AUTH_FAIL, info);
       res.status(HTTP_ERROR_AUTH_FAIL).json({ message: MESSAGE_ERROR_AUTH_FAIL, error: info });
