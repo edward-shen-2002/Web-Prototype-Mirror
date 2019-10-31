@@ -32,6 +32,4 @@ A dummy admin is automatically created, with the ```username: sampleuser``` and 
 
 A test email from ```Ethereal``` is used to accept all incoming email messages.
 
-Login with ```email: julio32@ethereal.email``` and ```password: qdjK2XgTyyHtR9zScz```.
-
-Login [here](https://ethereal.email/login).
+Login with ```email: julio32@ethereal.email``` and ```password: qdjK2XgTyyHtR9zScz``` [here](https://ethereal.email/login).
