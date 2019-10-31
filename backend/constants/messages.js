@@ -9,6 +9,7 @@ export const MESSAGE_ERROR_VERIFICATION_FAIL = "The account you are trying to ac
 export const MESSAGE_ERROR_ROLE_UNAUTHORIZED = "You do not have the role to perform this action";
 export const MESSAGE_ERROR_HACKER = "Please do not try and hack the website";
 export const MESSAGE_ERROR_NOT_FOUND = "Resource not found";
+export const MESSAGE_ERROR_USER_UNAPPROVED = "The account is awaiting approval from an admin";
 // export const ERROR_PASSWORD = "Incorrect password";
 // export const ERROR_SYNTAX_PARAMS = "Invalid params syntax";
 // export const ERROR_AUTH_PROCESS = "Error occured during authentication";

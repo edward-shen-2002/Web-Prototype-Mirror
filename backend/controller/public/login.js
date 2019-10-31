@@ -1,7 +1,7 @@
 import { generateToken } from "../../tools/jwt";
 
 import { PASSPORT_LOGIN } from "../../constants/passport";
-import { ROUTE_LOGIN, HTTP_ERROR_AUTH_FAIL } from "../../constants/rest";
+import { ROUTE_LOGIN, HTTP_ERROR_AUTH_FAIL, HTTP_ERROR_UNAUTHORIZED } from "../../constants/rest";
 
 import { MESSAGE_SUCCESS_LOGIN, MESSAGE_ERROR_CREDENTIALS } from "../../constants/messages";
 
@@ -9,7 +9,11 @@ const login = ({ router, passport }) => {
   router.post(ROUTE_LOGIN, (req, res, next) => {
     passport.authenticate(PASSPORT_LOGIN, (error, user, info) => {
       if(error) {
-        next(error);
+        if(error.general) {
+          res.status(HTTP_ERROR_UNAUTHORIZED).json({ message: error.general });
+        } else {
+          next(error);
+        }
       } else if(user) {
         user.hash = undefined;
         user.salt = undefined;

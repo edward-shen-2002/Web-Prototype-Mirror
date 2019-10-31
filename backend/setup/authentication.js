@@ -11,7 +11,17 @@ import { emailValidator, usernameValidator, passwordValidator, existingUsersVali
 import { ROLE_USER_MANAGER, ROLE_TEMPLATE_MANAGER, ROLE_DATA_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_PACKAGE_MANAGER, ROLE_LEVEL_NOT_APPLICABLE } from "../constants/roles";
 
 import { HTTP_ERROR_CONFLICT, HTTP_ERROR_AUTH_FAIL, HTTP_ERROR_DATABASE, HTTP_ERROR_UNAUTHORIZED, HTTP_ERROR_NOT_FOUND } from "../constants/rest";
-import { MESSAGE_ERROR_HACKER, MESSAGE_ERROR_CONFLICT_VERIFICATION, MESSAGE_ERROR_VERIFICATION_FAIL, MESSAGE_ERROR_AUTH_FAIL, MESSAGE_ERROR_DATABASE, MESSAGE_ERROR_ROLE_UNAUTHORIZED, MESSAGE_ERROR_CREDENTIALS, MESSAGE_ERROR_NOT_FOUND } from "../constants/messages";
+import { 
+  MESSAGE_ERROR_HACKER, 
+  MESSAGE_ERROR_CONFLICT_VERIFICATION, 
+  MESSAGE_ERROR_VERIFICATION_FAIL, 
+  MESSAGE_ERROR_AUTH_FAIL, 
+  MESSAGE_ERROR_DATABASE, 
+  MESSAGE_ERROR_ROLE_UNAUTHORIZED, 
+  MESSAGE_ERROR_NOT_FOUND, 
+  MESSAGE_ERROR_CREDENTIALS,
+  MESSAGE_ERROR_USER_UNAPPROVED 
+} from "../constants/messages";
 import { PASSPORT_JWT, PASSPORT_LOGIN, PASSPORT_REGISTER } from "../constants/passport"
 
 /**
@@ -28,15 +38,23 @@ const userAuthentication = ({ passport, UserModel }) => {
   );
 };
 
-const loginAuthentication = ({ passport, UserModel }) => {
+const loginAuthentication = ({ passport, UserModel, RegistrationModel }) => {
   passport.use(PASSPORT_LOGIN, new LocalStrategy({ session: false }, async (username, password, done) => {
-    UserModel.authenticate()(username, password, (error, result) => {
-      if(error) {
-        done(error);
-      } else {
-        result ? done(null, result) : done(null, false, { message: MESSAGE_ERROR_CREDENTIALS });
-      }
-    })
+    try {
+      const unapprovedUser = await RegistrationModel.findOne({ username });
+    
+      if(unapprovedUser) return done({ general: MESSAGE_ERROR_USER_UNAPPROVED });
+
+      UserModel.authenticate()(username, password, (error, result) => {
+        if(error) {
+          done(error);
+        } else {
+          result ? done(null, result) : done(null, false, { message: MESSAGE_ERROR_CREDENTIALS });
+        }
+      });
+    } catch(error) {
+      done(error);
+    }
   }));
 };
 
