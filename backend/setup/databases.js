@@ -95,7 +95,9 @@ const setupMongoose = async (options, { UserModel, DataGroupModel, OrganizationM
     
       const sampleUser = { username: "sampleuser", email: "sampleuser@hotmail.com", password: "password123@", roles: fullAdminControlRoles };
 
-      await UserModel.register({ ...sampleUser, password: undefined }, sampleUser.password);
+      const registeredUser = await UserModel.findOne({ username: "sampleuser" });
+
+      if(!registeredUser) await UserModel.register({ ...sampleUser, password: undefined }, sampleUser.password);
 
       console.log("MongoDB: Successfully created dummy admin");
     } catch(error) {
