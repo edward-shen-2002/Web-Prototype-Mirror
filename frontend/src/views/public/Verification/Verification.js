@@ -14,7 +14,7 @@ import { ROUTE_LOGIN, ROUTE_REGISTER } from "constants/routes";
 import "./Verification.scss";
 
 const ReturnButtons = ({ handleGoToLogin, handleGoToRegister  }) => (
-  <ButtonGroup >
+  <ButtonGroup fullWidth>
     <Button onClick={handleGoToLogin}>Go to login</Button>
     <Button onClick={handleGoToRegister}>Go to Register</Button>
   </ButtonGroup>

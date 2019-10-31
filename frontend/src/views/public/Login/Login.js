@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 
 import { connect } from "react-redux";
 
@@ -45,10 +45,10 @@ const LoginButtons = () => (
   </div>
 );
 
-const LoginForm = ({ handleLogin }) => (
+const LoginForm = ({ handleLogin, generalError }) => (
   <Formik
     initialValues={{ username: "sampleuser", password: "password123" }}
-    onSubmit={(values, { setSubmitting, setErrors }) => handleLogin(values, setErrors, setSubmitting)}
+    onSubmit={(values, { setSubmitting }) => handleLogin(values, setSubmitting)}
   >
     {({ handleSubmit, handleChange, values }) => (
       <Paper className="login__container">
@@ -57,6 +57,7 @@ const LoginForm = ({ handleLogin }) => (
           <p className="text-muted">Sign In to your account</p>
           <TextField className="login__field" label="Username" id="username" name="username" type="username" autoComplete="username" autoFocus={true} value={values.username} onChange={handleChange}/>
           <TextField className="login__field" label="Password" id="password" name="password" type="password" autoComplete="current-password" value={values.password} onChange={handleChange}/>
+          {generalError && <p className="login__error">{generalError}</p>}
           <LoginButtons/>
         </form>
       </Paper>
@@ -67,7 +68,7 @@ const LoginForm = ({ handleLogin }) => (
 const mapStateToProps = ({ isOnline }) => ({ isOnline });
 
 const mapDispatchToProps = (dispatch) => ({
-  login: (isOnline, history, { username, password }, _setErrors, setSubmitting) => {
+  login: (isOnline, history, { username, password }, setSubmitting, setGeneralError) => {
     if(isOnline) {
       history.push(ROUTE_DASHBOARD);
     } else {
@@ -77,17 +78,21 @@ const mapDispatchToProps = (dispatch) => ({
           saveToken(token);
           loadUserState(dispatch, { user });
         })
-        .catch(() => setSubmitting(false));
+        .catch(({ response: { data: { general, message } } }) => {
+          setGeneralError(general ? general : message);
+          setSubmitting(false);
+        });
     }
   }
 });
 
 let Login = ({ isOnline, history, login }) => {
-  const handleLogin = (values, setErrors, setSubmitting) => login(isOnline, history, values, setErrors, setSubmitting);
+  const [ generalError, setGeneralError ] = useState("");
+  const handleLogin = (values, setSubmitting) => login(isOnline, history, values, setSubmitting, setGeneralError);
 
   return (
     <div className="login">
-      <LoginForm handleLogin={handleLogin}/>
+      <LoginForm handleLogin={handleLogin} generalError={generalError}/>
     </div>
   );
 };

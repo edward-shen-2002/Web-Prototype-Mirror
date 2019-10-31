@@ -41,7 +41,7 @@ const userAuthentication = ({ passport, UserModel }) => {
 const loginAuthentication = ({ passport, UserModel, RegistrationModel }) => {
   passport.use(PASSPORT_LOGIN, new LocalStrategy({ session: false }, async (username, password, done) => {
     try {
-      const unapprovedUser = await RegistrationModel.findOne({ username });
+      const unapprovedUser = await RegistrationModel.findOne({ username, password });
     
       if(unapprovedUser) return done({ general: MESSAGE_ERROR_USER_UNAPPROVED });
 

@@ -9,10 +9,10 @@ const verification = ({ router, RegistrationModel, RegisterVerificationModel }) 
   router.get(`${ROUTE_VERFICATION}/:id`, async (req, res, next) => {
     const { newUser } = res.locals;
     const { username, email, _id } = newUser;
-
+    console.log("newuser", newUser);
     try { 
       await RegistrationModel.create({ ...newUser, _id: undefined })
-      await RegisterVerificationModel.remove({ $or: [ { _id }, { username }, { email } ] });
+      await RegisterVerificationModel.deleteMany({ $or: [ { _id }, { username }, { email } ] });
 
       res.json({ message: MESSAGE_SUCCESS_VERIFICATION });
     } catch(error) {

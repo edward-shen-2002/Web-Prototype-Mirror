@@ -157,7 +157,7 @@ const RegisterForm = ({ visisble, initialValues, handleRegister }) => (
 );
 
 const ReturnButtons = ({ handleReturnToRegister, handleReturnToLogin }) => (
-  <ButtonGroup >
+  <ButtonGroup fullWidth>
     <Button onClick={handleReturnToRegister}>Go Back</Button>
     <Button onClick={handleReturnToLogin}>Login</Button>
   </ButtonGroup>
