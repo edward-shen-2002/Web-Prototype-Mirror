@@ -3,7 +3,7 @@ import { Schema, model } from "mongoose";
 const ObjectId = Schema.Types.ObjectId;
 
 let organizationTypeSchema = new Schema({
-  groupNumber: { type: Number, required: true },
+  code: { type: String, required: true },
   name: { type: String, required: true },
   organizations: [ { type: ObjectId, ref: "Organization" } ]
 });

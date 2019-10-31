@@ -11,6 +11,7 @@ import verificationController from "../controller/verification/verification";
 
 // Admin controllers
 import usersController from "../controller/admin/user_manager/users";
+import registrationController from "../controller/admin/user_manager/registrations";
 
 import dataGroupsController from "../controller/admin/data_manager/dataGroups";
 
@@ -73,6 +74,7 @@ const userRoleRoutes = (helpers) => {
   router.use(userRoleMiddleware());
 
   usersController({ ...helpers, router });
+  registrationController({ ...helpers, router });
 
   return router;
 };

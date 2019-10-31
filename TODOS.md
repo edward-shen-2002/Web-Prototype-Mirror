@@ -5,6 +5,8 @@
 - [ ] Users Pagination
 - [ ] Token blacklist
 - [ ] User validation (registration or user management)
+- [ ] Scope for approving registration
+- [ ] Scope for modifying user
 - [ ] Webpack hostname - route production build with public URL (CRA can do it)
 
 ## Unprioritized

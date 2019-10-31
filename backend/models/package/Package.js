@@ -3,8 +3,6 @@ import { Schema, model } from "mongoose";
 const ObjectId = Schema.Types.ObjectId;
 
 let packageSchema = new Schema({
-  groupNumber: { type: Number, required: true },
-
   // Package name
   name: { type: String, required: true },
 

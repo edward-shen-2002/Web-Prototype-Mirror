@@ -22,6 +22,7 @@ import {
   MESSAGE_ERROR_CREDENTIALS,
   MESSAGE_ERROR_USER_UNAPPROVED 
 } from "../constants/messages";
+
 import { PASSPORT_JWT, PASSPORT_LOGIN, PASSPORT_REGISTER } from "../constants/passport"
 
 /**
@@ -114,7 +115,7 @@ export const verificationMiddleware = ({ UserModel, RegistrationModel, RegisterV
     let _id = urlPaths[2];
 
     try {
-      if(!isValidMongooseObjectId(_id)) return res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_NOT_FOUND })
+      if(!isValidMongooseObjectId(_id)) return res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_NOT_FOUND });
 
       const userToVerify = await RegisterVerificationModel.findById(_id);
 
@@ -162,14 +163,17 @@ export const userAuthenticationMiddleware = ({ passport }) => (req, res, next) =
 };
 
 const adminRoleMiddleware = (_req, res, next, role) => {
-  const { user: { roles } } = res.locals;
+  const { user } = res.locals;
+  const { roles } = user;
 
   const roleData = roles[role];
 
   if(roleData.scope === ROLE_LEVEL_NOT_APPLICABLE) {
     res.status(HTTP_ERROR_UNAUTHORIZED).json({ message: MESSAGE_ERROR_ROLE_UNAUTHORIZED });
   } else {
-    res.locals.roleData = roleData;
+    res.locals = { user, roleData };
+    // res.locals.user = user;
+    // res.locals.roleData = roleData;
     next();
   }
 };
@@ -190,6 +194,7 @@ export const dataRoleMiddleware = () => (req, res, next) => adminRoleMiddleware(
 // TODO : Handle other errors. Currently assumes database error occured previously.
 // Final errors route. To be used for handling errors that occur at the end of the router stack.
 export const generalErrorHandler = () => (error, _req, res, _next) => {
+  console.error("General error handler: ", error);
   res.status(HTTP_ERROR_DATABASE).json({ message: MESSAGE_ERROR_DATABASE, error });
 };
 

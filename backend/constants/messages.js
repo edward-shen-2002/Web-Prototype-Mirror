@@ -24,3 +24,4 @@ export const MESSAGE_SUCCESS_USERS_DELETE = "Successfully deleted user";
 export const MESSAGE_SUCCESS_DATAGROUPS = "Successfully fetched data groups";
 export const MESSAGE_SUCCESS_USERS_UPDATE = "Successfully updated user";
 export const MESSAGE_SUCCESS_USERS_CREATE = "Successfully created user";
+export const MESSAGE_SUCCESS_APPROVE = "Successfully approved user";

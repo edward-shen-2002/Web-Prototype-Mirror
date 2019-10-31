@@ -2,7 +2,7 @@ import React, { lazy, useEffect, useState } from "react";
 
 import { adminUserRoleAxios } from "tools/rest";
 
-import { REST_ADMIN_USERS } from "constants/rest";
+import { REST_ADMIN_REGISTRATION } from "constants/rest";
 
 const MaterialTable = lazy(() => import("material-table"));
 
@@ -15,9 +15,9 @@ const Registration = () => {
 
   useEffect(() => {
     if(!isDataFetched) {
-      // adminUserRoleAxios.get(REST_ADMIN_USERS)
-      //   .then(({ data: { data: { users } } }) => setRequests(users.map((user) => ({ ...user, password: "" }))))
-      //   .catch((error) => console.error(error));
+      adminUserRoleAxios.get(REST_ADMIN_REGISTRATION)
+        .then(({ data: { data: { users } } }) => setRequests(users.map((user) => ({ ...user, password: "" }))))
+        .catch((error) => console.error(error));
       
       setIsDataFetched(true);
     }
@@ -32,8 +32,12 @@ const Registration = () => {
     { title: "Password", field: "password" },
     { title: "Phone Number", field: "phoneNumber" },
     { title: "Creation Date", field: "creationDate", type: "date", render: ({ creationDate }) => new Date(creationDate).toLocaleDateString() },
-    { title: "Active", field: "active", type: "boolean" }
   ];
+
+  const handleDeleteRequest = (userToDelete) => {
+    const userToDeleteIndex = requests.indexOf(userToDelete);
+    setRequests([ ...requests.slice(0, userToDeleteIndex), ...requests.slice(userToDeleteIndex + 1) ]);
+  };
 
   const handleRowAdd = (newUser) => new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -79,6 +83,16 @@ const Registration = () => {
     }, 1000);
   });
 
+  const handleApproveUser = (_event, user) => {
+    adminUserRoleAxios.post(`${REST_ADMIN_REGISTRATION}/approve`, { user })
+      .then(() => {
+        handleDeleteRequest(user);
+      })
+      .catch(({ response: { data } }) => {
+        console.error(data);
+      });
+  };
+
   return (
     <div className="registrationPage">
       <MaterialTable
@@ -86,6 +100,7 @@ const Registration = () => {
         title="Registration"
         columns={columns}
         data={requests}
+        actions={[ { icon: "check", tooltip: "Approve User", onClick: handleApproveUser } ]}
         editable={{ onRowAdd: handleRowAdd, onRowUpdate: handleRowUpdate, onRowDelete: handleRowDelete }}
         options={{ actionsColumnIndex: -1 }}
       />

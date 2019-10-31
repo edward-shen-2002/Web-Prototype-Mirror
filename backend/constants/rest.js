@@ -20,6 +20,7 @@ export const ROUTE_GROUP_ADMIN = "/admin";
 
 export const ROUTE_GROUP_ADMIN_USER = `${ROUTE_GROUP_ADMIN}/user_manager`;
 export const ROUTE_ADMIN_USERS = "/users";
+export const ROUTE_ADMIN_REGISTRATION = "/registration";
 
 export const ROUTE_GROUP_ADMIN_DATA = `${ROUTE_GROUP_ADMIN}/data_manager`;
 export const ROUTE_ADMIN_DATAGROUPS = "/data_groups";
