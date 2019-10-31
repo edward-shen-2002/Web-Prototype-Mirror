@@ -18,8 +18,20 @@ Currently, the script commands are only set for yarn.
 
 Run the command `yarn deps`. This will install the root, frontend, and backend dependencies.
 
-#### Starting the application
+#### Starting the Application
 
 The backend is set to port 3000 and the frontend is set to port 3003. If you have any conflicts in port, adjust the ports in the [backend](/backend/app.js) or [frontend](/frontend/webpack.dev.js).
 
 Run the command `yarn dev`. Both the frontend and backend will be started. Open the application on your browser [here](http://localhost:3003).
+
+##### Admin Access
+
+A dummy admin is automatically created, with the ```username: sampleuser``` and  ```password: password123@```.
+
+##### Account Email verification
+
+A test email from ```Ethereal``` is used to accept all incoming email messages.
+
+Login with ```email: julio32@ethereal.email``` and ```password: qdjK2XgTyyHtR9zScz```.
+
+Login [here](https://ethereal.email/login).
