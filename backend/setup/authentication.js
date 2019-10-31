@@ -94,6 +94,7 @@ export const verificationMiddleware = ({ UserModel, RegistrationModel, RegisterV
 
   if(urlPaths.length === 3) {
     let _id = urlPaths[2];
+
     try {
       if(!isValidMongooseObjectId(_id)) return res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_NOT_FOUND })
 
@@ -116,7 +117,6 @@ export const verificationMiddleware = ({ UserModel, RegistrationModel, RegisterV
         next();
       }
     } catch(error) {
-      console.error(error)
       res.status(HTTP_ERROR_DATABASE).json({ message: MESSAGE_ERROR_DATABASE, error });
     }
   } else {

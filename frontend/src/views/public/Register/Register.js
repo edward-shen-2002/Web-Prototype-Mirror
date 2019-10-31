@@ -8,11 +8,11 @@ import { Formik } from "formik";
 
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Button from "@material-ui/core/Button";
 import Slide from "@material-ui/core/Slide";
 
 import { publicAxios } from "tools/rest";
-import { loadUserState } from "tools/redux";
 
 import { REST_REGISTER } from "constants/rest";
 import { ROUTE_LOGIN, ROUTE_DASHBOARD } from "constants/routes";
@@ -156,52 +156,55 @@ const RegisterForm = ({ visisble, initialValues, handleRegister }) => (
   </Slide>
 );
 
-const EmailVerification = ({ registrationData: { email }, visisble, handleReturnToRegister }) => (
+const ReturnButtons = ({ handleReturnToRegister, handleReturnToLogin }) => (
+  <ButtonGroup >
+    <Button onClick={handleReturnToRegister}>Go Back</Button>
+    <Button onClick={handleReturnToLogin}>Login</Button>
+  </ButtonGroup>
+);
+
+const EmailVerification = ({ registrationData: { email }, visisble, handleReturnToRegister, handleReturnToLogin }) => (
   <Slide direction="left" in={visisble} mountOnEnter unmountOnExit>
-    <Paper>
+    <Paper className="emailVerification">
       <p>An email has been sent to {email}</p>
-      <Button onClick={handleReturnToRegister}>Go Back</Button>
+      <ReturnButtons handleReturnToRegister={handleReturnToRegister} handleReturnToLogin={handleReturnToLogin}/>
     </Paper>
   </Slide>
 );
 
 const mapStateToProps = ({ app: { isOnline } }) => ({ isOnline });
-// { username, password, email, firstName, lastName, phoneNumber }
-const mapDispatchToProps = (dispatch) => ({ 
-// Prevent user from registering when already logged in
-  register: (isOnline, history, newUser, setErrors, setSubmitting, setRegisterView, setRegistrationData) => {
-    if(isOnline) {
-      history.push(ROUTE_DASHBOARD);
-    } else {
-      setRegistrationData(newUser);
-      setRegisterView(false);
-      // TODO : Store registration in a registration table. Do not store it in users table
-      publicAxios.post(REST_REGISTER, { ...newUser, passwordConfirm: undefined })
-        .then(({ data: { data } }) => {
-          // loadUserState(dispatch, data);
-        })
-        .catch((error) => console.log(error))
-        .finally(() => setSubmitting(false))
-    }
-  }
-});
 
-let Register = ({ isOnline, register, history }) => {
+let Register = ({ isOnline, history }) => {
   const [ registerView, setRegisterView ] = useState(true);
   const [ registrationData, setRegistrationData ] = useState({ username: "sampleuser", email: "e@ontario.ca", firstName: "", lastName: "", phoneNumber: "", password: "password123@", passwordConfirm: "password123@" });
 
-  const handleRegister = (values, setErrors, setSubmitting) => register(isOnline, history, values, setErrors, setSubmitting, setRegisterView, setRegistrationData);
-
+  const handleRegister = (newUser, setErrors, setSubmitting) => {
+    if(isOnline) {
+      history.push(ROUTE_DASHBOARD);
+    } else {
+      if(registerView) {
+        publicAxios.post(REST_REGISTER, { ...newUser, passwordConfirm: undefined })
+          .then(() => {
+            setRegisterView(false);
+            setRegistrationData(newUser);
+          })
+          .catch(({ response: { data: { error } } }) => setErrors(error))
+          .finally(() => setSubmitting(false));
+      }
+    }
+  };
+  
   const handleReturnToRegister = () => setRegisterView(true);
+  const handleReturnToLogin = () => history.push(ROUTE_LOGIN);
 
   return (
     <div className="register">
       <RegisterForm initialValues={registrationData} visisble={registerView} handleRegister={handleRegister}/>
-      <EmailVerification registrationData={registrationData} visisble={!registerView} handleReturnToRegister={handleReturnToRegister}/>
+      <EmailVerification registrationData={registrationData} visisble={!registerView} handleReturnToRegister={handleReturnToRegister} handleReturnToLogin={handleReturnToLogin}/>
     </div>
   ); 
 };
 
-Register = connect(mapStateToProps, mapDispatchToProps)(Register);
+Register = connect(mapStateToProps)(Register);
 
 export default Register;
