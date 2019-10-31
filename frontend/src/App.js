@@ -29,8 +29,9 @@ import {
 
 import Loading from "./Loading";
 
-const Navigation = lazy(() => import("./Navigation"));
-const AppHeader = lazy(() => import("./Header"));
+import Navigation from "./Navigation";
+
+import AppHeader from "./Header";
 
 // Public Views
 const Login = lazy(() => import("./views/public/Login"));
