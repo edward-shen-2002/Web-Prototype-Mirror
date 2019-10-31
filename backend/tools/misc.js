@@ -7,3 +7,5 @@ export const isObjectEmpty = (object) => {
 };
 
 export const stringContainsSpace = (string) => /\s/g.test(string);
+
+export const isValidMongooseObjectId = (stringId) => /^[a-fA-F0-9]{24}$/.test(stringId);

@@ -2,15 +2,16 @@ import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 
 import { Strategy as LocalStrategy } from "passport-local";
 
+
 import { secretOrKey } from "../config/jwt";
 
-import { isObjectEmpty } from "../tools/misc";
+import { isObjectEmpty, isValidMongooseObjectId } from "../tools/misc";
 import { emailValidator, usernameValidator, passwordValidator, existingUsersValidator } from "../tools/validation";
 
 import { ROLE_USER_MANAGER, ROLE_TEMPLATE_MANAGER, ROLE_DATA_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_PACKAGE_MANAGER, ROLE_LEVEL_NOT_APPLICABLE } from "../constants/roles";
 
 import { HTTP_ERROR_CONFLICT, HTTP_ERROR_AUTH_FAIL, HTTP_ERROR_DATABASE, HTTP_ERROR_UNAUTHORIZED, HTTP_ERROR_NOT_FOUND } from "../constants/rest";
-import { MESSAGE_ERROR_HACKER, MESSAGE_ERROR_CONFLICT_VERIFICATION, MESSAGE_ERROR_VERIFICATION_FAIL, MESSAGE_ERROR_AUTH_FAIL, MESSAGE_ERROR_DATABASE, MESSAGE_ERROR_ROLE_UNAUTHORIZED, MESSAGE_ERROR_CREDENTIALS } from "../constants/messages";
+import { MESSAGE_ERROR_HACKER, MESSAGE_ERROR_CONFLICT_VERIFICATION, MESSAGE_ERROR_VERIFICATION_FAIL, MESSAGE_ERROR_AUTH_FAIL, MESSAGE_ERROR_DATABASE, MESSAGE_ERROR_ROLE_UNAUTHORIZED, MESSAGE_ERROR_CREDENTIALS, MESSAGE_ERROR_NOT_FOUND } from "../constants/messages";
 import { PASSPORT_JWT, PASSPORT_LOGIN, PASSPORT_REGISTER } from "../constants/passport"
 
 /**
@@ -88,13 +89,14 @@ const registerAuthentication = ({ passport, UserModel, RegistrationModel }) => {
   }));
 };
 
-// TODO!!
 export const verificationMiddleware = ({ UserModel, RegistrationModel, RegisterVerificationModel }) => async (req, res, next) => {
   const urlPaths = req.path.split("/");
 
   if(urlPaths.length === 3) {
     let _id = urlPaths[2];
     try {
+      if(!isValidMongooseObjectId(_id)) return res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_NOT_FOUND })
+
       const userToVerify = await RegisterVerificationModel.findById(_id);
 
       if(!userToVerify) return res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_VERIFICATION_FAIL });
@@ -114,7 +116,7 @@ export const verificationMiddleware = ({ UserModel, RegistrationModel, RegisterV
         next();
       }
     } catch(error) {
-      console.log(error);
+      console.error(error)
       res.status(HTTP_ERROR_DATABASE).json({ message: MESSAGE_ERROR_DATABASE, error });
     }
   } else {
