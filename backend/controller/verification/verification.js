@@ -1,4 +1,3 @@
-import { PASSPORT_VERIFICATION } from "../../constants/passport";
 import { ROUTE_VERFICATION } from "../../constants/rest";
 import { MESSAGE_SUCCESS_VERIFICATION } from "../../constants/messages";
 
@@ -9,7 +8,7 @@ const verification = ({ router, RegistrationModel, RegisterVerificationModel }) 
   router.get(`${ROUTE_VERFICATION}/:id`, async (req, res, next) => {
     const { newUser } = res.locals;
     const { username, email, _id } = newUser;
-    console.log("newuser", newUser);
+
     try { 
       await RegistrationModel.create({ ...newUser, _id: undefined })
       await RegisterVerificationModel.deleteMany({ $or: [ { _id }, { username }, { email } ] });

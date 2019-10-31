@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 import { DATABASE_KEY } from "../config/database";
 
+import { ROLE_LEVEL_ADMIN } from "../constants/roles";
+
 /**
  * MongoDB set up.
  * 
@@ -25,7 +27,7 @@ const setupMongoose = async (options, { UserModel, DataGroupModel, OrganizationM
 
       console.log("MongoDB: Successfully created collections");
     } catch(error) {
-      console.log("MongoDB: Failed to create collections", error);
+      console.error("MongoDB: Failed to create collections", error);
     }
   };
 
@@ -45,21 +47,78 @@ const setupMongoose = async (options, { UserModel, DataGroupModel, OrganizationM
   // TODO: Create dummy data
   // Create or overwrite sample data in the database. The database must be already set up.
   const handleCreateDummyUser = async () => {
+    try {
+      console.log("MongoDB: Creating dummy admin");
 
+      const fullAdminControlRoles = {
+        TEMPLATE_MANAGER: {
+        scope: ROLE_LEVEL_ADMIN,
+        LHINs: [],
+        organizations: []
+        }, 
+        DATA_MANAGER: {
+          scope: ROLE_LEVEL_ADMIN,
+          LHINs: [],
+          organizations: []
+        }, 
+        PACKAGE_MANAGER: {
+          scope: ROLE_LEVEL_ADMIN,
+          LHINs: [],
+          organizations: []
+        }, 
+        USER_MANAGER: {
+          scope: ROLE_LEVEL_ADMIN,
+          LHINs: [],
+          organizations: []
+        }, 
+        ORGANIZATION_MANAGER: {
+          scope: ROLE_LEVEL_ADMIN,
+          LHINs: [],
+          organizations: []
+        },
+        LHIN_MANAGER: {
+          scope: ROLE_LEVEL_ADMIN,
+          LHINs: [],
+          organizations: []
+        },
+        SECTOR_MANAGER: {
+          scope: ROLE_LEVEL_ADMIN,
+          LHINs: [],
+          organizations: []
+        },
+        SYSTEM_MANAGER: {
+          scope: ROLE_LEVEL_ADMIN,
+          LHINs: [],
+          organizations: []
+        }
+      };
+    
+      const sampleUser = { username: "sampleuser", email: "sampleuser@hotmail.com", password: "password123@", roles: fullAdminControlRoles };
+
+      await UserModel.register({ ...sampleUser, password: undefined }, sampleUser.password);
+
+      console.log("MongoDB: Successfully created dummy admin");
+    } catch(error) {
+      console.error("MondoDB: Failed to create dummy admin", error);
+    }
   };
 
   const init = async ({ createDatabase, wipeDatabase, createDummyUser }) => {
-    console.log("MongoDB: Setting up database");
+    try {
+      console.log("MongoDB: Setting up database");
 
-    // Connects to the database or creates it when it doesn't exist
-    await mongoose.connect(DATABASE_KEY, { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false, useUnifiedTopology: true });
+      // Connects to the database or creates it when it doesn't exist
+      await mongoose.connect(DATABASE_KEY, { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false, useUnifiedTopology: true });
 
-    // Options
-    if(wipeDatabase) await handleWipeDatabase();
-    if(createDatabase) await handleCreateDatabase();
-    if(createDummyUser) await handleCreateDummyUser();
+      // Options
+      if(wipeDatabase) await handleWipeDatabase();
+      if(createDatabase) await handleCreateDatabase();
+      if(createDummyUser) await handleCreateDummyUser();
 
-    console.log("MongoDB: Successfully set up database");
+      console.log("MongoDB: Successfully set up database");
+    } catch(error) {
+      console.error("MongoDB: Failed to set up database", error);
+    }
   };
 
   // overwrite the default options
@@ -74,7 +133,7 @@ const setupDatabases = async (options, helpers) => {
 
     console.log("Databases: Successfully set up databases");
   } catch(error) {
-    console.log("Databases: Failed to set up databases");
+    console.error("Databases: Failed to set up databases");
   }
 
 };

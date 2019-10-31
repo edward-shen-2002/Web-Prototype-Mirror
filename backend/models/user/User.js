@@ -35,10 +35,10 @@ let userSchema = new Schema({
   
   email: { type: String, unique: true, required: true },
 
-  firstName: String,
-  lastName: String,
+  firstName: { type: String, default: "" },
+  lastName: { type: String, default: "" },
   
-  phoneNumber: String,
+  phoneNumber: { type: String, default: "" },
 
   organizations: { type: Object, default: {} },
   LHINs: { type: Object, default: {} },
@@ -89,7 +89,7 @@ let userSchema = new Schema({
     } 
   },
 
-  creationDate: { type: Date, required: true },
+  creationDate: { type: Date, default: Date.now, required: true },
   approvedDate: { type: Date, default: Date.now, required: true },
   active: { type: Boolean, required: true, default: true }
 }, { minimize: false });
