@@ -2,10 +2,6 @@ import {
   ROUTE_ADMIN_USER_USERS, 
   ROUTE_ADMIN_USER_REGISTRATION,
 
-  ROUTE_ADMIN_DATA_DATAGROUPS, 
-  ROUTE_ADMIN_DATA_ATTRIBUTES,
-  ROUTE_ADMIN_DATA_CATEGORIES,
-
   ROUTE_ADMIN_PACKAGE_PACKAGES,
 
   ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS,
@@ -13,7 +9,11 @@ import {
 
   ROUTE_ADMIN_LHIN_LHIN,
 
-  ROUTE_ADMIN_SECTOR_SECTOR
+  ROUTE_ADMIN_SECTOR_SECTOR,
+
+  ROUTE_ADMIN_TEMPLATE_TEMPLATES,
+  ROUTE_ADMIN_TEMPLATE_ATTRIBUTES,
+  ROUTE_ADMIN_TEMPLATE_CATEGORIES
 } from "constants/routes";
 
 import { ROLE_LEVEL_NOT_APPLICABLE } from "constants/roles";
@@ -23,16 +23,9 @@ const roleNavMap = {
     name: "Templates",
     icon: "mdi mdi-note-multiple",
     children: [
-      { name: "Templates", url: "/admin/workbooks/template", icon: "mdi mdi-table-large" }
-    ]
-  },
-  DATA_MANAGER: {
-    name: "Cell Data",
-    icon: "mdi mdi-buffer",
-    children: [
-      { name: "Attributes", url: ROUTE_ADMIN_DATA_ATTRIBUTES, icon: "mdi mdi-table-column" },
-      { name: "Categories", url: ROUTE_ADMIN_DATA_CATEGORIES, icon: "mdi mdi-table-row" },
-      { name: "Data Group", url: ROUTE_ADMIN_DATA_DATAGROUPS, icon: "mdi mdi-checkbook" }
+      { name: "Templates", url: ROUTE_ADMIN_TEMPLATE_TEMPLATES, icon: "mdi mdi-table-large" },
+      { name: "Attributes", url: ROUTE_ADMIN_TEMPLATE_ATTRIBUTES, icon: "mdi mdi-table-column" },
+      { name: "Categories", url: ROUTE_ADMIN_TEMPLATE_CATEGORIES, icon: "mdi mdi-table-row" },
     ]
   },
   PACKAGE_MANAGER: {

@@ -21,7 +21,6 @@ export const MESSAGE_SUCCESS_LOGOUT = "Successfully logged out";
 export const MESSAGE_SUCCESS_RECONNECT = "Successfully reconnected";
 export const MESSAGE_SUCCESS_USERS = "Successfully fetched users";
 export const MESSAGE_SUCCESS_USERS_DELETE = "Successfully deleted user";
-export const MESSAGE_SUCCESS_DATAGROUPS = "Successfully fetched data groups";
 export const MESSAGE_SUCCESS_USERS_UPDATE = "Successfully updated user";
 export const MESSAGE_SUCCESS_USERS_CREATE = "Successfully created user";
 export const MESSAGE_SUCCESS_APPROVE = "Successfully approved user";

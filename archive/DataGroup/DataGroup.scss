@@ -1,0 +1,26 @@
+// TODO : Responsive design
+.dataGroup {
+  width: 100%;
+  margin: 20px;
+  padding: 20px;
+}
+
+.header {
+  padding: 15px;
+
+  display: flex;
+  min-width: fit-content;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  
+  &__searchField {
+    width: 50%;
+  }
+}
+
+.actionButtons {
+  min-width: fit-content;
+  &__button {
+    margin: 0 5px 0 5px;
+  }
+}

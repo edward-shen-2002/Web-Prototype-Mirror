@@ -20,7 +20,7 @@ import logo from "images/brand/ON_POS_LOGO_BLUE_RGB.svg";
 import "./Header.scss";
 
 const AccountMenuHeader = () => (
-  <DropdownItem header tag="div" className="text-center">
+  <DropdownItem header className="text-center">
     <strong>Account</strong>
   </DropdownItem>
 );
@@ -59,7 +59,7 @@ const AccountMenuNav = ({ handleLogout }) => (
 );
 
 const AppNavigation = ({ handleLogout }) => (
-  <Toolbar className="appHeader__toolbar">
+  <Toolbar variant="dense">
     <AppSidebarToggler className="d-lg-none" display="md" mobile><i className="fa fa-bars"/></AppSidebarToggler>
     <AppSidebarToggler className="d-md-down-none" display="lg"><i className="fa fa-bars"/></AppSidebarToggler>
     <AppNavbarBrand full={{ src: logo, height: 48, alt: "MOH Logo" }}/>

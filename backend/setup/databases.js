@@ -20,7 +20,6 @@ const setupMongoose = async (options, { UserModel, DataGroupModel, OrganizationM
     try {
 
       await UserModel.createCollection();
-      await DataGroupModel.createCollection();
       await OrganizationModel.createCollection();
       await RegistrationModel.createCollection();
       await RegisterVerificationModel.createCollection();
@@ -55,11 +54,6 @@ const setupMongoose = async (options, { UserModel, DataGroupModel, OrganizationM
         scope: ROLE_LEVEL_ADMIN,
         LHINs: [],
         organizations: []
-        }, 
-        DATA_MANAGER: {
-          scope: ROLE_LEVEL_ADMIN,
-          LHINs: [],
-          organizations: []
         }, 
         PACKAGE_MANAGER: {
           scope: ROLE_LEVEL_ADMIN,

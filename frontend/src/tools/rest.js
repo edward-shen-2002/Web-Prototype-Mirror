@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { SERVER_APP, REST_GROUP_PUBLIC, REST_GROUP_AUTH, REST_GROUP_ADMIN_USER, REST_GROUP_ADMIN_DATA, REST_GROUP_ADMIN_ORGANIZATION, REST_GROUP_VERIFICATION } from "constants/rest";
+import { SERVER_APP, REST_GROUP_PUBLIC, REST_GROUP_AUTH, REST_GROUP_ADMIN_USER, REST_GROUP_ADMIN_ORGANIZATION, REST_GROUP_VERIFICATION } from "constants/rest";
 
 export const publicAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_PUBLIC}` });
 
@@ -10,13 +10,11 @@ export const verificationAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GR
 
 export const adminUserRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_USER}` });
 
-export const adminDataRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_DATA}` });
-
 export const adminOrganizationRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_ORGANIZATION}` });
 
 const _setAxiosToken = (routeAxios, token) => routeAxios.defaults.headers.common = { ...routeAxios.defaults.headers.common, Authorization: `Bearer ${token}` };
 
-const tokenAxiosList = [ authAxios, adminUserRoleAxios, adminDataRoleAxios, adminOrganizationRoleAxios ];
+const tokenAxiosList = [ authAxios, adminUserRoleAxios, adminOrganizationRoleAxios ];
 
 // Token is the same for all requests - representation of an authenticated registered user
 export const setAxiosToken = (token) => tokenAxiosList.forEach((routeAxios) => _setAxiosToken(routeAxios, token));

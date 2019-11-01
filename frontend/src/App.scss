@@ -15,6 +15,7 @@
 
   &__page {
     height: 100%;
+    min-width: fit-content;
 
     &--online {
       display: flex;

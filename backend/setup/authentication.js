@@ -5,10 +5,10 @@ import { Strategy as LocalStrategy } from "passport-local";
 
 import { secretOrKey } from "../config/jwt";
 
-import { isObjectEmpty, isValidMongooseObjectId } from "../tools/misc";
+import { isValidMongooseObjectId } from "../tools/misc";
 import { emailValidator, usernameValidator, passwordValidator, existingUsersValidator } from "../tools/validation";
 
-import { ROLE_USER_MANAGER, ROLE_TEMPLATE_MANAGER, ROLE_DATA_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_PACKAGE_MANAGER, ROLE_LEVEL_NOT_APPLICABLE } from "../constants/roles";
+import { ROLE_USER_MANAGER, ROLE_TEMPLATE_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_PACKAGE_MANAGER, ROLE_LEVEL_NOT_APPLICABLE } from "../constants/roles";
 
 import { HTTP_ERROR_CONFLICT, HTTP_ERROR_AUTH_FAIL, HTTP_ERROR_DATABASE, HTTP_ERROR_UNAUTHORIZED, HTTP_ERROR_NOT_FOUND } from "../constants/rest";
 import { 
@@ -186,8 +186,6 @@ export const userRoleMiddleware = () => (req, res, next) => adminRoleMiddleware(
 export const organizationRoleMiddleware = () => (req, res, next) => adminRoleMiddleware(req, res, next, ROLE_ORGANIZATION_MANAGER);
 
 // export const templateRoleMiddleware = () => adminRoleMiddleware(ROLE_TEMPLATE_MANAGER)
-
-export const dataRoleMiddleware = () => (req, res, next) => adminRoleMiddleware(req, res, next, ROLE_DATA_MANAGER);
 
 // export const packageRoleMiddleware = () => adminRoleMiddleware(ROLE_PACKAGE_MANAGER);
 

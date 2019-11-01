@@ -51,11 +51,6 @@ let userSchema = new Schema({
         LHINs: [],
         organizations: []
       }, 
-      DATA_MANAGER: {
-        scope: ROLE_LEVEL_NOT_APPLICABLE,
-        LHINs: [],
-        organizations: []
-      }, 
       PACKAGE_MANAGER: {
         scope: ROLE_LEVEL_NOT_APPLICABLE,
         LHINs: [],

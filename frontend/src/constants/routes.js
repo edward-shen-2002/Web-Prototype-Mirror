@@ -13,14 +13,13 @@ export const ROUTE_ADMIN_USER = `${ROUTE_ADMIN_ROOT}/user_manager`;
 export const ROUTE_ADMIN_USER_USERS = `${ROUTE_ADMIN_USER}/users`;
 export const ROUTE_ADMIN_USER_REGISTRATION = `${ROUTE_ADMIN_USER}/registration`;
 
-export const ROUTE_ADMIN_DATA = `${ROUTE_ADMIN_ROOT}/data_manager`;
-export const ROUTE_ADMIN_DATA_DATAGROUPS = `${ROUTE_ADMIN_DATA}/data_groups`;
-export const ROUTE_ADMIN_DATA_ATTRIBUTES = `${ROUTE_ADMIN_DATA}/attributes`;
-export const ROUTE_ADMIN_DATA_CATEGORIES = `${ROUTE_ADMIN_DATA}/categories`;
+export const ROUTE_ADMIN_TEMPLATE = `${ROUTE_ADMIN_ROOT}/template_manager`;
+export const ROUTE_ADMIN_TEMPLATE_TEMPLATES = `${ROUTE_ADMIN_TEMPLATE}/templates`;
+export const ROUTE_ADMIN_TEMPLATE_ATTRIBUTES = `${ROUTE_ADMIN_TEMPLATE}/attributes`;
+export const ROUTE_ADMIN_TEMPLATE_CATEGORIES = `${ROUTE_ADMIN_TEMPLATE}/categories`;
 
 export const ROUTE_ADMIN_PACKAGE = `${ROUTE_ADMIN_ROOT}/package_manager`;
 export const ROUTE_ADMIN_PACKAGE_PACKAGES = `${ROUTE_ADMIN_PACKAGE}/packages`;
-// Should create package be a dialog instead of a different page?
 
 export const ROUTE_ADMIN_ORGANIZATION = `${ROUTE_ADMIN_ROOT}/organization_manager`;
 export const ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS = `${ROUTE_ADMIN_ORGANIZATION}/organizations`;

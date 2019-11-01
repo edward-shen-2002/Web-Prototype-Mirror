@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { userAuthenticationMiddleware, verificationMiddleware, userRoleMiddleware, organizationRoleMiddleware, dataRoleMiddleware, generalErrorHandler} from "./authentication";
+import { userAuthenticationMiddleware, verificationMiddleware, userRoleMiddleware, organizationRoleMiddleware, generalErrorHandler} from "./authentication";
 
 // Route controllers
 import loginController from "../controller/public/login";
@@ -13,9 +13,7 @@ import verificationController from "../controller/verification/verification";
 import usersController from "../controller/admin/user_manager/users";
 import registrationController from "../controller/admin/user_manager/registrations";
 
-import dataGroupsController from "../controller/admin/data_manager/dataGroups";
-
-import { ROUTE_GROUP_PUBLIC, ROUTE_GROUP_AUTH, ROUTE_GROUP_ADMIN, ROUTE_GROUP_ADMIN_USER, ROUTE_GROUP_ADMIN_DATA, ROUTE_GROUP_VERIFICATION } from "../constants/rest";
+import { ROUTE_GROUP_PUBLIC, ROUTE_GROUP_AUTH, ROUTE_GROUP_ADMIN, ROUTE_GROUP_ADMIN_USER, ROUTE_GROUP_VERIFICATION } from "../constants/rest";
 
 /**
  * Routes which require user authentication -- must pass through the authentication middleware.
@@ -79,16 +77,6 @@ const userRoleRoutes = (helpers) => {
   return router;
 };
 
-const dataRoleRoutes = (helpers) => {
-  let router = new Router();
-
-  router.use(dataRoleMiddleware());
-
-  dataGroupsController({ ...helpers, router });
-
-  return router;
-};
-
 const organizationRoleRoutes = (helpers) => {
   let router = new Router();
 
@@ -110,7 +98,6 @@ const setupRouteGroups = (helpers) => {
   // ?Is separating roles to different routes necessary?
   app.use(ROUTE_GROUP_ADMIN, adminRoutes(helpers), generalErrorHandler());
   app.use(ROUTE_GROUP_ADMIN_USER, userRoleRoutes(helpers), generalErrorHandler());
-  app.use(ROUTE_GROUP_ADMIN_DATA, dataRoleRoutes(helpers), generalErrorHandler());
 };
 
 export default setupRouteGroups;

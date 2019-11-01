@@ -21,9 +21,6 @@ export const REST_GROUP_ADMIN_USER = `${REST_GROUP_ADMIN}/user_manager`;
 export const REST_ADMIN_USERS = "/users";
 export const REST_ADMIN_REGISTRATION = "/registration";
 
-export const REST_GROUP_ADMIN_DATA = `${REST_GROUP_ADMIN}/data_manager`;
-export const REST_ADMIN_DATAGROUPS = "/data_groups";
-
 export const REST_GROUP_ADMIN_ORGANIZATION = `${REST_GROUP_ADMIN}/organization_manager`;
 
 // HTTP error codes
