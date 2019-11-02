@@ -197,9 +197,17 @@ export const generalErrorHandler = () => (error, _req, res, _next) => {
 };
 
 const setupAuthentication = (helpers) => {
-  userAuthentication(helpers);
-  loginAuthentication(helpers);
-  registerAuthentication(helpers);
+  try {
+    console.log("Auth: Setting up authentication");
+
+    userAuthentication(helpers);
+    loginAuthentication(helpers);
+    registerAuthentication(helpers);
+    
+    console.log("Auth: Successfully set up authentication");
+  } catch(error) {
+    console.error("Auth: Failed to set up authentication");
+  }
 };
 
 export default setupAuthentication;
