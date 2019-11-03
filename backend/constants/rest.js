@@ -23,7 +23,7 @@ export const ROUTE_ADMIN_USERS = "/users";
 export const ROUTE_ADMIN_REGISTRATION = "/registration";
 
 export const ROUTE_GROUP_ADMIN_ORGANIZATION = `${ROUTE_GROUP_ADMIN}/organization_manager`;
-export const ROUTE_ADMIN_ORGANIZATIONS = "/orgnaizations";
+export const ROUTE_ADMIN_ORGANIZATIONS = "/organizations";
 
 /** HTTP response status codes */
 //Success codes

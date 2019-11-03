@@ -12,8 +12,9 @@ import verificationController from "../controller/verification/verification";
 // Admin controllers
 import usersController from "../controller/admin/user_manager/users";
 import registrationController from "../controller/admin/user_manager/registrations";
+import organizationController from "../controller/admin/organization_manager/organizations";
 
-import { ROUTE_GROUP_PUBLIC, ROUTE_GROUP_AUTH, ROUTE_GROUP_ADMIN, ROUTE_GROUP_ADMIN_USER, ROUTE_GROUP_VERIFICATION } from "../constants/rest";
+import { ROUTE_GROUP_PUBLIC, ROUTE_GROUP_AUTH, ROUTE_GROUP_ADMIN, ROUTE_GROUP_ADMIN_USER, ROUTE_GROUP_VERIFICATION, ROUTE_GROUP_ADMIN_ORGANIZATION } from "../constants/rest";
 
 /**
  * Routes which require user authentication -- must pass through the authentication middleware.
@@ -82,22 +83,33 @@ const organizationRoleRoutes = (helpers) => {
 
   router.use(organizationRoleMiddleware());
 
+  organizationController({ ...helpers, router });
+
   return router;
 };
 
 // Routes are grouped to fully utilize shared middleware
 const setupRouteGroups = (helpers) => {
+  console.log("REST: Setting up routes");
+  
   const { app } = helpers;
-
-  app.use(ROUTE_GROUP_PUBLIC, publicRoutes(helpers));
-  app.use(ROUTE_GROUP_AUTH, authRoutes(helpers));
-
-  app.use(ROUTE_GROUP_VERIFICATION, verificationRoutes(helpers));
-
-  // Admin routes
-  // ?Is separating roles to different routes necessary?
-  app.use(ROUTE_GROUP_ADMIN, adminRoutes(helpers), generalErrorHandler());
-  app.use(ROUTE_GROUP_ADMIN_USER, userRoleRoutes(helpers), generalErrorHandler());
+  
+  try {
+    app.use(ROUTE_GROUP_PUBLIC, publicRoutes(helpers));
+    app.use(ROUTE_GROUP_AUTH, authRoutes(helpers));
+  
+    app.use(ROUTE_GROUP_VERIFICATION, verificationRoutes(helpers));
+  
+    // Admin routes
+    // ?Is separating roles to different routes necessary?
+    app.use(ROUTE_GROUP_ADMIN, adminRoutes(helpers), generalErrorHandler());
+    app.use(ROUTE_GROUP_ADMIN_USER, userRoleRoutes(helpers), generalErrorHandler());
+    app.use(ROUTE_GROUP_ADMIN_ORGANIZATION, organizationRoleRoutes(helpers), generalErrorHandler());
+    
+    console.log("REST: Successfully set up routes");
+  } catch(error) {
+    console.error("REST: Failed to set up routes", error);
+  }
 };
 
 export default setupRouteGroups;

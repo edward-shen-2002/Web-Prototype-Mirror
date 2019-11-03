@@ -30,6 +30,7 @@ const passwordValidator = (password, cb) => {
 // Prevent inactive/banned accounts from logging in
 const findByUsername = (model, queryParameters) => model.findOne({ ...queryParameters, active: true });
 
+// TODO! should LHIN/organizations in roles be ids?
 let userSchema = new Schema({
   username: { type: String, lowercase: true, unique: true, required: true },
   
@@ -40,6 +41,7 @@ let userSchema = new Schema({
   
   phoneNumber: { type: String, default: "" },
 
+  // { _id: { name, position, ... } }
   organizations: { type: Object, default: {} },
   LHINs: { type: Object, default: {} },
 
