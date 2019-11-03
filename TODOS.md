@@ -2,16 +2,18 @@
 
 ## Prioritized
 
-- [ ] Users Pagination
-- [ ] Token blacklist
-- [ ] User validation (registration or user management)
-- [ ] Scope for approving registration
-- [ ] Scope for modifying user
-- [ ] Webpack hostname - route production build with public URL (CRA can do it)
+- [ ] Excel view
+- [ ] Package creation
 
 ## Unprioritized
 
+- [ ] Token blacklist
+- [ ] Webpack hostname - route production build with public URL (CRA can do it)
+- [ ] Pagination
 - [ ] Miscellaneous information - ie: job positions
 - [ ] General and route error handlers- should everything be handled here or do it in the original route? (General error handler handles most errors but may not make sense for some routes)
 - [ ] Strengthen verfication ids (change MongoDB Id to a more secure Id -- MongoDB Id is too predicatable)
-- [ ] Logout anchor or change style
+
+## Important but Unprioritized (may be too time-consuming at the moment - work on it gradually)
+
+- [ ] Scope Checking
