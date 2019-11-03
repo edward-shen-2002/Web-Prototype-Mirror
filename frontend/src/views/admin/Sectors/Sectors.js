@@ -45,33 +45,27 @@ const Sectors = () => {
     }, 600);
   });
 
-  const handleRowDelete = (oldUser) => new Promise((resolve, reject) => {
+  const handleRowDelete = (sector) => new Promise((resolve, reject) => {
     setTimeout(() => {
-      // adminSectorRoleAxios.delete(`${REST_ADMIN_USERS}/${oldUser.username}`)
-      //   .then(() => {
-      //     const oldUserIndex = requests.indexOf(oldUser);
-      //     setRequests([ ...requests.slice(0, oldUserIndex), ...requests.slice(oldUserIndex + 1) ]);
-      //     resolve();
-      //   })
-      //   .catch((error) => {
-      //     console.error(error);
-      //     reject();
-      //   });
+      adminSectorRoleAxios.delete(`${REST_ADMIN_SECTORS}/${sector._id}`)
+        .then(() => {
+          const sectorIndex = sectors.indexOf(sector);
+          setSectors([ ...sectors.slice(0, sectorIndex), ...sectors.slice(sectorIndex + 1) ]);
+          resolve();
+        })
+        .catch(reject);
     }, 1000);
   });
 
-  const handleRowUpdate = (newUser, oldUser) => new Promise((resolve, reject) => {
+  const handleRowUpdate = (newSector, oldSector) => new Promise((resolve, reject) => {
     setTimeout(() => {
-      // adminUserRoleAxios.put(REST_ADMIN_USERS, { newUser, oldUser })
-      //   .then(() => {
-      //     const oldUserIndex = requests.indexOf(oldUser);
-      //     setRequests([ ...requests.slice(0, oldUserIndex), { ...newUser, password: "" }, ...requests.slice(oldUserIndex + 1) ]);
-      //     resolve();
-      //   })
-      //   .catch((error) => {
-      //     console.error(error);
-      //     reject();
-      //   })
+      adminSectorRoleAxios.put(REST_ADMIN_SECTORS, { newSector, oldSector })
+        .then(() => {
+          const oldSectorIndex = sectors.indexOf(oldSector);
+          setSectors([ ...sectors.slice(0, oldSectorIndex), newSector, ...sectors.slice(oldSectorIndex + 1) ]);
+          resolve();
+        })
+        .catch(reject);
     }, 1000);
   });
 

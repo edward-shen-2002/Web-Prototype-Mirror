@@ -19,12 +19,18 @@ export const MESSAGE_SUCCESS_REGISTRATION = "Successfully registered";
 export const MESSAGE_SUCCESS_VERIFICATION = "Your account has been verified. A request has been sent to an admin. Please wait for an admin to approve your registration.";
 export const MESSAGE_SUCCESS_LOGIN = "Successfully logged in";
 export const MESSAGE_SUCCESS_LOGOUT = "Successfully logged out";
-export const MESSAGE_SUCCESS_RECONNECT = "Successfully reconnected";
+export const MESSAGE_SUCCESS_RECONNECT = "Successfully reconnected"
+;
 export const MESSAGE_SUCCESS_USERS = "Successfully fetched users";
 export const MESSAGE_SUCCESS_USERS_DELETE = "Successfully deleted user";
 export const MESSAGE_SUCCESS_USERS_UPDATE = "Successfully updated user";
 export const MESSAGE_SUCCESS_USERS_CREATE = "Successfully created user";
 export const MESSAGE_SUCCESS_APPROVE = "Successfully approved user";
+
 export const MESSAGE_SUCCESS_ORGANIZATIONS = "Successfully fetched organizations";
 export const MESSAGE_SUCCESS_ORGANIZATIONS_CREATE = "Successfully created sector";
+
 export const MESSAGE_SUCCESS_SECTORS = "Successfully fetched sectors";
+export const MESSAGE_SUCCESS_SECTORS_CREATE = "Successfully created sector";
+export const MESSAGE_SUCCESS_SECTORS_UPDATE = "Successfully updated sector";
+export const MESSAGE_SUCCESS_SECTORS_DELETE = "Successfully deleted sector";
