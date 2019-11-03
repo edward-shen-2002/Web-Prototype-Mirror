@@ -22,6 +22,7 @@ export const REST_ADMIN_USERS = "/users";
 export const REST_ADMIN_REGISTRATION = "/registration";
 
 export const REST_GROUP_ADMIN_ORGANIZATION = `${REST_GROUP_ADMIN}/organization_manager`;
+export const REST_ADMIN_ORGANIZATIONS = "/organizations";
 
 // HTTP error codes
 export const HTTP_ERROR_INVALID_TOKEN = 401;
