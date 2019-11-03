@@ -7,7 +7,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { loadUserState, resetUserState } from "tools/redux";
 import { authAxios, adminUserRoleAxios, adminOrganizationRoleAxios } from "tools/rest";
 import { findAndSaveToken } from "tools/storage";
-import { PrivillegedRoute } from "tools/routes";
+import { PrivillegedRoute } from "tools/components/routes";
 
 import { ONLINE, OFFLINE } from "constants/states";
 import { ROLE_USER_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_PACKAGE_MANAGER } from "constants/roles";
