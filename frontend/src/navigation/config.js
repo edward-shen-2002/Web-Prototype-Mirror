@@ -1,15 +1,14 @@
 import { 
   ROUTE_ADMIN_USER_USERS, 
-  ROUTE_ADMIN_USER_REGISTRATION,
+  ROUTE_ADMIN_USER_REGISTRATIONS,
 
   ROUTE_ADMIN_PACKAGE_PACKAGES,
 
   ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS,
-  ROUTE_ADMIN_ORGANIZATION_TYPES,
 
   ROUTE_ADMIN_LHIN_LHIN,
 
-  ROUTE_ADMIN_SECTOR_SECTOR,
+  ROUTE_ADMIN_SECTOR_SECTORS,
 
   ROUTE_ADMIN_TEMPLATE_TEMPLATES,
   ROUTE_ADMIN_TEMPLATE_ATTRIBUTES,
@@ -40,15 +39,14 @@ const roleNavMap = {
     icon: "mdi mdi-account",
     children: [
       { name: "Users", url: ROUTE_ADMIN_USER_USERS, icon: "mdi mdi-account-multiple" },
-      { name: "Registration", url: ROUTE_ADMIN_USER_REGISTRATION, icon: "mdi mdi-account" }
+      { name: "Registration", url: ROUTE_ADMIN_USER_REGISTRATIONS, icon: "mdi mdi-account" }
     ]
   },
   ORGANIZATION_MANAGER: {
     name: "Organizations",
     icon: "mdi mdi-account-group",
     children: [
-      { name: "Organizations", url: ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS, icon: "mdi mdi-account-group" },
-      { name: "Types", url: ROUTE_ADMIN_ORGANIZATION_TYPES, icon: "mdi mdi-account-network" }
+      { name: "Organizations", url: ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS, icon: "mdi mdi-account-group" }
     ]
   },
   LHIN_MANAGER: {
@@ -62,7 +60,7 @@ const roleNavMap = {
     name: "Sector",
     icon: "mdi mdi-account-group",
     children: [
-      { name: "Sector", url: ROUTE_ADMIN_SECTOR_SECTOR, icon: "mdi mdi-account-group" }
+      { name: "Sector", url: ROUTE_ADMIN_SECTOR_SECTORS, icon: "mdi mdi-account-group" }
     ]
   },
 };

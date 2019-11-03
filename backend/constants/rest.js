@@ -20,10 +20,13 @@ export const ROUTE_GROUP_ADMIN = "/admin";
 
 export const ROUTE_GROUP_ADMIN_USER = `${ROUTE_GROUP_ADMIN}/user_manager`;
 export const ROUTE_ADMIN_USERS = "/users";
-export const ROUTE_ADMIN_REGISTRATION = "/registration";
+export const ROUTE_ADMIN_REGISTRATION = "/registrations";
 
 export const ROUTE_GROUP_ADMIN_ORGANIZATION = `${ROUTE_GROUP_ADMIN}/organization_manager`;
 export const ROUTE_ADMIN_ORGANIZATIONS = "/organizations";
+
+export const ROUTE_GROUP_ADMIN_SECTOR = `${ROUTE_GROUP_ADMIN}/sector_manager`;
+export const ROUTE_ADMIN_SECTORS = "/sectors";
 
 /** HTTP response status codes */
 //Success codes

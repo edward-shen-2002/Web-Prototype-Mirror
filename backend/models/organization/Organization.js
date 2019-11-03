@@ -7,8 +7,8 @@ let organizationSchema = new Schema({
   code: { type: String, required: true, unique: true },
   address: { type: String, default: "" },
   sector: {
-    sectorId: { type: ObjectId, ref: "Sector", required: true },
-    name: { type: String, required: true }
+    sectorId: { type: ObjectId, ref: "Sector" },
+    name: { type: String }
   },
   users: [ { type: ObjectId, ref: "User" } ], 
   managers: [ { type: ObjectId, ref: "User" } ],
@@ -17,6 +17,6 @@ let organizationSchema = new Schema({
     name: { type: String, default: "" },
     telephone: { type: String, default: "" }
   }
-});
+}, { minimize: false });
 
 export default model("Organization", organizationSchema);

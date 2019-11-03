@@ -13,9 +13,10 @@ import OrganizationModel from "../models/organization/Organization";
 
 import RegistrationModel from "../models/user/Registration";
 import RegisterVerificationModel from "../models/user/RegisterVerification";
+import SectorModel from "../models/sector/Sector";
 
 const serverSetup = async (app, passport, options = {}) => {
-  const helpers = { app, passport, UserModel, OrganizationModel, RegistrationModel, RegisterVerificationModel };
+  const helpers = { app, passport, UserModel, OrganizationModel, RegistrationModel, RegisterVerificationModel, SectorModel };
   
   passport.use(new LocalStrategy(UserModel.authenticate()));
 

@@ -24,7 +24,7 @@ const _init = async () => {
   app.use(passport.initialize());
 
   // Initialize database, authentication, routes, etc ...
-  await serverSetup(app, passport, { createDummyUser: true });
+  await serverSetup(app, passport, { wipeDatabase: false, createDummyUser: true });
 
   app.listen(app.get("port"), () => console.log(`App listening on port ${app.get("port")}`));
 };

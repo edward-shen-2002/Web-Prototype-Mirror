@@ -14,16 +14,17 @@ import { ROLE_LEVEL_ADMIN } from "../constants/roles";
  *   wipeDatabase: default false
  *   createDummyUser: default false
  */
-const setupMongoose = async (options, { UserModel, DataGroupModel, OrganizationModel, RegistrationModel, RegisterVerificationModel }) => {
+const setupMongoose = async (options, { UserModel, SectorModel, OrganizationModel, RegistrationModel, RegisterVerificationModel }) => {
   const handleCreateDatabase = async () => {
     console.log("MongoDB: Creating collections in database");
     try {
 
       await UserModel.createCollection();
-      await OrganizationModel.createCollection();
       await RegistrationModel.createCollection();
       await RegisterVerificationModel.createCollection();
-
+      await OrganizationModel.createCollection();
+      await SectorModel.createCollection();
+      
       console.log("MongoDB: Successfully created collections");
     } catch(error) {
       console.error("MongoDB: Failed to create collections", error);
@@ -47,55 +48,64 @@ const setupMongoose = async (options, { UserModel, DataGroupModel, OrganizationM
   // Create or overwrite sample data in the database. The database must be already set up.
   const handleCreateDummyUser = async () => {
     try {
-      console.log("MongoDB: Creating dummy admin");
+      console.log("MongoDB: Creating dummy data");
+
+      const sampleSectorData = {
+        name: "Health"
+      };
+
+      let sampleSector = await SectorModel.findOneAndUpdate({ name: sampleSectorData.name }, sampleSectorData, { new: true, upsert: true });;
+
+      const sampleOrganizationData = {
+        name: "MOH",
+        code: "888",
+        address: "5700 Yonge St, North York, ON",
+        sector: { sectorId: sampleSector._id, name: sampleSector.name }
+      };
+
+      let sampleOrganization = await OrganizationModel.findOneAndUpdate({ code: sampleOrganizationData.code }, sampleOrganizationData, { new: true, upsert: true });
+
+      const adminRoleControlConfig = { scope: ROLE_LEVEL_ADMIN, sectors: [], LHINs: [], organizations: [] };
 
       const fullAdminControlRoles = {
-        TEMPLATE_MANAGER: {
-        scope: ROLE_LEVEL_ADMIN,
-        LHINs: [],
-        organizations: []
-        }, 
-        PACKAGE_MANAGER: {
-          scope: ROLE_LEVEL_ADMIN,
-          LHINs: [],
-          organizations: []
-        }, 
-        USER_MANAGER: {
-          scope: ROLE_LEVEL_ADMIN,
-          LHINs: [],
-          organizations: []
-        }, 
-        ORGANIZATION_MANAGER: {
-          scope: ROLE_LEVEL_ADMIN,
-          LHINs: [],
-          organizations: []
-        },
-        LHIN_MANAGER: {
-          scope: ROLE_LEVEL_ADMIN,
-          LHINs: [],
-          organizations: []
-        },
-        SECTOR_MANAGER: {
-          scope: ROLE_LEVEL_ADMIN,
-          LHINs: [],
-          organizations: []
-        },
-        SYSTEM_MANAGER: {
-          scope: ROLE_LEVEL_ADMIN,
-          LHINs: [],
-          organizations: []
-        }
+        TEMPLATE_MANAGER: { ...adminRoleControlConfig }, 
+        PACKAGE_MANAGER: { ...adminRoleControlConfig }, 
+        USER_MANAGER: { ...adminRoleControlConfig }, 
+        ORGANIZATION_MANAGER: { ...adminRoleControlConfig }, 
+        LHIN_MANAGER: { ...adminRoleControlConfig }, 
+        SECTOR_MANAGER: { ...adminRoleControlConfig }, 
+        SYSTEM_MANAGER: { ...adminRoleControlConfig }
+      };
+
+      let userOrganizations = {};
+
+      userOrganizations[sampleOrganization._id] = {
+        name: sampleOrganization.name,
+        position: "Co-op Student"
       };
     
-      const sampleUser = { username: "sampleuser", email: "sampleuser@hotmail.com", password: "password123@", roles: fullAdminControlRoles };
+      const sampleUserData = { 
+        username: "sampleuser", 
+        firstName: "Alfred", 
+        lastName: "Lemon", 
+        phoneNumber: "(999)-888-7777", 
+        email: "sampleuser@hotmail.com", 
+        password: "password123@", 
+        organizations: userOrganizations,
+        roles: fullAdminControlRoles 
+      };
 
-      const registeredUser = await UserModel.findOne({ username: "sampleuser" });
+      let sampleUser = await UserModel.findOne({ username: "sampleuser" });
 
-      if(!registeredUser) await UserModel.register({ ...sampleUser, password: undefined }, sampleUser.password);
+      if(!sampleUser) sampleUser = await UserModel.register({ ...sampleUserData, password: undefined }, sampleUserData.password);
 
-      console.log("MongoDB: Successfully created dummy admin");
+      sampleOrganization.users.push(sampleUser._id);
+      sampleOrganization.contact = { userId: sampleUser._id, name: sampleUser.firstName, telephone: sampleUser.phoneNumber }
+      await sampleOrganization.save();
+
+      console.log("MongoDB: Successfully created dummy data");
     } catch(error) {
-      console.error("MondoDB: Failed to create dummy admin", error);
+      console.error("MongoDB: Failed to create dummy data", error);
     }
   };
 
@@ -131,7 +141,6 @@ const setupDatabases = async (options, helpers) => {
   } catch(error) {
     console.error("Databases: Failed to set up databases");
   }
-
 };
 
 export default setupDatabases;

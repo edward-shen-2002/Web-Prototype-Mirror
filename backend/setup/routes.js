@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { userAuthenticationMiddleware, verificationMiddleware, userRoleMiddleware, organizationRoleMiddleware, generalErrorHandler} from "./authentication";
+import { userAuthenticationMiddleware, verificationMiddleware, userRoleMiddleware, organizationRoleMiddleware, generalErrorHandler, sectorRoleMiddleware} from "./authentication";
 
 // Route controllers
 import loginController from "../controller/public/login";
@@ -13,8 +13,9 @@ import verificationController from "../controller/verification/verification";
 import usersController from "../controller/admin/user_manager/users";
 import registrationController from "../controller/admin/user_manager/registrations";
 import organizationController from "../controller/admin/organization_manager/organizations";
+import sectorController from "../controller/admin/sector_manager/sectors";
 
-import { ROUTE_GROUP_PUBLIC, ROUTE_GROUP_AUTH, ROUTE_GROUP_ADMIN, ROUTE_GROUP_ADMIN_USER, ROUTE_GROUP_VERIFICATION, ROUTE_GROUP_ADMIN_ORGANIZATION } from "../constants/rest";
+import { ROUTE_GROUP_PUBLIC, ROUTE_GROUP_AUTH, ROUTE_GROUP_ADMIN, ROUTE_GROUP_ADMIN_USER, ROUTE_GROUP_VERIFICATION, ROUTE_GROUP_ADMIN_ORGANIZATION, ROUTE_GROUP_ADMIN_SECTOR } from "../constants/rest";
 
 /**
  * Routes which require user authentication -- must pass through the authentication middleware.
@@ -88,6 +89,16 @@ const organizationRoleRoutes = (helpers) => {
   return router;
 };
 
+const sectorRoleRoutes = (helpers) => {
+  let router = new Router();
+
+  router.use(sectorRoleMiddleware());
+
+  sectorController({ ...helpers, router });
+
+  return router;
+};
+
 // Routes are grouped to fully utilize shared middleware
 const setupRouteGroups = (helpers) => {
   console.log("REST: Setting up routes");
@@ -105,6 +116,7 @@ const setupRouteGroups = (helpers) => {
     app.use(ROUTE_GROUP_ADMIN, adminRoutes(helpers), generalErrorHandler());
     app.use(ROUTE_GROUP_ADMIN_USER, userRoleRoutes(helpers), generalErrorHandler());
     app.use(ROUTE_GROUP_ADMIN_ORGANIZATION, organizationRoleRoutes(helpers), generalErrorHandler());
+    app.use(ROUTE_GROUP_ADMIN_SECTOR, sectorRoleRoutes(helpers), generalErrorHandler());
     
     console.log("REST: Successfully set up routes");
   } catch(error) {

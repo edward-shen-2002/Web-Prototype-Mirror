@@ -11,7 +11,7 @@ export const ROUTE_ADMIN_ROOT = "/admin";
 
 export const ROUTE_ADMIN_USER = `${ROUTE_ADMIN_ROOT}/user_manager`;
 export const ROUTE_ADMIN_USER_USERS = `${ROUTE_ADMIN_USER}/users`;
-export const ROUTE_ADMIN_USER_REGISTRATION = `${ROUTE_ADMIN_USER}/registration`;
+export const ROUTE_ADMIN_USER_REGISTRATIONS = `${ROUTE_ADMIN_USER}/registrations`;
 
 export const ROUTE_ADMIN_TEMPLATE = `${ROUTE_ADMIN_ROOT}/template_manager`;
 export const ROUTE_ADMIN_TEMPLATE_TEMPLATES = `${ROUTE_ADMIN_TEMPLATE}/templates`;
@@ -23,10 +23,9 @@ export const ROUTE_ADMIN_PACKAGE_PACKAGES = `${ROUTE_ADMIN_PACKAGE}/packages`;
 
 export const ROUTE_ADMIN_ORGANIZATION = `${ROUTE_ADMIN_ROOT}/organization_manager`;
 export const ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS = `${ROUTE_ADMIN_ORGANIZATION}/organizations`;
-export const ROUTE_ADMIN_ORGANIZATION_TYPES = `${ROUTE_ADMIN_ORGANIZATION}/types`;
 
 export const ROUTE_ADMIN_LHIN = `${ROUTE_ADMIN_ROOT}/LHIN_manager`;
 export const ROUTE_ADMIN_LHIN_LHIN = `${ROUTE_ADMIN_LHIN}/LHINs`;
 
 export const ROUTE_ADMIN_SECTOR = `${ROUTE_ADMIN_ROOT}/sector_manager`;
-export const ROUTE_ADMIN_SECTOR_SECTOR = `${ROUTE_ADMIN_SECTOR}/sectors`;
+export const ROUTE_ADMIN_SECTOR_SECTORS = `${ROUTE_ADMIN_SECTOR}/sectors`;

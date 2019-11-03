@@ -2,20 +2,20 @@ import React, { lazy, useEffect, useState } from "react";
 
 import { adminUserRoleAxios } from "tools/rest";
 
-import { REST_ADMIN_REGISTRATION } from "constants/rest";
+import { REST_ADMIN_REGISTRATIONS } from "constants/rest";
 
 const MaterialTable = lazy(() => import("material-table"));
 
-import "./Registration.scss";
+import "./Registrations.scss";
 
 // TODO : Implement pagination
-const Registration = () => {
+const Registrations = () => {
   const [ requests, setRequests ] = useState([]);
   const [ isDataFetched, setIsDataFetched ] = useState(false);
 
   useEffect(() => {
     if(!isDataFetched) {
-      adminUserRoleAxios.get(REST_ADMIN_REGISTRATION)
+      adminUserRoleAxios.get(REST_ADMIN_REGISTRATIONS)
         .then(({ data: { data: { users } } }) => setRequests(users.map((user) => ({ ...user, password: "" }))))
         .catch((error) => console.error(error));
       
@@ -93,14 +93,16 @@ const Registration = () => {
       });
   };
 
+  const actions = [ { icon: "check", tooltip: "Approve User", onClick: handleApproveUser } ];
+
   return (
-    <div className="registrationPage">
+    <div className="registrationsPage">
       <MaterialTable
-        className="registrationTable"
-        title="Registration"
+        className="registrationsTable"
+        title="Registrations"
         columns={columns}
         data={requests}
-        actions={[ { icon: "check", tooltip: "Approve User", onClick: handleApproveUser } ]}
+        actions={actions}
         editable={{ onRowAdd: handleRowAdd, onRowUpdate: handleRowUpdate, onRowDelete: handleRowDelete }}
         options={{ actionsColumnIndex: -1 }}
       />
@@ -108,4 +110,4 @@ const Registration = () => {
   );
 };
 
-export default Registration;
+export default Registrations;

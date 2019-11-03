@@ -1,52 +1,54 @@
-import { Schema, model } from "mongoose";
+// import { Schema, model } from "mongoose";
 
-const ObjectId = Schema.Types.ObjectId;
+// const ObjectId = Schema.Types.ObjectId;
 
-let packageSchema = new Schema({
-  // Package name
-  name: { type: String, required: true },
+// let packageSchema = new Schema({
+//   // Package name
+//   name: { type: String, required: true },
 
-  // If this package is published to the users.
-  published: { type: Boolean, required: true, default: false },
+//   // If this package is published to the users.
+//   published: { type: Boolean, required: true, default: false },
 
-  // Organizations this package is assigned to, could be many.
-  // reference to User._id
-  organizations: [ { type: ObjectId, ref: "Organization" } ],
-  organizationTypes: [ { type: ObjectId, ref: "OrganizationType" } ],
+//   // Organizations this package is assigned to, could be many.
+//   // reference to User._id
+//   organizations: [ { type: ObjectId, ref: "Organization" } ],
+//   organizationTypes: [ { type: ObjectId, ref: "OrganizationType" } ],
 
-  // Workbooks this package includes.
-  // reference to Workbook._id
-  workbooks: [ { type: ObjectId, ref: "Workbook" } ],
+//   // Workbooks this package includes.
+//   // reference to Workbook._id
+//   workbooks: [ { type: ObjectId, ref: "Workbook" } ],
 
-  // description for the workbook
-  adminNotes: String,
+//   // description for the workbook
+//   adminNotes: String,
 
-  // Admins may provide some files, this does not include excel workbooks.
-  adminFiles: [ { buffer: Buffer, name: String } ],
+//   // Admins may provide some files, this does not include excel workbooks.
+//   adminFiles: [ { buffer: Buffer, name: String } ],
 
-  editStartDate: Date, 
-  editEndDate: Date, 
-  reviewStartDate: Date, 
-  reviewEndDate: Date, 
-  approvalStartDate: Date, 
-  approvalEndDate: Date,
+//   editStartDate: Date, 
+//   editEndDate: Date, 
+//   reviewStartDate: Date, 
+//   reviewEndDate: Date, 
+//   approvalStartDate: Date, 
+//   approvalEndDate: Date,
 
-  editors: [ { type: ObjectId, ref: "User" } ],
+//   editors: [ { type: ObjectId, ref: "User" } ],
 
-  // Approver and reviewer
-  reviewers: [ {
-    user: { type: ObjectId, ref: "User" },
-    status: String,
-    reason: String
-  } ],
+//   // Approver and reviewer
+//   reviewers: [ {
+//     user: { type: ObjectId, ref: "User" },
+//     status: String,
+//     reason: String
+//   } ],
 
-  approvers: [ {
-    user: {type: ObjectId, ref: "User"},
-    status: String,
-    reason: String
-  } ],
+//   approvers: [ {
+//     user: {type: ObjectId, ref: "User"},
+//     status: String,
+//     reason: String
+//   } ],
 
-  approveStatus: { type: String, default: "TBD", required: true }
-});
+//   approveStatus: { type: String, default: "TBD", required: true }
+// });
 
-export default model("Package", packageSchema);
+// export default model("Package", packageSchema);
+
+//TODO REVAMP

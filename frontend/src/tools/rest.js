@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { SERVER_APP, REST_GROUP_PUBLIC, REST_GROUP_AUTH, REST_GROUP_ADMIN_USER, REST_GROUP_ADMIN_ORGANIZATION, REST_GROUP_VERIFICATION } from "constants/rest";
+import { SERVER_APP, REST_GROUP_PUBLIC, REST_GROUP_AUTH, REST_GROUP_ADMIN_USER, REST_GROUP_ADMIN_ORGANIZATION, REST_GROUP_VERIFICATION, REST_GROUP_ADMIN_SECTOR } from "constants/rest";
 
 export const publicAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_PUBLIC}` });
 
@@ -11,6 +11,8 @@ export const verificationAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GR
 export const adminUserRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_USER}` });
 
 export const adminOrganizationRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_ORGANIZATION}` });
+
+export const adminSectorRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_SECTOR}` });
 
 const _setAxiosToken = (routeAxios, token) => routeAxios.defaults.headers.common = { ...routeAxios.defaults.headers.common, Authorization: `Bearer ${token}` };
 

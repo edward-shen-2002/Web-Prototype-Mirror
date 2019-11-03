@@ -15,7 +15,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 
-import SupervisorAccount from "@material-ui/icons/SupervisorAccount";
+import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
+import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import PersonIcon from "@material-ui/icons/Person";
 
 import { REST_ADMIN_ORGANIZATIONS } from "constants/rest";
@@ -109,7 +110,6 @@ const SectorEditComponent = ({ value, onChange }) => {
 const SectorRender = ({ sector: { name } }) => name;
 
 const Organizations = () => {
-  // const [ isDialogOpen, setIsDialogOpen ] = useState(false);
   const [ organizations, setOrganizations ] = useState([]);
   const [ isDataFetched, setIsDataFetched ] = useState(false);
   
@@ -117,7 +117,7 @@ const Organizations = () => {
   useEffect(() => {
     if(!isDataFetched) {
       adminOrganizationRoleAxios.get(REST_ADMIN_ORGANIZATIONS)
-        .then(() => console.log("success"))
+        .then(({ data: { data: { organizations } } }) => setOrganizations(organizations))
         .catch((error) => console.error(error));
       setIsDataFetched(true);
     }
@@ -143,8 +143,9 @@ const Organizations = () => {
   });
 
   const actions = [ 
-    { icon: PersonIcon, tooltip: "View Users", onClick: () => console.log("cl") }, 
-    { icon: SupervisorAccount, tooltip: "View Managers", onClick: () => console.log("clicked managers") } 
+    { icon: PersonIcon, tooltip: "View Users", onClick: () => {} }, 
+    { icon: SupervisorAccountIcon, tooltip: "View Managers", onClick: () => {} },
+    { icon: ContactPhoneIcon, tooltip: "View contacts", onClick: () => {} }
   ];
 
   return (

@@ -4,6 +4,6 @@ import { Schema, model } from "mongoose";
 // ?and organizations can only belong in one sector?
 const sectorSchema = new Schema({
   name: { type: String, required: true, unique: true }
-});
+}, { minimize: false });
 
 export default model("Sector", sectorSchema);

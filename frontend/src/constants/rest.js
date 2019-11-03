@@ -19,10 +19,13 @@ export const REST_GROUP_ADMIN = "/admin";
 
 export const REST_GROUP_ADMIN_USER = `${REST_GROUP_ADMIN}/user_manager`;
 export const REST_ADMIN_USERS = "/users";
-export const REST_ADMIN_REGISTRATION = "/registration";
+export const REST_ADMIN_REGISTRATIONS = "/registrations";
 
 export const REST_GROUP_ADMIN_ORGANIZATION = `${REST_GROUP_ADMIN}/organization_manager`;
 export const REST_ADMIN_ORGANIZATIONS = "/organizations";
+
+export const REST_GROUP_ADMIN_SECTOR = `${REST_GROUP_ADMIN}/sector_manager`;
+export const REST_ADMIN_SECTORS = "/sectors";
 
 // HTTP error codes
 export const HTTP_ERROR_INVALID_TOKEN = 401;

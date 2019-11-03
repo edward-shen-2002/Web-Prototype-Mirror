@@ -5,12 +5,12 @@ import { connect } from "react-redux";
 import { Switch, Route, Redirect } from "react-router-dom";
 
 import { loadUserState, resetUserState } from "tools/redux";
-import { authAxios, adminUserRoleAxios, adminOrganizationRoleAxios } from "tools/rest";
+import { authAxios, adminUserRoleAxios, adminOrganizationRoleAxios, adminSectorRoleAxios } from "tools/rest";
 import { findAndSaveToken } from "tools/storage";
 import { PrivillegedRoute } from "tools/components/routes";
 
 import { ONLINE, OFFLINE } from "constants/states";
-import { ROLE_USER_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_PACKAGE_MANAGER } from "constants/roles";
+import { ROLE_USER_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_PACKAGE_MANAGER, ROLE_SECTOR_MANAGER } from "constants/roles";
 import { REST_RECONNECT, HTTP_ERROR_INVALID_TOKEN, HTTP_ERROR_UNAUTHORIZED } from "constants/rest";
 import { 
   ROUTE_ROOT, 
@@ -21,9 +21,10 @@ import {
   ROUTE_VERIFICATION,
   ROUTE_RECOVERY, 
   ROUTE_ADMIN_USER_USERS, 
-  ROUTE_ADMIN_USER_REGISTRATION,  
+  ROUTE_ADMIN_USER_REGISTRATIONS,  
   ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS, 
-  ROUTE_ADMIN_PACKAGE_PACKAGES 
+  ROUTE_ADMIN_PACKAGE_PACKAGES,
+  ROUTE_ADMIN_SECTOR_SECTORS
 } from "constants/routes";
 
 import Loading from "./Loading";
@@ -40,8 +41,8 @@ const Recovery = lazy(() => import("./views/public/Recovery"));
 
 // Admin Views
 const Users = lazy(() => import("./views/admin/Users"));
-const Registration = lazy(() => import("./views/admin/Registration"))
-
+const Registrations = lazy(() => import("./views/admin/Registrations"))
+const Sectors = lazy(() => import("./views/admin/Sectors"));
 const Organizations = lazy(() => import("./views/admin/Organizations"));
 const Package = lazy(() => import("./views/admin/Package"));
 
@@ -53,7 +54,6 @@ const Profile = lazy(() => import("./views/user/Profile"));
 const NotFound = lazy(() => import("./views/misc/NotFound"));
 
 import "./App.scss";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 const AppPageContent = ({ isOnline }) => (
   <Suspense fallback={<Loading/>}>
@@ -73,10 +73,11 @@ const AppPageContent = ({ isOnline }) => (
 
       {/* Admin Routes */}
       <PrivillegedRoute path={ROUTE_ADMIN_USER_USERS} requiredState={ONLINE} requiredRole={ROLE_USER_MANAGER} Component={Users}/>
-      <PrivillegedRoute path={ROUTE_ADMIN_USER_REGISTRATION} requiredState={ONLINE} requiredRole={ROLE_USER_MANAGER} Component={Registration}/>
+      <PrivillegedRoute path={ROUTE_ADMIN_USER_REGISTRATIONS} requiredState={ONLINE} requiredRole={ROLE_USER_MANAGER} Component={Registrations}/>
+      
+      <PrivillegedRoute path={ROUTE_ADMIN_SECTOR_SECTORS} requiredState={ONLINE} requiredRole={ROLE_SECTOR_MANAGER} Component={Sectors}/>
       
       <PrivillegedRoute path={ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS} requiredState={ONLINE} requiredRole={ROLE_ORGANIZATION_MANAGER} Component={Organizations}/>
-      
       <PrivillegedRoute path={ROUTE_ADMIN_PACKAGE_PACKAGES} requiredState={ONLINE} requiredRole={ROLE_PACKAGE_MANAGER} Component={Package}/>
 
       <Route component={NotFound}/>
@@ -135,6 +136,7 @@ let App = ({ shouldReconnect, isOnline, account, handleReconnect, handleLogout, 
       setMiddleware(authAxios, authErrorMiddleware);
       setMiddleware(adminUserRoleAxios, adminErrorMiddleware);
       setMiddleware(adminOrganizationRoleAxios, adminErrorMiddleware);
+      setMiddleware(adminSectorRoleAxios, adminErrorMiddleware);
     }
   }, [ isOnline ]);
 

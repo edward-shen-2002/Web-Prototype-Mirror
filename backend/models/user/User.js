@@ -30,6 +30,8 @@ const passwordValidator = (password, cb) => {
 // Prevent inactive/banned accounts from logging in
 const findByUsername = (model, queryParameters) => model.findOne({ ...queryParameters, active: true });
 
+const defaultRoleControlConfig = {  scope: ROLE_LEVEL_NOT_APPLICABLE, sectors: [], LHINs: [], organizations: [] };
+
 // TODO! should LHIN/organizations in roles be ids?
 let userSchema = new Schema({
   username: { type: String, lowercase: true, unique: true, required: true },
@@ -47,43 +49,16 @@ let userSchema = new Schema({
 
   roles: { 
     type: Object, 
+    required: true,
     default: { 
-      TEMPLATE_MANAGER: {
-        scope: ROLE_LEVEL_NOT_APPLICABLE,
-        LHINs: [],
-        organizations: []
-      }, 
-      PACKAGE_MANAGER: {
-        scope: ROLE_LEVEL_NOT_APPLICABLE,
-        LHINs: [],
-        organizations: []
-      }, 
-      USER_MANAGER: {
-        scope: ROLE_LEVEL_NOT_APPLICABLE,
-        LHINs: [],
-        organizations: []
-      }, 
-      ORGANIZATION_MANAGER: {
-        scope: ROLE_LEVEL_NOT_APPLICABLE,
-        LHINs: [],
-        organizations: []
-      },
-      LHIN_MANAGER: {
-        scope: ROLE_LEVEL_NOT_APPLICABLE,
-        LHINs: [],
-        organizations: []
-      },
-      SECTOR_MANAGER: {
-        scope: ROLE_LEVEL_NOT_APPLICABLE,
-        LHINs: [],
-        organizations: []
-      },
-      SYSTEM_MANAGER: {
-        scope: ROLE_LEVEL_NOT_APPLICABLE,
-        LHINs: [],
-        organizations: []
-      }
-    } 
+      TEMPLATE_MANAGER: { ...defaultRoleControlConfig }, 
+      PACKAGE_MANAGER: { ...defaultRoleControlConfig }, 
+      USER_MANAGER: { ...defaultRoleControlConfig }, 
+      ORGANIZATION_MANAGER: { ...defaultRoleControlConfig }, 
+      LHIN_MANAGER: { ...defaultRoleControlConfig }, 
+      SECTOR_MANAGER: { ...defaultRoleControlConfig }, 
+      SYSTEM_MANAGER: { ...defaultRoleControlConfig }
+    }
   },
 
   creationDate: { type: Date, default: Date.now, required: true },

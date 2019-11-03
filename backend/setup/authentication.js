@@ -9,7 +9,7 @@ import { calculateRoleFilter } from "../tools/admin";
 import { isValidMongooseObjectId } from "../tools/misc";
 import { emailValidator, usernameValidator, passwordValidator, existingUsersValidator } from "../tools/validation";
 
-import { ROLE_USER_MANAGER, ROLE_TEMPLATE_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_PACKAGE_MANAGER, ROLE_LEVEL_NOT_APPLICABLE } from "../constants/roles";
+import { ROLE_USER_MANAGER, ROLE_TEMPLATE_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_PACKAGE_MANAGER, ROLE_SECTOR_MANAGER, ROLE_LEVEL_NOT_APPLICABLE } from "../constants/roles";
 
 import { HTTP_ERROR_CONFLICT, HTTP_ERROR_AUTH_FAIL, HTTP_ERROR_DATABASE, HTTP_ERROR_UNAUTHORIZED, HTTP_ERROR_NOT_FOUND } from "../constants/rest";
 import { 
@@ -169,9 +169,9 @@ const adminRoleMiddleware = (_req, res, next, role) => {
 
   const roleData = roles[role];
 
-  const { scope, LHINs, organizations } = roleData;
+  const { scope, sectors, LHINs, organizations } = roleData;
 
-  const filter = calculateRoleFilter({ scope, LHINs, organizations });
+  const filter = calculateRoleFilter({ scope, sectors, LHINs, organizations });
 
   if(scope === ROLE_LEVEL_NOT_APPLICABLE) {
     res.status(HTTP_ERROR_UNAUTHORIZED).json({ message: MESSAGE_ERROR_ROLE_UNAUTHORIZED });
@@ -187,6 +187,8 @@ const adminRoleMiddleware = (_req, res, next, role) => {
 export const userRoleMiddleware = () => (req, res, next) => adminRoleMiddleware(req, res, next, ROLE_USER_MANAGER);
 
 export const organizationRoleMiddleware = () => (req, res, next) => adminRoleMiddleware(req, res, next, ROLE_ORGANIZATION_MANAGER);
+
+export const sectorRoleMiddleware = () => (req, res, next) => adminRoleMiddleware(req, res, next, ROLE_SECTOR_MANAGER);
 
 // export const templateRoleMiddleware = () => adminRoleMiddleware(ROLE_TEMPLATE_MANAGER)
 

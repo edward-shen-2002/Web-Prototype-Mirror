@@ -78,7 +78,7 @@ const users = ({ router, UserModel }) => {
       if(user) {
         const { organizations } = user;
 
-        console.log("user orgs", organizations);
+        // TODO Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe, quaerat illum totam eveniet facilis deleniti? Architecto repudiandae impedit voluptas illo modi sed nemo perferendis officiis magni. Repellat esse saepe aperiam!
         res.end();
       } else {
         res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_NOT_FOUND });

@@ -1,30 +1,24 @@
-import { ROLE_LEVEL_ADMIN, ROLE_LEVEL_LHIN } from "../constants/roles";
+import { ROLE_LEVEL_ADMIN, ROLE_LEVEL_SECTOR, ROLE_LEVEL_LHIN } from "../constants/roles";
 
-const organizationsFilter = (organizations) => organizations.map((organization) => {
+const hierarchyFilter = (dataType, dataList) => dataList.map((data) => {
   let filter = {};
 
-  filter[`organizations.${organization}`] = { $exists: true };
+  filter[`${dataType}.${data}`] = { $exists: true };
 
   return filter;
 });
 
-const LHINsFilter = (LHINs) => LHINs.map((LHIN) => {
-  let filter = {};
-
-  filter[`LHINs.${LHIN}`] = { $exists: true };
-
-  return filter;
-});
-
-export const calculateRoleFilter = ({ scope, LHINs, organizations }) => {
+export const calculateRoleFilter = ({ scope, sectors, LHINs, organizations }) => {
   let filter;
 
   if(scope === ROLE_LEVEL_ADMIN) {
     filter = {};
+  } else if(scope === ROLE_LEVEL_SECTOR) {
+    filter = { $or: [ ...hierarchyFilter("sectors", sectors), ...hierarchyFilter("LHINs", LHINs), ...hierarchyFilter("organizations", organizations) ] }
   } else if(scope === ROLE_LEVEL_LHIN) {
-    if(LHINs || organizations) filter = { $or: [ ...LHINsFilter(LHINs), ...organizationsFilter(organizations) ] };
+    if(LHINs || organizations) filter = { $or: [ ...hierarchyFilter("LHINs", LHINs), ...hierarchyFilter("organizations", organizations) ] };
   } else {
-    if(organizations) filter = { $or: [ ...organizationsFilter(organizations) ] };
+    if(organizations) filter = { $or: [ ...hierarchyFilter("organizations", organizations) ] };
   }
 
   return filter;
