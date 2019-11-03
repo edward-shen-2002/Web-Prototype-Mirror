@@ -1,3 +1,5 @@
+import { isValidMongooseObjectId } from "../../../tools/misc";
+
 import { ROUTE_ADMIN_USERS } from "../../../constants/rest";
 
 import { 
@@ -7,23 +9,7 @@ import {
   MESSAGE_SUCCESS_USERS_DELETE 
 } from "../../../constants/messages";
 
-import { ROLE_LEVEL_ADMIN, ROLE_LEVEL_LHIN, ROLE_LEVEL_ORGANIZATION } from "../../../constants/roles";
-
-const organizationsFilter = (organizations) => organizations.map((organization) => {
-  let _filter = {};
-
-  _filter[`organizations.${organization}`] = { $exists: true };
-
-  return _filter;
-});
-
-const LHINsFilter = (LHINs) => LHINs.map((LHIN) => {
-  let _filter = {};
-
-  _filter[`LHINs.${LHIN}`] = { $exists: true };
-
-  return _filter;
-});
+// import { ROLE_LEVEL_ADMIN, ROLE_LEVEL_LHIN, ROLE_LEVEL_ORGANIZATION } from "../../../constants/roles";
 
 // TODO : Limit scope for put, post, and delete (get is done)
 // How to have pagination?
@@ -31,30 +17,10 @@ const LHINsFilter = (LHINs) => LHINs.map((LHIN) => {
 // https://itnext.io/back-end-pagination-with-nodejs-expressjs-mongodb-mongoose-ejs-3566994356e0
 const users = ({ router, UserModel }) => {
   router.get(ROUTE_ADMIN_USERS, (_req, res, next) => {
-    const { roleData } = res.locals;
-    let { scope, LHINs, organizations } = roleData;
-
-    let shouldPerformQuery = true;
-    let filter;
-
-    if(scope === ROLE_LEVEL_ADMIN) {
-      filter = {};
-    } else if(scope === ROLE_LEVEL_LHIN) {
-      if(LHINs.length || organizations.length) {
-        filter = { $or: [ ...LHINsFilter(LHINs), ...organizationsFilter(organizations) ] };
-      } else {
-        shouldPerformQuery = false;
-      }
-    } else {
-      if(organizations.length) {
-        filter = { $or: [ ...organizationsFilter(organizations) ] };
-      } else {
-        shouldPerformQuery = false;
-      }
-    }
+    const { filter } = res.locals;
 
     // ?Minor edge case where user is a LHIN/organization admin but has no scope... should this happen?
-    if(shouldPerformQuery) {
+    if(filter) {
       UserModel.find(filter)
         .then((users) => res.json({ message: MESSAGE_SUCCESS_USERS, data: { users } }))
         .catch(next);
@@ -90,13 +56,36 @@ const users = ({ router, UserModel }) => {
       .catch(next)
   });
 
-  // ? Should this be delete or change user to inactive?
-  router.delete(`${ROUTE_ADMIN_USERS}/:username`, (req, res, next) => {
-    const { username } = req.params;
+  // ? Should this be delete or change user to inactive? Change to id?
+  router.delete(`${ROUTE_ADMIN_USERS}/:_id`, (req, res, next) => {
+    const { _id } = req.params;
 
-    UserModel.deleteOne({ username })
+    if(!isValidMongooseObjectId(_id)) return res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_NOT_FOUND });
+
+    UserModel.findByIdAndRemove(_id)
       .then(() => res.json({ message: MESSAGE_SUCCESS_USERS_DELETE }))
       .catch(next);
+  });
+
+  router.get(`${ROUTE_ADMIN_USERS}/:_id/organizations`, async (req, res, next) => {
+    const { _id } = req.params;
+
+    if(!isValidMongooseObjectId(_id)) return res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_NOT_FOUND });
+
+    try {
+      const user = await UserModel.findById(_id);
+
+      if(user) {
+        const { organizations } = user;
+
+        console.log("user orgs", organizations);
+        res.end();
+      } else {
+        res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_NOT_FOUND });
+      }
+    } catch(error) {
+      next(error);
+    }
   });
 };
 

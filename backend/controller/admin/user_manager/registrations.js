@@ -1,6 +1,6 @@
 import { ROUTE_ADMIN_REGISTRATION, HTTP_ERROR_NOT_FOUND } from "../../../constants/rest";
 
-import { ROLE_LEVEL_ADMIN, ROLE_LEVEL_LHIN } from "../../../constants/roles";
+// import { ROLE_LEVEL_ADMIN, ROLE_LEVEL_LHIN } from "../../../constants/roles";
 
 import { MESSAGE_SUCCESS_USERS, MESSAGE_SUCCESS_APPROVE, MESSAGE_ERROR_NOT_FOUND } from "../../../constants/messages";
 
@@ -8,30 +8,10 @@ import { isValidMongooseObjectId } from "../../../tools/misc";
 
 const registration = ({ router, UserModel, RegistrationModel }) => {
   router.get(ROUTE_ADMIN_REGISTRATION, (req, res, next) => {
-    const { roleData } = res.locals;
-    let { scope, LHINs, organizations } = roleData;
-
-    let shouldPerformQuery = true;
-    let filter;
-
-    if(scope === ROLE_LEVEL_ADMIN) {
-      filter = {};
-    } else if(scope === ROLE_LEVEL_LHIN) {
-      if(LHINs.length || organizations.length) {
-        filter = { $or: [ ...LHINsFilter(LHINs), ...organizationsFilter(organizations) ] };
-      } else {
-        shouldPerformQuery = false;
-      }
-    } else {
-      if(organizations.length) {
-        filter = { $or: [ ...organizationsFilter(organizations) ] };
-      } else {
-        shouldPerformQuery = false;
-      }
-    }
+    const { filter } = res.locals;
 
     // ?Minor edge case where user is a LHIN/organization admin but has no scope... should this happen?
-    if(shouldPerformQuery) {
+    if(filter) {
       RegistrationModel.find(filter)
         .then((users) => res.json({ message: MESSAGE_SUCCESS_USERS, data: { users } }))
         .catch(next);

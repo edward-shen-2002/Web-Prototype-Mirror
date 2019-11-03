@@ -5,6 +5,7 @@ import { Strategy as LocalStrategy } from "passport-local";
 
 import { secretOrKey } from "../config/jwt";
 
+import { calculateRoleFilter } from "../tools/admin";
 import { isValidMongooseObjectId } from "../tools/misc";
 import { emailValidator, usernameValidator, passwordValidator, existingUsersValidator } from "../tools/validation";
 
@@ -168,12 +169,14 @@ const adminRoleMiddleware = (_req, res, next, role) => {
 
   const roleData = roles[role];
 
-  if(roleData.scope === ROLE_LEVEL_NOT_APPLICABLE) {
+  const { scope, LHINs, organizations } = roleData;
+
+  const filter = calculateRoleFilter({ scope, LHINs, organizations });
+
+  if(scope === ROLE_LEVEL_NOT_APPLICABLE) {
     res.status(HTTP_ERROR_UNAUTHORIZED).json({ message: MESSAGE_ERROR_ROLE_UNAUTHORIZED });
   } else {
-    res.locals = { user, roleData };
-    // res.locals.user = user;
-    // res.locals.roleData = roleData;
+    res.locals = { user, roleData, filter };
     next();
   }
 };
