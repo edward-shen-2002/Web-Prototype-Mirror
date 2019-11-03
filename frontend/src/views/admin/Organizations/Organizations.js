@@ -73,9 +73,13 @@ const SectorsDialog = ({ sectors, open, handleClose, handleSelect }) => (
   </Dialog>
 );
 
-const SectorEditComponent = ({ value: { name }, onChange }) => {
+const SectorEditComponent = ({ value, onChange }) => {
   const [ isSectorsDialogOpen, setIsSectorsDialogOpen ] = useState(false);
-  const [ sectors, setSectors ] = useState([ { name: "HEALTH", sectorId: "SAMPLEID" }, { name: "ENV", sectorId: "ENVID" } ]);
+  const [ sectors, setSectors ] = useState([]);
+
+  value = value ? value : { name: "", sectorId: "" };
+
+  let { name } = value;
 
   const handleOpenSectorsDialog = () => {
     setIsSectorsDialogOpen(true);
@@ -96,7 +100,7 @@ const SectorEditComponent = ({ value: { name }, onChange }) => {
 
   return (
     <div>
-      <Button onClick={handleOpenSectorsDialog}>{name}</Button>
+      <Button onClick={handleOpenSectorsDialog}>{name ? name : "NONE"}</Button>
       <SectorsDialog open={isSectorsDialogOpen} sectors={sectors} handleClose={handleCloseSectorsDialog} handleSelect={handleSelectSector}/>
     </div>
   );
@@ -106,17 +110,17 @@ const SectorRender = ({ sector: { name } }) => name;
 
 const Organizations = () => {
   // const [ isDialogOpen, setIsDialogOpen ] = useState(false);
-  const [ organizations, setOrganizations ] = useState([{ sector: { name: "HEALTH", sectorId: "SAMPLEID" }, name: "tst", code: "123" }]);
+  const [ organizations, setOrganizations ] = useState([]);
   const [ isDataFetched, setIsDataFetched ] = useState(false);
   
 
   useEffect(() => {
-    // if(!isDataFetched) {
-    //   adminOrganizationRoleAxios.get(REST_ADMIN_ORGANIZATIONS)
-    //     .then(() => console.log("success"))
-    //     .catch((error) => console.error(error));
-    //   setIsDataFetched(true);
-    // }
+    if(!isDataFetched) {
+      adminOrganizationRoleAxios.get(REST_ADMIN_ORGANIZATIONS)
+        .then(() => console.log("success"))
+        .catch((error) => console.error(error));
+      setIsDataFetched(true);
+    }
   });
 
   const columns = [
@@ -130,9 +134,13 @@ const Organizations = () => {
     resolve();
   });
 
-  const handleRowUpdate = () => {};
+  const handleRowUpdate = () => new Promise((resolve, reject) => {
 
-  const handleRowDelete = () => {};
+  });
+
+  const handleRowDelete = () => new Promise((resolve, reject) => {
+    
+  });
 
   const actions = [ 
     { icon: PersonIcon, tooltip: "View Users", onClick: () => console.log("cl") }, 
