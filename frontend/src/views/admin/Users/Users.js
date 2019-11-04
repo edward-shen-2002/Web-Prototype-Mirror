@@ -35,6 +35,25 @@ const OrganizationsDialog = ({ open, handleClose }) => (
   </Dialog>
 );
 
+const RolesDialogContent = () => (
+  <DialogContent>
+
+  </DialogContent>
+);
+
+const RolesDialogActions = () => (
+  <DialogActions>
+
+  </DialogActions>
+);
+
+const RolesDialog = ({ open, roles, handleClose }) => (
+  <Dialog open={open} onClose={handleClose}>
+    <RolesDialogContent roles={roles}/>
+    <RolesDialogActions/>
+  </Dialog>
+);
+
 // TODO : Implement pagination
 // TODO : Hierarchy filter - organization, LHIN, ...
 const Users = () => {
@@ -135,17 +154,13 @@ const Users = () => {
     { icon: EnhancedEncryptionIcon, tooltip: "View Roles", onClick: handleOpenRolesDialog }
   ];
 
+  const editable = { onRowAdd: handleRowAdd, onRowUpdate: handleRowUpdate, onRowDelete: handleRowDelete };
+
+  const options = { actionsColumnIndex: -1 };
+
   return (
     <div className="usersPage">
-      <MaterialTable
-        className="usersTable"
-        title="Users"
-        columns={columns}
-        actions={actions}
-        data={users}
-        editable={{ onRowAdd: handleRowAdd, onRowUpdate: handleRowUpdate, onRowDelete: handleRowDelete }}
-        options={{ actionsColumnIndex: -1 }}
-      />
+      <MaterialTable className="usersTable" title="Users" columns={columns} actions={actions} data={users} editable={editable} options={options}/>
       <OrganizationsDialog open={isOrganizationsDialogOpen} handleClose={handleCloseOrganizationsDialog}/>
     </div>
   );

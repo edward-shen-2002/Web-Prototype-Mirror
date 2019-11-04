@@ -86,6 +86,9 @@ const SectorEditComponent = ({ value, onChange }) => {
     setIsSectorsDialogOpen(true);
 
     // TODO: Fetch sectors
+    adminOrganizationRoleAxios.get(`${REST_ADMIN_ORGANIZATIONS}/sectors`)
+      .then(({ data: { data: { sectors } } }) => setSectors(sectors))
+      .catch((error) => console.error(error));
   }; 
 
   const handleCloseSectorsDialog = () => {
