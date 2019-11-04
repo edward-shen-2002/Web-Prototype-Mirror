@@ -36,15 +36,6 @@ const organizations = ({ router, OrganizationModel, SectorModel }) => {
       .then(() => res.json({ message: MESSAGE_SUCCESS_SECTORS_DELETE }))
       .catch(next);
   });
-
-  router.get(`${ROUTE_ADMIN_ORGANIZATIONS}/sectors`, (_req, res, next) => {
-    SectorModel.find({})
-      .then((sectors) => {
-        sectors = sectors.map(({ _id, name }) => ({ sectorId: _id, name }));
-        res.json({ message: MESSAGE_SUCCESS_SECTORS, data: { sectors } });
-      })
-      .catch(next);
-  });
 };
 
 export default organizations;

@@ -2,7 +2,7 @@ import React, { useState, useEffect, lazy } from "react";
 
 import uniqid from "uniqid";
 
-import { adminOrganizationRoleAxios } from "tools/rest";
+import { authAxios, adminOrganizationRoleAxios } from "tools/rest";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -19,7 +19,7 @@ import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import PersonIcon from "@material-ui/icons/Person";
 
-import { REST_ADMIN_ORGANIZATIONS } from "constants/rest";
+import { REST_AUTH_DATA, REST_ADMIN_ORGANIZATIONS } from "constants/rest";
 
 const MaterialTable = lazy(() => import("material-table"));
 
@@ -85,8 +85,7 @@ const SectorEditComponent = ({ value, onChange, rowData: organization }) => {
   const handleOpenSectorsDialog = () => {
     setIsSectorsDialogOpen(true);
 
-    // TODO: Fetch sectors
-    adminOrganizationRoleAxios.get(`${REST_ADMIN_ORGANIZATIONS}/sectors`)
+    authAxios.get(`${REST_AUTH_DATA}/sectors`)
       .then(({ data: { data: { sectors } } }) => setSectors(sectors))
       .catch((error) => console.error(error));
   }; 
@@ -169,6 +168,10 @@ const Organizations = () => {
     { icon: SupervisorAccountIcon, tooltip: "View Managers", onClick: () => {} },
     { icon: ContactPhoneIcon, tooltip: "View contacts", onClick: () => {} }
   ];
+  
+  const editable = { onRowAdd: handleRowAdd, onRowUpdate: handleRowUpdate, onRowDelete: handleRowDelete };
+
+  const options = { actionsColumnIndex: -1 };
 
   return (
     <div className="organizations">
@@ -177,8 +180,8 @@ const Organizations = () => {
         columns={columns}
         data={organizations}
         actions={actions}
-        editable={{ onRowAdd: handleRowAdd, onRowUpdate: handleRowUpdate, onRowDelete: handleRowDelete }}
-        options={{ actionsColumnIndex: -1 }}
+        editable={editable}
+        options={options}
       />
     </div>
   );
