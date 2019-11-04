@@ -114,7 +114,6 @@ const Organizations = () => {
   const [ organizations, setOrganizations ] = useState([]);
   const [ isDataFetched, setIsDataFetched ] = useState(false);
   
-
   useEffect(() => {
     if(!isDataFetched) {
       adminOrganizationRoleAxios.get(REST_ADMIN_ORGANIZATIONS)
@@ -131,8 +130,15 @@ const Organizations = () => {
   ];
 
   const handleRowAdd = (newOrganization) => new Promise((resolve, reject) => {
-    setOrganizations([ ...organizations, newOrganization ]);
-    resolve();
+    adminOrganizationRoleAxios.post(REST_ADMIN_ORGANIZATIONS, { newOrganization })
+      .then(({ data: { data: { organization } } }) => {
+        setOrganizations([ ...organizations, organization ]);
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
   });
 
   const handleRowUpdate = (newOrganization, oldOrganization) => new Promise((resolve, reject) => {

@@ -1,10 +1,10 @@
-import { ROUTE_ADMIN_ORGANIZATIONS } from "../../../constants/rest";
+import { ROUTE_ADMIN_ORGANIZATIONS, ROUTE_RECONNECT } from "../../../constants/rest";
 
 // import { ROLE_LEVEL_ADMIN, ROLE_LEVEL_LHIN } from "../../../constants/roles";
 
-import { MESSAGE_SUCCESS_ORGANIZATIONS, MESSAGE_SUCCESS_SECTORS, MESSAGE_SUCCESS_SECTORS_UPDATE, MESSAGE_SUCCESS_SECTORS_DELETE } from "../../../constants/messages";
+import { MESSAGE_SUCCESS_ORGANIZATIONS, MESSAGE_SUCCESS_SECTORS_UPDATE, MESSAGE_SUCCESS_SECTORS_DELETE, MESSAGE_SUCCESS_ORGANIZATIONS_CREATE } from "../../../constants/messages";
 
-
+// TODO : Consider scope
 const organizations = ({ router, OrganizationModel, SectorModel }) => {
   router.get(ROUTE_ADMIN_ORGANIZATIONS, (_req, res, next) => {
     const { filter } = res.locals;
@@ -17,8 +17,18 @@ const organizations = ({ router, OrganizationModel, SectorModel }) => {
       res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { organizations: [] } });
     }
   });
+  
+  router.post(ROUTE_ADMIN_ORGANIZATIONS, (req, res, next) => {
+    const { newOrganization } = req.body;
 
-  router.put(ROUTE_ADMIN_ORGANIZATIONS, async (req, res, next) => {
+    OrganizationModel.create(newOrganization)
+      .then((organization) => {
+        res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS_CREATE, data: { organization } });
+      })
+      .catch((error) => console.error(error));
+  });
+
+  router.put(ROUTE_ADMIN_ORGANIZATIONS, (req, res, next) => {
     const { newOrganization } = req.body;
 
     const { _id } = newOrganization;
