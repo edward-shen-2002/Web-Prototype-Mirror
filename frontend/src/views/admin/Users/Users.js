@@ -239,7 +239,10 @@ const Users = () => {
   };
 
   const handleDeleteUserOrganization = (userOrganization) => {
-    // const userIndex = userOrganization.
+    // TODO : Update on server
+    const userOrganizationIndex = userOrganizations.indexOf(userOrganization);
+
+    setUserOrganizations([ ...userOrganizations.slice(0, userOrganizationIndex), ...userOrganizations.slice(userOrganizationIndex + 1) ]);
   };
 
   const handleAddOrganization = (organization) => {
