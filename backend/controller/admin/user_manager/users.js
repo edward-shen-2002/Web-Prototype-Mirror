@@ -7,7 +7,6 @@ import {
   MESSAGE_SUCCESS_USERS_CREATE,
   MESSAGE_SUCCESS_USERS_UPDATE,
   MESSAGE_SUCCESS_USERS_DELETE, 
-  MESSAGE_SUCCESS_ORGANIZATIONS,
 
   MESSAGE_ERROR_NOT_FOUND
 } from "../../../constants/messages";
@@ -44,11 +43,13 @@ const users = ({ router, UserModel }) => {
 
   // TODO : Check user contents, individually extract the required information from the req.body since it's possibly that this new user can have super powers
   router.put(ROUTE_ADMIN_USERS, (req, res, next) => {
-    const { oldUser: { username }, newUser } = req.body;
+    const { updatedUser } = req.body;
+    const { _id } = updatedUser;
 
-    UserModel.findOneAndUpdate({ username }, newUser)
+    UserModel.findByIdAndUpdate(_id, updatedUser)
       .then(async (user) => {
-        const newPassword = newUser.password;
+        const newPassword = updatedUser.password;
+
         if(newPassword) {
           await user.setPassword(newPassword);
           await user.save();
@@ -68,31 +69,6 @@ const users = ({ router, UserModel }) => {
     UserModel.findByIdAndRemove(_id)
       .then(() => res.json({ message: MESSAGE_SUCCESS_USERS_DELETE }))
       .catch(next);
-  });
-
-  router.get(`${ROUTE_ADMIN_USERS}/:_id/organizations`, async (req, res, next) => {
-    const { _id } = req.params;
-
-    if(!isValidMongooseObjectId(_id)) return res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_NOT_FOUND });
-
-    try {
-      const user = await UserModel.findById(_id);
-
-      if(user) {
-        let { organizations } = user;
-
-        let userOrganizations = [];
-        for(let organizationId in organizations) {
-          userOrganizations.push({ _id: organizationId, ...organizations[organizationId] });
-        }
-
-        res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { userOrganizations } });
-      } else {
-        res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_NOT_FOUND });
-      }
-    } catch(error) {
-      next(error);
-    }
   });
 };
 

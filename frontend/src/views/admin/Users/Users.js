@@ -1,5 +1,6 @@
 import React, { lazy, useEffect, useState } from "react";
 
+import { isObjectEmpty } from "tools/misc";
 import { authAxios, adminUserRoleAxios } from "tools/rest";
 
 import { REST_AUTH_DATA, REST_ADMIN_USERS } from "constants/rest";
@@ -70,7 +71,7 @@ const UserOrganizationsListItems = ({ userOrganizations, handleDeleteUserOrganiz
   const { name } = userOrganization;
 
   const handleDeleteUserOrganizationItem = () => handleDeleteUserOrganization(userOrganization);
-
+  console.log(userOrganizations)
   return (
     <ListItem key={uniqid()} button>
       <ListItemText primary={name}/>
@@ -103,7 +104,6 @@ const OrganizationsDialogContent = ({ userOrganizations, organizations, handleAd
 
   const handleOrganizationsQueryChange = ({ target: { value } }) => setOrganizationsQuery(value);
   const handleUserOrganizationsQueryChange = ({ target: { value } }) => setUserOrganizationsQuery(value);
-
 
   return (
     <DialogContent className="organizationsContent">
@@ -153,6 +153,9 @@ const Users = () => {
   const [ users, setUsers ] = useState([]);
   const [ isDataFetched, setIsDataFetched ] = useState(false);
   const [ isOrganizationsDialogOpen, setIsOrganizationsDialogOpen ] = useState(false);
+
+  const [ user, setUser ] = useState(null);
+  const [ userOrganizationsMap, setUserOrganizationsMap ] = useState({});
   const [ userOrganizations, setUserOrganizations ] = useState([]);
   const [ organizations, setOrganizations ] = useState([]);
 
@@ -197,7 +200,7 @@ const Users = () => {
   
   const handleRowUpdate = (newUser, oldUser) => new Promise((resolve, reject) => {
     setTimeout(() => {
-      adminUserRoleAxios.put(REST_ADMIN_USERS, { newUser, oldUser })
+      adminUserRoleAxios.put(REST_ADMIN_USERS, { updatedUser: newUser })
         .then(() => {
           const oldUserIndex = users.indexOf(oldUser);
           setUsers([ ...users.slice(0, oldUserIndex), { ...newUser, password: "" }, ...users.slice(oldUserIndex + 1) ]);
@@ -213,12 +216,17 @@ const Users = () => {
   const handleOpenOrganizationsDialog = async (_event, user) => {
     if(!isOrganizationsDialogOpen) {
       try {
-        const userOrganizationsData = await adminUserRoleAxios.get(`${REST_ADMIN_USERS}/${user._id}/organizations`);
-        const { data: { data: { userOrganizations } } } = userOrganizationsData;
+        // const userOrganizationsData = await adminUserRoleAxios.get(`${REST_ADMIN_USERS}/${user._id}/organizations`);
+        // const { data: { data: { userOrganizationsMap } } } = userOrganizationsData;
+        const userOrganizationsMap = user.organizations;
         
+        let userOrganizations = Object.keys(userOrganizationsMap).map((userOrganizationId) => ({ _id: userOrganizationId, ...userOrganizationsMap[userOrganizationId] }));
+
         const organizationsData = await authAxios.get(`${REST_AUTH_DATA}/organizations`);
         const { data: { data: { organizations } } } = organizationsData;
         
+        setUser(user);
+        setUserOrganizationsMap(userOrganizationsMap);
         setUserOrganizations(userOrganizations);
         setOrganizations(organizations);
         setIsOrganizationsDialogOpen(true);
@@ -232,6 +240,8 @@ const Users = () => {
     if(isOrganizationsDialogOpen) setIsOrganizationsDialogOpen(false);
     if(userOrganizations) setUserOrganizations([]);
     if(organizations) setOrganizations([]);
+    if(!isObjectEmpty(userOrganizationsMap)) setUserOrganizationsMap({});
+    if(user) setUser(null);
   };
 
   const handleOpenRolesDialog = () => {
@@ -240,22 +250,52 @@ const Users = () => {
 
   const handleDeleteUserOrganization = (userOrganization) => {
     // TODO : Update on server
+    
+    let newUserOrganizationsMap = { ...userOrganizationsMap };
+    console.log(newUserOrganizationsMap)
+    delete newUserOrganizationsMap[userOrganization._id];
+    console.log(newUserOrganizationsMap)
+    
     const userOrganizationIndex = userOrganizations.indexOf(userOrganization);
+    const newUserOrganizations = [ ...userOrganizations.slice(0, userOrganizationIndex), ...userOrganizations.slice(userOrganizationIndex + 1) ];
+    
+    const updatedUser = { ...user, organizations: newUserOrganizationsMap };
 
-    setUserOrganizations([ ...userOrganizations.slice(0, userOrganizationIndex), ...userOrganizations.slice(userOrganizationIndex + 1) ]);
+    adminUserRoleAxios.put(REST_ADMIN_USERS, { updatedUser })
+      .then(() => {
+        const oldUserIndex = users.indexOf(user);
+        
+        setUsers([ ...users.slice(0, oldUserIndex), updatedUser, ...users.slice(oldUserIndex + 1) ]);
+        setUser(updatedUser);
+        setUserOrganizations(newUserOrganizations);
+        setUserOrganizationsMap(newUserOrganizationsMap);
+      })
+      .catch(() => console.error(error));
   };
 
-  const handleAddOrganization = (organization) => {
-    if(userOrganizations.find(({ _id }) => _id === organization._id)) {
+  const handleAddOrganization = (newUserOrganization) => {
+    if(userOrganizations.find(({ _id }) => _id === newUserOrganization._id)) {
       console.error("User is already a part of the selected organization");
     } else {
-      // TODO : Error check: prevent usr from joining the same organization
-      // ! NEED REFERENCE TO USER... HOW ELSE TO UPDATE
-      setUserOrganizations([ ...userOrganizations, organization ]);
+      let newUserOrganizationsMap = { ...userOrganizationsMap };
+      newUserOrganizationsMap[newUserOrganization._id] = { ...newUserOrganization, _id: undefined };
+
+      const updatedUser = { ...user, organizations: newUserOrganizationsMap };
+
+      adminUserRoleAxios.put(REST_ADMIN_USERS, { updatedUser })
+        .then(() => {
+          const newUserOrganizations = [ ...userOrganizations, newUserOrganization ];
+          const oldUserIndex = users.indexOf(user);
+          
+          setUsers([ ...users.slice(0, oldUserIndex), updatedUser, ...users.slice(oldUserIndex + 1) ]);
+          setUser(updatedUser);
+          setUserOrganizationsMap(newUserOrganizationsMap);
+          setUserOrganizations(newUserOrganizations);
+        })
+        .catch((error) => console.error(error));
     }
   };
 
-  
   const columns = [
     { title: "Username", field: "username" },
     { title: "Email", field: "email" },
