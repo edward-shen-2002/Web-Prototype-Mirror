@@ -46,14 +46,12 @@ const OrganizationsList = ({ organizations, handleAddOrganization }) => (
   </List>
 );
 
-const AllOrganizationsDialogContent = ({ organizations, handleQueryChange, handleAddOrganization }) => {
-  return (
-    <div className="allOrganizationsContent">
-      <TextField label="Search Organizations..." type="search" onChange={handleQueryChange} fullWidth/>
-      <OrganizationsList organizations={organizations} handleAddOrganization={handleAddOrganization}/>
-    </div>
-  );
-};
+const AllOrganizationsDialogContent = ({ organizations, handleQueryChange, handleAddOrganization }) => (
+  <div className="allOrganizationsContent">
+    <TextField label="Search Organizations..." type="search" onChange={handleQueryChange} fullWidth/>
+    <OrganizationsList organizations={organizations} handleAddOrganization={handleAddOrganization}/>
+  </div>
+);
 
 const DeleteButton = ({ handleDelete }) => (
   <IconButton onClick={handleDelete} aria-label="delete">
@@ -71,7 +69,7 @@ const UserOrganizationsListItems = ({ userOrganizations, handleDeleteUserOrganiz
   const { name } = userOrganization;
 
   const handleDeleteUserOrganizationItem = () => handleDeleteUserOrganization(userOrganization);
-  console.log(userOrganizations)
+
   return (
     <ListItem key={uniqid()} button>
       <ListItemText primary={name}/>
@@ -86,14 +84,12 @@ const UserOrganizationsList = ({ userOrganizations, handleDeleteUserOrganization
   </List>
 );
 
-const UserOrganizationsDialogContent = ({ userOrganizations, handleQueryChange, handleDeleteUserOrganization }) => {
-  return (
-    <div className="userOrganizationsContent">
-      <TextField label="Search User Organizations..." type="search" onChange={handleQueryChange} autoFocus fullWidth/>
-      <UserOrganizationsList userOrganizations={userOrganizations} handleDeleteUserOrganization={handleDeleteUserOrganization}/>
-    </div>
-  );
-};
+const UserOrganizationsDialogContent = ({ userOrganizations, handleQueryChange, handleDeleteUserOrganization }) => (
+  <div className="userOrganizationsContent">
+    <TextField label="Search User Organizations..." type="search" onChange={handleQueryChange} autoFocus fullWidth/>
+    <UserOrganizationsList userOrganizations={userOrganizations} handleDeleteUserOrganization={handleDeleteUserOrganization}/>
+  </div>
+);
 
 const OrganizationsDialogContent = ({ userOrganizations, organizations, handleAddOrganization, handleDeleteUserOrganization }) => {
   const [ userOrganizationsQuery, setUserOrganizationsQuery ] = useState("");
@@ -216,8 +212,6 @@ const Users = () => {
   const handleOpenOrganizationsDialog = async (_event, user) => {
     if(!isOrganizationsDialogOpen) {
       try {
-        // const userOrganizationsData = await adminUserRoleAxios.get(`${REST_ADMIN_USERS}/${user._id}/organizations`);
-        // const { data: { data: { userOrganizationsMap } } } = userOrganizationsData;
         const userOrganizationsMap = user.organizations;
         
         let userOrganizations = Object.keys(userOrganizationsMap).map((userOrganizationId) => ({ _id: userOrganizationId, ...userOrganizationsMap[userOrganizationId] }));
@@ -252,9 +246,8 @@ const Users = () => {
     // TODO : Update on server
     
     let newUserOrganizationsMap = { ...userOrganizationsMap };
-    console.log(newUserOrganizationsMap)
+
     delete newUserOrganizationsMap[userOrganization._id];
-    console.log(newUserOrganizationsMap)
     
     const userOrganizationIndex = userOrganizations.indexOf(userOrganization);
     const newUserOrganizations = [ ...userOrganizations.slice(0, userOrganizationIndex), ...userOrganizations.slice(userOrganizationIndex + 1) ];

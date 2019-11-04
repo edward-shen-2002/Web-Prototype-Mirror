@@ -4,6 +4,7 @@
 
 - [ ] Excel view
 - [ ] Package creation
+- [ ] Some fetch/update components may use the MongoDB item to update -- if that's the case, update the ID in the frontend
 
 ## Unprioritized
 
