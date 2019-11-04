@@ -7,7 +7,7 @@ import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-import { REST_VERIFICATION } from "constants/rest";
+import { REST_VERIFICATION_VERIFICATION } from "constants/rest";
 
 import { ROUTE_LOGIN, ROUTE_REGISTER } from "constants/routes";
 
@@ -36,7 +36,7 @@ const Verification = ({ history, match: { params: { _id } } }) => {
   useEffect(() => {
     if(!isDataFetched) {
       setTimeout(() => {
-        verificationAxios.get(`${REST_VERIFICATION}/${_id}`)
+        verificationAxios.get(`${REST_VERIFICATION_VERIFICATION}/${_id}`)
           .then(({ data: { message } }) => setMessage(message))
           .catch(({ response: { data: { message } } }) => setMessage(message))
         setIsDataFetched(true);

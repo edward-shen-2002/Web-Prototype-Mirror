@@ -11,7 +11,7 @@ import { PrivillegedRoute } from "tools/components/routes";
 
 import { ONLINE, OFFLINE } from "constants/states";
 import { ROLE_USER_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_PACKAGE_MANAGER, ROLE_SECTOR_MANAGER } from "constants/roles";
-import { REST_RECONNECT, HTTP_ERROR_INVALID_TOKEN, HTTP_ERROR_UNAUTHORIZED } from "constants/rest";
+import { REST_AUTH_RECONNECT, HTTP_ERROR_INVALID_TOKEN, HTTP_ERROR_UNAUTHORIZED } from "constants/rest";
 import { 
   ROUTE_ROOT, 
   ROUTE_DASHBOARD, 
@@ -96,7 +96,7 @@ const mapStateToProps = ({ app: { shouldReconnect, isOnline }, domain: { account
 
 const mapDispatchToProps = (dispatch) => ({
   handleReconnect: () => {
-    authAxios.post(REST_RECONNECT)
+    authAxios.post(REST_AUTH_RECONNECT)
       .then(({ data: { data } }) => loadUserState(dispatch, data))
       .catch((error) => console.error(error));
   },

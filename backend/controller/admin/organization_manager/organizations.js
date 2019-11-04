@@ -31,7 +31,6 @@ const organizations = ({ router, OrganizationModel, SectorModel }) => {
   // router.post();
   router.delete(`${ROUTE_ADMIN_ORGANIZATIONS}/:_id`, (req, res, next) => {
     const { _id } = req.params;
-    console.log(_id)
 
     OrganizationModel.findByIdAndRemove(_id)
       .then(() => res.json({ message: MESSAGE_SUCCESS_SECTORS_DELETE }))

@@ -1,37 +1,57 @@
 import React, { lazy, useEffect, useState } from "react";
 
-import { adminUserRoleAxios } from "tools/rest";
+import { authAxios, adminUserRoleAxios } from "tools/rest";
 
-import { REST_ADMIN_USERS } from "constants/rest";
+import { REST_AUTH_DATA, REST_ADMIN_USERS } from "constants/rest";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions"
+import DialogActions from "@material-ui/core/DialogActions";
+
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 
 import GroupIcon from "@material-ui/icons/Group";
 import EnhancedEncryptionIcon from "@material-ui/icons/EnhancedEncryption";
+
+import uniqid from "uniqid";
 
 const MaterialTable = lazy(() => import("material-table"));
 
 import "./Users.scss";
 
-const OrganizationsDialogContent = () => (
-  <DialogContent>
+const UserOrgnaizationsOrganizationsDialogContent = ({  }) => {
 
-  </DialogContent>
-);
+};
 
-const OrganizationsDialogActions = () => (
+const UserOrganizationsCurrentOrganizationsDialogContent = () => {
+
+};
+
+const UserOrganizationsDialogContent = ({ userOrganizations }) => {
+
+  return (
+    <DialogContent>
+      
+    </DialogContent>
+  );
+};
+
+const UserOrganizationsDialogActions = () => (
   <DialogActions>
 
   </DialogActions>
 );
 
-const OrganizationsDialog = ({ open, handleClose }) => (
+const UserOrganizationsDialog = ({ open, userOrganizations, handleClose }) => (
   <Dialog open={open} onClose={handleClose}>
-    <OrganizationsDialogContent/>
-    <OrganizationsDialogActions/>
+    <DialogTitle>User Orgnaizations</DialogTitle>
+    <UserOrganizationsDialogContent userOrganizations={userOrganizations}/>
+    <UserOrganizationsDialogActions/>
   </Dialog>
 );
 
@@ -61,6 +81,7 @@ const Users = () => {
   const [ isDataFetched, setIsDataFetched ] = useState(false);
   const [ isOrganizationsDialogOpen, setIsOrganizationsDialogOpen ] = useState(false);
   const [ userOrganizations, setUserOrganizations ] = useState([]);
+  const [ organizations, setOrganizations ] = useState([]);
 
   useEffect(() => {
     if(!isDataFetched) {
@@ -81,7 +102,7 @@ const Users = () => {
       })
       .catch((error) => {
         console.error(error);
-        reject();
+        reject(error);
       });
     }, 600);
   });
@@ -111,27 +132,33 @@ const Users = () => {
         })
         .catch((error) => {
           console.error(error);
-          reject();
+          reject(error);
         })
       }, 1000);
   });
 
-  const handleOpenOrganizationsDialog = (_event, user) => {
+  const handleOpenOrganizationsDialog = async (_event, user) => {
     if(!isOrganizationsDialogOpen) {
-      setIsOrganizationsDialogOpen(true);
-      adminUserRoleAxios.get(`${REST_ADMIN_USERS}/${user._id}/organizations`)
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      try {
+        const userOrganizationsData = await adminUserRoleAxios.get(`${REST_ADMIN_USERS}/${user._id}/organizations`);
+        const { data: { data: { userOrganizations } } } = userOrganizationsData;
+        
+        const organizationsData = await authAxios.get(`${REST_AUTH_DATA}/organizations`);
+        const { data: { data: { organizations } } } = organizationsData;
+        
+        setUserOrganizations(userOrganizations);
+        setOrganizations(organizations);
+        setIsOrganizationsDialogOpen(true);
+      } catch(error) {
+        console.error(error);
+      }
     }
   };
 
   const handleCloseOrganizationsDialog = () => {
     if(isOrganizationsDialogOpen) setIsOrganizationsDialogOpen(false);
     if(userOrganizations) setUserOrganizations([]);
+    if(organizations) setOrganizations([]);
   };
 
   const handleOpenRolesDialog = () => {
@@ -161,7 +188,7 @@ const Users = () => {
   return (
     <div className="usersPage">
       <MaterialTable className="usersTable" title="Users" columns={columns} actions={actions} data={users} editable={editable} options={options}/>
-      <OrganizationsDialog open={isOrganizationsDialogOpen} handleClose={handleCloseOrganizationsDialog}/>
+      <UserOrganizationsDialog open={isOrganizationsDialogOpen} userOrganizations={userOrganizations} handleClose={handleCloseOrganizationsDialog}/>
     </div>
   );
 };

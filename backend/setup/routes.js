@@ -5,9 +5,14 @@ import { userAuthenticationMiddleware, verificationMiddleware, userRoleMiddlewar
 // Route controllers
 import loginController from "../controller/public/login";
 import registerController from "../controller/public/register";
-import reconnectController from "../controller/auth/reconnect";
-import logoutController from "../controller/auth/logout";
+
+// Verification controllers
 import verificationController from "../controller/verification/verification";
+
+// Auth controllers
+import logoutController from "../controller/auth/logout";
+import reconnectController from "../controller/auth/reconnect";
+import dataController from "..//controller/auth/data";
 
 // Admin controllers
 import usersController from "../controller/admin/user_manager/users";
@@ -20,7 +25,8 @@ import { ROUTE_GROUP_PUBLIC, ROUTE_GROUP_AUTH, ROUTE_GROUP_ADMIN, ROUTE_GROUP_AD
 /**
  * Routes which require user authentication -- must pass through the authentication middleware.
  */
-const authRoutes = ({ passport }) => {
+const authRoutes = (helpers) => {
+  const { passport } = helpers;
   let router = new Router();
 
   // Authentication middleware -- All requests with the corresponsing app route must go through this middleware first
@@ -28,6 +34,7 @@ const authRoutes = ({ passport }) => {
 
   reconnectController({ router });
   logoutController({ router });
+  dataController({ ...helpers, router });
 
   return router;
 };

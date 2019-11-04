@@ -1,12 +1,15 @@
 import { isValidMongooseObjectId } from "../../../tools/misc";
 
-import { ROUTE_ADMIN_USERS } from "../../../constants/rest";
+import { ROUTE_ADMIN_USERS, HTTP_ERROR_NOT_FOUND } from "../../../constants/rest";
 
 import { 
   MESSAGE_SUCCESS_USERS, 
   MESSAGE_SUCCESS_USERS_CREATE,
   MESSAGE_SUCCESS_USERS_UPDATE,
-  MESSAGE_SUCCESS_USERS_DELETE 
+  MESSAGE_SUCCESS_USERS_DELETE, 
+  MESSAGE_SUCCESS_ORGANIZATIONS,
+
+  MESSAGE_ERROR_NOT_FOUND
 } from "../../../constants/messages";
 
 // import { ROLE_LEVEL_ADMIN, ROLE_LEVEL_LHIN, ROLE_LEVEL_ORGANIZATION } from "../../../constants/roles";
@@ -76,10 +79,14 @@ const users = ({ router, UserModel }) => {
       const user = await UserModel.findById(_id);
 
       if(user) {
-        const { organizations } = user;
+        let { organizations } = user;
 
-        // TODO Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe, quaerat illum totam eveniet facilis deleniti? Architecto repudiandae impedit voluptas illo modi sed nemo perferendis officiis magni. Repellat esse saepe aperiam!
-        res.end();
+        let userOrganizations = [];
+        for(let organizationId in organizations) {
+          userOrganizations.push({ _id: organizationId, ...organizations[organizationId] });
+        }
+
+        res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { userOrganizations } });
       } else {
         res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_NOT_FOUND });
       }

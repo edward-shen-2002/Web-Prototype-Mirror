@@ -14,7 +14,7 @@ import Slide from "@material-ui/core/Slide";
 
 import { publicAxios } from "tools/rest";
 
-import { REST_REGISTER } from "constants/rest";
+import { REST_PUBLIC_REGISTER } from "constants/rest";
 import { ROUTE_LOGIN, ROUTE_DASHBOARD } from "constants/routes";
 
 import * as yup from "yup";
@@ -183,7 +183,7 @@ let Register = ({ isOnline, history }) => {
       history.push(ROUTE_DASHBOARD);
     } else {
       if(registerView) {
-        publicAxios.post(REST_REGISTER, { ...newUser, passwordConfirm: undefined })
+        publicAxios.post(REST_PUBLIC_REGISTER, { ...newUser, passwordConfirm: undefined })
           .then(() => {
             setRegisterView(false);
             setRegistrationData(newUser);

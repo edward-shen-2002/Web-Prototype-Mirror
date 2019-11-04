@@ -15,6 +15,7 @@ export const ROUTE_VERFICATION = "/verification";
 export const ROUTE_GROUP_AUTH = "/jwt";
 export const ROUTE_RECONNECT = "/reconnect";
 export const ROUTE_LOGOUT = "/logout";
+export const ROUTE_DATA = "/data";
 
 export const ROUTE_GROUP_ADMIN = "/admin";
 
