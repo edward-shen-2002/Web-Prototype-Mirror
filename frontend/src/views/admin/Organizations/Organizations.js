@@ -149,8 +149,19 @@ const Organizations = () => {
       });
   });
 
-  const handleRowDelete = () => new Promise((resolve, reject) => {
-    
+  const handleRowDelete = (oldOrganization) => new Promise((resolve, reject) => {
+    setTimeout(() => {
+      adminOrganizationRoleAxios.delete(`${REST_ADMIN_ORGANIZATIONS}/${oldOrganization._id}`)
+        .then(() => {
+          const oldOrganizationIndex = organizations.indexOf(oldOrganization);
+          setOrganizations([ ...organizations.slice(0, oldOrganizationIndex), ...organizations.slice(oldOrganizationIndex + 1) ]);
+          resolve();
+        })
+        .catch((error) => {
+          console.error(error);
+          reject(error);
+        });
+      }, 1000);
   });
 
   const actions = [ 

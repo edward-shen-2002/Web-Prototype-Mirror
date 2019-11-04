@@ -2,7 +2,7 @@ import { ROUTE_ADMIN_ORGANIZATIONS } from "../../../constants/rest";
 
 // import { ROLE_LEVEL_ADMIN, ROLE_LEVEL_LHIN } from "../../../constants/roles";
 
-import { MESSAGE_SUCCESS_ORGANIZATIONS, MESSAGE_SUCCESS_SECTORS, MESSAGE_SUCCESS_SECTORS_UPDATE } from "../../../constants/messages";
+import { MESSAGE_SUCCESS_ORGANIZATIONS, MESSAGE_SUCCESS_SECTORS, MESSAGE_SUCCESS_SECTORS_UPDATE, MESSAGE_SUCCESS_SECTORS_DELETE } from "../../../constants/messages";
 
 
 const organizations = ({ router, OrganizationModel, SectorModel }) => {
@@ -22,18 +22,21 @@ const organizations = ({ router, OrganizationModel, SectorModel }) => {
     const { newOrganization } = req.body;
 
     const { _id } = newOrganization;
-    
-    try {
-      OrganizationModel.findByIdAndUpdate(_id, newOrganization)
-        .then(() => res.json({ message: MESSAGE_SUCCESS_SECTORS_UPDATE }))
-        .catch(next);
-    } catch(error) {
-      next(error);
-    }
+
+    OrganizationModel.findByIdAndUpdate(_id, newOrganization)
+      .then(() => res.json({ message: MESSAGE_SUCCESS_SECTORS_UPDATE }))
+      .catch(next);
   });
 
   // router.post();
-  // router.delete();
+  router.delete(`${ROUTE_ADMIN_ORGANIZATIONS}/:_id`, (req, res, next) => {
+    const { _id } = req.params;
+    console.log(_id)
+
+    OrganizationModel.findByIdAndRemove(_id)
+      .then(() => res.json({ message: MESSAGE_SUCCESS_SECTORS_DELETE }))
+      .catch(next);
+  });
 
   router.get(`${ROUTE_ADMIN_ORGANIZATIONS}/sectors`, (_req, res, next) => {
     SectorModel.find({})

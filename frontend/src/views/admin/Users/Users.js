@@ -96,7 +96,7 @@ const Users = () => {
         })
         .catch((error) => {
           console.error(error);
-          reject();
+          reject(error);
         });
       }, 1000);
   });
