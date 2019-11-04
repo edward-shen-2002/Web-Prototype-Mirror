@@ -81,7 +81,7 @@ const setupMongoose = async (options, { UserModel, SectorModel, OrganizationMode
 
       userOrganizations[sampleOrganization._id] = {
         name: sampleOrganization.name,
-        position: "Co-op Student"
+        code: sampleOrganization.code
       };
     
       const sampleUserData = { 

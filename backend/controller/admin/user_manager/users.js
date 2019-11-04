@@ -60,7 +60,6 @@ const users = ({ router, UserModel }) => {
       .catch(next)
   });
 
-  // ? Should this be delete or change user to inactive? Change to id?
   router.delete(`${ROUTE_ADMIN_USERS}/:_id`, (req, res, next) => {
     const { _id } = req.params;
 

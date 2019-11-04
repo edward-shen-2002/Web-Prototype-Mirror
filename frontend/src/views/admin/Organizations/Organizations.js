@@ -130,28 +130,32 @@ const Organizations = () => {
   ];
 
   const handleRowAdd = (newOrganization) => new Promise((resolve, reject) => {
-    adminOrganizationRoleAxios.post(REST_ADMIN_ORGANIZATIONS, { newOrganization })
-      .then(({ data: { data: { organization } } }) => {
-        setOrganizations([ ...organizations, organization ]);
-        resolve();
-      })
-      .catch((error) => {
-        console.error(error);
-        reject(error);
-      });
+    setTimeout(() => {
+      adminOrganizationRoleAxios.post(REST_ADMIN_ORGANIZATIONS, { newOrganization })
+        .then(({ data: { data: { organization } } }) => {
+          setOrganizations([ ...organizations, organization ]);
+          resolve();
+        })
+        .catch((error) => {
+          console.error(error);
+          reject(error);
+        });
+    }, 600);
   });
 
   const handleRowUpdate = (newOrganization, oldOrganization) => new Promise((resolve, reject) => {
-    adminOrganizationRoleAxios.put(REST_ADMIN_ORGANIZATIONS, { newOrganization })
-      .then(() => {
-        const oldOrganizationIndex = organizations.indexOf(oldOrganization);
-        setOrganizations([ ...organizations.slice(0, oldOrganizationIndex), newOrganization, ...organizations.slice(oldOrganizationIndex + 1) ]);
-        resolve();
-      })
-      .catch((error) => {
-        console.error(error);
-        reject(error);
-      });
+    setTimeout(() => {
+      adminOrganizationRoleAxios.put(REST_ADMIN_ORGANIZATIONS, { newOrganization })
+        .then(() => {
+          const oldOrganizationIndex = organizations.indexOf(oldOrganization);
+          setOrganizations([ ...organizations.slice(0, oldOrganizationIndex), newOrganization, ...organizations.slice(oldOrganizationIndex + 1) ]);
+          resolve();
+        })
+        .catch((error) => {
+          console.error(error);
+          reject(error);
+        });
+    }, 1000);
   });
 
   const handleRowDelete = (oldOrganization) => new Promise((resolve, reject) => {
@@ -166,7 +170,7 @@ const Organizations = () => {
           console.error(error);
           reject(error);
         });
-      }, 1000);
+    }, 1000);
   });
 
   const actions = [ 
