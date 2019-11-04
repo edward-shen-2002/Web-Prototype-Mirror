@@ -48,14 +48,14 @@ const SectorsList = ({ sectors, handleSelect }) => (
 const SectorsDialogContent = ({ sectors, handleSelect }) => {
   const [ query, setQuery ] = useState("");
 
-  const newSectors = sectors.filter(({ name }) => name.toLowerCase().includes(query.toLowerCase()));
+  const filteredSectors = sectors.filter(({ name }) => name.toLowerCase().includes(query.toLowerCase()));
 
   const handleQueryChange = ({ target: { value } }) => setQuery(value);
 
   return (
     <DialogContent>
       <TextField label="Search Sector..." type="search" onChange={handleQueryChange} autoFocus/>
-      <SectorsList sectors={newSectors} handleSelect={handleSelect}/>
+      <SectorsList sectors={filteredSectors} handleSelect={handleSelect}/>
     </DialogContent>
   );
 };
