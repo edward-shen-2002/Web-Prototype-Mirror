@@ -74,7 +74,7 @@ const SectorsDialog = ({ sectors, open, handleClose, handleSelect }) => (
   </Dialog>
 );
 
-const SectorEditComponent = ({ value, onChange }) => {
+const SectorEditComponent = ({ value, onChange, rowData: organization }) => {
   const [ isSectorsDialogOpen, setIsSectorsDialogOpen ] = useState(false);
   const [ sectors, setSectors ] = useState([]);
 
@@ -95,9 +95,8 @@ const SectorEditComponent = ({ value, onChange }) => {
     setIsSectorsDialogOpen(false);
     setSectors([]);
   };
-
+  
   const handleSelectSector = (newSector) => {
-    // TODO: Update sector in db
     onChange(newSector);
     handleCloseSectorsDialog();
   };
@@ -137,8 +136,17 @@ const Organizations = () => {
     resolve();
   });
 
-  const handleRowUpdate = () => new Promise((resolve, reject) => {
-
+  const handleRowUpdate = (newOrganization, oldOrganization) => new Promise((resolve, reject) => {
+    adminOrganizationRoleAxios.put(REST_ADMIN_ORGANIZATIONS, { newOrganization })
+      .then(() => {
+        const oldOrganizationIndex = organizations.indexOf(oldOrganization);
+        setOrganizations([ ...organizations.slice(0, oldOrganizationIndex), newOrganization, ...organizations.slice(oldOrganizationIndex + 1) ]);
+        resolve();
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
   });
 
   const handleRowDelete = () => new Promise((resolve, reject) => {
