@@ -37,7 +37,7 @@ const users = ({ router, UserModel }) => {
     const { password } = newUser;
 
     UserModel.register({ ...newUser, password: undefined }, password)
-      .then(() => res.json({ message: MESSAGE_SUCCESS_USERS_CREATE }))
+      .then((user) => res.json({ message: MESSAGE_SUCCESS_USERS_CREATE, data: { user } }))
       .catch(next);
   });
 

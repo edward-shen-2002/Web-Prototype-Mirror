@@ -168,8 +168,8 @@ const Users = () => {
   const handleRowAdd = (newUser) => new Promise((resolve, reject) => {
     setTimeout(() => {
       adminUserRoleAxios.post(REST_ADMIN_USERS, { newUser })
-      .then(() => {
-        setUsers([ ...users, { ...newUser, password: "" } ]);
+      .then(({ data: { data: { user } } }) => {
+        setUsers([ ...users, user ]);
         resolve();
       })
       .catch((error) => {
