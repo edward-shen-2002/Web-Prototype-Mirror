@@ -39,17 +39,17 @@ const OrganizationsListItems = ({ organizations, handleAddOrganization }) => org
   )
 });
 
-const OrganizationsList = ({ organizations }) => (
+const OrganizationsList = ({ organizations, handleAddOrganization }) => (
   <List>
-    <OrganizationsListItems organizations={organizations}/>
+    <OrganizationsListItems organizations={organizations} handleAddOrganization={handleAddOrganization}/>
   </List>
 );
 
-const AllOrganizationsDialogContent = ({ organizations, handleQueryChange }) => {
+const AllOrganizationsDialogContent = ({ organizations, handleQueryChange, handleAddOrganization }) => {
   return (
     <div className="allOrganizationsContent">
       <TextField label="Search Organizations..." type="search" onChange={handleQueryChange} fullWidth/>
-      <OrganizationsList organizations={organizations}/>
+      <OrganizationsList organizations={organizations} handleAddOrganization={handleAddOrganization}/>
     </div>
   );
 };
@@ -74,27 +74,27 @@ const UserOrganizationsListItems = ({ userOrganizations, handleDeleteUserOrganiz
   return (
     <ListItem key={uniqid()} button>
       <ListItemText primary={name}/>
-      <UserOrganizationsListItemActions handleDeleteUserOrganizationItem={handleDeleteUserOrganizationItem}/>
+      <UserOrganizationsListItemActions handleDeleteUserOrganization={handleDeleteUserOrganizationItem}/>
     </ListItem>
   );
 });
 
-const UserOrganizationsList = ({ userOrganizations }) => (
+const UserOrganizationsList = ({ userOrganizations, handleDeleteUserOrganization }) => (
   <List>
-    <UserOrganizationsListItems userOrganizations={userOrganizations}/>
+    <UserOrganizationsListItems userOrganizations={userOrganizations} handleDeleteUserOrganization={handleDeleteUserOrganization}/>
   </List>
 );
 
-const UserOrganizationsDialogContent = ({ userOrganizations, handleQueryChange }) => {
+const UserOrganizationsDialogContent = ({ userOrganizations, handleQueryChange, handleDeleteUserOrganization }) => {
   return (
     <div className="userOrganizationsContent">
       <TextField label="Search User Organizations..." type="search" onChange={handleQueryChange} autoFocus fullWidth/>
-      <UserOrganizationsList userOrganizations={userOrganizations}/>
+      <UserOrganizationsList userOrganizations={userOrganizations} handleDeleteUserOrganization={handleDeleteUserOrganization}/>
     </div>
   );
 };
 
-const OrganizationsDialogContent = ({ userOrganizations, organizations }) => {
+const OrganizationsDialogContent = ({ userOrganizations, organizations, handleAddOrganization, handleDeleteUserOrganization }) => {
   const [ userOrganizationsQuery, setUserOrganizationsQuery ] = useState("");
   const [ organizationsQuery, setOrganizationsQuery ] = useState("");
 
@@ -104,14 +104,12 @@ const OrganizationsDialogContent = ({ userOrganizations, organizations }) => {
   const handleOrganizationsQueryChange = ({ target: { value } }) => setOrganizationsQuery(value);
   const handleUserOrganizationsQueryChange = ({ target: { value } }) => setUserOrganizationsQuery(value);
 
-  const handleDeleteUserOrganization = (userOrganization) => {};
-  const handleAddOrganization = (organization) => {};
 
   return (
     <DialogContent className="organizationsContent">
-      <UserOrganizationsDialogContent userOrganizations={filteredUserOrganizations} handleQueryChange={handleUserOrganizationsQueryChange}/>
+      <UserOrganizationsDialogContent userOrganizations={filteredUserOrganizations} handleQueryChange={handleUserOrganizationsQueryChange} handleDeleteUserOrganization={handleDeleteUserOrganization}/>
       <div className="verticalSeparator"></div>
-      <AllOrganizationsDialogContent organizations={filteredOrganizations} handleQueryChange={handleOrganizationsQueryChange}/>
+      <AllOrganizationsDialogContent organizations={filteredOrganizations} handleQueryChange={handleOrganizationsQueryChange} handleAddOrganization={handleAddOrganization}/>
     </DialogContent>
   );
 };
@@ -122,10 +120,10 @@ const OrganizationsDialogActions = ({ handleClose }) => (
   </DialogActions>
 );
 
-const OrganizationsDialog = ({ open, userOrganizations, organizations, handleClose }) => (
+const OrganizationsDialog = ({ open, userOrganizations, organizations, handleClose, handleAddOrganization, handleDeleteUserOrganization }) => (
   <Dialog open={open} onClose={handleClose}>
     <DialogTitle>User Organizations</DialogTitle>
-    <OrganizationsDialogContent userOrganizations={userOrganizations} organizations={organizations}/>
+    <OrganizationsDialogContent userOrganizations={userOrganizations} organizations={organizations} handleAddOrganization={handleAddOrganization} handleDeleteUserOrganization={handleDeleteUserOrganization}/>
     <OrganizationsDialogActions handleClose={handleClose}/>
   </Dialog>
 );
@@ -239,6 +237,21 @@ const Users = () => {
   const handleOpenRolesDialog = () => {
 
   };
+
+  const handleDeleteUserOrganization = (userOrganization) => {
+    // const userIndex = userOrganization.
+  };
+
+  const handleAddOrganization = (organization) => {
+    if(userOrganizations.find(({ _id }) => _id === organization._id)) {
+      console.error("User is already a part of the selected organization");
+    } else {
+      // TODO : Error check: prevent usr from joining the same organization
+      // ! NEED REFERENCE TO USER... HOW ELSE TO UPDATE
+      setUserOrganizations([ ...userOrganizations, organization ]);
+    }
+  };
+
   
   const columns = [
     { title: "Username", field: "username" },
@@ -263,7 +276,14 @@ const Users = () => {
   return (
     <div className="usersPage">
       <MaterialTable className="usersTable" title="Users" columns={columns} actions={actions} data={users} editable={editable} options={options}/>
-      <OrganizationsDialog open={isOrganizationsDialogOpen} userOrganizations={userOrganizations} organizations={organizations} handleClose={handleCloseOrganizationsDialog}/>
+      <OrganizationsDialog 
+        open={isOrganizationsDialogOpen} 
+        userOrganizations={userOrganizations} 
+        organizations={organizations} 
+        handleClose={handleCloseOrganizationsDialog} 
+        handleAddOrganization={handleAddOrganization} 
+        handleDeleteUserOrganization={handleDeleteUserOrganization}
+      />
     </div>
   );
 };
