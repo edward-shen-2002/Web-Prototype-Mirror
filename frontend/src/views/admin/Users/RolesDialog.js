@@ -71,11 +71,11 @@ const RolesListItemContent = ({ isOpen, roleContent, handleSelectRoleScope }) =>
 const RolesListItemSummary = ({ role, isOpen, handleToggle }) => (
   <ListItem onClick={handleToggle} button>
     <ListItemText primary={role}/>
-    { isOpen ? <ExpandLessIcon/> : <ExpandMoreIcon/> }
+    {isOpen ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
   </ListItem>
 );
 
-const RoleListItem = ({ role, roleContent, handleChangeRoleScope }) => {
+const RoleListItem = ({ role, roleContent, handleChangeRoleScope, handleOpenEntityDialog, handleCloseEntityDialog }) => {
   const [ isOpen, setIsOpen ] = useState(false);
   
   const formattedRoleString = (
@@ -96,11 +96,20 @@ const RoleListItem = ({ role, roleContent, handleChangeRoleScope }) => {
   )
 };
 
-const RolesListItems = ({ userRoles, handleChangeRoleScope }) => Object.keys(userRoles).map((role) => <RoleListItem key={role} role={role} roleContent={userRoles[role]} handleChangeRoleScope={handleChangeRoleScope}/>);
+const RolesListItems = ({ userRoles, handleChangeRoleScope, handleOpenEntityDialog, handleCloseEntityDialog }) => Object.keys(userRoles).map((role) => (
+  <RoleListItem 
+    key={role} 
+    role={role} 
+    roleContent={userRoles[role]} 
+    handleChangeRoleScope={handleChangeRoleScope} 
+    handleOpenEntityDialog={handleOpenEntityDialog} 
+    handleCloseEntityDialog={handleCloseEntityDialog}
+  />
+));
 
-const RolesList = ({ userRoles, handleChangeRoleScope }) => (
+const RolesList = ({ userRoles, handleChangeRoleScope, handleOpenEntityDialog, handleCloseEntityDialog }) => (
   <List>
-    <RolesListItems userRoles={userRoles} handleChangeRoleScope={handleChangeRoleScope}/>
+    <RolesListItems userRoles={userRoles} handleChangeRoleScope={handleChangeRoleScope} handleOpenEntityDialog={handleOpenEntityDialog} handleCloseEntityDialog={handleCloseEntityDialog}/>
   </List>
 );
 
@@ -136,7 +145,7 @@ const RolesDialogContent = ({ userRoles, handleChangeRoleScope }) => {
 
   return (
     <DialogContent className="rolesContent">
-      <RolesList userRoles={userRoles} handleOpenEntityDialog={handleOpenEntityDialog} handleChangeRoleScope={handleChangeRoleScope}/>
+      <RolesList userRoles={userRoles} handleOpenEntityDialog={handleOpenEntityDialog} handleCloseEntityDialog={handleCloseEntityDialog} handleChangeRoleScope={handleChangeRoleScope}/>
       <HierarchyEntitiesDialog 
         open={isEntityDialogOpen}
         title={title}
@@ -160,7 +169,7 @@ const RolesDialog = ({ open, userRoles, handleClose, handleChangeRoleScope }) =>
   <Dialog open={open} onClose={handleClose}>
     <DialogTitle>User Roles</DialogTitle>
     <RolesDialogContent userRoles={userRoles} handleChangeRoleScope={handleChangeRoleScope}/>
-    <RolesDialogActions/>
+    <RolesDialogActions handleClose={handleClose}/>
   </Dialog>
 );
 

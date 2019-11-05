@@ -31,6 +31,15 @@ const Users = () => {
   const [ isRolesDialogOpen, setIsRolesDialogOpen ] = useState(false);
   const [ userRoles, setUserRoles ] = useState({});
 
+  const updateUser = (newUser, oldUser, resolve, reject) => (
+    adminUserRoleAxios.put(REST_ADMIN_USERS, { updatedUser: newUser })
+      .then((response) => {
+        const oldUserIndex = users.indexOf(oldUser);
+        setUsers([ ...users.slice(0, oldUserIndex), { ...newUser, password: "" }, ...users.slice(oldUserIndex + 1) ]);
+        return response;
+      })
+  );
+
   useEffect(() => {
     if(!isDataFetched) {
       adminUserRoleAxios.get(REST_ADMIN_USERS)
@@ -72,16 +81,9 @@ const Users = () => {
   
   const handleRowUpdate = (newUser, oldUser) => new Promise((resolve, reject) => {
     setTimeout(() => {
-      adminUserRoleAxios.put(REST_ADMIN_USERS, { updatedUser: newUser })
-        .then(() => {
-          const oldUserIndex = users.indexOf(oldUser);
-          setUsers([ ...users.slice(0, oldUserIndex), { ...newUser, password: "" }, ...users.slice(oldUserIndex + 1) ]);
-          resolve();
-        })
-        .catch((error) => {
-          console.error(error);
-          reject(error);
-        })
+      updateUser(newUser, oldUser)
+        .then(resolve)
+        .catch(reject);
     }, 1000);
   });
 
@@ -172,8 +174,14 @@ const Users = () => {
     let updatedUserRoles = { ...userRoles };
     updatedUserRoles[role] = { ...updatedUserRoles[role], scope };
 
-    setUser({ ...user, roles: updatedUserRoles });
-    setUserRoles(updatedUserRoles);
+    const updatedUser = { ...user, roles: updatedUserRoles };
+
+    updateUser(updatedUser, user)
+      .then(() => {
+        setUser(updatedUser);
+        setUserRoles(updatedUserRoles);
+      })
+      .catch((error) => console.error(error));
   };
 
   const columns = [
