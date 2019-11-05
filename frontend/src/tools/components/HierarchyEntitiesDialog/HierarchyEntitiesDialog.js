@@ -18,13 +18,13 @@ import { DeleteButton } from "tools/components/buttons";
 
 import "./HierarchyEntitiesDialog.scss";
 
-const HierchyEntitiesListItems = ({ entities, handleAddEntity }) => entities.map((organization) => {
-  const { name } = organization;
+const HierchyEntitiesListItems = ({ entities, handleAddEntity }) => entities.map((entity) => {
+  const { name } = entity;
 
-  const handleAddOrganizationItem = () => handleAddEntity(organization);
+  const handleAddEntityItem = () => handleAddEntity(entity);
 
   return (
-    <ListItem key={uniqid()} button onClick={handleAddOrganizationItem}>
+    <ListItem key={uniqid()} button onClick={handleAddEntityItem}>
       <ListItemText primary={name}/>
     </ListItem>
   )
@@ -50,15 +50,15 @@ const UserHierarchyEntitiesListItemActions = ({ handleDeleteUserEntity }) => (
   </ListItemSecondaryAction>
 );
 
-const UserHierarchyEntititesListItems = ({ userEntities, handleDeleteUserEntity }) => userEntities.map((userOrganization) => {
-  const { name } = userOrganization;
+const UserHierarchyEntititesListItems = ({ userEntities, handleDeleteUserEntity }) => userEntities.map((userEntity) => {
+  const { name } = userEntity;
 
-  const handleDeleteUserOrganizationItem = () => handleDeleteUserEntity(userOrganization);
+  const handleDeleteUserEntityItem = () => handleDeleteUserEntity(userEntity);
 
   return (
     <ListItem key={uniqid()} button>
       <ListItemText primary={name}/>
-      <UserHierarchyEntitiesListItemActions handleDeleteUserEntity={handleDeleteUserOrganizationItem}/>
+      <UserHierarchyEntitiesListItemActions handleDeleteUserEntity={handleDeleteUserEntityItem}/>
     </ListItem>
   );
 });

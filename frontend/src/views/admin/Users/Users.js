@@ -10,7 +10,7 @@ import EnhancedEncryptionIcon from "@material-ui/icons/EnhancedEncryption";
 
 import RolesDialog from "./RolesDialog";
 
-import HierarchyEntitiesDialog from "./HierarchyEntitiesDialog";
+import HierarchyEntitiesDialog from "tools/components/HierarchyEntitiesDialog";
 
 const MaterialTable = lazy(() => import("material-table"));
 
