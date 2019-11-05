@@ -168,6 +168,14 @@ const Users = () => {
     }
   };
 
+  const handleChangeRoleScope = (role, scope) => {
+    let updatedUserRoles = { ...userRoles };
+    updatedUserRoles[role] = { ...updatedUserRoles[role], scope };
+
+    setUser({ ...user, roles: updatedUserRoles });
+    setUserRoles(updatedUserRoles);
+  };
+
   const columns = [
     { title: "Username", field: "username" },
     { title: "Email", field: "email" },
@@ -206,8 +214,9 @@ const Users = () => {
       />
       <RolesDialog
         open={isRolesDialogOpen}
-        handleClose={handleCloseRolesDialog}
         userRoles={userRoles}
+        handleClose={handleCloseRolesDialog}
+        handleChangeRoleScope={handleChangeRoleScope}
       />
     </div>
   );
