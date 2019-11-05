@@ -8,7 +8,9 @@ import { REST_AUTH_DATA, REST_ADMIN_USERS } from "constants/rest";
 import GroupIcon from "@material-ui/icons/Group";
 import EnhancedEncryptionIcon from "@material-ui/icons/EnhancedEncryption";
 
-import OrganizationsDialog from "./OrganizationsDialog";
+import RolesDialog from "./RolesDialog";
+
+import HierarchyEntitiesDialog from "./HierarchyEntitiesDialog";
 
 const MaterialTable = lazy(() => import("material-table"));
 
@@ -25,6 +27,9 @@ const Users = () => {
   const [ userOrganizationsMap, setUserOrganizationsMap ] = useState({});
   const [ userOrganizations, setUserOrganizations ] = useState([]);
   const [ organizations, setOrganizations ] = useState([]);
+
+  const [ isRolesDialogOpen, setIsRolesDialogOpen ] = useState(false);
+  const [ userRoles, setUserRoles ] = useState({});
 
   useEffect(() => {
     if(!isDataFetched) {
@@ -82,22 +87,19 @@ const Users = () => {
 
   const handleOpenOrganizationsDialog = async (_event, user) => {
     if(!isOrganizationsDialogOpen) {
-      try {
-        const userOrganizationsMap = user.organizations;
-        
-        let userOrganizations = Object.keys(userOrganizationsMap).map((userOrganizationId) => ({ _id: userOrganizationId, ...userOrganizationsMap[userOrganizationId] }));
+      const userOrganizationsMap = user.organizations;
+      
+      let userOrganizations = Object.keys(userOrganizationsMap).map((userOrganizationId) => ({ _id: userOrganizationId, ...userOrganizationsMap[userOrganizationId] }));
 
-        const organizationsData = await authAxios.get(`${REST_AUTH_DATA}/organizations`);
-        const { data: { data: { organizations } } } = organizationsData;
-        
-        setUser(user);
-        setUserOrganizationsMap(userOrganizationsMap);
-        setUserOrganizations(userOrganizations);
-        setOrganizations(organizations);
-        setIsOrganizationsDialogOpen(true);
-      } catch(error) {
-        console.error(error);
-      }
+      authAxios.get(`${REST_AUTH_DATA}/organizations`)
+        .then(({ data: { data: { organizations } } }) => {
+          setUser(user);
+          setUserOrganizationsMap(userOrganizationsMap);
+          setUserOrganizations(userOrganizations);
+          setOrganizations(organizations);
+          setIsOrganizationsDialogOpen(true);
+        })
+        .catch((error) => console.error(error));
     }
   };
 
@@ -109,8 +111,16 @@ const Users = () => {
     if(user) setUser(null);
   };
 
-  const handleOpenRolesDialog = () => {
+  const handleOpenRolesDialog = (_event, user) => {
+    setUser(user);
+    setUserRoles(user.roles);
+    setIsRolesDialogOpen(true);
+  };
 
+  const handleCloseRolesDialog = () => {
+    if(isRolesDialogOpen) setIsRolesDialogOpen(false);
+    if(user) setUser(null);
+    if(userRoles) setUserRoles({});
   };
 
   const handleDeleteUserOrganization = (userOrganization) => {
@@ -132,7 +142,7 @@ const Users = () => {
         setUserOrganizations(newUserOrganizations);
         setUserOrganizationsMap(newUserOrganizationsMap);
       })
-      .catch(() => console.error(error));
+      .catch((error) => console.error(error));
   };
 
   const handleAddOrganization = (newUserOrganization) => {
@@ -181,13 +191,23 @@ const Users = () => {
   return (
     <div className="usersPage">
       <MaterialTable className="usersTable" title="Users" columns={columns} actions={actions} data={users} editable={editable} options={options}/>
-      <OrganizationsDialog 
-        open={isOrganizationsDialogOpen} 
-        userOrganizations={userOrganizations} 
-        organizations={organizations} 
+      <HierarchyEntitiesDialog
+        open={isOrganizationsDialogOpen}
+        userEntities={userOrganizations} 
+        entities={organizations} 
+        title="Organizations"
+        userTitle="Current Organizations"
+        allTitle="Add User Organization"
+        userSearchPlaceholder="Search User Organizations..."
+        allSearchPlaceHolder="Search organizations..."
         handleClose={handleCloseOrganizationsDialog} 
-        handleAddOrganization={handleAddOrganization} 
-        handleDeleteUserOrganization={handleDeleteUserOrganization}
+        handleAddEntity={handleAddOrganization} 
+        handleDeleteUserEntity={handleDeleteUserOrganization}
+      />
+      <RolesDialog
+        open={isRolesDialogOpen}
+        handleClose={handleCloseRolesDialog}
+        userRoles={userRoles}
       />
     </div>
   );

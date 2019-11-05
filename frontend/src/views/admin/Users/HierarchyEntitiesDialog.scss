@@ -1,0 +1,27 @@
+.hierchyEntitiesContent {
+  display: flex;
+}
+
+.userHierarchyEntitiesContent {
+  width: 300px;
+  margin-right: 10px;
+
+  &__header {
+    margin-bottom: 20px;
+  }
+}
+
+.allHierarchyEntitiesContent {
+  width: 300px;
+  margin-left: 10px;
+
+  &__header {
+    margin-bottom: 20px;
+  }
+}
+
+.verticalSeparator {
+  border: 1px solid black;
+
+  margin: 0 auto;
+}
