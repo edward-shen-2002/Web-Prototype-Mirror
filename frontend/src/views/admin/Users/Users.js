@@ -1,9 +1,9 @@
 import React, { lazy, useEffect, useState } from "react";
 
 import { isObjectEmpty } from "tools/misc";
-import { authAxios, adminUserRoleAxios } from "tools/rest";
+import { publicAxios, adminUserRoleAxios } from "tools/rest";
 
-import { REST_AUTH_DATA, REST_ADMIN_USERS } from "constants/rest";
+import { REST_PUBLIC_DATA, REST_ADMIN_USERS } from "constants/rest";
 
 import GroupIcon from "@material-ui/icons/Group";
 import EnhancedEncryptionIcon from "@material-ui/icons/EnhancedEncryption";
@@ -94,7 +94,7 @@ const Users = () => {
       
       let userOrganizations = Object.keys(userOrganizationsMap).map((userOrganizationId) => ({ _id: userOrganizationId, ...userOrganizationsMap[userOrganizationId] }));
 
-      authAxios.get(`${REST_AUTH_DATA}/organizations`)
+      publicAxios.get(`${REST_PUBLIC_DATA}/organizations`)
         .then(({ data: { data: { organizations } } }) => {
           setUser(user);
           setUserOrganizationsMap(userOrganizationsMap);

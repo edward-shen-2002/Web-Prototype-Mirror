@@ -2,7 +2,7 @@ import React, { useState, useEffect, lazy } from "react";
 
 import uniqid from "uniqid";
 
-import { authAxios, adminOrganizationRoleAxios } from "tools/rest";
+import { publicAxios, adminOrganizationRoleAxios } from "tools/rest";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -19,7 +19,7 @@ import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import PersonIcon from "@material-ui/icons/Person";
 
-import { REST_AUTH_DATA, REST_ADMIN_ORGANIZATIONS } from "constants/rest";
+import { REST_PUBLIC_DATA, REST_ADMIN_ORGANIZATIONS } from "constants/rest";
 
 const MaterialTable = lazy(() => import("material-table"));
 
@@ -85,7 +85,7 @@ const SectorEditComponent = ({ value, onChange, rowData: organization }) => {
   const handleOpenSectorsDialog = () => {
     setIsSectorsDialogOpen(true);
 
-    authAxios.get(`${REST_AUTH_DATA}/sectors`)
+    publicAxios.get(`${REST_PUBLIC_DATA}/sectors`)
       .then(({ data: { data: { sectors } } }) => setSectors(sectors))
       .catch((error) => console.error(error));
   }; 

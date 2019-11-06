@@ -7,6 +7,7 @@ export const SERVER_APP = process.env.NODE_ENV === "production" ? process.env.SE
 export const REST_GROUP_PUBLIC = "/public";
 export const REST_PUBLIC_LOGIN = "/login";
 export const REST_PUBLIC_REGISTER = "/register";
+export const REST_PUBLIC_DATA = "/data";
 
 export const REST_GROUP_VERIFICATION = "/verification";
 export const REST_VERIFICATION_VERIFICATION = "/verification";
@@ -14,7 +15,6 @@ export const REST_VERIFICATION_VERIFICATION = "/verification";
 export const REST_GROUP_AUTH = "/jwt";
 export const REST_AUTH_RECONNECT = "/reconnect";
 export const REST_AUTH_LOGOUT = "/logout";
-export const REST_AUTH_DATA = "/data";
 
 export const REST_GROUP_ADMIN = "/admin";
 

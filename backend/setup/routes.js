@@ -5,6 +5,7 @@ import { userAuthenticationMiddleware, verificationMiddleware, userRoleMiddlewar
 // Route controllers
 import loginController from "../controller/public/login";
 import registerController from "../controller/public/register";
+import dataController from "../controller/public/data";
 
 // Verification controllers
 import verificationController from "../controller/verification/verification";
@@ -12,7 +13,6 @@ import verificationController from "../controller/verification/verification";
 // Auth controllers
 import logoutController from "../controller/auth/logout";
 import reconnectController from "../controller/auth/reconnect";
-import dataController from "..//controller/auth/data";
 
 // Admin controllers
 import usersController from "../controller/admin/user_manager/users";
@@ -34,8 +34,7 @@ const authRoutes = (helpers) => {
 
   reconnectController({ router });
   logoutController({ router });
-  dataController({ ...helpers, router });
-
+  
   return router;
 };
 
@@ -44,7 +43,7 @@ const authRoutes = (helpers) => {
  */
 const verificationRoutes = (helpers) => {
   let router = new Router();
-
+  
   router.use(verificationMiddleware({ ...helpers }));
   
   verificationController({ ...helpers, router });
@@ -60,6 +59,7 @@ const publicRoutes = (helpers) => {
   
   loginController({ ...helpers, router });
   registerController({ ...helpers, router });
+  dataController({ ...helpers, router });
 
   return router;
 };

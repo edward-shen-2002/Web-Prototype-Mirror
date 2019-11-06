@@ -30,7 +30,7 @@ const passwordValidator = (password, cb) => {
 // Prevent inactive/banned accounts from logging in
 const findByUsername = (model, queryParameters) => model.findOne({ ...queryParameters, active: true });
 
-const defaultRoleControlConfig = {  scope: ROLE_LEVEL_NOT_APPLICABLE, sectors: [], LHINs: [], organizations: [] };
+const defaultRoleControlConfig = { scope: ROLE_LEVEL_NOT_APPLICABLE, sectors: [], LHINs: [], organizations: [] };
 
 // TODO! should LHIN/organizations in roles be ids?
 let userSchema = new Schema({

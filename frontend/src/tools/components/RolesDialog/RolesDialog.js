@@ -1,6 +1,6 @@
 import React, { useState, Fragment } from "react";
 
-import { authAxios } from "tools/rest";
+import { publicAxios } from "tools/rest";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -26,7 +26,7 @@ import HierarchyEntitiesDialog from "tools/components/HierarchyEntitiesDialog";
 
 import { ROLE_SCOPES } from "constants/roles";
 
-import { REST_AUTH_DATA } from "constants/rest";
+import { REST_PUBLIC_DATA } from "constants/rest";
 
 import "./RolesDialog.scss";
 
@@ -133,7 +133,7 @@ const RolesDialogContent = ({ userRoles, handleChangeRoleScope, handleAddRoleEnt
   const [ entities, setEntities ] = useState([]);
 
   const handleOpenEntityDialog = (role, entityType) => {
-    authAxios.get(`${REST_AUTH_DATA}/${entityType}`)
+    publicAxios.get(`${REST_PUBLIC_DATA}/${entityType}`)
       .then(({ data: { data } }) => {
         const entities = data[entityType];
 
