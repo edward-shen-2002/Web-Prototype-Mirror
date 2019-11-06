@@ -38,7 +38,11 @@ const Verification = ({ history, match: { params: { _id } } }) => {
       setTimeout(() => {
         verificationAxios.get(`${REST_VERIFICATION_VERIFICATION}/${_id}`)
           .then(({ data: { message } }) => setMessage(message))
-          .catch(({ response: { data: { message } } }) => setMessage(message))
+          .catch((error) => {
+            const { response: { data: { message } } } = error;
+
+            setMessage(message ? message : error.toString());
+          });
         setIsDataFetched(true);
       }, 3000); 
     }
