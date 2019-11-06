@@ -15,6 +15,7 @@
 - [ ] Miscellaneous information - ie: job positions
 - [ ] General and route error handlers- should everything be handled here or do it in the original route? (General error handler handles most errors but may not make sense for some routes)
 - [ ] Strengthen verfication ids (change MongoDB Id to a more secure Id -- MongoDB Id is too predicatable)
+- [ ] Keep styles considtent (ie, Profile and All packages headers/pages - mismatched styles)
 
 ## Important but Unprioritized (may be too time-consuming at the moment - work on it gradually)
 
