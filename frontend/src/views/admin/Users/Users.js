@@ -31,10 +31,11 @@ const Users = () => {
   const [ isRolesDialogOpen, setIsRolesDialogOpen ] = useState(false);
   const [ userRoles, setUserRoles ] = useState({});
 
-  const updateUser = (newUser, oldUser, resolve, reject) => (
+  const updateUser = (newUser, oldUser) => (
     adminUserRoleAxios.put(REST_ADMIN_USERS, { updatedUser: newUser })
       .then((response) => {
-        const oldUserIndex = users.indexOf(oldUser);
+        const oldUserIndex = users.findIndex(({ _id }) => _id === oldUser._id);
+
         setUsers([ ...users.slice(0, oldUserIndex), { ...newUser, password: "" }, ...users.slice(oldUserIndex + 1) ]);
         return response;
       })
@@ -131,15 +132,13 @@ const Users = () => {
     delete newUserOrganizationsMap[userOrganization._id];
     
     const userOrganizationIndex = userOrganizations.indexOf(userOrganization);
+
     const newUserOrganizations = [ ...userOrganizations.slice(0, userOrganizationIndex), ...userOrganizations.slice(userOrganizationIndex + 1) ];
     
     const updatedUser = { ...user, organizations: newUserOrganizationsMap };
 
-    adminUserRoleAxios.put(REST_ADMIN_USERS, { updatedUser })
+    updateUser(updatedUser, user)
       .then(() => {
-        const oldUserIndex = users.indexOf(user);
-        
-        setUsers([ ...users.slice(0, oldUserIndex), updatedUser, ...users.slice(oldUserIndex + 1) ]);
         setUser(updatedUser);
         setUserOrganizations(newUserOrganizations);
         setUserOrganizationsMap(newUserOrganizationsMap);
@@ -155,16 +154,13 @@ const Users = () => {
       newUserOrganizationsMap[newUserOrganization._id] = { ...newUserOrganization, _id: undefined };
 
       const updatedUser = { ...user, organizations: newUserOrganizationsMap };
+      const newUserOrganizations = [ ...userOrganizations, newUserOrganization ];
 
-      adminUserRoleAxios.put(REST_ADMIN_USERS, { updatedUser })
+      updateUser(updatedUser, user)
         .then(() => {
-          const newUserOrganizations = [ ...userOrganizations, newUserOrganization ];
-          const oldUserIndex = users.indexOf(user);
-          
-          setUsers([ ...users.slice(0, oldUserIndex), updatedUser, ...users.slice(oldUserIndex + 1) ]);
           setUser(updatedUser);
-          setUserOrganizationsMap(newUserOrganizationsMap);
           setUserOrganizations(newUserOrganizations);
+          setUserOrganizationsMap(newUserOrganizationsMap);
         })
         .catch((error) => console.error(error));
     }
@@ -182,6 +178,52 @@ const Users = () => {
         setUserRoles(updatedUserRoles);
       })
       .catch((error) => console.error(error));
+  };
+
+  const handleDeleteRoleEntity = (role, entityType, entity) => {
+    let updatedUserRoles = { ...userRoles };
+
+    let newEntities = updatedUserRoles[role][entityType];
+    
+    const entityIndex = newEntities.indexOf(entity);
+
+    if(entityIndex < 0) {
+      console.error("User entity doesn't exist");
+    } else {
+      newEntities = [ ...newEntities.slice(0, entityIndex), ...newEntities.slice(entityIndex + 1) ];
+
+      updatedUserRoles[role][entityType] = newEntities;
+
+      const updatedUser = { ...user, roles: updatedUserRoles };
+  
+      updateUser(updatedUser, user)
+        .then(() => {
+          setUser(updatedUser);
+          setUserRoles(updatedUser.roles);
+        })
+        .catch((error) => console.error(error));
+    }
+  };
+
+  const handleAddRoleEntity = (role, entityType, entity) => {
+    let updatedUserRoles = { ...userRoles };
+
+    const entities = updatedUserRoles[role][entityType];
+
+    if(entities.find(({ _id }) => _id === entity._id)) {
+      console.error("Role entity already exists");
+    } else {
+      updatedUserRoles[role][entityType] = [ ...updatedUserRoles[role][entityType], entity ];
+  
+      const updatedUser = { ...user, roles: updatedUserRoles };
+  
+      updateUser(updatedUser, user)
+        .then(() => {
+          setUser(updatedUser);
+          setUserRoles(updatedUser.roles);
+        })
+        .catch((error) => console.error(error));
+    }
   };
 
   const columns = [
@@ -224,6 +266,8 @@ const Users = () => {
         open={isRolesDialogOpen}
         userRoles={userRoles}
         handleClose={handleCloseRolesDialog}
+        handleAddRoleEntity={handleAddRoleEntity}
+        handleDeleteRoleEntity={handleDeleteRoleEntity}
         handleChangeRoleScope={handleChangeRoleScope}
       />
     </div>

@@ -1,6 +1,6 @@
 import React, { useState, Fragment } from "react";
 
-import uniqid from "uniqid";
+import { authAxios } from "tools/rest";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -26,7 +26,15 @@ import HierarchyEntitiesDialog from "tools/components/HierarchyEntitiesDialog";
 
 import { ROLE_SCOPES } from "constants/roles";
 
+import { REST_AUTH_DATA } from "constants/rest";
+
 import "./RolesDialog.scss";
+
+const formatRoleString = (role) => (
+  role.split("_")
+    .map((string) => string === "LHIN" ? string : `${string.charAt(0)}${string.slice(1).toLocaleLowerCase()}`)
+    .join(" ")
+);
 
 const RoleScope = ({ currentroleScopeOption, roleScopesOptions, handleSelectRoleScope }) => (
   <div className="roleScope">
@@ -35,36 +43,44 @@ const RoleScope = ({ currentroleScopeOption, roleScopesOptions, handleSelectRole
   </div>
 ); 
 
-const HierarchyEntitiesButtons = () => (
+const HierarchyEntitiesButtons = ({ handleClickOrganizations, /*handleClickLHINs,*/ handleClickSectors }) => (
   <ButtonGroup className="hierarchyButtons">
-    <Button className="hierarchyButtons__button" color="secondary" variant="contained">Organizations</Button>
-    <Button className="hierarchyButtons__button" color="secondary" variant="contained">LHINs</Button>
-    <Button className="hierarchyButtons__button" color="secondary" variant="contained">Sectors</Button>
+    <Button className="hierarchyButtons__button" color="secondary" variant="contained" onClick={handleClickOrganizations}>Organizations</Button>
+    {/* <Button className="hierarchyButtons__button" color="secondary" variant="contained" onClick={handleClickLHINs}>LHINs</Button> */}
+    <Button className="hierarchyButtons__button" color="secondary" variant="contained" onClick={handleClickSectors}>Sectors</Button>
   </ButtonGroup>
 );
 
-const RoleListContent = ({ roleContent: { scope, sectors, LHINs, organizations }, handleSelectRoleScope }) => {
+const RoleListContent = ({ role, roleContent: { scope, sectors, LHINs, organizations }, handleSelectRoleScope, handleOpenEntityDialog }) => {
   const roleScopesOptions = ROLE_SCOPES.map((scope) => ({ value: scope, label: (scope === "LHIN" || scope === "N/A") ? scope : `${scope.charAt(0)}${scope.slice(1).toLocaleLowerCase()}` }));
 
   const currentroleScopeOption =  roleScopesOptions.find(({ value }) => scope === value);
 
+  const handleClickOrganizations = () => handleOpenEntityDialog(role, "organizations");
+  // const handleClickLHINs = () => handleOpenEntityDialog(role, "LHINs");
+  const handleClickSectors = () => handleOpenEntityDialog(role, "sectors");
+
   return (
     <ListItem className="roleListContent">
       <RoleScope currentroleScopeOption={currentroleScopeOption} roleScopesOptions={roleScopesOptions} handleSelectRoleScope={handleSelectRoleScope}/>
-      <HierarchyEntitiesButtons/>
+      <HierarchyEntitiesButtons 
+        handleClickOrganizations={handleClickOrganizations} 
+        // handleClickLHINs={handleClickLHINs} 
+        handleClickSectors={handleClickSectors}
+      />
     </ListItem>
   );
 };
 
-const RoleList = ({ roleContent, handleSelectRoleScope }) => (
+const RoleList = ({ role, roleContent, handleSelectRoleScope, handleOpenEntityDialog }) => (
   <List>
-    <RoleListContent roleContent={roleContent} handleSelectRoleScope={handleSelectRoleScope}/>
+    <RoleListContent role={role} roleContent={roleContent} handleSelectRoleScope={handleSelectRoleScope} handleOpenEntityDialog={handleOpenEntityDialog}/>
   </List>
 );
 
-const RolesListItemContent = ({ isOpen, roleContent, handleSelectRoleScope }) => (
+const RolesListItemContent = ({ isOpen, role, roleContent, handleSelectRoleScope, handleOpenEntityDialog }) => (
   <Collapse in={isOpen} timeout="auto" unmountOnExit>
-    <RoleList roleContent={roleContent} handleSelectRoleScope={handleSelectRoleScope}/>
+    <RoleList role={role} roleContent={roleContent} handleSelectRoleScope={handleSelectRoleScope} handleOpenEntityDialog={handleOpenEntityDialog}/>
   </Collapse>
 );
 
@@ -75,14 +91,10 @@ const RolesListItemSummary = ({ role, isOpen, handleToggle }) => (
   </ListItem>
 );
 
-const RoleListItem = ({ role, roleContent, handleChangeRoleScope, handleOpenEntityDialog, handleCloseEntityDialog }) => {
+const RoleListItem = ({ role, roleContent, handleChangeRoleScope, handleOpenEntityDialog }) => {
   const [ isOpen, setIsOpen ] = useState(false);
   
-  const formattedRoleString = (
-    role.split("_")
-      .map((string) => string === "LHIN" ? string : `${string.charAt(0)}${string.slice(1).toLocaleLowerCase()}`)
-      .join(" ")
-  );
+  const formattedRoleString = formatRoleString(role);
   
   const handleToggle = () => setIsOpen(!isOpen);
 
@@ -91,29 +103,28 @@ const RoleListItem = ({ role, roleContent, handleChangeRoleScope, handleOpenEnti
   return (
     <Fragment>
       <RolesListItemSummary isOpen={isOpen} role={formattedRoleString} handleToggle={handleToggle}/>
-      <RolesListItemContent isOpen={isOpen} roleContent={roleContent} handleSelectRoleScope={handleSelectRoleScope}/>
+      <RolesListItemContent isOpen={isOpen} role={role} roleContent={roleContent} handleSelectRoleScope={handleSelectRoleScope} handleOpenEntityDialog={handleOpenEntityDialog}/>
     </Fragment>
   )
 };
 
-const RolesListItems = ({ userRoles, handleChangeRoleScope, handleOpenEntityDialog, handleCloseEntityDialog }) => Object.keys(userRoles).map((role) => (
+const RolesListItems = ({ userRoles, handleChangeRoleScope, handleOpenEntityDialog }) => Object.keys(userRoles).map((role) => (
   <RoleListItem 
     key={role} 
     role={role} 
     roleContent={userRoles[role]} 
     handleChangeRoleScope={handleChangeRoleScope} 
     handleOpenEntityDialog={handleOpenEntityDialog} 
-    handleCloseEntityDialog={handleCloseEntityDialog}
   />
 ));
 
-const RolesList = ({ userRoles, handleChangeRoleScope, handleOpenEntityDialog, handleCloseEntityDialog }) => (
+const RolesList = ({ userRoles, handleChangeRoleScope, handleOpenEntityDialog }) => (
   <List>
-    <RolesListItems userRoles={userRoles} handleChangeRoleScope={handleChangeRoleScope} handleOpenEntityDialog={handleOpenEntityDialog} handleCloseEntityDialog={handleCloseEntityDialog}/>
+    <RolesListItems userRoles={userRoles} handleChangeRoleScope={handleChangeRoleScope} handleOpenEntityDialog={handleOpenEntityDialog}/>
   </List>
 );
 
-const RolesDialogContent = ({ userRoles, handleChangeRoleScope }) => {
+const RolesDialogContent = ({ userRoles, handleChangeRoleScope, handleAddRoleEntity, handleDeleteRoleEntity }) => {
   const [ isEntityDialogOpen, setIsEntityDialogOpen ] = useState(false);
 
   // For single role modification
@@ -122,37 +133,54 @@ const RolesDialogContent = ({ userRoles, handleChangeRoleScope }) => {
   const [ entities, setEntities ] = useState([]);
 
   const handleOpenEntityDialog = (role, entityType) => {
-    setIsEntityDialogOpen(true);
-    setEntityType(entityType);
-    setEntities(userRoles[role]);
-    setRole(role);
+    authAxios.get(`${REST_AUTH_DATA}/${entityType}`)
+      .then(({ data: { data } }) => {
+        const entities = data[entityType];
+
+        setIsEntityDialogOpen(true);
+        setEntityType(entityType);
+        setEntities(entities);
+        setRole(role);
+      })
+      .catch((error) => console.error(error));
   };
 
   const handleCloseEntityDialog = () => {
     if(isEntityDialogOpen) setIsEntityDialogOpen(false);
     if(entityType) setEntityType("");
-    if(entities) setEntities([]);
     if(role) setRole("");
   };
+  
+  const handleAddEntity = (entity) => handleAddRoleEntity(role, entityType, entity);
 
-  const formattedEntityType = entityType.toUpperCase();
+  const handleDeleteUserEntity = (entity) => handleDeleteRoleEntity(role, entityType, entity);
+
+  const userEntities = (!role || !entityType) ? [] : userRoles[role][entityType];
+
+  const formattedEntityType = `${entityType.charAt(0).toUpperCase()}${entityType.slice(1)}`;
+  const formattedRoleString = formatRoleString(role);
   const entityTypeStringLength = entityType.length;
 
-  const title = `${role} ${formattedEntityType}`;
+  const title = `${formattedRoleString} ${formattedEntityType}`;
+  const userTitle = `Current ${formattedEntityType}`;
   const userSearchPlaceholder = `Search Role ${formattedEntityType}...`;
   const allTitle = `Add Role ${entityType.slice(0, entityTypeStringLength)}`;
-  const allSearchPlaceholder = `Search ${entityType.slice(0, entityTypeStringLength)}`;
+  const allSearchPlaceholder = `Search ${entityType.slice(0, entityTypeStringLength)}...`;
 
   return (
     <DialogContent className="rolesContent">
-      <RolesList userRoles={userRoles} handleOpenEntityDialog={handleOpenEntityDialog} handleCloseEntityDialog={handleCloseEntityDialog} handleChangeRoleScope={handleChangeRoleScope}/>
+      <RolesList userRoles={userRoles} handleOpenEntityDialog={handleOpenEntityDialog} handleChangeRoleScope={handleChangeRoleScope}/>
       <HierarchyEntitiesDialog 
         open={isEntityDialogOpen}
         title={title}
+        userTitle={userTitle}
+        userEntities={userEntities}
         entities={entities}
         userSearchPlaceholder={userSearchPlaceholder}
         allTitle={allTitle}
         allSearchPlaceholder={allSearchPlaceholder}
+        handleAddEntity={handleAddEntity}
+        handleDeleteUserEntity={handleDeleteUserEntity}
         handleClose={handleCloseEntityDialog}
       />
     </DialogContent>
@@ -165,10 +193,10 @@ const RolesDialogActions = ({ handleClose }) => (
   </DialogActions>
 );
 
-const RolesDialog = ({ open, userRoles, handleClose, handleChangeRoleScope }) => (
+const RolesDialog = ({ open, userRoles, handleClose, handleChangeRoleScope, handleAddRoleEntity, handleDeleteRoleEntity }) => (
   <Dialog open={open} onClose={handleClose}>
     <DialogTitle>User Roles</DialogTitle>
-    <RolesDialogContent userRoles={userRoles} handleChangeRoleScope={handleChangeRoleScope}/>
+    <RolesDialogContent userRoles={userRoles} handleChangeRoleScope={handleChangeRoleScope} handleAddRoleEntity={handleAddRoleEntity} handleDeleteRoleEntity={handleDeleteRoleEntity}/>
     <RolesDialogActions handleClose={handleClose}/>
   </Dialog>
 );
