@@ -1,5 +1,9 @@
 import { Schema, model } from "mongoose";
 
+import { ROLE_LEVEL_NOT_APPLICABLE } from "../../constants/roles";
+
+const defaultRoleControlConfig = { scope: ROLE_LEVEL_NOT_APPLICABLE, sectors: [], LHINs: [], organizations: [] };
+
 // TODO : Replace with https://github.com/dropbox/zxcvbn
 
 /**
@@ -18,6 +22,23 @@ let registerVerificationSchema = new Schema({
   lastName: { type: String, default: "" },
   
   phoneNumber: { type: String, default: "" },
+
+  organizations: { type: Object, default: {} },
+  LHINs: { type: Object, default: {} },
+
+  roles: { 
+    type: Object, 
+    required: true,
+    default: { 
+      TEMPLATE_MANAGER: { ...defaultRoleControlConfig }, 
+      PACKAGE_MANAGER: { ...defaultRoleControlConfig }, 
+      USER_MANAGER: { ...defaultRoleControlConfig }, 
+      ORGANIZATION_MANAGER: { ...defaultRoleControlConfig }, 
+      LHIN_MANAGER: { ...defaultRoleControlConfig }, 
+      SECTOR_MANAGER: { ...defaultRoleControlConfig }, 
+      SYSTEM_MANAGER: { ...defaultRoleControlConfig }
+    }
+  },
 
   creationDate: { type: Date, default: Date.now, required: true }
 }, { timestamps: true, minimize: false });
