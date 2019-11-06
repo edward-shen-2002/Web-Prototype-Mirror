@@ -147,11 +147,13 @@ const Users = () => {
   };
 
   const handleAddOrganization = (newUserOrganization) => {
-    if(userOrganizations.find(({ _id }) => _id === newUserOrganization._id)) {
+    const { _id } = newUserOrganization;
+
+    if(userOrganizations[_id]) { 
       console.error("User is already a part of the selected organization");
     } else {
       let newUserOrganizationsMap = { ...userOrganizationsMap };
-      newUserOrganizationsMap[newUserOrganization._id] = { ...newUserOrganization, _id: undefined };
+      newUserOrganizationsMap[_id] = { ...newUserOrganization, _id: undefined };
 
       const updatedUser = { ...user, organizations: newUserOrganizationsMap };
       const newUserOrganizations = [ ...userOrganizations, newUserOrganization ];

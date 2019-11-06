@@ -9,7 +9,7 @@ import { Formik } from "formik";
 import { publicAxios } from "tools/rest";
 
 import { ROLE_LEVEL_NOT_APPLICABLE } from "constants/roles";
-import { REST_PUBLIC_REGISTER } from "constants/rest";
+import { REST_PUBLIC_REGISTER, REST_PUBLIC_DATA } from "constants/rest";
 import { ROUTE_LOGIN, ROUTE_DASHBOARD } from "constants/routes";
 
 import Paper from "@material-ui/core/Paper";
@@ -19,6 +19,7 @@ import Button from "@material-ui/core/Button";
 import Slide from "@material-ui/core/Slide";
 
 import RolesDialog from "tools/components/RolesDialog";
+import HierarchyEntititesDialog from "tools/components/HierarchyEntitiesDialog";
 
 import * as yup from "yup";
 
@@ -55,7 +56,7 @@ const LoginLinkButton = () => (
   </Link>
 );
 
-const RegisterForm = ({ values, errors, touched, handleSubmit, handleChange, handleBlur, handleOpenRolesDialog }) => (
+const RegisterForm = ({ values, errors, touched, handleSubmit, handleChange, handleBlur, handleOpenRolesDialog, handleOpenOrganizationsDialog }) => (
   <form className="register__form" onSubmit={handleSubmit}>
     <h1>Register</h1>
     <TextField 
@@ -143,20 +144,23 @@ const RegisterForm = ({ values, errors, touched, handleSubmit, handleChange, han
       helperText={touched.passwordConfirm && errors.passwordConfirm}
       onBlur={handleBlur}
     />
-    <Button color="secondary" variant="contained" onClick={handleOpenRolesDialog} fullWidth>Set Roles</Button>
+    <Button className="register__button" color="secondary" variant="contained" onClick={handleOpenOrganizationsDialog} fullWidth>Set Organizations</Button>
+    <Button className="register__button" color="secondary" variant="contained" onClick={handleOpenRolesDialog} fullWidth>Set Roles</Button>
     <Button className="register__button" variant="contained" color="primary" type="submit">Register</Button>
     <LoginLinkButton/>
   </form>
 );
 
 const RegisterFormContainer = (props) => {
-  const { values: { roles }, setFieldValue, handleChange } = props;
-
   const [ isRolesDialogOpen, setIsRolesDialogOpen ] = useState(false);
+  const [ isOrganizationsDialogOpen, setIsOrganizationsDialogOpen ] = useState(false);
 
-  const handleOpenRolesDialog = () => {
-    setIsRolesDialogOpen(true);
-  };
+  const [ organizations, setOrganizations ] = useState([]);
+  const [ userOrganizations, setUserOrganizations ] = useState([]);
+
+  const { values: { organizations: userOrganizationsMap, roles }, setFieldValue } = props;
+
+  const handleOpenRolesDialog = () => setIsRolesDialogOpen(true);
 
   const handleCloseRolesDialog = () => {
     if(isRolesDialogOpen) setIsRolesDialogOpen(false);
@@ -203,10 +207,66 @@ const RegisterFormContainer = (props) => {
     }
   };
 
+  const handleOpenOrganizationsDialog = () => {
+    setIsOrganizationsDialogOpen(true);
+
+    publicAxios.get(`${REST_PUBLIC_DATA}/organizations`)
+      .then(({ data: { data: { organizations } } }) => {
+        setOrganizations(organizations);
+        setUserOrganizations(Object.keys(userOrganizationsMap).map((_id) => ({ ...userOrganizationsMap[_id], _id })));
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const handleCloseOrganizationsDialog = () => {
+    if(isOrganizationsDialogOpen) setIsOrganizationsDialogOpen(false);
+    if(organizations) setOrganizations([]);
+    if(userOrganizations) setUserOrganizations([]);
+  };
+
+  const handleAddOrganization = (newUserOrganization) => {
+    const { _id } = newUserOrganization;
+
+    if(userOrganizationsMap[_id]) {
+      console.error("User is already a part of the selected organization");
+    } else {
+      let newUserOrganizationsMap = { ...userOrganizationsMap };
+      newUserOrganizationsMap[_id] = { ...newUserOrganization, _id: undefined };
+
+      setUserOrganizations([ ...userOrganizations, newUserOrganization ]);
+      setFieldValue("organizations", newUserOrganizationsMap);
+    }
+  };
+
+  const handleDeleteUserOrganization = (userOrganization) => {
+    const userOrganizationIndex = userOrganizations.indexOf(userOrganization);
+
+    const newUserOrganizations = [ ...userOrganizations.slice(0, userOrganizationIndex), ...userOrganizations.slice(userOrganizationIndex + 1) ];
+
+    let newUserOrganizationsMap = { ...userOrganizationsMap };
+    delete newUserOrganizationsMap[userOrganization._id];
+
+    setFieldValue("organizations", newUserOrganizationsMap);
+    setUserOrganizations(newUserOrganizations);
+  };
+
   return (
     <div>
-      <RegisterForm handleOpenRolesDialog={handleOpenRolesDialog} {...props}/>
+      <RegisterForm handleOpenRolesDialog={handleOpenRolesDialog} handleOpenOrganizationsDialog={handleOpenOrganizationsDialog} {...props}/>
       <RolesDialog open={isRolesDialogOpen} userRoles={roles} handleClose={handleCloseRolesDialog} handleChangeRoleScope={handleChangeRoleScope} handleAddRoleEntity={handleAddRoleEntity} handleDeleteRoleEntity={handleDeleteRoleEntity}/>
+      <HierarchyEntititesDialog
+         open={isOrganizationsDialogOpen}
+         userEntities={userOrganizations} 
+         entities={organizations} 
+         title="Organizations"
+         userTitle="Current Organizations"
+         allTitle="Add User Organization"
+         userSearchPlaceholder="Search User Organizations..."
+         allSearchPlaceHolder="Search organizations..."
+         handleClose={handleCloseOrganizationsDialog} 
+         handleAddEntity={handleAddOrganization} 
+         handleDeleteUserEntity={handleDeleteUserOrganization}
+      />
     </div>
   );
 };
@@ -255,7 +315,8 @@ let Register = ({ isOnline, history }) => {
       LHIN_MANAGER: { ...defaultRoleControlConfig }, 
       SECTOR_MANAGER: { ...defaultRoleControlConfig }, 
       SYSTEM_MANAGER: { ...defaultRoleControlConfig }
-    }
+    },
+    organizations: {}
   });
 
   const handleRegister = (newUser, { setSubmitting, setErrors }) => {
