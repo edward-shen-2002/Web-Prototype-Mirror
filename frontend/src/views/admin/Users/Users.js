@@ -250,7 +250,7 @@ const Users = () => {
 
   return (
     <div className="usersPage">
-      <MaterialTable className="usersTable" title="Users" columns={columns} actions={actions} data={users} editable={editable} options={options}/>
+      <MaterialTable className="usersPage__table" title="Users" columns={columns} actions={actions} data={users} editable={editable} options={options}/>
       <HierarchyEntitiesDialog
         open={isOrganizationsDialogOpen}
         userEntities={userOrganizations} 

@@ -32,7 +32,6 @@ const findByUsername = (model, queryParameters) => model.findOne({ ...queryParam
 
 const defaultRoleControlConfig = { scope: ROLE_LEVEL_NOT_APPLICABLE, sectors: [], LHINs: [], organizations: [] };
 
-// TODO! should LHIN/organizations in roles be ids?
 let userSchema = new Schema({
   username: { type: String, lowercase: true, unique: true, required: true },
   
