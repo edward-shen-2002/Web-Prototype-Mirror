@@ -170,8 +170,6 @@ const RegisterFormContainer = (props) => {
     let updatedUserRoles = { ...roles };
     updatedUserRoles[role] = { ...updatedUserRoles[role], scope };
 
-    // handleChange()
-
     setFieldValue("roles", updatedUserRoles);
   };
 
@@ -329,7 +327,10 @@ let Register = ({ isOnline, history }) => {
             setRegisterView(false);
             setRegistrationData(newUser);
           })
-          .catch(({ response: { data: { error } } }) => setErrors(error))
+          .catch(({ response: { data: { message, error } } }) => {
+            console.error(message);
+            setErrors(error ? error : {});
+          })
           .finally(() => setSubmitting(false));
       }
     }

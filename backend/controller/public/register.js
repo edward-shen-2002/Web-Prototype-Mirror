@@ -20,7 +20,7 @@ const register = ({ router, passport, RegisterVerificationModel }) => {
           .then(({ _id }) => {
             const { username, email } = user;
             sendVerficationEmail(_id, username, email)
-              .then(({ message }) => {
+              .then(() => {
                 res.json({ message: MESSAGE_SUCCESS_REGISTRATION });
               })
               .catch(next);

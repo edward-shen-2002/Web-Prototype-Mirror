@@ -13,7 +13,6 @@ import { ROLE_USER_MANAGER, ROLE_TEMPLATE_MANAGER, ROLE_ORGANIZATION_MANAGER, RO
 
 import { HTTP_ERROR_CONFLICT, HTTP_ERROR_AUTH_FAIL, HTTP_ERROR_DATABASE, HTTP_ERROR_UNAUTHORIZED, HTTP_ERROR_NOT_FOUND } from "../constants/rest";
 import { 
-  MESSAGE_ERROR_HACKER, 
   MESSAGE_ERROR_CONFLICT_VERIFICATION, 
   MESSAGE_ERROR_VERIFICATION_FAIL, 
   MESSAGE_ERROR_AUTH_FAIL, 
@@ -68,9 +67,7 @@ const loginAuthentication = ({ passport, UserModel, RegistrationModel }) => {
 const registerAuthentication = ({ passport, UserModel, RegistrationModel }) => {
   passport.use(PASSPORT_REGISTER, new LocalStrategy({ passReqToCallback: true, session: false }, async (req, username, password, done) => {
     const newUser = req.body;
-    const { email, roles } = newUser;
-
-    if(roles) return done({ error: MESSAGE_ERROR_HACKER });
+    const { email } = newUser;
 
     const validatedUsername = usernameValidator(username);
     const validatedEmail = emailValidator(email);
