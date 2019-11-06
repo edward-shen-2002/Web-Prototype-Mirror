@@ -8,7 +8,7 @@ import { REST_AUTH_DATA, REST_ADMIN_USERS } from "constants/rest";
 import GroupIcon from "@material-ui/icons/Group";
 import EnhancedEncryptionIcon from "@material-ui/icons/EnhancedEncryption";
 
-import RolesDialog from "./RolesDialog";
+import RolesDialog from "tools/components/RolesDialog";
 
 import HierarchyEntitiesDialog from "tools/components/HierarchyEntitiesDialog";
 
