@@ -10,7 +10,7 @@ import { findAndSaveToken } from "tools/storage";
 import { PrivillegedRoute } from "tools/components/routes";
 
 import { ONLINE, OFFLINE } from "constants/states";
-import { ROLE_USER_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_PACKAGE_MANAGER, ROLE_SECTOR_MANAGER } from "constants/roles";
+import { ROLE_USER_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_PACKAGE_MANAGER, ROLE_SECTOR_MANAGER, ROLE_TEMPLATE_MANAGER} from "constants/roles";
 import { REST_AUTH_RECONNECT, HTTP_ERROR_INVALID_TOKEN, HTTP_ERROR_UNAUTHORIZED } from "constants/rest";
 import { 
   ROUTE_ROOT, 
@@ -23,6 +23,7 @@ import {
   ROUTE_ADMIN_USER_USERS, 
   ROUTE_ADMIN_USER_REGISTRATIONS,  
   ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS, 
+  ROUTE_ADMIN_TEMPLATE_TEMPLATES,
   ROUTE_ADMIN_PACKAGE_PACKAGES,
   ROUTE_ADMIN_SECTOR_SECTORS
 } from "constants/routes";
@@ -45,6 +46,7 @@ const Registrations = lazy(() => import("./views/admin/Registrations"))
 const Sectors = lazy(() => import("./views/admin/Sectors"));
 const Organizations = lazy(() => import("./views/admin/Organizations"));
 const Package = lazy(() => import("./views/admin/Package"));
+const Templates = lazy(() => import("./views/admin/Templates"));
 
 // User Views
 const Dashboard = lazy(() => import("./views/user/Dashboard"));
@@ -74,6 +76,7 @@ const AppPageContent = ({ isOnline }) => (
       {/* Admin Routes */}
       <PrivillegedRoute path={ROUTE_ADMIN_USER_USERS} requiredState={ONLINE} requiredRole={ROLE_USER_MANAGER} Component={Users}/>
       <PrivillegedRoute path={ROUTE_ADMIN_USER_REGISTRATIONS} requiredState={ONLINE} requiredRole={ROLE_USER_MANAGER} Component={Registrations}/>
+      <PrivillegedRoute path={ROUTE_ADMIN_TEMPLATE_TEMPLATES} requiredState={ONLINE} requiredRole={ROLE_TEMPLATE_MANAGER} Component={Templates}/>
       
       <PrivillegedRoute path={ROUTE_ADMIN_SECTOR_SECTORS} requiredState={ONLINE} requiredRole={ROLE_SECTOR_MANAGER} Component={Sectors}/>
       

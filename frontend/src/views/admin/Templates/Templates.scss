@@ -1,0 +1,33 @@
+.templatesPage {
+  margin: 20px;
+  width: 100%;
+}
+
+.templatesContent {
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 10px;
+
+  padding: 20px;
+}
+
+.headerActions {
+  width: 420px;
+
+  &__search {
+    width: 280px;
+  }
+
+  &__button {
+    width: 130px;
+    margin-left: 10px;
+    padding: 0 20px;
+  }
+}
