@@ -7,21 +7,24 @@ import { AddFabIconButton } from "tools/components/buttons";
 
 import TextField from "@material-ui/core/TextField";
 
-import TemplatesDialog from "./TemplatesDialog";
+import { adminTemplateRoleAxios } from "tools/rest";
+import { REST_ADMIN_TEMPLATES } from "constants/rest";
+
+import { ROUTE_ADMIN_TEMPLATE_TEMPLATE } from "constants/routes";
 
 import "./Templates.scss";
 
-const HeaderActions = ({ handleQueryChange, handleOpenTemplateDialog }) => (
+const HeaderActions = ({ handleQueryChange, handleCreateTemplate }) => (
   <div className="headerActions">
     <TextField className="headerActions__search" label="Search Templates..." variant="outlined" type="search" onChange={handleQueryChange}/>
-    <AddFabIconButton className="headerActions__button" title="Create" handleAdd={handleOpenTemplateDialog}/>
+    <AddFabIconButton className="headerActions__button" title="Create" handleClick={handleCreateTemplate}/>
   </div>
 );
 
-const Header = ({ handleQueryChange, handleOpenTemplateDialog }) => (
+const Header = ({ handleQueryChange, handleCreateTemplate }) => (
   <Paper className="header">
     <Typography variant="h5">Templates</Typography>
-    <HeaderActions handleQueryChange={handleQueryChange} handleOpenTemplateDialog={handleOpenTemplateDialog}/>
+    <HeaderActions handleQueryChange={handleQueryChange} handleCreateTemplate={handleCreateTemplate}/>
   </Paper>
 );
 
@@ -31,37 +34,48 @@ const TemplatesContent = ({ templates }) => (
   </Paper>
 );
 
-const TemplatesContainer = () => {
+const TemplatesContainer = ({ history }) => {
   const [ query, setQuery ] = useState("");
   const [ templates, setTemplates ] = useState([]);
-  const [ isTemplateDialogOpen, setIsTemplateDialogOpen ] = useState(false);
+  const [ isDateFetched, setIsDataFetched ] = useState(false);
 
-  const handleOpenTemplateDialog = () => {
-    setIsTemplateDialogOpen(true);
-  };
+  useEffect(() => {
+    if(!isDateFetched) {  
+      adminTemplateRoleAxios.get(REST_ADMIN_TEMPLATES)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => console.error(error));
+      setIsDataFetched(true);
+    } 
+  }, [ isDateFetched ]);
 
-  const handleCloseTemplatesDialog = () => {
-    setIsTemplateDialogOpen(false);
-  };
-  
   const handleQueryChange = ({ target: { value } }) => setQuery(value);
 
   const filteredTemplates = useMemo(() => (
     templates.filter(({ name }) => name.toLowerCase().includes(query.toLowerCase()))
   ), [ query ]);
 
+  const handleCreateTemplate = () => {
+    adminTemplateRoleAxios.post(REST_ADMIN_TEMPLATES)
+    .then((response) => {
+        history.push(ROUTE_ADMIN_TEMPLATE_TEMPLATE);
+        
+      })
+      .catch((error) => console.error(error));
+  };
+
   return (
     <div>
-      <Header handleQueryChange={handleQueryChange} handleOpenTemplateDialog={handleOpenTemplateDialog}/>
+      <Header handleQueryChange={handleQueryChange} handleCreateTemplate={handleCreateTemplate}/>
       <TemplatesContent templates={filteredTemplates}/>
-      <TemplatesDialog open={isTemplateDialogOpen} handleClose={handleCloseTemplatesDialog}/>
     </div>
   );
 };
 
-const Templates = () => (
+const Templates = (props) => (
   <div className="templatesPage">
-    <TemplatesContainer/>
+    <TemplatesContainer {...props}/>
   </div>
 );
 

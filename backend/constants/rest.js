@@ -29,6 +29,9 @@ export const ROUTE_ADMIN_ORGANIZATIONS = "/organizations";
 export const ROUTE_GROUP_ADMIN_SECTOR = `${ROUTE_GROUP_ADMIN}/sector_manager`;
 export const ROUTE_ADMIN_SECTORS = "/sectors";
 
+export const ROUTE_GROUP_ADMIN_TEMPLATE = `${ROUTE_GROUP_ADMIN}/template_manager`;
+export const ROUTE_ADMIN_TEMPLATES = "/templates";
+
 /** HTTP response status codes */
 //Success codes
 export const HTTP_SUCCESS = 200;

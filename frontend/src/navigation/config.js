@@ -10,9 +10,7 @@ import {
 
   ROUTE_ADMIN_SECTOR_SECTORS,
 
-  ROUTE_ADMIN_TEMPLATE_TEMPLATES,
-  ROUTE_ADMIN_TEMPLATE_ATTRIBUTES,
-  ROUTE_ADMIN_TEMPLATE_CATEGORIES
+  ROUTE_ADMIN_TEMPLATE_TEMPLATES
 } from "constants/routes";
 
 import { ROLE_LEVEL_NOT_APPLICABLE } from "constants/roles";
@@ -22,9 +20,7 @@ const roleNavMap = {
     name: "Templates",
     icon: "mdi mdi-note-multiple",
     children: [
-      { name: "Templates", url: ROUTE_ADMIN_TEMPLATE_TEMPLATES, icon: "mdi mdi-table-large" },
-      { name: "Attributes", url: ROUTE_ADMIN_TEMPLATE_ATTRIBUTES, icon: "mdi mdi-table-column" },
-      { name: "Categories", url: ROUTE_ADMIN_TEMPLATE_CATEGORIES, icon: "mdi mdi-table-row" },
+      { name: "Templates", url: ROUTE_ADMIN_TEMPLATE_TEMPLATES, icon: "mdi mdi-table-large" }
     ]
   },
   PACKAGE_MANAGER: {

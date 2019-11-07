@@ -12,8 +12,8 @@ export const DeleteButton = ({ handleDelete }) => (
   </IconButton>
 );
 
-export const AddFabIconButton = ({ className, handleAdd, title }) => (
-  <Fab className={className} color="primary" variant="extended" aria-label="add" onClick={handleAdd}>
+export const AddFabIconButton = ({ className, handleClick, title }) => (
+  <Fab className={className} color="primary" variant="extended" aria-label="add" onClick={handleClick}>
     <AddCircleIcon/>
     {title}
   </Fab>

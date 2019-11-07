@@ -187,7 +187,7 @@ export const organizationRoleMiddleware = () => (req, res, next) => adminRoleMid
 
 export const sectorRoleMiddleware = () => (req, res, next) => adminRoleMiddleware(req, res, next, ROLE_SECTOR_MANAGER);
 
-// export const templateRoleMiddleware = () => adminRoleMiddleware(ROLE_TEMPLATE_MANAGER)
+export const templateRoleMiddleware = () => (req, res, next) => adminRoleMiddleware(req, res, next, ROLE_TEMPLATE_MANAGER)
 
 // export const packageRoleMiddleware = () => adminRoleMiddleware(ROLE_PACKAGE_MANAGER);
 

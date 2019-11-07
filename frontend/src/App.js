@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { Switch, Route, Redirect } from "react-router-dom";
 
 import { loadUserState, resetUserState } from "tools/redux";
-import { authAxios, adminUserRoleAxios, adminOrganizationRoleAxios, adminSectorRoleAxios } from "tools/rest";
+import { authAxios, adminUserRoleAxios, adminOrganizationRoleAxios, adminSectorRoleAxios, adminTemplateRoleAxios } from "tools/rest";
 import { findAndSaveToken } from "tools/storage";
 import { PrivillegedRoute } from "tools/components/routes";
 
@@ -23,6 +23,7 @@ import {
   ROUTE_ADMIN_USER_USERS, 
   ROUTE_ADMIN_USER_REGISTRATIONS,  
   ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS, 
+  ROUTE_ADMIN_TEMPLATE_TEMPLATE,
   ROUTE_ADMIN_TEMPLATE_TEMPLATES,
   ROUTE_ADMIN_PACKAGE_PACKAGES,
   ROUTE_ADMIN_SECTOR_SECTORS
@@ -43,10 +44,15 @@ const Recovery = lazy(() => import("./views/public/Recovery"));
 // Admin Views
 const Users = lazy(() => import("./views/admin/Users"));
 const Registrations = lazy(() => import("./views/admin/Registrations"))
+
 const Sectors = lazy(() => import("./views/admin/Sectors"));
+
 const Organizations = lazy(() => import("./views/admin/Organizations"));
+
 const Package = lazy(() => import("./views/admin/Package"));
+
 const Templates = lazy(() => import("./views/admin/Templates"));
+const Template = lazy(() => import("./views/admin/Template"));
 
 // User Views
 const Dashboard = lazy(() => import("./views/user/Dashboard"));
@@ -57,6 +63,7 @@ const NotFound = lazy(() => import("./views/misc/NotFound"));
 
 import "./App.scss";
 
+// ! TODO : Split routes to composition!!!
 const AppPageContent = ({ isOnline }) => (
   <Suspense fallback={<Loading/>}>
     <Switch>
@@ -64,24 +71,26 @@ const AppPageContent = ({ isOnline }) => (
       <Route exact path={ROUTE_ROOT} component={(props) => isOnline ? <Redirect to={ROUTE_DASHBOARD}/> : <Login {...props} />}/>
 
       {/* Public Routes */}
-      <PrivillegedRoute path={ROUTE_LOGIN} requiredState={OFFLINE} Component={Login}/>
-      <PrivillegedRoute path={ROUTE_REGISTER} requiredState={OFFLINE} Component={Register}/>
-      <PrivillegedRoute path={ROUTE_VERIFICATION} requiredState={OFFLINE} Component={Verification}/>
-      <PrivillegedRoute path={ROUTE_RECOVERY} requiredState={OFFLINE} Component={Recovery}/>
+      <PrivillegedRoute exact path={ROUTE_LOGIN} requiredState={OFFLINE} Component={Login}/>
+      <PrivillegedRoute exact path={ROUTE_REGISTER} requiredState={OFFLINE} Component={Register}/>
+      <PrivillegedRoute exact path={ROUTE_VERIFICATION} requiredState={OFFLINE} Component={Verification}/>
+      <PrivillegedRoute exact path={ROUTE_RECOVERY} requiredState={OFFLINE} Component={Recovery}/>
 
       {/* User Routes */}
-      <PrivillegedRoute exact path={ROUTE_DASHBOARD} requiredState={ONLINE} Component={Dashboard}/>
-      <PrivillegedRoute path={ROUTE_PROFILE} requiredState={ONLINE} Component={Profile}/>
+      <PrivillegedRoute exact exact path={ROUTE_DASHBOARD} requiredState={ONLINE} Component={Dashboard}/>
+      <PrivillegedRoute exact path={ROUTE_PROFILE} requiredState={ONLINE} Component={Profile}/>
 
       {/* Admin Routes */}
-      <PrivillegedRoute path={ROUTE_ADMIN_USER_USERS} requiredState={ONLINE} requiredRole={ROLE_USER_MANAGER} Component={Users}/>
-      <PrivillegedRoute path={ROUTE_ADMIN_USER_REGISTRATIONS} requiredState={ONLINE} requiredRole={ROLE_USER_MANAGER} Component={Registrations}/>
+      <PrivillegedRoute exact path={ROUTE_ADMIN_USER_USERS} requiredState={ONLINE} requiredRole={ROLE_USER_MANAGER} Component={Users}/>
+      <PrivillegedRoute exact path={ROUTE_ADMIN_USER_REGISTRATIONS} requiredState={ONLINE} requiredRole={ROLE_USER_MANAGER} Component={Registrations}/>
+
       <PrivillegedRoute path={ROUTE_ADMIN_TEMPLATE_TEMPLATES} requiredState={ONLINE} requiredRole={ROLE_TEMPLATE_MANAGER} Component={Templates}/>
+      <PrivillegedRoute path={ROUTE_ADMIN_TEMPLATE_TEMPLATE} requiredState={ONLINE} requiredRole={ROLE_TEMPLATE_MANAGER} Component={Template}/>
       
-      <PrivillegedRoute path={ROUTE_ADMIN_SECTOR_SECTORS} requiredState={ONLINE} requiredRole={ROLE_SECTOR_MANAGER} Component={Sectors}/>
+      <PrivillegedRoute exact path={ROUTE_ADMIN_SECTOR_SECTORS} requiredState={ONLINE} requiredRole={ROLE_SECTOR_MANAGER} Component={Sectors}/>
       
-      <PrivillegedRoute path={ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS} requiredState={ONLINE} requiredRole={ROLE_ORGANIZATION_MANAGER} Component={Organizations}/>
-      <PrivillegedRoute path={ROUTE_ADMIN_PACKAGE_PACKAGES} requiredState={ONLINE} requiredRole={ROLE_PACKAGE_MANAGER} Component={Package}/>
+      <PrivillegedRoute exact path={ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS} requiredState={ONLINE} requiredRole={ROLE_ORGANIZATION_MANAGER} Component={Organizations}/>
+      <PrivillegedRoute exact path={ROUTE_ADMIN_PACKAGE_PACKAGES} requiredState={ONLINE} requiredRole={ROLE_PACKAGE_MANAGER} Component={Package}/>
 
       <Route component={NotFound}/>
     </Switch>
@@ -127,7 +136,7 @@ let App = ({ shouldReconnect, isOnline, account, handleReconnect, handleLogout, 
       if(status === HTTP_ERROR_INVALID_TOKEN) {
         handleLogout();
       } else if(status === HTTP_ERROR_UNAUTHORIZED) {
-        history.push("/dashboard");
+        history.push(ROUTE_DASHBOARD);
       }
 
       return Promise.reject(error);
@@ -140,6 +149,7 @@ let App = ({ shouldReconnect, isOnline, account, handleReconnect, handleLogout, 
       setMiddleware(adminUserRoleAxios, adminErrorMiddleware);
       setMiddleware(adminOrganizationRoleAxios, adminErrorMiddleware);
       setMiddleware(adminSectorRoleAxios, adminErrorMiddleware);
+      setMiddleware(adminTemplateRoleAxios, adminErrorMiddleware);
     }
   }, [ isOnline ]);
 

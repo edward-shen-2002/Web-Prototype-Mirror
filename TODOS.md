@@ -6,6 +6,7 @@
 - [ ] Package creation
 - [ ] Some fetch/update components may use the MongoDB item to update -- if that's the case, update the ID in the frontend
 - [ ] Modifying one hierarchy may affect other hierarchies -- update affected hierarchies (ie remove user from organization => remove organization in user)
+- [ ] Use compositional routing
 
 ## Unprioritized
 

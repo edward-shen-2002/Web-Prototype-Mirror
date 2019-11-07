@@ -28,6 +28,9 @@ export const REST_ADMIN_ORGANIZATIONS = "/organizations";
 export const REST_GROUP_ADMIN_SECTOR = `${REST_GROUP_ADMIN}/sector_manager`;
 export const REST_ADMIN_SECTORS = "/sectors";
 
+export const REST_GROUP_ADMIN_TEMPLATE = `${REST_GROUP_ADMIN}/template_manager`;
+export const REST_ADMIN_TEMPLATES = "/templates";
+
 // HTTP error codes
 export const HTTP_ERROR_INVALID_TOKEN = 401;
 export const HTTP_ERROR_UNAUTHORIZED = 403;

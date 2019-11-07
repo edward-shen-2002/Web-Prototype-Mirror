@@ -1,3 +1,5 @@
+// TODO : CHANGE THIS TO COMPOSITIONAL ROUTING!!!
+
 export const ROUTE_ROOT = "/";
 export const ROUTE_DASHBOARD = "/dashboard";
 export const ROUTE_LOGIN = "/login";
@@ -15,8 +17,7 @@ export const ROUTE_ADMIN_USER_REGISTRATIONS = `${ROUTE_ADMIN_USER}/registrations
 
 export const ROUTE_ADMIN_TEMPLATE = `${ROUTE_ADMIN_ROOT}/template_manager`;
 export const ROUTE_ADMIN_TEMPLATE_TEMPLATES = `${ROUTE_ADMIN_TEMPLATE}/templates`;
-export const ROUTE_ADMIN_TEMPLATE_ATTRIBUTES = `${ROUTE_ADMIN_TEMPLATE}/attributes`;
-export const ROUTE_ADMIN_TEMPLATE_CATEGORIES = `${ROUTE_ADMIN_TEMPLATE}/categories`;
+export const ROUTE_ADMIN_TEMPLATE_TEMPLATE = `${ROUTE_ADMIN_TEMPLATE}/:_id`;
 
 export const ROUTE_ADMIN_PACKAGE = `${ROUTE_ADMIN_ROOT}/package_manager`;
 export const ROUTE_ADMIN_PACKAGE_PACKAGES = `${ROUTE_ADMIN_PACKAGE}/packages`;
