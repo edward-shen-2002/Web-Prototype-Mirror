@@ -28,7 +28,7 @@ import {
   ROUTE_ADMIN_SECTOR_SECTORS
 } from "constants/routes";
 
-import Loading from "./Loading";
+import Loading from "tools/components/Loading";
 
 import Navigation from "./Navigation";
 
@@ -150,10 +150,8 @@ let App = ({ shouldReconnect, isOnline, account, handleReconnect, handleLogout, 
     if(shouldReconnect) handleReconnect();
   }, [ shouldReconnect ]);
 
-  const className = `app ${isOnline ? "app--online" : "app-offline"}`;
-  
   return (
-    <div className={className}>
+    <div className="app">
       {isOnline && <AppHeader history={history}/>}
       <AppPage isOnline={isOnline} location={location} history={history} account={account}/>
     </div>

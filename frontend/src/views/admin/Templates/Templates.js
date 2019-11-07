@@ -20,7 +20,7 @@ const HeaderActions = ({ handleQueryChange, handleOpenTemplateDialog }) => (
 
 const Header = ({ handleQueryChange, handleOpenTemplateDialog }) => (
   <Paper className="header">
-    <Typography variant="h5" gutterBottom={true}>Templates</Typography>
+    <Typography variant="h5">Templates</Typography>
     <HeaderActions handleQueryChange={handleQueryChange} handleOpenTemplateDialog={handleOpenTemplateDialog}/>
   </Paper>
 );
