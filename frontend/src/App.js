@@ -7,10 +7,10 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { loadUserState, resetUserState } from "tools/redux";
 import { authAxios, adminUserRoleAxios, adminOrganizationRoleAxios, adminSectorRoleAxios, adminTemplateRoleAxios } from "tools/rest";
 import { findAndSaveToken } from "tools/storage";
-import { PrivillegedRoute } from "tools/components/routes";
+import { ActivityRoute } from "tools/components/routes";
 
 import { ONLINE, OFFLINE } from "constants/states";
-import { ROLE_USER_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_PACKAGE_MANAGER, ROLE_SECTOR_MANAGER, ROLE_TEMPLATE_MANAGER} from "constants/roles";
+
 import { REST_AUTH_RECONNECT, HTTP_ERROR_INVALID_TOKEN, HTTP_ERROR_UNAUTHORIZED } from "constants/rest";
 import { 
   ROUTE_ROOT, 
@@ -20,6 +20,8 @@ import {
   ROUTE_REGISTER, 
   ROUTE_VERIFICATION,
   ROUTE_RECOVERY, 
+
+  ROUTE_ADMIN_ROOT,
   ROUTE_ADMIN_USER_USERS, 
   ROUTE_ADMIN_USER_REGISTRATIONS,  
   ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS, 
@@ -36,30 +38,19 @@ import Navigation from "./Navigation";
 import AppHeader from "./Header";
 
 // Public Views
-const Login = lazy(() => import("./views/public/Login"));
-const Register = lazy(() => import("./views/public/Register"));
-const Verification = lazy(() => import("./views/public/Verification"));
-const Recovery = lazy(() => import("./views/public/Recovery"));
+const Login = lazy(() => import("./views/PublicRouter/Login"));
+const Register = lazy(() => import("./views/PublicRouter/Register"));
+const Verification = lazy(() => import("./views/VerificationRouter/Verification"));
+const Recovery = lazy(() => import("./views/PublicRouter/Recovery"));
 
-// Admin Views
-const Users = lazy(() => import("./views/admin/Users"));
-const Registrations = lazy(() => import("./views/admin/Registrations"))
-
-const Sectors = lazy(() => import("./views/admin/Sectors"));
-
-const Organizations = lazy(() => import("./views/admin/Organizations"));
-
-const Package = lazy(() => import("./views/admin/Package"));
-
-const Templates = lazy(() => import("./views/admin/Templates"));
-const Template = lazy(() => import("./views/admin/Template"));
+import AdminRouter from "./views/AdminRouter";
 
 // User Views
-const Dashboard = lazy(() => import("./views/user/Dashboard"));
-const Profile = lazy(() => import("./views/user/Profile"));
+const Dashboard = lazy(() => import("./views/UserRouter/Dashboard"));
+const Profile = lazy(() => import("./views/UserRouter/Profile"));
 
 // Misc Views
-const NotFound = lazy(() => import("./views/misc/NotFound"));
+const NotFound = lazy(() => import("tools/components/NotFound"));
 
 import "./App.scss";
 
@@ -68,29 +59,21 @@ const AppPageContent = ({ isOnline }) => (
   <Suspense fallback={<Loading/>}>
     <Switch>
       {/* Default Route */}
-      <Route exact path={ROUTE_ROOT} component={(props) => isOnline ? <Redirect to={ROUTE_DASHBOARD}/> : <Login {...props} />}/>
+      {/* <Route exact path={ROUTE_ROOT} component={(props) => isOnline ? <Redirect to={ROUTE_DASHBOARD}/> : <Login {...props} />}/> */}
+      <Route exact path={ROUTE_ROOT} component={({ history }) => isOnline ? <Redirect to={ROUTE_DASHBOARD}/> : history.push(ROUTE_LOGIN) }/>
 
       {/* Public Routes */}
-      <PrivillegedRoute exact path={ROUTE_LOGIN} requiredState={OFFLINE} Component={Login}/>
-      <PrivillegedRoute exact path={ROUTE_REGISTER} requiredState={OFFLINE} Component={Register}/>
-      <PrivillegedRoute exact path={ROUTE_VERIFICATION} requiredState={OFFLINE} Component={Verification}/>
-      <PrivillegedRoute exact path={ROUTE_RECOVERY} requiredState={OFFLINE} Component={Recovery}/>
+      <ActivityRoute exact path={ROUTE_LOGIN} requiredState={OFFLINE} Component={Login}/>
+      <ActivityRoute exact path={ROUTE_REGISTER} requiredState={OFFLINE} Component={Register}/>
+      <ActivityRoute exact path={ROUTE_VERIFICATION} requiredState={OFFLINE} Component={Verification}/>
+      <ActivityRoute exact path={ROUTE_RECOVERY} requiredState={OFFLINE} Component={Recovery}/>
 
       {/* User Routes */}
-      <PrivillegedRoute exact exact path={ROUTE_DASHBOARD} requiredState={ONLINE} Component={Dashboard}/>
-      <PrivillegedRoute exact path={ROUTE_PROFILE} requiredState={ONLINE} Component={Profile}/>
+      <ActivityRoute exact exact path={ROUTE_DASHBOARD} requiredState={ONLINE} Component={Dashboard}/>
+      <ActivityRoute exact path={ROUTE_PROFILE} requiredState={ONLINE} Component={Profile}/>
 
       {/* Admin Routes */}
-      <PrivillegedRoute exact path={ROUTE_ADMIN_USER_USERS} requiredState={ONLINE} requiredRole={ROLE_USER_MANAGER} Component={Users}/>
-      <PrivillegedRoute exact path={ROUTE_ADMIN_USER_REGISTRATIONS} requiredState={ONLINE} requiredRole={ROLE_USER_MANAGER} Component={Registrations}/>
-
-      <PrivillegedRoute path={ROUTE_ADMIN_TEMPLATE_TEMPLATES} requiredState={ONLINE} requiredRole={ROLE_TEMPLATE_MANAGER} Component={Templates}/>
-      <PrivillegedRoute path={ROUTE_ADMIN_TEMPLATE_TEMPLATE} requiredState={ONLINE} requiredRole={ROLE_TEMPLATE_MANAGER} Component={Template}/>
-      
-      <PrivillegedRoute exact path={ROUTE_ADMIN_SECTOR_SECTORS} requiredState={ONLINE} requiredRole={ROLE_SECTOR_MANAGER} Component={Sectors}/>
-      
-      <PrivillegedRoute exact path={ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS} requiredState={ONLINE} requiredRole={ROLE_ORGANIZATION_MANAGER} Component={Organizations}/>
-      <PrivillegedRoute exact path={ROUTE_ADMIN_PACKAGE_PACKAGES} requiredState={ONLINE} requiredRole={ROLE_PACKAGE_MANAGER} Component={Package}/>
+      <ActivityRoute path={ROUTE_ADMIN_ROOT} requiredState={ONLINE} Component={AdminRouter}/>
 
       <Route component={NotFound}/>
     </Switch>
