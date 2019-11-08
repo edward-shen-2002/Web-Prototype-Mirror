@@ -2,7 +2,7 @@ import React from "react";
 
 import AppBar from "./AppBar";
 
-const Excel = ({ name, homeLink }) => {
+const Excel = ({ name, returnLink }) => {
 
   const handleSubmitName = (name) => {
     console.log(name);
@@ -10,7 +10,7 @@ const Excel = ({ name, homeLink }) => {
 
   return (
     <div>
-      <AppBar name={name} homeLink={homeLink} handleSubmitName={handleSubmitName}/>
+      <AppBar name={name} returnLink={returnLink} handleSubmitName={handleSubmitName}/>
     </div>
   );
 };

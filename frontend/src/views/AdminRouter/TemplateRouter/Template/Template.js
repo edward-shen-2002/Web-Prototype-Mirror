@@ -45,7 +45,7 @@ let Template = ({ handleHideAppNavigation, handleShowAppNavigation, isAppNavigat
 
   return (
     <div>
-      <Excel name={name} homeLink={ROUTE_ADMIN_TEMPLATE_TEMPLATES}/>
+      <Excel name={name} returnLink={ROUTE_ADMIN_TEMPLATE_TEMPLATES}/>
     </div>
   );
 };

@@ -31,7 +31,6 @@ import NotFound from "tools/components/NotFound";
 
 import "./App.scss";
 
-// ! TODO : Split routes to composition!!!
 const AppPageContent = ({ isOnline }) => (
   <Suspense fallback={<Loading/>}>
     <Switch>

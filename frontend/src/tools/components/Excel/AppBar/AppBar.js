@@ -29,9 +29,9 @@ const styles = () => ({
   }
 });
 
-const ExcelIconButton = ({ homeLink }) => (
+const ExcelIconButton = ({ returnLink }) => (
   <IconButton>
-    <Link to={homeLink}>
+    <Link to={returnLink}>
       <FileTableOutline className="excelIcon"/>
     </Link>
   </IconButton>
@@ -49,7 +49,7 @@ const ExcelHeader = ({ inputStyle, title, handleBlur, handleKeyDown, handleTitle
   </div>
 );
 
-const ExcelAppBar = ({ name, homeLink, classes: { inputStyle }, handleSubmitName }) => {
+const ExcelAppBar = ({ name, returnLink, classes: { inputStyle }, handleSubmitName }) => {
   // Local title associated with temporary changes (workbook title changes only on blur, not on input change)
   const [ title, setTitle ] = useState(name);
   const handleTitleChange = (event) => setTitle(event.target.value);
@@ -63,7 +63,7 @@ const ExcelAppBar = ({ name, homeLink, classes: { inputStyle }, handleSubmitName
 
   return (
     <AppBar className="excelAppBar" position="static" color="default">
-      <ExcelIconButton homeLink={homeLink}/>
+      <ExcelIconButton returnLink={returnLink}/>
       <ExcelHeader inputStyle={inputStyle} title={title} handleBlur={handleBlur} handleKeyDown={handleKeyDown} handleTitleChange={handleTitleChange}/>
     </AppBar>
   );

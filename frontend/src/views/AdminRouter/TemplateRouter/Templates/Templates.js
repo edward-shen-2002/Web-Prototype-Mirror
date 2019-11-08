@@ -47,19 +47,16 @@ const TemplatesTable = ({ templates, history, handleRowAdd, handleRowDelete, han
 
   const editable = { onRowAdd: handleRowAdd, onRowUpdate: handleRowUpdate, onRowDelete: handleRowDelete };
 
-  const options = { actionsColumnIndex: -1 };
+  const options = { actionsColumnIndex: -1, search: false, header: false, showTitle: false };
 
   return (
-    <MaterialTable title="Templates" columns={columns} actions={actions} data={templates} editable={editable} options={options}/>
+    <MaterialTable columns={columns} actions={actions} data={templates} editable={editable} options={options}/>
   );
 };
 
+// TODO : Add other views in the future
 const TemplatesContent = ({ templates, isTableView, history, handleRowAdd, handleRowDelete, handleRowUpdate }) => (
-  <Paper className="templatesContent">
-    {
-      isTableView && <TemplatesTable templates={templates} history={history} handleRowAdd={handleRowAdd} handleRowDelete={handleRowDelete} handleRowUpdate={handleRowUpdate}/>
-    }
-  </Paper>
+  <TemplatesTable templates={templates} history={history} handleRowAdd={handleRowAdd} handleRowDelete={handleRowDelete} handleRowUpdate={handleRowUpdate}/>
 );
 
 const TemplatesContainer = ({ history }) => {
