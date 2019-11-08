@@ -12,24 +12,7 @@ import { ActivityRoute } from "tools/components/routes";
 import { ONLINE, OFFLINE } from "constants/states";
 
 import { REST_AUTH_RECONNECT, HTTP_ERROR_INVALID_TOKEN, HTTP_ERROR_UNAUTHORIZED } from "constants/rest";
-import { 
-  ROUTE_ROOT, 
-  ROUTE_DASHBOARD, 
-  ROUTE_LOGIN, 
-  ROUTE_PROFILE, 
-  ROUTE_REGISTER, 
-  ROUTE_VERIFICATION,
-  ROUTE_RECOVERY, 
-
-  ROUTE_ADMIN_ROOT,
-  ROUTE_ADMIN_USER_USERS, 
-  ROUTE_ADMIN_USER_REGISTRATIONS,  
-  ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS, 
-  ROUTE_ADMIN_TEMPLATE_TEMPLATE,
-  ROUTE_ADMIN_TEMPLATE_TEMPLATES,
-  ROUTE_ADMIN_PACKAGE_PACKAGES,
-  ROUTE_ADMIN_SECTOR_SECTORS
-} from "constants/routes";
+import { ROUTE_ROOT, ROUTE_USER_DASHBOARD, ROUTE_VERIFICATION, ROUTE_USER, ROUTE_PUBLIC, ROUTE_ADMIN_ROOT } from "constants/routes";
 
 import Loading from "tools/components/Loading";
 
@@ -37,20 +20,14 @@ import Navigation from "./Navigation";
 
 import AppHeader from "./Header";
 
-// Public Views
-const Login = lazy(() => import("./views/PublicRouter/Login"));
-const Register = lazy(() => import("./views/PublicRouter/Register"));
-const Verification = lazy(() => import("./views/VerificationRouter/Verification"));
-const Recovery = lazy(() => import("./views/PublicRouter/Recovery"));
-
+import VerificationRouter from "./views/VerificationRouter";
+import PublicRouter from "./views/PublicRouter";
+import UserRouter from "./views/UserRouter";
 import AdminRouter from "./views/AdminRouter";
 
-// User Views
-const Dashboard = lazy(() => import("./views/UserRouter/Dashboard"));
-const Profile = lazy(() => import("./views/UserRouter/Profile"));
+const Login = lazy(() => import("./views/PublicRouter/Login"));
 
-// Misc Views
-const NotFound = lazy(() => import("tools/components/NotFound"));
+import NotFound from "tools/components/NotFound";
 
 import "./App.scss";
 
@@ -58,21 +35,11 @@ import "./App.scss";
 const AppPageContent = ({ isOnline }) => (
   <Suspense fallback={<Loading/>}>
     <Switch>
-      {/* Default Route */}
-      {/* <Route exact path={ROUTE_ROOT} component={(props) => isOnline ? <Redirect to={ROUTE_DASHBOARD}/> : <Login {...props} />}/> */}
-      <Route exact path={ROUTE_ROOT} component={({ history }) => isOnline ? <Redirect to={ROUTE_DASHBOARD}/> : history.push(ROUTE_LOGIN) }/>
+      <Route exact path={ROUTE_ROOT} component={(props) => isOnline ? <Redirect to={ROUTE_USER_DASHBOARD}/> : <Login {...props}/> }/>
 
-      {/* Public Routes */}
-      <ActivityRoute exact path={ROUTE_LOGIN} requiredState={OFFLINE} Component={Login}/>
-      <ActivityRoute exact path={ROUTE_REGISTER} requiredState={OFFLINE} Component={Register}/>
-      <ActivityRoute exact path={ROUTE_VERIFICATION} requiredState={OFFLINE} Component={Verification}/>
-      <ActivityRoute exact path={ROUTE_RECOVERY} requiredState={OFFLINE} Component={Recovery}/>
-
-      {/* User Routes */}
-      <ActivityRoute exact exact path={ROUTE_DASHBOARD} requiredState={ONLINE} Component={Dashboard}/>
-      <ActivityRoute exact path={ROUTE_PROFILE} requiredState={ONLINE} Component={Profile}/>
-
-      {/* Admin Routes */}
+      <ActivityRoute path={ROUTE_PUBLIC} requiredState={OFFLINE} Component={PublicRouter}/>
+      <ActivityRoute path={ROUTE_VERIFICATION} requiredState={OFFLINE} Component={VerificationRouter}/>
+      <ActivityRoute path={ROUTE_USER} requiredState={ONLINE} Component={UserRouter}/>
       <ActivityRoute path={ROUTE_ADMIN_ROOT} requiredState={ONLINE} Component={AdminRouter}/>
 
       <Route component={NotFound}/>
@@ -119,7 +86,7 @@ let App = ({ shouldReconnect, isOnline, account, handleReconnect, handleLogout, 
       if(status === HTTP_ERROR_INVALID_TOKEN) {
         handleLogout();
       } else if(status === HTTP_ERROR_UNAUTHORIZED) {
-        history.push(ROUTE_DASHBOARD);
+        history.push(ROUTE_USER_DASHBOARD);
       }
 
       return Promise.reject(error);

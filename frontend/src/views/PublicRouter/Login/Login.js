@@ -15,12 +15,12 @@ import { publicAxios, setAxiosToken } from "tools/rest";
 import { saveToken } from "tools/storage";
 
 import { REST_PUBLIC_LOGIN } from "constants/rest";
-import { ROUTE_REGISTER, ROUTE_RECOVERY, ROUTE_DASHBOARD } from "constants/routes";
+import { ROUTE_PUBLIC_REGISTER, ROUTE_PUBLIC_RECOVERY, ROUTE_USER_DASHBOARD } from "constants/routes";
 
 import "./Login.scss";
 
 const RegisterButton = () => (
-  <Link to={ROUTE_REGISTER}>
+  <Link to={ROUTE_PUBLIC_REGISTER}>
     <Button className="loginButtonsMain__button loginButtonsMain__register" variant="contained" color="primary">Register</Button>
   </Link>
 );
@@ -33,7 +33,7 @@ const MainButtons = () => (
 );
 
 const RecoveryButton = () => (
-  <Link to={ROUTE_RECOVERY}>
+  <Link to={ROUTE_PUBLIC_RECOVERY}>
     <Button size="small">Forgot Password?</Button>
   </Link>
 );
@@ -70,7 +70,7 @@ const mapStateToProps = ({ isOnline }) => ({ isOnline });
 const mapDispatchToProps = (dispatch) => ({
   login: (isOnline, history, { username, password }, setSubmitting, setGeneralError) => {
     if(isOnline) {
-      history.push(ROUTE_DASHBOARD);
+      history.push(ROUTE_USER_DASHBOARD);
     } else {
       publicAxios.post(REST_PUBLIC_LOGIN, { username, password })
         .then(({ data: { data: { token, user } } }) => {

@@ -12,7 +12,7 @@ import { AppHeaderDropdown, AppSidebarToggler, AppNavbarBrand } from "@coreui/re
 
 import { AppBar, Toolbar } from "@material-ui/core";
 
-import { ROUTE_LOGIN } from "constants/routes";
+import { ROUTE_PUBLIC_LOGIN } from "constants/routes";
 import { REST_AUTH_LOGOUT } from "constants/rest";
 
 import logo from "images/brand/ON_POS_LOGO_BLUE_RGB.svg";
@@ -73,7 +73,7 @@ const mapDispatchToProps = (dispatch, { history }) => ({
       .catch((error) => console.error(error))
       .finally(() => {
         resetUserState(dispatch);
-        history.push(ROUTE_LOGIN);
+        history.push(ROUTE_PUBLIC_LOGIN);
       });
   }
 });

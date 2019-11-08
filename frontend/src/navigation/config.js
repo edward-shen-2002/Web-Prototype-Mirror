@@ -1,4 +1,8 @@
 import { 
+  ROUTE_USER_PROFILE,
+  
+  ROUTE_USER_PACKAGES,
+
   ROUTE_ADMIN_USER_USERS, 
   ROUTE_ADMIN_USER_REGISTRATIONS,
 
@@ -78,9 +82,9 @@ const createAdminNavigation = (roles) => {
 const createUserNavigation = () => {
   const userTitle = { title: true, name: "User" };
   
-  const userProfile = { name: "My Profile", url: "/profile", icon: "mdi mdi-account-card-details-outline" };
+  const userProfile = { name: "My Profile", url: ROUTE_USER_PROFILE, icon: "mdi mdi-account-card-details-outline" };
 
-  const userPackages = { name: "My Packages", url: "/packages", icon: "mdi mdi-pen" };
+  const userPackages = { name: "My Packages", url: ROUTE_USER_PACKAGES, icon: "mdi mdi-pen" };
 
   return [ userTitle, userProfile, userPackages ];
 };

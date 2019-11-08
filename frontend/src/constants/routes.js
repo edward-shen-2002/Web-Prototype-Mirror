@@ -1,15 +1,22 @@
 // TODO : CHANGE THIS TO COMPOSITIONAL ROUTING!!!
 
 export const ROUTE_ROOT = "/";
-export const ROUTE_DASHBOARD = "/dashboard";
-export const ROUTE_LOGIN = "/login";
-export const ROUTE_REGISTER = "/register";
-export const ROUTE_VERIFICATION = "/verification/:_id";
-export const ROUTE_RECOVERY = "/recovery";
-export const ROUTE_PROFILE = "/profile";
+
+export const ROUTE_PUBLIC = `${ROUTE_ROOT}public`;
+export const ROUTE_PUBLIC_LOGIN = `${ROUTE_PUBLIC}/login`;
+export const ROUTE_PUBLIC_REGISTER = `${ROUTE_PUBLIC}/register`;
+export const ROUTE_PUBLIC_RECOVERY = `${ROUTE_PUBLIC}/recovery`;
+
+export const ROUTE_USER = `${ROUTE_ROOT}user`;
+export const ROUTE_USER_PROFILE = `${ROUTE_USER}/profile`;
+export const ROUTE_USER_DASHBOARD = `${ROUTE_USER}/dashboard`;
+export const ROUTE_USER_PACKAGES = `${ROUTE_USER}/packages`;
+
+export const ROUTE_VERIFICATION = `${ROUTE_ROOT}verification`;
+export const ROUTE_VERIFICATION_VERIFICATION = `${ROUTE_VERIFICATION}/:_id`;
 
 // Admin routes
-export const ROUTE_ADMIN_ROOT = "/admin";
+export const ROUTE_ADMIN_ROOT = `${ROUTE_ROOT}admin`;
 
 export const ROUTE_ADMIN_USER = `${ROUTE_ADMIN_ROOT}/user_manager`;
 export const ROUTE_ADMIN_USER_USERS = `${ROUTE_ADMIN_USER}/users`;

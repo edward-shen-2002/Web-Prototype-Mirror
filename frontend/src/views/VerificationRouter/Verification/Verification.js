@@ -9,7 +9,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { REST_VERIFICATION_VERIFICATION } from "constants/rest";
 
-import { ROUTE_LOGIN, ROUTE_REGISTER } from "constants/routes";
+import { ROUTE_PUBLIC_LOGIN, ROUTE_PUBLIC_REGISTER } from "constants/routes";
 
 import "./Verification.scss";
 
@@ -48,8 +48,8 @@ const Verification = ({ history, match: { params: { _id } } }) => {
     }
   });
 
-  const handleGoToLogin = () => history.push(ROUTE_LOGIN);
-  const handleGoToRegister = () => history.push(ROUTE_REGISTER);
+  const handleGoToLogin = () => history.push(ROUTE_PUBLIC_LOGIN);
+  const handleGoToRegister = () => history.push(ROUTE_PUBLIC_REGISTER);
 
   return (
     <div className="verificationContainer">

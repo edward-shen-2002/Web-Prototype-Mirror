@@ -10,7 +10,7 @@ import { publicAxios } from "tools/rest";
 
 import { ROLE_LEVEL_NOT_APPLICABLE } from "constants/roles";
 import { REST_PUBLIC_REGISTER, REST_PUBLIC_DATA } from "constants/rest";
-import { ROUTE_LOGIN, ROUTE_DASHBOARD } from "constants/routes";
+import { ROUTE_PUBLIC_LOGIN, ROUTE_USER_DASHBOARD } from "constants/routes";
 
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
@@ -51,7 +51,7 @@ const registerSchema = yup.object().shape({
 });
 
 const LoginLinkButton = () => (
-  <Link to={ROUTE_LOGIN}>
+  <Link to={ROUTE_PUBLIC_LOGIN}>
     <Button className="register__button" fullWidth>Back to login</Button>
   </Link>
 );
@@ -319,7 +319,7 @@ let Register = ({ isOnline, history }) => {
 
   const handleRegister = (newUser, { setSubmitting, setErrors }) => {
     if(isOnline) {
-      history.push(ROUTE_DASHBOARD);
+      history.push(ROUTE_USER_DASHBOARD);
     } else {
       if(registerView) {
         publicAxios.post(REST_PUBLIC_REGISTER, { ...newUser, passwordConfirm: undefined })
@@ -337,7 +337,7 @@ let Register = ({ isOnline, history }) => {
   };
   
   const handleReturnToRegister = () => setRegisterView(true);
-  const handleReturnToLogin = () => history.push(ROUTE_LOGIN);
+  const handleReturnToLogin = () => history.push(ROUTE_PUBLIC_LOGIN);
 
   return (
     <div className="register">

@@ -8,12 +8,12 @@ import TextField from "@material-ui/core/TextField";
 
 import { Formik } from "formik";
 
-import { ROUTE_LOGIN } from "constants/routes";
+import { ROUTE_PUBLIC_LOGIN } from "constants/routes";
 
 import "./Recovery.scss";
 
 const LoginLinkButton = () => (
-  <Link to={ROUTE_LOGIN}>
+  <Link to={ROUTE_PUBLIC_LOGIN}>
     <Button className="register__button" fullWidth>Back to login</Button>
   </Link>
 );
