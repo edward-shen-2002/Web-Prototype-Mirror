@@ -34,7 +34,7 @@ const templates = ({ router, TemplateModel }) => {
     try {
       const blankWorkbook = await XlsxPopulate.fromBlankAsync();
 
-      const blankWorkbookData = blankWorkbook.outputAsync();
+      const blankWorkbookData = await blankWorkbook.outputAsync();
 
       TemplateModel.create({ name, file: blankWorkbookData })
         .then((template) => {
