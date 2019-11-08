@@ -4,6 +4,7 @@ import { json, urlencoded } from "body-parser";
 
 import cors from "cors";
 import passport from "passport";
+import compression from "compression";
 
 import serverSetup from "./setup";
 
@@ -18,6 +19,8 @@ const _init = async () => {
   app.use(urlencoded({ extended: true }));
 
   app.use(cors());
+
+  app.use(compression());
 
   app.use(logger("dev")); 
 

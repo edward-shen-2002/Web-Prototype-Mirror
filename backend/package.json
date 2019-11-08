@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
     "esm": "^3.2.25",
@@ -40,6 +41,7 @@
     "passport-local-mongoose": "^5.0.1",
     "password-validator": "^5.0.2",
     "systeminformation": "^4.14.8",
+    "uniqid": "^5.1.0",
     "xlsx-populate": "https://github.com/greylemon/xlsx-populate#Haonan"
   }
 }
