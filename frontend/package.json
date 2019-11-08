@@ -34,6 +34,7 @@
     "react-router-dom": "^5.0.0",
     "react-select": "^3.0.8",
     "react-sortable-tree": "^2.6.2",
+    "react-window": "^1.8.5",
     "reactstrap": "^8.0.1",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",

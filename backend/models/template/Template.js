@@ -1,9 +1,7 @@
 import { Schema, model } from "mongoose";
 
-// const ObjectId = Schema.Types.ObjectId;
-
 let templateSchema = new Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: true },
 
   file: { type: String },
 

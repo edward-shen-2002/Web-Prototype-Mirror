@@ -14,7 +14,7 @@ import { ROLE_LEVEL_ADMIN } from "../constants/roles";
  *   wipeDatabase: default false
  *   createDummyUser: default false
  */
-const setupMongoose = async (options, { UserModel, SectorModel, OrganizationModel, RegistrationModel, RegisterVerificationModel }) => {
+const setupMongoose = async (options, { UserModel, SectorModel, OrganizationModel, TemplateModel, RegistrationModel, RegisterVerificationModel }) => {
   const handleCreateDatabase = async () => {
     console.log("MongoDB: Creating collections in database");
     try {
@@ -24,6 +24,7 @@ const setupMongoose = async (options, { UserModel, SectorModel, OrganizationMode
       await RegisterVerificationModel.createCollection();
       await OrganizationModel.createCollection();
       await SectorModel.createCollection();
+      await TemplateModel.createCollection();
       
       console.log("MongoDB: Successfully created collections");
     } catch(error) {

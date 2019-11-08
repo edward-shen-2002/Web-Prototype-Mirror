@@ -8,15 +8,14 @@ import { Strategy as LocalStrategy } from "passport-local";
 
 // MongoDB models
 import UserModel from "../models/user/User";
-
 import OrganizationModel from "../models/organization/Organization";
-
 import RegistrationModel from "../models/user/Registration";
 import RegisterVerificationModel from "../models/user/RegisterVerification";
 import SectorModel from "../models/sector/Sector";
+import TemplateModel from "../models/template/Template";
 
 const serverSetup = async (app, passport, options = {}) => {
-  const helpers = { app, passport, UserModel, OrganizationModel, RegistrationModel, RegisterVerificationModel, SectorModel };
+  const helpers = { app, passport, UserModel, OrganizationModel, RegistrationModel, RegisterVerificationModel, SectorModel, TemplateModel };
   
   passport.use(new LocalStrategy(UserModel.authenticate()));
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, lazy } from "react";
 
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -7,12 +7,16 @@ import { AddFabIconButton } from "tools/components/buttons";
 
 import TextField from "@material-ui/core/TextField";
 
+import LaunchIcon from "@material-ui/icons/Launch";
+
 import { adminTemplateRoleAxios } from "tools/rest";
 import { REST_ADMIN_TEMPLATES } from "constants/rest";
 
-import { ROUTE_ADMIN_TEMPLATE_TEMPLATE } from "constants/routes";
+import { ROUTE_ADMIN_TEMPLATE_TEMPLATES } from "constants/routes";
 
 import "./Templates.scss";
+
+const MaterialTable = lazy(() => import("material-table"));
 
 const HeaderActions = ({ handleQueryChange, handleCreateTemplate }) => (
   <div className="headerActions">
@@ -28,9 +32,33 @@ const Header = ({ handleQueryChange, handleCreateTemplate }) => (
   </Paper>
 );
 
-const TemplatesContent = ({ templates }) => (
+const TemplatesTable = ({ templates, history, handleRowAdd, handleRowDelete, handleRowUpdate }) => {
+  const handleOpenTemplate = (_event, template) => {
+    history.push(`${ROUTE_ADMIN_TEMPLATE_TEMPLATES}/${template._id}`);
+  };
+
+  const columns = [
+    { title: "Name", field: "name" }
+  ];
+
+  const actions = [
+    { icon: LaunchIcon, tooltip: "Open Template", onClick: handleOpenTemplate }
+  ];
+
+  const editable = { onRowAdd: handleRowAdd, onRowUpdate: handleRowUpdate, onRowDelete: handleRowDelete };
+
+  const options = { actionsColumnIndex: -1 };
+
+  return (
+    <MaterialTable title="Templates" columns={columns} actions={actions} data={templates} editable={editable} options={options}/>
+  );
+};
+
+const TemplatesContent = ({ templates, isTableView, history, handleRowAdd, handleRowDelete, handleRowUpdate }) => (
   <Paper className="templatesContent">
-    
+    {
+      isTableView && <TemplatesTable templates={templates} history={history} handleRowAdd={handleRowAdd} handleRowDelete={handleRowDelete} handleRowUpdate={handleRowUpdate}/>
+    }
   </Paper>
 );
 
@@ -38,12 +66,13 @@ const TemplatesContainer = ({ history }) => {
   const [ query, setQuery ] = useState("");
   const [ templates, setTemplates ] = useState([]);
   const [ isDateFetched, setIsDataFetched ] = useState(false);
+  const [ isTableView, setIsTableView ] = useState(true);
 
   useEffect(() => {
     if(!isDateFetched) {  
       adminTemplateRoleAxios.get(REST_ADMIN_TEMPLATES)
-        .then((response) => {
-          console.log(response);
+        .then(({ data: { data: { templates } } }) => {
+          setTemplates(templates);
         })
         .catch((error) => console.error(error));
       setIsDataFetched(true);
@@ -52,23 +81,68 @@ const TemplatesContainer = ({ history }) => {
 
   const handleQueryChange = ({ target: { value } }) => setQuery(value);
 
-  const filteredTemplates = useMemo(() => (
-    templates.filter(({ name }) => name.toLowerCase().includes(query.toLowerCase()))
-  ), [ query ]);
+  const filteredTemplates = templates.filter(({ name }) => name.toLowerCase().includes(query.toLowerCase()));
 
   const handleCreateTemplate = () => {
     adminTemplateRoleAxios.post(REST_ADMIN_TEMPLATES)
-    .then((response) => {
-        history.push(ROUTE_ADMIN_TEMPLATE_TEMPLATE);
-        
+    .then(({ data: { data: { template } } }) => {
+        history.push(`${ROUTE_ADMIN_TEMPLATE_TEMPLATES}/${template._id}`);
       })
       .catch((error) => console.error(error));
   };
 
+  const handleRowAdd = (newTemplate) => new Promise((resolve, reject) => {
+    setTimeout(() => {
+      adminTemplateRoleAxios.post(REST_ADMIN_TEMPLATES, { newTemplate })
+        .then(({ data: { data: { template } } }) => {
+          setTemplates([ ...templates, template ]);
+
+          resolve();
+        })
+        .catch((error) => {
+          console.error(error);
+          reject(error);
+        });
+    }, 600);
+  });
+
+  const handleRowDelete = (template) => new Promise((resolve, reject) => {
+    setTimeout(() => {
+
+      adminTemplateRoleAxios.delete(`${REST_ADMIN_TEMPLATES}/${template._id}`)
+        .then(() => {
+          const templateIndex = templates.findIndex(({ _id }) => _id === template._id);
+
+          setTemplates([ ...templates.slice(0, templateIndex), ...templates.slice(templateIndex + 1) ]);
+          resolve();
+        })
+        .catch((error) => {
+          console.error(error);
+          reject(error);
+        });
+    }, 1000);
+  });
+  
+  const handleRowUpdate = (newTemplate, oldTemplate) => new Promise((resolve, reject) => {
+    setTimeout(() => {
+      adminTemplateRoleAxios.put(REST_ADMIN_TEMPLATES, { newTemplate, oldTemplate })
+        .then(() => {
+          const templateIndex = templates.findIndex(({ _id }) => _id === oldTemplate._id);
+
+          setTemplates([ ...templates.slice(0, templateIndex), newTemplate, ...templates.slice(templateIndex + 1) ]);
+          resolve();
+        })
+        .catch((error) => {
+          console.error(error);
+          reject(error);
+        });
+    }, 1000);
+  });
+
   return (
     <div>
       <Header handleQueryChange={handleQueryChange} handleCreateTemplate={handleCreateTemplate}/>
-      <TemplatesContent templates={filteredTemplates}/>
+      <TemplatesContent templates={filteredTemplates} isTableView={isTableView} history={history} handleRowAdd={handleRowAdd} handleRowDelete={handleRowDelete} handleRowUpdate={handleRowUpdate}/>
     </div>
   );
 };

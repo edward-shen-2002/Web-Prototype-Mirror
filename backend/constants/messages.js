@@ -34,3 +34,9 @@ export const MESSAGE_SUCCESS_SECTORS = "Successfully fetched sectors";
 export const MESSAGE_SUCCESS_SECTORS_CREATE = "Successfully created sector";
 export const MESSAGE_SUCCESS_SECTORS_UPDATE = "Successfully updated sector";
 export const MESSAGE_SUCCESS_SECTORS_DELETE = "Successfully deleted sector";
+
+export const MESSAGE_SUCCESS_TEMPLATES = "Successfully fetched templates";
+export const MESSAGE_SUCCESS_TEMPLATES_CREATE = "Successfully created template";
+export const MESSAGE_SUCCESS_TEMPLATES_TEMPLATE = "Successfully fetched template";
+export const MESSAGE_SUCCESS_TEMPLATES_DELETE = "Successfully deleted template";
+export const MESSAGE_SUCCESS_TEMPLATES_UPDATE = "Successfully updated template";

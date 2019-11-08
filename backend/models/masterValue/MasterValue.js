@@ -1,5 +1,7 @@
 import { Schema, model } from "mongoose";
 
+const ObjectId = Schema.Types.ObjectId;
+
 /**
  * Contains the values of successfully approved workbooks
  * 
@@ -50,11 +52,12 @@ let masterValueSchema = new Schema({
 
   quarter: { type: String },
 
-  templateName: { type: String, required: true },
+  template: { type: ObjectId, required: true },
 
-  attributePosition: { type: String, required: true },
+  attributeId: { type: String, required: true },
+  categoryId: { type: String, required: true },
 
-  categoryPosition: { type: String, required: true },
+  // ! ATTRIBUTE AND CATEGORY ID WILL BE NEEDED IF USER CAN ADD ROW/COLUMNS...
 
   value: { type: String, required: true }
 }, { minimize: false });

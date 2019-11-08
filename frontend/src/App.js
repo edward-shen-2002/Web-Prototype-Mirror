@@ -12,7 +12,7 @@ import { ActivityRoute } from "tools/components/routes";
 import { ONLINE, OFFLINE } from "constants/states";
 
 import { REST_AUTH_RECONNECT, HTTP_ERROR_INVALID_TOKEN, HTTP_ERROR_UNAUTHORIZED } from "constants/rest";
-import { ROUTE_ROOT, ROUTE_USER_DASHBOARD, ROUTE_VERIFICATION, ROUTE_USER, ROUTE_PUBLIC, ROUTE_ADMIN_ROOT } from "constants/routes";
+import { ROUTE_ROOT, ROUTE_USER_PROFILE, ROUTE_VERIFICATION, ROUTE_USER, ROUTE_PUBLIC, ROUTE_ADMIN_ROOT } from "constants/routes";
 
 import Loading from "tools/components/Loading";
 
@@ -35,7 +35,7 @@ import "./App.scss";
 const AppPageContent = ({ isOnline }) => (
   <Suspense fallback={<Loading/>}>
     <Switch>
-      <Route exact path={ROUTE_ROOT} component={(props) => isOnline ? <Redirect to={ROUTE_USER_DASHBOARD}/> : <Login {...props}/> }/>
+      <Route exact path={ROUTE_ROOT} component={(props) => isOnline ? <Redirect to={ROUTE_USER_PROFILE}/> : <Login {...props}/> }/>
 
       <ActivityRoute path={ROUTE_PUBLIC} requiredState={OFFLINE} Component={PublicRouter}/>
       <ActivityRoute path={ROUTE_VERIFICATION} requiredState={OFFLINE} Component={VerificationRouter}/>
