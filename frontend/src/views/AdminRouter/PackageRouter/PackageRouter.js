@@ -10,7 +10,7 @@ import NotFound from "tools/components/NotFound";
 
 const PackageRouter = () => (
   <Switch>
-    <Route path={ROUTE_ADMIN_PACKAGE_PACKAGES} component={Packages}/>
+    <Route exact path={ROUTE_ADMIN_PACKAGE_PACKAGES} component={Packages}/>
 
     <Route component={NotFound}/>
   </Switch>

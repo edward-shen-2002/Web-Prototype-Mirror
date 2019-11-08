@@ -10,7 +10,7 @@ const Organizations = lazy(() => import("./Organizations"));
 
 const OrganizationRouter = () => (
   <Switch>
-    <Route path={ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS} component={Organizations}/>
+    <Route exact path={ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS} component={Organizations}/>
 
     <Route component={NotFound}/>
   </Switch>

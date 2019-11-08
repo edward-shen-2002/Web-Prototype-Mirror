@@ -10,7 +10,7 @@ import { ROUTE_ADMIN_SECTOR_SECTORS } from "constants/routes";
 
 const SectorRouter = () => (
   <Switch>
-    <Route path={ROUTE_ADMIN_SECTOR_SECTORS} component={Sectors}/>
+    <Route exact path={ROUTE_ADMIN_SECTOR_SECTORS} component={Sectors}/>
 
     <Route component={NotFound}/>
   </Switch>

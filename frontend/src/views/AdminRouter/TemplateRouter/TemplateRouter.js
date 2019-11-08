@@ -11,8 +11,8 @@ import { ROUTE_ADMIN_TEMPLATE_TEMPLATE,ROUTE_ADMIN_TEMPLATE_TEMPLATES } from "co
 
 const TemplateRouter = () => (
   <Switch>
-    <Route path={ROUTE_ADMIN_TEMPLATE_TEMPLATES} component={Templates}/>
-    <Route path={ROUTE_ADMIN_TEMPLATE_TEMPLATE} component={Template}/>
+    <Route exact path={ROUTE_ADMIN_TEMPLATE_TEMPLATES} component={Templates}/>
+    <Route exact path={ROUTE_ADMIN_TEMPLATE_TEMPLATE} component={Template}/>
 
     <Route component={NotFound}/>
   </Switch>

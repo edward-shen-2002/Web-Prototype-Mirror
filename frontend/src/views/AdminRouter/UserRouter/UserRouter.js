@@ -11,8 +11,8 @@ import { ROUTE_ADMIN_USER_USERS, ROUTE_ADMIN_USER_REGISTRATIONS } from "constant
 
 const UserRouter = () => (
   <Switch>
-    <Route path={ROUTE_ADMIN_USER_USERS} component={Users}/>
-    <Route path={ROUTE_ADMIN_USER_REGISTRATIONS} component={Registrations}/>
+    <Route exact path={ROUTE_ADMIN_USER_USERS} component={Users}/>
+    <Route exact path={ROUTE_ADMIN_USER_REGISTRATIONS} component={Registrations}/>
 
     <Route component={NotFound}/>
   </Switch>
