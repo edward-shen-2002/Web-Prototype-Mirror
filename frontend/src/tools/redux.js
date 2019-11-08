@@ -1,6 +1,6 @@
-import { setOnline, setOffline } from "store/actions/app/isOnline";
-import { updateAccount, clearAccount } from "store/actions/domain/account";
-import { showAppNavigation, hideAppNavigation } from "store/actions/ui/isAppNavigationOpen";
+import { setOnline, setOffline } from "actions/app/isOnline";
+import { updateAccount, clearAccount } from "actions/domain/account";
+import { showAppNavigation, hideAppNavigation } from "actions/ui/isAppNavigationOpen";
 
 import { deleteAxiosToken, setAxiosToken } from "tools/rest";
 import { deleteToken, saveToken } from "tools/storage";
@@ -23,6 +23,6 @@ export const resetUserState = (dispatch) => {
   dispatch(setOffline());
 
   dispatch(clearAccount());
-  
+
   dispatch(hideAppNavigation());
 };
