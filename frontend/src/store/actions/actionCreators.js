@@ -24,3 +24,9 @@ export const SET_SHOULDRECONNECT = "SET_SHOULDRECONNECT";
 
 export const UPDATE_ACCOUNT = "UPDATE_ACCOUNT";
 export const CLEAR_ACCOUNT = "CLEAR_ACCOUNT";
+
+/**
+ * UI data: data related to the views/components display state
+ */
+export const SHOW_APPNAVIGATION = "SHOW_APPNAVIGATION";
+export const HIDE_APPNAVIGATION = "HIDE_APPNAVIGATION";

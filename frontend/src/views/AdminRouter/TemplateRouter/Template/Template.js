@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 
+import { connect } from "react-redux";
+
 import { adminTemplateRoleAxios } from "tools/rest";
 
 import Excel from "tools/components/Excel";

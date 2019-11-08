@@ -47,14 +47,14 @@ const AppPageContent = ({ isOnline }) => (
   </Suspense>
 );
 
-const AppPage = ({ isOnline, account: { roles }, location, history }) => (
+const AppPage = ({ isOnline, isAppNavigationOpen, account: { roles }, location, history }) => (
   <div className={`app__page ${isOnline ? "app__page--online" : "app_page--offline" }`}>
-    {isOnline && <Navigation location={location} history={history} roles={roles}/>}
+    {isAppNavigationOpen && <Navigation location={location} history={history} roles={roles}/>}
     <AppPageContent isOnline={isOnline}/>
   </div>
 ); 
 
-const mapStateToProps = ({ app: { shouldReconnect, isOnline }, domain: { account } }) => ({ shouldReconnect, isOnline, account });
+const mapStateToProps = ({ app: { shouldReconnect, isOnline }, domain: { account }, ui: { isAppNavigationOpen } }) => ({ shouldReconnect, isOnline, isAppNavigationOpen, account });
 
 const mapDispatchToProps = (dispatch) => ({
   handleReconnect: () => {
@@ -66,7 +66,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 // ?Axios interceptor might not be overriden...
-let App = ({ shouldReconnect, isOnline, account, handleReconnect, handleLogout, location, history }) => {
+let App = ({ shouldReconnect, isOnline, isAppNavigationOpen, account, handleReconnect, handleLogout, location, history }) => {
   // Set up auth middleware - only shared information among all auth requests must be present here to ensure functionality
   // TODO : Check edge cases - Will 'isOnline' parameter work for all cases? When can it fail?
   useMemo(() => {
@@ -112,8 +112,8 @@ let App = ({ shouldReconnect, isOnline, account, handleReconnect, handleLogout, 
 
   return (
     <div className="app">
-      {isOnline && <AppHeader history={history}/>}
-      <AppPage isOnline={isOnline} location={location} history={history} account={account}/>
+      {isAppNavigationOpen && <AppHeader history={history}/>}
+      <AppPage isOnline={isOnline} isAppNavigationOpen={isAppNavigationOpen} location={location} history={history} account={account}/>
     </div>
   );
 };
