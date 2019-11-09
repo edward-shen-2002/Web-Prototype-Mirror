@@ -26,6 +26,8 @@ let Template = ({ handleHideAppNavigation, handleShowAppNavigation, isAppNavigat
   const [ template, setTemplate ] = useState({});
   const [ isDataFetched, setIsDataFetched ] = useState(false);
 
+  if(isAppNavigationOpen) handleHideAppNavigation(isAppNavigationOpen);
+
   useEffect(() => {
     if(!isDataFetched) {
       adminTemplateRoleAxios.get(`${REST_ADMIN_TEMPLATES}/${_id}`)
@@ -34,7 +36,6 @@ let Template = ({ handleHideAppNavigation, handleShowAppNavigation, isAppNavigat
         })
         .catch((error) => console.error(error));
 
-      handleHideAppNavigation(isAppNavigationOpen);
       setIsDataFetched(true);
     }
 
@@ -44,9 +45,7 @@ let Template = ({ handleHideAppNavigation, handleShowAppNavigation, isAppNavigat
   const { name } = template;
 
   return (
-    <div>
-      <Excel name={name} returnLink={ROUTE_ADMIN_TEMPLATE_TEMPLATES}/>
-    </div>
+    <Excel name={name} returnLink={ROUTE_ADMIN_TEMPLATE_TEMPLATES}/>
   );
 };
 
