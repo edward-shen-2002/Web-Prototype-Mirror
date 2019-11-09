@@ -9,6 +9,8 @@ import Excel from "tools/components/Excel";
 import { REST_ADMIN_TEMPLATES } from "constants/rest";
 import { ROUTE_ADMIN_TEMPLATE_TEMPLATES } from "constants/routes";
 
+import Loading from "tools/components/Loading";
+
 import "./Template.scss";
 
 const mapStateToProps = ({ ui: { isAppNavigationOpen } }) => ({ isAppNavigationOpen });
@@ -34,9 +36,8 @@ let Template = ({ handleHideAppNavigation, handleShowAppNavigation, isAppNavigat
         .then(({ data: { data: { template } } }) => {
           setTemplate(template);
         })
-        .catch((error) => console.error(error));
-
-      setIsDataFetched(true);
+        .catch((error) => console.error(error))
+        .finally(() => setIsDataFetched(true));
     }
 
     return () => handleShowAppNavigation(isAppNavigationOpen);
@@ -44,9 +45,22 @@ let Template = ({ handleHideAppNavigation, handleShowAppNavigation, isAppNavigat
 
   const { name } = template;
 
+  const handleSubmitName = (name) => {
+    const newTemplate = { name };
+    return (
+      adminTemplateRoleAxios.put(`${REST_ADMIN_TEMPLATES}/${_id}`, { newTemplate })
+        .then(() => {
+          setTemplate(newTemplate);
+        })
+        .catch((error) => console.error(error))
+    );
+  };
+    
   return (
-    <Excel name={name} returnLink={ROUTE_ADMIN_TEMPLATE_TEMPLATES}/>
-  );
+    isDataFetched 
+      ? <Excel name={name} returnLink={ROUTE_ADMIN_TEMPLATE_TEMPLATES} handleSubmitName={handleSubmitName}/>
+      : <Loading/>
+  )
 };
 
 Template = connect(mapStateToProps, mapDispatchToProps)(Template);

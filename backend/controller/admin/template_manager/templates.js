@@ -1,5 +1,7 @@
 import XlsxPopulate from "xlsx-populate";
 
+import { DEFAULT_EXCEL_ROWS, DEFAULT_EXCEL_COLUMNS } from "../../../constants/excel";
+
 import { ROUTE_ADMIN_TEMPLATES } from "../../../constants/rest";
 
 import { 
@@ -33,6 +35,10 @@ const templates = ({ router, TemplateModel }) => {
 
     try {
       const blankWorkbook = await XlsxPopulate.fromBlankAsync();
+
+      const sheet = blankWorkbook.sheet(0);
+      
+      sheet.row(DEFAULT_EXCEL_ROWS).cell(DEFAULT_EXCEL_COLUMNS).setValue("LAST_VALUE");
 
       const blankWorkbookData = await blankWorkbook.outputAsync();
 
@@ -73,6 +79,19 @@ const templates = ({ router, TemplateModel }) => {
     TemplateModel.findById(_id)
       .then((template) => {
         res.json({ message: MESSAGE_SUCCESS_TEMPLATES_TEMPLATE, data: { template } });
+      })
+      .catch(next);
+  });
+
+  router.put(`${ROUTE_ADMIN_TEMPLATES}/:_id`, (req, res, next) => {
+    const { _id } = req.params;
+    const { newTemplate } = req.body;
+
+    console.log(newTemplate);
+
+    TemplateModel.findByIdAndUpdate(_id, newTemplate)
+      .then(() => {
+        res.json({ message: MESSAGE_SUCCESS_TEMPLATES_UPDATE });
       })
       .catch(next);
   });

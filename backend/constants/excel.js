@@ -1,0 +1,2 @@
+export const DEFAULT_EXCEL_ROWS = 1000;
+export const DEFAULT_EXCEL_COLUMNS = 26;
