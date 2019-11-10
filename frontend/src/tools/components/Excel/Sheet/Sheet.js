@@ -25,6 +25,7 @@ import "./Sheet.scss";
 const SheetView = ({ height, width, values, sheet }) => {
   const [ columnCount, setColumnCount ] = useState(DEFAULT_EXCEL_COLUMNS + 1);
   const [ rowCount, setRowCount ] = useState(DEFAULT_EXCEL_ROWS + 1);
+  const [ activeCell, setActiveCell ] = useState({ row: null, column: null });
   const [ isMounted, setIsMounted ] = useState(false);
 
   const rowHeight = (index) => {
@@ -67,6 +68,10 @@ const SheetView = ({ height, width, values, sheet }) => {
     return width;
   };
 
+  const handleResetActiveCell = () => setActiveCell({ row: null, column: null });
+
+  const handleSetActiveCell = ({ row, column }) => setActiveCell({ row, column });
+
   useEffect(() => {
     if(!isMounted) {
       const { _maxColumnNumber, _maxRowNumber } = sheet.usedRange();
@@ -76,7 +81,9 @@ const SheetView = ({ height, width, values, sheet }) => {
     }
   });
 
-  const itemData = { sheet, values };
+  console.log(activeCell)
+
+  const itemData = { sheet, values, activeCell, handleResetActiveCell, handleSetActiveCell };
 
   return (
     <VariableSizeGrid
