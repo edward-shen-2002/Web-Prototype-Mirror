@@ -53,7 +53,7 @@ const EditCell = ({ style, value, column, row, handleChangeCellValue, handleSetA
 
   return (
     <input
-      className="cell--edit" 
+      className="cell cell--edit" 
       style={style} 
       type="text" 
       value={inputValue} 

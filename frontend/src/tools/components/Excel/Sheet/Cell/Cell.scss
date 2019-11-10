@@ -1,7 +1,7 @@
 .cell {
-  border-right: 1px solid #CCCCCC;
-  border-bottom: 1px solid #CCCCCC;
   padding: 0 4px 0 4px;
+
+  outline: 1px solid #CCCCCC;
   
   white-space: pre;
   overflow: hidden;
@@ -18,15 +18,17 @@
   }
 
   &--active {
-    z-index: 100000;
     outline: 2px #5292F7 solid;
+    outline-offset: -2px;
+
+    // width: 100%;
+    box-sizing: border-box;
   }
 
   &--edit {
-    z-index: 100000;
-
     padding-left: 3px;
 
-    outline: 3px #1A73E8 solid
+    outline: 2px #1A73E8 solid;
+    outline-offset: -2px;
   }
 }
