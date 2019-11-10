@@ -18,6 +18,15 @@
   }
 
   &--active {
-    background-color: #87CEFA;
+    z-index: 100000;
+    outline: 2px #5292F7 solid;
+  }
+
+  &--edit {
+    z-index: 100000;
+
+    padding-left: 3px;
+
+    outline: 3px #1A73E8 solid
   }
 }

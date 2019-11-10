@@ -11,6 +11,10 @@ const HeaderCell = ({ style, value }) => (
 );
 
 const DataCell = ({ style, value, column, row, isActiveCell, handleSetActiveCell, handleSetActiveCellEdit }) => {
+  let className = "cell";
+
+  if(isActiveCell) className += " cell--active";
+  
   const handleDoubleClick = () => {
     if(!isActiveCell) handleSetActiveCell({ row, column });
     handleSetActiveCellEdit();
@@ -20,10 +24,6 @@ const DataCell = ({ style, value, column, row, isActiveCell, handleSetActiveCell
     handleSetActiveCell({ row, column });
   };
 
-  let className = "cell";
-
-  if(isActiveCell) className += "cell--active";
-
   return (
     <div className={className} style={style} onClick={handleClick} onDoubleClick={handleDoubleClick}>
       {value}
@@ -31,7 +31,7 @@ const DataCell = ({ style, value, column, row, isActiveCell, handleSetActiveCell
   );
 };
 
-const EditCell = ({ style, value, column, row, handleChangeCellValue, handleSetActiveCellEdit, handleSetActiveCellNormal }) => {
+const EditCell = ({ style, value, column, row, handleChangeCellValue, handleSetActiveCellNormal }) => {
   const [ inputValue, setInputValue ] = useState(value ? value : "");
 
   const handleInputChange = ({ target: { value } }) => setInputValue(value);
@@ -52,9 +52,10 @@ const EditCell = ({ style, value, column, row, handleChangeCellValue, handleSetA
   };
 
   return (
-    <input 
-      type="text" 
+    <input
+      className="cell--edit" 
       style={style} 
+      type="text" 
       value={inputValue} 
       autoFocus 
       onChange={handleInputChange}
