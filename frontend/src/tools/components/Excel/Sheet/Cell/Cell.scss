@@ -2,9 +2,12 @@
   border-right: 1px solid #CCCCCC;
   border-bottom: 1px solid #CCCCCC;
   padding: 0 4px 0 4px;
-  // line-height: normal;
+  
   white-space: pre;
   overflow: hidden;
 
-  // box-sizing: 
+  &--positionIndicator {
+    text-align: center;
+    background-color: #F7F8F9;
+  }
 }

@@ -1,6 +1,11 @@
 import XlsxPopulate from "xlsx-populate";
 
-import { DEFAULT_EXCEL_ROWS, DEFAULT_EXCEL_COLUMNS } from "../../../constants/excel";
+import { 
+  DEFAULT_EXCEL_ROWS, 
+  DEFAULT_EXCEL_COLUMNS,
+  DEFAULT_EXCEL_ROW_HEIGHT,
+  DEFAULT_EXCEL_COLUMN_WIDTH
+} from "../../../constants/excel";
 
 import { ROUTE_ADMIN_TEMPLATES } from "../../../constants/rest";
 
@@ -37,10 +42,12 @@ const templates = ({ router, TemplateModel }) => {
       const blankWorkbook = await XlsxPopulate.fromBlankAsync();
 
       const sheet = blankWorkbook.sheet(0);
-      
-      sheet.row(DEFAULT_EXCEL_ROWS).cell(DEFAULT_EXCEL_COLUMNS).setValue("LAST_VALUE");
 
-      const blankWorkbookData = await blankWorkbook.outputAsync();
+      for(let row = 1; row <= DEFAULT_EXCEL_ROWS; row++) sheet.row(row).height(DEFAULT_EXCEL_ROW_HEIGHT);
+
+      for(let column = 1; column <= DEFAULT_EXCEL_COLUMNS; column++) sheet.column(column).width(DEFAULT_EXCEL_COLUMN_WIDTH);
+
+      const blankWorkbookData = await blankWorkbook.outputAsync("base64");
 
       TemplateModel.create({ name, file: blankWorkbookData })
         .then((template) => {

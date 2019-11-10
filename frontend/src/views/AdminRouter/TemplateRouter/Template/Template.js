@@ -6,6 +6,8 @@ import { showAppNavigation, hideAppNavigation } from "actions/ui/isAppNavigation
 import { adminTemplateRoleAxios } from "tools/rest";
 import Excel from "tools/components/Excel";
 
+import XlsxPopulate from "xlsx-populate";
+
 import { REST_ADMIN_TEMPLATES } from "constants/rest";
 import { ROUTE_ADMIN_TEMPLATE_TEMPLATES } from "constants/routes";
 
@@ -27,13 +29,19 @@ const mapDispatchToProps = (dispatch) => ({
 let Template = ({ handleHideAppNavigation, handleShowAppNavigation, isAppNavigationOpen, match: { params: { _id } } }) => {
   const [ template, setTemplate ] = useState({});
   const [ isDataFetched, setIsDataFetched ] = useState(false);
+  const [ workbook, setWorkbook ] = useState(null);
 
   if(isAppNavigationOpen) handleHideAppNavigation(isAppNavigationOpen);
 
   useEffect(() => {
     if(!isDataFetched) {
       adminTemplateRoleAxios.get(`${REST_ADMIN_TEMPLATES}/${_id}`)
-        .then(({ data: { data: { template } } }) => {
+        .then(async ({ data: { data: { template } } }) => {
+          const { file } = template;
+
+          const workbook = await XlsxPopulate.fromDataAsync(file, { base64: true });
+
+          setWorkbook(workbook);
           setTemplate(template);
         })
         .catch((error) => console.error(error))
@@ -50,7 +58,7 @@ let Template = ({ handleHideAppNavigation, handleShowAppNavigation, isAppNavigat
     return (
       adminTemplateRoleAxios.put(`${REST_ADMIN_TEMPLATES}/${_id}`, { newTemplate })
         .then(() => {
-          setTemplate(newTemplate);
+          setTemplate({ ...template, ...newTemplate });
         })
         .catch((error) => console.error(error))
     );
@@ -58,7 +66,7 @@ let Template = ({ handleHideAppNavigation, handleShowAppNavigation, isAppNavigat
     
   return (
     isDataFetched 
-      ? <Excel name={name} returnLink={ROUTE_ADMIN_TEMPLATE_TEMPLATES} handleSubmitName={handleSubmitName}/>
+      ? <Excel name={name} workbook={workbook} returnLink={ROUTE_ADMIN_TEMPLATE_TEMPLATES} handleSubmitName={handleSubmitName}/>
       : <Loading/>
   )
 };

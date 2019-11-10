@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { VariableSizeGrid } from "react-window";
 
@@ -6,49 +6,101 @@ import AutoSizer from "react-virtualized-auto-sizer";
 
 import Cell from "./Cell";
 
+import { 
+  DEFAULT_EXCEL_ROWS, 
+  DEFAULT_EXCEL_COLUMNS,
+
+  DEFAULT_EXCEL_ROW_HEIGHT,
+  DEFAULT_EXCEL_COLUMN_WIDTH,
+
+  DEFAULT_EXCEL_ROW_HEIGHT_HIDDEN,
+  DEFAULT_EXCEL_COLUMN_WIDTH_HIDDEN,
+  
+  DEFAULT_EXCEL_ROW_HEIGHT_HEADER,
+  DEFAULT_EXCEL_COLUMN_WIDTH_HEADER
+} from "constants/excel";
+
 import "./Sheet.scss";
 
-const columnWidths = new Array(26)
-  .fill(true)
-  .map(() => 75 + Math.round(Math.random() * 50));
-const rowHeights = new Array(1000)
-  .fill(true)
-  .map(() => 25);
+const SheetView = ({ height, width, values, sheet }) => {
+  const [ columnCount, setColumnCount ] = useState(DEFAULT_EXCEL_COLUMNS + 1);
+  const [ rowCount, setRowCount ] = useState(DEFAULT_EXCEL_ROWS + 1);
+  const [ isMounted, setIsMounted ] = useState(false);
 
-const SheetView = ({ height, width, values, xlsxPopulate }) => {
-  // const rowHeight = (index) => {
+  const rowHeight = (index) => {
+    let height;
+    
+    if(index === 0) {
+      height = DEFAULT_EXCEL_ROW_HEIGHT_HEADER;
+    } else {
+      const sheetRow = sheet.row(index);
 
-  // };
+      if(sheetRow.hidden()) {
+        height = DEFAULT_EXCEL_ROW_HEIGHT_HIDDEN;
+      } else {
+        height = sheetRow.height();
 
-  // const columnWidth = (index) => {
+        if(!height) height = DEFAULT_EXCEL_ROW_HEIGHT;
+      }
+    }
 
-  // };
+    return height;
+  };
+
+  const columnWidth = (index) => {
+    let width;
+
+    if(index === 0) {
+      width = DEFAULT_EXCEL_COLUMN_WIDTH_HEADER;
+    } else {
+      const sheetColumn = sheet.column(index);
+
+      if(sheetColumn.hidden()) {
+        width = DEFAULT_EXCEL_COLUMN_WIDTH_HIDDEN
+      } else {
+        width = sheetColumn.width();
+
+        if(!width) width = DEFAULT_EXCEL_COLUMN_WIDTH;
+      }
+    }
+
+    return width;
+  };
+
+  useEffect(() => {
+    if(!isMounted) {
+      const { _maxColumnNumber, _maxRowNumber } = sheet.usedRange();
+      setColumnCount(_maxColumnNumber + 1);
+      setRowCount(_maxRowNumber + 1);
+      setIsMounted(true);
+    }
+  });
+
+  const itemData = { sheet, values };
 
   return (
     <VariableSizeGrid
       freezeRowCount={1}
       freezeColumnCount={1}
-      columnCount={26}
-      columnWidth={(index) => columnWidths[index]}
+      columnCount={columnCount}
+      columnWidth={columnWidth}
       height={height}
-      // itemData={}
-      rowCount={1000}
-      rowHeight={(index) => rowHeights[index]}
+      itemData={itemData}
+      rowCount={rowCount}
+      rowHeight={rowHeight}
       width={width}
     >
-      {({ columnIndex, rowIndex, style }) => (
-        <Cell style={style} columnIndex={columnIndex} rowIndex={rowIndex} values={values}/>
-      )}
+      {Cell}
     </VariableSizeGrid>
   );
 };
 
-const Sheet = ({ xlsxPopulate, values }) => {
+const Sheet = ({ sheet, values }) => {
   return (
     <div className="sheet">
       <AutoSizer>
         {({ height, width }) => (
-          <SheetView height={height} width={width} values={values} xlsxPopulate={xlsxPopulate}/>
+          <SheetView height={height} width={width} values={values} sheet={sheet}/>
         )}
       </AutoSizer>
     </div>

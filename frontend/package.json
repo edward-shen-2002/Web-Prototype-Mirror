@@ -42,6 +42,7 @@
     "typescript": "^3.6.3",
     "uniqid": "^5.0.3",
     "webpack-bundle-analyzer": "^3.6.0",
+    "xlsx-populate": "https://github.com/greylemon/xlsx-populate",
     "yup": "^0.27.0"
   },
   "devDependencies": {
