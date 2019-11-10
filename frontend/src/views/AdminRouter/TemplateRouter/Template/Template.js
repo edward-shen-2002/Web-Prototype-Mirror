@@ -30,7 +30,7 @@ let Template = ({ handleHideAppNavigation, handleShowAppNavigation, isAppNavigat
   const [ template, setTemplate ] = useState({});
   const [ isDataFetched, setIsDataFetched ] = useState(false);
   const [ workbook, setWorkbook ] = useState(null);
-
+  
   if(isAppNavigationOpen) handleHideAppNavigation(isAppNavigationOpen);
 
   useEffect(() => {

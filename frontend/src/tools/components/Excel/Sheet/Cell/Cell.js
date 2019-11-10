@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { columnNumberToName } from "xlsx-populate/lib/addressConverter";
 
@@ -20,13 +20,24 @@ const DataCell = ({ style, value, column, row, handleSetActiveCell }) => {
   );
 };
 
-const EditCell = ({ style, value, handleResetActiveCell }) => {
-  const [ inputValue, setInputValue ] = useState(value);
+const EditCell = ({ style, value, column, row, handleResetActiveCell, handleChangeCellValue }) => {
+  const [ inputValue, setInputValue ] = useState(value ? value : "");
 
   const handleInputChange = ({ target: { value } }) => setInputValue(value);
 
   const handleBlur = () => {
     handleResetActiveCell();
+  };
+
+  const handleKeyDown = ({ key, target }) => {
+    if(key === "Enter") {
+      handleChangeCellValue(row, column, inputValue);
+      target.blur();
+    } else if(key === "Tab") {
+      target.blur();
+    } else if(key === "Escape") {
+      target.blur();
+    }
   };
 
   return (
@@ -36,13 +47,22 @@ const EditCell = ({ style, value, handleResetActiveCell }) => {
       value={inputValue} 
       autoFocus 
       onChange={handleInputChange}
-      // onKeyPress
+      onKeyDown={handleKeyDown}
       onBlur={handleBlur}
     />
   );
 };
 
-const EditableCell = ({ style, value, activeCell, columnIndex, rowIndex, handleResetActiveCell, handleSetActiveCell }) => {
+const EditableCell = ({ 
+  style, 
+  value, 
+  activeCell, 
+  columnIndex, 
+  rowIndex, 
+  handleResetActiveCell, 
+  handleSetActiveCell, 
+  handleChangeCellValue 
+}) => {
   const { row, column } = activeCell;
 
   const isViewMode = columnIndex !== column || rowIndex !== row;
@@ -50,12 +70,12 @@ const EditableCell = ({ style, value, activeCell, columnIndex, rowIndex, handleR
   return (
     isViewMode 
       ? <DataCell style={style} value={value} column={columnIndex} row={rowIndex} handleSetActiveCell={handleSetActiveCell}/>
-      : <EditCell style={style} value={value} handleResetActiveCell={handleResetActiveCell}/>
+      : <EditCell style={style} value={value} column={columnIndex} row={rowIndex} handleResetActiveCell={handleResetActiveCell} handleChangeCellValue={handleChangeCellValue}/>
   );
 };
 
 const Cell = ({ style, data, columnIndex, rowIndex }) => {
-  const { sheet, activeCell, handleResetActiveCell, handleSetActiveCell } = data;
+  const { sheet, activeCell, handleResetActiveCell, handleSetActiveCell, handleChangeCellValue } = data;
 
   let value;
   let Component;
@@ -72,6 +92,7 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         activeCell={activeCell} 
         handleResetActiveCell={handleResetActiveCell} 
         handleSetActiveCell={handleSetActiveCell}
+        handleChangeCellValue={handleChangeCellValue}
       />
     );
   } else {

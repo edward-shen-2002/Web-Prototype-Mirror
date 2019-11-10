@@ -22,7 +22,7 @@ import {
 
 import "./Sheet.scss";
 
-const SheetView = ({ height, width, values, sheet }) => {
+const SheetView = ({ height, width, values, sheet, handleChangeCellValue }) => {
   const [ columnCount, setColumnCount ] = useState(DEFAULT_EXCEL_COLUMNS + 1);
   const [ rowCount, setRowCount ] = useState(DEFAULT_EXCEL_ROWS + 1);
   const [ activeCell, setActiveCell ] = useState({ row: null, column: null });
@@ -81,9 +81,7 @@ const SheetView = ({ height, width, values, sheet }) => {
     }
   });
 
-  console.log(activeCell)
-
-  const itemData = { sheet, values, activeCell, handleResetActiveCell, handleSetActiveCell };
+  const itemData = { sheet, values, activeCell, handleResetActiveCell, handleSetActiveCell, handleChangeCellValue };
 
   return (
     <VariableSizeGrid
@@ -102,12 +100,20 @@ const SheetView = ({ height, width, values, sheet }) => {
   );
 };
 
-const Sheet = ({ sheet, values }) => {
+const Sheet = ({ sheet, values, handleChangeCellValue }) => {
+  
+
   return (
     <div className="sheet">
       <AutoSizer>
         {({ height, width }) => (
-          <SheetView height={height} width={width} values={values} sheet={sheet}/>
+          <SheetView 
+            height={height} 
+            width={width} 
+            values={values} 
+            sheet={sheet} 
+            handleChangeCellValue={handleChangeCellValue}
+          />
         )}
       </AutoSizer>
     </div>
