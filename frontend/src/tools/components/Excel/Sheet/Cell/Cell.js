@@ -10,23 +10,34 @@ const HeaderCell = ({ style, value }) => (
   </div>
 );
 
-const DataCell = ({ style, value, column, row, handleSetActiveCell }) => {
-  const handleDoubleClick = () => handleSetActiveCell({ row, column });
+const DataCell = ({ style, value, column, row, isActiveCell, handleSetActiveCell, handleSetActiveCellEdit }) => {
+  const handleDoubleClick = () => {
+    if(!isActiveCell) handleSetActiveCell({ row, column });
+    handleSetActiveCellEdit();
+  };
+
+  const handleClick = () => {
+    handleSetActiveCell({ row, column });
+  };
+
+  let className = "cell";
+
+  if(isActiveCell) className += "cell--active";
 
   return (
-    <div className="cell" style={style} onDoubleClick={handleDoubleClick}>
+    <div className={className} style={style} onClick={handleClick} onDoubleClick={handleDoubleClick}>
       {value}
     </div>
   );
 };
 
-const EditCell = ({ style, value, column, row, handleResetActiveCell, handleChangeCellValue }) => {
+const EditCell = ({ style, value, column, row, handleChangeCellValue, handleSetActiveCellEdit, handleSetActiveCellNormal }) => {
   const [ inputValue, setInputValue ] = useState(value ? value : "");
 
   const handleInputChange = ({ target: { value } }) => setInputValue(value);
 
   const handleBlur = () => {
-    handleResetActiveCell();
+    handleSetActiveCellNormal();
   };
 
   const handleKeyDown = ({ key, target }) => {
@@ -57,25 +68,55 @@ const EditableCell = ({
   style, 
   value, 
   activeCell, 
+  isActiveCellEditMode,
   columnIndex, 
   rowIndex, 
-  handleResetActiveCell, 
   handleSetActiveCell, 
-  handleChangeCellValue 
+  handleChangeCellValue,
+  handleSetActiveCellEdit, 
+  handleSetActiveCellNormal
 }) => {
   const { row, column } = activeCell;
 
-  const isViewMode = columnIndex !== column || rowIndex !== row;
+  const isActiveCell = columnIndex === column && rowIndex === row;
+  const isEditMode = isActiveCell && isActiveCellEditMode;
 
   return (
-    isViewMode 
-      ? <DataCell style={style} value={value} column={columnIndex} row={rowIndex} handleSetActiveCell={handleSetActiveCell}/>
-      : <EditCell style={style} value={value} column={columnIndex} row={rowIndex} handleResetActiveCell={handleResetActiveCell} handleChangeCellValue={handleChangeCellValue}/>
+    isEditMode 
+    ? (
+      <EditCell 
+        style={style} 
+        value={value} 
+        column={columnIndex} 
+        row={rowIndex} 
+        handleChangeCellValue={handleChangeCellValue} 
+        handleSetActiveCellNormal={handleSetActiveCellNormal}
+      />
+    )
+    : (
+      <DataCell 
+        style={style} 
+        value={value} 
+        column={columnIndex} 
+        row={rowIndex} 
+        isActiveCell={isActiveCell}
+        handleSetActiveCell={handleSetActiveCell} 
+        handleSetActiveCellEdit={handleSetActiveCellEdit}
+      />
+    )
   );
 };
 
 const Cell = ({ style, data, columnIndex, rowIndex }) => {
-  const { sheet, activeCell, handleResetActiveCell, handleSetActiveCell, handleChangeCellValue } = data;
+  const { 
+    sheet, 
+    activeCell, 
+    isActiveCellEditMode,
+    handleSetActiveCell, 
+    handleChangeCellValue, 
+    handleSetActiveCellEdit, 
+    handleSetActiveCellNormal 
+  } = data;
 
   let value;
   let Component;
@@ -90,9 +131,11 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         columnIndex={columnIndex} 
         rowIndex={rowIndex} 
         activeCell={activeCell} 
-        handleResetActiveCell={handleResetActiveCell} 
+        isActiveCellEditMode={isActiveCellEditMode}
         handleSetActiveCell={handleSetActiveCell}
         handleChangeCellValue={handleChangeCellValue}
+        handleSetActiveCellEdit={handleSetActiveCellEdit}
+        handleSetActiveCellNormal={handleSetActiveCellNormal}
       />
     );
   } else {

@@ -25,7 +25,10 @@ import "./Sheet.scss";
 const SheetView = ({ height, width, values, sheet, handleChangeCellValue }) => {
   const [ columnCount, setColumnCount ] = useState(DEFAULT_EXCEL_COLUMNS + 1);
   const [ rowCount, setRowCount ] = useState(DEFAULT_EXCEL_ROWS + 1);
-  const [ activeCell, setActiveCell ] = useState({ row: null, column: null });
+
+  const [ activeCell, setActiveCell ] = useState({ row: 1, column: 1 });
+  const [ isActiveCellEditMode, setIsActiveCellEditMode ] = useState(false);
+
   const [ isMounted, setIsMounted ] = useState(false);
 
   const rowHeight = (index) => {
@@ -68,9 +71,10 @@ const SheetView = ({ height, width, values, sheet, handleChangeCellValue }) => {
     return width;
   };
 
-  const handleResetActiveCell = () => setActiveCell({ row: null, column: null });
-
   const handleSetActiveCell = ({ row, column }) => setActiveCell({ row, column });
+
+  const handleSetActiveCellEdit = () => setIsActiveCellEditMode(true);
+  const handleSetActiveCellNormal = () => setIsActiveCellEditMode(false);
 
   useEffect(() => {
     if(!isMounted) {
@@ -81,7 +85,9 @@ const SheetView = ({ height, width, values, sheet, handleChangeCellValue }) => {
     }
   });
 
-  const itemData = { sheet, values, activeCell, handleResetActiveCell, handleSetActiveCell, handleChangeCellValue };
+  console.log(activeCell, isActiveCellEditMode)
+
+  const itemData = { sheet, values, activeCell, isActiveCellEditMode, handleSetActiveCell, handleChangeCellValue, handleSetActiveCellEdit, handleSetActiveCellNormal };
 
   return (
     <VariableSizeGrid

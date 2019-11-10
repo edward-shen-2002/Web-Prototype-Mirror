@@ -6,8 +6,18 @@
   white-space: pre;
   overflow: hidden;
 
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+
   &--positionIndicator {
     text-align: center;
     background-color: #F7F8F9;
+  }
+
+  &--active {
+    background-color: #87CEFA;
   }
 }
