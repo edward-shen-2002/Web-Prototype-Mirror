@@ -16,7 +16,18 @@
 
   &--positionIndicator {
     text-align: center;
-    background-color: #F7F8F9;
+
+    &-active {
+      color: white;
+      background-color: #4F4F4F;
+
+      outline: 2px solid gray;
+      outline-offset: -2px;
+    }
+
+    &-inactive {
+      background-color: #F7F8F9;
+    }
   }
 
   &--active {

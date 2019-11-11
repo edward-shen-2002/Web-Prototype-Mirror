@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { VariableSizeGrid } from "react-window";
 
@@ -22,14 +22,34 @@ import {
 
 import "./Sheet.scss";
 
+const handleActiveCellArrowEvent = (direction, activeCell, isActiveCellEditMode, handleSetActiveCell) => {
+  if(!isActiveCellEditMode) {
+    let { row, column } = activeCell;
+    if(direction === "ArrowUp") {
+      if(row > 1) row--;
+    } else if(direction === "ArrowDown") {
+      if(column < columnCount) column++;
+    } else if(direction === "ArrowLeft") {
+      if(column > 1) column--;
+    } else {
+      if(row < rowCount) row++;
+    }
+
+    if(row !== activeCell.row || column !== activeCell.column) handleSetActiveCell({ row, column });
+  }
+};
+
 const Sheet = ({ sheet, values, handleChangeCellValue }) => {
   const [ columnCount, setColumnCount ] = useState(DEFAULT_EXCEL_COLUMNS + 1);
   const [ rowCount, setRowCount ] = useState(DEFAULT_EXCEL_ROWS + 1);
 
   const [ activeCell, setActiveCell ] = useState({ row: 1, column: 1 });
+
   const [ isActiveCellEditMode, setIsActiveCellEditMode ] = useState(false);
 
   const [ isMounted, setIsMounted ] = useState(false);
+
+  const sheetRef = useRef(null);
 
   const rowHeight = (index) => {
     let height;
@@ -75,26 +95,11 @@ const Sheet = ({ sheet, values, handleChangeCellValue }) => {
     if(activeCell.row !== row || activeCell.column !== column) {
       setIsActiveCellEditMode(false);
       setActiveCell({ row, column });
-    }
+    } 
   };
 
   const handleSetActiveCellEdit = () => setIsActiveCellEditMode(true);
   const handleSetActiveCellNormal = () => setIsActiveCellEditMode(false);
-
-  const handleActiveCellArrowEvent = (direction) => {
-    let { row, column } = activeCell;
-    if(direction === "ArrowUp") {
-      if(row > 1) row--;
-    } else if(direction === "ArrowDown") {
-      if(column < columnCount) column++;
-    } else if(direction === "ArrowLeft") {
-      if(column > 1) column--;
-    } else {
-      if(row < rowCount) row++;
-    }
-
-    if(row !== activeCell.row || column !== activeCell.column) setActiveCell({ row, column });
-  };
 
   useEffect(() => {
     if(!isMounted) {
@@ -110,6 +115,10 @@ const Sheet = ({ sheet, values, handleChangeCellValue }) => {
     values, 
     activeCell, 
     isActiveCellEditMode, 
+
+    columnCount,
+    rowCount,
+
     handleSetActiveCell, 
     handleChangeCellValue, 
     handleSetActiveCellEdit, 
@@ -122,16 +131,17 @@ const Sheet = ({ sheet, values, handleChangeCellValue }) => {
       <AutoSizer>
         {({ height, width }) => (
           <VariableSizeGrid
-          freezeRowCount={1}
-          freezeColumnCount={1}
-          columnCount={columnCount}
-          columnWidth={columnWidth}
-          height={height}
-          itemData={itemData}
-          rowCount={rowCount}
-          rowHeight={rowHeight}
-          width={width}
-        >
+            innerRef={sheetRef}
+            freezeRowCount={1}
+            freezeColumnCount={1}
+            columnCount={columnCount}
+            columnWidth={columnWidth}
+            height={height}
+            itemData={itemData}
+            rowCount={rowCount}
+            rowHeight={rowHeight}
+            width={width}
+          >
           {Cell}
         </VariableSizeGrid>
         )}

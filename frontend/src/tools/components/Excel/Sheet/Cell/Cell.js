@@ -2,22 +2,34 @@ import React, { useState } from "react";
 
 import { columnNumberToName } from "xlsx-populate/lib/addressConverter";
 
+import { arrowKeyRegex } from "tools/regex";
+
 import "./Cell.scss";
 
-const HeaderCell = ({ style, value }) => (
-  <div className="cell cell--positionIndicator" style={style}>
-    {value}
-  </div>
-);
+const HeaderCell = ({ style, value, isActiveHeader }) => {
+  const className = `cell cell--positionIndicator ${isActiveHeader ? "cell--positionIndicator-active" : "cell--positionIndicator-inactive"}`;
+
+  return (
+    <div className={className} style={style}>
+      {value}
+    </div>
+  );
+};
 
 const DataCell = ({ 
   style, 
   value, 
   column, 
   row, 
+
+  columnCount,
+  rowCount,
+
+  activeCell,
   isActiveCell, 
   handleSetActiveCell, 
-  handleSetActiveCellEdit
+  handleSetActiveCellEdit,
+  handleActiveCellArrowEvent
 }) => {
   let className = "cell";
 
@@ -32,8 +44,41 @@ const DataCell = ({
     handleSetActiveCell({ row, column });
   };
 
+  const handleKeyDown = ({ key }) => {
+    if(arrowKeyRegex.test(key)) {
+      event.preventDefault();
+
+      let { row, column } = activeCell;
+      if(key === "ArrowUp") {
+        if(row > 1) row--;
+      } else if(key === "ArrowDown") {
+        if(row < rowCount) row++;
+      } else if(key === "ArrowLeft") {
+        if(column > 1) column--;
+      } else {
+        if(column < columnCount) column++;
+      }
+      
+      // TODO : Consider edges in the future.. Right now do not consider edges
+      if(row !== activeCell.row || column !== activeCell.column) {
+        setTimeout(
+          () => handleSetActiveCell({ row, column }), 
+          0.2
+        )
+      }
+    }
+  };
+
   return (
-    <div className={className} style={style} onClick={handleClick} onDoubleClick={handleDoubleClick}>
+    <div 
+      className={className} 
+      style={style} 
+      tabIndex="0"
+      onClick={handleClick} 
+      onDoubleClick={handleDoubleClick}
+      onKeyDown={handleKeyDown}
+      onKeyPress={handleKeyDown}
+    >
       {value}
     </div>
   );
@@ -45,8 +90,8 @@ const EditCell = ({
   column, 
   row, 
   handleChangeCellValue, 
-  handleSetActiveCellNormal,
-  handleSetActiveCell
+  handleSetActiveCell,
+  handleSetActiveCellNormal
 }) => {
   const [ inputValue, setInputValue ] = useState(value ? value : "");
 
@@ -59,11 +104,11 @@ const EditCell = ({
   const handleKeyDown = ({ key, target }) => {
     if(key === "Enter") {
       handleChangeCellValue(row, column, inputValue);
-      target.blur();
+      handleSetActiveCellNormal();
     } else if(key === "Tab") {
-      target.blur();
+      // handleSetActiveCellNormal();
     } else if(key === "Escape") {
-      target.blur();
+      handleSetActiveCellNormal();
     }
   };
 
@@ -88,10 +133,15 @@ const EditableCell = ({
   isActiveCellEditMode,
   columnIndex, 
   rowIndex, 
+
+  columnCount,
+  rowCount,
+
   handleChangeCellValue,
   handleSetActiveCellEdit, 
+  handleSetActiveCell,
   handleSetActiveCellNormal,
-  handleSetActiveCell
+  handleActiveCellArrowEvent
 }) => {
   const { row, column } = activeCell;
 
@@ -107,8 +157,8 @@ const EditableCell = ({
         column={columnIndex} 
         row={rowIndex} 
         handleChangeCellValue={handleChangeCellValue} 
-        handleSetActiveCellNormal={handleSetActiveCellNormal}
         handleSetActiveCell={handleSetActiveCell}
+        handleSetActiveCellNormal={handleSetActiveCellNormal}
       />
     )
     : (
@@ -116,10 +166,14 @@ const EditableCell = ({
         style={style} 
         value={value} 
         column={columnIndex} 
+        activeCell={activeCell}
         row={rowIndex} 
+        columnCount={columnCount}
+        rowCount={rowCount}
         isActiveCell={isActiveCell}
         handleSetActiveCell={handleSetActiveCell} 
         handleSetActiveCellEdit={handleSetActiveCellEdit}
+        handleActiveCellArrowEvent={handleActiveCellArrowEvent}
       />
     )
   );
@@ -130,10 +184,15 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
     sheet, 
     activeCell, 
     isActiveCellEditMode,
+
+    columnCount,
+    rowCount,
+
     handleChangeCellValue, 
     handleSetActiveCellEdit, 
+    handleSetActiveCell,
     handleSetActiveCellNormal,
-    handleSetActiveCell
+    handleActiveCellArrowEvent
   } = data;
 
   let value;
@@ -150,22 +209,33 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         rowIndex={rowIndex} 
         activeCell={activeCell} 
         isActiveCellEditMode={isActiveCellEditMode}
+        columnCount={columnCount}
+        rowCount={rowCount}
         handleSetActiveCell={handleSetActiveCell}
         handleChangeCellValue={handleChangeCellValue}
         handleSetActiveCellEdit={handleSetActiveCellEdit}
-        handleSetActiveCellNormal={handleSetActiveCellNormal}
         handleSetActiveCell={handleSetActiveCell}
+        handleSetActiveCellNormal={handleSetActiveCellNormal}
+        handleActiveCellArrowEvent={handleActiveCellArrowEvent}
       />
     );
   } else {
+    const { column, row } = activeCell;
+    const isActiveHeader = columnIndex === column || rowIndex === row;
+
     if(columnIndex > 0 && rowIndex === 0) {
       value = columnNumberToName(columnIndex);
     } else if(columnIndex === 0 && rowIndex > 0) {
       value = rowIndex;
     }
 
+
     Component = (
-      <HeaderCell style={style} value={value}/>
+      <HeaderCell 
+        style={style} 
+        value={value}
+        isActiveHeader={isActiveHeader}
+      />
     );
   }
 
