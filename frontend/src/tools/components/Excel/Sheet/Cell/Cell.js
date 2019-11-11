@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { columnNumberToName } from "xlsx-populate/lib/addressConverter";
 
@@ -10,7 +10,15 @@ const HeaderCell = ({ style, value }) => (
   </div>
 );
 
-const DataCell = ({ style, value, column, row, isActiveCell, handleSetActiveCell, handleSetActiveCellEdit }) => {
+const DataCell = ({ 
+  style, 
+  value, 
+  column, 
+  row, 
+  isActiveCell, 
+  handleSetActiveCell, 
+  handleSetActiveCellEdit
+}) => {
   let className = "cell";
 
   if(isActiveCell) className += " cell--active";
@@ -31,13 +39,21 @@ const DataCell = ({ style, value, column, row, isActiveCell, handleSetActiveCell
   );
 };
 
-const EditCell = ({ style, value, column, row, handleChangeCellValue, handleSetActiveCellNormal }) => {
+const EditCell = ({ 
+  style, 
+  value, 
+  column, 
+  row, 
+  handleChangeCellValue, 
+  handleSetActiveCellNormal,
+  handleSetActiveCell
+}) => {
   const [ inputValue, setInputValue ] = useState(value ? value : "");
 
   const handleInputChange = ({ target: { value } }) => setInputValue(value);
 
   const handleBlur = () => {
-    handleSetActiveCellNormal();
+    handleSetActiveCell({ row, column });
   };
 
   const handleKeyDown = ({ key, target }) => {
@@ -72,10 +88,10 @@ const EditableCell = ({
   isActiveCellEditMode,
   columnIndex, 
   rowIndex, 
-  handleSetActiveCell, 
   handleChangeCellValue,
   handleSetActiveCellEdit, 
-  handleSetActiveCellNormal
+  handleSetActiveCellNormal,
+  handleSetActiveCell
 }) => {
   const { row, column } = activeCell;
 
@@ -92,6 +108,7 @@ const EditableCell = ({
         row={rowIndex} 
         handleChangeCellValue={handleChangeCellValue} 
         handleSetActiveCellNormal={handleSetActiveCellNormal}
+        handleSetActiveCell={handleSetActiveCell}
       />
     )
     : (
@@ -113,10 +130,10 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
     sheet, 
     activeCell, 
     isActiveCellEditMode,
-    handleSetActiveCell, 
     handleChangeCellValue, 
     handleSetActiveCellEdit, 
-    handleSetActiveCellNormal 
+    handleSetActiveCellNormal,
+    handleSetActiveCell
   } = data;
 
   let value;
@@ -137,6 +154,7 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         handleChangeCellValue={handleChangeCellValue}
         handleSetActiveCellEdit={handleSetActiveCellEdit}
         handleSetActiveCellNormal={handleSetActiveCellNormal}
+        handleSetActiveCell={handleSetActiveCell}
       />
     );
   } else {

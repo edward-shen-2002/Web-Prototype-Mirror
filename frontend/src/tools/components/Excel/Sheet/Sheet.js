@@ -22,7 +22,7 @@ import {
 
 import "./Sheet.scss";
 
-const SheetView = ({ height, width, values, sheet, handleChangeCellValue }) => {
+const Sheet = ({ sheet, values, handleChangeCellValue }) => {
   const [ columnCount, setColumnCount ] = useState(DEFAULT_EXCEL_COLUMNS + 1);
   const [ rowCount, setRowCount ] = useState(DEFAULT_EXCEL_ROWS + 1);
 
@@ -71,10 +71,30 @@ const SheetView = ({ height, width, values, sheet, handleChangeCellValue }) => {
     return width;
   };
 
-  const handleSetActiveCell = ({ row, column }) => setActiveCell({ row, column });
+  const handleSetActiveCell = ({ row, column }) => {
+    if(activeCell.row !== row || activeCell.column !== column) {
+      setIsActiveCellEditMode(false);
+      setActiveCell({ row, column });
+    }
+  };
 
   const handleSetActiveCellEdit = () => setIsActiveCellEditMode(true);
   const handleSetActiveCellNormal = () => setIsActiveCellEditMode(false);
+
+  const handleActiveCellArrowEvent = (direction) => {
+    let { row, column } = activeCell;
+    if(direction === "ArrowUp") {
+      if(row > 1) row--;
+    } else if(direction === "ArrowDown") {
+      if(column < columnCount) column++;
+    } else if(direction === "ArrowLeft") {
+      if(column > 1) column--;
+    } else {
+      if(row < rowCount) row++;
+    }
+
+    if(row !== activeCell.row || column !== activeCell.column) setActiveCell({ row, column });
+  };
 
   useEffect(() => {
     if(!isMounted) {
@@ -85,41 +105,35 @@ const SheetView = ({ height, width, values, sheet, handleChangeCellValue }) => {
     }
   });
 
-  console.log(activeCell, isActiveCellEditMode)
-
-  const itemData = { sheet, values, activeCell, isActiveCellEditMode, handleSetActiveCell, handleChangeCellValue, handleSetActiveCellEdit, handleSetActiveCellNormal };
-
-  return (
-    <VariableSizeGrid
-      freezeRowCount={1}
-      freezeColumnCount={1}
-      columnCount={columnCount}
-      columnWidth={columnWidth}
-      height={height}
-      itemData={itemData}
-      rowCount={rowCount}
-      rowHeight={rowHeight}
-      width={width}
-    >
-      {Cell}
-    </VariableSizeGrid>
-  );
-};
-
-const Sheet = ({ sheet, values, handleChangeCellValue }) => {
-  
+  const itemData = { 
+    sheet, 
+    values, 
+    activeCell, 
+    isActiveCellEditMode, 
+    handleSetActiveCell, 
+    handleChangeCellValue, 
+    handleSetActiveCellEdit, 
+    handleSetActiveCellNormal,
+    handleActiveCellArrowEvent
+  };
 
   return (
     <div className="sheet">
       <AutoSizer>
         {({ height, width }) => (
-          <SheetView 
-            height={height} 
-            width={width} 
-            values={values} 
-            sheet={sheet} 
-            handleChangeCellValue={handleChangeCellValue}
-          />
+          <VariableSizeGrid
+          freezeRowCount={1}
+          freezeColumnCount={1}
+          columnCount={columnCount}
+          columnWidth={columnWidth}
+          height={height}
+          itemData={itemData}
+          rowCount={rowCount}
+          rowHeight={rowHeight}
+          width={width}
+        >
+          {Cell}
+        </VariableSizeGrid>
         )}
       </AutoSizer>
     </div>
