@@ -25,11 +25,17 @@ const DataCell = ({
   columnCount,
   rowCount,
 
+  isSelectionMode,
+
   activeCell,
   isActiveCell, 
   handleSetActiveCell, 
   handleSetActiveCellEdit,
-  handleActiveCellArrowEvent
+  handleActiveCellArrowEvent,
+
+  handleSelectionStart,
+  handleSelectionOver,
+  handleSelectionEnd
 }) => {
   let className = "cell";
 
@@ -61,12 +67,21 @@ const DataCell = ({
       
       // TODO : Consider edges in the future.. Right now do not consider edges
       if(row !== activeCell.row || column !== activeCell.column) {
-        setTimeout(
-          () => handleSetActiveCell({ row, column }), 
-          0.2
-        )
+        handleSetActiveCell({ row, column })
       }
     }
+  };
+
+  const handleMouseDown = () => {
+    handleSelectionStart(row, column);
+  };
+
+  const handleMouseOver = () => {
+    if(isSelectionMode) handleSelectionOver(row, column);
+  };
+
+  const handleMouseUp = () => {
+    if(isSelectionMode) handleSelectionEnd();
   };
 
   return (
@@ -78,6 +93,9 @@ const DataCell = ({
       onDoubleClick={handleDoubleClick}
       onKeyDown={handleKeyDown}
       onKeyPress={handleKeyDown}
+      onMouseDown={handleMouseDown}
+      onMouseOut={handleMouseOver}
+      onMouseUp={handleMouseUp}
     >
       {value}
     </div>
@@ -131,6 +149,8 @@ const EditableCell = ({
   value, 
   activeCell, 
   isActiveCellEditMode,
+  isSelectionMode,
+
   columnIndex, 
   rowIndex, 
 
@@ -141,7 +161,11 @@ const EditableCell = ({
   handleSetActiveCellEdit, 
   handleSetActiveCell,
   handleSetActiveCellNormal,
-  handleActiveCellArrowEvent
+  handleActiveCellArrowEvent,
+
+  handleSelectionStart,
+  handleSelectionOver,
+  handleSelectionEnd
 }) => {
   const { row, column } = activeCell;
 
@@ -167,6 +191,7 @@ const EditableCell = ({
         value={value} 
         column={columnIndex} 
         activeCell={activeCell}
+        isSelectionMode={isSelectionMode}
         row={rowIndex} 
         columnCount={columnCount}
         rowCount={rowCount}
@@ -174,6 +199,9 @@ const EditableCell = ({
         handleSetActiveCell={handleSetActiveCell} 
         handleSetActiveCellEdit={handleSetActiveCellEdit}
         handleActiveCellArrowEvent={handleActiveCellArrowEvent}
+        handleSelectionStart={handleSelectionStart}
+        handleSelectionOver={handleSelectionOver}
+        handleSelectionEnd={handleSelectionEnd}
       />
     )
   );
@@ -187,12 +215,17 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
 
     columnCount,
     rowCount,
+    isSelectionMode,
 
     handleChangeCellValue, 
     handleSetActiveCellEdit, 
     handleSetActiveCell,
     handleSetActiveCellNormal,
-    handleActiveCellArrowEvent
+    handleActiveCellArrowEvent,
+
+    handleSelectionStart,
+    handleSelectionOver,
+    handleSelectionEnd
   } = data;
 
   let value;
@@ -209,6 +242,7 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         rowIndex={rowIndex} 
         activeCell={activeCell} 
         isActiveCellEditMode={isActiveCellEditMode}
+        isSelectionMode={isSelectionMode}
         columnCount={columnCount}
         rowCount={rowCount}
         handleSetActiveCell={handleSetActiveCell}
@@ -217,6 +251,9 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         handleSetActiveCell={handleSetActiveCell}
         handleSetActiveCellNormal={handleSetActiveCellNormal}
         handleActiveCellArrowEvent={handleActiveCellArrowEvent}
+        handleSelectionStart={handleSelectionStart}
+        handleSelectionOver={handleSelectionOver}
+        handleSelectionEnd={handleSelectionEnd}
       />
     );
   } else {

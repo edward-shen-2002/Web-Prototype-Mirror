@@ -5,6 +5,7 @@ import { VariableSizeGrid } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 
 import Cell from "./Cell";
+import { TopLeftSelectionPane } from "./SelectionPane";
 
 import { 
   DEFAULT_EXCEL_ROWS, 
@@ -39,17 +40,31 @@ const handleActiveCellArrowEvent = (direction, activeCell, isActiveCellEditMode,
   }
 };
 
+const initializeActiveCell = (sheet) => {
+  const activeCell = { row: 1, column: 1 };
+
+  const { row, column } = activeCell;
+  sheet.activeCell(row, column);
+
+  return activeCell;
+};
+
 const Sheet = ({ sheet, values, handleChangeCellValue }) => {
   const [ columnCount, setColumnCount ] = useState(DEFAULT_EXCEL_COLUMNS + 1);
   const [ rowCount, setRowCount ] = useState(DEFAULT_EXCEL_ROWS + 1);
 
-  const [ activeCell, setActiveCell ] = useState({ row: 1, column: 1 });
+  const [ activeCell, setActiveCell ] = useState(initializeActiveCell(sheet));
 
   const [ isActiveCellEditMode, setIsActiveCellEditMode ] = useState(false);
 
   const [ isMounted, setIsMounted ] = useState(false);
 
+  const [ isSelectionMode, setIsSelectionMode ] = useState(false);
+  const [ selectionArea, setSelectionArea ] = useState({ x1: 1, y1: 1, x2: 1, y2: 1 });
+
   const sheetRef = useRef(null);
+
+  const topLeftSelectionPaneRef = useRef(null);
 
   const rowHeight = (index) => {
     let height;
@@ -93,6 +108,7 @@ const Sheet = ({ sheet, values, handleChangeCellValue }) => {
 
   const handleSetActiveCell = ({ row, column }) => {
     if(activeCell.row !== row || activeCell.column !== column) {
+      sheet.activeCell(row, column);
       setIsActiveCellEditMode(false);
       setActiveCell({ row, column });
     } 
@@ -100,6 +116,28 @@ const Sheet = ({ sheet, values, handleChangeCellValue }) => {
 
   const handleSetActiveCellEdit = () => setIsActiveCellEditMode(true);
   const handleSetActiveCellNormal = () => setIsActiveCellEditMode(false);
+
+  // ! Consider header/column
+  const handleSelectionStart = (row, column) => {
+    setIsSelectionMode(true);
+    setSelectionArea({ x1: row, y1: column, x2: row, y2: column });
+  };
+
+  // ! Consider header/column
+  const handleSelectionOver = (row, column) => {
+    const { x1: oldX1, y1: oldY1, x2: oldX2, y2: oldY2 } = selectionArea;
+    
+    const x1 = Math.min(row, oldX1);
+    const y1 = Math.min(column, oldY1);
+    const x2 = Math.max(row, oldX2);
+    const y2 = Math.max(column, oldY2);
+
+    if(oldX1 !== x1 || oldY1 !== y1 || oldX2 !== x2 || oldY2 !== y2) setSelectionArea({ x1, y1, x2, y2 });
+  };
+
+  const handleSelectionEnd = () => {
+    setIsSelectionMode(false);
+  };
 
   useEffect(() => {
     if(!isMounted) {
@@ -115,15 +153,20 @@ const Sheet = ({ sheet, values, handleChangeCellValue }) => {
     values, 
     activeCell, 
     isActiveCellEditMode, 
-
+    
     columnCount,
     rowCount,
+    isSelectionMode,
 
     handleSetActiveCell, 
     handleChangeCellValue, 
     handleSetActiveCellEdit, 
     handleSetActiveCellNormal,
-    handleActiveCellArrowEvent
+    handleActiveCellArrowEvent,
+
+    handleSelectionStart,
+    handleSelectionOver,
+    handleSelectionEnd
   };
 
   return (
@@ -131,7 +174,7 @@ const Sheet = ({ sheet, values, handleChangeCellValue }) => {
       <AutoSizer>
         {({ height, width }) => (
           <VariableSizeGrid
-            innerRef={sheetRef}
+            ref={sheetRef}
             freezeRowCount={1}
             freezeColumnCount={1}
             columnCount={columnCount}
@@ -141,6 +184,14 @@ const Sheet = ({ sheet, values, handleChangeCellValue }) => {
             rowCount={rowCount}
             rowHeight={rowHeight}
             width={width}
+            extraTopLeftElement={
+              <TopLeftSelectionPane 
+                key="top-left-selection-pane" 
+                sheetRef={sheetRef} 
+                selectionRef={topLeftSelectionPaneRef}
+                selectionArea={selectionArea}
+              />
+            }
           >
           {Cell}
         </VariableSizeGrid>
