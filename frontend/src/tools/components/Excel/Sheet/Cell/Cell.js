@@ -39,7 +39,7 @@ const DataCell = ({
 }) => {
   let className = "cell";
 
-  if(isActiveCell) className += " cell--active";
+  // if(isActiveCell) className += " cell--active";
   
   const handleDoubleClick = () => {
     if(!isActiveCell) handleSetActiveCell({ row, column });
@@ -73,11 +73,11 @@ const DataCell = ({
   };
 
   const handleMouseDown = () => {
-    handleSelectionStart(row, column);
+    handleSelectionStart(column, row);
   };
 
-  const handleMouseOver = () => {
-    if(isSelectionMode) handleSelectionOver(row, column);
+  const handleMouseEnter = () => {
+    if(isSelectionMode) handleSelectionOver(column, row);
   };
 
   const handleMouseUp = () => {
@@ -94,7 +94,7 @@ const DataCell = ({
       onKeyDown={handleKeyDown}
       onKeyPress={handleKeyDown}
       onMouseDown={handleMouseDown}
-      onMouseOut={handleMouseOver}
+      onMouseEnter={handleMouseEnter}
       onMouseUp={handleMouseUp}
     >
       {value}

@@ -5,7 +5,7 @@ import { VariableSizeGrid } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 
 import Cell from "./Cell";
-import { TopLeftSelectionPane } from "./SelectionPane";
+import { TopLeftSelectionPane, TopRightSelectionPane, BottomLeftSelectionPane, BottomRightSelectionPane } from "./SelectionPane";
 
 import { 
   DEFAULT_EXCEL_ROWS, 
@@ -65,6 +65,9 @@ const Sheet = ({ sheet, values, handleChangeCellValue }) => {
   const sheetRef = useRef(null);
 
   const topLeftSelectionPaneRef = useRef(null);
+  const topRightSelectionPaneRef = useRef(null);
+  const bottomLeftSelectionPaneRef = useRef(null);
+  const bottomRightSelectionPaneRef = useRef(null);
 
   const rowHeight = (index) => {
     let height;
@@ -118,21 +121,16 @@ const Sheet = ({ sheet, values, handleChangeCellValue }) => {
   const handleSetActiveCellNormal = () => setIsActiveCellEditMode(false);
 
   // ! Consider header/column
-  const handleSelectionStart = (row, column) => {
+  const handleSelectionStart = (x1, y1) => {
     setIsSelectionMode(true);
-    setSelectionArea({ x1: row, y1: column, x2: row, y2: column });
+    setSelectionArea({ x1, y1, x2: x1, y2: y1 });
   };
 
   // ! Consider header/column
-  const handleSelectionOver = (row, column) => {
-    const { x1: oldX1, y1: oldY1, x2: oldX2, y2: oldY2 } = selectionArea;
-    
-    const x1 = Math.min(row, oldX1);
-    const y1 = Math.min(column, oldY1);
-    const x2 = Math.max(row, oldX2);
-    const y2 = Math.max(column, oldY2);
+  const handleSelectionOver = (x2, y2) => {
+    const { x2: oldX2, y2: oldY2 } = selectionArea;
 
-    if(oldX1 !== x1 || oldY1 !== y1 || oldX2 !== x2 || oldY2 !== y2) setSelectionArea({ x1, y1, x2, y2 });
+    if(oldX2 !== x2 || oldY2 !== y2) setSelectionArea({ ...selectionArea, x2, y2 });
   };
 
   const handleSelectionEnd = () => {
@@ -147,6 +145,8 @@ const Sheet = ({ sheet, values, handleChangeCellValue }) => {
       setIsMounted(true);
     }
   });
+
+  const selectionPaneCommonProps = { sheetRef, selectionArea, isSelectionMode };
 
   const itemData = { 
     sheet, 
@@ -168,7 +168,7 @@ const Sheet = ({ sheet, values, handleChangeCellValue }) => {
     handleSelectionOver,
     handleSelectionEnd
   };
-
+  
   return (
     <div className="sheet">
       <AutoSizer>
@@ -184,14 +184,10 @@ const Sheet = ({ sheet, values, handleChangeCellValue }) => {
             rowCount={rowCount}
             rowHeight={rowHeight}
             width={width}
-            extraTopLeftElement={
-              <TopLeftSelectionPane 
-                key="top-left-selection-pane" 
-                sheetRef={sheetRef} 
-                selectionRef={topLeftSelectionPaneRef}
-                selectionArea={selectionArea}
-              />
-            }
+            extraTopLeftElement={<TopLeftSelectionPane key="top-left-selection-pane" selectionRef={topLeftSelectionPaneRef} {...selectionPaneCommonProps}/>}
+            extraTopRightElement={<TopRightSelectionPane key="top-left-selection-pane" selectionRef={topRightSelectionPaneRef} {...selectionPaneCommonProps}/>}
+            extraBottomLeftElement={<BottomLeftSelectionPane key="bottom-left-selection-pane" selectionRef={bottomLeftSelectionPaneRef} {...selectionPaneCommonProps}/>}
+            extraBottomRightElement={<BottomRightSelectionPane key="bottom-right-selection-pane" selectionRef={bottomRightSelectionPaneRef} {...selectionPaneCommonProps}/>}
           >
           {Cell}
         </VariableSizeGrid>
