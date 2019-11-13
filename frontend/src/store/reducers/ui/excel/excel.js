@@ -4,6 +4,8 @@ import selectionArea from "./selectionArea";
 
 import activeCell from "./activeCell";
 
-const excelReducer = combineReducers({ selectionArea, activeCell });
+import isSelectionMode from "./isSelectionMode";
+
+const excelReducer = combineReducers({ selectionArea, activeCell, isSelectionMode });
 
 export default excelReducer;

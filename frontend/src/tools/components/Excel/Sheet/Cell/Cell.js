@@ -2,6 +2,9 @@ import React, { useState } from "react";
 
 import { connect } from "react-redux";
 
+import { updateSelectionArea } from "actions/ui/excel/selectionArea";
+import { setIsSelectionModeOn, setIsSelectionModeOff } from "actions/ui/excel/isSelectionMode";
+
 import { columnNumberToName } from "xlsx-populate/lib/addressConverter";
 
 import { arrowKeyRegex } from "tools/regex";
@@ -9,7 +12,7 @@ import { arrowKeyRegex } from "tools/regex";
 import "./Cell.scss";
 
 const mapDispatchToProps = (dispatch) => ({
-  // ! selection actions
+  handleSelectionAreaAll: (selectionArea) => dispatch(updateSelectionArea(selectionArea))
 });
 
 const mapSelectionAreaStateToProps = ({ ui: { excel: { selectionArea } } }) => ({ selectionArea });
@@ -33,7 +36,7 @@ let ColumnHeaderCell = ({ style, value, column, selectionArea }) => {
   const { x1, x2 } = selectionArea;
 
   const isActiveHeader = (x1 >= column && column >= x2) || (x2 >= column && column >= x1);
-  
+
   const className = `cell cell--positionIndicator ${isActiveHeader ? "cell--positionIndicator-active" : "cell--positionIndicator-inactive"}`;
 
   return (
@@ -45,11 +48,13 @@ let ColumnHeaderCell = ({ style, value, column, selectionArea }) => {
 
 ColumnHeaderCell = connect(mapSelectionAreaStateToProps)(ColumnHeaderCell);
 
-let RootHeaderCell = ({ style, value }) => {
+let RootHeaderCell = ({ style, value, columnCount, rowCount, handleSelectionAreaAll }) => {
+  const handleClick = () => handleSelectionAreaAll({ x1: 1, y1: 1, x2: columnCount - 1, y2: rowCount - 1 });
+
   const className = "cell cell--positionIndicator";
 
   return (
-    <div className={className} style={style}>
+    <div className={className} style={style} onClick={handleClick}>
       {value}
     </div>
   );
@@ -65,8 +70,6 @@ const DataCell = ({
 
   columnCount,
   rowCount,
-
-  isSelectionMode,
 
   activeCell,
   isActiveCell, 
@@ -117,11 +120,11 @@ const DataCell = ({
   };
 
   const handleMouseEnter = () => {
-    if(isSelectionMode) handleSelectionOver(column, row);
+    handleSelectionOver(column, row);
   };
 
   const handleMouseUp = () => {
-    if(isSelectionMode) handleSelectionEnd();
+    handleSelectionEnd();
   };
 
   return (
@@ -189,7 +192,6 @@ const EditableCell = ({
   value, 
   activeCell, 
   isActiveCellEditMode,
-  isSelectionMode,
 
   columnIndex, 
   rowIndex, 
@@ -231,7 +233,6 @@ const EditableCell = ({
         value={value} 
         column={columnIndex} 
         activeCell={activeCell}
-        isSelectionMode={isSelectionMode}
         row={rowIndex} 
         columnCount={columnCount}
         rowCount={rowCount}
@@ -255,7 +256,6 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
 
     columnCount,
     rowCount,
-    isSelectionMode,
 
     handleChangeCellValue, 
     handleSetActiveCellEdit, 
@@ -282,7 +282,6 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         rowIndex={rowIndex} 
         activeCell={activeCell} 
         isActiveCellEditMode={isActiveCellEditMode}
-        isSelectionMode={isSelectionMode}
         columnCount={columnCount}
         rowCount={rowCount}
         handleSetActiveCell={handleSetActiveCell}
@@ -327,11 +326,11 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         <RootHeaderCell 
           style={style} 
           value={value}
+          columnCount={columnCount}
+          rowCount={rowCount}
         />
       );
     }
-
-
   }
 
   return Component;

@@ -2,9 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 
 import { connect } from "react-redux";
 
-import { updateSelectionArea, resetSelectionArea } from "actions/ui/excel/selectionArea";
-
-// import {  }
+import { updateSelectionArea } from "actions/ui/excel/selectionArea";
+import { setIsSelectionModeOn, setIsSelectionModeOff } from "actions/ui/excel/isSelectionMode";
 
 import { VariableSizeGrid } from "react-window";
 
@@ -55,11 +54,15 @@ const initializeActiveCell = (sheet) => {
   return activeCell;
 };
 
+const mapStateToProps = ({ ui: { excel: { isSelectionMode } } }) => ({ isSelectionMode });
+
 const mapDispatchToProps = (dispatch) => ({
-  handleUpdateSelectionArea: (selectionArea) => dispatch(updateSelectionArea(selectionArea))
+  handleUpdateSelectionArea: (selectionArea) => dispatch(updateSelectionArea(selectionArea)),
+  handleSetSelectionModeOn: () => dispatch(setIsSelectionModeOn()),
+  handleSetSelectionModeOff: () => dispatch(setIsSelectionModeOff())
 });
 
-let Sheet = ({ sheet, values, handleChangeCellValue, handleUpdateSelectionArea }) => {
+let Sheet = ({ sheet, values, isSelectionMode, handleChangeCellValue, handleUpdateSelectionArea, handleSetSelectionModeOn, handleSetSelectionModeOff }) => {
   const [ columnCount, setColumnCount ] = useState(DEFAULT_EXCEL_COLUMNS + 1);
   const [ rowCount, setRowCount ] = useState(DEFAULT_EXCEL_ROWS + 1);
 
@@ -68,9 +71,6 @@ let Sheet = ({ sheet, values, handleChangeCellValue, handleUpdateSelectionArea }
   const [ isActiveCellEditMode, setIsActiveCellEditMode ] = useState(false);
 
   const [ isMounted, setIsMounted ] = useState(false);
-
-  const [ isSelectionMode, setIsSelectionMode ] = useState(false);
-  const [ selectionArea, setSelectionArea ] = useState({ x1: 1, y1: 1, x2: 1, y2: 1 });
 
   const sheetRef = useRef(null);
 
@@ -120,11 +120,8 @@ let Sheet = ({ sheet, values, handleChangeCellValue, handleUpdateSelectionArea }
   };
 
   const handleSetActiveCell = ({ row, column }) => {
-    if(activeCell.row !== row || activeCell.column !== column) {
-      sheet.activeCell(row, column);
-      // setIsActiveCellEditMode(false);
-      // // setActiveCell({ row, column });
-    } 
+    sheet.activeCell(row, column);
+    handleUpdateSelectionArea({ x1: column , y1: row, x2: column, y2: row });
   };
 
   const handleSetActiveCellEdit = () => setIsActiveCellEditMode(true);
@@ -132,18 +129,17 @@ let Sheet = ({ sheet, values, handleChangeCellValue, handleUpdateSelectionArea }
 
   // ! Consider header/column
   const handleSelectionStart = (x1, y1) => {
-    setIsSelectionMode(true);
-    // setSelectionArea({ x1, y1, x2: x1, y2: y1 });
+    if(!isSelectionMode) handleSetSelectionModeOn();
     handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
   };
 
   // ! Consider header/column
   const handleSelectionOver = (x2, y2) => {
-    handleUpdateSelectionArea({ x2, y2 });
+    if(isSelectionMode) handleUpdateSelectionArea({ x2, y2 });
   };
 
   const handleSelectionEnd = () => {
-    setIsSelectionMode(false);
+    handleSetSelectionModeOff();
   };
 
   useEffect(() => {
@@ -154,9 +150,7 @@ let Sheet = ({ sheet, values, handleChangeCellValue, handleUpdateSelectionArea }
       setIsMounted(true);
     }
   });
-
-  const selectionPaneCommonProps = { sheetRef, selectionArea, isSelectionMode };
-
+  
   const itemData = { 
     sheet, 
     values, 
@@ -193,10 +187,10 @@ let Sheet = ({ sheet, values, handleChangeCellValue, handleUpdateSelectionArea }
             rowCount={rowCount}
             rowHeight={rowHeight}
             width={width}
-            extraTopLeftElement={<TopLeftSelectionPane key="top-left-selection-pane" selectionRef={topLeftSelectionPaneRef} {...selectionPaneCommonProps}/>}
-            extraTopRightElement={<TopRightSelectionPane key="top-left-selection-pane" selectionRef={topRightSelectionPaneRef} {...selectionPaneCommonProps}/>}
-            extraBottomLeftElement={<BottomLeftSelectionPane key="bottom-left-selection-pane" selectionRef={bottomLeftSelectionPaneRef} {...selectionPaneCommonProps}/>}
-            extraBottomRightElement={<BottomRightSelectionPane key="bottom-right-selection-pane" selectionRef={bottomRightSelectionPaneRef} {...selectionPaneCommonProps}/>}
+            extraTopLeftElement={<TopLeftSelectionPane key="top-left-selection-pane" selectionRef={topLeftSelectionPaneRef} sheetRef={sheetRef}/>}
+            extraTopRightElement={<TopRightSelectionPane key="top-left-selection-pane" selectionRef={topRightSelectionPaneRef} sheetRef={sheetRef}/>}
+            extraBottomLeftElement={<BottomLeftSelectionPane key="bottom-left-selection-pane" selectionRef={bottomLeftSelectionPaneRef} sheetRef={sheetRef}/>}
+            extraBottomRightElement={<BottomRightSelectionPane key="bottom-right-selection-pane" selectionRef={bottomRightSelectionPaneRef} sheetRef={sheetRef}/>}
           >
           {Cell}
         </VariableSizeGrid>
@@ -206,6 +200,6 @@ let Sheet = ({ sheet, values, handleChangeCellValue, handleUpdateSelectionArea }
   );
 };
 
-Sheet = connect(null, mapDispatchToProps)(Sheet);
+Sheet = connect(mapStateToProps, mapDispatchToProps)(Sheet);
 
 export default Sheet;

@@ -43,7 +43,7 @@ class SelectionPane extends Component {
   }
 }
 
-const mapSelectionAreaStateToProps = ({ ui: { excel: { selectionArea } } }) => ({ selectionArea });
+const mapSelectionAreaStateToProps = ({ ui: { excel: { selectionArea, isSelectionMode } } }) => ({ selectionArea, isSelectionMode });
 
 export let TopLeftSelectionPane = ({ 
   sheetRef, 
@@ -53,26 +53,24 @@ export let TopLeftSelectionPane = ({
 }) => {
   useEffect(() => {
     const { x1, y1, x2, y2 } = selectionArea;
-    
-    if(isSelectionMode) {
-      const { current } = sheetRef;
-      const isCorrectPane = x1 >= x2 && y1 >= y2;
-  
-      if(current && isCorrectPane){
-        const { top: topStart, left: leftStart, width: widthStart, height: heightStart } = current._getItemStyle(y1, x1);
-        const { top: topEnd, left: leftEnd } = current._getItemStyle(y2, x2);
 
-        const width = leftStart + widthStart - leftEnd;
+    const { current } = sheetRef;
+    const isCorrectPane = x1 >= x2 && y1 >= y2;
 
-        const height = topStart + heightStart - topEnd;
+    if(current && isCorrectPane){
+      const { top: topStart, left: leftStart, width: widthStart, height: heightStart } = current._getItemStyle(y1, x1);
+      const { top: topEnd, left: leftEnd } = current._getItemStyle(y2, x2);
 
-        const style = { left: leftEnd, top: topEnd, width: width, height: height, display: null, zIndex: 100000 };
+      const width = leftStart + widthStart - leftEnd;
 
-        if(selectionRef) selectionRef.current.update(style)
-      } else {
-        selectionRef.current.reset();
-      }
-    } 
+      const height = topStart + heightStart - topEnd;
+
+      const style = { left: leftEnd, top: topEnd, width: width, height: height, display: null, zIndex: 100000 };
+
+      if(selectionRef) selectionRef.current.update(style)
+    } else {
+      selectionRef.current.reset();
+    }
   });
 
   return (
@@ -92,29 +90,25 @@ export let TopRightSelectionPane = ({
 }) => {
   useEffect(() => {
     const { x1, y1, x2, y2 } = selectionArea;
-    
-    
-    if(isSelectionMode) {
-      const isCorrectPane = x1 < x2 && y1 > y2;
+    const isCorrectPane = x1 < x2 && y1 > y2;
 
-      if(isCorrectPane) {
-        const { current } = sheetRef;
-        if(current){
-          const { top: topStart, left: leftStart, height: heightStart } = current._getItemStyle(y1, x1);
-          const { top: topEnd, left: leftEnd, width: widthEnd } = current._getItemStyle(y2, x2);
-  
-          const width = leftEnd + widthEnd - leftStart;
-  
-          const height = topStart + heightStart - topEnd;
-  
-          const style = { left: leftStart, top: topEnd, width: width, height: height, display: null, zIndex: 100000 };
-  
-          if(selectionRef) selectionRef.current.update(style)
-        }
-      } else {
-        selectionRef.current.reset();
+    if(isCorrectPane) {
+      const { current } = sheetRef;
+      if(current){
+        const { top: topStart, left: leftStart, height: heightStart } = current._getItemStyle(y1, x1);
+        const { top: topEnd, left: leftEnd, width: widthEnd } = current._getItemStyle(y2, x2);
+
+        const width = leftEnd + widthEnd - leftStart;
+
+        const height = topStart + heightStart - topEnd;
+
+        const style = { left: leftStart, top: topEnd, width: width, height: height, display: null, zIndex: 100000 };
+
+        if(selectionRef) selectionRef.current.update(style)
       }
-    } 
+    } else {
+      selectionRef.current.reset();
+    }
   });
   
   return (
@@ -134,31 +128,27 @@ export let BottomLeftSelectionPane = ({
 }) => {
   useEffect(() => {
     const { x1, y1, x2, y2 } = selectionArea;
-    
-    
-    if(isSelectionMode) {
-      const isCorrectPane = x1 >= x2 && y1 < y2;
+    const isCorrectPane = x1 >= x2 && y1 < y2;
 
-      if(isCorrectPane) {
-        const { current } = sheetRef;
-        if(current){
-          const { top: topStart, left: leftStart, width: widthStart, height: heightStart } = current._getItemStyle(y1, x1);
-          const { top: topEnd, left: leftEnd } = current._getItemStyle(y2, x2);
-  
-          const width = leftStart + widthStart - leftEnd;
-  
-          const height = topEnd - topStart;
+    if(isCorrectPane) {
+      const { current } = sheetRef;
+      if(current){
+        const { top: topStart, left: leftStart, width: widthStart, height: heightStart } = current._getItemStyle(y1, x1);
+        const { top: topEnd, left: leftEnd } = current._getItemStyle(y2, x2);
 
-          const top = topStart - heightStart;
-          
-          const style = { left: leftEnd, top, width: width, height: height, display: null, zIndex: 100000 };
-  
-          if(selectionRef) selectionRef.current.update(style)
-        }
-      } else {
-        selectionRef.current.reset();
+        const width = leftStart + widthStart - leftEnd;
+
+        const height = topEnd - topStart;
+
+        const top = topStart - heightStart;
+        
+        const style = { left: leftEnd, top, width: width, height: height, display: null, zIndex: 100000 };
+
+        if(selectionRef) selectionRef.current.update(style)
       }
-    } 
+    } else {
+      selectionRef.current.reset();
+    }
   });
   
   return (
@@ -178,28 +168,24 @@ export let BottomRightSelectionPane = ({
 }) => {
   useEffect(() => {
     const { x1, y1, x2, y2 } = selectionArea;
-    
-    
-    if(isSelectionMode) {
-      const isCorrectPane = x1 < x2 && y1 <= y2;
+    const isCorrectPane = x1 < x2 && y1 <= y2;
 
-      if(isCorrectPane) {
-        const { current } = sheetRef;
-        if(current){
-          const { top: topStart, left: leftStart } = current._getItemStyle(y1, x1);
-          const { top: topEnd, left: leftEnd, width: widthEnd, height: heightEnd } = current._getItemStyle(y2, x2);
-  
-          const width = leftEnd + widthEnd - leftStart;
-  
-          const height = topEnd + heightEnd - topStart;
-  
-          const style = { left: leftStart, top: topStart, width: width, height: height, display: null, zIndex: 100000 };
-  
-          if(selectionRef) selectionRef.current.update(style)
-        }
-      } else {
-        selectionRef.current.reset();
+    if(isCorrectPane) {
+      const { current } = sheetRef;
+      if(current){
+        const { top: topStart, left: leftStart } = current._getItemStyle(y1, x1);
+        const { top: topEnd, left: leftEnd, width: widthEnd, height: heightEnd } = current._getItemStyle(y2, x2);
+
+        const width = leftEnd + widthEnd - leftStart;
+
+        const height = topEnd + heightEnd - topStart;
+
+        const style = { left: leftStart, top: topStart, width: width, height: height, display: null, zIndex: 100000 };
+
+        if(selectionRef) selectionRef.current.update(style)
       }
+    } else {
+      selectionRef.current.reset();
     } 
   });
   
