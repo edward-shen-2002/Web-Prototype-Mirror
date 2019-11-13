@@ -132,7 +132,7 @@ let Sheet = ({ sheet, values, handleChangeCellValue, handleUpdateSelectionArea }
   const handleSelectionStart = (x1, y1) => {
     setIsSelectionMode(true);
     // setSelectionArea({ x1, y1, x2: x1, y2: y1 });
-    handleUpdateSelectionArea({ x1, y1 });
+    handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
   };
 
   // ! Consider header/column
