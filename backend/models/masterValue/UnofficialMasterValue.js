@@ -53,9 +53,8 @@ let masterValueSchema = new Schema({
 
   templateName: { type: String, required: true },
 
-  attributePosition: { type: String, required: true },
-
-  categoryPosition: { type: String, required: true },
+  attributeId: { type: String, required: true },
+  categoryId: { type: String, required: true },
 
   value: { type: String, required: true }
 }, { minimize: false });

@@ -77,6 +77,7 @@ const DataCell = ({
   };
 
   const handleMouseEnter = () => {
+    console.log("executing")
     if(isSelectionMode) handleSelectionOver(column, row);
   };
 
@@ -227,7 +228,7 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
     handleSelectionOver,
     handleSelectionEnd
   } = data;
-
+  
   let value;
   let Component;
 

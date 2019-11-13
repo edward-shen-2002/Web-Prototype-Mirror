@@ -13,9 +13,7 @@ const ObjectId = Schema.Types.ObjectId;
  *   quarter: "4",
  *   templateName: "Budget Request",
  *   sheetName: "Balance Sheet",
- *   sheetOrder: 7,
- *   attributePosition: "AB",
- *   categoryPosition: "5",
+ *   sheetOrder: 7
  *   ...
  * }
  * 
@@ -56,8 +54,6 @@ let masterValueSchema = new Schema({
 
   attributeId: { type: String, required: true },
   categoryId: { type: String, required: true },
-
-  // ! ATTRIBUTE AND CATEGORY ID WILL BE NEEDED IF USER CAN ADD ROW/COLUMNS...
 
   value: { type: String, required: true }
 }, { minimize: false });

@@ -13,6 +13,8 @@ let templateSchema = new Schema({
   
     // ! categories: { $id: { position, value, ... } }
     categories: {}
+
+    // ! Are templates, solely templates - they contain the categories and attributes to fill cells up?
   }]
 }, { minimize: false });
 

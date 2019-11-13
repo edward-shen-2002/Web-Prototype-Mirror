@@ -2,6 +2,8 @@ import { combineReducers } from "redux";
 
 import isAppNavigationOpen from "./isAppNavigationOpen";
 
-const uiReducer = combineReducers({ isAppNavigationOpen });
+import excel from "./excel";
+
+const uiReducer = combineReducers({ isAppNavigationOpen, excel });
 
 export default uiReducer;

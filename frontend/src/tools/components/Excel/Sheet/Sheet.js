@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 
+import { connect } from "react-redux";
+
+import { updateSelectionArea, resetSelectionArea } from "actions/ui/excel/selectionArea";
+
 import { VariableSizeGrid } from "react-window";
 
 import AutoSizer from "react-virtualized-auto-sizer";
@@ -49,7 +53,11 @@ const initializeActiveCell = (sheet) => {
   return activeCell;
 };
 
-const Sheet = ({ sheet, values, handleChangeCellValue }) => {
+const mapDispatchToProps = (dispatch) => ({
+  handleUpdateSelectionArea: (selectionArea) => dispatch(updateSelectionArea(selectionArea)) 
+});
+
+let Sheet = ({ sheet, values, handleChangeCellValue, handleUpdateSelectionArea }) => {
   const [ columnCount, setColumnCount ] = useState(DEFAULT_EXCEL_COLUMNS + 1);
   const [ rowCount, setRowCount ] = useState(DEFAULT_EXCEL_ROWS + 1);
 
@@ -112,8 +120,8 @@ const Sheet = ({ sheet, values, handleChangeCellValue }) => {
   const handleSetActiveCell = ({ row, column }) => {
     if(activeCell.row !== row || activeCell.column !== column) {
       sheet.activeCell(row, column);
-      setIsActiveCellEditMode(false);
-      setActiveCell({ row, column });
+      // setIsActiveCellEditMode(false);
+      // // setActiveCell({ row, column });
     } 
   };
 
@@ -123,14 +131,13 @@ const Sheet = ({ sheet, values, handleChangeCellValue }) => {
   // ! Consider header/column
   const handleSelectionStart = (x1, y1) => {
     setIsSelectionMode(true);
-    setSelectionArea({ x1, y1, x2: x1, y2: y1 });
+    // setSelectionArea({ x1, y1, x2: x1, y2: y1 });
+    handleUpdateSelectionArea({ x1, y1 });
   };
 
   // ! Consider header/column
   const handleSelectionOver = (x2, y2) => {
-    const { x2: oldX2, y2: oldY2 } = selectionArea;
-
-    if(oldX2 !== x2 || oldY2 !== y2) setSelectionArea({ ...selectionArea, x2, y2 });
+    handleUpdateSelectionArea({ x2, y2 });
   };
 
   const handleSelectionEnd = () => {
@@ -196,5 +203,7 @@ const Sheet = ({ sheet, values, handleChangeCellValue }) => {
     </div>
   );
 };
+
+Sheet = connect(null, mapDispatchToProps)(Sheet);
 
 export default Sheet;

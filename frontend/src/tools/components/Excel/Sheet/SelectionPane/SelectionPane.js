@@ -1,17 +1,19 @@
 import React, { Component, useRef, useEffect } from "react";
 
+import { connect } from "react-redux";
+
 import "./SelectionPane.scss";
 
 // ! Consider using HOC - Selection(specificSelection)
 
 const DefaultStyle = {
   zIndex: 100000,
-  position: 'absolute',
-  border: '2px solid rgba(75, 135, 255, 0.95)',
-  background: 'rgba(3, 169, 244, 0.05)',
-  pointerEvents: 'none',
-  display: 'none',
-  transition: "all 0.1s"
+  position: "absolute",
+  border: "2px solid rgba(75, 135, 255, 0.95)",
+  background: "rgba(3, 169, 244, 0.05)",
+  pointerEvents: "none",
+  display: "none",
+  // transition: "all 0.1s"
 };
 
 class SelectionPane extends Component {
@@ -19,12 +21,7 @@ class SelectionPane extends Component {
     super(props);
 
     this.state = {
-      style: { 
-        left: 0,
-        top: 0,
-        width: 0,
-        height: 0
-       }
+      style: { left: 0, top: 0, width: 0, height: 0 }
     };
   }
 
@@ -35,24 +32,19 @@ class SelectionPane extends Component {
   reset() {
     if(this.state.style.width || this.state.style.height) {
       this.setState({ 
-        style: {
-          left: 0,
-          top: 0,
-          width: 0,
-          height: 0
-        }
+        style: { top: 0, width: 0, height: 0 }
       });
     }
   }
-
-  // setSelection()
 
   render() {
     return <div style={Object.assign({}, DefaultStyle, this.state.style)}/>;
   }
 }
 
-export const TopLeftSelectionPane = ({ 
+const mapSelectionAreaStateToProps = ({ ui: { excel: { selectionArea } } }) => ({ selectionArea });
+
+export let TopLeftSelectionPane = ({ 
   sheetRef, 
   selectionRef, 
   selectionArea,
@@ -73,14 +65,7 @@ export const TopLeftSelectionPane = ({
 
         const height = topStart + heightStart - topEnd;
 
-        const style = {
-          left: leftEnd,
-          top: topEnd,
-          width: width,
-          height: height,
-          display: null,
-          zIndex: 100000
-        };
+        const style = { left: leftEnd, top: topEnd, width: width, height: height, display: null, zIndex: 100000 };
 
         if(selectionRef) selectionRef.current.update(style)
       } else {
@@ -96,7 +81,9 @@ export const TopLeftSelectionPane = ({
   );
 };
 
-export const TopRightSelectionPane = ({ 
+TopLeftSelectionPane = connect(mapSelectionAreaStateToProps)(TopLeftSelectionPane);
+
+export let TopRightSelectionPane = ({ 
   sheetRef, 
   selectionRef, 
   selectionArea,
@@ -119,14 +106,7 @@ export const TopRightSelectionPane = ({
   
           const height = topStart + heightStart - topEnd;
   
-          const style = {
-            left: leftStart,
-            top: topEnd,
-            width: width,
-            height: height,
-            display: null,
-            zIndex: 100000
-          };
+          const style = { left: leftStart, top: topEnd, width: width, height: height, display: null, zIndex: 100000 };
   
           if(selectionRef) selectionRef.current.update(style)
         }
@@ -143,7 +123,9 @@ export const TopRightSelectionPane = ({
   );
 };
 
-export const BottomLeftSelectionPane = ({ 
+TopRightSelectionPane = connect(mapSelectionAreaStateToProps)(TopRightSelectionPane);
+
+export let BottomLeftSelectionPane = ({ 
   sheetRef, 
   selectionRef, 
   selectionArea,
@@ -167,15 +149,8 @@ export const BottomLeftSelectionPane = ({
           const height = topEnd - topStart;
 
           const top = topStart - heightStart;
-  
-          const style = {
-            left: leftEnd,
-            top,
-            width: width,
-            height: height,
-            display: null,
-            zIndex: 100000
-          };
+          
+          const style = { left: leftEnd, top, width: width, height: height, display: null, zIndex: 100000 };
   
           if(selectionRef) selectionRef.current.update(style)
         }
@@ -192,7 +167,9 @@ export const BottomLeftSelectionPane = ({
   );
 };
 
-export const BottomRightSelectionPane = ({ 
+BottomLeftSelectionPane = connect(mapSelectionAreaStateToProps)(BottomLeftSelectionPane);
+
+export let BottomRightSelectionPane = ({ 
   sheetRef, 
   selectionRef, 
   selectionArea,
@@ -215,14 +192,7 @@ export const BottomRightSelectionPane = ({
   
           const height = topEnd + heightEnd - topStart;
   
-          const style = {
-            left: leftStart,
-            top: topStart,
-            width: width,
-            height: height,
-            display: null,
-            zIndex: 100000
-          };
+          const style = { left: leftStart, top: topStart, width: width, height: height, display: null, zIndex: 100000 };
   
           if(selectionRef) selectionRef.current.update(style)
         }
@@ -238,3 +208,5 @@ export const BottomRightSelectionPane = ({
     />
   );
 };
+
+BottomRightSelectionPane = connect(mapSelectionAreaStateToProps)(BottomRightSelectionPane);
