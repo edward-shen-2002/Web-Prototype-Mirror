@@ -1,12 +1,23 @@
 import React, { useState } from "react";
 
+import { connect } from "react-redux";
+
 import { columnNumberToName } from "xlsx-populate/lib/addressConverter";
 
 import { arrowKeyRegex } from "tools/regex";
 
 import "./Cell.scss";
 
-const HeaderCell = ({ style, value, isActiveHeader }) => {
+const mapDispatchToProps = (dispatch) => ({
+  // ! selection actions
+});
+
+const mapSelectionAreaStateToProps = ({ ui: { excel: { selectionArea } } }) => ({ selectionArea });
+
+let RowHeaderCell = ({ style, value, row, selectionArea }) => {
+  const { y1, y2 } = selectionArea;
+
+  const isActiveHeader = (y1 >= row && row >= y2) || (y2 >= row && row >= y1);
   const className = `cell cell--positionIndicator ${isActiveHeader ? "cell--positionIndicator-active" : "cell--positionIndicator-inactive"}`;
 
   return (
@@ -15,6 +26,36 @@ const HeaderCell = ({ style, value, isActiveHeader }) => {
     </div>
   );
 };
+
+RowHeaderCell = connect(mapSelectionAreaStateToProps)(RowHeaderCell);
+
+let ColumnHeaderCell = ({ style, value, column, selectionArea }) => {
+  const { x1, x2 } = selectionArea;
+
+  const isActiveHeader = (x1 >= column && column >= x2) || (x2 >= column && column >= x1);
+  
+  const className = `cell cell--positionIndicator ${isActiveHeader ? "cell--positionIndicator-active" : "cell--positionIndicator-inactive"}`;
+
+  return (
+    <div className={className} style={style}>
+      {value}
+    </div>
+  );
+};
+
+ColumnHeaderCell = connect(mapSelectionAreaStateToProps)(ColumnHeaderCell);
+
+let RootHeaderCell = ({ style, value }) => {
+  const className = "cell cell--positionIndicator";
+
+  return (
+    <div className={className} style={style}>
+      {value}
+    </div>
+  );
+};
+
+RootHeaderCell = connect(null, mapDispatchToProps)(RootHeaderCell);
 
 const DataCell = ({ 
   style, 
@@ -31,7 +72,6 @@ const DataCell = ({
   isActiveCell, 
   handleSetActiveCell, 
   handleSetActiveCellEdit,
-  handleActiveCellArrowEvent,
 
   handleSelectionStart,
   handleSelectionOver,
@@ -77,7 +117,6 @@ const DataCell = ({
   };
 
   const handleMouseEnter = () => {
-    console.log("executing")
     if(isSelectionMode) handleSelectionOver(column, row);
   };
 
@@ -263,18 +302,36 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
 
     if(columnIndex > 0 && rowIndex === 0) {
       value = columnNumberToName(columnIndex);
+
+      Component = (
+        <ColumnHeaderCell 
+          style={style} 
+          value={value}
+          column={columnIndex}
+        />
+      );
     } else if(columnIndex === 0 && rowIndex > 0) {
       value = rowIndex;
+
+      Component = (
+        <RowHeaderCell 
+          style={style} 
+          value={value}
+          row={rowIndex}
+        />
+      );
+    } else {
+      value = "";
+
+      Component = (
+        <RootHeaderCell 
+          style={style} 
+          value={value}
+        />
+      );
     }
 
 
-    Component = (
-      <HeaderCell 
-        style={style} 
-        value={value}
-        isActiveHeader={isActiveHeader}
-      />
-    );
   }
 
   return Component;

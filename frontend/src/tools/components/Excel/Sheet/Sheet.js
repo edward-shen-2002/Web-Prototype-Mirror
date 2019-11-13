@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 
 import { updateSelectionArea, resetSelectionArea } from "actions/ui/excel/selectionArea";
 
+// import {  }
+
 import { VariableSizeGrid } from "react-window";
 
 import AutoSizer from "react-virtualized-auto-sizer";
@@ -54,7 +56,7 @@ const initializeActiveCell = (sheet) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  handleUpdateSelectionArea: (selectionArea) => dispatch(updateSelectionArea(selectionArea)) 
+  handleUpdateSelectionArea: (selectionArea) => dispatch(updateSelectionArea(selectionArea))
 });
 
 let Sheet = ({ sheet, values, handleChangeCellValue, handleUpdateSelectionArea }) => {

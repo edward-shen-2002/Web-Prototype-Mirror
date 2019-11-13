@@ -6,7 +6,7 @@ import "./SelectionPane.scss";
 
 // ! Consider using HOC - Selection(specificSelection)
 
-const DefaultStyle = {
+const defaultStyle = {
   zIndex: 100000,
   position: "absolute",
   border: "2px solid rgba(75, 135, 255, 0.95)",
@@ -38,7 +38,8 @@ class SelectionPane extends Component {
   }
 
   render() {
-    return <div style={Object.assign({}, DefaultStyle, this.state.style)}/>;
+    const style = { ...defaultStyle, ...this.state.style };
+    return <div style={style}/>;
   }
 }
 
