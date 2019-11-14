@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from "react";
+import React, { PureComponent } from "react";
 
 import { connect } from "react-redux";
 
@@ -74,6 +74,6 @@ class EventRedux extends PureComponent {
   }
 
   render() {
-    return <Fragment/>;
+    return null;
   }
 };

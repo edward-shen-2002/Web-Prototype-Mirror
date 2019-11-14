@@ -30,6 +30,23 @@ const initializeActiveCell = (sheet) => {
   return activeCell;
 };
 
+const iniitalizeFreezePaneCounts = (sheet) => {
+  const panes = sheet.panes();
+
+  let freezeRowCount;
+  let freezeColumnCount; 
+
+  if(panes && panes.state === "frozen") {
+    freezeRowCount = panes.ySpit;
+    freezeColumnCount = panes.xSplit;
+  } else {
+    freezeRowCount = 0;
+    freezeColumnCount = 0;
+  }
+
+  return { freezeRowCount, freezeColumnCount };
+};
+
 const mapStateToProps = ({ ui: { excel: { isSelectionMode } } }) => ({ isSelectionMode });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -53,6 +70,8 @@ let Excel = ({
   const [ sheet, setSheet ] = useState(workbook.sheet(0));
   const [ sheetIndex, setSheetIndex ] = useState(0);
   const [ sheetValues, setSheetValues ] = useState(sheet.usedRange().value());
+
+  const [ frozenPane, setFrozenPane ] = useState(iniitalizeFreezePaneCounts(sheet));
 
   const [ columnCount, setColumnCount ] = useState(DEFAULT_EXCEL_COLUMNS + 1);
   const [ rowCount, setRowCount ] = useState(DEFAULT_EXCEL_ROWS + 1);
@@ -96,6 +115,8 @@ let Excel = ({
     };
   });
 
+  const { freezeRowCount, freezeColumnCount } = frozenPane;
+
   return (
     <div className="excel">
       <AppBar 
@@ -114,6 +135,9 @@ let Excel = ({
         handleChangeCellValue={handleChangeCellValue}
         rowCount={rowCount}
         columnCount={columnCount}
+
+        freezeRowCount={freezeRowCount}
+        freezeColumnCount={freezeColumnCount}
 
         sheetRef={sheetRef}
 

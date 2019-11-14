@@ -249,9 +249,6 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
       />
     );
   } else {
-    const { column, row } = activeCell;
-    const isActiveHeader = columnIndex === column || rowIndex === row;
-
     if(columnIndex > 0 && rowIndex === 0) {
       value = columnNumberToName(columnIndex);
 

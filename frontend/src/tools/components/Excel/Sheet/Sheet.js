@@ -31,6 +31,9 @@ const Sheet = ({
   rowCount,
   isSelectionMode, 
 
+  freezeRowCount,
+  freezeColumnCount,
+
   sheetRef,
 
   activeCell,
@@ -141,6 +144,11 @@ const Sheet = ({
     }
   };
 
+  const tableFreezeRowCount = freezeRowCount + 1;
+  const tableFreezeColumnCount = freezeColumnCount + 1;
+
+  const commonSelectionPaneProps = { sheetRef, tableFreezeRowCount, tableFreezeColumnCount };
+
   return (
     <div className="sheet"
       onKeyDown={handleKeyDown}
@@ -149,8 +157,8 @@ const Sheet = ({
         {({ height, width }) => (
           <VariableSizeGrid
             ref={sheetRef}
-            freezeRowCount={1}
-            freezeColumnCount={1}
+            freezeRowCount={tableFreezeRowCount}
+            freezeColumnCount={tableFreezeColumnCount}
             columnCount={columnCount}
             columnWidth={columnWidth}
             height={height}
@@ -158,10 +166,10 @@ const Sheet = ({
             rowCount={rowCount}
             rowHeight={rowHeight}
             width={width}
-            extraTopLeftElement={<TopLeftSelectionPane key="top-left-selection-pane" selectionRef={topLeftSelectionPaneRef} sheetRef={sheetRef}/>}
-            extraTopRightElement={<TopRightSelectionPane key="top-left-selection-pane" selectionRef={topRightSelectionPaneRef} sheetRef={sheetRef}/>}
-            extraBottomLeftElement={<BottomLeftSelectionPane key="bottom-left-selection-pane" selectionRef={bottomLeftSelectionPaneRef} sheetRef={sheetRef}/>}
-            extraBottomRightElement={<BottomRightSelectionPane key="bottom-right-selection-pane" selectionRef={bottomRightSelectionPaneRef} sheetRef={sheetRef}/>}
+            extraTopLeftElement={<TopLeftSelectionPane key="top-left-selection-pane" selectionRef={topLeftSelectionPaneRef} {...commonSelectionPaneProps}/>}
+            extraTopRightElement={<TopRightSelectionPane key="top-left-selection-pane" selectionRef={topRightSelectionPaneRef} {...commonSelectionPaneProps}/>}
+            extraBottomLeftElement={<BottomLeftSelectionPane key="bottom-left-selection-pane" selectionRef={bottomLeftSelectionPaneRef} {...commonSelectionPaneProps}/>}
+            extraBottomRightElement={<BottomRightSelectionPane key="bottom-right-selection-pane" selectionRef={bottomRightSelectionPaneRef} {...commonSelectionPaneProps}/>}
           >
             {Cell}
           </VariableSizeGrid>
