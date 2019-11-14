@@ -1,4 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+
+import { connect } from "react-redux";
+
+import { updateSelectionArea } from "actions/ui/excel/selectionArea";
+import { setIsSelectionModeOn, setIsSelectionModeOff } from "actions/ui/excel/isSelectionMode";
 
 import AppBar from "./AppBar";
 import ToolBar from "./ToolBar";
@@ -6,14 +11,58 @@ import FormulaBar from "./FormulaBar";
 import Sheet from "./Sheet";
 import SheetNavigator from "./SheetNavigator";
 
+import { 
+  DEFAULT_EXCEL_ROWS, 
+  DEFAULT_EXCEL_COLUMNS
+} from "constants/excel";
+
+
 import "./Excel.scss";
 
 const Divider = () => <hr className="divider"/>;
 
-const Excel = ({ name, workbook, returnLink, handleSubmitName }) => {
+const initializeActiveCell = (sheet) => {
+  const activeCell = { row: 1, column: 1 };
+
+  const { row, column } = activeCell;
+  sheet.activeCell(row, column);
+
+  return activeCell;
+};
+
+const mapStateToProps = ({ ui: { excel: { isSelectionMode } } }) => ({ isSelectionMode });
+
+const mapDispatchToProps = (dispatch) => ({
+  handleUpdateSelectionArea: (selectionArea) => dispatch(updateSelectionArea(selectionArea)),
+  handleSetSelectionModeOn: () => dispatch(setIsSelectionModeOn()),
+  handleSetSelectionModeOff: () => dispatch(setIsSelectionModeOff())
+});
+
+let Excel = ({ 
+  name, 
+  workbook, 
+  returnLink, 
+  isSelectionMode,
+
+  handleUpdateSelectionArea,
+  handleSetSelectionModeOn,
+  handleSetSelectionModeOff,
+
+  handleSubmitName 
+}) => {
   const [ sheet, setSheet ] = useState(workbook.sheet(0));
   const [ sheetIndex, setSheetIndex ] = useState(0);
   const [ sheetValues, setSheetValues ] = useState(sheet.usedRange().value());
+
+  const [ columnCount, setColumnCount ] = useState(DEFAULT_EXCEL_COLUMNS + 1);
+  const [ rowCount, setRowCount ] = useState(DEFAULT_EXCEL_ROWS + 1);
+
+  const [ isActiveCellEditMode, setIsActiveCellEditMode ] = useState(false);
+  const [ activeCell, setActiveCell ] = useState(initializeActiveCell(sheet));
+  
+  const [ isMounted, setIsMounted ] = useState(false);
+
+  const sheetRef = useRef(null);
 
   const handleChangeCellValue = (row, column, value) => {
     sheet.row(row).cell(column).setValue(value);
@@ -31,13 +80,19 @@ const Excel = ({ name, workbook, returnLink, handleSubmitName }) => {
     setSheetValues(sheet.usedRange().value());
   };
 
-  useEffect(() => {
-    window.onmouseup = () => {
-  
-    };
+  const handleSetActiveCellEdit = () => setIsActiveCellEditMode(true);
+  const handleSetActiveCellNormal = () => setIsActiveCellEditMode(false);
 
-    return () => {
-      window.onmouseup = null;
+  useEffect(() => {
+    if(!isMounted) {
+      const { _maxColumnNumber, _maxRowNumber } = sheet.usedRange();
+      setColumnCount(_maxColumnNumber + 1);
+      setRowCount(_maxRowNumber + 1);
+      setIsMounted(true);
+
+    }
+    window.onmouseup = () => {
+      if(isSelectionMode) handleSetSelectionModeOff();
     };
   });
 
@@ -57,6 +112,22 @@ const Excel = ({ name, workbook, returnLink, handleSubmitName }) => {
         sheet={sheet} 
         values={sheetValues} 
         handleChangeCellValue={handleChangeCellValue}
+        rowCount={rowCount}
+        columnCount={columnCount}
+
+        sheetRef={sheetRef}
+
+        isSelectionMode={isSelectionMode}
+
+        activeCell={activeCell}
+        isActiveCellEditMode={isActiveCellEditMode}
+        
+        handleUpdateSelectionArea={handleUpdateSelectionArea}
+        handleSetSelectionModeOn={handleSetSelectionModeOn}
+        handleSetSelectionModeOff={handleSetSelectionModeOff}
+
+        handleSetActiveCellEdit={handleSetActiveCellEdit}
+        handleSetActiveCellNormal={handleSetActiveCellNormal}
       />
       <Divider/>
       <SheetNavigator 
@@ -66,5 +137,7 @@ const Excel = ({ name, workbook, returnLink, handleSubmitName }) => {
     </div>
   );
 };
+
+Excel = connect(mapStateToProps, mapDispatchToProps)(Excel);
 
 export default Excel;

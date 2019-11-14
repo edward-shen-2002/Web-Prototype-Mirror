@@ -6,8 +6,6 @@ import { updateSelectionArea } from "actions/ui/excel/selectionArea";
 
 import { columnNumberToName } from "xlsx-populate/lib/addressConverter";
 
-import { arrowKeyRegex } from "tools/regex";
-
 import "./Cell.scss";
 
 const mapDispatchToProps = (dispatch) => ({
@@ -67,21 +65,14 @@ const DataCell = ({
   column, 
   row, 
 
-  columnCount,
-  rowCount,
-
-  activeCell,
   isActiveCell, 
   handleSetActiveCell, 
   handleSetActiveCellEdit,
 
   handleSelectionStart,
-  handleSelectionOver,
-  handleSelectionEnd
+  handleSelectionOver
 }) => {
   let className = "cell";
-
-  // if(isActiveCell) className += " cell--active";
   
   const handleDoubleClick = () => {
     if(!isActiveCell) handleSetActiveCell({ row, column });
@@ -92,38 +83,12 @@ const DataCell = ({
     handleSetActiveCell({ row, column });
   };
 
-  const handleKeyDown = ({ key }) => {
-    if(arrowKeyRegex.test(key)) {
-      event.preventDefault();
-
-      let { row, column } = activeCell;
-      if(key === "ArrowUp") {
-        if(row > 1) row--;
-      } else if(key === "ArrowDown") {
-        if(row < rowCount) row++;
-      } else if(key === "ArrowLeft") {
-        if(column > 1) column--;
-      } else {
-        if(column < columnCount) column++;
-      }
-      
-      // TODO : Consider edges in the future.. Right now do not consider edges
-      if(row !== activeCell.row || column !== activeCell.column) {
-        handleSetActiveCell({ row, column })
-      }
-    }
-  };
-
   const handleMouseDown = () => {
     handleSelectionStart(column, row);
   };
 
   const handleMouseEnter = () => {
     handleSelectionOver(column, row);
-  };
-
-  const handleMouseUp = () => {
-    handleSelectionEnd();
   };
 
   return (
@@ -133,11 +98,8 @@ const DataCell = ({
       tabIndex="0"
       onClick={handleClick} 
       onDoubleClick={handleDoubleClick}
-      onKeyDown={handleKeyDown}
-      onKeyPress={handleKeyDown}
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}
-      onMouseUp={handleMouseUp}
     >
       {value}
     </div>
@@ -202,11 +164,9 @@ const EditableCell = ({
   handleSetActiveCellEdit, 
   handleSetActiveCell,
   handleSetActiveCellNormal,
-  handleActiveCellArrowEvent,
 
   handleSelectionStart,
-  handleSelectionOver,
-  handleSelectionEnd
+  handleSelectionOver
 }) => {
   const { row, column } = activeCell;
 
@@ -238,10 +198,8 @@ const EditableCell = ({
         isActiveCell={isActiveCell}
         handleSetActiveCell={handleSetActiveCell} 
         handleSetActiveCellEdit={handleSetActiveCellEdit}
-        handleActiveCellArrowEvent={handleActiveCellArrowEvent}
         handleSelectionStart={handleSelectionStart}
         handleSelectionOver={handleSelectionOver}
-        handleSelectionEnd={handleSelectionEnd}
       />
     )
   );
@@ -260,11 +218,9 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
     handleSetActiveCellEdit, 
     handleSetActiveCell,
     handleSetActiveCellNormal,
-    handleActiveCellArrowEvent,
 
     handleSelectionStart,
-    handleSelectionOver,
-    handleSelectionEnd
+    handleSelectionOver
   } = data;
   
   let value;
@@ -288,10 +244,8 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         handleSetActiveCellEdit={handleSetActiveCellEdit}
         handleSetActiveCell={handleSetActiveCell}
         handleSetActiveCellNormal={handleSetActiveCellNormal}
-        handleActiveCellArrowEvent={handleActiveCellArrowEvent}
         handleSelectionStart={handleSelectionStart}
         handleSelectionOver={handleSelectionOver}
-        handleSelectionEnd={handleSelectionEnd}
       />
     );
   } else {

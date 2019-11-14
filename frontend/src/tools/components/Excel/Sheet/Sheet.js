@@ -1,21 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
-
-import { connect } from "react-redux";
-
-import { updateSelectionArea } from "actions/ui/excel/selectionArea";
-import { setIsSelectionModeOn, setIsSelectionModeOff } from "actions/ui/excel/isSelectionMode";
+import React, { useRef } from "react";
 
 import { VariableSizeGrid } from "react-window";
 
 import AutoSizer from "react-virtualized-auto-sizer";
 
+import { arrowKeyRegex } from "tools/regex";
+
 import Cell from "./Cell";
+import EventListener from "./EventListener";
+
 import { TopLeftSelectionPane, TopRightSelectionPane, BottomLeftSelectionPane, BottomRightSelectionPane } from "./SelectionPane";
 
 import { 
-  DEFAULT_EXCEL_ROWS, 
-  DEFAULT_EXCEL_COLUMNS,
-
   DEFAULT_EXCEL_ROW_HEIGHT,
   DEFAULT_EXCEL_COLUMN_WIDTH,
 
@@ -28,56 +24,31 @@ import {
 
 import "./Sheet.scss";
 
-const handleActiveCellArrowEvent = (direction, activeCell, isActiveCellEditMode, handleSetActiveCell) => {
-  if(!isActiveCellEditMode) {
-    let { row, column } = activeCell;
-    if(direction === "ArrowUp") {
-      if(row > 1) row--;
-    } else if(direction === "ArrowDown") {
-      if(column < columnCount) column++;
-    } else if(direction === "ArrowLeft") {
-      if(column > 1) column--;
-    } else {
-      if(row < rowCount) row++;
-    }
+const Sheet = ({ 
+  sheet, 
+  values, 
+  columnCount,
+  rowCount,
+  isSelectionMode, 
 
-    if(row !== activeCell.row || column !== activeCell.column) handleSetActiveCell({ row, column });
-  }
-};
+  sheetRef,
 
-const initializeActiveCell = (sheet) => {
-  const activeCell = { row: 1, column: 1 };
+  activeCell,
 
-  const { row, column } = activeCell;
-  sheet.activeCell(row, column);
+  isActiveCellEditMode,
+  handleSetActiveCellNormal,
+  handleSetActiveCellEdit,
 
-  return activeCell;
-};
-
-const mapStateToProps = ({ ui: { excel: { isSelectionMode } } }) => ({ isSelectionMode });
-
-const mapDispatchToProps = (dispatch) => ({
-  handleUpdateSelectionArea: (selectionArea) => dispatch(updateSelectionArea(selectionArea)),
-  handleSetSelectionModeOn: () => dispatch(setIsSelectionModeOn()),
-  handleSetSelectionModeOff: () => dispatch(setIsSelectionModeOff())
-});
-
-let Sheet = ({ sheet, values, isSelectionMode, handleChangeCellValue, handleUpdateSelectionArea, handleSetSelectionModeOn, handleSetSelectionModeOff }) => {
-  const [ columnCount, setColumnCount ] = useState(DEFAULT_EXCEL_COLUMNS + 1);
-  const [ rowCount, setRowCount ] = useState(DEFAULT_EXCEL_ROWS + 1);
-
-  const [ activeCell, setActiveCell ] = useState(initializeActiveCell(sheet));
-
-  const [ isActiveCellEditMode, setIsActiveCellEditMode ] = useState(false);
-
-  const [ isMounted, setIsMounted ] = useState(false);
-
-  const sheetRef = useRef(null);
-
+  handleChangeCellValue, 
+  handleUpdateSelectionArea, 
+  handleSetSelectionModeOn
+}) => {
   const topLeftSelectionPaneRef = useRef(null);
   const topRightSelectionPaneRef = useRef(null);
   const bottomLeftSelectionPaneRef = useRef(null);
   const bottomRightSelectionPaneRef = useRef(null);
+
+  const eventListenerRef = useRef(null);
 
   const rowHeight = (index) => {
     let height;
@@ -124,9 +95,6 @@ let Sheet = ({ sheet, values, isSelectionMode, handleChangeCellValue, handleUpda
     handleUpdateSelectionArea({ x1: column , y1: row, x2: column, y2: row });
   };
 
-  const handleSetActiveCellEdit = () => setIsActiveCellEditMode(true);
-  const handleSetActiveCellNormal = () => setIsActiveCellEditMode(false);
-
   // ! Consider header/column
   const handleSelectionStart = (x1, y1) => {
     if(!isSelectionMode) handleSetSelectionModeOn();
@@ -137,19 +105,6 @@ let Sheet = ({ sheet, values, isSelectionMode, handleChangeCellValue, handleUpda
   const handleSelectionOver = (x2, y2) => {
     if(isSelectionMode) handleUpdateSelectionArea({ x2, y2 });
   };
-
-  const handleSelectionEnd = () => {
-    handleSetSelectionModeOff();
-  };
-
-  useEffect(() => {
-    if(!isMounted) {
-      const { _maxColumnNumber, _maxRowNumber } = sheet.usedRange();
-      setColumnCount(_maxColumnNumber + 1);
-      setRowCount(_maxRowNumber + 1);
-      setIsMounted(true);
-    }
-  });
 
   const itemData = { 
     sheet, 
@@ -165,15 +120,31 @@ let Sheet = ({ sheet, values, isSelectionMode, handleChangeCellValue, handleUpda
     handleChangeCellValue, 
     handleSetActiveCellEdit, 
     handleSetActiveCellNormal,
-    handleActiveCellArrowEvent,
 
     handleSelectionStart,
-    handleSelectionOver,
-    handleSelectionEnd
+    handleSelectionOver
+  };
+
+  const handleKeyDown = ({ key }) => {
+    if(arrowKeyRegex.test(key)) {
+      event.preventDefault();
+
+      if(key === "ArrowUp") {
+        eventListenerRef.current.moveUp();
+      } else if(key === "ArrowDown") {
+        eventListenerRef.current.moveDown();
+      } else if(key === "ArrowLeft") {
+        eventListenerRef.current.moveLeft();
+      } else {
+        eventListenerRef.current.moveRight();
+      }
+    }
   };
 
   return (
-    <div className="sheet">
+    <div className="sheet"
+      onKeyDown={handleKeyDown}
+    >
       <AutoSizer>
         {({ height, width }) => (
           <VariableSizeGrid
@@ -192,14 +163,13 @@ let Sheet = ({ sheet, values, isSelectionMode, handleChangeCellValue, handleUpda
             extraBottomLeftElement={<BottomLeftSelectionPane key="bottom-left-selection-pane" selectionRef={bottomLeftSelectionPaneRef} sheetRef={sheetRef}/>}
             extraBottomRightElement={<BottomRightSelectionPane key="bottom-right-selection-pane" selectionRef={bottomRightSelectionPaneRef} sheetRef={sheetRef}/>}
           >
-          {Cell}
-        </VariableSizeGrid>
+            {Cell}
+          </VariableSizeGrid>
         )}
       </AutoSizer>
+      <EventListener eventListenerRef={eventListenerRef} columnCount={columnCount} rowCount={rowCount}/>
     </div>
   );
 };
-
-Sheet = connect(mapStateToProps, mapDispatchToProps)(Sheet);
 
 export default Sheet;
