@@ -150,7 +150,7 @@ let Sheet = ({ sheet, values, isSelectionMode, handleChangeCellValue, handleUpda
       setIsMounted(true);
     }
   });
-  
+
   const itemData = { 
     sheet, 
     values, 
@@ -171,7 +171,7 @@ let Sheet = ({ sheet, values, isSelectionMode, handleChangeCellValue, handleUpda
     handleSelectionOver,
     handleSelectionEnd
   };
-  
+
   return (
     <div className="sheet">
       <AutoSizer>

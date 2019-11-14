@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 
 import { updateSelectionArea } from "actions/ui/excel/selectionArea";
-import { setIsSelectionModeOn, setIsSelectionModeOff } from "actions/ui/excel/isSelectionMode";
 
 import { columnNumberToName } from "xlsx-populate/lib/addressConverter";
 

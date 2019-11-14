@@ -85,8 +85,7 @@ TopLeftSelectionPane = connect(mapSelectionAreaStateToProps)(TopLeftSelectionPan
 export let TopRightSelectionPane = ({ 
   sheetRef, 
   selectionRef, 
-  selectionArea,
-  isSelectionMode
+  selectionArea
 }) => {
   useEffect(() => {
     const { x1, y1, x2, y2 } = selectionArea;
@@ -123,8 +122,7 @@ TopRightSelectionPane = connect(mapSelectionAreaStateToProps)(TopRightSelectionP
 export let BottomLeftSelectionPane = ({ 
   sheetRef, 
   selectionRef, 
-  selectionArea,
-  isSelectionMode
+  selectionArea
 }) => {
   useEffect(() => {
     const { x1, y1, x2, y2 } = selectionArea;
@@ -163,8 +161,7 @@ BottomLeftSelectionPane = connect(mapSelectionAreaStateToProps)(BottomLeftSelect
 export let BottomRightSelectionPane = ({ 
   sheetRef, 
   selectionRef, 
-  selectionArea,
-  isSelectionMode
+  selectionArea
 }) => {
   useEffect(() => {
     const { x1, y1, x2, y2 } = selectionArea;

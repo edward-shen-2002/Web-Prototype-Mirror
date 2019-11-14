@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import AppBar from "./AppBar";
 import ToolBar from "./ToolBar";
@@ -31,17 +31,38 @@ const Excel = ({ name, workbook, returnLink, handleSubmitName }) => {
     setSheetValues(sheet.usedRange().value());
   };
 
+  useEffect(() => {
+    window.onmouseup = () => {
+  
+    };
+
+    return () => {
+      window.onmouseup = null;
+    };
+  });
+
   return (
     <div className="excel">
-      <AppBar name={name} returnLink={returnLink} handleSubmitName={handleSubmitName}/>
+      <AppBar 
+        name={name} 
+        returnLink={returnLink} 
+        handleSubmitName={handleSubmitName}
+      />
       <Divider/>
       <ToolBar/>
       <Divider/>
       <FormulaBar/>
       <Divider/>
-      <Sheet sheet={sheet} values={sheetValues} handleChangeCellValue={handleChangeCellValue}/>
+      <Sheet 
+        sheet={sheet} 
+        values={sheetValues} 
+        handleChangeCellValue={handleChangeCellValue}
+      />
       <Divider/>
-      <SheetNavigator sheetIndex={sheetIndex} handleChangeSheet={handleChangeSheet}/>
+      <SheetNavigator 
+        sheetIndex={sheetIndex} 
+        handleChangeSheet={handleChangeSheet}
+      />
     </div>
   );
 };
