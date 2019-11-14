@@ -1,1 +1,1 @@
-export * from "./SelectionPane";
+export { default } from "./SelectionPane";

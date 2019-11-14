@@ -1,17 +1,15 @@
-.selectionPane {
-  z-Index: 100000;
+.selectionArea {
+  z-index: 100000;
   position: absolute;
-  border: 2px solid rgba(75, 135, 255, 0.95);
+  border-width: 1px;
+  border-color: rgba(75, 135, 255, 0.95);
   background: rgba(3, 169, 244, 0.05);
-  // pointer-events: none;;
-  // display: none;
-  // transition: all 0.1s,
+  pointer-events: none;
 }
 
-// zIndex: 100000,
-// position: 'absolute',
-// border: '2px solid rgba(75, 135, 255, 0.95)',
-// background: 'rgba(3, 169, 244, 0.05)',
-// pointerEvents: 'none',
-// display: 'none',
-// transition: 'all 0.1s',
+.activeCell {
+  z-index: 100000;
+  position: absolute;
+  border: 2px solid rgba(75, 135, 255, 0.95);
+  pointer-events: none;
+}

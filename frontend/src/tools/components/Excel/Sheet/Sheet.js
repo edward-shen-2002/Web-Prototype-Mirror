@@ -9,7 +9,7 @@ import { arrowKeyRegex } from "tools/regex";
 import Cell from "./Cell";
 import EventListener from "./EventListener";
 
-import { TopLeftSelectionPane, TopRightSelectionPane, BottomLeftSelectionPane, BottomRightSelectionPane } from "./SelectionPane";
+import SelectionPaneListener from "./SelectionPane";
 
 import { 
   DEFAULT_EXCEL_ROW_HEIGHT,
@@ -166,10 +166,13 @@ const Sheet = ({
             rowCount={rowCount}
             rowHeight={rowHeight}
             width={width}
-            extraTopLeftElement={<TopLeftSelectionPane key="top-left-selection-pane" selectionRef={topLeftSelectionPaneRef} {...commonSelectionPaneProps}/>}
-            extraTopRightElement={<TopRightSelectionPane key="top-left-selection-pane" selectionRef={topRightSelectionPaneRef} {...commonSelectionPaneProps}/>}
-            extraBottomLeftElement={<BottomLeftSelectionPane key="bottom-left-selection-pane" selectionRef={bottomLeftSelectionPaneRef} {...commonSelectionPaneProps}/>}
-            extraBottomRightElement={<BottomRightSelectionPane key="bottom-right-selection-pane" selectionRef={bottomRightSelectionPaneRef} {...commonSelectionPaneProps}/>}
+            extraBottomRightElement={(
+              <SelectionPaneListener 
+                key="bottom-right-selection-pane" 
+                selectionRef={bottomRightSelectionPaneRef} 
+                sheetRef={sheetRef}
+              />
+            )}
           >
             {Cell}
           </VariableSizeGrid>

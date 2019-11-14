@@ -4,26 +4,6 @@ import { connect } from "react-redux";
 
 import "./SelectionPane.scss";
 
-// ! Consider using HOC - Selection(specificSelection)
-
-const defaultSelectionAreaStyle = {
-  zIndex: 100000,
-  position: "absolute",
-  borderWidth: "1px",
-  borderColor: "rgba(75, 135, 255, 0.95)",
-  background: "rgba(3, 169, 244, 0.05)",
-  pointerEvents: "none",
-  display: "none"
-};
-
-const defaultActiveCellStyle = {
-  zIndex: 100000,
-  position: "absolute",
-  border: "2px solid rgba(75, 135, 255, 0.95)",
-  pointerEvents: "none",
-  display: "none"
-};
-
 class SelectionPane extends Component {
   constructor(props) {
     super(props);
@@ -53,7 +33,7 @@ class SelectionPane extends Component {
 
   render() {
     const { isSelectionMode } = this.props;
-    let selectionAreaStyle = { ...defaultSelectionAreaStyle, ...this.state.selectionAreaStyle };
+    let selectionAreaStyle = { ...this.state.selectionAreaStyle };
     
     if(isSelectionMode) {
       selectionAreaStyle.borderStyle = "dashed";
@@ -61,12 +41,12 @@ class SelectionPane extends Component {
       selectionAreaStyle.borderStyle = "solid";
     }
 
-    let activeCellStyle = { ...defaultActiveCellStyle, ...this.state.activeCellStyle };
+    let activeCellStyle = { ...this.state.activeCellStyle };
 
     return (
       <Fragment>
-        <div style={selectionAreaStyle}/>
-        <div style={activeCellStyle}/>
+        <div className="selectionArea" style={selectionAreaStyle}/>
+        <div className="activeCell" style={activeCellStyle}/>
       </Fragment>
     );
   }
@@ -74,142 +54,7 @@ class SelectionPane extends Component {
 
 const mapSelectionAreaStateToProps = ({ ui: { excel: { selectionArea, isSelectionMode } } }) => ({ selectionArea, isSelectionMode });
 
-export let TopLeftSelectionPane = ({ 
-  sheetRef, 
-  selectionRef, 
-  selectionArea,
-  isSelectionMode, 
-  tableFreezeRowCount, 
-  tableFreezeColumnCount
-}) => {
-  const { x1, y1, x2, y2 } = selectionArea;
-  useEffect(() => {
-    const { current } = sheetRef;
-    const isCorrectPane = x1 >= x2 && y1 >= y2;
-
-    if(current && isCorrectPane){
-      const { top: topStart, left: leftStart, width: widthStart, height: heightStart } = current._getItemStyle(y1, x1);
-      const { top: topEnd, left: leftEnd } = current._getItemStyle(y2, x2);
-
-      const selectionAreaWidth = leftStart + widthStart - leftEnd;
-      const selectionAreaHeight = topStart + heightStart - topEnd;
-      const selectionAreaStyle = { left: leftEnd, top: topEnd, width: selectionAreaWidth, height: selectionAreaHeight, display: null, zIndex: 100000 };
-
-      const activeCellStyle = { top: topStart, left: leftStart, width: widthStart, height: heightStart, display: null, zIndex: 100000 };
-
-      if(selectionRef) {
-        selectionRef.current.update(selectionAreaStyle);
-        selectionRef.current.updateActiveCell(activeCellStyle);
-      }
-    } else {
-      selectionRef.current.reset();
-    }
-  });
-
-  return (
-    <SelectionPane
-      ref={selectionRef}
-      isSelectionMode={isSelectionMode}
-    />
-  );
-};
-
-TopLeftSelectionPane = connect(mapSelectionAreaStateToProps)(TopLeftSelectionPane);
-
-export let TopRightSelectionPane = ({ 
-  sheetRef, 
-  selectionRef, 
-  selectionArea,
-  isSelectionMode, 
-  tableFreezeRowCount, 
-  tableFreezeColumnCount
-}) => {
-  const { x1, y1, x2, y2 } = selectionArea;
-
-  useEffect(() => {
-    const isCorrectPane = x1 < x2 && y1 > y2;
-
-    if(isCorrectPane) {
-      const { current } = sheetRef;
-      if(current){
-        const { top: topStart, left: leftStart, width: widthStart, height: heightStart } = current._getItemStyle(y1, x1);
-        const { top: topEnd, left: leftEnd, width: widthEnd } = current._getItemStyle(y2, x2);
-
-        const selectionAreaWidth = leftEnd + widthEnd - leftStart;
-        const selectionAreaHeight = topStart + heightStart - topEnd;
-        const selectionAreaStyle = { left: leftStart, top: topEnd, width: selectionAreaWidth, height: selectionAreaHeight, display: null, zIndex: 100000 };
-
-        const activeCellStyle = { top: topStart, left: leftStart, width: widthStart, height: heightStart, display: null, zIndex: 100000 };
-
-        if(selectionRef) {
-          selectionRef.current.update(selectionAreaStyle);
-          selectionRef.current.updateActiveCell(activeCellStyle);
-        }
-      }
-    } else {
-      selectionRef.current.reset();
-    }
-  });
-  
-  return (
-    <SelectionPane
-      ref={selectionRef}
-      isSelectionMode={isSelectionMode}
-    />
-  );
-};
-
-TopRightSelectionPane = connect(mapSelectionAreaStateToProps)(TopRightSelectionPane);
-
-export let BottomLeftSelectionPane = ({ 
-  sheetRef, 
-  selectionRef, 
-  selectionArea,
-  isSelectionMode, 
-  tableFreezeRowCount, 
-  tableFreezeColumnCount
-}) => {
-  const { x1, y1, x2, y2 } = selectionArea;
-
-  useEffect(() => {
-    const isCorrectPane = x1 > x2 && y1 < y2;
-
-    if(isCorrectPane) {
-      const { current } = sheetRef;
-      if(current){
-        const { top: topStart, left: leftStart, width: widthStart, height: heightStart } = current._getItemStyle(y1, x1);
-        const { top: topEnd, left: leftEnd } = current._getItemStyle(y2, x2);
-
-        const { top: topFrozen } = current._getItemStyle(tableFreezeRowCount, tableFreezeColumnCount);
-
-        const selectionAreaWidth = leftStart + widthStart - leftEnd;
-        const selectionAreaHeight = topEnd - topStart;
-        const topOffset = topStart - topFrozen;
-        const selectionAreaStyle = { left: leftEnd, top: topOffset, width: selectionAreaWidth, height: selectionAreaHeight, display: null, zIndex: 100000 };
-
-        const activeCellStyle = { top: topOffset, left: leftStart, width: widthStart, height: heightStart, display: null, zIndex: 100000 };
-
-        if(selectionRef) {
-          selectionRef.current.update(selectionAreaStyle);
-          selectionRef.current.updateActiveCell(activeCellStyle);
-        }
-      }
-    } else {
-      selectionRef.current.reset();
-    }
-  });
-  
-  return (
-    <SelectionPane
-      ref={selectionRef}
-      isSelectionMode={isSelectionMode}
-    />
-  );
-};
-
-BottomLeftSelectionPane = connect(mapSelectionAreaStateToProps)(BottomLeftSelectionPane);
-
-export let BottomRightSelectionPane = ({ 
+let SelectionPaneListener = ({ 
   sheetRef, 
   selectionRef, 
   selectionArea,
@@ -218,28 +63,42 @@ export let BottomRightSelectionPane = ({
   const { x1, y1, x2, y2 } = selectionArea;
 
   useEffect(() => {
-    const isCorrectPane = x1 <= x2 && y1 <= y2;
+    const { current } = sheetRef;
+    if(current){
+      let selectionAreaWidth;
+      let selectionAreaHeight;
+      let selectionAreaStyle;
+      let left;
+      let top;
 
-    if(isCorrectPane) {
-      const { current } = sheetRef;
-      if(current){
-        const { top: topStart, left: leftStart, width: widthStart, height: heightStart } = current._getItemStyle(y1, x1);
-        const { top: topEnd, left: leftEnd, width: widthEnd, height: heightEnd } = current._getItemStyle(y2, x2);
+      const { top: topStart, left: leftStart, width: widthStart, height: heightStart } = current._getItemStyle(y1, x1);
+      const { top: topEnd, left: leftEnd, width: widthEnd, height: heightEnd } = current._getItemStyle(y2, x2);
 
-        const selectionAreaWidth = leftEnd + widthEnd - leftStart;
-        const selectionAreaHeight = topEnd + heightEnd - topStart;
-        const selectionAreaStyle = { left: leftStart, top: topStart, width: selectionAreaWidth, height: selectionAreaHeight, display: null, zIndex: 99999 };
-
-        const activeCellStyle = { top: topStart, left: leftStart, width: widthStart, height: heightStart, display: null, zIndex: 99999 };
-
-        if(selectionRef) {
-          selectionRef.current.update(selectionAreaStyle);
-          selectionRef.current.updateActiveCell(activeCellStyle);
-        }
+      if(x1 <= x2) {
+        selectionAreaWidth = leftEnd + widthEnd - leftStart;
+        left = leftStart;
+      } else {
+        selectionAreaWidth = leftStart + widthStart - leftEnd;
+        left = leftEnd;
       }
-    } else {
-      selectionRef.current.reset();
-    } 
+
+      if(y1 <= y2) {
+        selectionAreaHeight = topEnd + heightEnd - topStart;
+        top = topStart;
+      } else {
+        selectionAreaHeight = topStart + heightStart - topEnd;
+        top = topEnd;
+      }
+
+      selectionAreaStyle = { left, top, width: selectionAreaWidth, height: selectionAreaHeight, display: null, zIndex: 99999 };
+
+      const activeCellStyle = { top: topStart, left: leftStart, width: widthStart, height: heightStart, display: null, zIndex: 99999 };
+
+      if(selectionRef) {
+        selectionRef.current.update(selectionAreaStyle);
+        selectionRef.current.updateActiveCell(activeCellStyle);
+      }
+    }
   });
   
   return (
@@ -250,4 +109,6 @@ export let BottomRightSelectionPane = ({
   );
 };
 
-BottomRightSelectionPane = connect(mapSelectionAreaStateToProps)(BottomRightSelectionPane);
+SelectionPaneListener = connect(mapSelectionAreaStateToProps)(SelectionPaneListener);
+
+export default SelectionPaneListener;
