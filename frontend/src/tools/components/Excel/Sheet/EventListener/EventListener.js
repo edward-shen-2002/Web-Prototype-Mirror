@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent, Fragment } from "react";
 
 import { connect } from "react-redux";
 
@@ -30,7 +30,9 @@ EventListener = connect(mapStateToProps, mapDispatchToProps)(EventListener);
 
 export default EventListener;
 
-class EventRedux extends Component {
+
+// TODO : Scroll into view once you reach the end of the end of the view scope
+class EventRedux extends PureComponent {
   constructor(props) {
     super(props);
   }
@@ -68,14 +70,10 @@ class EventRedux extends Component {
 
     x1++;
 
-    console.log("moving right")
-
-    console.log(columnCount)
-
     if(x1 < columnCount) handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
   }
 
   render() {
-    return <div></div>;
+    return <Fragment/>;
   }
 };
