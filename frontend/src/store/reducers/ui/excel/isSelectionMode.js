@@ -1,11 +1,11 @@
 import { createReducer } from "store/tools/setup";
 
-const defaultIsSelectionMode = false;
+const defaultSelectionMode = false;
 
-const setIsSelectionModeOn = () => true;
+const setSelectionModeOn = () => true;
 
-const setIsSelectionModeOff = () => false;
+const setSelectionModeOff = () => false;
 
-const isSelectionMode = createReducer(defaultIsSelectionMode, { SET_SELECTIONMODE_ON: setIsSelectionModeOn, SET_SELECTIONMODE_OFF: setIsSelectionModeOff });
+const isSelectionMode = createReducer(defaultSelectionMode, { SET_SELECTIONMODE_ON: setSelectionModeOn, SET_SELECTIONMODE_OFF: setSelectionModeOff });
 
 export default isSelectionMode;

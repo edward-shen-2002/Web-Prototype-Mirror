@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { connect } from "react-redux";
 
@@ -63,37 +63,29 @@ let RootHeaderCell = ({ style, value, columnCount, rowCount, handleSelectionArea
 
 RootHeaderCell = connect(null, mapHeaderDispatchToProps)(RootHeaderCell);
 
-const DataCell = ({ 
+const EditableCell = ({ 
   style, 
   value, 
-  column, 
-  row, 
 
-  handleSetActiveCell, 
+  columnIndex, 
+  rowIndex, 
 
   handleSelectionStart,
   handleSelectionOver
 }) => {
-  let className = "cell";
-
-  const handleClick = () => {
-    handleSetActiveCell({ row, column });
-  };
-
   const handleMouseDown = () => {
-    handleSelectionStart(column, row);
+    handleSelectionStart(columnIndex, rowIndex);
   };
 
   const handleMouseEnter = ({ buttons }) => {
-    if(buttons === 1) handleSelectionOver(column, row);
+    if(buttons === 1) handleSelectionOver(columnIndex, rowIndex);
   };
 
   return (
     <div 
-      className={className} 
+      className="cell" 
       style={style} 
       tabIndex="0"
-      onClick={handleClick} 
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}
     >
@@ -102,118 +94,13 @@ const DataCell = ({
   );
 };
 
-const EditCell = ({ 
-  style, 
-  value, 
-  column, 
-  row, 
-  handleChangeCellValue, 
-  handleSetActiveCell,
-  handleSetActiveCellNormal
-}) => {
-  const [ inputValue, setInputValue ] = useState(value ? value : "");
-
-  const handleInputChange = ({ target: { value } }) => setInputValue(value);
-
-  const handleBlur = () => {
-    handleSetActiveCell({ row, column });
-  };
-
-  const handleKeyDown = ({ key, target }) => {
-    if(key === "Enter") {
-      handleChangeCellValue(row, column, inputValue);
-      handleSetActiveCellNormal();
-    } else if(key === "Tab") {
-      // handleSetActiveCellNormal();
-    } else if(key === "Escape") {
-      handleSetActiveCellNormal();
-    }
-  };
-
-  return (
-    <input
-      className="cell cell--edit" 
-      style={style} 
-      type="text" 
-      value={inputValue} 
-      autoFocus 
-      onChange={handleInputChange}
-      onKeyDown={handleKeyDown}
-      onBlur={handleBlur}
-    />
-  );
-};
-
-const EditableCell = ({ 
-  style, 
-  value, 
-  activeCell, 
-  isActiveCellEditMode,
-
-  columnIndex, 
-  rowIndex, 
-
-  columnCount,
-  rowCount,
-
-  handleChangeCellValue,
-  handleSetActiveCellEdit, 
-  handleSetActiveCell,
-  handleSetActiveCellNormal,
-
-  handleSelectionStart,
-  handleSelectionOver
-}) => {
-  const { row, column } = activeCell;
-
-  const isActiveCell = columnIndex === column && rowIndex === row;
-  const isEditMode = isActiveCell && isActiveCellEditMode;
-
-  return (
-    isEditMode 
-    ? (
-      <EditCell 
-        style={style} 
-        value={value} 
-        column={columnIndex} 
-        row={rowIndex} 
-        handleChangeCellValue={handleChangeCellValue} 
-        handleSetActiveCell={handleSetActiveCell}
-        handleSetActiveCellNormal={handleSetActiveCellNormal}
-      />
-    )
-    : (
-      <DataCell 
-        style={style} 
-        value={value} 
-        column={columnIndex} 
-        activeCell={activeCell}
-        row={rowIndex} 
-        columnCount={columnCount}
-        rowCount={rowCount}
-        isActiveCell={isActiveCell}
-        handleSetActiveCell={handleSetActiveCell} 
-        handleSetActiveCellEdit={handleSetActiveCellEdit}
-        handleSelectionStart={handleSelectionStart}
-        handleSelectionOver={handleSelectionOver}
-      />
-    )
-  );
-};
-
 const Cell = ({ style, data, columnIndex, rowIndex }) => {
   const { 
     sheet, 
     activeCell, 
-    isActiveCellEditMode,
 
     columnCount,
     rowCount,
-
-    handleChangeCellValue, 
-    handleSetActiveCellEdit, 
-    handleSetActiveCell,
-    handleSetActiveCellNormal,
 
     handleSelectionStart,
     handleSelectionOver
@@ -232,14 +119,8 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         columnIndex={columnIndex} 
         rowIndex={rowIndex} 
         activeCell={activeCell} 
-        isActiveCellEditMode={isActiveCellEditMode}
         columnCount={columnCount}
         rowCount={rowCount}
-        handleSetActiveCell={handleSetActiveCell}
-        handleChangeCellValue={handleChangeCellValue}
-        handleSetActiveCellEdit={handleSetActiveCellEdit}
-        handleSetActiveCell={handleSetActiveCell}
-        handleSetActiveCellNormal={handleSetActiveCellNormal}
         handleSelectionStart={handleSelectionStart}
         handleSelectionOver={handleSelectionOver}
       />

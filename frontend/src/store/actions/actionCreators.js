@@ -1,13 +1,4 @@
 /**
- * UI state: data that represents how the UI is currently displayed
- */
-
-// // Navigation
-// export const OPEN_MAIN_NAV = "OPEN_MAIN_NAV";
-// export const CLOSE_MAIN_NAV = "CLOSE_MAIN_NAV";
-// export const TOGGLE_MAIN_NAV = "TOGGLE_MAIN_NAV";
-
-/**
  * App state: data that is specific to the application's behavior
  */
 
@@ -39,3 +30,6 @@ export const RESET_SELECTIONAREA = "RESET_SELECTIONAREA";
 
 export const SET_SELECTIONMDOE_ON = "SET_SELECTIONMODE_ON";
 export const SET_SELECTIONMODE_OFF = "SET_SELECTIONMODE_OFF";
+
+export const SET_EDITMODE_ON = "SET_EDITMODE_ON";
+export const SET_EDITMODE_OFF = "SET_EDITMODE_OFF";

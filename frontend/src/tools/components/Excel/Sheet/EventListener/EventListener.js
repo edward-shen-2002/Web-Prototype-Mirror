@@ -4,12 +4,19 @@ import { connect } from "react-redux";
 
 import { updateSelectionArea } from "actions/ui/excel/selectionArea";
 
-// ! Possible optimizations? Don't use component?
+import { updateActiveCell } from "actions/ui/excel/activeCell";
 
-const mapStateToProps = ({ ui: { excel: { selectionArea } } }) => ({ selectionArea });
+import { setSelectionModeOn, setSelectionModeOff } from "actions/ui/excel/isSelectionMode";
+
+// ! Possible optimizations? Don't use component? How would you keep ref?
+
+const mapStateToProps = ({ ui: { excel: { selectionArea, isSelectionMode } } }) => ({ selectionArea, isSelectionMode });
 
 const mapDispatchToProps = (dispatch) => ({
-  handleUpdateSelectionArea: (selectionArea) => dispatch(updateSelectionArea(selectionArea))
+  handleUpdateSelectionArea: (selectionArea) => dispatch(updateSelectionArea(selectionArea)),
+  handleSetIsSelectionModeOn: () => dispatch(setSelectionModeOn()),
+  handleSetIsSelectionModeOff: () => dispatch(setSelectionModeOff()),
+  handleUpdateActiveCell: (activeCell) => dispatch(updateActiveCell(activeCell))
 });
 
 let EventListener = ({ 
@@ -17,14 +24,22 @@ let EventListener = ({
   selectionArea, 
   columnCount,
   rowCount,
-  handleUpdateSelectionArea
+  isSelectionMode,
+  handleUpdateActiveCell,
+  handleUpdateSelectionArea,
+  handleSetIsSelectionModeOn,
+  handleSetIsSelectionModeOff
 }) => (
   <EventRedux 
     ref={eventListenerRef} 
     rowCount={rowCount}
     columnCount={columnCount}
     selectionArea={selectionArea}
+    isSelectionMode={isSelectionMode}
+    handleUpdateActiveCell={handleUpdateActiveCell}
     handleUpdateSelectionArea={handleUpdateSelectionArea}
+    handleSetIsSelectionModeOn={handleSetIsSelectionModeOn}
+    handleSetIsSelectionModeOff={handleSetIsSelectionModeOff}
   />
 );
 
@@ -71,6 +86,35 @@ class EventRedux extends PureComponent {
     x1++;
 
     if(x1 < columnCount) handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
+  }
+
+  startSelectionArea(selectionArea) {
+    const { isSelectionMode, handleUpdateSelectionArea, handleSetIsSelectionModeOn } = this.props;
+    if(!isSelectionMode) handleSetIsSelectionModeOn();
+
+    handleUpdateSelectionArea(selectionArea);
+  }
+
+  updateSelectionArea(selectionArea) {
+    const { isSelectionMode, handleUpdateSelectionArea } = this.props;
+    if(isSelectionMode) handleUpdateSelectionArea(selectionArea);
+  }
+
+  updateActiveCell(activeCell) {
+    const { handleUpdateActiveCell } = this.props;
+    handleUpdateActiveCell(activeCell);
+  }
+
+  setIsSelectionModeOn() {
+    const { isSelectionMode, handleSetIsSelectionModeOn } = this.props;
+
+    if(!isSelectionMode) handleSetIsSelectionModeOn();
+  }
+
+  setIsSelectionModeOff() {
+    const { isSelectionMode, handleSetIsSelectionModeOff } = this.props;
+
+    if(isSelectionMode) handleSetIsSelectionModeOff();
   }
 
   render() {

@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 
-import { connect } from "react-redux";
-
-import { updateSelectionArea } from "actions/ui/excel/selectionArea";
-import { setIsSelectionModeOn, setIsSelectionModeOff } from "actions/ui/excel/isSelectionMode";
-
 import AppBar from "./AppBar";
 import ToolBar from "./ToolBar";
 import FormulaBar from "./FormulaBar";
@@ -21,15 +16,6 @@ import {
 import "./Excel.scss";
 
 const Divider = () => <hr className="divider"/>;
-
-const initializeActiveCell = (sheet) => {
-  const activeCell = { row: 1, column: 1 };
-
-  const { row, column } = activeCell;
-  sheet.activeCell(row, column);
-
-  return activeCell;
-};
 
 const iniitalizeFreezePaneCounts = (sheet) => {
   const panes = sheet.panes();
@@ -48,20 +34,10 @@ const iniitalizeFreezePaneCounts = (sheet) => {
   return { freezeRowCount, freezeColumnCount };
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  handleUpdateSelectionArea: (selectionArea) => dispatch(updateSelectionArea(selectionArea)),
-  handleSetSelectionModeOn: () => dispatch(setIsSelectionModeOn()),
-  handleSetSelectionModeOff: () => dispatch(setIsSelectionModeOff())
-});
-
-let Excel = ({ 
+const Excel = ({ 
   name, 
   workbook, 
   returnLink, 
-
-  handleUpdateSelectionArea,
-  handleSetSelectionModeOn,
-  handleSetSelectionModeOff,
 
   handleSubmitName 
 }) => {
@@ -73,9 +49,6 @@ let Excel = ({
 
   const [ columnCount, setColumnCount ] = useState(DEFAULT_EXCEL_COLUMNS + 1);
   const [ rowCount, setRowCount ] = useState(DEFAULT_EXCEL_ROWS + 1);
-
-  const [ isActiveCellEditMode, setIsActiveCellEditMode ] = useState(false);
-  const [ activeCell, setActiveCell ] = useState(initializeActiveCell(sheet));
   
   const [ isMounted, setIsMounted ] = useState(false);
 
@@ -96,9 +69,6 @@ let Excel = ({
     setSheetIndex(index);
     setSheetValues(sheet.usedRange().value());
   };
-
-  const handleSetActiveCellEdit = () => setIsActiveCellEditMode(true);
-  const handleSetActiveCellNormal = () => setIsActiveCellEditMode(false);
 
   useEffect(() => {
     if(!isMounted) {
@@ -134,16 +104,6 @@ let Excel = ({
         freezeColumnCount={freezeColumnCount}
 
         sheetRef={sheetRef}
-
-        activeCell={activeCell}
-        isActiveCellEditMode={isActiveCellEditMode}
-        
-        handleUpdateSelectionArea={handleUpdateSelectionArea}
-        handleSetSelectionModeOn={handleSetSelectionModeOn}
-        handleSetSelectionModeOff={handleSetSelectionModeOff}
-
-        handleSetActiveCellEdit={handleSetActiveCellEdit}
-        handleSetActiveCellNormal={handleSetActiveCellNormal}
       />
       <Divider/>
       <SheetNavigator 
@@ -154,7 +114,5 @@ let Excel = ({
     </div>
   );
 };
-
-Excel = connect(null, mapDispatchToProps)(Excel);
 
 export default Excel;

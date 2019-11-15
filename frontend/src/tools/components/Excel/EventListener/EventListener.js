@@ -2,11 +2,11 @@ import React, { Fragment } from "react";
 
 import { connect } from "react-redux";
 
-import { setIsSelectionModeOff } from "actions/ui/excel/isSelectionMode";
+import { setSelectionModeOff } from "actions/ui/excel/isSelectionMode";
 
 const mapStateToProps = ({ ui: { excel: { isSelectionMode } } }) => ({ isSelectionMode });
 const mapDispatchToProps = (dispatch) => ({
-  handleSetSelectionModeOff: () => dispatch(setIsSelectionModeOff())
+  handleSetSelectionModeOff: () => dispatch(setSelectionModeOff())
 }); 
 
 let EventListener = ({ isSelectionMode, handleSetSelectionModeOff }) => {

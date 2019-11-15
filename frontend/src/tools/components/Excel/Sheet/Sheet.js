@@ -33,17 +33,7 @@ const Sheet = ({
   freezeRowCount,
   freezeColumnCount,
 
-  sheetRef,
-
-  activeCell,
-
-  isActiveCellEditMode,
-  handleSetActiveCellNormal,
-  handleSetActiveCellEdit,
-
-  handleChangeCellValue, 
-  handleUpdateSelectionArea, 
-  handleSetSelectionModeOn
+  sheetRef
 }) => {
   const topRightSelectionPaneRef = useRef(null);
   const topLeftSelectionPaneRef = useRef(null);
@@ -94,35 +84,24 @@ const Sheet = ({
     return width;
   };
 
-  const handleSetActiveCell = ({ row, column }) => {
-    sheet.activeCell(row, column);
-    handleUpdateSelectionArea({ x1: column , y1: row, x2: column, y2: row });
-  };
-
   // ! Consider header/column
   const handleSelectionStart = (x1, y1) => {
-    handleSetSelectionModeOn();
-    handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
+    sheet.activeCell(y1, x1);
+    eventListenerRef.current.updateActiveCell({ column: x1 , row: y1 });
+    eventListenerRef.current.startSelectionArea({ x1, y1, x2: x1, y2: y1 });
   };
 
   // ! Consider header/column
   const handleSelectionOver = (x2, y2) => {
-    handleUpdateSelectionArea({ x2, y2 });
+    eventListenerRef.current.updateSelectionArea({ x2, y2 });
   };
 
   const itemData = { 
     sheet, 
     values, 
-    activeCell, 
-    isActiveCellEditMode, 
     
     columnCount,
     rowCount,
-
-    handleSetActiveCell, 
-    handleChangeCellValue, 
-    handleSetActiveCellEdit, 
-    handleSetActiveCellNormal,
 
     handleSelectionStart,
     handleSelectionOver
