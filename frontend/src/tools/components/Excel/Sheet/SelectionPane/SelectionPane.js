@@ -57,45 +57,103 @@ export let TopLeftSelectionPane = ({
   sheetRef, 
   selectionRef, 
   selectionArea,
-  isSelectionMode
+  isSelectionMode,
+  freezeRowCount,
+  freezeColumnCount
 }) => {
   useEffect(() => {
     const { x1, y1, x2, y2 } = selectionArea;
-    
+
     const { current } = sheetRef;
-    if(current){
-      let selectionAreaWidth;
-      let selectionAreaHeight;
-      let selectionAreaStyle;
-      let left;
-      let top;
 
-      const { top: topStart, left: leftStart, width: widthStart, height: heightStart } = current._getItemStyle(y1, x1);
-      const { top: topEnd, left: leftEnd, width: widthEnd, height: heightEnd } = current._getItemStyle(y2, x2);
+    if(current) {
+      if(((y2 <= freezeRowCount || y1 <= freezeRowCount) && (x2 <= freezeColumnCount || x1 <= freezeColumnCount)) && current){
+        let borderStyle = isSelectionMode ? "dashed" : "solid";
+        let selectionAreaWidth;
+        let selectionAreaHeight;
+        let selectionAreaStyle;
+        let left;
+        let top;
+        let customSelectionStyle = {
+          borderTopWidth: STYLE_SELECTION_BORDER_WIDTH,
+          borderTopColor: STYLE_SELECTION_BORDER_COLOR,
+          borderTopStyle: borderStyle,
+          borderLeftWidth: STYLE_SELECTION_BORDER_WIDTH,
+          borderLeftColor: STYLE_SELECTION_BORDER_COLOR,
+          borderLeftStyle: borderStyle,
+        };
+  
+        const { top: topStart, left: leftStart, width: widthStart, height: heightStart } = current._getItemStyle(y1, x1);
+        const { top: topEnd, left: leftEnd, width: widthEnd, height: heightEnd } = current._getItemStyle(y2, x2);
+  
+        if(x1 <= x2) {
+          selectionAreaWidth = leftEnd + widthEnd - leftStart;
+          left = leftStart;
+        } else {
+          selectionAreaWidth = leftStart + widthStart - leftEnd;
+          left = leftEnd;
+        }
+  
+        if(y1 <= y2) {
+          selectionAreaHeight = topEnd + heightEnd - topStart;
+          top = topStart;
+        } else {
+          selectionAreaHeight = topStart + heightStart - topEnd;
+          top = topEnd;
+        }
+  
+        if(y1 > freezeRowCount || y2 > freezeRowCount) {
+          const minRowHeight = y1 < y2 ? topStart : topEnd;
 
-      if(x1 <= x2) {
-        selectionAreaWidth = leftEnd + widthEnd - leftStart;
-        left = leftStart;
-      } else {
-        selectionAreaWidth = leftStart + widthStart - leftEnd;
-        left = leftEnd;
-      }
+          const { top: topFrozenEnd, height: heightFrozenEnd } = current._getItemStyle(freezeRowCount, freezeColumnCount);
+  
+          selectionAreaHeight = topFrozenEnd + heightFrozenEnd - minRowHeight;
+        } else {
+          customSelectionStyle.borderBottomColor = STYLE_SELECTION_BORDER_COLOR;
+          customSelectionStyle.borderBottomWidth = STYLE_SELECTION_BORDER_WIDTH;
+          customSelectionStyle.borderBottomStyle = borderStyle;
+        }
+      
+        if(x1 > freezeColumnCount || x2 > freezeColumnCount) {
+          const minColumnWidth = x1 < x2 ? leftStart : leftEnd;
 
-      if(y1 <= y2) {
-        selectionAreaHeight = topEnd + heightEnd - topStart;
-        top = topStart;
-      } else {
-        selectionAreaHeight = topStart + heightStart - topEnd;
-        top = topEnd;
-      }
+          const { left: leftFrozenEnd, width: widthFrozenEnd } = current._getItemStyle(freezeRowCount, freezeColumnCount);
+  
+          selectionAreaWidth = leftFrozenEnd + widthFrozenEnd - minColumnWidth;
+        } else {
+          customSelectionStyle.borderRightColor = STYLE_SELECTION_BORDER_COLOR;
+          customSelectionStyle.borderRightWidth = STYLE_SELECTION_BORDER_WIDTH;
+          customSelectionStyle.borderRightStyle = borderStyle;
+        }
 
-      selectionAreaStyle = { left, top, width: selectionAreaWidth, height: selectionAreaHeight, display: null };
-
-      const activeCellStyle = { top: topStart, left: leftStart, width: widthStart, height: heightStart, display: null };
-
-      if(selectionRef) {
+        selectionAreaStyle = { 
+          left, 
+          top, 
+          width: selectionAreaWidth, 
+          height: selectionAreaHeight, 
+          display: null, 
+          ...customSelectionStyle 
+        };
+  
+        const activeCellStyle = { 
+          top: topStart, 
+          left: leftStart, 
+          width: widthStart, 
+          height: heightStart, 
+          display: null 
+        };
+  
         selectionRef.current.updateSelectionAreaStyle(selectionAreaStyle);
-        selectionRef.current.updateActiveCellStyle(activeCellStyle);
+
+        if(y1 <= freezeRowCount && x1 <= freezeColumnCount) {
+          selectionRef.current.updateActiveCellStyle(activeCellStyle);
+        } else {
+          selectionRef.current.resetActiveCell();
+        }
+      } else {
+        selectionRef.current.resetSelectionArea();
+
+        if(x1 > freezeColumnCount || y1 > freezeRowCount) selectionRef.current.resetActiveCell();
       }
     }
   });
@@ -179,9 +237,22 @@ export let TopRightSelectionPane = ({
           customSelectionStyle.borderLeftStyle = borderStyle;
         }
 
-        selectionAreaStyle = { left, top, width: selectionAreaWidth, height: selectionAreaHeight, display: null, ...customSelectionStyle };
+        selectionAreaStyle = { 
+          left, 
+          top, 
+          width: selectionAreaWidth, 
+          height: selectionAreaHeight, 
+          display: null, 
+          ...customSelectionStyle 
+        };
   
-        const activeCellStyle = { top: topStart, left: leftStart, width: widthStart, height: heightStart, display: null };
+        const activeCellStyle = { 
+          top: topStart, 
+          left: leftStart, 
+          width: widthStart, 
+          height: heightStart, 
+          display: null 
+        };
   
         selectionRef.current.updateSelectionAreaStyle(selectionAreaStyle);
 
@@ -364,20 +435,24 @@ export let BottomRightSelectionPane = ({
       }
 
       selectionAreaStyle = { 
-        left, 
-        top, 
-        width: 
-        selectionAreaWidth, 
-        height: 
-        selectionAreaHeight, 
-        borderWidth: "1px",
-        borderColor: "rgba(75, 135, 255, 0.95)",
+        left: left, 
+        top: top, 
+        width: selectionAreaWidth, 
+        height: selectionAreaHeight, 
+        borderWidth: STYLE_SELECTION_BORDER_WIDTH,
+        borderColor: STYLE_SELECTION_BORDER_COLOR,
         borderStyle: isSelectionMode ? "dashed" : "solid",
         display: null,
         zIndex: 100
       };
 
-      const activeCellStyle = { top: topStart, left: leftStart, width: widthStart, height: heightStart, display: null };
+      const activeCellStyle = { 
+        top: topStart, 
+        left: leftStart, 
+        width: widthStart, 
+        height: heightStart, 
+        display: null 
+      };
 
       if(selectionRef) {
         selectionRef.current.updateSelectionAreaStyle(selectionAreaStyle);

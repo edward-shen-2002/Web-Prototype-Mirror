@@ -172,13 +172,13 @@ const Sheet = ({
             rowCount={rowCount}
             rowHeight={rowHeight}
             width={width}
-            // extraTopLeftElement={(
-            //   <TopLeftSelectionPane
-            //     key="top-left-selection-pane"
-            //     selectionRef={topLeftSelectionPaneRef}
-            //     {...commonSelectionPaneProps}
-            //   />
-            // )}
+            extraTopLeftElement={(
+              <TopLeftSelectionPane
+                key="top-left-selection-pane"
+                selectionRef={topLeftSelectionPaneRef}
+                {...commonSelectionPaneProps}
+              />
+            )}
             extraTopRightElement={(
               <TopRightSelectionPane
                 key="top-right-selection-pane"
