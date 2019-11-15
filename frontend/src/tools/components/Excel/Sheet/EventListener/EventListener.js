@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 
 import { updateSelectionArea } from "actions/ui/excel/selectionArea";
 
+// ! Possible optimizations? Don't use component?
+
 const mapStateToProps = ({ ui: { excel: { selectionArea } } }) => ({ selectionArea });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -30,8 +32,6 @@ EventListener = connect(mapStateToProps, mapDispatchToProps)(EventListener);
 
 export default EventListener;
 
-
-// TODO : Scroll into view once you reach the end of the end of the view scope
 class EventRedux extends PureComponent {
   constructor(props) {
     super(props);

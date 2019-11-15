@@ -35,7 +35,7 @@
     "react-select": "^3.0.8",
     "react-sortable-tree": "^2.6.2",
     "react-virtualized-auto-sizer": "^1.0.2",
-    "react-window": "https://github.com/greylemon/react-window/",
+    "react-window": "https://github.com/greylemon/react-window",
     "reactstrap": "^8.0.1",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",

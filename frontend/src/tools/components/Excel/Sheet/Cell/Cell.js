@@ -8,45 +8,49 @@ import { columnNumberToName } from "xlsx-populate/lib/addressConverter";
 
 import "./Cell.scss";
 
-const mapDispatchToProps = (dispatch) => ({
-  handleSelectionAreaAll: (selectionArea) => dispatch(updateSelectionArea(selectionArea))
+// ! Selection algorithms is a bit too complicated and time consuming to implement. Leave for now.
+
+const mapHeaderDispatchToProps = (dispatch) => ({
+  handleSelectionArea: (selectionArea) => dispatch(updateSelectionArea(selectionArea))
 });
 
-const mapSelectionAreaStateToProps = ({ ui: { excel: { selectionArea } } }) => ({ selectionArea });
+const mapSelectionAreaStateToProps = ({ ui: { excel: { selectionArea, isSelectionMode } } }) => ({ selectionArea });
 
-let RowHeaderCell = ({ style, value, row, selectionArea }) => {
+let RowHeaderCell = ({ style, value, row, columnCount, selectionArea, handleSelectionArea }) => {
   const { y1, y2 } = selectionArea;
 
   const isActiveHeader = (y1 >= row && row >= y2) || (y2 >= row && row >= y1);
   const className = `cell cell--positionIndicator ${isActiveHeader ? "cell--positionIndicator-active" : "cell--positionIndicator-inactive"}`;
 
+  const handleClick = () => handleSelectionArea({ x1: 1, y1: row, x2: columnCount - 1, y2: row });
+
   return (
-    <div className={className} style={style}>
+    <div className={className} style={style} onClick={handleClick}>
       {value}
     </div>
   );
 };
 
-RowHeaderCell = connect(mapSelectionAreaStateToProps)(RowHeaderCell);
+RowHeaderCell = connect(mapSelectionAreaStateToProps, mapHeaderDispatchToProps)(RowHeaderCell);
 
-let ColumnHeaderCell = ({ style, value, column, selectionArea }) => {
-  const { x1, x2 } = selectionArea;
-
+let ColumnHeaderCell = ({ style, value, column, rowCount, selectionArea, handleSelectionArea }) => {
+  const { x1, x2 } = selectionArea;  
   const isActiveHeader = (x1 >= column && column >= x2) || (x2 >= column && column >= x1);
-
   const className = `cell cell--positionIndicator ${isActiveHeader ? "cell--positionIndicator-active" : "cell--positionIndicator-inactive"}`;
+  
+  const handleClick = () => handleSelectionArea({ x1: column, y1: 1, x2: column, y2: rowCount - 1 });
 
   return (
-    <div className={className} style={style}>
+    <div className={className} style={style} onClick={handleClick}>
       {value}
     </div>
   );
 };
 
-ColumnHeaderCell = connect(mapSelectionAreaStateToProps)(ColumnHeaderCell);
+ColumnHeaderCell = connect(mapSelectionAreaStateToProps, mapHeaderDispatchToProps)(ColumnHeaderCell);
 
-let RootHeaderCell = ({ style, value, columnCount, rowCount, handleSelectionAreaAll }) => {
-  const handleClick = () => handleSelectionAreaAll({ x1: 1, y1: 1, x2: columnCount - 1, y2: rowCount - 1 });
+let RootHeaderCell = ({ style, value, columnCount, rowCount, handleSelectionArea }) => {
+  const handleClick = () => handleSelectionArea({ x1: 1, y1: 1, x2: columnCount - 1, y2: rowCount - 1 });
 
   const className = "cell cell--positionIndicator";
 
@@ -57,7 +61,7 @@ let RootHeaderCell = ({ style, value, columnCount, rowCount, handleSelectionArea
   );
 };
 
-RootHeaderCell = connect(null, mapDispatchToProps)(RootHeaderCell);
+RootHeaderCell = connect(null, mapHeaderDispatchToProps)(RootHeaderCell);
 
 const DataCell = ({ 
   style, 
@@ -257,6 +261,7 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
           style={style} 
           value={value}
           column={columnIndex}
+          rowCount={rowCount}
         />
       );
     } else if(columnIndex === 0 && rowIndex > 0) {
@@ -267,6 +272,7 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
           style={style} 
           value={value}
           row={rowIndex}
+          columnCount={columnCount}
         />
       );
     } else {

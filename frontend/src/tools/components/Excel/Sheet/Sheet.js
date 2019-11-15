@@ -9,7 +9,7 @@ import { arrowKeyRegex } from "tools/regex";
 import Cell from "./Cell";
 import EventListener from "./EventListener";
 
-import SelectionPaneListener from "./SelectionPane";
+import { BottomRightSelectionPane, TopRightSelectionPane, TopLeftSelectionPane, BottomLeftSelectionPane } from "./SelectionPane";
 
 import { 
   DEFAULT_EXCEL_ROW_HEIGHT,
@@ -46,8 +46,8 @@ const Sheet = ({
   handleUpdateSelectionArea, 
   handleSetSelectionModeOn
 }) => {
-  const topLeftSelectionPaneRef = useRef(null);
   const topRightSelectionPaneRef = useRef(null);
+  const topLeftSelectionPaneRef = useRef(null);
   const bottomLeftSelectionPaneRef = useRef(null);
   const bottomRightSelectionPaneRef = useRef(null);
 
@@ -58,6 +58,8 @@ const Sheet = ({
     
     if(index === 0) {
       height = DEFAULT_EXCEL_ROW_HEIGHT_HEADER;
+    } else if(index === 1) {
+      height = 100;
     } else {
       const sheetRow = sheet.row(index);
 
@@ -144,10 +146,14 @@ const Sheet = ({
     }
   };
 
-  const tableFreezeRowCount = freezeRowCount + 1;
-  const tableFreezeColumnCount = freezeColumnCount + 1;
+  const tableFreezeRowCount = freezeRowCount + 3;
+  const tableFreezeColumnCount = freezeColumnCount + 3;
 
-  const commonSelectionPaneProps = { sheetRef, tableFreezeRowCount, tableFreezeColumnCount };
+  freezeRowCount = freezeRowCount + 2;
+
+  freezeColumnCount = freezeColumnCount + 2;
+
+  const commonSelectionPaneProps = { sheetRef, freezeRowCount, freezeColumnCount };
 
   return (
     <div className="sheet"
@@ -166,11 +172,32 @@ const Sheet = ({
             rowCount={rowCount}
             rowHeight={rowHeight}
             width={width}
+            // extraTopLeftElement={(
+            //   <TopLeftSelectionPane
+            //     key="top-left-selection-pane"
+            //     selectionRef={topLeftSelectionPaneRef}
+            //     {...commonSelectionPaneProps}
+            //   />
+            // )}
+            extraTopRightElement={(
+              <TopRightSelectionPane
+                key="top-right-selection-pane"
+                selectionRef={topRightSelectionPaneRef}
+                {...commonSelectionPaneProps}
+              />  
+            )}
+            extraBottomLeftElement={(
+              <BottomLeftSelectionPane 
+                key="bottom-left-selection-pane" 
+                selectionRef={bottomLeftSelectionPaneRef} 
+                {...commonSelectionPaneProps}
+              />
+            )}
             extraBottomRightElement={(
-              <SelectionPaneListener 
+              <BottomRightSelectionPane 
                 key="bottom-right-selection-pane" 
                 selectionRef={bottomRightSelectionPaneRef} 
-                sheetRef={sheetRef}
+                {...commonSelectionPaneProps}
               />
             )}
           >

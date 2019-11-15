@@ -10581,9 +10581,9 @@ react-virtualized@^9.19.1:
     prop-types "^15.6.0"
     react-lifecycles-compat "^3.0.4"
 
-"react-window@https://github.com/greylemon/react-window/":
-  version "1.8.5"
-  resolved "https://github.com/greylemon/react-window/#10f8f41e28bff6f09946e355696fb67732ef252e"
+"react-window@https://github.com/greylemon/react-window":
+  version "1.8.2"
+  resolved "https://github.com/greylemon/react-window#96635d7129dc2bd4820ad31248eaaa06d937add8"
   dependencies:
     "@babel/runtime" "^7.0.0"
     memoize-one ">=3.1.1 <6"
