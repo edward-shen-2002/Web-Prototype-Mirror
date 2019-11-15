@@ -14,7 +14,7 @@ const mapHeaderDispatchToProps = (dispatch) => ({
   handleSelectionArea: (selectionArea) => dispatch(updateSelectionArea(selectionArea))
 });
 
-const mapSelectionAreaStateToProps = ({ ui: { excel: { selectionArea, isSelectionMode } } }) => ({ selectionArea });
+const mapSelectionAreaStateToProps = ({ ui: { excel: { selectionArea } } }) => ({ selectionArea });
 
 let RowHeaderCell = ({ style, value, row, columnCount, selectionArea, handleSelectionArea }) => {
   const { y1, y2 } = selectionArea;
@@ -69,19 +69,12 @@ const DataCell = ({
   column, 
   row, 
 
-  isActiveCell, 
   handleSetActiveCell, 
-  handleSetActiveCellEdit,
 
   handleSelectionStart,
   handleSelectionOver
 }) => {
   let className = "cell";
-  
-  const handleDoubleClick = () => {
-    if(!isActiveCell) handleSetActiveCell({ row, column });
-    handleSetActiveCellEdit();
-  };
 
   const handleClick = () => {
     handleSetActiveCell({ row, column });
@@ -91,8 +84,8 @@ const DataCell = ({
     handleSelectionStart(column, row);
   };
 
-  const handleMouseEnter = () => {
-    handleSelectionOver(column, row);
+  const handleMouseEnter = ({ buttons }) => {
+    if(buttons === 1) handleSelectionOver(column, row);
   };
 
   return (
@@ -101,7 +94,6 @@ const DataCell = ({
       style={style} 
       tabIndex="0"
       onClick={handleClick} 
-      onDoubleClick={handleDoubleClick}
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}
     >

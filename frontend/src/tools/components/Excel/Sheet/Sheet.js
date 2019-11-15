@@ -29,7 +29,6 @@ const Sheet = ({
   values, 
   columnCount,
   rowCount,
-  isSelectionMode, 
 
   freezeRowCount,
   freezeColumnCount,
@@ -102,13 +101,13 @@ const Sheet = ({
 
   // ! Consider header/column
   const handleSelectionStart = (x1, y1) => {
-    if(!isSelectionMode) handleSetSelectionModeOn();
+    handleSetSelectionModeOn();
     handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
   };
 
   // ! Consider header/column
   const handleSelectionOver = (x2, y2) => {
-    if(isSelectionMode) handleUpdateSelectionArea({ x2, y2 });
+    handleUpdateSelectionArea({ x2, y2 });
   };
 
   const itemData = { 
@@ -119,7 +118,6 @@ const Sheet = ({
     
     columnCount,
     rowCount,
-    isSelectionMode,
 
     handleSetActiveCell, 
     handleChangeCellValue, 

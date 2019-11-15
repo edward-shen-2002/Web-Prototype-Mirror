@@ -10,6 +10,7 @@ import ToolBar from "./ToolBar";
 import FormulaBar from "./FormulaBar";
 import Sheet from "./Sheet";
 import SheetNavigator from "./SheetNavigator";
+import EventListener from "./EventListener";
 
 import { 
   DEFAULT_EXCEL_ROWS, 
@@ -47,8 +48,6 @@ const iniitalizeFreezePaneCounts = (sheet) => {
   return { freezeRowCount, freezeColumnCount };
 };
 
-const mapStateToProps = ({ ui: { excel: { isSelectionMode } } }) => ({ isSelectionMode });
-
 const mapDispatchToProps = (dispatch) => ({
   handleUpdateSelectionArea: (selectionArea) => dispatch(updateSelectionArea(selectionArea)),
   handleSetSelectionModeOn: () => dispatch(setIsSelectionModeOn()),
@@ -59,7 +58,6 @@ let Excel = ({
   name, 
   workbook, 
   returnLink, 
-  isSelectionMode,
 
   handleUpdateSelectionArea,
   handleSetSelectionModeOn,
@@ -108,11 +106,7 @@ let Excel = ({
       setColumnCount(_maxColumnNumber + 1);
       setRowCount(_maxRowNumber + 1);
       setIsMounted(true);
-
     }
-    window.onmouseup = () => {
-      if(isSelectionMode) handleSetSelectionModeOff();
-    };
   });
 
   const { freezeRowCount, freezeColumnCount } = frozenPane;
@@ -141,8 +135,6 @@ let Excel = ({
 
         sheetRef={sheetRef}
 
-        isSelectionMode={isSelectionMode}
-
         activeCell={activeCell}
         isActiveCellEditMode={isActiveCellEditMode}
         
@@ -158,10 +150,11 @@ let Excel = ({
         sheetIndex={sheetIndex} 
         handleChangeSheet={handleChangeSheet}
       />
+      <EventListener/>
     </div>
   );
 };
 
-Excel = connect(mapStateToProps, mapDispatchToProps)(Excel);
+Excel = connect(null, mapDispatchToProps)(Excel);
 
 export default Excel;

@@ -33,7 +33,7 @@ class SelectionPane extends Component {
 
   resetActiveCell() {
     if(this.state.activeCellStyle.width || this.state.activeCellStyle.height) {
-      this.setState({ activeCellStyle: { top: 0, width: 0, height: 0 } });
+      this.setState({ activeCellStyle: { display: "none", top: 0, left: 0, width: 0, height: 0 } });
     }
   }
 
