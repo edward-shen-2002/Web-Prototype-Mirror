@@ -14,8 +14,7 @@ class SelectionPane extends Component {
     this.state = {
       selectionAreaStyle: { display: "none", left: 0, top: 0, width: 0, height: 0 },
       activeCellStyle: { display: "none", left: 0, top: 0, width: 0, height: 0 },
-      isEditMode: false,
-      activeCellRef: null
+      isEditMode: false
     };
   }
 
@@ -37,10 +36,6 @@ class SelectionPane extends Component {
     if(this.state.activeCellStyle.width || this.state.activeCellStyle.height) {
       this.setState({ isEditMode: false, activeCellStyle: { display: "none", top: 0, left: 0, width: 0, height: 0 } });
     }
-  }
-
-  setActiveCellRef(activeCellRef) {
-    this.setState({ activeCellRef });
   }
   
   render() {

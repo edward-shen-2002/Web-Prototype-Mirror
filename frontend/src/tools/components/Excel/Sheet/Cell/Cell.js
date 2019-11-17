@@ -75,8 +75,6 @@ const EditableCell = ({
 
   handleDoubleClickEditableCell
 }) => {
-  const cellRef = useRef(null);
-
   const handleMouseDown = ({ buttons }) => {
     if(buttons === 1) handleSelectionStart(columnIndex, rowIndex);
   };
@@ -86,15 +84,13 @@ const EditableCell = ({
   };
 
   const handleDoubleClick = () => {
-    handleDoubleClickEditableCell(cellRef);
+    handleDoubleClickEditableCell();
   };
 
   return (
     <div 
-      ref={cellRef}
       className="cell" 
       style={style} 
-      tabIndex="0"
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}
       onDoubleClick={handleDoubleClick}
@@ -106,8 +102,7 @@ const EditableCell = ({
 
 const Cell = ({ style, data, columnIndex, rowIndex }) => {
   const { 
-    sheet, 
-    activeCell, 
+    sheet,
 
     columnCount,
     rowCount,
@@ -128,11 +123,10 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
       <EditableCell 
         style={style} 
         value={value} 
+
         columnIndex={columnIndex} 
         rowIndex={rowIndex} 
-        activeCell={activeCell} 
-        columnCount={columnCount}
-        rowCount={rowCount}
+
         handleSelectionStart={handleSelectionStart}
         handleSelectionOver={handleSelectionOver}
 

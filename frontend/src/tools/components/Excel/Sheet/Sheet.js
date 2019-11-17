@@ -99,9 +99,8 @@ const Sheet = ({
     eventListenerRef.current.updateSelectionArea({ x2, y2 });
   };
 
-  const handleDoubleClickEditableCell = (cellRef) => {
+  const handleDoubleClickEditableCell = () => {
     eventListenerRef.current.setEditModeOn();
-    bottomRightSelectionPaneRef.current.setActiveCellRef(cellRef);
   };
 
   const itemData = { 
@@ -117,7 +116,9 @@ const Sheet = ({
     handleSelectionOver
   };
 
-  const handleKeyDown = ({ key }) => {
+  const handleKeyDown = (event) => {
+    const { key } = event;
+
     if(key === "ArrowUp") {
       eventListenerRef.current.moveUp();
     } else if(key === "ArrowDown" || key === "Enter") {
@@ -137,8 +138,19 @@ const Sheet = ({
       || key === "Tab"
     ) {
       event.preventDefault();
+      // event.stopPropagation();
       eventListenerRef.current.setEditModeOff();
     }
+  };
+
+  const handleKeyDownCapture = (event) => {
+    const { key } = event;
+    console.log(key)
+
+    if(key === "Tab") {
+      event.preventDefault();
+      event.stopPropagation();
+    };
   };
 
   const tableFreezeRowCount = freezeRowCount + 3;
@@ -154,7 +166,9 @@ const Sheet = ({
     <div 
       ref={sheetContainerRef}
       className="sheet"
+      tabIndex="0"
       onKeyDown={handleKeyDown}
+      onKeyDownCapture={handleKeyDownCapture}
     >
       <AutoSizer>
         {({ height, width }) => (
