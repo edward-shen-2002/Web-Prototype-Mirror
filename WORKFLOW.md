@@ -1,23 +1,36 @@
-# Business Workflow
+# Business Model
 
 ## Workflow
 
-* Admin creates package; assigns reviewers/approvers, organizations, ...
-* Organization Package gets created with copied workflow parameters from package
-* Manager assigns editors, which is recorded to Organization Package
-* Editors can edit Organization Package within the editting period
-* After the edit period comes the reviewing period
-* ...
+### Templates
 
-## Design Decisions
+    i) Template managers create a template 
+    ii) Then, add categories/attributes and prepolation parameters
 
-* The managers assign editors because they are more familiar with the employees in the organization
-* Organization Package is for submission and workflow records
-* ...
+### Packages
 
-## Issues
+    i) Package managers use the template and assigns organizations and other parameters for the prepoulation data
+    ii) Deadlines are set for the edit, review, and approval phases
+    iii) Validation parameters are also set
+    iv) Once the package is published, prepoulation parameters will be completed and the data will be prepoulated from the master table
 
-* How does organization cluster admin (LHIN) work? Should admin roles be different from those roles?
-  * New role scope would be something like: user manager - one of [ admin, LHIN, organization ]
-  * Possibly define a parameter called adminClass, which represents the level of admin capabilities that users can have... Front-end would need to change
-  * Or roles can be of the form { ROLE_1 : scope (one of [ "N/A", "admin", "lhin", "manager", organization ]) }. The given sample scope may not apply to all roles
+### Package Edit
+
+    i) Editors can edit the package workbooks only in the edit phase
+    ii) If they wish, they can request an extension, which will be forwarded to the package manager
+    iii) On submission, validation will be processed
+    iv) On successful validation, the package will be submitted and sent to the reviewer
+
+### Package Review
+
+    i) Reviewers can review immediately after the submission
+    ii) On unsatisfactory submissions, the package and review notes are sent back to the editors
+    iii) On successful submission, the package and review notes are sent to the next phase, approval
+
+### Package Approval
+
+    i) Approvers/package managers can approve, reject, or edit packages at any given time
+    ii) A rejected package is sent back for edit/?review
+    iii) On approval, the master value will be populated with the package workbook values
+
+## Master Value Table
