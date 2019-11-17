@@ -8,15 +8,22 @@ import { updateActiveCell } from "actions/ui/excel/activeCell";
 
 import { setSelectionModeOn, setSelectionModeOff } from "actions/ui/excel/isSelectionMode";
 
+import { setEditModeOn, setEditModeOff } from "actions/ui/excel/isEditMode";
+
 // ! Possible optimizations? Don't use component? How would you keep ref?
 
-const mapStateToProps = ({ ui: { excel: { selectionArea, isSelectionMode } } }) => ({ selectionArea, isSelectionMode });
+const mapStateToProps = ({ ui: { excel: { selectionArea, isSelectionMode, isEditMode } } }) => ({ selectionArea, isSelectionMode, isEditMode });
 
 const mapDispatchToProps = (dispatch) => ({
   handleUpdateSelectionArea: (selectionArea) => dispatch(updateSelectionArea(selectionArea)),
-  handleSetIsSelectionModeOn: () => dispatch(setSelectionModeOn()),
-  handleSetIsSelectionModeOff: () => dispatch(setSelectionModeOff()),
-  handleUpdateActiveCell: (activeCell) => dispatch(updateActiveCell(activeCell))
+  
+  handleSetSelectionModeOn: () => dispatch(setSelectionModeOn()),
+  handleSetSelectionModeOff: () => dispatch(setSelectionModeOff()),
+
+  handleUpdateActiveCell: (activeCell) => dispatch(updateActiveCell(activeCell)),
+
+  handleSetEditModeOn: () => dispatch(setEditModeOn()),
+  handleSetEditModeOff: () => dispatch(setEditModeOff())
 });
 
 let EventListener = ({ 
@@ -25,10 +32,18 @@ let EventListener = ({
   columnCount,
   rowCount,
   isSelectionMode,
+
+  isEditMode,
+
   handleUpdateActiveCell,
+
   handleUpdateSelectionArea,
-  handleSetIsSelectionModeOn,
-  handleSetIsSelectionModeOff
+
+  handleSetSelectionModeOn,
+  handleSetSelectionModeOff,
+
+  handleSetEditModeOn,
+  handleSetEditModeOff
 }) => (
   <EventRedux 
     ref={eventListenerRef} 
@@ -36,10 +51,16 @@ let EventListener = ({
     columnCount={columnCount}
     selectionArea={selectionArea}
     isSelectionMode={isSelectionMode}
+    isEditMode={isEditMode}
+
     handleUpdateActiveCell={handleUpdateActiveCell}
     handleUpdateSelectionArea={handleUpdateSelectionArea}
-    handleSetIsSelectionModeOn={handleSetIsSelectionModeOn}
-    handleSetIsSelectionModeOff={handleSetIsSelectionModeOff}
+    
+    handleSetSelectionModeOn={handleSetSelectionModeOn}
+    handleSetSelectionModeOff={handleSetSelectionModeOff}
+
+    handleSetEditModeOn={handleSetEditModeOn}
+    handleSetEditModeOff={handleSetEditModeOff}
   />
 );
 
@@ -89,8 +110,8 @@ class EventRedux extends PureComponent {
   }
 
   startSelectionArea(selectionArea) {
-    const { isSelectionMode, handleUpdateSelectionArea, handleSetIsSelectionModeOn } = this.props;
-    if(!isSelectionMode) handleSetIsSelectionModeOn();
+    const { isSelectionMode, handleUpdateSelectionArea, handleSetSelectionModeOn } = this.props;
+    if(!isSelectionMode) handleSetSelectionModeOn();
 
     handleUpdateSelectionArea(selectionArea);
   }
@@ -106,15 +127,26 @@ class EventRedux extends PureComponent {
   }
 
   setIsSelectionModeOn() {
-    const { isSelectionMode, handleSetIsSelectionModeOn } = this.props;
+    const { isSelectionMode, handleSetSelectionModeOn } = this.props;
 
-    if(!isSelectionMode) handleSetIsSelectionModeOn();
+    if(!isSelectionMode) handleSetSelectionModeOn();
   }
 
   setIsSelectionModeOff() {
-    const { isSelectionMode, handleSetIsSelectionModeOff } = this.props;
+    const { isSelectionMode, handleSetSelectionModeOff } = this.props;
 
-    if(isSelectionMode) handleSetIsSelectionModeOff();
+    if(isSelectionMode) handleSetSelectionModeOff();
+  }
+
+  setEditModeOn() {
+    const { isEditMode, handleSetEditModeOn } = this.props;
+    if(!isEditMode) handleSetEditModeOn();
+  }
+
+  setEditModeOff() {
+    const { isEditMode, handleSetEditModeOff } = this.props;
+
+    if(isEditMode) handleSetEditModeOff();
   }
 
   render() {

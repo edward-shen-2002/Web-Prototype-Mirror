@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 
 import { connect } from "react-redux";
 
@@ -71,23 +71,33 @@ const EditableCell = ({
   rowIndex, 
 
   handleSelectionStart,
-  handleSelectionOver
+  handleSelectionOver,
+
+  handleDoubleClickEditableCell
 }) => {
-  const handleMouseDown = () => {
-    handleSelectionStart(columnIndex, rowIndex);
+  const cellRef = useRef(null);
+
+  const handleMouseDown = ({ buttons }) => {
+    if(buttons === 1) handleSelectionStart(columnIndex, rowIndex);
   };
 
   const handleMouseEnter = ({ buttons }) => {
     if(buttons === 1) handleSelectionOver(columnIndex, rowIndex);
   };
 
+  const handleDoubleClick = () => {
+    handleDoubleClickEditableCell(cellRef);
+  };
+
   return (
     <div 
+      ref={cellRef}
       className="cell" 
       style={style} 
       tabIndex="0"
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}
+      onDoubleClick={handleDoubleClick}
     >
       {value}
     </div>
@@ -103,7 +113,9 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
     rowCount,
 
     handleSelectionStart,
-    handleSelectionOver
+    handleSelectionOver,
+
+    handleDoubleClickEditableCell
   } = data;
   
   let value;
@@ -123,6 +135,8 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         rowCount={rowCount}
         handleSelectionStart={handleSelectionStart}
         handleSelectionOver={handleSelectionOver}
+
+        handleDoubleClickEditableCell={handleDoubleClickEditableCell}
       />
     );
   } else {

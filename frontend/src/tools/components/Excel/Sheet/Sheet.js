@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 
 import { VariableSizeGrid } from "react-window";
 
@@ -41,6 +41,7 @@ const Sheet = ({
   const bottomRightSelectionPaneRef = useRef(null);
 
   const eventListenerRef = useRef(null);
+  const sheetContainerRef = useRef(null);
 
   const rowHeight = (index) => {
     let height;
@@ -87,13 +88,20 @@ const Sheet = ({
   // ! Consider header/column
   const handleSelectionStart = (x1, y1) => {
     sheet.activeCell(y1, x1);
+    eventListenerRef.current.setEditModeOff();
     eventListenerRef.current.updateActiveCell({ column: x1 , row: y1 });
     eventListenerRef.current.startSelectionArea({ x1, y1, x2: x1, y2: y1 });
   };
 
   // ! Consider header/column
   const handleSelectionOver = (x2, y2) => {
+    eventListenerRef.current.setEditModeOff();
     eventListenerRef.current.updateSelectionArea({ x2, y2 });
+  };
+
+  const handleDoubleClickEditableCell = (cellRef) => {
+    eventListenerRef.current.setEditModeOn();
+    bottomRightSelectionPaneRef.current.setActiveCellRef(cellRef);
   };
 
   const itemData = { 
@@ -103,23 +111,33 @@ const Sheet = ({
     columnCount,
     rowCount,
 
+    handleDoubleClickEditableCell,
+
     handleSelectionStart,
     handleSelectionOver
   };
 
   const handleKeyDown = ({ key }) => {
-    if(arrowKeyRegex.test(key)) {
+    if(key === "ArrowUp") {
+      eventListenerRef.current.moveUp();
+    } else if(key === "ArrowDown" || key === "Enter") {
+      eventListenerRef.current.moveDown();
+    } else if(key === "ArrowLeft") {
+      eventListenerRef.current.moveLeft();
+    } else if(key === "ArrowRight" || key === "Tab") {
+      eventListenerRef.current.moveRight();
+    } 
+    
+    if(
+      key === "ArrowUp"
+      || key === "ArrowDown"
+      || key === "ArrowLeft"
+      || key === "ArrowRight"
+      || key === "Enter"
+      || key === "Tab"
+    ) {
       event.preventDefault();
-
-      if(key === "ArrowUp") {
-        eventListenerRef.current.moveUp();
-      } else if(key === "ArrowDown") {
-        eventListenerRef.current.moveDown();
-      } else if(key === "ArrowLeft") {
-        eventListenerRef.current.moveLeft();
-      } else {
-        eventListenerRef.current.moveRight();
-      }
+      eventListenerRef.current.setEditModeOff();
     }
   };
 
@@ -130,10 +148,12 @@ const Sheet = ({
 
   freezeColumnCount = freezeColumnCount + 2;
 
-  const commonSelectionPaneProps = { sheetRef, freezeRowCount, freezeColumnCount };
+  const commonSelectionPaneProps = { sheetRef, sheetContainerRef, freezeRowCount, freezeColumnCount };
 
   return (
-    <div className="sheet"
+    <div 
+      ref={sheetContainerRef}
+      className="sheet"
       onKeyDown={handleKeyDown}
     >
       <AutoSizer>
@@ -182,7 +202,12 @@ const Sheet = ({
           </VariableSizeGrid>
         )}
       </AutoSizer>
-      <EventListener eventListenerRef={eventListenerRef} columnCount={columnCount} rowCount={rowCount}/>
+      <EventListener 
+        eventListenerRef={eventListenerRef} 
+        columnCount={columnCount} 
+        rowCount={rowCount}
+        sheetContainerRef={sheetContainerRef}
+      />
     </div>
   );
 };

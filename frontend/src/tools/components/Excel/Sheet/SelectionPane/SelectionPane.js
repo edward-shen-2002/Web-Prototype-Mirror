@@ -12,8 +12,10 @@ class SelectionPane extends Component {
     super(props);
 
     this.state = {
-      selectionAreaStyle: { left: 0, top: 0, width: 0, height: 0 },
-      activeCellStyle: { left: 0, top: 0, width: 0, height: 0 }
+      selectionAreaStyle: { display: "none", left: 0, top: 0, width: 0, height: 0 },
+      activeCellStyle: { display: "none", left: 0, top: 0, width: 0, height: 0 },
+      isEditMode: false,
+      activeCellRef: null
     };
   }
 
@@ -21,43 +23,51 @@ class SelectionPane extends Component {
     this.setState({ selectionAreaStyle });
   }
   
-  updateActiveCellStyle(activeCellStyle) {
-    this.setState({ activeCellStyle });
+  updateActiveCellStyle(activeCellStyle, isEditMode) {    
+    this.setState({ activeCellStyle, isEditMode });
   }
 
   resetSelectionArea() {
     if(this.state.selectionAreaStyle.width || this.state.selectionAreaStyle.height) {
-      this.setState({ selectionAreaStyle: { top: 0, width: 0, height: 0 } });
+      this.setState({ selectionAreaStyle: { display: "none", top: 0, left: 0, width: 0, height: 0 } });
     }
   }
 
   resetActiveCell() {
     if(this.state.activeCellStyle.width || this.state.activeCellStyle.height) {
-      this.setState({ activeCellStyle: { display: "none", top: 0, left: 0, width: 0, height: 0 } });
+      this.setState({ isEditMode: false, activeCellStyle: { display: "none", top: 0, left: 0, width: 0, height: 0 } });
     }
   }
 
+  setActiveCellRef(activeCellRef) {
+    this.setState({ activeCellRef });
+  }
+  
   render() {
-    let selectionAreaStyle = { ...this.state.selectionAreaStyle };
-
-    let activeCellStyle = { ...this.state.activeCellStyle };
+    const { activeCellStyle, selectionAreaStyle, isEditMode } = this.state;
 
     return (
       <Fragment>
         <div className="selectionArea" style={selectionAreaStyle}/>
-        <div className="activeCell" style={activeCellStyle}/>
+        {
+          isEditMode 
+            ? <input className="activeCell activeCell--editMode" type="text" style={activeCellStyle} autoFocus/>
+            : <div className="activeCell activeCell--normalMode" style={activeCellStyle}/>
+        }
       </Fragment>
     );
   }
 }
 
-const mapSelectionAreaStateToProps = ({ ui: { excel: { selectionArea, isSelectionMode } } }) => ({ selectionArea, isSelectionMode });
+const mapSelectionAreaStateToProps = ({ ui: { excel: { selectionArea, isSelectionMode, isEditMode } } }) => ({ selectionArea, isSelectionMode, isEditMode });
 
 export let TopLeftSelectionPane = ({
   sheetRef, 
   selectionRef, 
   selectionArea,
+  sheetContainerRef,
   isSelectionMode,
+  isEditMode,
   freezeRowCount,
   freezeColumnCount
 }) => {
@@ -162,6 +172,8 @@ export let TopLeftSelectionPane = ({
     <SelectionPane
       ref={selectionRef}
       isSelectionMode={isSelectionMode}
+      isEditMode={isEditMode}
+      sheetContainerRef={sheetContainerRef}
     />
   );
 };
@@ -171,10 +183,12 @@ TopLeftSelectionPane = connect(mapSelectionAreaStateToProps)(TopLeftSelectionPan
 export let TopRightSelectionPane = ({
   sheetRef, 
   selectionRef, 
+  sheetContainerRef,
   selectionArea,
   isSelectionMode,
   freezeColumnCount, 
-  freezeRowCount
+  freezeRowCount,
+  isEditMode
 }) => {
   useEffect(() => {
     const { x1, y1, x2, y2 } = selectionArea;
@@ -273,6 +287,8 @@ export let TopRightSelectionPane = ({
     <SelectionPane
       ref={selectionRef}
       isSelectionMode={isSelectionMode}
+      isEditMode={isEditMode}
+      sheetContainerRef={sheetContainerRef}
     />
   );
 };
@@ -285,7 +301,8 @@ export let BottomLeftSelectionPane = ({
   selectionArea,
   isSelectionMode,
   freezeColumnCount, 
-  freezeRowCount
+  freezeRowCount,
+  isEditMode
 }) => {
   useEffect(() => {
     const { x1, y1, x2, y2 } = selectionArea;
@@ -391,6 +408,7 @@ export let BottomLeftSelectionPane = ({
     <SelectionPane
       ref={selectionRef}
       isSelectionMode={isSelectionMode}
+      isEditMode={isEditMode}
     />
   );
 };
@@ -400,71 +418,78 @@ BottomLeftSelectionPane = connect(mapSelectionAreaStateToProps)(BottomLeftSelect
 export let BottomRightSelectionPane = ({ 
   sheetRef, 
   selectionRef, 
+  sheetContainerRef,
   selectionArea,
-  isSelectionMode
+  isSelectionMode,
+  freezeColumnCount,
+  freezeRowCount,
+  isEditMode
 }) => {
-  
   useEffect(() => {
     const { x1, y1, x2, y2 } = selectionArea;
 
-    const { current } = sheetRef;
-    if(current){
-      let selectionAreaWidth;
-      let selectionAreaHeight;
-      let selectionAreaStyle;
-      let left;
-      let top;
-
-      const { top: topStart, left: leftStart, width: widthStart, height: heightStart } = current._getItemStyle(y1, x1);
-      const { top: topEnd, left: leftEnd, width: widthEnd, height: heightEnd } = current._getItemStyle(y2, x2);
-
-      if(x1 <= x2) {
-        selectionAreaWidth = leftEnd + widthEnd - leftStart;
-        left = leftStart;
-      } else {
-        selectionAreaWidth = leftStart + widthStart - leftEnd;
-        left = leftEnd;
-      }
-
-      if(y1 <= y2) {
-        selectionAreaHeight = topEnd + heightEnd - topStart;
-        top = topStart;
-      } else {
-        selectionAreaHeight = topStart + heightStart - topEnd;
-        top = topEnd;
-      }
-
-      selectionAreaStyle = { 
-        left: left, 
-        top: top, 
-        width: selectionAreaWidth, 
-        height: selectionAreaHeight, 
-        borderWidth: STYLE_SELECTION_BORDER_WIDTH,
-        borderColor: STYLE_SELECTION_BORDER_COLOR,
-        borderStyle: isSelectionMode ? "dashed" : "solid",
-        display: null,
-        zIndex: 100
-      };
-
-      const activeCellStyle = { 
-        top: topStart, 
-        left: leftStart, 
-        width: widthStart, 
-        height: heightStart, 
-        display: null 
-      };
-
-      if(selectionRef) {
-        selectionRef.current.updateSelectionAreaStyle(selectionAreaStyle);
-        selectionRef.current.updateActiveCellStyle(activeCellStyle);
-      }
+    if((x1 <= freezeColumnCount && x2 <= freezeColumnCount) || (y1 <= freezeRowCount && y2 <= freezeColumnCount)) {
+      selectionRef.current.resetActiveCell();
+      selectionRef.current.resetSelectionArea();
     }
+
+    const { current } = sheetRef;
+
+    let selectionAreaWidth;
+    let selectionAreaHeight;
+    let left;
+    let top;
+
+    const { top: topStart, left: leftStart, width: widthStart, height: heightStart } = current._getItemStyle(y1, x1);
+    const { top: topEnd, left: leftEnd, width: widthEnd, height: heightEnd } = current._getItemStyle(y2, x2);
+
+    if(x1 <= x2) {
+      selectionAreaWidth = leftEnd + widthEnd - leftStart;
+      left = leftStart;
+    } else {
+      selectionAreaWidth = leftStart + widthStart - leftEnd;
+      left = leftEnd;
+    }
+
+    if(y1 <= y2) {
+      selectionAreaHeight = topEnd + heightEnd - topStart;
+      top = topStart;
+    } else {
+      selectionAreaHeight = topStart + heightStart - topEnd;
+      top = topEnd;
+    }
+
+    const selectionAreaStyle = { 
+      left: left, 
+      top: top, 
+      width: selectionAreaWidth, 
+      height: selectionAreaHeight, 
+      borderWidth: STYLE_SELECTION_BORDER_WIDTH,
+      borderColor: STYLE_SELECTION_BORDER_COLOR,
+      borderStyle: isSelectionMode ? "dashed" : "solid",
+      display: null,
+      zIndex: 100
+    };
+
+    const activeCellStyle = { 
+      top: topStart, 
+      left: leftStart, 
+      width: widthStart, 
+      height: heightStart, 
+      display: null 
+    };
+
+    selectionRef.current.updateSelectionAreaStyle(selectionAreaStyle);
+
+    selectionRef.current.updateActiveCellStyle(activeCellStyle, x1 > freezeColumnCount && y1 > freezeRowCount ? isEditMode : false);
   });
-  
+
   return (
     <SelectionPane
       ref={selectionRef}
       isSelectionMode={isSelectionMode}
+      isEditMode={isEditMode}
+      sheetContainerRef={sheetContainerRef}
     />
   );
 };
