@@ -10,8 +10,8 @@ import FileTableOutline from "mdi-material-ui/FileTableOutline";
 import "./AppBar.scss";
 
 const ExcelIconButton = ({ returnLink }) => (
-  <Link to={returnLink}>
-    <Button className="excelIconButton"><FileTableOutline className="excelIconButton__icon"/></Button>
+  <Link to={returnLink} className="excelIconButton">
+    <Button><FileTableOutline className="excelIconButton__icon"/></Button>
   </Link>
 );
 
