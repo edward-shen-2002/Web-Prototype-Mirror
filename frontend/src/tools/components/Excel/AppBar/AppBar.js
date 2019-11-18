@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 import { Link } from "react-router-dom";
 
-import AppBar from "@material-ui/core/AppBar";
 import InputBase from "@material-ui/core/InputBase";
 import Button from "@material-ui/core/Button";
 
@@ -11,9 +10,9 @@ import FileTableOutline from "mdi-material-ui/FileTableOutline";
 import "./AppBar.scss";
 
 const ExcelIconButton = ({ returnLink }) => (
-  <Button className="excelIconButton">
-    <Link to={returnLink}><FileTableOutline className="excelIconButton__icon"/></Link>
-  </Button>
+  <Link to={returnLink}>
+    <Button className="excelIconButton"><FileTableOutline className="excelIconButton__icon"/></Button>
+  </Link>
 );
 
 /**
