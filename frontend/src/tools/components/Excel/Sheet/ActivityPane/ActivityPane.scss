@@ -2,7 +2,7 @@
 
 .selectionArea {
   position: absolute;
-  background: rgba(3, 169, 244, 0.05);
+  background-color: rgba(3, 169, 244, 0.05);
   pointer-events: none;
 }
 
@@ -17,4 +17,9 @@
   &--normalMode {
     pointer-events: none;
   }
+}
+
+.activeHeader {
+  position: absolute;
+  background-color: rgba(41, 41, 41, 0.05);
 }

@@ -22,13 +22,6 @@ let TopRightActivityPane = ({
   useEffect(() => {
     const { x1, y1, x2, y2 } = selectionArea;
 
-    if((y1 > freezeRowCount && y2 > freezeRowCount) || (x1 <= freezeColumnCount && x2 <= freezeColumnCount)) {
-      selectionRef.current.resetActiveCell();
-      selectionRef.current.resetSelectionArea();
-
-      return;
-    }
-
     let borderStyle = isSelectionMode ? "dashed" : "solid";
     let selectionAreaWidth;
     let selectionAreaHeight;
@@ -48,6 +41,7 @@ let TopRightActivityPane = ({
     const { top: topEnd, left: leftEnd, width: widthEnd, height: heightEnd } = sheetRef.current._getItemStyle(y2, x2);
 
     const { top: topFrozenEnd, left: leftFrozenEnd, width: widthFrozenEnd, height: heightFrozenEnd } = sheetRef.current._getItemStyle(freezeRowCount, freezeColumnCount);
+    const { height: heightHeader } = sheetRef.current._getItemStyle(0, 0);
 
     if(freezeColumnCount && (x1 <= freezeColumnCount || x2 <= freezeColumnCount)) {
       left = leftFrozenEnd + widthFrozenEnd;
@@ -94,14 +88,33 @@ let TopRightActivityPane = ({
       }
     }
 
+    if(x1 > freezeColumnCount || x2 > freezeColumnCount) {
+      selectionRef.current.updateColumnHeaderStyle({
+        left,
+        top: 0,
+        width: selectionAreaWidth,
+        height: heightHeader,
+        display: null
+      });
+    } else {
+      selectionRef.current.resetColumnHeaderStyle();
+    }
+
+    
+    if((y1 > freezeRowCount && y2 > freezeRowCount) || (x1 <= freezeColumnCount && x2 <= freezeColumnCount)) {
+      selectionRef.current.resetActiveCell();
+      selectionRef.current.resetSelectionArea();
+
+      return;
+    }
+
     customSelectionStyle = { 
       ...customSelectionStyle,
       left: left, 
       top: top, 
       width: selectionAreaWidth, 
       height: selectionAreaHeight, 
-      display: null,
-      zIndex: 100
+      display: null
     };
 
     const activeCellStyle = { 

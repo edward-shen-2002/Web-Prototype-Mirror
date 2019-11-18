@@ -22,13 +22,6 @@ let BottomLeftActivityPane = ({
   useEffect(() => {
     const { x1, y1, x2, y2 } = selectionArea;
 
-    if((y1 <= freezeRowCount && y2 <= freezeRowCount) || (x1 > freezeColumnCount && x2 > freezeColumnCount)) {
-      selectionRef.current.resetActiveCell();
-      selectionRef.current.resetSelectionArea();
-
-      return;
-    }
-
     let borderStyle = isSelectionMode ? "dashed" : "solid";
     let selectionAreaWidth;
     let selectionAreaHeight;
@@ -48,6 +41,7 @@ let BottomLeftActivityPane = ({
     const { top: topEnd, left: leftEnd, width: widthEnd, height: heightEnd } = sheetRef.current._getItemStyle(y2, x2);
 
     const { top: topFrozenEnd, left: leftFrozenEnd, width: widthFrozenEnd, height: heightFrozenEnd } = sheetRef.current._getItemStyle(freezeRowCount, freezeColumnCount);
+    const { left: leftHeader, width: widthHeader } = sheetRef.current._getItemStyle(0, 0);
 
     const minLeft = x1 < x2 ? leftStart : leftEnd;
     left = minLeft;
@@ -94,14 +88,32 @@ let BottomLeftActivityPane = ({
       }
     }
 
+    if(y1 > freezeRowCount || y2 > freezeRowCount) {
+      selectionRef.current.updateRowHeaderStyle({
+        left: 0,
+        top,
+        width: widthHeader,
+        height: selectionAreaHeight,
+        display: null
+      });
+    } else {
+      selectionRef.current.resetRowHeaderStyle();
+    }
+
+    if((y1 <= freezeRowCount && y2 <= freezeRowCount) || (x1 > freezeColumnCount && x2 > freezeColumnCount)) {
+      selectionRef.current.resetActiveCell();
+      selectionRef.current.resetSelectionArea();
+
+      return;
+    }
+
     customSelectionStyle = { 
       ...customSelectionStyle,
       left: left, 
       top: top, 
       width: selectionAreaWidth, 
       height: selectionAreaHeight, 
-      display: null,
-      zIndex: 100
+      display: null
     };
 
     const activeCellStyle = { 
@@ -109,7 +121,7 @@ let BottomLeftActivityPane = ({
       left: leftStart, 
       width: widthStart, 
       height: heightStart, 
-      display: null 
+      display: null
     };
 
     selectionRef.current.updateSelectionAreaStyle(customSelectionStyle);

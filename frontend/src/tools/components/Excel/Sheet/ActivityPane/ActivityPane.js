@@ -9,6 +9,8 @@ class ActivityPane extends Component {
     this.state = {
       selectionAreaStyle: { display: "none", left: 0, top: 0, width: 0, height: 0 },
       activeCellStyle: { display: "none", left: 0, top: 0, width: 0, height: 0 },
+      columnHeaderStyle: { display: "none", left: 0, top: 0, width: 0, height: 0 },
+      rowHeaderStyle: { display: "none", left: 0, top: 0, width: 0, height: 0 },
       isEditMode: false
     };
   }
@@ -16,14 +18,41 @@ class ActivityPane extends Component {
   updateSelectionAreaStyle(selectionAreaStyle) {
     this.setState({ selectionAreaStyle });
   }
+
+  updateColumnHeaderStyle(columnHeaderStyle) {
+    this.setState({ columnHeaderStyle });
+  } 
+
+  updateRowHeaderStyle(rowHeaderStyle) {
+    this.setState({ rowHeaderStyle });
+  }
   
   updateActiveCellStyle(activeCellStyle, isEditMode) {   
     this.setState({ activeCellStyle, isEditMode });
   }
 
+  resetColumnHeaderStyle() {
+    if(this.state.columnHeaderStyle.width || this.state.columnHeaderStyle.height) {
+      this.setState({
+        columnHeaderStyle: { display: "none", top: 0, left: 0, width: 0, height: 0 }
+      });
+    }
+  }
+
+  resetRowHeaderStyle() {
+    if(this.state.rowHeaderStyle.width || this.state.rowHeaderStyle.height) {
+      this.setState({
+        rowHeaderStyle: { display: "none", top: 0, left: 0, width: 0, height: 0 }
+      });
+    }
+  }
+
   resetSelectionArea() {
     if(this.state.selectionAreaStyle.width || this.state.selectionAreaStyle.height) {
-      this.setState({ selectionAreaStyle: { display: "none", top: 0, left: 0, width: 0, height: 0 } });
+      this.setState({ 
+        selectionAreaStyle: { display: "none", top: 0, left: 0, width: 0, height: 0 }
+
+      });
     }
   }
 
@@ -34,11 +63,13 @@ class ActivityPane extends Component {
   }
   
   render() {
-    const { activeCellStyle, selectionAreaStyle, isEditMode } = this.state;
+    const { activeCellStyle, selectionAreaStyle, columnHeaderStyle, rowHeaderStyle, isEditMode } = this.state;
 
     return (
       <Fragment>
         <div className="selectionArea" style={selectionAreaStyle}/>
+        <div className="activeHeader" style={columnHeaderStyle}/>
+        <div className="activeHeader" style={rowHeaderStyle}/>
         {
           isEditMode 
             ? <input className="activeCell activeCell--editMode" type="text" style={activeCellStyle} autoFocus/>

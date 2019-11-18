@@ -1,4 +1,8 @@
 .sheet {
   // display: flex;
   height: 100%;
+
+  &:focus {
+    outline: none;
+  }
 }

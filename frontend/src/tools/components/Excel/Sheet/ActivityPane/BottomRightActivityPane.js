@@ -48,6 +48,8 @@ let BottomRightActivityPane = ({
 
     const { top: topFrozenEnd, left: leftFrozenEnd, width: widthFrozenEnd, height: heightFrozenEnd } = sheetRef.current._getItemStyle(freezeRowCount, freezeColumnCount);
 
+    const { width: widthHeader, height: heightHeader } = sheetRef.current._getItemStyle(0, 0);
+
     if(freezeColumnCount && (x1 <= freezeColumnCount || x2 <= freezeColumnCount)) {
       left = leftFrozenEnd + widthFrozenEnd;
 
@@ -100,12 +102,11 @@ let BottomRightActivityPane = ({
 
     customSelectionStyle = { 
       ...customSelectionStyle,
-      left: left, 
-      top: top, 
+      left,
+      top,
       width: selectionAreaWidth, 
       height: selectionAreaHeight, 
-      display: null,
-      zIndex: 100
+      display: null
     };
 
     const activeCellStyle = { 

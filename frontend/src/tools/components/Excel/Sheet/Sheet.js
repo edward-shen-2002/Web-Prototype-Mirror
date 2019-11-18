@@ -100,6 +100,18 @@ const Sheet = ({
     eventListenerRef.current.setEditModeOn();
   };
 
+  const handleClickColumnHeader = (column) => {
+    eventListenerRef.current.selectColumnHeader(column);
+  };
+
+  const handleClickRowHeader = (row) => {
+    eventListenerRef.current.selectRowHeader(row);
+  };
+
+  const handleClickRootHeader = () => {
+    eventListenerRef.current.selectRootHeader();
+  };
+
   const itemData = { 
     sheet, 
     values, 
@@ -110,7 +122,11 @@ const Sheet = ({
     handleDoubleClickEditableCell,
 
     handleSelectionStart,
-    handleSelectionOver
+    handleSelectionOver,
+
+    handleClickColumnHeader,
+    handleClickRowHeader,
+    handleClickRootHeader
   };
 
   const handleKeyDown = (event) => {
@@ -131,12 +147,11 @@ const Sheet = ({
     }
   };
   
-  freezeRowCount = freezeRowCount + 2;
+  freezeRowCount = freezeRowCount + 0;
   freezeColumnCount = freezeColumnCount + 2;
 
   const tableFreezeRowCount = freezeRowCount + 1;
   const tableFreezeColumnCount = freezeColumnCount + 1;
-
 
   const commonSelectionPaneProps = { sheetRef, sheetContainerRef, freezeRowCount, freezeColumnCount };
 
@@ -160,34 +175,18 @@ const Sheet = ({
             rowCount={rowCount}
             rowHeight={rowHeight}
             width={width}
-            extraTopLeftElement={(
-              <TopLeftActivityPane
-                key="top-left-selection-pane"
-                selectionRef={topLeftSelectionPaneRef}
-                {...commonSelectionPaneProps}
-              />
-            )}
-            extraTopRightElement={(
-              <TopRightActivityPane
-                key="top-right-activity-pane"
-                selectionRef={topRightSelectionPaneRef}
-                {...commonSelectionPaneProps}
-              />  
-            )}
-            extraBottomLeftElement={(
-              <BottomLeftActivityPane 
-                key="bottom-left-activity-pane" 
-                selectionRef={bottomLeftSelectionPaneRef} 
-                {...commonSelectionPaneProps}
-              />
-            )}
-            extraBottomRightElement={(
-              <BottomRightActivityPane 
-                key="bottom-right-activity-pane" 
-                selectionRef={bottomRightSelectionPaneRef} 
-                {...commonSelectionPaneProps}
-              />
-            )}
+            extraTopLeftElement={
+              <TopLeftActivityPane key="top-left-selection-pane" selectionRef={topLeftSelectionPaneRef} {...commonSelectionPaneProps}/>
+            }
+            extraTopRightElement={
+              <TopRightActivityPane key="top-right-activity-pane" selectionRef={topRightSelectionPaneRef} {...commonSelectionPaneProps}/>  
+            }
+            extraBottomLeftElement={
+              <BottomLeftActivityPane key="bottom-left-activity-pane" selectionRef={bottomLeftSelectionPaneRef} {...commonSelectionPaneProps}/>
+            }
+            extraBottomRightElement={
+              <BottomRightActivityPane key="bottom-right-activity-pane" selectionRef={bottomRightSelectionPaneRef} {...commonSelectionPaneProps}/>
+            }
           >
             {Cell}
           </VariableSizeGrid>
