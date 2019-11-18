@@ -128,6 +128,7 @@ let TopRightActivityPane = ({
     selectionRef.current.updateSelectionAreaStyle(customSelectionStyle);
 
     if(x1 > freezeColumnCount && y1 <= freezeRowCount) {
+      console.log("wrigint top")
       selectionRef.current.updateActiveCellStyle(activeCellStyle, isEditMode);
     } else {
       selectionRef.current.resetActiveCell();

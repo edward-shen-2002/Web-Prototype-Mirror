@@ -111,7 +111,7 @@ let TopLeftActivityPane = ({
       selectionRef.current.resetRowHeaderStyle();
     }
 
-    if(freezeColumnCount && freezeRowCount && ((y1 > freezeRowCount && y2 > freezeRowCount) || (x1 > freezeColumnCount && x2 > freezeColumnCount))) {
+    if((freezeColumnCount && freezeRowCount && ((y1 > freezeRowCount && y2 > freezeRowCount) || (x1 > freezeColumnCount && x2 > freezeColumnCount)) || ((freezeColumnCount && !freezeRowCount) || (!freezeColumnCount && freezeRowCount)))) {
       selectionRef.current.resetActiveCell();
       selectionRef.current.resetSelectionArea();
 
@@ -138,6 +138,7 @@ let TopLeftActivityPane = ({
     selectionRef.current.updateSelectionAreaStyle(customSelectionStyle);
 
     if(x1 <= freezeColumnCount && y1 <= freezeRowCount) {
+      console.log("writing")
       selectionRef.current.updateActiveCellStyle(activeCellStyle, isEditMode);
     } else {
       selectionRef.current.resetActiveCell();
@@ -157,28 +158,3 @@ let TopLeftActivityPane = ({
 TopLeftActivityPane = connect(mapSelectionAreaStateToProps)(TopLeftActivityPane);
 
 export default TopLeftActivityPane;
-
-
-// if(!freezeColumnCount) {
-//   selectionRef.current.updateRowHeaderStyle({
-//     left: 0,
-//     top,
-//     width: heightHeader,
-//     height: selectionAreaHeight,
-//     display: null
-//   });
-// } else {
-//   selectionRef.current.resetRowHeaderStyle();
-// }
-
-// if(!freezeRowCount) {
-//   selectionRef.current.updateColumnHeaderStyle({
-//     left,
-//     top: 0,
-//     width: selectionAreaWidth,
-//     height: heightHeader,
-//     display: null
-//   });
-// } else {
-//   selectionRef.current.resetColumnHeaderStyle();
-// }

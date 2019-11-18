@@ -79,6 +79,10 @@ const Excel = ({
     }
   });
 
+  sheet.row(1).cell(1).style("bold", true);
+
+  console.log(sheet.usedRange())
+
   const { freezeRowCount, freezeColumnCount } = frozenPane;
 
   return (
