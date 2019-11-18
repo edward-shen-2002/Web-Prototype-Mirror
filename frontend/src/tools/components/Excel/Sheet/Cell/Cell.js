@@ -133,41 +133,39 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         handleDoubleClickEditableCell={handleDoubleClickEditableCell}
       />
     );
+  } else if(columnIndex > 0 && rowIndex === 0) {
+    value = columnNumberToName(columnIndex);
+
+    Component = (
+      <ColumnHeaderCell 
+        style={style} 
+        value={value}
+        column={columnIndex}
+        rowCount={rowCount}
+      />
+    );
+  } else if(columnIndex === 0 && rowIndex > 0) {
+    value = rowIndex;
+
+    Component = (
+      <RowHeaderCell 
+        style={style} 
+        value={value}
+        row={rowIndex}
+        columnCount={columnCount}
+      />
+    );
   } else {
-    if(columnIndex > 0 && rowIndex === 0) {
-      value = columnNumberToName(columnIndex);
+    value = "";
 
-      Component = (
-        <ColumnHeaderCell 
-          style={style} 
-          value={value}
-          column={columnIndex}
-          rowCount={rowCount}
-        />
-      );
-    } else if(columnIndex === 0 && rowIndex > 0) {
-      value = rowIndex;
-
-      Component = (
-        <RowHeaderCell 
-          style={style} 
-          value={value}
-          row={rowIndex}
-          columnCount={columnCount}
-        />
-      );
-    } else {
-      value = "";
-
-      Component = (
-        <RootHeaderCell 
-          style={style} 
-          value={value}
-          columnCount={columnCount}
-          rowCount={rowCount}
-        />
-      );
-    }
+    Component = (
+      <RootHeaderCell 
+        style={style} 
+        value={value}
+        columnCount={columnCount}
+        rowCount={rowCount}
+      />
+    );
   }
 
   return Component;

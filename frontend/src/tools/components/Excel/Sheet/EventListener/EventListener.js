@@ -4,23 +4,25 @@ import { connect } from "react-redux";
 
 import { updateSelectionArea } from "actions/ui/excel/selectionArea";
 
-import { updateActiveCell } from "actions/ui/excel/activeCell";
-
 import { setSelectionModeOn, setSelectionModeOff } from "actions/ui/excel/isSelectionMode";
 
 import { setEditModeOn, setEditModeOff } from "actions/ui/excel/isEditMode";
 
-// ! Possible optimizations? Don't use component? How would you keep ref?
-
-const mapStateToProps = ({ ui: { excel: { selectionArea, isSelectionMode, isEditMode } } }) => ({ selectionArea, isSelectionMode, isEditMode });
+const mapStateToProps = ({ 
+  ui: { 
+    excel: { 
+      selectionArea, 
+      isSelectionMode, 
+      isEditMode
+    } 
+  } 
+}) => ({ selectionArea, isSelectionMode, isEditMode });
 
 const mapDispatchToProps = (dispatch) => ({
   handleUpdateSelectionArea: (selectionArea) => dispatch(updateSelectionArea(selectionArea)),
   
   handleSetSelectionModeOn: () => dispatch(setSelectionModeOn()),
   handleSetSelectionModeOff: () => dispatch(setSelectionModeOff()),
-
-  handleUpdateActiveCell: (activeCell) => dispatch(updateActiveCell(activeCell)),
 
   handleSetEditModeOn: () => dispatch(setEditModeOn()),
   handleSetEditModeOff: () => dispatch(setEditModeOff())
@@ -35,7 +37,7 @@ let EventListener = ({
 
   isEditMode,
 
-  handleUpdateActiveCell,
+  sheet,
 
   handleUpdateSelectionArea,
 
@@ -53,7 +55,8 @@ let EventListener = ({
     isSelectionMode={isSelectionMode}
     isEditMode={isEditMode}
 
-    handleUpdateActiveCell={handleUpdateActiveCell}
+    sheet={sheet}
+
     handleUpdateSelectionArea={handleUpdateSelectionArea}
     
     handleSetSelectionModeOn={handleSetSelectionModeOn}
@@ -73,45 +76,118 @@ class EventRedux extends PureComponent {
     super(props);
   }
 
-  moveUp() {
-    const { selectionArea, handleUpdateSelectionArea } = this.props;
-    let { x1, y1 } = selectionArea;
-
-    y1--;
-
-    if(y1 > 0) handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
-  }
-
-  moveDown() {
-    const { selectionArea, rowCount, handleUpdateSelectionArea } = this.props;
-    let { x1, y1 } = selectionArea;
-
-    y1++;
-    
-    if(y1 < rowCount) handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
-  }
-
-  moveLeft() {
-    const { selectionArea, handleUpdateSelectionArea } = this.props;
-    let { x1, y1 } = selectionArea;
-
-    x1--;
-
-    if(x1 > 0) handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
-  }
-
-  moveRight() {
-    const { selectionArea, columnCount, handleUpdateSelectionArea } = this.props;
+  tab(sheetContainerRef, event) {
+    const { selectionArea, columnCount, sheet, handleUpdateSelectionArea } = this.props;
     let { x1, y1 } = selectionArea;
 
     x1++;
 
-    if(x1 < columnCount) handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
+    event.preventDefault();
+    sheetContainerRef.current.focus();
+
+    if(x1 < columnCount) {
+      handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
+      sheet.activeCell(y1, x1);
+    }
+
+    this.setEditModeOff();
+  }
+
+  enter(sheetContainerRef, event) {
+    const { selectionArea, sheet, rowCount, handleUpdateSelectionArea } = this.props;
+    let { x1, y1 } = selectionArea;
+
+    y1++;
+
+    event.preventDefault();
+    sheetContainerRef.current.focus();
+    
+    if(y1 < rowCount) {
+      handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
+      sheet.activeCell(y1, x1);
+    }
+
+    this.setEditModeOff();
+  }
+
+  moveUp(event) {
+    const { isEditMode } = this.props;
+    if(isEditMode) return;
+
+    const { selectionArea, sheet, handleUpdateSelectionArea } = this.props;
+    let { x1, y1 } = selectionArea;
+
+    y1--;
+
+    event.preventDefault();
+
+    if(y1 > 0) {
+      handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
+      sheet.activeCell(y1, x1);
+    }
+  }
+
+  moveDown(event) {
+    const { isEditMode } = this.props;
+    if(isEditMode) return;
+
+    const { selectionArea, sheet, rowCount, handleUpdateSelectionArea } = this.props;
+    let { x1, y1 } = selectionArea;
+
+    
+    y1++;
+
+    event.preventDefault();
+    
+    if(y1 < rowCount) {
+      handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
+      sheet.activeCell(y1, x1);
+    }
+  }
+
+  moveLeft(event) {
+    const { isEditMode } = this.props;
+    if(isEditMode) return;
+
+    const { selectionArea, sheet, handleUpdateSelectionArea } = this.props;
+    let { x1, y1 } = selectionArea;
+
+    x1--;
+
+    event.preventDefault();
+
+    if(x1 > 0) {
+      handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
+      sheet.activeCell(y1, x1);
+    }
+  }
+
+  moveRight(event) {
+    const { isEditMode } = this.props;
+    if(isEditMode) return;
+
+    const { selectionArea, columnCount, sheet, handleUpdateSelectionArea } = this.props;
+    let { x1, y1 } = selectionArea;
+
+    x1++;
+
+    event.preventDefault();
+
+    if(x1 < columnCount) {
+      handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
+      sheet.activeCell(y1, x1);
+    }
   }
 
   startSelectionArea(selectionArea) {
-    const { isSelectionMode, handleUpdateSelectionArea, handleSetSelectionModeOn } = this.props;
+    const { isSelectionMode, sheet, handleUpdateSelectionArea, handleSetSelectionModeOn } = this.props;
     if(!isSelectionMode) handleSetSelectionModeOn();
+
+    const { x1, y1 } = selectionArea;
+
+    sheet.activeCell(y1, x1);
+
+    this.setEditModeOff();
 
     handleUpdateSelectionArea(selectionArea);
   }
@@ -119,11 +195,6 @@ class EventRedux extends PureComponent {
   updateSelectionArea(selectionArea) {
     const { isSelectionMode, handleUpdateSelectionArea } = this.props;
     if(isSelectionMode) handleUpdateSelectionArea(selectionArea);
-  }
-
-  updateActiveCell(activeCell) {
-    const { handleUpdateActiveCell } = this.props;
-    handleUpdateActiveCell(activeCell);
   }
 
   setIsSelectionModeOn() {
@@ -139,8 +210,10 @@ class EventRedux extends PureComponent {
   }
 
   setEditModeOn() {
-    const { isEditMode, handleSetEditModeOn } = this.props;
+    const { isEditMode, isSelectionMode, handleSetEditModeOn, handleSetSelectionModeOff } = this.props;
     if(!isEditMode) handleSetEditModeOn();
+
+    if(isSelectionMode) handleSetSelectionModeOff();
   }
 
   setEditModeOff() {

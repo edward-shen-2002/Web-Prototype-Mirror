@@ -4,12 +4,13 @@ import { VariableSizeGrid } from "react-window";
 
 import AutoSizer from "react-virtualized-auto-sizer";
 
-import { arrowKeyRegex } from "tools/regex";
-
 import Cell from "./Cell";
 import EventListener from "./EventListener";
 
-import { BottomRightSelectionPane, TopRightSelectionPane, TopLeftSelectionPane, BottomLeftSelectionPane } from "./SelectionPane";
+import BottomRightActivityPane from "./ActivityPane/BottomRightActivityPane";
+import TopRightActivityPane from "./ActivityPane/TopRightActivityPane";
+import BottomLeftActivityPane from "./ActivityPane/BottomLeftActivityPane";
+import TopLeftActivityPane from "./ActivityPane/TopLeftActivityPane";
 
 import { 
   DEFAULT_EXCEL_ROW_HEIGHT,
@@ -87,15 +88,11 @@ const Sheet = ({
 
   // ! Consider header/column
   const handleSelectionStart = (x1, y1) => {
-    sheet.activeCell(y1, x1);
-    eventListenerRef.current.setEditModeOff();
-    eventListenerRef.current.updateActiveCell({ column: x1 , row: y1 });
     eventListenerRef.current.startSelectionArea({ x1, y1, x2: x1, y2: y1 });
   };
 
   // ! Consider header/column
   const handleSelectionOver = (x2, y2) => {
-    eventListenerRef.current.setEditModeOff();
     eventListenerRef.current.updateSelectionArea({ x2, y2 });
   };
 
@@ -120,45 +117,26 @@ const Sheet = ({
     const { key } = event;
 
     if(key === "ArrowUp") {
-      eventListenerRef.current.moveUp();
-    } else if(key === "ArrowDown" || key === "Enter") {
-      eventListenerRef.current.moveDown();
+      eventListenerRef.current.moveUp(event);
+    } else if(key === "ArrowDown") {
+      eventListenerRef.current.moveDown(event);
     } else if(key === "ArrowLeft") {
-      eventListenerRef.current.moveLeft();
-    } else if(key === "ArrowRight" || key === "Tab") {
-      eventListenerRef.current.moveRight();
-    } 
-    
-    if(
-      key === "ArrowUp"
-      || key === "ArrowDown"
-      || key === "ArrowLeft"
-      || key === "ArrowRight"
-      || key === "Enter"
-      || key === "Tab"
-    ) {
-      event.preventDefault();
-      // event.stopPropagation();
-      eventListenerRef.current.setEditModeOff();
+      eventListenerRef.current.moveLeft(event);
+    } else if(key === "ArrowRight") {
+      eventListenerRef.current.moveRight(event);
+    } else if(key === "Enter") {
+      eventListenerRef.current.enter(sheetContainerRef, event);
+    } else if(key === "Tab") {
+      eventListenerRef.current.tab(sheetContainerRef, event);
     }
   };
-
-  const handleKeyDownCapture = (event) => {
-    const { key } = event;
-    console.log(key)
-
-    if(key === "Tab") {
-      event.preventDefault();
-      event.stopPropagation();
-    };
-  };
-
-  const tableFreezeRowCount = freezeRowCount + 3;
-  const tableFreezeColumnCount = freezeColumnCount + 3;
-
+  
   freezeRowCount = freezeRowCount + 2;
-
   freezeColumnCount = freezeColumnCount + 2;
+
+  const tableFreezeRowCount = freezeRowCount + 1;
+  const tableFreezeColumnCount = freezeColumnCount + 1;
+
 
   const commonSelectionPaneProps = { sheetRef, sheetContainerRef, freezeRowCount, freezeColumnCount };
 
@@ -168,7 +146,6 @@ const Sheet = ({
       className="sheet"
       tabIndex="0"
       onKeyDown={handleKeyDown}
-      onKeyDownCapture={handleKeyDownCapture}
     >
       <AutoSizer>
         {({ height, width }) => (
@@ -184,29 +161,29 @@ const Sheet = ({
             rowHeight={rowHeight}
             width={width}
             extraTopLeftElement={(
-              <TopLeftSelectionPane
+              <TopLeftActivityPane
                 key="top-left-selection-pane"
                 selectionRef={topLeftSelectionPaneRef}
                 {...commonSelectionPaneProps}
               />
             )}
             extraTopRightElement={(
-              <TopRightSelectionPane
-                key="top-right-selection-pane"
+              <TopRightActivityPane
+                key="top-right-activity-pane"
                 selectionRef={topRightSelectionPaneRef}
                 {...commonSelectionPaneProps}
               />  
             )}
             extraBottomLeftElement={(
-              <BottomLeftSelectionPane 
-                key="bottom-left-selection-pane" 
+              <BottomLeftActivityPane 
+                key="bottom-left-activity-pane" 
                 selectionRef={bottomLeftSelectionPaneRef} 
                 {...commonSelectionPaneProps}
               />
             )}
             extraBottomRightElement={(
-              <BottomRightSelectionPane 
-                key="bottom-right-selection-pane" 
+              <BottomRightActivityPane 
+                key="bottom-right-activity-pane" 
                 selectionRef={bottomRightSelectionPaneRef} 
                 {...commonSelectionPaneProps}
               />
@@ -220,6 +197,7 @@ const Sheet = ({
         eventListenerRef={eventListenerRef} 
         columnCount={columnCount} 
         rowCount={rowCount}
+        sheet={sheet}
         sheetContainerRef={sheetContainerRef}
       />
     </div>
