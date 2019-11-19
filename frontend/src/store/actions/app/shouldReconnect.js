@@ -1,3 +1,3 @@
-import { SET_SHOULDRECONNECT } from "actionCreators";
+import { SET_SHOULD_RECONNECT } from "actionCreators";
 
-export const setShouldReconnect = (shouldReconnect) => ({ type: SET_SHOULDRECONNECT, shouldReconnect });
+export const setShouldReconnect = (shouldReconnect) => ({ type: SET_SHOULD_RECONNECT, shouldReconnect });

@@ -6,6 +6,6 @@ const updateSelectionArea = (state, { selectionArea }) => ({ ...state, ...select
 
 const resetSelectionArea = () => ({ ...DEFAULT_EXCEL_SELECTION_AREA });
 
-const selectionAreaReducer = createReducer(DEFAULT_EXCEL_SELECTION_AREA, { UPDATE_SELECTIONAREA: updateSelectionArea, RESET_SELECTIONAREA: resetSelectionArea });
+const selectionAreaReducer = createReducer(DEFAULT_EXCEL_SELECTION_AREA, { UPDATE_SELECTION_AREA: updateSelectionArea, RESET_SELECTION_AREA: resetSelectionArea });
 
 export default selectionAreaReducer;

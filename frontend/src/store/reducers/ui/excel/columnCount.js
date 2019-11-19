@@ -6,6 +6,6 @@ const updateColumnCount = (_state, { columnCount }) => columnCount;
 
 const resetColumnCount = () => DEFAULT_EXCEL_COLUMNS;
 
-const columnCountReducer = createReducer(DEFAULT_EXCEL_COLUMNS, { UPDATE_COLUMNCOUNT: updateColumnCount, RESET_COLUMNCOUNT: resetColumnCount });
+const columnCountReducer = createReducer(DEFAULT_EXCEL_COLUMNS, { UPDATE_COLUMN_COUNT: updateColumnCount, RESET_COLUMN_COUNT: resetColumnCount });
 
 export default columnCountReducer;

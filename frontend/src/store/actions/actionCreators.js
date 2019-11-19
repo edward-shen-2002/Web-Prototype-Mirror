@@ -7,7 +7,7 @@ export const SET_OFFLINE = "SET_OFFLINE";
 export const SET_ONLINE = "SET_ONLINE";
 
 // Reconnection
-export const SET_SHOULDRECONNECT = "SET_SHOULDRECONNECT";
+export const SET_SHOULD_RECONNECT = "SET_SHOULD_RECONNECT";
 
 /**
  * Domain data: data that the application needs to show, use, or modify
@@ -19,14 +19,14 @@ export const CLEAR_ACCOUNT = "CLEAR_ACCOUNT";
 /**
  * UI data: data related to the views/components display state
  */
-export const SHOW_APPNAVIGATION = "SHOW_APPNAVIGATION";
-export const HIDE_APPNAVIGATION = "HIDE_APPNAVIGATION";
+export const SHOW_APP_NAVIGATION = "SHOW_APP_NAVIGATION";
+export const HIDE_APP_NAVIGATION = "HIDE_APP_NAVIGATION";
 
-export const UPDATE_SELECTIONAREA = "UPDATE_SELECTIONAREA";
-export const RESET_SELECTIONAREA = "RESET_SELECTIONAREA";
+export const UPDATE_SELECTION_AREA = "UPDATE_SELECTION_AREA";
+export const RESET_SELECTION_AREA = "RESET_SELECTION_AREA";
 
-export const SET_SELECTIONMDOE_ON = "SET_SELECTIONMODE_ON";
-export const SET_SELECTIONMODE_OFF = "SET_SELECTIONMODE_OFF";
+export const SET_SELECTION_MDOE_ON = "SET_SELECTION_MODE_ON";
+export const SET_SELECTION_MODE_OFF = "SET_SELECTION_MODE_OFF";
 
-export const SET_EDITMODE_ON = "SET_EDITMODE_ON";
-export const SET_EDITMODE_OFF = "SET_EDITMODE_OFF";
+export const SET_EDIT_MODE_ON = "SET_EDIT_MODE_ON";
+export const SET_EDIT_MODE_OFF = "SET_EDIT_MODE_OFF";

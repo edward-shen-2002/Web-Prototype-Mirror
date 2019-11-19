@@ -6,6 +6,6 @@ const updateFreezeColumnCount = (_state, { freezeColumnCount }) => freezeColumnC
 
 const resetFreezeColumnCount = () => DEFAULT_EXCEL_FREEZE_COLUMN_COUNT;
 
-const freezeColumnCountReducer = createReducer(DEFAULT_EXCEL_FREEZE_COLUMN_COUNT, { UPDATE_FREEZECOLUMNCOUNT: updateFreezeColumnCount, RESET_FREEZECOLUMNCOUNT: resetFreezeColumnCount });
+const freezeColumnCountReducer = createReducer(DEFAULT_EXCEL_FREEZE_COLUMN_COUNT, { UPDATE_FREEZE_COLUMN_COUNT: updateFreezeColumnCount, RESET_FREEZE_COLUMN_COUNT: resetFreezeColumnCount });
 
 export default freezeColumnCountReducer;

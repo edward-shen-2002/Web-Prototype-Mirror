@@ -6,6 +6,6 @@ const setSelectionModeOn = () => true;
 
 const setSelectionModeOff = () => false;
 
-const isSelectionMode = createReducer(defaultSelectionMode, { SET_SELECTIONMODE_ON: setSelectionModeOn, SET_SELECTIONMODE_OFF: setSelectionModeOff });
+const isSelectionMode = createReducer(defaultSelectionMode, { SET_SELECTION_MODE_ON: setSelectionModeOn, SET_SELECTION_MODE_OFF: setSelectionModeOff });
 
 export default isSelectionMode;

@@ -6,6 +6,6 @@ const setEditModeOn = () => true;
 
 const setEditModeOff = () => false;
 
-const isEditMode = createReducer(defaultEditMode, { SET_EDITMODE_ON: setEditModeOn, SET_EDITMODE_OFF: setEditModeOff });
+const isEditMode = createReducer(defaultEditMode, { SET_EDIT_MODE_ON: setEditModeOn, SET_EDIT_MODE_OFF: setEditModeOff });
 
 export default isEditMode;

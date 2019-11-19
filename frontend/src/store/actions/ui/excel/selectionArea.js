@@ -1,5 +1,5 @@
-import { UPDATE_SELECTIONAREA, RESET_SELECTIONAREA } from "actionCreators";
+import { UPDATE_SELECTION_AREA, RESET_SELECTION_AREA } from "actionCreators";
 
-export const updateSelectionArea = (selectionArea) => ({ type: UPDATE_SELECTIONAREA, selectionArea });
+export const updateSelectionArea = (selectionArea) => ({ type: UPDATE_SELECTION_AREA, selectionArea });
 
-export const resetSelectionArea = () => ({ type: RESET_SELECTIONAREA });
+export const resetSelectionArea = () => ({ type: RESET_SELECTION_AREA });

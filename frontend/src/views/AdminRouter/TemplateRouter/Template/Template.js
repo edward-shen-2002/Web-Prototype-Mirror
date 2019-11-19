@@ -15,6 +15,9 @@ import Loading from "tools/components/Loading";
 
 import "./Template.scss";
 
+// ! Xlsx populate workoook instance
+let WorkbookInstance;
+
 const mapStateToProps = ({ ui: { isAppNavigationOpen } }) => ({ isAppNavigationOpen });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -29,7 +32,8 @@ const mapDispatchToProps = (dispatch) => ({
 let Template = ({ handleHideAppNavigation, handleShowAppNavigation, isAppNavigationOpen, match: { params: { _id } } }) => {
   const [ template, setTemplate ] = useState({});
   const [ isDataFetched, setIsDataFetched ] = useState(false);
-  const [ workbook, setWorkbook ] = useState(null);
+
+  const { name } = template;
   
   if(isAppNavigationOpen) handleHideAppNavigation(isAppNavigationOpen);
 
@@ -39,19 +43,23 @@ let Template = ({ handleHideAppNavigation, handleShowAppNavigation, isAppNavigat
         .then(async ({ data: { data: { template } } }) => {
           const { file } = template;
 
-          const workbook = await XlsxPopulate.fromDataAsync(file, { base64: true });
+          WorkbookInstance = await XlsxPopulate.fromDataAsync(file, { base64: true });
 
-          setWorkbook(workbook);
+          // TODO : Set redux excel state
+
           setTemplate(template);
         })
         .catch((error) => console.error(error))
         .finally(() => setIsDataFetched(true));
     }
 
-    return () => handleShowAppNavigation(isAppNavigationOpen);
-  }, [ isDataFetched ]);
+    return () => {
+      // TODO : Reset redux excel state
 
-  const { name } = template;
+
+      handleShowAppNavigation(isAppNavigationOpen);
+    };
+  }, [ isDataFetched ]);
 
   const handleSubmitName = (name) => {
     const newTemplate = { name };
@@ -64,11 +72,13 @@ let Template = ({ handleHideAppNavigation, handleShowAppNavigation, isAppNavigat
     );
   };
     
+  console.log("here again")
+
   return (
     isDataFetched 
-      ? <Excel name={name} workbook={workbook} returnLink={ROUTE_ADMIN_TEMPLATE_TEMPLATES} handleSubmitName={handleSubmitName}/>
+      ? <Excel name={name} workbook={WorkbookInstance} returnLink={ROUTE_ADMIN_TEMPLATE_TEMPLATES} handleSubmitName={handleSubmitName}/>
       : <Loading/>
-  )
+  );
 };
 
 Template = connect(mapStateToProps, mapDispatchToProps)(Template);

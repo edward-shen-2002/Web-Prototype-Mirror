@@ -6,6 +6,6 @@ const updateActiveSheetIndex = (_state, { activeSheetIndex }) => activeSheetInde
 
 const resetActiveSheetIndex = () => DEFAULT_EXCEL_ACTIVE_SHEET_INDEX;
 
-const activeSheetIndexReducer = createReducer(DEFAULT_EXCEL_ACTIVE_SHEET_INDEX, { UPDATE_ACTIVESHEETINDEX: updateActiveSheetIndex, RESET_ACTIVESHEETINDEX: resetActiveSheetIndex });
+const activeSheetIndexReducer = createReducer(DEFAULT_EXCEL_ACTIVE_SHEET_INDEX, { UPDATE_ACTIVE_SHEET_INDEX: updateActiveSheetIndex, RESET_ACTIVE_SHEET_INDEX: resetActiveSheetIndex });
 
 export default activeSheetIndexReducer;

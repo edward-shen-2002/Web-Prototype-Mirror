@@ -1,5 +1,5 @@
-import { SET_EDITMODE_ON, SET_EDITMODE_OFF } from "actionCreators";
+import { SET_EDIT_MODE_ON, SET_EDIT_MODE_OFF } from "actionCreators";
 
-export const setEditModeOn = () => ({ type: SET_EDITMODE_ON });
+export const setEditModeOn = () => ({ type: SET_EDIT_MODE_ON });
 
-export const setEditModeOff = () => ({ type: SET_EDITMODE_OFF });
+export const setEditModeOff = () => ({ type: SET_EDIT_MODE_OFF });
