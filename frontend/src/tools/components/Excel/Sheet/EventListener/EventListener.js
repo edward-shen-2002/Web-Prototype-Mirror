@@ -93,6 +93,23 @@ class EventRedux extends PureComponent {
     this.setEditModeOff();
   }
 
+  shiftTab(sheetContainerRef, event) {
+    const { selectionArea, sheet, handleUpdateSelectionArea } = this.props;
+    let { x1, y1 } = selectionArea;
+
+    x1--;
+
+    event.preventDefault();
+    sheetContainerRef.current.focus();
+
+    if(x1 > 0) {
+      handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
+      sheet.activeCell(y1, x1);
+    }
+
+    this.setEditModeOff();
+  }
+
   enter(sheetContainerRef, event) {
     const { selectionArea, sheet, rowCount, handleUpdateSelectionArea } = this.props;
     let { x1, y1 } = selectionArea;
@@ -108,6 +125,11 @@ class EventRedux extends PureComponent {
     }
 
     this.setEditModeOff();
+  }
+
+  esc(sheetContainerRef) {
+    this.setEditModeOff();
+    sheetContainerRef.current.focus();
   }
 
   moveUp(event) {
