@@ -110,6 +110,16 @@ class EventRedux extends PureComponent {
     this.setEditModeOff();
   }
 
+  ctrlA(event) {
+    const { rowCount, isEditMode, columnCount, handleUpdateSelectionArea } = this.props;
+
+    if(isEditMode) return;
+
+    event.preventDefault();
+
+    handleUpdateSelectionArea({ x1: 1, y1: 1, x2: columnCount - 1, y2: rowCount - 1 });
+  }
+
   enter(sheetContainerRef, event) {
     const { selectionArea, sheet, rowCount, handleUpdateSelectionArea } = this.props;
     let { x1, y1 } = selectionArea;
@@ -231,6 +241,9 @@ class EventRedux extends PureComponent {
 
   selectRootHeader() {
     const { rowCount, columnCount, handleUpdateSelectionArea } = this.props;
+
+    this.setEditModeOff();
+
     handleUpdateSelectionArea({ x1: 1, y1: 1, x2: columnCount - 1, y2: rowCount - 1 });
   }
 

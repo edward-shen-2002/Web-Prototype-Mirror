@@ -130,8 +130,8 @@ const Sheet = ({
   };
 
   const handleKeyDown = (event) => {
-    const { key, shiftKey } = event;
-
+    const { key, shiftKey, ctrlKey } = event;
+    
     if(key === "ArrowUp") {
       eventListenerRef.current.moveUp(event);
     } else if(key === "ArrowDown") {
@@ -148,6 +148,8 @@ const Sheet = ({
       eventListenerRef.current.tab(sheetContainerRef, event);
     } else if(key === "Escape") {
       eventListenerRef.current.esc(sheetContainerRef);
+    } else if(key === "a" && ctrlKey) {
+      eventListenerRef.current.ctrlA(event);
     }
   };
   
