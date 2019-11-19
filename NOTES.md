@@ -11,3 +11,11 @@ However, we keep reference to the _id in order to regularly (weekly basis or so)
 ## Design
 
 For a flat table, we may not need an attributes/categories page
+
+## History
+
+https://redux.js.org/recipes/implementing-undo-history
+
+## Multiple Selection
+
+Need to introduce new states
