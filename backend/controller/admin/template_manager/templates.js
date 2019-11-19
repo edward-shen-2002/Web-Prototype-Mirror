@@ -47,6 +47,8 @@ const templates = ({ router, TemplateModel }) => {
 
       for(let column = 1; column <= DEFAULT_EXCEL_COLUMNS; column++) sheet.column(column).width(DEFAULT_EXCEL_COLUMN_WIDTH);
 
+      sheet.row(DEFAULT_EXCEL_ROWS).cell(DEFAULT_EXCEL_COLUMNS).setValue("");
+
       const blankWorkbookData = await blankWorkbook.outputAsync("base64");
 
       TemplateModel.create({ name, file: blankWorkbookData })
