@@ -27,6 +27,7 @@
     "popper.js": "^1.14.7",
     "prop-types": "^15.6.0",
     "react": "^16.10.2",
+    "react-beautiful-dnd": "^12.1.1",
     "react-bootstrap": "^1.0.0-beta.8",
     "react-dnd": "^9.4.0",
     "react-dom": "^16.8.6",

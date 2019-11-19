@@ -1,3 +1,27 @@
 .sheetNavigator {
+  display: flex;
+  flex-flow: row nowrap;
+
   height: 40px;
+  padding-left: 40px;
+
+  &__droppable {
+    display: flex;
+    flex-flow: row nowrap;
+  }
+
+  &__draggable {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+
+    &--active {
+      background-color: white;
+    }
+
+    &--inactive {
+      background-color: #DADCE0;
+    }
+  }
 }

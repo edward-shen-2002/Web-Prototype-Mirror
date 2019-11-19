@@ -25,6 +25,53 @@ import {
 
 import "./Sheet.scss";
 
+const SheetWindow = ({
+  sheetRef,
+  tableFreezeRowCount,
+  tableFreezeColumnCount,
+  columnCount,
+  columnWidth,
+  itemData,
+  rowCount,
+  rowHeight,
+  topLeftSelectionPaneRef,
+  topRightSelectionPaneRef,
+  bottomLeftSelectionPaneRef,
+  bottomRightSelectionPaneRef,
+  commonSelectionPaneProps
+}) => (
+  <AutoSizer>
+    {({ height, width }) => (
+      <VariableSizeGrid
+        ref={sheetRef}
+        freezeRowCount={tableFreezeRowCount}
+        freezeColumnCount={tableFreezeColumnCount}
+        columnCount={columnCount}
+        columnWidth={columnWidth}
+        height={height}
+        itemData={itemData}
+        rowCount={rowCount}
+        rowHeight={rowHeight}
+        width={width}
+        extraTopLeftElement={
+          <TopLeftActivityPane key="top-left-selection-pane" selectionRef={topLeftSelectionPaneRef} {...commonSelectionPaneProps}/>
+        }
+        extraTopRightElement={
+          <TopRightActivityPane key="top-right-activity-pane" selectionRef={topRightSelectionPaneRef} {...commonSelectionPaneProps}/>  
+        }
+        extraBottomLeftElement={
+          <BottomLeftActivityPane key="bottom-left-activity-pane" selectionRef={bottomLeftSelectionPaneRef} {...commonSelectionPaneProps}/>
+        }
+        extraBottomRightElement={
+          <BottomRightActivityPane key="bottom-right-activity-pane" selectionRef={bottomRightSelectionPaneRef} {...commonSelectionPaneProps}/>
+        }
+      >
+        {Cell}
+      </VariableSizeGrid>
+    )}
+  </AutoSizer>
+);
+
 const Sheet = ({ 
   sheet, 
   values, 
@@ -168,36 +215,21 @@ const Sheet = ({
       tabIndex="0"
       onKeyDown={handleKeyDown}
     >
-      <AutoSizer>
-        {({ height, width }) => (
-          <VariableSizeGrid
-            ref={sheetRef}
-            freezeRowCount={tableFreezeRowCount}
-            freezeColumnCount={tableFreezeColumnCount}
-            columnCount={columnCount}
-            columnWidth={columnWidth}
-            height={height}
-            itemData={itemData}
-            rowCount={rowCount}
-            rowHeight={rowHeight}
-            width={width}
-            extraTopLeftElement={
-              <TopLeftActivityPane key="top-left-selection-pane" selectionRef={topLeftSelectionPaneRef} {...commonSelectionPaneProps}/>
-            }
-            extraTopRightElement={
-              <TopRightActivityPane key="top-right-activity-pane" selectionRef={topRightSelectionPaneRef} {...commonSelectionPaneProps}/>  
-            }
-            extraBottomLeftElement={
-              <BottomLeftActivityPane key="bottom-left-activity-pane" selectionRef={bottomLeftSelectionPaneRef} {...commonSelectionPaneProps}/>
-            }
-            extraBottomRightElement={
-              <BottomRightActivityPane key="bottom-right-activity-pane" selectionRef={bottomRightSelectionPaneRef} {...commonSelectionPaneProps}/>
-            }
-          >
-            {Cell}
-          </VariableSizeGrid>
-        )}
-      </AutoSizer>
+      <SheetWindow
+        sheetRef={sheetRef}
+        tableFreezeRowCount={tableFreezeRowCount}
+        tableFreezeColumnCount={tableFreezeColumnCount}
+        columnCount={columnCount}
+        columnWidth={columnWidth}
+        itemData={itemData}
+        rowCount={rowCount}
+        rowHeight={rowHeight}
+        topLeftSelectionPaneRef={topLeftSelectionPaneRef}
+        topRightSelectionPaneRef={topRightSelectionPaneRef}
+        bottomLeftSelectionPaneRef={bottomLeftSelectionPaneRef}
+        bottomRightSelectionPaneRef={bottomRightSelectionPaneRef}
+        commonSelectionPaneProps={commonSelectionPaneProps}
+      />
       <EventListener 
         eventListenerRef={eventListenerRef} 
         columnCount={columnCount} 

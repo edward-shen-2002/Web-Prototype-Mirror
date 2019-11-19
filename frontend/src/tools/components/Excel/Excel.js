@@ -42,10 +42,11 @@ const Excel = ({
   handleSubmitName 
 }) => {
   const [ sheet, setSheet ] = useState(workbook.sheet(0));
-  const [ sheetIndex, setSheetIndex ] = useState(0);
-  const [ sheetValues, setSheetValues ] = useState(sheet.usedRange().value());
+  const [ sheetNames, setSheetNames ] = useState(workbook.sheets().map((sheet) => sheet.name()));
+  const [ activeSheetIndex, setActiveSheetIndex ] = useState(0);
+  const [ sheetValues, setSheetValues ] = useState(workbook.sheet(0).usedRange().value());
 
-  const [ frozenPane, setFrozenPane ] = useState(iniitalizeFreezePaneCounts(sheet));
+  const [ frozenPane, setFrozenPane ] = useState(iniitalizeFreezePaneCounts(workbook.sheet(0)));
 
   const [ columnCount, setColumnCount ] = useState(DEFAULT_EXCEL_COLUMNS + 1);
   const [ rowCount, setRowCount ] = useState(DEFAULT_EXCEL_ROWS + 1);
@@ -65,9 +66,16 @@ const Excel = ({
   };
 
   const handleChangeSheet = (index) => {
-    setSheet(workbook.sheet(index));
-    setSheetIndex(index);
-    setSheetValues(sheet.usedRange().value());
+    const newSheet = workbook.sheet(index);
+
+    setSheet(newSheet);
+    setActiveSheetIndex(index);
+    setSheetValues(newSheet.usedRange().value());
+    setFrozenPane(iniitalizeFreezePaneCounts(newSheet))
+  };
+
+  const handleUpdateSheetNames = (sheetNames) => {
+    setSheetNames(sheetNames);
   };
 
   useEffect(() => {
@@ -78,10 +86,6 @@ const Excel = ({
       setIsMounted(true);
     }
   });
-
-  sheet.row(1).cell(1).style("bold", true);
-
-  console.log(sheet.usedRange())
 
   const { freezeRowCount, freezeColumnCount } = frozenPane;
 
@@ -111,8 +115,11 @@ const Excel = ({
       />
       <Divider/>
       <SheetNavigator 
-        sheetIndex={sheetIndex} 
+        activeSheetIndex={activeSheetIndex} 
+        sheetNames={sheetNames}
+        workbook={workbook}
         handleChangeSheet={handleChangeSheet}
+        handleUpdateSheetNames={handleUpdateSheetNames}
       />
       <EventListener/>
     </div>
