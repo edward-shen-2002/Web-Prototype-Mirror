@@ -21,7 +21,7 @@ let BottomRightActivityPane = ({
   useEffect(() => {
     const { x1, y1, x2, y2 } = selectionArea;
 
-    if((x1 <= freezeColumnCount && x2 <= freezeColumnCount) || (y1 <= freezeRowCount && y2 <= freezeColumnCount)) {
+    if((x1 <= freezeColumnCount && x2 <= freezeColumnCount) || (y1 <= freezeRowCount && y2 <= freezeRowCount)) {
       selectionRef.current.resetActiveCell();
       selectionRef.current.resetSelectionArea();
 
@@ -47,8 +47,6 @@ let BottomRightActivityPane = ({
     const { top: topEnd, left: leftEnd, width: widthEnd, height: heightEnd } = sheetRef.current._getItemStyle(y2, x2);
 
     const { top: topFrozenEnd, left: leftFrozenEnd, width: widthFrozenEnd, height: heightFrozenEnd } = sheetRef.current._getItemStyle(freezeRowCount, freezeColumnCount);
-
-    const { width: widthHeader, height: heightHeader } = sheetRef.current._getItemStyle(0, 0);
 
     if(freezeColumnCount && (x1 <= freezeColumnCount || x2 <= freezeColumnCount)) {
       left = leftFrozenEnd + widthFrozenEnd;
