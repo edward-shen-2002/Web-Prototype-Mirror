@@ -98,7 +98,7 @@ let SheetWindow = ({
     handleClickRootHeader
   };
 
-  freezeRowCount = freezeRowCount + 2;
+  freezeRowCount = freezeRowCount + 0;
   freezeColumnCount = freezeColumnCount + 0;
 
   const tableFreezeRowCount = freezeRowCount + 1;
