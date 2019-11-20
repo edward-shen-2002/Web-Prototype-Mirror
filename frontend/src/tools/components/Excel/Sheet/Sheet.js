@@ -1,5 +1,7 @@
 import React, { useRef } from "react";
 
+import { connect } from "react-redux";
+
 import { VariableSizeGrid } from "react-window";
 
 import AutoSizer from "react-virtualized-auto-sizer";
@@ -25,143 +27,63 @@ import {
 
 import "./Sheet.scss";
 
-const SheetWindow = ({
-  sheetRef,
-  tableFreezeRowCount,
-  tableFreezeColumnCount,
-  columnCount,
-  columnWidth,
-  itemData,
-  rowCount,
-  rowHeight,
-  topLeftSelectionPaneRef,
-  topRightSelectionPaneRef,
-  bottomLeftSelectionPaneRef,
-  bottomRightSelectionPaneRef,
-  commonSelectionPaneProps
-}) => (
-  <AutoSizer>
-    {({ height, width }) => (
-      <VariableSizeGrid
-        ref={sheetRef}
-        freezeRowCount={tableFreezeRowCount}
-        freezeColumnCount={tableFreezeColumnCount}
-        columnCount={columnCount}
-        columnWidth={columnWidth}
-        height={height}
-        itemData={itemData}
-        rowCount={rowCount}
-        rowHeight={rowHeight}
-        width={width}
-        extraTopLeftElement={
-          <TopLeftActivityPane key="top-left-selection-pane" selectionRef={topLeftSelectionPaneRef} {...commonSelectionPaneProps}/>
-        }
-        extraTopRightElement={
-          <TopRightActivityPane key="top-right-activity-pane" selectionRef={topRightSelectionPaneRef} {...commonSelectionPaneProps}/>  
-        }
-        extraBottomLeftElement={
-          <BottomLeftActivityPane key="bottom-left-activity-pane" selectionRef={bottomLeftSelectionPaneRef} {...commonSelectionPaneProps}/>
-        }
-        extraBottomRightElement={
-          <BottomRightActivityPane key="bottom-right-activity-pane" selectionRef={bottomRightSelectionPaneRef} {...commonSelectionPaneProps}/>
-        }
-      >
-        {Cell}
-      </VariableSizeGrid>
-    )}
-  </AutoSizer>
-);
-
-const Sheet = ({ 
-  sheet, 
-  values, 
+const mapStateToProps = ({
+  ui: {
+    excel: {
+      sheetCellValues,
+      columnCount,
+      rowCount,
+      columnWidths,
+      rowHeights,
+      freezeRowCount,
+      freezeColumnCount
+    }
+  }
+}) => ({
+  sheetCellValues,
   columnCount,
   rowCount,
+  columnWidths,
+  rowHeights,
+  freezeRowCount,
+  freezeColumnCount
+});
 
+let SheetWindow = ({
+  sheetCellValues,
   freezeRowCount,
   freezeColumnCount,
-
-  sheetRef
+  columnCount,
+  rowCount,
+  columnWidths,
+  rowHeights,
+  sheetRef,
+  eventListenerRef,
+  sheetContainerRef,
 }) => {
   const topRightSelectionPaneRef = useRef(null);
   const topLeftSelectionPaneRef = useRef(null);
   const bottomLeftSelectionPaneRef = useRef(null);
   const bottomRightSelectionPaneRef = useRef(null);
 
-  const eventListenerRef = useRef(null);
-  const sheetContainerRef = useRef(null);
+  const rowHeight = (index) => rowHeights[index];
 
-  const rowHeight = (index) => {
-    let height;
-    
-    if(index === 0) {
-      height = DEFAULT_EXCEL_ROW_HEIGHT_HEADER;
-    } else if(index === 1) {
-      height = 100;
-    } else {
-      const sheetRow = sheet.row(index);
+  const columnWidth = (index) => columnWidths[index];
 
-      if(sheetRow.hidden()) {
-        height = DEFAULT_EXCEL_ROW_HEIGHT_HIDDEN;
-      } else {
-        height = sheetRow.height();
+  const handleSelectionStart = (x1, y1) => eventListenerRef.current.startSelectionArea({ x1, y1, x2: x1, y2: y1 });
 
-        if(!height) height = DEFAULT_EXCEL_ROW_HEIGHT;
-      }
-    }
+  const handleSelectionOver = (x2, y2) => eventListenerRef.current.updateSelectionArea({ x2, y2 });
 
-    return height;
-  };
+  const handleDoubleClickEditableCell = () => eventListenerRef.current.setEditModeOn();
 
-  const columnWidth = (index) => {
-    let width;
+  const handleClickColumnHeader = (column) => eventListenerRef.current.selectColumnHeader(column);
 
-    if(index === 0) {
-      width = DEFAULT_EXCEL_COLUMN_WIDTH_HEADER;
-    } else {
-      const sheetColumn = sheet.column(index);
+  const handleClickRowHeader = (row) => eventListenerRef.current.selectRowHeader(row);
 
-      if(sheetColumn.hidden()) {
-        width = DEFAULT_EXCEL_COLUMN_WIDTH_HIDDEN
-      } else {
-        width = sheetColumn.width();
-
-        if(!width) width = DEFAULT_EXCEL_COLUMN_WIDTH;
-      }
-    }
-
-    return width;
-  };
-
-  // ! Consider header/column
-  const handleSelectionStart = (x1, y1) => {
-    eventListenerRef.current.startSelectionArea({ x1, y1, x2: x1, y2: y1 });
-  };
-
-  // ! Consider header/column
-  const handleSelectionOver = (x2, y2) => {
-    eventListenerRef.current.updateSelectionArea({ x2, y2 });
-  };
-
-  const handleDoubleClickEditableCell = () => {
-    eventListenerRef.current.setEditModeOn();
-  };
-
-  const handleClickColumnHeader = (column) => {
-    eventListenerRef.current.selectColumnHeader(column);
-  };
-
-  const handleClickRowHeader = (row) => {
-    eventListenerRef.current.selectRowHeader(row);
-  };
-
-  const handleClickRootHeader = () => {
-    eventListenerRef.current.selectRootHeader();
-  };
+  const handleClickRootHeader = () => eventListenerRef.current.selectRootHeader();
 
   const itemData = { 
-    sheet, 
-    values, 
+    sheetCellValues, 
     
     columnCount,
     rowCount,
@@ -176,6 +98,71 @@ const Sheet = ({
     handleClickRootHeader
   };
 
+  freezeRowCount = freezeRowCount + 2;
+  freezeColumnCount = freezeColumnCount + 0;
+
+  const tableFreezeRowCount = freezeRowCount + 1;
+  const tableFreezeColumnCount = freezeColumnCount + 1;
+
+  const commonSelectionPaneProps = { sheetRef, sheetContainerRef, freezeRowCount, freezeColumnCount };
+
+  return (
+    <AutoSizer>
+      {({ height, width }) => (
+        <VariableSizeGrid
+          ref={sheetRef}
+          freezeRowCount={tableFreezeRowCount}
+          freezeColumnCount={tableFreezeColumnCount}
+          columnCount={columnCount}
+          columnWidth={columnWidth}
+          height={height}
+          itemData={itemData}
+          rowCount={rowCount}
+          rowHeight={rowHeight}
+          width={width}
+          extraTopLeftElement={
+            <TopLeftActivityPane 
+              key="top-left-selection-pane" 
+              selectionRef={topLeftSelectionPaneRef} 
+              {...commonSelectionPaneProps}
+            />
+          }
+          extraTopRightElement={
+            <TopRightActivityPane 
+              key="top-right-activity-pane" 
+              selectionRef={topRightSelectionPaneRef} 
+              {...commonSelectionPaneProps}
+            />  
+          }
+          extraBottomLeftElement={
+            <BottomLeftActivityPane 
+              key="bottom-left-activity-pane" 
+              selectionRef={bottomLeftSelectionPaneRef} 
+              {...commonSelectionPaneProps}
+            />
+          }
+          extraBottomRightElement={
+            <BottomRightActivityPane 
+              key="bottom-right-activity-pane" 
+              selectionRef={bottomRightSelectionPaneRef} 
+              {...commonSelectionPaneProps}
+            />
+          }
+        >
+          {Cell}
+        </VariableSizeGrid>
+      )}
+    </AutoSizer>
+  );
+};
+
+SheetWindow = connect(mapStateToProps)(SheetWindow);
+
+const Sheet = ({ sheet, sheetRef }) => {
+  const eventListenerRef = useRef(null);
+  const sheetContainerRef = useRef(null);
+
+  // ! Fix this for multi-selection
   const handleKeyDown = (event) => {
     const { key, shiftKey, ctrlKey } = event;
     
@@ -200,43 +187,10 @@ const Sheet = ({
     }
   };
   
-  freezeRowCount = freezeRowCount + 0;
-  freezeColumnCount = freezeColumnCount + 2;
-
-  const tableFreezeRowCount = freezeRowCount + 1;
-  const tableFreezeColumnCount = freezeColumnCount + 1;
-
-  const commonSelectionPaneProps = { sheetRef, sheetContainerRef, freezeRowCount, freezeColumnCount };
-
   return (
-    <div 
-      ref={sheetContainerRef}
-      className="sheet"
-      tabIndex="0"
-      onKeyDown={handleKeyDown}
-    >
-      <SheetWindow
-        sheetRef={sheetRef}
-        tableFreezeRowCount={tableFreezeRowCount}
-        tableFreezeColumnCount={tableFreezeColumnCount}
-        columnCount={columnCount}
-        columnWidth={columnWidth}
-        itemData={itemData}
-        rowCount={rowCount}
-        rowHeight={rowHeight}
-        topLeftSelectionPaneRef={topLeftSelectionPaneRef}
-        topRightSelectionPaneRef={topRightSelectionPaneRef}
-        bottomLeftSelectionPaneRef={bottomLeftSelectionPaneRef}
-        bottomRightSelectionPaneRef={bottomRightSelectionPaneRef}
-        commonSelectionPaneProps={commonSelectionPaneProps}
-      />
-      <EventListener 
-        eventListenerRef={eventListenerRef} 
-        columnCount={columnCount} 
-        rowCount={rowCount}
-        sheet={sheet}
-        sheetContainerRef={sheetContainerRef}
-      />
+    <div ref={sheetContainerRef} className="sheet" tabIndex="0" onKeyDown={handleKeyDown}>
+      <SheetWindow sheetRef={sheetRef} eventListenerRef={eventListenerRef} sheetContainerRef={sheetContainerRef}/>
+      <EventListener sheet={sheet} eventListenerRef={eventListenerRef} sheetContainerRef={sheetContainerRef}/>
     </div>
   );
 };

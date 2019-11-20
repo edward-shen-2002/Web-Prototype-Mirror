@@ -13,10 +13,19 @@ const mapStateToProps = ({
     excel: { 
       selectionArea, 
       isSelectionMode, 
-      isEditMode
+      isEditMode,
+
+      columnCount,
+      rowCount
     } 
   } 
-}) => ({ selectionArea, isSelectionMode, isEditMode });
+}) => ({ 
+  selectionArea, 
+  isSelectionMode, 
+  isEditMode,
+  columnCount,
+  rowCount
+});
 
 const mapDispatchToProps = (dispatch) => ({
   handleUpdateSelectionArea: (selectionArea) => dispatch(updateSelectionArea(selectionArea)),
@@ -231,11 +240,17 @@ class EventRedux extends PureComponent {
 
   selectColumnHeader(column) {
     const { rowCount, handleUpdateSelectionArea } = this.props;
+
+    this.setEditModeOff();
+    
     handleUpdateSelectionArea({ x1: column, y1: 1, x2: column, y2: rowCount - 1 });
   }
 
   selectRowHeader(row) {
     const { columnCount, handleUpdateSelectionArea } = this.props;
+
+    this.setEditModeOff();
+
     handleUpdateSelectionArea({ x1: 1, y1: row, x2: columnCount - 1, y2: row });
   }
 

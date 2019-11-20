@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { showAppNavigation, hideAppNavigation } from "actions/ui/isAppNavigationOpen"; 
 
 import { adminTemplateRoleAxios } from "tools/rest";
+import { loadWorkbook, resetWorkbook } from "tools/redux";
 import Excel from "tools/components/Excel";
 
 import XlsxPopulate from "xlsx-populate";
@@ -13,6 +14,24 @@ import { ROUTE_ADMIN_TEMPLATE_TEMPLATES } from "constants/routes";
 
 import Loading from "tools/components/Loading";
 
+import { 
+  DEFAULT_EXCEL_ROWS, 
+  DEFAULT_EXCEL_COLUMNS,
+
+  DEFAULT_EXCEL_ROW_HEIGHT,
+  DEFAULT_EXCEL_COLUMN_WIDTH,
+
+  DEFAULT_EXCEL_ROW_HEIGHT_HIDDEN,
+  DEFAULT_EXCEL_COLUMN_WIDTH_HIDDEN,
+  
+  DEFAULT_EXCEL_ROW_HEIGHT_HEADER,
+  DEFAULT_EXCEL_COLUMN_WIDTH_HEADER,
+
+  DEFAULT_EXCEL_FREEZE_ROW_COUNT,
+  DEFAULT_EXCEL_FREEZE_COLUMN_COUNT
+} from "constants/excel";
+
+
 import "./Template.scss";
 
 // ! Xlsx populate workoook instance
@@ -21,31 +40,125 @@ let WorkbookInstance;
 const mapStateToProps = ({ ui: { isAppNavigationOpen } }) => ({ isAppNavigationOpen });
 
 const mapDispatchToProps = (dispatch) => ({
-  handleHideAppNavigation: (isAppNavigationOpen) => {
-    if(isAppNavigationOpen) dispatch(hideAppNavigation());
-  },
-  handleShowAppNavigation: (isAppNavigationOpen) => {
+  handleHideAppNavigation: () => dispatch(hideAppNavigation()),
+  handleExitTemplate: (isAppNavigationOpen) => {
     if(!isAppNavigationOpen) dispatch(showAppNavigation());
+    resetWorkbook(dispatch);
+  },
+  handleLoadTemplate: (excelData) => {
+    loadWorkbook(dispatch, excelData);
   }
 });
 
-let Template = ({ handleHideAppNavigation, handleShowAppNavigation, isAppNavigationOpen, match: { params: { _id } } }) => {
+let Template = ({ 
+  isAppNavigationOpen, 
+  handleHideAppNavigation, 
+  match: { params: { _id } }, 
+  handleExitTemplate, 
+  handleLoadTemplate
+}) => {
   const [ template, setTemplate ] = useState({});
   const [ isDataFetched, setIsDataFetched ] = useState(false);
 
   const { name } = template;
-  
-  if(isAppNavigationOpen) handleHideAppNavigation(isAppNavigationOpen);
+
+  if(isAppNavigationOpen) handleHideAppNavigation();
 
   useEffect(() => {
     if(!isDataFetched) {
       adminTemplateRoleAxios.get(`${REST_ADMIN_TEMPLATES}/${_id}`)
         .then(async ({ data: { data: { template } } }) => {
           const { file } = template;
-
+          
           WorkbookInstance = await XlsxPopulate.fromDataAsync(file, { base64: true });
+          
+          let freezeRowCount = DEFAULT_EXCEL_FREEZE_ROW_COUNT;
+          let freezeColumnCount = DEFAULT_EXCEL_FREEZE_COLUMN_COUNT; 
 
-          // TODO : Set redux excel state
+          let columnCount = DEFAULT_EXCEL_COLUMNS + 1;
+          let rowCount = DEFAULT_EXCEL_ROWS + 1;
+
+          
+          const sheetNames = WorkbookInstance.sheets().map((sheet) => sheet.name());
+          const activeSheet = WorkbookInstance.activeSheet();
+          const activeSheetName = activeSheet.name();
+          
+          const activeSheetUsedRange = activeSheet.usedRange();
+
+          // ! Set columnCount / rowCount to be max of default and set values~
+          if(activeSheetUsedRange) {
+            const { _maxColumnNumber, _maxRowNumber } = activeSheetUsedRange;
+
+            columnCount = _maxColumnNumber + 1;
+            rowCount = _maxRowNumber + 1;
+          }
+
+          let sheetCellValues = [];
+
+          for(let row = 0; row <= DEFAULT_EXCEL_ROWS; row++) {
+            let rowValues = [];
+            for(let column = 0; column <= DEFAULT_EXCEL_COLUMNS; column++) {
+              rowValues.push(row && column ? activeSheet.row(row).cell(column).value() : null);
+            }
+
+            sheetCellValues.push(rowValues);
+          }
+
+          let columnWidths = [ DEFAULT_EXCEL_COLUMN_WIDTH_HEADER ];
+          for(let column = 1; column <= DEFAULT_EXCEL_COLUMNS; column++) {
+            let width;
+
+            const sheetColumn = activeSheet.column(column);
+
+            if(sheetColumn.hidden()) {
+              width = DEFAULT_EXCEL_COLUMN_WIDTH_HIDDEN;
+            } else {
+              width = sheetColumn.width();
+        
+              if(!width) width = DEFAULT_EXCEL_COLUMN_WIDTH
+            }
+
+            columnWidths.push(width);
+          }
+          
+          let rowHeights = [ DEFAULT_EXCEL_ROW_HEIGHT_HEADER ];
+
+          for(let row = 1; row <= DEFAULT_EXCEL_ROWS; row++) {
+            let height;
+            const sheetRow = activeSheet.row(row);
+
+            if(sheetRow.hidden()) {
+              height = DEFAULT_EXCEL_ROW_HEIGHT_HIDDEN;
+            } else {
+              height = sheetRow.height();
+      
+              if(!height) height = DEFAULT_EXCEL_ROW_HEIGHT;
+            }
+
+            rowHeights.push(height);
+          }
+
+          const panes = activeSheet.panes();
+          
+          if(panes && panes.state === "frozen") {
+            freezeRowCount = panes.ySpit;
+            freezeColumnCount = panes.xSplit;
+          }
+          
+          handleLoadTemplate({
+            sheetCellValues,
+
+            rowCount,
+            columnCount,
+
+            rowHeights,
+            columnWidths,
+
+            freezeColumnCount,
+            freezeRowCount,
+            activeSheetName,
+            sheetNames
+          });
 
           setTemplate(template);
         })
@@ -54,10 +167,7 @@ let Template = ({ handleHideAppNavigation, handleShowAppNavigation, isAppNavigat
     }
 
     return () => {
-      // TODO : Reset redux excel state
-
-
-      handleShowAppNavigation(isAppNavigationOpen);
+      if(isDataFetched) handleExitTemplate(isAppNavigationOpen);
     };
   }, [ isDataFetched ]);
 
@@ -71,8 +181,6 @@ let Template = ({ handleHideAppNavigation, handleShowAppNavigation, isAppNavigat
         .catch((error) => console.error(error))
     );
   };
-    
-  console.log("here again")
 
   return (
     isDataFetched 

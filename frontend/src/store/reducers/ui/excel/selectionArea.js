@@ -1,6 +1,6 @@
 import { createReducer } from "store/tools/setup";
 
-import { DEFAULT_EXCEL_SELECTION_AREA } from "constants/states";
+import { DEFAULT_EXCEL_SELECTION_AREA } from "constants/excel";
 
 const updateSelectionArea = (state, { selectionArea }) => ({ ...state, ...selectionArea });
 

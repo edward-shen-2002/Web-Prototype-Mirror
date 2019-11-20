@@ -76,8 +76,8 @@ const EditableCell = ({
 };
 
 const Cell = ({ style, data, columnIndex, rowIndex }) => {
-  const { 
-    sheet,
+  const {
+    sheetCellValues,
 
     columnCount,
     rowCount,
@@ -96,7 +96,7 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
   let Component;
 
   if(columnIndex > 0 && rowIndex > 0){
-    value = sheet.row(rowIndex).cell(columnIndex).value();
+    value = sheetCellValues[rowIndex][columnIndex];
 
     Component = (
       <EditableCell 
