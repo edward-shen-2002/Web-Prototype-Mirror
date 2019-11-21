@@ -84,8 +84,8 @@ let SheetWindow = ({
   };
 
   // ! Test
-  freezeRowCount = freezeRowCount + 0;
-  freezeColumnCount = freezeColumnCount + 0;
+  freezeRowCount = freezeRowCount + 5;
+  freezeColumnCount = freezeColumnCount + 5;
 
   const tableFreezeRowCount = freezeRowCount + 1;
   const tableFreezeColumnCount = freezeColumnCount + 1;
