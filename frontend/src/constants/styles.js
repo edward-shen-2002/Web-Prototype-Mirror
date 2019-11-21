@@ -1,2 +1,4 @@
 export const STYLE_SELECTION_BORDER_COLOR = "rgba(75, 135, 255, 0.95)";
 export const STYLE_SELECTION_BORDER_WIDTH = "1px";
+export const STYLE_ACTIVE_SELECTION_BORDER_STYLE = "dashed";
+export const STYLE_STAGNANT_SELECTION_BORDER_STYLE = "solid";
