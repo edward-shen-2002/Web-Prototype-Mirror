@@ -12,6 +12,7 @@ import WindowListener from "./WindowListener";
 import Cell from "./Cell";
 
 import BottomRightActivityPane from "./ActivityPane/BottomRightActivityPane";
+import TopRightActivityPane from "./ActivityPane/TopRightActivityPane";
 
 import "./Sheet.scss";
 
@@ -83,10 +84,6 @@ let SheetWindow = ({
     handleClickRootHeader
   };
 
-  // ! Test
-  freezeRowCount = freezeRowCount + 5;
-  freezeColumnCount = freezeColumnCount + 5;
-
   const tableFreezeRowCount = freezeRowCount + 1;
   const tableFreezeColumnCount = freezeColumnCount + 1;
 
@@ -113,13 +110,12 @@ let SheetWindow = ({
           //     {...commonSelectionPaneProps}
           //   />
           // }
-          // extraTopRightElement={
-          //   <TopRightActivityPane 
-          //     key="top-right-activity-pane" 
-          //     selectionRef={topRightSelectionPaneRef} 
-          //     {...commonSelectionPaneProps}
-          //   />  
-          // }
+          extraTopRightElement={
+            <TopRightActivityPane 
+              key="top-right-activity-pane" 
+              {...commonSelectionPaneProps}
+            />  
+          }
           // extraBottomLeftElement={
           //   <BottomLeftActivityPane 
           //     key="bottom-left-activity-pane" 
