@@ -233,7 +233,7 @@ class EventRedux extends PureComponent {
     } else {
       y++;
   
-      if(y < rowCount) handleUpdateActiveCellPosition({ x });
+      if(y < rowCount) handleUpdateActiveCellPosition({ y });
       if(stagnantSelectionAreas) handleResetStagnantSelectionAreas()
     }
   }
