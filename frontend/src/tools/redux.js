@@ -22,7 +22,7 @@ import { updateSheetNames, resetSheetNames } from "actions/ui/excel/sheetNames";
 
 import { setEditModeOff } from "actions/ui/excel/isEditMode";
 
-import { resetSelectionArea } from "actions/ui/excel/selectionArea";
+import { resetActiveSelectionArea } from "actions/ui/excel/activeSelectionArea";
 
 
 export const loadUserState = (dispatch, { user, token }) => {
@@ -97,5 +97,5 @@ export const resetWorkbook = (dispatch) => {
 
   dispatch(setEditModeOff());
 
-  dispatch(resetSelectionArea())
+  dispatch(resetActiveSelectionArea())
 };

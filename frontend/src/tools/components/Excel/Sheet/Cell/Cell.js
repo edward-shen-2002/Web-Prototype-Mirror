@@ -50,12 +50,12 @@ const EditableCell = ({
 
   handleDoubleClickEditableCell
 }) => {
-  const handleMouseDown = ({ buttons }) => {
-    if(buttons === 1) handleSelectionStart(columnIndex, rowIndex);
+  const handleMouseDown = ({ buttons, ctrlKey }) => {
+    if(buttons === 1) handleSelectionStart(columnIndex, rowIndex, ctrlKey);
   };
 
-  const handleMouseEnter = ({ buttons }) => {
-    if(buttons === 1) handleSelectionOver(columnIndex, rowIndex);
+  const handleMouseEnter = ({ buttons, ctrlKey }) => {
+    if(buttons === 1) handleSelectionOver(columnIndex, rowIndex, ctrlKey);
   };
 
   const handleDoubleClick = () => {

@@ -1,11 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 
 import AppBar from "./AppBar";
 import ToolBar from "./ToolBar";
 import FormulaBar from "./FormulaBar";
 import Sheet from "./Sheet";
 import SheetNavigator from "./SheetNavigator";
-import EventListener from "./EventListener";
 
 import "./Excel.scss";
 
@@ -19,8 +18,6 @@ const Excel = ({
   handleSubmitName 
 }) => {
   const [ sheet, setSheet ] = useState(workbook.sheet(0));
-
-  const sheetRef = useRef(null);
 
   return (
     <div className="excel">
@@ -36,11 +33,9 @@ const Excel = ({
       <Divider/>
       <Sheet 
         sheet={sheet} 
-        sheetRef={sheetRef}
       />
       <Divider/>
       <SheetNavigator workbook={workbook}/>
-      <EventListener/>
     </div>
   );
 };

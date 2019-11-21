@@ -2,16 +2,23 @@ import React, { PureComponent } from "react";
 
 import { connect } from "react-redux";
 
-import { updateSelectionArea } from "actions/ui/excel/selectionArea";
-
+import { updateActiveCellPosition } from "actions/ui/excel/activeCellPosition";
+import { updateActiveSelectionArea, resetActiveSelectionArea } from "actions/ui/excel/activeSelectionArea";
 import { setSelectionModeOn, setSelectionModeOff } from "actions/ui/excel/isSelectionMode";
-
 import { setEditModeOn, setEditModeOff } from "actions/ui/excel/isEditMode";
+
+import { updateStagnantSelectionAreas, resetStagnantSelectionAreas } from "actions/ui/excel/stagnantSelectionAreas";
+
+import { isPositionEqualArea } from "tools/excel";
 
 const mapStateToProps = ({ 
   ui: { 
     excel: { 
-      selectionArea, 
+      activeCellPosition,
+      activeSelectionArea, 
+
+      stagnantSelectionAreas,
+      
       isSelectionMode, 
       isEditMode,
 
@@ -20,16 +27,27 @@ const mapStateToProps = ({
     } 
   } 
 }) => ({ 
-  selectionArea, 
+  activeCellPosition,
+  activeSelectionArea, 
+
+  stagnantSelectionAreas,
+  
   isSelectionMode, 
   isEditMode,
+
   columnCount,
   rowCount
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  handleUpdateSelectionArea: (selectionArea) => dispatch(updateSelectionArea(selectionArea)),
-  
+  handleUpdateActiveCellPosition: (activeCellPosition) => dispatch(updateActiveCellPosition(activeCellPosition)),
+
+  handleUpdateActiveSelectionArea: (activeSelectionArea) => dispatch(updateActiveSelectionArea(activeSelectionArea)),
+  handleResetActiveSelectionArea: () => dispatch(resetActiveSelectionArea()),
+
+  handleUpdateStagnantSelectionAreas: (stagnantSelectionAreas) => dispatch(updateStagnantSelectionAreas(stagnantSelectionAreas)),
+  handleResetStagnantSelectionAreas: () => dispatch(resetStagnantSelectionAreas()),
+
   handleSetSelectionModeOn: () => dispatch(setSelectionModeOn()),
   handleSetSelectionModeOff: () => dispatch(setSelectionModeOff()),
 
@@ -39,16 +57,25 @@ const mapDispatchToProps = (dispatch) => ({
 
 let EventListener = ({ 
   eventListenerRef, 
-  selectionArea, 
+
+  activeCellPosition,
+  activeSelectionArea,
+
   columnCount,
   rowCount,
-  isSelectionMode,
 
+  isSelectionMode,
   isEditMode,
 
-  sheet,
+  stagnantSelectionAreas,
 
-  handleUpdateSelectionArea,
+  handleUpdateActiveCellPosition,
+
+  handleUpdateActiveSelectionArea,
+  handleResetActiveSelectionArea,
+
+  handleUpdateStagnantSelectionAreas,
+  handleResetStagnantSelectionAreas,
 
   handleSetSelectionModeOn,
   handleSetSelectionModeOff,
@@ -58,16 +85,26 @@ let EventListener = ({
 }) => (
   <EventRedux 
     ref={eventListenerRef} 
+
     rowCount={rowCount}
     columnCount={columnCount}
-    selectionArea={selectionArea}
+
+    activeCellPosition={activeCellPosition}
+    activeSelectionArea={activeSelectionArea}
+
+    stagnantSelectionAreas={stagnantSelectionAreas}
+
     isSelectionMode={isSelectionMode}
     isEditMode={isEditMode}
 
-    sheet={sheet}
+    handleUpdateStagnantSelectionAreas={handleUpdateStagnantSelectionAreas}
+    handleResetStagnantSelectionAreas={handleResetStagnantSelectionAreas}
 
-    handleUpdateSelectionArea={handleUpdateSelectionArea}
-    
+    handleUpdateActiveCellPosition={handleUpdateActiveCellPosition}
+
+    handleUpdateActiveSelectionArea={handleUpdateActiveSelectionArea}
+    handleResetActiveSelectionArea={handleResetActiveSelectionArea}
+
     handleSetSelectionModeOn={handleSetSelectionModeOn}
     handleSetSelectionModeOff={handleSetSelectionModeOff}
 
@@ -85,190 +122,281 @@ class EventRedux extends PureComponent {
     super(props);
   }
 
-  tab(sheetContainerRef, event) {
-    const { selectionArea, columnCount, sheet, handleUpdateSelectionArea } = this.props;
-    let { x1, y1 } = selectionArea;
-
-    x1++;
-
-    event.preventDefault();
-    sheetContainerRef.current.focus();
-
-    if(x1 < columnCount) {
-      handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
-      sheet.activeCell(y1, x1);
-    }
-
-    this.setEditModeOff();
-  }
-
-  shiftTab(sheetContainerRef, event) {
-    const { selectionArea, sheet, handleUpdateSelectionArea } = this.props;
-    let { x1, y1 } = selectionArea;
-
-    x1--;
-
-    event.preventDefault();
-    sheetContainerRef.current.focus();
-
-    if(x1 > 0) {
-      handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
-      sheet.activeCell(y1, x1);
-    }
-
-    this.setEditModeOff();
-  }
-
-  ctrlA(event) {
-    const { rowCount, isEditMode, columnCount, handleUpdateSelectionArea } = this.props;
-
+  arrowUp(event, shiftKey) {
+    let { 
+      activeCellPosition,
+      isEditMode,
+      stagnantSelectionAreas,
+      handleUpdateActiveCellPosition,
+      handleUpdateStagnantSelectionAreas,
+      handleResetStagnantSelectionAreas
+    } = this.props;
     if(isEditMode) return;
 
-    event.preventDefault();
-
-    handleUpdateSelectionArea({ x1: 1, y1: 1, x2: columnCount - 1, y2: rowCount - 1 });
-  }
-
-  enter(sheetContainerRef, event) {
-    const { selectionArea, sheet, rowCount, handleUpdateSelectionArea } = this.props;
-    let { x1, y1 } = selectionArea;
-
-    y1++;
-
-    event.preventDefault();
-    sheetContainerRef.current.focus();
+    let { x, y } = activeCellPosition;
     
-    if(y1 < rowCount) {
-      handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
-      sheet.activeCell(y1, x1);
-    }
-
-    this.setEditModeOff();
-  }
-
-  esc(sheetContainerRef) {
-    this.setEditModeOff();
-    sheetContainerRef.current.focus();
-  }
-
-  moveUp(event) {
-    const { isEditMode } = this.props;
-    if(isEditMode) return;
-
-    const { selectionArea, sheet, handleUpdateSelectionArea } = this.props;
-    let { x1, y1 } = selectionArea;
-
-    y1--;
-
     event.preventDefault();
+    
+    if(shiftKey) { 
+      const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
 
-    if(y1 > 0) {
-      handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
-      sheet.activeCell(y1, x1);
+      if(stagnantSelectionAreasLength) {
+        let lastStagnantSelectionArea = { ...stagnantSelectionAreas[stagnantSelectionAreasLength - 1] };
+
+        const { y1, y2 } = lastStagnantSelectionArea;
+
+        if(y1 > y || y2 > y) {
+          if(y1 > y) {
+            lastStagnantSelectionArea.y1 -= 1;
+          } else {
+            lastStagnantSelectionArea.y2 -= 1;
+          }
+          
+          if(isPositionEqualArea(activeCellPosition, lastStagnantSelectionArea)) {
+            handleResetStagnantSelectionAreas();
+          } else {
+            handleUpdateStagnantSelectionAreas([ lastStagnantSelectionArea ]);
+          }
+        } else {
+          if(y1 < y) {
+            lastStagnantSelectionArea.y1 -= 1;
+          } else {
+            lastStagnantSelectionArea.y2 -= 1;
+          }
+
+          if(lastStagnantSelectionArea.y1 > 0 && lastStagnantSelectionArea.y2 > 0) handleUpdateStagnantSelectionAreas([ lastStagnantSelectionArea ]);
+        }
+      } else {
+        const y2 = y - 1;
+
+        if(y2 > 0) handleUpdateStagnantSelectionAreas([ { x1: x, x2: x, y1: y, y2 } ]);
+      }
+    } else {
+      y--;
+  
+      if(y > 0) handleUpdateActiveCellPosition({ y });
+      if(stagnantSelectionAreas) handleResetStagnantSelectionAreas()
     }
   }
 
-  moveDown(event) {
-    const { isEditMode } = this.props;
+  arrowDown(event, shiftKey) {
+    let { 
+      activeCellPosition,
+      isEditMode,
+      rowCount,
+      stagnantSelectionAreas,
+      handleUpdateActiveCellPosition,
+      handleUpdateStagnantSelectionAreas,
+      handleResetStagnantSelectionAreas
+    } = this.props;
     if(isEditMode) return;
-
-    const { selectionArea, sheet, rowCount, handleUpdateSelectionArea } = this.props;
-    let { x1, y1 } = selectionArea;
-
     
-    y1++;
+    let { x, y } = activeCellPosition;
 
     event.preventDefault();
     
-    if(y1 < rowCount) {
-      handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
-      sheet.activeCell(y1, x1);
+    if(shiftKey) { 
+      const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
+
+      if(stagnantSelectionAreasLength) {
+        let lastStagnantSelectionArea = { ...stagnantSelectionAreas[stagnantSelectionAreasLength - 1] };
+
+        const { y1, y2 } = lastStagnantSelectionArea;
+
+        if(y1 < y || y2 < y) {
+          if(y1 < y) {
+            lastStagnantSelectionArea.y1 += 1;
+          } else {
+            lastStagnantSelectionArea.y2 += 1;
+          }
+
+          if(isPositionEqualArea(activeCellPosition, lastStagnantSelectionArea)) {
+            handleResetStagnantSelectionAreas();
+          } else {
+            handleUpdateStagnantSelectionAreas([ lastStagnantSelectionArea ]);
+          }
+        } else {
+          if(y1 > y) {
+            lastStagnantSelectionArea.y1 += 1;
+          } else {
+            lastStagnantSelectionArea.y2 += 1;
+          }
+
+          if(lastStagnantSelectionArea.y1 < rowCount && lastStagnantSelectionArea.y2 < rowCount) handleUpdateStagnantSelectionAreas([ lastStagnantSelectionArea ]);
+        }
+      
+      } else {
+        const y2 = y + 1;
+
+        if(y2 < rowCount) handleUpdateStagnantSelectionAreas([ { x1: x, x2: x, y1: y, y2 } ]);
+      }
+    } else {
+      y++;
+  
+      if(y < rowCount) handleUpdateActiveCellPosition({ x });
+      if(stagnantSelectionAreas) handleResetStagnantSelectionAreas()
     }
   }
 
-  moveLeft(event) {
-    const { isEditMode } = this.props;
+  arrowLeft(event, shiftKey) {
+    let { 
+      activeCellPosition,
+      isEditMode,
+      stagnantSelectionAreas,
+      handleUpdateActiveCellPosition,
+      handleUpdateStagnantSelectionAreas,
+      handleResetStagnantSelectionAreas
+    } = this.props;
     if(isEditMode) return;
 
-    const { selectionArea, sheet, handleUpdateSelectionArea } = this.props;
-    let { x1, y1 } = selectionArea;
-
-    x1--;
-
-    event.preventDefault();
-
-    if(x1 > 0) {
-      handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
-      sheet.activeCell(y1, x1);
-    }
-  }
-
-  moveRight(event) {
-    const { isEditMode } = this.props;
-    if(isEditMode) return;
-
-    const { selectionArea, columnCount, sheet, handleUpdateSelectionArea } = this.props;
-    let { x1, y1 } = selectionArea;
-
-    x1++;
-
-    event.preventDefault();
-
-    if(x1 < columnCount) {
-      handleUpdateSelectionArea({ x1, y1, x2: x1, y2: y1 });
-      sheet.activeCell(y1, x1);
-    }
-  }
-
-  startSelectionArea(selectionArea) {
-    const { isSelectionMode, sheet, handleUpdateSelectionArea, handleSetSelectionModeOn } = this.props;
-    if(!isSelectionMode) handleSetSelectionModeOn();
-
-    const { x1, y1 } = selectionArea;
-
-    sheet.activeCell(y1, x1);
-
-    this.setEditModeOff();
-
-    handleUpdateSelectionArea(selectionArea);
-  }
-
-  updateSelectionArea(selectionArea) {
-    const { isSelectionMode, handleUpdateSelectionArea } = this.props;
-    if(isSelectionMode) handleUpdateSelectionArea(selectionArea);
-  }
-
-  selectColumnHeader(column) {
-    const { rowCount, handleUpdateSelectionArea } = this.props;
-
-    this.setEditModeOff();
+    let { x, y } = activeCellPosition;
     
-    handleUpdateSelectionArea({ x1: column, y1: 1, x2: column, y2: rowCount - 1 });
+    event.preventDefault();
+    
+    if(shiftKey) { 
+      const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
+
+      if(stagnantSelectionAreasLength) {
+        let lastStagnantSelectionArea = { ...stagnantSelectionAreas[stagnantSelectionAreasLength - 1] };
+
+        const { x1, x2 } = lastStagnantSelectionArea;
+
+        if(x1 > x || x2 > x) {
+          if(x1 > x) {
+            lastStagnantSelectionArea.x1 -= 1;
+          } else {
+            lastStagnantSelectionArea.x2 -= 1;
+          }
+          
+          if(isPositionEqualArea(activeCellPosition, lastStagnantSelectionArea)) {
+            handleResetStagnantSelectionAreas();
+          } else {
+            handleUpdateStagnantSelectionAreas([ lastStagnantSelectionArea ]);
+          }
+        } else {
+          if(x1 < x) {
+            lastStagnantSelectionArea.x1 -= 1;
+          } else {
+            lastStagnantSelectionArea.x2 -= 1;
+          }
+
+          if(lastStagnantSelectionArea.x1 > 0 && lastStagnantSelectionArea.x2 > 0) handleUpdateStagnantSelectionAreas([ lastStagnantSelectionArea ]);
+        }
+      } else {
+        const x2 = x - 1;
+
+        if(x2 > 0) handleUpdateStagnantSelectionAreas([ { x1: x, x2, y1: y, y2: y } ]);
+      }
+    } else {
+      x--;
+  
+      if(x > 0) handleUpdateActiveCellPosition({ x });
+      if(stagnantSelectionAreas) handleResetStagnantSelectionAreas()
+    }
   }
 
-  selectRowHeader(row) {
-    const { columnCount, handleUpdateSelectionArea } = this.props;
+  arrowRight(event, shiftKey) {
+    let { 
+      activeCellPosition,
+      isEditMode,
+      columnCount,
+      stagnantSelectionAreas,
+      handleUpdateActiveCellPosition,
+      handleUpdateStagnantSelectionAreas,
+      handleResetStagnantSelectionAreas
+    } = this.props;
+    if(isEditMode) return;
+    
+    let { x, y } = activeCellPosition;
+
+    event.preventDefault();
+    
+    if(shiftKey) { 
+      const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
+
+      if(stagnantSelectionAreasLength) {
+        let lastStagnantSelectionArea = { ...stagnantSelectionAreas[stagnantSelectionAreasLength - 1] };
+
+        const { x1, x2 } = lastStagnantSelectionArea;
+
+        if(x1 < x || x2 < x) {
+          if(x1 < x) {
+            lastStagnantSelectionArea.x1 += 1;
+          } else {
+            lastStagnantSelectionArea.x2 += 1;
+          }
+
+          if(isPositionEqualArea(activeCellPosition, lastStagnantSelectionArea)) {
+            handleResetStagnantSelectionAreas();
+          } else {
+            handleUpdateStagnantSelectionAreas([ lastStagnantSelectionArea ]);
+          }
+        } else {
+          if(x1 > x) {
+            lastStagnantSelectionArea.x1 += 1;
+          } else {
+            lastStagnantSelectionArea.x2 += 1;
+          }
+
+          if(lastStagnantSelectionArea.x1 < columnCount && lastStagnantSelectionArea.x2 < columnCount) handleUpdateStagnantSelectionAreas([ lastStagnantSelectionArea ]);
+        }
+      
+      } else {
+        const x2 = x + 1;
+
+        if(x2 < columnCount) handleUpdateStagnantSelectionAreas([ { x1: x, x2, y1: y, y2: y } ]);
+      }
+    } else {
+      x++;
+  
+      if(x < columnCount) handleUpdateActiveCellPosition({ x });
+      if(stagnantSelectionAreas) handleResetStagnantSelectionAreas()
+    }
+  }
+
+  mouseUp() {
+    const { isSelectionMode, activeSelectionArea, stagnantSelectionAreas, handleResetActiveSelectionArea, handleUpdateStagnantSelectionAreas } = this.props;
+
+    if(!isSelectionMode) return;
+
+    this.setSelectionModeOff();
+
+    const { x1, y1, x2, y2 } = activeSelectionArea;
+
+    if(x1 !== x2 || y1 !== y2) handleUpdateStagnantSelectionAreas([ ...stagnantSelectionAreas, activeSelectionArea ]);
+
+    handleResetActiveSelectionArea();
+  }
+
+  startSelection(x1, y1, isMultiSelection) {
+    const { handleUpdateActiveCellPosition, stagnantSelectionAreas, handleResetStagnantSelectionAreas, handleUpdateActiveSelectionArea } = this.props;
+
+    if(!isMultiSelection && stagnantSelectionAreas) handleResetStagnantSelectionAreas(); 
 
     this.setEditModeOff();
+    this.setSelectionModeOn();
 
-    handleUpdateSelectionArea({ x1: 1, y1: row, x2: columnCount - 1, y2: row });
+    handleUpdateActiveCellPosition({ x: x1, y: y1 });
+    handleUpdateActiveSelectionArea({ x1, y1, x2: x1, y2: y1 });
   }
 
-  selectRootHeader() {
-    const { rowCount, columnCount, handleUpdateSelectionArea } = this.props;
+  selectOver(x2, y2, isMultiSelection) {
+    const { isSelectionMode, stagnantSelectionAreas, handleResetStagnantSelectionAreas, handleUpdateActiveSelectionArea } = this.props;
 
-    this.setEditModeOff();
+    if(!isSelectionMode) return;
 
-    handleUpdateSelectionArea({ x1: 1, y1: 1, x2: columnCount - 1, y2: rowCount - 1 });
-  }
+    if(!isMultiSelection && stagnantSelectionAreas) handleResetStagnantSelectionAreas(); 
 
-  setIsSelectionModeOn() {
+    handleUpdateActiveSelectionArea({ x2, y2 });
+  };
+
+  setSelectionModeOn() {
     const { isSelectionMode, handleSetSelectionModeOn } = this.props;
 
     if(!isSelectionMode) handleSetSelectionModeOn();
   }
 
-  setIsSelectionModeOff() {
+  setSelectionModeOff() {
     const { isSelectionMode, handleSetSelectionModeOff } = this.props;
 
     if(isSelectionMode) handleSetSelectionModeOff();

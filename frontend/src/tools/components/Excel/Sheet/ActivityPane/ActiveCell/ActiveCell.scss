@@ -1,0 +1,14 @@
+@import "~styles/mixins/shadows";
+
+.activeCell {
+  position: absolute;
+  border: 2px solid rgba(75, 135, 255, 0.95);
+
+  &--editMode {
+    @include shadow;
+  }
+
+  &--normalMode {
+    pointer-events: none;
+  }
+}

@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 
-import selectionArea from "./selectionArea";
+import activeSelectionArea from "./activeSelectionArea";
+import activeCellPosition from "./activeCellPosition";
 
 import columnCount from "./columnCount";
 import rowCount from "./rowCount";
@@ -20,10 +21,15 @@ import sheetNames from "./sheetNames";
 
 import sheetCellValues from "./sheetCellValues";
 
+import stagnantSelectionAreas from "./stagnantSelectionAreas";
+
 const excelReducer = combineReducers({ 
   sheetCellValues,
   
-  selectionArea,
+  activeSelectionArea,
+  stagnantSelectionAreas,
+
+  activeCellPosition,
   
   activeSheetName,
   sheetNames,
