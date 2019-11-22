@@ -69,7 +69,7 @@ export const computeSelectionAreaStyle = (SheetInstance, selectionArea, freezeCo
 
   customSelectionStyle.left = left;
   customSelectionStyle.top = top;
-  customSelectionStyle.width = selectionAreaWidthl
+  customSelectionStyle.width = selectionAreaWidth;
   customSelectionStyle.height = selectionAreaHeight; 
   customSelectionStyle.display = null;
 

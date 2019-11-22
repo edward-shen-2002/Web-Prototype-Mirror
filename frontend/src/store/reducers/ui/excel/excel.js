@@ -23,6 +23,8 @@ import sheetCellValues from "./sheetCellValues";
 
 import stagnantSelectionAreas from "./stagnantSelectionAreas";
 
+import activeCellSelectionAreaIndex from "./activeCellSelectionAreaIndex";
+
 const excelReducer = combineReducers({ 
   sheetCellValues,
   
@@ -30,6 +32,7 @@ const excelReducer = combineReducers({
   stagnantSelectionAreas,
 
   activeCellPosition,
+  activeCellSelectionAreaIndex,
   
   activeSheetName,
   sheetNames,

@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 
 import { updateActiveCellPosition } from "actions/ui/excel/activeCellPosition";
 import { updateActiveSelectionArea, resetActiveSelectionArea } from "actions/ui/excel/activeSelectionArea";
+import { updateActiveCellSelectionAreaIndex, resetActiveCellSelectionAreaIndex } from "actions/ui/excel/activeCellSelectionAreaIndex";
+
 import { setSelectionModeOn, setSelectionModeOff } from "actions/ui/excel/isSelectionMode";
 import { setEditModeOn, setEditModeOff } from "actions/ui/excel/isEditMode";
 
@@ -16,6 +18,7 @@ const mapStateToProps = ({
     excel: { 
       activeCellPosition,
       activeSelectionArea, 
+      activeCellSelectionAreaIndex,
 
       stagnantSelectionAreas,
       
@@ -29,6 +32,7 @@ const mapStateToProps = ({
 }) => ({ 
   activeCellPosition,
   activeSelectionArea, 
+  activeCellSelectionAreaIndex,
 
   stagnantSelectionAreas,
   
@@ -45,6 +49,9 @@ const mapDispatchToProps = (dispatch) => ({
   handleUpdateActiveSelectionArea: (activeSelectionArea) => dispatch(updateActiveSelectionArea(activeSelectionArea)),
   handleResetActiveSelectionArea: () => dispatch(resetActiveSelectionArea()),
 
+  handleUpdateActiveCellSelectionAreaIndex: (activeCellSelectionAreaIndex) => dispatch(updateActiveCellSelectionAreaIndex(activeCellSelectionAreaIndex)),
+  handleResetActiveCellSelectionAreaIndex: () => dispatch(resetActiveCellSelectionAreaIndex()),
+
   handleUpdateStagnantSelectionAreas: (stagnantSelectionAreas) => dispatch(updateStagnantSelectionAreas(stagnantSelectionAreas)),
   handleResetStagnantSelectionAreas: () => dispatch(resetStagnantSelectionAreas()),
 
@@ -60,6 +67,7 @@ let EventListener = ({
 
   activeCellPosition,
   activeSelectionArea,
+  activeCellSelectionAreaIndex,
 
   columnCount,
   rowCount,
@@ -70,6 +78,9 @@ let EventListener = ({
   stagnantSelectionAreas,
 
   handleUpdateActiveCellPosition,
+
+  handleUpdateActiveCellSelectionAreaIndex,
+  handleResetActiveCellSelectionAreaIndex,
 
   handleUpdateActiveSelectionArea,
   handleResetActiveSelectionArea,
@@ -91,11 +102,15 @@ let EventListener = ({
 
     activeCellPosition={activeCellPosition}
     activeSelectionArea={activeSelectionArea}
+    activeCellSelectionAreaIndex={activeCellSelectionAreaIndex}
 
     stagnantSelectionAreas={stagnantSelectionAreas}
 
     isSelectionMode={isSelectionMode}
     isEditMode={isEditMode}
+
+    handleUpdateActiveCellSelectionAreaIndex={handleUpdateActiveCellSelectionAreaIndex}
+    handleResetActiveCellSelectionAreaIndex={handleResetActiveCellSelectionAreaIndex} 
 
     handleUpdateStagnantSelectionAreas={handleUpdateStagnantSelectionAreas}
     handleResetStagnantSelectionAreas={handleResetStagnantSelectionAreas}
@@ -354,6 +369,41 @@ class EventRedux extends PureComponent {
     }
   }
 
+  tab(event, shiftKey) {
+    const { activeCellPosition, activeSelectionArea, stagnantSelectionAreas, activeCellSelectionAreaIndex } = this.props;
+
+    event.preventDefault();
+
+    let selectionArea;
+
+    // Get the rectangular scope that an active selection area can go in
+    if(activeSelectionArea) {
+      // It is possible to have the active cell go over both active area and stagnant areas
+      if(stagnantSelectionAreas) {
+        const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
+
+        // ! Make the first upper outer bound be the indicator that the active cell is in the acive selection area
+        // ! When it's not out of bound, the cell is in a stagnant selection area
+        if(stagnantSelectionAreasLength === activeCellSelectionAreaIndex) {
+          selectionArea = activeSelectionArea;
+        } else {
+          selectionArea = stagnantSelectionAreas[activeCellSelectionAreaIndex];
+        }
+      } else {
+        selectionArea = activeSelectionArea;
+      }
+    } else if(stagnantSelectionAreas) {
+      selectionArea = stagnantSelectionAreas[activeCellSelectionAreaIndex];
+    } 
+
+    // When shift key is enabled, perform the reverse of tab
+    if(shiftKey) {
+
+    } else {
+
+    }
+  }
+
   mouseUp() {
     const { isSelectionMode, activeSelectionArea, stagnantSelectionAreas, handleResetActiveSelectionArea, handleUpdateStagnantSelectionAreas } = this.props;
 
@@ -363,7 +413,7 @@ class EventRedux extends PureComponent {
 
     const { x1, y1, x2, y2 } = activeSelectionArea;
 
-    if(x1 !== x2 || y1 !== y2) handleUpdateStagnantSelectionAreas([ ...stagnantSelectionAreas, activeSelectionArea ]);
+    if(stagnantSelectionAreas || (x1 !== x2 || y1 !== y2)) handleUpdateStagnantSelectionAreas([ ...stagnantSelectionAreas, activeSelectionArea ]);
 
     handleResetActiveSelectionArea();
   }
@@ -381,13 +431,15 @@ class EventRedux extends PureComponent {
   }
 
   selectOver(x2, y2, isMultiSelection) {
-    const { isSelectionMode, stagnantSelectionAreas, handleResetStagnantSelectionAreas, handleUpdateActiveSelectionArea } = this.props;
+    const { isSelectionMode, activeCellPosition, stagnantSelectionAreas, handleResetStagnantSelectionAreas, handleUpdateActiveSelectionArea } = this.props;
 
     if(!isSelectionMode) return;
 
     if(!isMultiSelection && stagnantSelectionAreas) handleResetStagnantSelectionAreas(); 
 
-    handleUpdateActiveSelectionArea({ x2, y2 });
+    const { x, y } = activeCellPosition;
+
+    handleUpdateActiveSelectionArea({ x1: x, y1: y, x2, y2 });
   };
 
   setSelectionModeOn() {
@@ -413,6 +465,12 @@ class EventRedux extends PureComponent {
     const { isEditMode, handleSetEditModeOff } = this.props;
 
     if(isEditMode) handleSetEditModeOff();
+  }
+
+  resetActiveCellSelectionAreaIndex() {
+    const { activeCellSelectionAreaIndex, handleResetActiveCellSelectionAreaIndex } = this.props;
+
+    if(activeCellSelectionAreaIndex >= 0) handleResetActiveCellSelectionAreaIndex();
   }
 
   render() {
