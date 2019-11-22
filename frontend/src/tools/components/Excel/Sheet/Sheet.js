@@ -145,22 +145,25 @@ const Sheet = ({ sheet }) => {
 
   const handleKeyDown = (event) => {
     const { key, shiftKey, ctrlKey } = event;
+    const { current: EventListenerInstance } = eventListenerRef;
     
     if(key === "ArrowUp") {
-      eventListenerRef.current.arrowUp(event, shiftKey);
+      EventListenerInstance.arrowUp(event, shiftKey);
     } else if(key === "ArrowDown") {
-      eventListenerRef.current.arrowDown(event, shiftKey);
+      EventListenerInstance.arrowDown(event, shiftKey);
     } else if(key === "ArrowLeft") {
-      eventListenerRef.current.arrowLeft(event, shiftKey);
+      EventListenerInstance.arrowLeft(event, shiftKey);
     } else if(key === "ArrowRight") {
-      eventListenerRef.current.arrowRight(event, shiftKey);
-    } 
+      EventListenerInstance.arrowRight(event, shiftKey);
+    } else if(key === "Tab") {
+      EventListenerInstance.tab(event, shiftKey, sheetContainerRef);
+    }
   };
   
   return (
     <div ref={sheetContainerRef} className="sheet" tabIndex="0" onKeyDown={handleKeyDown}>
       <SheetWindow sheetContainerRef={sheetContainerRef} eventListenerRef={eventListenerRef}/>
-      <EventListener sheet={sheet} eventListenerRef={eventListenerRef} sheetContainerRef={sheetContainerRef}/>
+      <EventListener sheet={sheet} eventListenerRef={eventListenerRef}/>
       <WindowListener eventListenerRef={eventListenerRef}/>
     </div>
   );

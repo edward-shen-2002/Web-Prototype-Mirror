@@ -369,43 +369,118 @@ class EventRedux extends PureComponent {
     }
   }
 
-  tab(event, shiftKey) {
-    const { activeCellPosition, activeSelectionArea, stagnantSelectionAreas, activeCellSelectionAreaIndex } = this.props;
+  tab(event, shiftKey, sheetContainerRef) {
+    let { 
+      isEditMode,
+
+      activeCellPosition, 
+      activeSelectionArea, 
+      stagnantSelectionAreas, 
+      activeCellSelectionAreaIndex,
+
+      rowCount,
+      columnCount,
+
+      handleSetEditModeOff,
+      handleUpdateActiveCellPosition,
+      handleUpdateActiveCellSelectionAreaIndex
+    } = this.props;
 
     event.preventDefault();
 
+    const { current: SheetContainerInstance } = sheetContainerRef;
+
+    if(isEditMode) {
+      handleSetEditModeOff();
+      SheetContainerInstance.focus();
+    }
+
     let selectionArea;
+    let isBounded;
+
+    const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
 
     // Get the rectangular scope that an active selection area can go in
-    if(activeSelectionArea) {
-      // It is possible to have the active cell go over both active area and stagnant areas
-      if(stagnantSelectionAreas) {
-        const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
-
-        // ! Make the first upper outer bound be the indicator that the active cell is in the acive selection area
-        // ! When it's not out of bound, the cell is in a stagnant selection area
-        if(stagnantSelectionAreasLength === activeCellSelectionAreaIndex) {
-          selectionArea = activeSelectionArea;
+    // TODO : clean up later
+    if(activeSelectionArea || stagnantSelectionAreasLength) {
+      if(activeSelectionArea) {
+        // It is possible to have the active cell go over both active area and stagnant areas
+        if(stagnantSelectionAreasLength) {
+          // ! Make the first upper outer bound be the indicator that the active cell is in the acive selection area
+          // ! When it's not out of bound, the cell is in a stagnant selection area
+          if(stagnantSelectionAreasLength === activeCellSelectionAreaIndex) {
+            selectionArea = activeSelectionArea;
+          } else {
+            selectionArea = stagnantSelectionAreas[activeCellSelectionAreaIndex];
+          }
         } else {
-          selectionArea = stagnantSelectionAreas[activeCellSelectionAreaIndex];
+          selectionArea = activeSelectionArea;
         }
       } else {
-        selectionArea = activeSelectionArea;
-      }
-    } else if(stagnantSelectionAreas) {
-      selectionArea = stagnantSelectionAreas[activeCellSelectionAreaIndex];
-    } 
+        selectionArea = stagnantSelectionAreas[activeCellSelectionAreaIndex];
+      } 
 
-    // When shift key is enabled, perform the reverse of tab
-    if(shiftKey) {
-
+      isBounded = false
     } else {
+      isBounded = true;
 
+      selectionArea = { x1: 1, y1: 1, x2: columnCount - 1, y2: rowCount - 1 };
+    }
+
+    let { x1, y1, x2, y2 } = selectionArea;
+    let { x, y } = activeCellPosition;
+
+    // When shift key is enabled, perform the reverse of tab. We can do the same for y for the bounded case since we are not using y for unbounded
+    if(shiftKey) {
+      x--;
+      y--;
+    } else {
+      x++;
+      y++;
+    }
+    
+    // Check for bounds -- do not update when isbounded and tab goes out bounds
+    if((x < x1 && x < x2) || (x > x1 && x > x2)) {
+      if(!isBounded) {
+        // Check for bounds in y
+        if((y < y1 && y < y2) || (y > y1 && y > y2)) {
+          // Need to switch selection areas. 
+          (y < y1 && y < y2) ? activeCellSelectionAreaIndex-- : activeCellSelectionAreaIndex++;
+
+          // Fix out of bounds result
+          if((activeSelectionArea && activeCellSelectionAreaIndex === stagnantSelectionAreasLength + 1) || (!activeSelectionArea && activeCellSelectionAreaIndex === stagnantSelectionAreasLength)) {
+            activeCellSelectionAreaIndex = 0;
+          } else if(activeCellSelectionAreaIndex < 0) {
+            activeSelectionArea ? activeCellSelectionAreaIndex = stagnantSelectionAreasLength : activeCellSelectionAreaIndex = stagnantSelectionAreasLength - 1;
+          }
+
+          let newSelectionArea = (activeCellSelectionAreaIndex === stagnantSelectionAreasLength) ? activeSelectionArea : stagnantSelectionAreas[activeCellSelectionAreaIndex]; 
+          
+          const { x1: newX1, y1: newY1, x2: newX2, y2: newY2 } = newSelectionArea;
+
+          if(y < y1 && y < y2) {
+            x = Math.max(newX1, newX2);
+            y = Math.max(newY1, newY2);  
+          } else {
+            x = Math.min(newX1, newX2);
+            y = Math.min(newY1, newY2);   
+          }
+
+          handleUpdateActiveCellSelectionAreaIndex(activeCellSelectionAreaIndex);
+        } else {
+          // Make x go to its resepective end point (start or end) as a result of going out of bound
+          x = (x < x1 && x < x2) ? Math.max(x1, x2) : Math.min(x1, x2);
+        }
+
+        handleUpdateActiveCellPosition({ x, y });
+      }
+    } else {
+      handleUpdateActiveCellPosition({ x });
     }
   }
 
   mouseUp() {
-    const { isSelectionMode, activeSelectionArea, stagnantSelectionAreas, handleResetActiveSelectionArea, handleUpdateStagnantSelectionAreas } = this.props;
+    const { isSelectionMode, activeSelectionArea, stagnantSelectionAreas, handleResetActiveSelectionArea, handleUpdateStagnantSelectionAreas, handleUpdateActiveCellSelectionAreaIndex } = this.props;
 
     if(!isSelectionMode) return;
 
@@ -413,7 +488,11 @@ class EventRedux extends PureComponent {
 
     const { x1, y1, x2, y2 } = activeSelectionArea;
 
-    if(stagnantSelectionAreas || (x1 !== x2 || y1 !== y2)) handleUpdateStagnantSelectionAreas([ ...stagnantSelectionAreas, activeSelectionArea ]);
+    if(x1 !== x2 || y1 !== y2) {
+      const newStagnantSelectionAreas = [ ...stagnantSelectionAreas, activeSelectionArea ];
+      handleUpdateStagnantSelectionAreas(newStagnantSelectionAreas);
+      handleUpdateActiveCellSelectionAreaIndex(newStagnantSelectionAreas.length - 1);
+    }
 
     handleResetActiveSelectionArea();
   }
@@ -431,7 +510,7 @@ class EventRedux extends PureComponent {
   }
 
   selectOver(x2, y2, isMultiSelection) {
-    const { isSelectionMode, activeCellPosition, stagnantSelectionAreas, handleResetStagnantSelectionAreas, handleUpdateActiveSelectionArea } = this.props;
+    const { isSelectionMode, activeCellPosition, stagnantSelectionAreas, activeCellSelectionAreaIndex, handleResetStagnantSelectionAreas, handleUpdateActiveSelectionArea, handleUpdateActiveCellSelectionAreaIndex } = this.props;
 
     if(!isSelectionMode) return;
 
@@ -439,7 +518,10 @@ class EventRedux extends PureComponent {
 
     const { x, y } = activeCellPosition;
 
+    const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
+
     handleUpdateActiveSelectionArea({ x1: x, y1: y, x2, y2 });
+    if(stagnantSelectionAreasLength !== activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(stagnantSelectionAreasLength);
   };
 
   setSelectionModeOn() {
