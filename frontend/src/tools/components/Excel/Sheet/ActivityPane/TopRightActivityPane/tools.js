@@ -46,12 +46,9 @@ export const computeSelectionAreaStyle = (SheetInstance, selectionArea, freezeCo
       left = leftEnd;
     }
 
-    customSelectionStyle = {
-      ...customSelectionStyle,
-      borderLeftWidth: STYLE_SELECTION_BORDER_WIDTH,
-      borderLeftColor: STYLE_SELECTION_BORDER_COLOR,
-      borderLeftStyle: borderStyle
-    }
+    customSelectionStyle.borderLeftWidth = STYLE_SELECTION_BORDER_WIDTH;
+    customSelectionStyle.borderLeftColor = STYLE_SELECTION_BORDER_COLOR;
+    customSelectionStyle.borderLeftStyle = borderStyle;
   }
 
   const minTop = y1 < y2 ? topStart : topEnd;
@@ -66,22 +63,17 @@ export const computeSelectionAreaStyle = (SheetInstance, selectionArea, freezeCo
       selectionAreaHeight = topStart + heightStart - topEnd;
     }
 
-    customSelectionStyle = {
-      ...customSelectionStyle,
-      borderBottomWidth: STYLE_SELECTION_BORDER_WIDTH,
-      borderBottomColor: STYLE_SELECTION_BORDER_COLOR,
-      borderBottomStyle: borderStyle
-    }
+    customSelectionStyle.borderBottomWidth = STYLE_SELECTION_BORDER_WIDTH;
+    customSelectionStyle.borderBottomColor = STYLE_SELECTION_BORDER_COLOR;
+    customSelectionStyle.borderBottomStyle = borderStyle;  
   }
 
-  customSelectionStyle = { 
-    ...customSelectionStyle,
-    left: left, 
-    top: top, 
-    width: selectionAreaWidth, 
-    height: selectionAreaHeight, 
-    display: null
-  };
 
+  customSelectionStyle.left = left; 
+  customSelectionStyle.top = top; 
+  customSelectionStyle.width = selectionAreaWidth; 
+  customSelectionStyle.height = selectionAreaHeight; 
+  customSelectionStyle.display = null;
+  
   return customSelectionStyle;
 };

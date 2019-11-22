@@ -41,12 +41,10 @@ export const computeSelectionAreaStyle = (SheetInstance, selectionArea, freezeCo
       selectionAreaWidth = leftStart + widthStart - minLeft;
     }
 
-    customSelectionStyle = {
-      ...customSelectionStyle,
-      borderRightWidth: STYLE_SELECTION_BORDER_WIDTH,
-      borderRightColor: STYLE_SELECTION_BORDER_COLOR,
-      borderRightStyle: borderStyle
-    }
+    customSelectionStyle.borderRightWidth = STYLE_SELECTION_BORDER_WIDTH;
+    customSelectionStyle.borderRightColor = STYLE_SELECTION_BORDER_COLOR;
+    customSelectionStyle.borderRightColor = STYLE_SELECTION_BORDER_COLOR;
+    customSelectionStyle.borderRightStyle = borderStyle;
   }
 
   if(freezeRowCount && (y1 <= freezeRowCount || y2 <= freezeRowCount)) {
@@ -66,22 +64,16 @@ export const computeSelectionAreaStyle = (SheetInstance, selectionArea, freezeCo
       selectionAreaHeight = topStart + heightStart - topEnd;
     }
 
-    customSelectionStyle = {
-      ...customSelectionStyle,
-      borderTopWidth: STYLE_SELECTION_BORDER_WIDTH,
-      borderTopColor: STYLE_SELECTION_BORDER_COLOR,
-      borderTopStyle: borderStyle
-    }
+    customSelectionStyle.borderTopWidth = STYLE_SELECTION_BORDER_WIDTH;
+    customSelectionStyle.borderTopColor = STYLE_SELECTION_BORDER_COLOR;
+    customSelectionStyle.borderTopStyle = borderStyle;
   }
 
-  customSelectionStyle = { 
-    ...customSelectionStyle,
-    left: left, 
-    top: top, 
-    width: selectionAreaWidth, 
-    height: selectionAreaHeight, 
-    display: null
-  };
+  customSelectionStyle.left = left;
+  customSelectionStyle.top = top;
+  customSelectionStyle.width = selectionAreaWidth;
+  customSelectionStyle.height = selectionAreaHeight;
+  customSelectionStyle.display = null;
 
   return customSelectionStyle;
 };

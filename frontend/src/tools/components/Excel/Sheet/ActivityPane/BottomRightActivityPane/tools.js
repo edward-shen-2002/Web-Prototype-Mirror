@@ -46,12 +46,9 @@ export const computeSelectionAreaStyle = (SheetInstance, selectionArea, freezeCo
       left = leftEnd;
     }
 
-    customSelectionStyle = {
-      ...customSelectionStyle,
-      borderLeftWidth: STYLE_SELECTION_BORDER_WIDTH,
-      borderLeftColor: STYLE_SELECTION_BORDER_COLOR,
-      borderLeftStyle: borderStyle
-    }
+    customSelectionStyle.borderLeftWidth = STYLE_SELECTION_BORDER_WIDTH;
+    customSelectionStyle.borderLeftColor = STYLE_SELECTION_BORDER_COLOR;
+    customSelectionStyle.borderLeftStyle = borderStyle;
   }
 
   if(freezeRowCount && (y1 <= freezeRowCount || y2 <= freezeRowCount)) {
@@ -71,22 +68,16 @@ export const computeSelectionAreaStyle = (SheetInstance, selectionArea, freezeCo
       top = topEnd;
     }
 
-    customSelectionStyle = {
-      ...customSelectionStyle,
-      borderTopWidth: STYLE_SELECTION_BORDER_WIDTH,
-      borderTopColor: STYLE_SELECTION_BORDER_COLOR,
-      borderTopStyle: borderStyle
-    }
+    customSelectionStyle.borderTopWidth = STYLE_SELECTION_BORDER_WIDTH;
+    customSelectionStyle.borderTopColor = STYLE_SELECTION_BORDER_COLOR;
+    customSelectionStyle.borderTopStyle = borderStyle;
   }
 
-  customSelectionStyle = { 
-    ...customSelectionStyle,
-    left,
-    top,
-    width: selectionAreaWidth, 
-    height: selectionAreaHeight, 
-    display: null
-  };
+  customSelectionStyle.left = left;
+  customSelectionStyle.top = top;
+  customSelectionStyle.width = selectionAreaWidth;
+  customSelectionStyle.height = selectionAreaHeight; 
+  customSelectionStyle.display = null;
 
   return customSelectionStyle;
 };
