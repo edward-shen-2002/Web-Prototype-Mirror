@@ -140,11 +140,14 @@ class EventRedux extends PureComponent {
   arrowUp(event, shiftKey) {
     let { 
       activeCellPosition,
+      activeCellSelectionAreaIndex,
       isEditMode,
       stagnantSelectionAreas,
       handleUpdateActiveCellPosition,
       handleUpdateStagnantSelectionAreas,
-      handleResetStagnantSelectionAreas
+      handleUpdateActiveCellSelectionAreaIndex,
+      handleResetStagnantSelectionAreas,
+      handleResetActiveCellSelectionAreaIndex
     } = this.props;
     if(isEditMode) return;
 
@@ -156,41 +159,50 @@ class EventRedux extends PureComponent {
       const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
 
       if(stagnantSelectionAreasLength) {
-        let lastStagnantSelectionArea = { ...stagnantSelectionAreas[stagnantSelectionAreasLength - 1] };
+        let focusedStagnantSelectionArea = { ...stagnantSelectionAreas[activeCellSelectionAreaIndex] };
 
-        const { y1, y2 } = lastStagnantSelectionArea;
+        const { y1, y2 } = focusedStagnantSelectionArea;
 
         if(y1 > y || y2 > y) {
           if(y1 > y) {
-            lastStagnantSelectionArea.y1 -= 1;
+            focusedStagnantSelectionArea.y1 -= 1;
           } else {
-            lastStagnantSelectionArea.y2 -= 1;
+            focusedStagnantSelectionArea.y2 -= 1;
           }
           
-          if(isPositionEqualArea(activeCellPosition, lastStagnantSelectionArea)) {
+          if(isPositionEqualArea(activeCellPosition, focusedStagnantSelectionArea)) {
             handleResetStagnantSelectionAreas();
+            handleResetActiveCellSelectionAreaIndex();
           } else {
-            handleUpdateStagnantSelectionAreas([ lastStagnantSelectionArea ]);
+            handleUpdateStagnantSelectionAreas([ focusedStagnantSelectionArea ]);
+            if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
           }
         } else {
           if(y1 < y) {
-            lastStagnantSelectionArea.y1 -= 1;
+            focusedStagnantSelectionArea.y1 -= 1;
           } else {
-            lastStagnantSelectionArea.y2 -= 1;
+            focusedStagnantSelectionArea.y2 -= 1;
           }
 
-          if(lastStagnantSelectionArea.y1 > 0 && lastStagnantSelectionArea.y2 > 0) handleUpdateStagnantSelectionAreas([ lastStagnantSelectionArea ]);
+          if(focusedStagnantSelectionArea.y1 > 0 && focusedStagnantSelectionArea.y2 > 0) {
+            handleUpdateStagnantSelectionAreas([ focusedStagnantSelectionArea ]);
+            if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
+          }
         }
       } else {
         const y2 = y - 1;
 
-        if(y2 > 0) handleUpdateStagnantSelectionAreas([ { x1: x, x2: x, y1: y, y2 } ]);
+        if(y2 > 0) {
+          handleUpdateStagnantSelectionAreas([ { x1: x, x2: x, y1: y, y2 } ]);
+          if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
+        }
       }
     } else {
       y--;
   
       if(y > 0) handleUpdateActiveCellPosition({ y });
-      if(stagnantSelectionAreas) handleResetStagnantSelectionAreas()
+      if(stagnantSelectionAreas) handleResetStagnantSelectionAreas();
+      if(activeCellSelectionAreaIndex >= 0) handleResetActiveCellSelectionAreaIndex();
     }
   }
 
@@ -198,11 +210,14 @@ class EventRedux extends PureComponent {
     let { 
       activeCellPosition,
       isEditMode,
+      activeCellSelectionAreaIndex,
       rowCount,
       stagnantSelectionAreas,
       handleUpdateActiveCellPosition,
       handleUpdateStagnantSelectionAreas,
-      handleResetStagnantSelectionAreas
+      handleUpdateActiveCellSelectionAreaIndex,
+      handleResetStagnantSelectionAreas,
+      handleResetActiveCellSelectionAreaIndex
     } = this.props;
     if(isEditMode) return;
     
@@ -214,53 +229,63 @@ class EventRedux extends PureComponent {
       const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
 
       if(stagnantSelectionAreasLength) {
-        let lastStagnantSelectionArea = { ...stagnantSelectionAreas[stagnantSelectionAreasLength - 1] };
+        let focusedStagnantSelectionArea = { ...stagnantSelectionAreas[activeCellSelectionAreaIndex] };
 
-        const { y1, y2 } = lastStagnantSelectionArea;
+        const { y1, y2 } = focusedStagnantSelectionArea;
 
         if(y1 < y || y2 < y) {
           if(y1 < y) {
-            lastStagnantSelectionArea.y1 += 1;
+            focusedStagnantSelectionArea.y1 += 1;
           } else {
-            lastStagnantSelectionArea.y2 += 1;
+            focusedStagnantSelectionArea.y2 += 1;
           }
 
-          if(isPositionEqualArea(activeCellPosition, lastStagnantSelectionArea)) {
+          if(isPositionEqualArea(activeCellPosition, focusedStagnantSelectionArea)) {
             handleResetStagnantSelectionAreas();
+            handleResetActiveCellSelectionAreaIndex();
           } else {
-            handleUpdateStagnantSelectionAreas([ lastStagnantSelectionArea ]);
+            handleUpdateStagnantSelectionAreas([ focusedStagnantSelectionArea ]);
+            if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
           }
         } else {
           if(y1 > y) {
-            lastStagnantSelectionArea.y1 += 1;
+            focusedStagnantSelectionArea.y1 += 1;
           } else {
-            lastStagnantSelectionArea.y2 += 1;
+            focusedStagnantSelectionArea.y2 += 1;
           }
 
-          if(lastStagnantSelectionArea.y1 < rowCount && lastStagnantSelectionArea.y2 < rowCount) handleUpdateStagnantSelectionAreas([ lastStagnantSelectionArea ]);
+          if(focusedStagnantSelectionArea.y1 < rowCount && focusedStagnantSelectionArea.y2 < rowCount) {
+            handleUpdateStagnantSelectionAreas([ focusedStagnantSelectionArea ]);
+            if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
+          }
         }
       
       } else {
         const y2 = y + 1;
 
         if(y2 < rowCount) handleUpdateStagnantSelectionAreas([ { x1: x, x2: x, y1: y, y2 } ]);
+        if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
       }
     } else {
       y++;
   
       if(y < rowCount) handleUpdateActiveCellPosition({ y });
-      if(stagnantSelectionAreas) handleResetStagnantSelectionAreas()
+      if(stagnantSelectionAreas) handleResetStagnantSelectionAreas();
+      if(activeCellSelectionAreaIndex >= 0) handleResetActiveCellSelectionAreaIndex();
     }
   }
 
   arrowLeft(event, shiftKey) {
     let { 
       activeCellPosition,
+      activeCellSelectionAreaIndex,
       isEditMode,
       stagnantSelectionAreas,
       handleUpdateActiveCellPosition,
       handleUpdateStagnantSelectionAreas,
-      handleResetStagnantSelectionAreas
+      handleUpdateActiveCellSelectionAreaIndex,
+      handleResetStagnantSelectionAreas,
+      handleResetActiveCellSelectionAreaIndex
     } = this.props;
     if(isEditMode) return;
 
@@ -272,53 +297,63 @@ class EventRedux extends PureComponent {
       const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
 
       if(stagnantSelectionAreasLength) {
-        let lastStagnantSelectionArea = { ...stagnantSelectionAreas[stagnantSelectionAreasLength - 1] };
+        let focusedStagnantSelectionArea = { ...stagnantSelectionAreas[activeCellSelectionAreaIndex] };
 
-        const { x1, x2 } = lastStagnantSelectionArea;
+        const { x1, x2 } = focusedStagnantSelectionArea;
 
         if(x1 > x || x2 > x) {
           if(x1 > x) {
-            lastStagnantSelectionArea.x1 -= 1;
+            focusedStagnantSelectionArea.x1 -= 1;
           } else {
-            lastStagnantSelectionArea.x2 -= 1;
+            focusedStagnantSelectionArea.x2 -= 1;
           }
           
-          if(isPositionEqualArea(activeCellPosition, lastStagnantSelectionArea)) {
+          if(isPositionEqualArea(activeCellPosition, focusedStagnantSelectionArea)) {
             handleResetStagnantSelectionAreas();
+            handleResetActiveCellSelectionAreaIndex();
           } else {
-            handleUpdateStagnantSelectionAreas([ lastStagnantSelectionArea ]);
+            handleUpdateStagnantSelectionAreas([ focusedStagnantSelectionArea ]);
+            if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
           }
         } else {
           if(x1 < x) {
-            lastStagnantSelectionArea.x1 -= 1;
+            focusedStagnantSelectionArea.x1 -= 1;
           } else {
-            lastStagnantSelectionArea.x2 -= 1;
+            focusedStagnantSelectionArea.x2 -= 1;
           }
 
-          if(lastStagnantSelectionArea.x1 > 0 && lastStagnantSelectionArea.x2 > 0) handleUpdateStagnantSelectionAreas([ lastStagnantSelectionArea ]);
+          if(focusedStagnantSelectionArea.x1 > 0 && focusedStagnantSelectionArea.x2 > 0) {
+            handleUpdateStagnantSelectionAreas([ focusedStagnantSelectionArea ]);
+            if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
+          }
         }
       } else {
         const x2 = x - 1;
 
         if(x2 > 0) handleUpdateStagnantSelectionAreas([ { x1: x, x2, y1: y, y2: y } ]);
+        if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
       }
     } else {
       x--;
   
       if(x > 0) handleUpdateActiveCellPosition({ x });
-      if(stagnantSelectionAreas) handleResetStagnantSelectionAreas()
+      if(stagnantSelectionAreas) handleResetStagnantSelectionAreas();
+      if(activeCellSelectionAreaIndex >= 0) handleResetActiveCellSelectionAreaIndex();
     }
   }
 
   arrowRight(event, shiftKey) {
     let { 
       activeCellPosition,
+      activeCellSelectionAreaIndex,
       isEditMode,
       columnCount,
       stagnantSelectionAreas,
       handleUpdateActiveCellPosition,
       handleUpdateStagnantSelectionAreas,
-      handleResetStagnantSelectionAreas
+      handleUpdateActiveCellSelectionAreaIndex,
+      handleResetStagnantSelectionAreas,
+      handleResetActiveCellSelectionAreaIndex
     } = this.props;
     if(isEditMode) return;
     
@@ -330,42 +365,49 @@ class EventRedux extends PureComponent {
       const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
 
       if(stagnantSelectionAreasLength) {
-        let lastStagnantSelectionArea = { ...stagnantSelectionAreas[stagnantSelectionAreasLength - 1] };
+        let focusedStagnantSelectionArea = { ...stagnantSelectionAreas[activeCellSelectionAreaIndex] };
 
-        const { x1, x2 } = lastStagnantSelectionArea;
+        const { x1, x2 } = focusedStagnantSelectionArea;
 
         if(x1 < x || x2 < x) {
           if(x1 < x) {
-            lastStagnantSelectionArea.x1 += 1;
+            focusedStagnantSelectionArea.x1 += 1;
           } else {
-            lastStagnantSelectionArea.x2 += 1;
+            focusedStagnantSelectionArea.x2 += 1;
           }
 
-          if(isPositionEqualArea(activeCellPosition, lastStagnantSelectionArea)) {
+          if(isPositionEqualArea(activeCellPosition, focusedStagnantSelectionArea)) {
             handleResetStagnantSelectionAreas();
+            handleResetActiveCellSelectionAreaIndex();
           } else {
-            handleUpdateStagnantSelectionAreas([ lastStagnantSelectionArea ]);
+            handleUpdateStagnantSelectionAreas([ focusedStagnantSelectionArea ]);
+            if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
           }
         } else {
           if(x1 > x) {
-            lastStagnantSelectionArea.x1 += 1;
+            focusedStagnantSelectionArea.x1 += 1;
           } else {
-            lastStagnantSelectionArea.x2 += 1;
+            focusedStagnantSelectionArea.x2 += 1;
           }
 
-          if(lastStagnantSelectionArea.x1 < columnCount && lastStagnantSelectionArea.x2 < columnCount) handleUpdateStagnantSelectionAreas([ lastStagnantSelectionArea ]);
+          if(focusedStagnantSelectionArea.x1 < columnCount && focusedStagnantSelectionArea.x2 < columnCount) {
+            handleUpdateStagnantSelectionAreas([ focusedStagnantSelectionArea ]);
+            if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
+          }
         }
       
       } else {
         const x2 = x + 1;
 
         if(x2 < columnCount) handleUpdateStagnantSelectionAreas([ { x1: x, x2, y1: y, y2: y } ]);
+        if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
       }
     } else {
       x++;
   
       if(x < columnCount) handleUpdateActiveCellPosition({ x });
-      if(stagnantSelectionAreas) handleResetStagnantSelectionAreas()
+      if(stagnantSelectionAreas) handleResetStagnantSelectionAreas();
+      if(activeCellSelectionAreaIndex >= 0) handleResetActiveCellSelectionAreaIndex();
     }
   }
 
@@ -480,7 +522,7 @@ class EventRedux extends PureComponent {
   }
 
   mouseUp(isMultiSelection) {
-    const { isSelectionMode, activeSelectionArea, stagnantSelectionAreas, handleResetActiveSelectionArea, handleUpdateStagnantSelectionAreas, handleUpdateActiveCellSelectionAreaIndex } = this.props;
+    const { isSelectionMode, activeSelectionArea, stagnantSelectionAreas, handleResetActiveSelectionArea, handleUpdateStagnantSelectionAreas, handleUpdateActiveCellSelectionAreaIndex, handleResetActiveCellSelectionAreaIndex } = this.props;
 
     if(!isSelectionMode) return;
 
@@ -493,9 +535,13 @@ class EventRedux extends PureComponent {
         const newStagnantSelectionAreas = [ ...stagnantSelectionAreas, activeSelectionArea ];
         handleUpdateStagnantSelectionAreas(newStagnantSelectionAreas);
         handleUpdateActiveCellSelectionAreaIndex(newStagnantSelectionAreas.length - 1);
+      } else {
+        handleResetActiveCellSelectionAreaIndex();
       }
   
       handleResetActiveSelectionArea();
+    } else if(!isMultiSelection) {
+      handleResetActiveCellSelectionAreaIndex();
     }
   }
 
@@ -521,7 +567,17 @@ class EventRedux extends PureComponent {
   }
 
   selectOver(x2, y2, isMultiSelection) {
-    const { isSelectionMode, activeCellPosition, stagnantSelectionAreas, activeCellSelectionAreaIndex, handleResetStagnantSelectionAreas, handleResetActiveSelectionArea, handleUpdateActiveSelectionArea, handleUpdateActiveCellSelectionAreaIndex } = this.props;
+    const { 
+      isSelectionMode, 
+      activeCellPosition, 
+      stagnantSelectionAreas, 
+      activeCellSelectionAreaIndex, 
+      handleResetStagnantSelectionAreas, 
+      handleResetActiveSelectionArea, 
+      handleUpdateActiveSelectionArea, 
+      handleUpdateActiveCellSelectionAreaIndex,
+      handleResetActiveCellSelectionAreaIndex
+    } = this.props;
 
     if(!isSelectionMode) return;
 
@@ -533,9 +589,11 @@ class EventRedux extends PureComponent {
 
     if(x === x2 && y === y2 && !isMultiSelection) {
       handleResetActiveSelectionArea();
+      handleResetActiveCellSelectionAreaIndex();
     } else {
       handleUpdateActiveSelectionArea({ x1: x, y1: y, x2, y2 });
     }
+
     if(stagnantSelectionAreasLength !== activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(stagnantSelectionAreasLength);
   };
 
