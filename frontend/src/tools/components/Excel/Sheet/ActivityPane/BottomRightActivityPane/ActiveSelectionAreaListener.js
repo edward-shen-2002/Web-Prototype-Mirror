@@ -38,9 +38,8 @@ let ActiveSelectionAreaListener = ({
   useEffect(() => {
     const { current: ActiveSelectionAreaInstance } = activeSelectionAreaRef;
 
-    if(isSelectionMode) {
+    if(isSelectionMode && activeSelectionArea) {
       const { x1, y1, x2, y2 } = activeSelectionArea;
-
       
       if((x1 <= freezeColumnCount && x2 <= freezeColumnCount) || (y1 <= freezeRowCount && y2 <= freezeRowCount)) return ActiveSelectionAreaInstance.resetActiveSelectionArea();
 

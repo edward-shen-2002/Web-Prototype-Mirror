@@ -38,7 +38,7 @@ let ActiveSelectionAreaListener = ({
   useEffect(() => {
     const { current: ActiveSelectionAreaInstance } = activeSelectionAreaRef;
 
-    if(isSelectionMode) {
+    if(isSelectionMode && activeSelectionArea) {
       const { x1, y1, x2, y2 } = activeSelectionArea;
 
       

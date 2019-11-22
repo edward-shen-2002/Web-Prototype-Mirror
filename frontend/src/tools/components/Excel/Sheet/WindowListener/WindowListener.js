@@ -1,8 +1,9 @@
 import React, { Fragment } from "react";
 
 const WindowListener = ({ eventListenerRef }) => {
-  window.onmouseup = () => {
-    eventListenerRef.current.mouseUp();
+  window.onmouseup = (event) => {
+    const { ctrlKey } = event;
+    eventListenerRef.current.mouseUp(ctrlKey);
   };
 
   return null;

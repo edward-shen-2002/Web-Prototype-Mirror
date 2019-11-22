@@ -479,38 +479,49 @@ class EventRedux extends PureComponent {
     }
   }
 
-  mouseUp() {
+  mouseUp(isMultiSelection) {
     const { isSelectionMode, activeSelectionArea, stagnantSelectionAreas, handleResetActiveSelectionArea, handleUpdateStagnantSelectionAreas, handleUpdateActiveCellSelectionAreaIndex } = this.props;
 
     if(!isSelectionMode) return;
 
     this.setSelectionModeOff();
 
-    const { x1, y1, x2, y2 } = activeSelectionArea;
-
-    if(x1 !== x2 || y1 !== y2) {
-      const newStagnantSelectionAreas = [ ...stagnantSelectionAreas, activeSelectionArea ];
-      handleUpdateStagnantSelectionAreas(newStagnantSelectionAreas);
-      handleUpdateActiveCellSelectionAreaIndex(newStagnantSelectionAreas.length - 1);
+    if(activeSelectionArea) {
+      const { x1, y1, x2, y2 } = activeSelectionArea;
+  
+      if((x1 !== x2 || y1 !== y2) || isMultiSelection) {
+        const newStagnantSelectionAreas = [ ...stagnantSelectionAreas, activeSelectionArea ];
+        handleUpdateStagnantSelectionAreas(newStagnantSelectionAreas);
+        handleUpdateActiveCellSelectionAreaIndex(newStagnantSelectionAreas.length - 1);
+      }
+  
+      handleResetActiveSelectionArea();
     }
-
-    handleResetActiveSelectionArea();
   }
 
   startSelection(x1, y1, isMultiSelection) {
-    const { handleUpdateActiveCellPosition, stagnantSelectionAreas, handleResetStagnantSelectionAreas, handleUpdateActiveSelectionArea } = this.props;
+    const { activeCellPosition, stagnantSelectionAreas, handleResetStagnantSelectionAreas, handleUpdateActiveCellPosition, handleUpdateStagnantSelectionAreas, handleUpdateActiveSelectionArea, handleUpdateActiveCellSelectionAreaIndex } = this.props;
 
-    if(!isMultiSelection && stagnantSelectionAreas) handleResetStagnantSelectionAreas(); 
+    if(!isMultiSelection && stagnantSelectionAreas.length) handleResetStagnantSelectionAreas(); 
 
     this.setEditModeOff();
     this.setSelectionModeOn();
 
+    const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
+
+    if(isMultiSelection) {
+      const { x, y } = activeCellPosition;
+      handleUpdateActiveCellSelectionAreaIndex(stagnantSelectionAreasLength + 1);
+      handleUpdateActiveSelectionArea({ x1, y1, x2: x1, y2: y1 });
+
+      if(!stagnantSelectionAreasLength && x1 !== x && y1 !== y) handleUpdateStagnantSelectionAreas([ { x1: x, y1: y, x2: x, y2: y } ]);
+    } 
+
     handleUpdateActiveCellPosition({ x: x1, y: y1 });
-    handleUpdateActiveSelectionArea({ x1, y1, x2: x1, y2: y1 });
   }
 
   selectOver(x2, y2, isMultiSelection) {
-    const { isSelectionMode, activeCellPosition, stagnantSelectionAreas, activeCellSelectionAreaIndex, handleResetStagnantSelectionAreas, handleUpdateActiveSelectionArea, handleUpdateActiveCellSelectionAreaIndex } = this.props;
+    const { isSelectionMode, activeCellPosition, stagnantSelectionAreas, activeCellSelectionAreaIndex, handleResetStagnantSelectionAreas, handleResetActiveSelectionArea, handleUpdateActiveSelectionArea, handleUpdateActiveCellSelectionAreaIndex } = this.props;
 
     if(!isSelectionMode) return;
 
@@ -520,7 +531,11 @@ class EventRedux extends PureComponent {
 
     const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
 
-    handleUpdateActiveSelectionArea({ x1: x, y1: y, x2, y2 });
+    if(x === x2 && y === y2 && !isMultiSelection) {
+      handleResetActiveSelectionArea();
+    } else {
+      handleUpdateActiveSelectionArea({ x1: x, y1: y, x2, y2 });
+    }
     if(stagnantSelectionAreasLength !== activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(stagnantSelectionAreasLength);
   };
 
