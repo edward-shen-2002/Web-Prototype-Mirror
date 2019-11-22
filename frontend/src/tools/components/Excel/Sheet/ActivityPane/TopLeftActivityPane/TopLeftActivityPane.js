@@ -4,7 +4,7 @@ import ActiveCellListener from "./ActiveCellListener";
 import ActiveSelectionAreaListener from "./ActiveSelectionAreaListener";
 import StagnantSelectionAreasListener from "./StagnantSelectionAreasListener";
 
-const TopRightActivityPane = ({ sheetGridRef }) => (
+const TopLeftActivityPane = ({ sheetGridRef }) => (
   <Fragment>
     <ActiveCellListener sheetGridRef={sheetGridRef}/>
     <ActiveSelectionAreaListener sheetGridRef={sheetGridRef}/>
@@ -12,4 +12,4 @@ const TopRightActivityPane = ({ sheetGridRef }) => (
   </Fragment>
 );
 
-export default TopRightActivityPane;
+export default TopLeftActivityPane;

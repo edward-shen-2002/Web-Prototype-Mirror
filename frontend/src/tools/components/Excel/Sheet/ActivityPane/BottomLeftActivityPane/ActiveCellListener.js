@@ -41,11 +41,13 @@ let ActiveCellListener = ({
     const { current: SheetInstance } = sheetGridRef;
     const { x, y } = activeCellPosition;
     
-    if(x <= freezeColumnCount || y > freezeRowCount) {
-      return ActiveCellInstance.resetActiveCell();
-    }
+    if(x > freezeColumnCount || y <= freezeRowCount) return ActiveCellInstance.resetActiveCell();
 
-    const { top, left, height, width } = SheetInstance._getItemStyle(y, x);
+    let { top, left, height, width } = SheetInstance._getItemStyle(y, x);
+
+    const { top: topFreeze, height: heightFreeze } = SheetInstance._getItemStyle(freezeRowCount, freezeColumnCount);
+
+    top = top - topFreeze - heightFreeze;
 
     ActiveCellInstance.setActiveCell({ 
       activeCellStyle: { top, left, width, height, display: null }, 

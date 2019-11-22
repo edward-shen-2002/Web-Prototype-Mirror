@@ -7,21 +7,21 @@ import {
 } from "constants/styles";
 
 export const computeSelectionAreaStyle = (SheetInstance, selectionArea, freezeColumnCount, freezeRowCount, isActive) => {
+  const { x1, y1, x2, y2 } = selectionArea;
+
   let borderStyle = isActive ? STYLE_ACTIVE_SELECTION_BORDER_STYLE : STYLE_STAGNANT_SELECTION_BORDER_STYLE;
   let selectionAreaWidth;
   let selectionAreaHeight;
   let left;
   let top;
 
-  const { x1, y1, x2, y2 } = selectionArea;
-
   let customSelectionStyle = {
-    borderBottomWidth: STYLE_SELECTION_BORDER_WIDTH,
-    borderBottomColor: STYLE_SELECTION_BORDER_COLOR,
-    borderBottomStyle: borderStyle,
     borderRightWidth: STYLE_SELECTION_BORDER_WIDTH,
     borderRightColor: STYLE_SELECTION_BORDER_COLOR,
-    borderRightStyle: borderStyle
+    borderRightStyle: borderStyle,
+    borderTopWidth: STYLE_SELECTION_BORDER_WIDTH,
+    borderTopColor: STYLE_SELECTION_BORDER_COLOR,
+    borderTopStyle: borderStyle
   };
 
   const { top: topStart, left: leftStart, width: widthStart, height: heightStart } = SheetInstance._getItemStyle(y1, x1);
@@ -32,13 +32,13 @@ export const computeSelectionAreaStyle = (SheetInstance, selectionArea, freezeCo
   if(freezeColumnCount && (x1 <= freezeColumnCount || x2 <= freezeColumnCount)) {
     left = leftFrozenEnd + widthFrozenEnd;
 
-    if(x1 <= x2) {
+    if(x1 < x2) {
       selectionAreaWidth = leftEnd + widthEnd - left;
     } else {
       selectionAreaWidth = leftStart + widthStart - left;
     }
   } else {
-    if(x1 <= x2) {
+    if(x1 < x2) {
       selectionAreaWidth = leftEnd + widthEnd - leftStart;
       left = leftStart;
     } else {
@@ -54,35 +54,30 @@ export const computeSelectionAreaStyle = (SheetInstance, selectionArea, freezeCo
     }
   }
 
-  if(freezeRowCount && (y1 <= freezeRowCount || y2 <= freezeRowCount)) {
-    top = topFrozenEnd + heightFrozenEnd;
+  const minTop = y1 < y2 ? topStart : topEnd;
+  top = minTop;
 
-    if(y1 <= y2) {
-      selectionAreaHeight = topEnd + heightEnd - top;
-    } else {
-      selectionAreaHeight = topStart + heightStart - top;
-    }
+  if(y1 > freezeRowCount || y2 > freezeRowCount) {
+    selectionAreaHeight = topFrozenEnd + heightFrozenEnd - top;
   } else {
-    if(y1 <= y2) {
+    if(y1 < y2) {
       selectionAreaHeight = topEnd + heightEnd - topStart;
-      top = topStart;
     } else {
       selectionAreaHeight = topStart + heightStart - topEnd;
-      top = topEnd;
     }
 
     customSelectionStyle = {
       ...customSelectionStyle,
-      borderTopWidth: STYLE_SELECTION_BORDER_WIDTH,
-      borderTopColor: STYLE_SELECTION_BORDER_COLOR,
-      borderTopStyle: borderStyle
+      borderBottomWidth: STYLE_SELECTION_BORDER_WIDTH,
+      borderBottomColor: STYLE_SELECTION_BORDER_COLOR,
+      borderBottomStyle: borderStyle
     }
   }
 
   customSelectionStyle = { 
     ...customSelectionStyle,
-    left,
-    top,
+    left: left, 
+    top: top, 
     width: selectionAreaWidth, 
     height: selectionAreaHeight, 
     display: null

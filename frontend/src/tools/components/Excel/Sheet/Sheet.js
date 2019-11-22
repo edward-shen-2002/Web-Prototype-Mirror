@@ -11,8 +11,10 @@ import WindowListener from "./WindowListener";
 
 import Cell from "./Cell";
 
-import BottomRightActivityPane from "./ActivityPane/BottomRightActivityPane";
+import TopLeftActivityPane from "./ActivityPane/TopLeftActivityPane";
 import TopRightActivityPane from "./ActivityPane/TopRightActivityPane";
+import BottomLeftActivityPane from "./ActivityPane/BottomLeftActivityPane";
+import BottomRightActivityPane from "./ActivityPane/BottomRightActivityPane";
 
 import "./Sheet.scss";
 
@@ -103,26 +105,24 @@ let SheetWindow = ({
           rowCount={rowCount}
           rowHeight={rowHeight}
           width={width}
-          // extraTopLeftElement={
-          //   <TopLeftActivityPane 
-          //     key="top-left-selection-pane" 
-          //     selectionRef={topLeftSelectionPaneRef} 
-          //     {...commonSelectionPaneProps}
-          //   />
-          // }
+          extraTopLeftElement={
+            <TopLeftActivityPane 
+              key="top-left-selection-pane" 
+              {...commonSelectionPaneProps}
+            />
+          }
           extraTopRightElement={
             <TopRightActivityPane 
               key="top-right-activity-pane" 
               {...commonSelectionPaneProps}
             />  
           }
-          // extraBottomLeftElement={
-          //   <BottomLeftActivityPane 
-          //     key="bottom-left-activity-pane" 
-          //     selectionRef={bottomLeftSelectionPaneRef} 
-          //     {...commonSelectionPaneProps}
-          //   />
-          // }
+          extraBottomLeftElement={
+            <BottomLeftActivityPane 
+              key="bottom-left-activity-pane" 
+              {...commonSelectionPaneProps}
+            />
+          }
           extraBottomRightElement={
             <BottomRightActivityPane 
               key="bottom-right-activity-pane" 

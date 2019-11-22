@@ -144,6 +144,10 @@ let Template = ({
             freezeRowCount = panes.ySpit;
             freezeColumnCount = panes.xSplit;
           }
+
+          // ! Test
+          freezeColumnCount = 0;
+          freezeRowCount = 3;
           
           handleLoadTemplate({
             sheetCellValues,

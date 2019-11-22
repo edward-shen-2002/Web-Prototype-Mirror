@@ -38,7 +38,7 @@ let StagnantSelectionAreasListener = ({
       const { current: SheetInstance } = sheetGridRef;
       const { current: StagnantSelectionAreasInstance } = stagnantSelectionAreasRef;
 
-      const relevantStagnantSelectionAreas = stagnantSelectionAreas.filter(({ x1, y1, x2, y2 }) => (x1 > freezeColumnCount || x2 > freezeColumnCount) && (y1 > freezeRowCount || y2 > freezeRowCount));
+      const relevantStagnantSelectionAreas = stagnantSelectionAreas.filter(({ x1, y1, x2, y2 }) => (x1 > freezeColumnCount || x2 > freezeColumnCount) && (y1 <= freezeRowCount || y2 <= freezeRowCount));
 
       const relevantStagnantSelectionAreasStyles = relevantStagnantSelectionAreas.map((stagnantSelectionArea) => computeSelectionAreaStyle(SheetInstance, stagnantSelectionArea, freezeColumnCount, freezeRowCount, false));
 
