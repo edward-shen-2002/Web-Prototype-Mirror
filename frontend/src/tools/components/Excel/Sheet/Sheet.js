@@ -157,6 +157,8 @@ const Sheet = ({ sheet }) => {
       EventListenerInstance.arrowRight(event, shiftKey);
     } else if(key === "Tab") {
       EventListenerInstance.tab(event, shiftKey, sheetContainerRef);
+    } else if(key === "Enter") {
+      EventListenerInstance.enter(event, shiftKey, sheetContainerRef);
     }
   };
   

@@ -525,8 +525,113 @@ class EventRedux extends PureComponent {
     }
   }
 
-  enter() {
+  enter(event, shiftKey, sheetContainerRef) {
+    let { 
+      isEditMode,
+
+      activeCellPosition, 
+      activeSelectionArea, 
+      stagnantSelectionAreas, 
+      activeCellSelectionAreaIndex,
+
+      rowCount,
+      columnCount,
+
+      handleSetEditModeOff,
+      handleUpdateActiveCellPosition,
+      handleUpdateActiveCellSelectionAreaIndex
+    } = this.props;
+
+    event.preventDefault();
+
+    const { current: SheetContainerInstance } = sheetContainerRef;
+
+    if(isEditMode) {
+      handleSetEditModeOff();
+      SheetContainerInstance.focus();
+    }
+
+    let selectionArea;
+    let isBounded;
+
+    const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
+
+    // Get the rectangular scope that an active selection area can go in
+    // TODO : clean up later
+    if(activeSelectionArea || stagnantSelectionAreasLength) {
+      if(activeSelectionArea) {
+        // It is possible to have the active cell go over both active area and stagnant areas
+        if(stagnantSelectionAreasLength) {
+          // ! Make the first upper outer bound be the indicator that the active cell is in the acive selection area
+          // ! When it's not out of bound, the cell is in a stagnant selection area
+          if(stagnantSelectionAreasLength === activeCellSelectionAreaIndex) {
+            selectionArea = activeSelectionArea;
+          } else {
+            selectionArea = stagnantSelectionAreas[activeCellSelectionAreaIndex];
+          }
+        } else {
+          selectionArea = activeSelectionArea;
+        }
+      } else {
+        selectionArea = stagnantSelectionAreas[activeCellSelectionAreaIndex];
+      } 
+
+      isBounded = false
+    } else {
+      isBounded = true;
+
+      selectionArea = { x1: 1, y1: 1, x2: columnCount - 1, y2: rowCount - 1 };
+    }
+
+    let { x1, y1, x2, y2 } = selectionArea;
+    let { x, y } = activeCellPosition;
+
+    if(shiftKey) {
+      x--;
+      y--;
+    } else {
+      x++;
+      y++;
+    }
     
+    // Check for bounds -- do not update when isbounded and tab goes out bounds
+    if((y < y1 && y < y2) || (y > y1 && y > y2)) {
+      if(!isBounded) {
+        // Check for bounds in x
+        if((x < x1 && x < x2) || (x > x1 && x > x2)) {
+          // Need to switch selection areas. 
+          (x < x1 && x < x2) ? activeCellSelectionAreaIndex-- : activeCellSelectionAreaIndex++;
+
+          // Fix out of bounds result
+          if((activeSelectionArea && activeCellSelectionAreaIndex === stagnantSelectionAreasLength + 1) || (!activeSelectionArea && activeCellSelectionAreaIndex === stagnantSelectionAreasLength)) {
+            activeCellSelectionAreaIndex = 0;
+          } else if(activeCellSelectionAreaIndex < 0) {
+            activeSelectionArea ? activeCellSelectionAreaIndex = stagnantSelectionAreasLength : activeCellSelectionAreaIndex = stagnantSelectionAreasLength - 1;
+          }
+
+          let newSelectionArea = (activeCellSelectionAreaIndex === stagnantSelectionAreasLength) ? activeSelectionArea : stagnantSelectionAreas[activeCellSelectionAreaIndex]; 
+          
+          const { x1: newX1, y1: newY1, x2: newX2, y2: newY2 } = newSelectionArea;
+
+          if(x < x1 && x < x2) {
+            x = Math.max(newX1, newX2);
+            y = Math.max(newY1, newY2);  
+          } else {
+            x = Math.min(newX1, newX2);
+            y = Math.min(newY1, newY2);   
+          }
+
+          handleUpdateActiveCellSelectionAreaIndex(activeCellSelectionAreaIndex);
+        } else {
+          // Make y go to its resepective end point (start or end) as a result of going out of bound
+          y = (y < y1 && y < y2) ? Math.max(y1, y2) : Math.min(y1, y2);
+        }
+
+        handleUpdateActiveCellPosition({ x, y });
+      }
+    } else {
+      handleUpdateActiveCellPosition({ y });
+    }
   }
 
   // ! TODO - Break squares, and deselect stagnant areas with the same area as the active selection
