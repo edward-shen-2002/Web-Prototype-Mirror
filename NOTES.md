@@ -16,6 +16,10 @@ For a flat table, we may not need an attributes/categories page
 
 https://redux.js.org/recipes/implementing-undo-history
 
-## Multiple Selection
+## Input expansion
 
-Need to introduce new states
+We need the ref of the window to get the offset.
+
+Autosizer already gives the heigh and width of the window.
+
+Current cell position gives the starting point of the cell.
