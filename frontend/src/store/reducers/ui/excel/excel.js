@@ -28,24 +28,25 @@ import activeCellSelectionAreaIndex from "./activeCellSelectionAreaIndex";
 const excelReducer = combineReducers({ 
   sheetCellData,
   
+  freezeColumnCount,
+  freezeRowCount,
+  
+  columnCount, 
+  rowCount,
+  
+  columnWidths,
+  rowHeights,
+
+  
+  activeSheetName,
+  sheetNames,
+  
   activeSelectionArea,
   stagnantSelectionAreas,
 
   activeCellPosition,
   activeCellSelectionAreaIndex,
   
-  activeSheetName,
-  sheetNames,
-
-  freezeColumnCount,
-  freezeRowCount,
-
-  columnCount, 
-  rowCount,
-
-  columnWidths,
-  rowHeights,
-
   isSelectionMode, 
   isEditMode 
 });

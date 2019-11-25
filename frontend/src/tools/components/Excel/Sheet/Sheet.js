@@ -153,7 +153,7 @@ const Sheet = () => {
   const sheetContainerRef = useRef(null);
 
   const handleKeyDown = (event) => {
-    const { key, shiftKey, ctrlKey } = event;
+    const { key, shiftKey } = event;
     const { current: EventListenerInstance } = eventListenerRef;
     
     if(key === "ArrowUp") {
@@ -170,7 +170,6 @@ const Sheet = () => {
       EventListenerInstance.enter(event, shiftKey, sheetContainerRef);
     }
   };
-
   
   return (
     <div ref={sheetContainerRef} className="sheet" tabIndex="0" onKeyDown={handleKeyDown}>
