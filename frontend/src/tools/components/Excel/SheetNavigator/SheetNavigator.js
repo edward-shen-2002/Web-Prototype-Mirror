@@ -76,7 +76,7 @@ const mapStateToProps = ({
   activeSheetName
 });
 
-let SheetNavigator = ({ workbook, activeSheetName, sheetNames }) => {
+let SheetNavigator = ({ activeSheetName, sheetNames }) => {
   // ! Think carefully about this one...
   const handleAddSheet = () => {
     // const newSheetName = generateNewSheetName(sheetNames);

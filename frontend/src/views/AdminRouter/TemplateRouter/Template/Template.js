@@ -34,9 +34,6 @@ import {
 
 import "./Template.scss";
 
-// ! Xlsx populate workoook instance
-let WorkbookInstance;
-
 const mapStateToProps = ({ ui: { isAppNavigationOpen } }) => ({ isAppNavigationOpen });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -70,7 +67,7 @@ let Template = ({
         .then(async ({ data: { data: { template } } }) => {
           const { file } = template;
           
-          WorkbookInstance = await XlsxPopulate.fromDataAsync(file, { base64: true });
+          const WorkbookInstance = await XlsxPopulate.fromDataAsync(file, { base64: true });
           
           let freezeRowCount = DEFAULT_EXCEL_FREEZE_ROW_COUNT;
           let freezeColumnCount = DEFAULT_EXCEL_FREEZE_COLUMN_COUNT; 
@@ -190,7 +187,7 @@ let Template = ({
 
   return (
     isDataFetched 
-      ? <Excel name={name} workbook={WorkbookInstance} returnLink={ROUTE_ADMIN_TEMPLATE_TEMPLATES} handleSubmitName={handleSubmitName}/>
+      ? <Excel name={name} returnLink={ROUTE_ADMIN_TEMPLATE_TEMPLATES} handleSubmitName={handleSubmitName}/>
       : <Loading/>
   );
 };

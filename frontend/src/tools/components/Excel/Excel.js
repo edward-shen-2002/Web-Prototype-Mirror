@@ -10,34 +10,18 @@ import "./Excel.scss";
 
 const Divider = () => <hr className="divider"/>;
 
-const Excel = ({ 
-  name, 
-  workbook, 
-  returnLink, 
-
-  handleSubmitName 
-}) => {
-  const [ sheet, setSheet ] = useState(workbook.sheet(0));
-
-  return (
-    <div className="excel">
-      <AppBar 
-        name={name} 
-        returnLink={returnLink} 
-        handleSubmitName={handleSubmitName}
-      />
-      <Divider/>
-      <ToolBar/>
-      <Divider/>
-      <FormulaBar/>
-      <Divider/>
-      <Sheet 
-        sheet={sheet} 
-      />
-      <Divider/>
-      <SheetNavigator workbook={workbook}/>
-    </div>
-  );
-};
+const Excel = ({ name, returnLink, handleSubmitName }) => (
+  <div className="excel">
+    <AppBar name={name} returnLink={returnLink} handleSubmitName={handleSubmitName}/>
+    <Divider/>
+    <ToolBar/>
+    <Divider/>
+    <FormulaBar/>
+    <Divider/>
+    <Sheet/>
+    <Divider/>
+    <SheetNavigator/>
+  </div>
+);
 
 export default Excel;

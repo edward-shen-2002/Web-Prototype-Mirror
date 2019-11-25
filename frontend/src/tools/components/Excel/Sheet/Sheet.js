@@ -148,7 +148,7 @@ let SheetWindow = ({
 
 SheetWindow = connect(mapStateToProps)(SheetWindow);
 
-const Sheet = ({ sheet }) => {
+const Sheet = () => {
   const eventListenerRef = useRef(null);
   const sheetContainerRef = useRef(null);
 
@@ -175,7 +175,7 @@ const Sheet = ({ sheet }) => {
   return (
     <div ref={sheetContainerRef} className="sheet" tabIndex="0" onKeyDown={handleKeyDown}>
       <SheetWindow sheetContainerRef={sheetContainerRef} eventListenerRef={eventListenerRef}/>
-      <EventListener sheet={sheet} eventListenerRef={eventListenerRef}/>
+      <EventListener eventListenerRef={eventListenerRef}/>
       <WindowListener eventListenerRef={eventListenerRef}/>
     </div>
   );
