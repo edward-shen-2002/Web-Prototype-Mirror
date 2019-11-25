@@ -1,10 +1,16 @@
-import React, { Fragment } from "react";
+import { useEffect } from "react";
 
 const WindowListener = ({ eventListenerRef }) => {
-  window.onmouseup = (event) => {
-    const { ctrlKey } = event;
-    eventListenerRef.current.mouseUp(ctrlKey);
-  };
+  useEffect(() => {
+    window.onmouseup = (event) => {
+      const { ctrlKey } = event;
+      eventListenerRef.current.mouseUp(ctrlKey);
+    };
+
+    return () => {
+      window.onmouseup = null;
+    };
+  })
 
   return null;
 };
