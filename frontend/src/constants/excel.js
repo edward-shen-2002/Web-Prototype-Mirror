@@ -22,7 +22,7 @@ export const DEFAULT_EXCEL_CELL_ORIGIN_ROW = 1;
 export const DEFAULT_EXCEL_CELL_ORIGIN_COLUMN = 1;
 
 export const DEFAULT_EXCEL_SHEET_NAMES = [];
-export const DEFAULT_EXCEL_SHEET_CELL_VALUES = [];
+export const DEFAULT_EXCEL_SHEET_CELL_DATA = [];
 
 export const DEFAULT_EXCEL_COLUMN_WIDTHS = [];
 export const DEFAULT_EXCEL_ROW_HEIGHTS = [];

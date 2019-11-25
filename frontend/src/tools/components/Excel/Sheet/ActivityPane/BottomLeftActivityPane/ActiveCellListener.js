@@ -32,14 +32,16 @@ let ActiveCellListener = ({
   freezeColumnCount,
   freezeRowCount,
 
-  sheetGridRef
+  sheetGridRef,
+
+  handleChangeValue
 }) => {
   const activeCellRef = useRef(null);
+  const { x, y } = activeCellPosition;
 
   useEffect(() => {
     const { current: ActiveCellInstance } = activeCellRef;
     const { current: SheetInstance } = sheetGridRef;
-    const { x, y } = activeCellPosition;
     
     if(x > freezeColumnCount || y <= freezeRowCount) return ActiveCellInstance.resetActiveCell();
 
@@ -58,6 +60,9 @@ let ActiveCellListener = ({
   return (
     <ActiveCell 
       ref={activeCellRef}
+      x={x}
+      y={y}
+      handleChangeValue={handleChangeValue}
     />
   );
 };

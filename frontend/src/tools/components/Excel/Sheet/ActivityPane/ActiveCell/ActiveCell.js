@@ -10,6 +10,23 @@ const DEFAULT_ACTIVE_CELL_STYLE = {
   height: 0 
 };
 
+const ActiveInputCell = ({ 
+  activeCellStyle,
+  x,
+  y,
+  handleChangeValue
+}) => {
+  const handleKeyDown = ({ key, target: { value } }) => {
+    if(key === "Enter" || key === "Tab") {
+      handleChangeValue(y, x, { value });
+    }
+  };
+
+  return (
+    <input className="activeCell activeCell--editMode" style={activeCellStyle} autoFocus onKeyDown={handleKeyDown}/>
+  );
+};
+
 class ActiveCell extends PureComponent {
   constructor(props) {
     super(props);
@@ -43,11 +60,13 @@ class ActiveCell extends PureComponent {
   }
 
   render() {
+    const { x, y, handleChangeValue } = this.props;
     const { activeCellStyle, isNormalMode } = this.state;
+
     return (
       isNormalMode 
         ? <div className="activeCell activeCell--normalMode" style={activeCellStyle}/>
-        : <input className="activeCell activeCell--editMode" style={activeCellStyle} autoFocus/>
+        : <ActiveInputCell activeCellStyle={activeCellStyle} x={x} y={y} handleChangeValue={handleChangeValue} autoFocus/>
     );
   }
 };

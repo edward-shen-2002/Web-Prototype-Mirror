@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 
 import { connect } from "react-redux";
 
@@ -21,7 +21,7 @@ import "./Sheet.scss";
 const mapStateToProps = ({
   ui: {
     excel: {
-      sheetCellValues,
+      sheetCellData,
       columnCount,
       rowCount,
       columnWidths,
@@ -31,7 +31,7 @@ const mapStateToProps = ({
     }
   }
 }) => ({
-  sheetCellValues,
+  sheetCellData,
   columnCount,
   rowCount,
   columnWidths,
@@ -41,7 +41,7 @@ const mapStateToProps = ({
 });
 
 let SheetWindow = ({
-  sheetCellValues,
+  sheetCellData,
   freezeRowCount,
   freezeColumnCount,
   columnCount,
@@ -51,27 +51,32 @@ let SheetWindow = ({
   eventListenerRef
 }) => {
   const sheetGridRef = useRef(null);
+
+  let EventListenerInstance;
+
+  useEffect(() => {
+    EventListenerInstance = eventListenerRef.current;
+  });
   
   const rowHeight = (index) => rowHeights[index];
   const columnWidth = (index) => columnWidths[index];
 
-  const handleSelectionStart = (x1, y1, ctrlKey) => {
-    eventListenerRef.current.startSelection(x1, y1, ctrlKey);
-  };
+  const handleSelectionStart = (x1, y1, ctrlKey) => EventListenerInstance.startSelection(x1, y1, ctrlKey);
 
-  const handleSelectionOver = (x2, y2, ctrlKey) => eventListenerRef.current.selectOver(x2, y2, ctrlKey);
+  const handleSelectionOver = (x2, y2, ctrlKey) => EventListenerInstance.selectOver(x2, y2, ctrlKey);
 
-  const handleDoubleClickEditableCell = () => eventListenerRef.current.setEditModeOn();
+  const handleDoubleClickEditableCell = () => EventListenerInstance.setEditModeOn();
 
-  const handleClickColumnHeader = (column, ctrlKey) => eventListenerRef.current.clickColumnHeader(column, ctrlKey);
+  const handleClickColumnHeader = (column, ctrlKey) => EventListenerInstance.clickColumnHeader(column, ctrlKey);
 
-  const handleClickRowHeader = (row, ctrlKey) => eventListenerRef.current.clickRowHeader(row, ctrlKey);
+  const handleClickRowHeader = (row, ctrlKey) => EventListenerInstance.clickRowHeader(row, ctrlKey);
 
-  const handleClickRootHeader = () => eventListenerRef.current.clickRootHeader();
-
+  const handleClickRootHeader = () => EventListenerInstance.clickRootHeader();
+  
+  const handleChangeValue = (row, column, value) => EventListenerInstance.changeValue(row, column, value);
 
   const itemData = { 
-    sheetCellValues, 
+    sheetCellData, 
     
     columnCount,
     rowCount,
@@ -89,7 +94,11 @@ let SheetWindow = ({
   const tableFreezeRowCount = freezeRowCount + 1;
   const tableFreezeColumnCount = freezeColumnCount + 1;
 
-  const commonSelectionPaneProps = { sheetGridRef };
+  const commonSelectionPaneProps = { 
+    sheetGridRef, 
+
+    handleChangeValue 
+  };
 
   return (
     <AutoSizer>
@@ -161,6 +170,7 @@ const Sheet = ({ sheet }) => {
       EventListenerInstance.enter(event, shiftKey, sheetContainerRef);
     }
   };
+
   
   return (
     <div ref={sheetContainerRef} className="sheet" tabIndex="0" onKeyDown={handleKeyDown}>

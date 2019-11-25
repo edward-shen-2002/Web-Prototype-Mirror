@@ -93,15 +93,17 @@ let Template = ({
             rowCount = _maxRowNumber + 1;
           }
 
-          let sheetCellValues = [];
+          let sheetCellData = [];
 
           for(let row = 0; row <= DEFAULT_EXCEL_ROWS; row++) {
             let rowValues = [];
             for(let column = 0; column <= DEFAULT_EXCEL_COLUMNS; column++) {
-              rowValues.push(row && column ? activeSheet.row(row).cell(column).value() : null);
+              rowValues.push({
+                value: row && column ? activeSheet.row(row).cell(column).value() : null
+              });
             }
 
-            sheetCellValues.push(rowValues);
+            sheetCellData.push(rowValues);
           }
 
           let columnWidths = [ DEFAULT_EXCEL_COLUMN_WIDTH_HEADER ];
@@ -150,7 +152,7 @@ let Template = ({
           freezeRowCount = 3;
           
           handleLoadTemplate({
-            sheetCellValues,
+            sheetCellData,
 
             rowCount,
             columnCount,

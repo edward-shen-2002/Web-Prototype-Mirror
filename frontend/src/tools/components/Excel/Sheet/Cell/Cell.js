@@ -40,7 +40,7 @@ const RootHeaderCell = ({ style, value, handleClickRootHeader }) => {
 
 const EditableCell = ({ 
   style, 
-  value, 
+  cellData, 
 
   columnIndex, 
   rowIndex, 
@@ -62,6 +62,8 @@ const EditableCell = ({
     handleDoubleClickEditableCell();
   };
 
+  const { value } = cellData;
+  
   return (
     <div 
       className="cell" 
@@ -77,7 +79,7 @@ const EditableCell = ({
 
 const Cell = ({ style, data, columnIndex, rowIndex }) => {
   const {
-    sheetCellValues,
+    sheetCellData,
 
     columnCount,
     rowCount,
@@ -92,16 +94,17 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
     handleClickRootHeader
   } = data;
   
-  let value;
+  let cellData;
   let Component;
+  let value;
 
   if(columnIndex > 0 && rowIndex > 0){
-    value = sheetCellValues[rowIndex][columnIndex];
+    cellData = sheetCellData[rowIndex][columnIndex];
 
     Component = (
       <EditableCell 
         style={style} 
-        value={value} 
+        cellData={cellData} 
 
         columnIndex={columnIndex} 
         rowIndex={rowIndex} 

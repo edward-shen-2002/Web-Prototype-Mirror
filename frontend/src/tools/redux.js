@@ -7,7 +7,7 @@ import { showAppNavigation, hideAppNavigation } from "actions/ui/isAppNavigation
 
 import { updateActiveSheetName, resetActiveSheetName } from "actions/ui/excel/activeSheetName";
 
-import { updateSheetCellValues, resetSheetCellValues } from "actions/ui/excel/sheetCellValues";
+import { updateSheetCellData, resetSheetCellData } from "actions/ui/excel/sheetCellData";
 
 import { updateColumnCount, resetColumnCount } from "actions/ui/excel/columnCount";
 import { updateRowCount, resetRowCount } from "actions/ui/excel/rowCount";
@@ -23,6 +23,14 @@ import { updateSheetNames, resetSheetNames } from "actions/ui/excel/sheetNames";
 import { setEditModeOff } from "actions/ui/excel/isEditMode";
 
 import { resetActiveSelectionArea } from "actions/ui/excel/activeSelectionArea";
+
+import { resetActiveCellPosition } from "actions/ui/excel/activeCellPosition";
+
+import { resetActiveCellSelectionAreaIndex } from "actions/ui/excel/activeCellSelectionAreaIndex";
+
+import { setSelectionModeOff } from "actions/ui/excel/isSelectionMode";
+
+import { resetStagnantSelectionAreas } from "actions/ui/excel/stagnantSelectionAreas";
 
 
 export const loadUserState = (dispatch, { user, token }) => {
@@ -50,7 +58,7 @@ export const resetUserState = (dispatch) => {
 export const loadWorkbook = (
   dispatch, 
   { 
-    sheetCellValues,
+    sheetCellData,
     activeSheetName,
     
     columnCount,
@@ -65,7 +73,7 @@ export const loadWorkbook = (
     sheetNames
   }
 ) => {
-  dispatch(updateSheetCellValues(sheetCellValues));
+  dispatch(updateSheetCellData(sheetCellData));
   dispatch(updateActiveSheetName(activeSheetName));
 
   dispatch(updateColumnCount(columnCount));
@@ -81,7 +89,7 @@ export const loadWorkbook = (
 };
 
 export const resetWorkbook = (dispatch) => {
-  dispatch(resetSheetCellValues());
+  dispatch(resetSheetCellData());
   dispatch(resetActiveSheetName());
 
   dispatch(resetColumnCount());
@@ -97,5 +105,13 @@ export const resetWorkbook = (dispatch) => {
 
   dispatch(setEditModeOff());
 
-  dispatch(resetActiveSelectionArea())
+  dispatch(resetActiveSelectionArea());
+
+  dispatch(resetActiveCellPosition());
+  dispatch(resetActiveCellSelectionAreaIndex());
+
+  dispatch(setSelectionModeOff());
+
+  dispatch(resetStagnantSelectionAreas());
+  dispatch(resetActiveSelectionArea());
 };

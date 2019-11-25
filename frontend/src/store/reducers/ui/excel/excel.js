@@ -19,14 +19,14 @@ import isEditMode from "./isEditMode";
 
 import sheetNames from "./sheetNames";
 
-import sheetCellValues from "./sheetCellValues";
+import sheetCellData from "./sheetCellData";
 
 import stagnantSelectionAreas from "./stagnantSelectionAreas";
 
 import activeCellSelectionAreaIndex from "./activeCellSelectionAreaIndex";
 
 const excelReducer = combineReducers({ 
-  sheetCellValues,
+  sheetCellData,
   
   activeSelectionArea,
   stagnantSelectionAreas,

@@ -11,6 +11,8 @@ import { setEditModeOn, setEditModeOff } from "actions/ui/excel/isEditMode";
 
 import { updateStagnantSelectionAreas, resetStagnantSelectionAreas } from "actions/ui/excel/stagnantSelectionAreas";
 
+import { updateSheetCellData } from "actions/ui/excel/sheetCellData";
+
 import { isPositionEqualArea } from "tools/excel";
 
 const mapStateToProps = ({ 
@@ -26,7 +28,9 @@ const mapStateToProps = ({
       isEditMode,
 
       columnCount,
-      rowCount
+      rowCount,
+
+      sheetCellData
     } 
   } 
 }) => ({ 
@@ -40,7 +44,9 @@ const mapStateToProps = ({
   isEditMode,
 
   columnCount,
-  rowCount
+  rowCount,
+
+  sheetCellData
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -59,7 +65,9 @@ const mapDispatchToProps = (dispatch) => ({
   handleSetSelectionModeOff: () => dispatch(setSelectionModeOff()),
 
   handleSetEditModeOn: () => dispatch(setEditModeOn()),
-  handleSetEditModeOff: () => dispatch(setEditModeOff())
+  handleSetEditModeOff: () => dispatch(setEditModeOff()),
+
+  handleChangeSheetCellData: (sheetCellData) => dispatch(updateSheetCellData(sheetCellData))
 });
 
 let EventListener = ({ 
@@ -77,6 +85,8 @@ let EventListener = ({
 
   stagnantSelectionAreas,
 
+  sheetCellData,
+
   handleUpdateActiveCellPosition,
 
   handleUpdateActiveCellSelectionAreaIndex,
@@ -92,7 +102,9 @@ let EventListener = ({
   handleSetSelectionModeOff,
 
   handleSetEditModeOn,
-  handleSetEditModeOff
+  handleSetEditModeOff,
+
+  handleChangeSheetCellData
 }) => (
   <EventRedux 
     ref={eventListenerRef} 
@@ -108,6 +120,8 @@ let EventListener = ({
 
     isSelectionMode={isSelectionMode}
     isEditMode={isEditMode}
+
+    sheetCellData={sheetCellData}
 
     handleUpdateActiveCellSelectionAreaIndex={handleUpdateActiveCellSelectionAreaIndex}
     handleResetActiveCellSelectionAreaIndex={handleResetActiveCellSelectionAreaIndex} 
@@ -125,6 +139,8 @@ let EventListener = ({
 
     handleSetEditModeOn={handleSetEditModeOn}
     handleSetEditModeOff={handleSetEditModeOff}
+
+    handleChangeSheetCellData={handleChangeSheetCellData}
   />
 );
 
@@ -632,6 +648,16 @@ class EventRedux extends PureComponent {
     } else {
       handleUpdateActiveCellPosition({ y });
     }
+  }
+
+  changeValue(row, column, data) {
+    const { sheetCellData, handleChangeSheetCellData } = this.props;
+
+    handleChangeSheetCellData([
+      ...sheetCellData.slice(0, row),
+      [ ...sheetCellData[row].slice(0, column), { ...sheetCellData[row][column], ...data }, ...sheetCellData[row].slice(column + 1) ],
+      ...sheetCellData.slice(row + 1),
+    ]);
   }
 
   clickRowHeader(row, ctrlKey) {
