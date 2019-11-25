@@ -55,19 +55,19 @@ let SheetWindow = ({
   const rowHeight = (index) => rowHeights[index];
   const columnWidth = (index) => columnWidths[index];
 
-  const handleSelectionStart = (x1, y1, isMultiSelection) => {
-    eventListenerRef.current.startSelection(x1, y1, isMultiSelection);
+  const handleSelectionStart = (x1, y1, ctrlKey) => {
+    eventListenerRef.current.startSelection(x1, y1, ctrlKey);
   };
 
-  const handleSelectionOver = (x2, y2, isMultiSelection) => eventListenerRef.current.selectOver(x2, y2, isMultiSelection);
+  const handleSelectionOver = (x2, y2, ctrlKey) => eventListenerRef.current.selectOver(x2, y2, ctrlKey);
 
   const handleDoubleClickEditableCell = () => eventListenerRef.current.setEditModeOn();
 
-  const handleClickColumnHeader = (column) => {};
+  const handleClickColumnHeader = (column, ctrlKey) => eventListenerRef.current.clickColumnHeader(column, ctrlKey);
 
-  const handleClickRowHeader = (row) => {};
+  const handleClickRowHeader = (row, ctrlKey) => eventListenerRef.current.clickRowHeader(row, ctrlKey);
 
-  const handleClickRootHeader = () => {};
+  const handleClickRootHeader = () => eventListenerRef.current.clickRootHeader();
 
 
   const itemData = { 

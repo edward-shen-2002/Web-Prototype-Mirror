@@ -24,7 +24,7 @@ class Headers extends PureComponent {
     
     return (
       <HeaderComponents headerStyles={headerStyles} type={type}/>
-    )
+    );
   }
 }
 

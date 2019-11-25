@@ -7,7 +7,7 @@ import "./Cell.scss";
 // ! Selection algorithms is a bit too complicated and time consuming to implement. Leave for now.
 
 const RowHeaderCell = ({ style, value, row, handleClickRowHeader }) => {
-  const handleClick = () => handleClickRowHeader(row);
+  const handleClick = ({ ctrlKey }) => handleClickRowHeader(row, ctrlKey);
 
   return (
     <div className="cell cell--positionIndicator" style={style} onClick={handleClick}>
@@ -17,7 +17,7 @@ const RowHeaderCell = ({ style, value, row, handleClickRowHeader }) => {
 };
 
 const ColumnHeaderCell = ({ style, value, column, handleClickColumnHeader }) => {
-  const handleClick = () => handleClickColumnHeader(column);
+  const handleClick = ({ ctrlKey }) => handleClickColumnHeader(column, ctrlKey);
 
   return (
     <div className="cell cell--positionIndicator" style={style} onClick={handleClick}>
