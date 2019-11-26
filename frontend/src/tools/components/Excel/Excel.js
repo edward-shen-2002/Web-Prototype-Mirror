@@ -10,9 +10,19 @@ import "./Excel.scss";
 
 const Divider = () => <hr className="divider"/>;
 
-const Excel = ({ name, returnLink, handleSubmitName }) => (
+const Excel = ({ 
+  name, 
+  returnLink, 
+  handleSubmitName,
+  handleSaveWorkbook
+}) => (
   <div className="excel">
-    <AppBar name={name} returnLink={returnLink} handleSubmitName={handleSubmitName}/>
+    <AppBar 
+      name={name} 
+      returnLink={returnLink} 
+      handleSubmitName={handleSubmitName}
+      handleSaveWorkbook={handleSaveWorkbook}
+    />
     <Divider/>
     <ToolBar/>
     <Divider/>

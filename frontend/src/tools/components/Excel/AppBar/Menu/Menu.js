@@ -3,7 +3,9 @@ import React, { useState } from "react";
 import File from "./File";
 import Edit from "./Edit";
 
-const Menu = () => {
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+
+const Menu = ({ handleSaveWorkbook }) => {
   const [ isMenuOpenable, setIsMenuOpenable ] = useState(false);
   const [ openedMenuName, setOpenedMenuName ] = useState(null);
 
@@ -21,16 +23,20 @@ const Menu = () => {
     }
   };
 
-  const handleBlurMenuContainer = () => {
+  const handleClickAway = () => {
     if(isMenuOpenable) setIsMenuOpenable(false);
     if(openedMenuName) setOpenedMenuName(null);
   };
 
+  const commonMenuItemProps = { openedMenuName, handleClickMenu, handleHoverMenu };
+
   return (
-    <div className="appBar__menu" onBlur={handleBlurMenuContainer}>
-      <File openedMenuName={openedMenuName} handleClickMenu={handleClickMenu} handleHoverMenu={handleHoverMenu}/>
-      <Edit openedMenuName={openedMenuName} handleClickMenu={handleClickMenu} handleHoverMenu={handleHoverMenu}/>
-    </div>
+    <ClickAwayListener onClickAway={handleClickAway}>
+      <div className="appBar__menu">
+        <File handleSaveWorkbook={handleSaveWorkbook} {...commonMenuItemProps}/>
+        <Edit {...commonMenuItemProps}/>
+      </div>
+    </ClickAwayListener>
   );
 };
 

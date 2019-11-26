@@ -24,10 +24,14 @@ const MenuOptionItemLabel = ({ label }) => (
   </ListItemText>
 );
 
+// ! Recurse here when menu item has children
 const MenuOption = ({ icon, label, handleClick }) => (
   <ListItem onClick={handleClick} button>
     <MenuOptionItemIcon icon={icon}/>
     <MenuOptionItemLabel label={label}/>
+
+    {/* RECURSE */}
+
   </ListItem>
 );
 

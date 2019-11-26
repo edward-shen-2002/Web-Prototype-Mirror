@@ -96,8 +96,6 @@ const templates = ({ router, TemplateModel }) => {
     const { _id } = req.params;
     const { newTemplate } = req.body;
 
-    console.log(newTemplate);
-
     TemplateModel.findByIdAndUpdate(_id, newTemplate)
       .then(() => {
         res.json({ message: MESSAGE_SUCCESS_TEMPLATES_UPDATE });

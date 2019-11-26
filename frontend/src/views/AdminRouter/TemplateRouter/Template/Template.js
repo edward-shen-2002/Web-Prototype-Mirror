@@ -74,10 +74,11 @@ let Template = ({
             let columnWidths = getColumnWidths(sheet);
             let rowHeights = getRowHeights(sheet);
             let { freezeRowCount, freezeColumnCount } = getFreezeHeader(sheet);
-
+            
             sheetsColumnCount[name] = columnCount;
             sheetsRowCount[name] = rowCount;
             sheetsCellData[name] = sheetCellData;
+
             sheetsColumnWidths[name] = columnWidths;
             sheetsRowHeights[name] = rowHeights;
             sheetsFreezeRowCount[name] = freezeRowCount;
@@ -121,9 +122,26 @@ let Template = ({
     );
   };
 
+  const handleSaveWorkbook = (file) => {
+    const newTemplate = { file };
+
+    return (
+      adminTemplateRoleAxios.put(`${REST_ADMIN_TEMPLATES}/${_id}`, { newTemplate })
+        .then(() => {
+          setTemplate({ ...template, ...newTemplate });
+        })
+        .catch((error) => console.error(error))
+    );
+  };
+
   return (
     isDataFetched 
-      ? <Excel name={name} returnLink={ROUTE_ADMIN_TEMPLATE_TEMPLATES} handleSubmitName={handleSubmitName}/>
+      ? <Excel 
+          name={name} 
+          returnLink={ROUTE_ADMIN_TEMPLATE_TEMPLATES} 
+          handleSubmitName={handleSubmitName}
+          handleSaveWorkbook={handleSaveWorkbook}
+        />
       : <Loading/>
   );
 };

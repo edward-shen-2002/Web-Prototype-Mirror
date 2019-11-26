@@ -21,17 +21,22 @@ const ExcelIconButton = ({ returnLink }) => (
 /**
  * The header of the workbook, which contains the title (?and related actions)
  */
-const Header = ({ name, handleSubmitName }) => (
+const Header = ({ name, handleSubmitName, handleSaveWorkbook }) => (
   <div>
     <Title name={name} handleSubmitName={handleSubmitName}/>
-    <Menu/>
+    <Menu handleSaveWorkbook={handleSaveWorkbook}/>
   </div>
 );
 
-const AppBar = ({ name, returnLink, handleSubmitName }) => (
+const AppBar = ({ 
+  name, 
+  returnLink, 
+  handleSubmitName,
+  handleSaveWorkbook
+}) => (
   <div className="appBar">
     <ExcelIconButton returnLink={returnLink}/>
-    <Header name={name} handleSubmitName={handleSubmitName}/>
+    <Header name={name} handleSubmitName={handleSubmitName} handleSaveWorkbook={handleSaveWorkbook}/>
   </div>
 );
 

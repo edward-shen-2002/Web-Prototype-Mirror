@@ -100,7 +100,7 @@ export const getFreezeHeader = (sheet) => {
   const panes = sheet.panes();
           
   if(panes && panes.state === "frozen") {
-    freezeHeader.freezeRowCount = panes.ySpit;
+    freezeHeader.freezeRowCount = panes.ySplit;
     freezeHeader.freezeColumnCount = panes.xSplit;
   } else {
     freezeHeader.freezeRowCount = DEFAULT_EXCEL_SHEET_FREEZE_ROW_COUNT;
