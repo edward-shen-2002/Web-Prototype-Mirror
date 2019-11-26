@@ -8,6 +8,8 @@ import FileTableOutline from "mdi-material-ui/FileTableOutline";
 
 import Title from "./Title";
 
+import Menu from "./Menu";
+
 import "./AppBar.scss";
 
 const ExcelIconButton = ({ returnLink }) => (
@@ -18,19 +20,19 @@ const ExcelIconButton = ({ returnLink }) => (
 
 /**
  * The header of the workbook, which contains the title (?and related actions)
- * TODO : Make input width contain text
  */
-const ExcelHeader = ({ name, handleSubmitName }) => (
+const Header = ({ name, handleSubmitName }) => (
   <div>
     <Title name={name} handleSubmitName={handleSubmitName}/>
+    <Menu/>
   </div>
 );
 
-const ExcelAppBar = ({ name, returnLink, handleSubmitName }) => (
-  <div className="excelAppBar">
+const AppBar = ({ name, returnLink, handleSubmitName }) => (
+  <div className="appBar">
     <ExcelIconButton returnLink={returnLink}/>
-    <ExcelHeader name={name} handleSubmitName={handleSubmitName}/>
+    <Header name={name} handleSubmitName={handleSubmitName}/>
   </div>
 );
 
-export default ExcelAppBar;
+export default AppBar;

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import InputBase from "@material-ui/core/InputBase";
 
+// TODO : Make input width contain text - react virtualized
 const Title = ({ name, handleSubmitName }) => {
   const [ title, setTitle ] = useState(name);
 
@@ -19,7 +20,7 @@ const Title = ({ name, handleSubmitName }) => {
 
   return (
     <InputBase 
-      className="appBarTitle" 
+      className="appBar__title" 
       type="text" 
       value={title} 
       onBlur={handleBlur} 

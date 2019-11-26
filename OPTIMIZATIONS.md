@@ -25,3 +25,7 @@ We can use a simple sum function to get top and left.
 This way, we don't rely on the method, which may be costly to perform (unsure).
 
 We also do not have to rely on the sheet ref as a result.
+
+## Excel Appbar
+
+Since we're using popper, which can be moved anywhere, its possible that we can have one popper instead of one every menu
