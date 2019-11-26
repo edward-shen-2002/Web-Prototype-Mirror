@@ -9,43 +9,49 @@ import ActiveSelectionArea from "../ActiveSelectionArea";
 const mapStateToProps = ({
   ui: {
     excel: {
+      activeSheetName,
       isSelectionMode,
       activeSelectionArea,
 
-      freezeColumnCount,
-      freezeRowCount
+      sheetsFreezeColumnCount,
+      sheetsFreezeRowCount
     }
   }
 }) => ({
+  activeSheetName,
   isSelectionMode,
   activeSelectionArea,
 
-  freezeColumnCount,
-  freezeRowCount
+  sheetsFreezeColumnCount,
+  sheetsFreezeRowCount
 });
 
 let ActiveSelectionAreaListener = ({ 
+  activeSheetName,
   sheetGridRef,
 
   isSelectionMode,
   activeSelectionArea,
 
-  freezeColumnCount,
-  freezeRowCount
+  sheetsFreezeColumnCount,
+  sheetsFreezeRowCount
 }) => {
   const activeSelectionAreaRef = useRef(null);
 
   useEffect(() => {
     const { current: ActiveSelectionAreaInstance } = activeSelectionAreaRef;
+    
+    const sheetFreezeColumnCount = sheetsFreezeColumnCount[activeSheetName];
+    const sheetFreezeRowCount = sheetsFreezeRowCount[activeSheetName];
 
     if(isSelectionMode && activeSelectionArea) {
       const { x1, y1, x2, y2 } = activeSelectionArea;
       
-      if((x1 <= freezeColumnCount && x2 <= freezeColumnCount) || (y1 <= freezeRowCount && y2 <= freezeRowCount)) return ActiveSelectionAreaInstance.resetActiveSelectionArea();
+      if((x1 <= sheetFreezeColumnCount && x2 <= sheetFreezeColumnCount) || (y1 <= sheetFreezeRowCount && y2 <= sheetFreezeRowCount)) return ActiveSelectionAreaInstance.resetActiveSelectionArea();
 
       const { current: SheetInstance } = sheetGridRef;
       
-      ActiveSelectionAreaInstance.setActiveSelectionAreaStyle(computeSelectionAreaStyle(SheetInstance, activeSelectionArea, freezeColumnCount, freezeRowCount, true));
+      ActiveSelectionAreaInstance.setActiveSelectionAreaStyle(computeSelectionAreaStyle(SheetInstance, activeSelectionArea, sheetFreezeColumnCount, sheetFreezeRowCount, true));
     } else {
       ActiveSelectionAreaInstance.resetActiveSelectionArea();
     }

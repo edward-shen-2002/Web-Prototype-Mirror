@@ -7,30 +7,33 @@ import ActiveCell from "../ActiveCell/ActiveCell";
 const mapStateToProps = ({
   ui: {
     excel: {
+      activeSheetName,
       activeCellPosition,
 
       isEditMode,
 
-      freezeColumnCount,
-      freezeRowCount
+      sheetsFreezeColumnCount,
+      sheetsFreezeRowCount
     }
   }
 }) => ({
+  activeSheetName,
   activeCellPosition,
 
   isEditMode,
   
-  freezeColumnCount,
-  freezeRowCount
+  sheetsFreezeColumnCount,
+  sheetsFreezeRowCount
 });
 
 let ActiveCellListener = ({
+  activeSheetName,
   activeCellPosition,
 
   isEditMode,
 
-  freezeColumnCount,
-  freezeRowCount,
+  sheetsFreezeColumnCount,
+  sheetsFreezeRowCount,
 
   sheetGridRef,
 
@@ -42,8 +45,10 @@ let ActiveCellListener = ({
   useEffect(() => {
     const { current: ActiveCellInstance } = activeCellRef;
     const { current: SheetInstance } = sheetGridRef;
-    
-    if(x <= freezeColumnCount || y <= freezeRowCount) return ActiveCellInstance.resetActiveCell();
+    const sheetFreezeColumnCount = sheetsFreezeColumnCount[activeSheetName];
+    const sheetFreezeRowCoutn = sheetsFreezeRowCount[activeSheetName];
+
+    if(x <= sheetFreezeColumnCount || y <= sheetFreezeRowCoutn) return ActiveCellInstance.resetActiveCell();
 
     const { top, left, height, width } = SheetInstance._getItemStyle(y, x);
 

@@ -21,33 +21,36 @@ import "./Sheet.scss";
 const mapStateToProps = ({
   ui: {
     excel: {
-      sheetCellData,
-      columnCount,
-      rowCount,
-      columnWidths,
-      rowHeights,
-      freezeRowCount,
-      freezeColumnCount
+      activeSheetName,
+      sheetsCellData,
+      sheetsColumnCount,
+      sheetsRowCount,
+      sheetsColumnWidths,
+      sheetsRowHeights,
+      sheetsFreezeRowCount,
+      sheetsFreezeColumnCount
     }
   }
 }) => ({
-  sheetCellData,
-  columnCount,
-  rowCount,
-  columnWidths,
-  rowHeights,
-  freezeRowCount,
-  freezeColumnCount
+  activeSheetName,
+  sheetsCellData,
+  sheetsColumnCount,
+  sheetsRowCount,
+  sheetsColumnWidths,
+  sheetsRowHeights,
+  sheetsFreezeRowCount,
+  sheetsFreezeColumnCount
 });
 
 let SheetWindow = ({
-  sheetCellData,
-  freezeRowCount,
-  freezeColumnCount,
-  columnCount,
-  rowCount,
-  columnWidths,
-  rowHeights,
+  activeSheetName,
+  sheetsCellData,
+  sheetsFreezeRowCount,
+  sheetsFreezeColumnCount,
+  sheetsColumnCount,
+  sheetsRowCount,
+  sheetsColumnWidths,
+  sheetsRowHeights,
   eventListenerRef
 }) => {
   const sheetGridRef = useRef(null);
@@ -57,7 +60,15 @@ let SheetWindow = ({
   useEffect(() => {
     EventListenerInstance = eventListenerRef.current;
   });
-  
+
+  const rowHeights = sheetsRowHeights[activeSheetName];
+  const columnWidths = sheetsColumnWidths[activeSheetName];
+  const tableFreezeRowCount = sheetsFreezeRowCount[activeSheetName] + 1;
+  const tableFreezeColumnCount = sheetsFreezeColumnCount[activeSheetName] + 1;
+  const rowCount = sheetsRowCount[activeSheetName];
+  const columnCount = sheetsColumnCount[activeSheetName];
+  const sheetCellData = sheetsCellData[activeSheetName];
+
   const rowHeight = (index) => rowHeights[index];
   const columnWidth = (index) => columnWidths[index];
 
@@ -75,6 +86,7 @@ let SheetWindow = ({
   
   const handleChangeValue = (row, column, value) => EventListenerInstance.changeValue(row, column, value);
 
+
   const itemData = { 
     sheetCellData, 
     
@@ -91,14 +103,9 @@ let SheetWindow = ({
     handleClickRootHeader
   };
 
-  const tableFreezeRowCount = freezeRowCount + 1;
-  const tableFreezeColumnCount = freezeColumnCount + 1;
 
-  const commonSelectionPaneProps = { 
-    sheetGridRef, 
 
-    handleChangeValue 
-  };
+  const commonSelectionPaneProps = { sheetGridRef, handleChangeValue };
 
   return (
     <AutoSizer>

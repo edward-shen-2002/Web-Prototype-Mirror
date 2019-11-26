@@ -3,40 +3,26 @@ import { combineReducers } from "redux";
 import activeSelectionArea from "./activeSelectionArea";
 import activeCellPosition from "./activeCellPosition";
 
-import columnCount from "./columnCount";
-import rowCount from "./rowCount";
-
-import columnWidths from "./columnWidths";
-import rowHeights from "./rowHeights";
-
 import activeSheetName from "./activeSheetName";
-
-import freezeColumnCount from "./freezeColumnCount";
-import freezeRowCount from "./freezeRowCount";
 
 import isSelectionMode from "./isSelectionMode";
 import isEditMode from "./isEditMode";
 
 import sheetNames from "./sheetNames";
 
-import sheetCellData from "./sheetCellData";
-
 import stagnantSelectionAreas from "./stagnantSelectionAreas";
 
 import activeCellSelectionAreaIndex from "./activeCellSelectionAreaIndex";
 
-const excelReducer = combineReducers({ 
-  sheetCellData,
-  
-  freezeColumnCount,
-  freezeRowCount,
-  
-  columnCount, 
-  rowCount,
-  
-  columnWidths,
-  rowHeights,
+import sheetsCellData from "./sheetsCellData";
+import sheetsColumnCount from "./sheetsColumnCount";
+import sheetsColumnWidths from "./sheetsColumnWidths";
+import sheetsFreezeColumnCount from "./sheetsFreezeColumnCount";
+import sheetsRowCount from "./sheetsRowCount";
+import sheetsRowHeights from "./sheetsRowHeights";
+import sheetsFreezeRowCount from "./sheetsFreezeRowCount";
 
+const excelReducer = combineReducers({ 
   
   activeSheetName,
   sheetNames,
@@ -48,7 +34,15 @@ const excelReducer = combineReducers({
   activeCellSelectionAreaIndex,
   
   isSelectionMode, 
-  isEditMode 
+  isEditMode,
+
+  sheetsCellData,
+  sheetsColumnCount,
+  sheetsColumnWidths,
+  sheetsFreezeColumnCount,
+  sheetsRowCount,
+  sheetsRowHeights,
+  sheetsFreezeRowCount
 });
 
 export default excelReducer;

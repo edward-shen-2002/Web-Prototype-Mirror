@@ -7,30 +7,33 @@ import ActiveCell from "../ActiveCell/ActiveCell";
 const mapStateToProps = ({
   ui: {
     excel: {
+      activeSheetName,
       activeCellPosition,
 
       isEditMode,
 
-      freezeColumnCount,
-      freezeRowCount
+      sheetsFreezeColumnCount,
+      sheetsFreezeRowCount
     }
   }
 }) => ({
+  activeSheetName,
   activeCellPosition,
 
   isEditMode,
   
-  freezeColumnCount,
-  freezeRowCount
+  sheetsFreezeColumnCount,
+  sheetsFreezeRowCount
 });
 
 let ActiveCellListener = ({
+  activeSheetName,
   activeCellPosition,
 
   isEditMode,
 
-  freezeColumnCount,
-  freezeRowCount,
+  sheetsFreezeColumnCount,
+  sheetsFreezeRowCount,
 
   sheetGridRef,
 
@@ -38,16 +41,18 @@ let ActiveCellListener = ({
 }) => {
   const activeCellRef = useRef(null);
   const { x, y } = activeCellPosition;
-
+  
   useEffect(() => {
     const { current: ActiveCellInstance } = activeCellRef;
     const { current: SheetInstance } = sheetGridRef;
+    const sheetFreezeColumnCount = sheetsFreezeColumnCount[activeSheetName];
+    const sheetFreezeRowCount = sheetsFreezeRowCount[activeSheetName];
     
-    if(x > freezeColumnCount || y <= freezeRowCount) return ActiveCellInstance.resetActiveCell();
+    if(x > sheetFreezeColumnCount || y <= sheetFreezeRowCount) return ActiveCellInstance.resetActiveCell();
 
     let { top, left, height, width } = SheetInstance._getItemStyle(y, x);
 
-    const { top: topFreeze, height: heightFreeze } = SheetInstance._getItemStyle(freezeRowCount, freezeColumnCount);
+    const { top: topFreeze, height: heightFreeze } = SheetInstance._getItemStyle(sheetFreezeRowCount, sheetFreezeColumnCount);
 
     top = top - topFreeze - heightFreeze;
 

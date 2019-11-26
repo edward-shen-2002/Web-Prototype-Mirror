@@ -10,26 +10,29 @@ import { computeSelectionAreaStyle } from "./tools";
 const mapStateToProps = ({
   ui: {
     excel: {
+      activeSheetName,
       stagnantSelectionAreas,
 
-      freezeRowCount,
-      freezeColumnCount
+      sheetsFreezeColumnCount,
+      sheetsFreezeRowCount
     }
   }
 }) => ({
+  activeSheetName,
   stagnantSelectionAreas,
 
-  freezeRowCount,
-  freezeColumnCount
+  sheetsFreezeColumnCount,
+  sheetsFreezeRowCount
 });
 
 let StagnantSelectionAreasListener = ({
+  activeSheetName,
   sheetGridRef,
 
   stagnantSelectionAreas,
 
-  freezeRowCount,
-  freezeColumnCount
+  sheetsFreezeColumnCount,
+  sheetsFreezeRowCount
 }) => {
   const stagnantSelectionAreasRef = useRef(null);
 
@@ -37,10 +40,12 @@ let StagnantSelectionAreasListener = ({
     if(stagnantSelectionAreas) {
       const { current: SheetInstance } = sheetGridRef;
       const { current: StagnantSelectionAreasInstance } = stagnantSelectionAreasRef;
+      const sheetFreezeColumnCount = sheetsFreezeColumnCount[activeSheetName];
+      const sheetFreezeRowCount = sheetsFreezeRowCount[activeSheetName];
 
-      const relevantStagnantSelectionAreas = stagnantSelectionAreas.filter(({ x1, y1, x2, y2 }) => (x1 > freezeColumnCount || x2 > freezeColumnCount) && (y1 <= freezeRowCount || y2 <= freezeRowCount));
+      const relevantStagnantSelectionAreas = stagnantSelectionAreas.filter(({ x1, y1, x2, y2 }) => (x1 > sheetFreezeColumnCount || x2 > sheetFreezeColumnCount) && (y1 <= sheetFreezeRowCount || y2 <= sheetFreezeRowCount));
 
-      const relevantStagnantSelectionAreasStyles = relevantStagnantSelectionAreas.map((stagnantSelectionArea) => computeSelectionAreaStyle(SheetInstance, stagnantSelectionArea, freezeColumnCount, freezeRowCount, false));
+      const relevantStagnantSelectionAreasStyles = relevantStagnantSelectionAreas.map((stagnantSelectionArea) => computeSelectionAreaStyle(SheetInstance, stagnantSelectionArea, sheetFreezeColumnCount, sheetFreezeRowCount, false));
 
       StagnantSelectionAreasInstance.setStagnantSelectionAreasStyles(relevantStagnantSelectionAreasStyles);
     }

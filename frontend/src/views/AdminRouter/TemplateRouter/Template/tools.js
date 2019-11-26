@@ -1,18 +1,18 @@
 import { 
-  DEFAULT_EXCEL_ROWS, 
-  DEFAULT_EXCEL_COLUMNS,
+  DEFAULT_EXCEL_SHEET_ROW_COUNT, 
+  DEFAULT_EXCEL_SHEET_COLUMN_COUNT,
 
-  DEFAULT_EXCEL_ROW_HEIGHT,
-  DEFAULT_EXCEL_COLUMN_WIDTH,
+  DEFAULT_EXCEL_SHEET_ROW_HEIGHT,
+  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH,
 
-  DEFAULT_EXCEL_ROW_HEIGHT_HIDDEN,
-  DEFAULT_EXCEL_COLUMN_WIDTH_HIDDEN,
+  DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HIDDEN,
+  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HIDDEN,
   
-  DEFAULT_EXCEL_ROW_HEIGHT_HEADER,
-  DEFAULT_EXCEL_COLUMN_WIDTH_HEADER,
+  DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
+  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER,
 
-  DEFAULT_EXCEL_FREEZE_ROW_COUNT,
-  DEFAULT_EXCEL_FREEZE_COLUMN_COUNT
+  DEFAULT_EXCEL_SHEET_FREEZE_ROW_COUNT,
+  DEFAULT_EXCEL_SHEET_FREEZE_COLUMN_COUNT
 } from "constants/excel";
 
 
@@ -27,27 +27,27 @@ export const getHeaderCount = (sheet) => {
     headerCount.columnCount = _maxColumnNumber + 1;
     headerCount.rowCount = _maxRowNumber + 1;
   } else {
-    headerCount.columnCount = DEFAULT_EXCEL_COLUMNS + 1;
-    headerCount.rowCount = DEFAULT_EXCEL_ROWS + 1;
+    headerCount.columnCount = DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1;
+    headerCount.rowCount = DEFAULT_EXCEL_SHEET_ROW_COUNT + 1;
   }
 
   return headerCount;
 };
 
 export const getColumnWidths = (sheet) => {
-  let columnWidths = [ DEFAULT_EXCEL_COLUMN_WIDTH_HEADER ];
+  let columnWidths = [ DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER ];
 
-  for(let column = 1; column <= DEFAULT_EXCEL_COLUMNS; column++) {
+  for(let column = 1; column <= DEFAULT_EXCEL_SHEET_COLUMN_COUNT; column++) {
     let width;
 
     const sheetColumn = sheet.column(column);
 
     if(sheetColumn.hidden()) {
-      width = DEFAULT_EXCEL_COLUMN_WIDTH_HIDDEN;
+      width = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HIDDEN;
     } else {
       width = sheetColumn.width();
 
-      if(!width) width = DEFAULT_EXCEL_COLUMN_WIDTH
+      if(!width) width = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH
     }
 
     columnWidths.push(width);
@@ -57,18 +57,18 @@ export const getColumnWidths = (sheet) => {
 };
 
 export const getRowHeights = (sheet) => {
-  let rowHeights = [ DEFAULT_EXCEL_ROW_HEIGHT_HEADER ];
+  let rowHeights = [ DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER ];
 
-  for(let row = 1; row <= DEFAULT_EXCEL_ROWS; row++) {
+  for(let row = 1; row <= DEFAULT_EXCEL_SHEET_ROW_COUNT; row++) {
     let height;
     const sheetRow = sheet.row(row);
 
     if(sheetRow.hidden()) {
-      height = DEFAULT_EXCEL_ROW_HEIGHT_HIDDEN;
+      height = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HIDDEN;
     } else {
       height = sheetRow.height();
 
-      if(!height) height = DEFAULT_EXCEL_ROW_HEIGHT;
+      if(!height) height = DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
     }
 
     rowHeights.push(height);
@@ -80,9 +80,9 @@ export const getRowHeights = (sheet) => {
 export const getSheetData = (sheet) => {
   let sheetCellData = [];
 
-  for(let row = 0; row <= DEFAULT_EXCEL_ROWS; row++) {
+  for(let row = 0; row <= DEFAULT_EXCEL_SHEET_ROW_COUNT; row++) {
     let rowValues = [];
-    for(let column = 0; column <= DEFAULT_EXCEL_COLUMNS; column++) {
+    for(let column = 0; column <= DEFAULT_EXCEL_SHEET_COLUMN_COUNT; column++) {
       rowValues.push({
         value: row && column ? sheet.row(row).cell(column).value() : null
       });
@@ -103,8 +103,8 @@ export const getFreezeHeader = (sheet) => {
     freezeHeader.freezeRowCount = panes.ySpit;
     freezeHeader.freezeColumnCount = panes.xSplit;
   } else {
-    freezeHeader.freezeRowCount = DEFAULT_EXCEL_FREEZE_ROW_COUNT;
-    freezeHeader.freezeColumnCount = DEFAULT_EXCEL_FREEZE_COLUMN_COUNT; 
+    freezeHeader.freezeRowCount = DEFAULT_EXCEL_SHEET_FREEZE_ROW_COUNT;
+    freezeHeader.freezeColumnCount = DEFAULT_EXCEL_SHEET_FREEZE_COLUMN_COUNT; 
   }
 
   return freezeHeader;

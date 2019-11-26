@@ -54,31 +54,47 @@ let Template = ({
           const WorkbookInstance = await XlsxPopulate.fromDataAsync(file, { base64: true });
           
           const sheetNames = WorkbookInstance.sheets().map((sheet) => sheet.name());
+
           const activeSheet = WorkbookInstance.activeSheet();
           const activeSheetName = activeSheet.name();
 
-          // ! Set columnCount / rowCount to be max of default and set values~
-          let { columnCount, rowCount } = getHeaderCount(activeSheet);
+          let sheetsColumnCount = {};
+          let sheetsColumnWidths = {};
+          let sheetsFreezeColumnCount = {};
+          let sheetsRowCount = {};
+          let sheetsRowHeights = {};
+          let sheetsFreezeRowCount = {};
+          let sheetsCellData = {};
 
-          let sheetCellData = getSheetData(activeSheet);
+          sheetNames.forEach((name) => {
+            const sheet = WorkbookInstance.sheet(name);
 
-          let columnWidths = getColumnWidths(activeSheet);
-          
-          let rowHeights = getRowHeights(activeSheet);
+            let { columnCount, rowCount } = getHeaderCount(sheet);
+            let sheetCellData = getSheetData(sheet);
+            let columnWidths = getColumnWidths(sheet);
+            let rowHeights = getRowHeights(sheet);
+            let { freezeRowCount, freezeColumnCount } = getFreezeHeader(sheet);
 
-          let { freezeRowCount, freezeColumnCount } = getFreezeHeader(activeSheet);
+            sheetsColumnCount[name] = columnCount;
+            sheetsRowCount[name] = rowCount;
+            sheetsCellData[name] = sheetCellData;
+            sheetsColumnWidths[name] = columnWidths;
+            sheetsRowHeights[name] = rowHeights;
+            sheetsFreezeRowCount[name] = freezeRowCount;
+            sheetsFreezeColumnCount[name] = freezeColumnCount;
+          });
 
           handleLoadTemplate({
-            sheetCellData,
+            sheetsCellData,
 
-            rowCount,
-            columnCount,
+            sheetsColumnCount,
+            sheetsColumnWidths,
+            sheetsFreezeColumnCount,
+            
+            sheetsRowCount,
+            sheetsFreezeRowCount,
+            sheetsRowHeights,
 
-            rowHeights,
-            columnWidths,
-
-            freezeColumnCount,
-            freezeRowCount,
             activeSheetName,
             sheetNames
           });

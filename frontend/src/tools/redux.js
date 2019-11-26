@@ -7,17 +7,6 @@ import { showAppNavigation, hideAppNavigation } from "actions/ui/isAppNavigation
 
 import { updateActiveSheetName, resetActiveSheetName } from "actions/ui/excel/activeSheetName";
 
-import { updateSheetCellData, resetSheetCellData } from "actions/ui/excel/sheetCellData";
-
-import { updateColumnCount, resetColumnCount } from "actions/ui/excel/columnCount";
-import { updateRowCount, resetRowCount } from "actions/ui/excel/rowCount";
-
-import { updateColumnWidths, resetColumnWidths } from "actions/ui/excel/columnWidths";
-import { updateRowHeights, resetRowHeights } from "actions/ui/excel/rowHeights";
-
-import { updateFreezeColumnCount, resetFreezeColumnCount } from "actions/ui/excel/freezeColumnCount";
-import { updateFreezeRowCount, resetFreezeRowCount } from "actions/ui/excel/freezeRowCount";
-
 import { updateSheetNames, resetSheetNames } from "actions/ui/excel/sheetNames";
 
 import { setEditModeOff } from "actions/ui/excel/isEditMode";
@@ -31,6 +20,19 @@ import { resetActiveCellSelectionAreaIndex } from "actions/ui/excel/activeCellSe
 import { setSelectionModeOff } from "actions/ui/excel/isSelectionMode";
 
 import { resetStagnantSelectionAreas } from "actions/ui/excel/stagnantSelectionAreas";
+
+
+import { updateSheetsCellData, resetSheetsCellData } from "actions/ui/excel/sheetsCellData";
+
+import { updateSheetsColumnCount, resetSheetsColumnCount } from "actions/ui/excel/sheetsColumnCount";
+
+import { updateSheetsRowCount, resetSheetsRowCount } from "actions/ui/excel/sheetsRowCount";
+
+import { updateSheetsColumnWidths, resetSheetsColumnWidths } from "actions/ui/excel/sheetsColumnWidths";
+import { updateSheetsRowHeights, resetSheetsRowHeights } from "actions/ui/excel/sheetsRowHeights";
+
+import { updateSheetsFreezeColumnCount, resetSheetsFreezeColumnCount } from "actions/ui/excel/sheetsFreezeColumnCount";
+import { updateSheetsFreezeRowCount, resetSheetsFreezeRowCount } from "actions/ui/excel/sheetsFreezeRowCount";
 
 
 export const loadUserState = (dispatch, { user, token }) => {
@@ -58,48 +60,48 @@ export const resetUserState = (dispatch) => {
 export const loadWorkbook = (
   dispatch, 
   { 
-    sheetCellData,
     activeSheetName,
     
-    columnCount,
-    rowCount,
+    sheetsCellData,
+    sheetsColumnCount,
+    sheetsRowCount,
 
-    columnWidths,
-    rowHeights,
+    sheetsColumnWidths,
+    sheetsRowHeights,
     
-    freezeColumnCount,
-    freezeRowCount,
+    sheetsFreezeColumnCount,
+    sheetsFreezeRowCount,
 
     sheetNames
   }
 ) => {
-  dispatch(updateSheetCellData(sheetCellData));
+  dispatch(updateSheetsCellData(sheetsCellData));
   dispatch(updateActiveSheetName(activeSheetName));
 
-  dispatch(updateColumnCount(columnCount));
-  dispatch(updateRowCount(rowCount));
+  dispatch(updateSheetsColumnCount(sheetsColumnCount));
+  dispatch(updateSheetsRowCount(sheetsRowCount));
 
-  dispatch(updateColumnWidths(columnWidths));
-  dispatch(updateRowHeights(rowHeights));
+  dispatch(updateSheetsColumnWidths(sheetsColumnWidths));
+  dispatch(updateSheetsRowHeights(sheetsRowHeights));
 
-  dispatch(updateFreezeColumnCount(freezeColumnCount));
-  dispatch(updateFreezeRowCount(freezeRowCount));
+  dispatch(updateSheetsFreezeColumnCount(sheetsFreezeColumnCount));
+  dispatch(updateSheetsFreezeRowCount(sheetsFreezeRowCount));
 
   dispatch(updateSheetNames(sheetNames));
 };
 
 export const resetWorkbook = (dispatch) => {
-  dispatch(resetSheetCellData());
+  dispatch(resetSheetsCellData());
   dispatch(resetActiveSheetName());
 
-  dispatch(resetColumnCount());
-  dispatch(resetRowCount());
+  dispatch(resetSheetsColumnCount());
+  dispatch(resetSheetsRowCount());
 
-  dispatch(resetRowHeights());
-  dispatch(resetColumnWidths());
+  dispatch(resetSheetsRowHeights());
+  dispatch(resetSheetsColumnWidths());
 
-  dispatch(resetFreezeColumnCount());
-  dispatch(resetFreezeRowCount());
+  dispatch(resetSheetsFreezeColumnCount());
+  dispatch(resetSheetsFreezeRowCount());
 
   dispatch(resetSheetNames());
 

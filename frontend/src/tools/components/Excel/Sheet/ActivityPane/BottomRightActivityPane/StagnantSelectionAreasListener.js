@@ -10,26 +10,29 @@ import { computeSelectionAreaStyle } from "./tools";
 const mapStateToProps = ({
   ui: {
     excel: {
+      activeSheetName,
       stagnantSelectionAreas,
 
-      freezeRowCount,
-      freezeColumnCount
+      sheetsFreezeRowCount,
+      sheetsFreezeColumnCount
     }
   }
 }) => ({
+  activeSheetName,
   stagnantSelectionAreas,
 
-  freezeRowCount,
-  freezeColumnCount
+  sheetsFreezeRowCount,
+  sheetsFreezeColumnCount
 });
 
 let StagnantSelectionAreasListener = ({
+  activeSheetName,
   sheetGridRef,
 
   stagnantSelectionAreas,
 
-  freezeRowCount,
-  freezeColumnCount
+  sheetsFreezeRowCount,
+  sheetsFreezeColumnCount
 }) => {
   const stagnantSelectionAreasRef = useRef(null);
 
@@ -38,9 +41,12 @@ let StagnantSelectionAreasListener = ({
       const { current: SheetInstance } = sheetGridRef;
       const { current: StagnantSelectionAreasInstance } = stagnantSelectionAreasRef;
 
-      const relevantStagnantSelectionAreas = stagnantSelectionAreas.filter(({ x1, y1, x2, y2 }) => (x1 > freezeColumnCount || x2 > freezeColumnCount) && (y1 > freezeRowCount || y2 > freezeRowCount));
+      const sheetFreezeColumnCount = sheetsFreezeColumnCount[activeSheetName];
+      const sheetFreezeRowCount = sheetsFreezeRowCount[activeSheetName];
 
-      const relevantStagnantSelectionAreasStyles = relevantStagnantSelectionAreas.map((stagnantSelectionArea) => computeSelectionAreaStyle(SheetInstance, stagnantSelectionArea, freezeColumnCount, freezeRowCount, false));
+      const relevantStagnantSelectionAreas = stagnantSelectionAreas.filter(({ x1, y1, x2, y2 }) => (x1 > sheetFreezeColumnCount || x2 > sheetFreezeColumnCount) && (y1 > sheetFreezeRowCount || y2 > sheetFreezeRowCount));
+
+      const relevantStagnantSelectionAreasStyles = relevantStagnantSelectionAreas.map((stagnantSelectionArea) => computeSelectionAreaStyle(SheetInstance, stagnantSelectionArea, sheetFreezeColumnCount, sheetFreezeRowCount, false));
 
       StagnantSelectionAreasInstance.setStagnantSelectionAreasStyles(relevantStagnantSelectionAreasStyles);
     }
