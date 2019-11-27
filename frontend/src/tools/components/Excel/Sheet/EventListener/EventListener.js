@@ -696,26 +696,41 @@ class EventRedux extends PureComponent {
       const sheetColumnCount = sheetsColumnCount[activeSheetName];
       const sheetCellData = sheetsCellData[activeSheetName];
 
-      // Range on stagnant or active selection area
-      let { x1, x2, y1, y2 } = isSelectionMode ? activeSelectionArea : stagnantSelectionAreas[activeCellSelectionAreaIndex];
+      // { row: column }
+      let selectionAreaCoveredCells = {};
+
+      let combinedSelectionArea = activeSelectionArea ? [ ...stagnantSelectionAreas, activeSelectionArea ] : [ ...stagnantSelectionAreas ];
+
+      combinedSelectionArea.forEach(({ x1, x2, y1, y2 }) => {
+        let startRow = Math.min(y1, y2);
+        let endRow = Math.max(y1, y2);
+  
+        let startColumn = Math.min(x1, x2);
+        let endColumn = Math.max(x1, x2);
+
+        for(let row = startRow; row <= endRow; row++) {
+          for(let column = startColumn; column <= endColumn; column++) {
+            if(selectionAreaCoveredCells[row]) {
+              selectionAreaCoveredCells[row][column] = true;
+            } else {
+              selectionAreaCoveredCells[row] = { [column]: true };
+            }
+          }
+        }
+      });
 
       let newSheetCellData = [];
-
-      let startRow = Math.min(y1, y2);
-      let endRow = Math.max(y1, y2);
-
-      let startColumn = Math.min(x1, x2);
-      let endColumn = Math.max(x1, x2);
-
 
       for(let row = 0; row < sheetRowCount; row++) {
         let rowData = [];
         for(let column = 0; column < sheetColumnCount; column++) {
           const cellData = sheetCellData[row][column];
 
+          const coveredRow = selectionAreaCoveredCells[row];
+
           rowData.push(
-            (startRow <= row && row <= endRow && startColumn <= column && column <= endColumn) 
-              ? { ...cellData, value: "" }
+            (coveredRow && coveredRow[column]) 
+              ? { ...cellData, value: undefined }
               : cellData
           );
         }
