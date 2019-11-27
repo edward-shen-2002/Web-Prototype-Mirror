@@ -18,18 +18,37 @@ const mapStateToProps = ({
   activeCellInputValue
 });
 
-let InputField = ({ activeCellInputValue }) => {
+let InputField = ({ 
+  eventListenerRef, 
+  sheetContainerRef,
+  activeCellInputValue
+}) => {
 
-  const handleChange = () => {
-
+  const handleKeyDown = ({ key }) => {
+    const { current: EventListenerInstance } = eventListenerRef;
+  
+    if(key === "Enter") {
+      EventListenerInstance.enter(event, false, sheetContainerRef);
+    } else if(key === "Tab") {
+      EventListenerInstance.tab(event, false, sheetContainerRef);
+    } else if(key === "Escape") {
+      EventListenerInstance.escape(sheetContainerRef);
+    }
   };
+
+  const handleChange = ({ target: { value } }) => eventListenerRef.current.changeActiveInputValue(value);
+  const handleFocus = () => eventListenerRef.current.focusFormulaInput();
+  const handleBlur = () => eventListenerRef.current.blurFormulaInput();
 
   return (
     <InputBase
       className="formulaBar__input"
       type="text"
       value={activeCellInputValue}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
       onChange={handleChange}
+      onKeyDown={handleKeyDown}
       fullWidth
     />
   )
@@ -37,13 +56,13 @@ let InputField = ({ activeCellInputValue }) => {
 
 InputField = connect(mapStateToProps)(InputField);
 
-const FormulaBar = () => {
+const FormulaBar = ({ eventListenerRef, sheetContainerRef }) => {
 
   return (
     <div className="formulaBar">
       <div className="formulaBar__icon">fx</div>
       <Divider orientation="vertical"/>
-      <InputField/>
+      <InputField eventListenerRef={eventListenerRef} sheetContainerRef={sheetContainerRef}/>
     </div>
   );
 };

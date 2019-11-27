@@ -1,6 +1,6 @@
 import { createReducer } from "store/tools/setup";
 
-const UPDATE_ACTIVE_CELL_INPUT_VALUE = (state, { activeCellInputValue }) => activeCellInputValue;
+const UPDATE_ACTIVE_CELL_INPUT_VALUE = (_state, { activeCellInputValue }) => activeCellInputValue;
 
 const RESET_ACTIVE_CELL_INPUT_VALUE = () => "";
 

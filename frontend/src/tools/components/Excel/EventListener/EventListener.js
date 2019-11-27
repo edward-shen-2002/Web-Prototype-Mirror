@@ -2,6 +2,7 @@ import React, { PureComponent } from "react";
 
 import { connect } from "react-redux";
 
+import { setActiveCellInputAutoFocusOn, setActiveCellInputAutoFocusOff } from "actions/ui/excel/activeCellInputAutoFocus";
 import { updateActiveCellInputValue, resetActiveCellInputValue } from "actions/ui/excel/activeCellInputValue";
 import { updateActiveCellPosition } from "actions/ui/excel/activeCellPosition";
 import { updateActiveSelectionArea, resetActiveSelectionArea } from "actions/ui/excel/activeSelectionArea";
@@ -23,6 +24,7 @@ const mapStateToProps = ({
       activeCellPosition,
       activeSelectionArea, 
       activeCellSelectionAreaIndex,
+      activeCellInputAutoFocus,
 
       activeSheetName,
 
@@ -42,6 +44,7 @@ const mapStateToProps = ({
   activeCellPosition,
   activeSelectionArea, 
   activeCellSelectionAreaIndex,
+  activeCellInputAutoFocus,
 
   activeSheetName,
 
@@ -77,7 +80,10 @@ const mapDispatchToProps = (dispatch) => ({
   handleChangeSheetCellData: (sheetName, sheetsCellData) => dispatch(updateSheetCellData(sheetName, sheetsCellData)),
 
   handleUpdateActiveCellInputValue: (value) => dispatch(updateActiveCellInputValue(value)),
-  handleResetActiveCellInputValue: () => dispatch(resetActiveCellInputValue())
+  handleResetActiveCellInputValue: () => dispatch(resetActiveCellInputValue()),
+
+  handleSetActiveCellInputAutoFocusOn: () => dispatch(setActiveCellInputAutoFocusOn()),
+  handleSetActiveCellInputAutoFocusOff: () => dispatch(setActiveCellInputAutoFocusOff()),
 });
 
 let EventListener = ({ 
@@ -88,6 +94,7 @@ let EventListener = ({
   activeCellPosition,
   activeSelectionArea,
   activeCellSelectionAreaIndex,
+  activeCellInputAutoFocus,
 
   sheetsColumnCount,
   sheetsRowCount,
@@ -118,7 +125,10 @@ let EventListener = ({
   handleChangeSheetCellData,
 
   handleUpdateActiveCellInputValue,
-  handleResetActiveCellInputValue
+  handleResetActiveCellInputValue,
+
+  handleSetActiveCellInputAutoFocusOn,
+  handleSetActiveCellInputAutoFocusOff
 }) => (
   <EventRedux 
     ref={eventListenerRef} 
@@ -132,6 +142,7 @@ let EventListener = ({
     activeCellPosition={activeCellPosition}
     activeSelectionArea={activeSelectionArea}
     activeCellSelectionAreaIndex={activeCellSelectionAreaIndex}
+    activeCellInputAutoFocus={activeCellInputAutoFocus}
 
     stagnantSelectionAreas={stagnantSelectionAreas}
 
@@ -159,6 +170,9 @@ let EventListener = ({
 
     handleUpdateActiveCellInputValue={handleUpdateActiveCellInputValue}
     handleResetActiveCellInputValue={handleResetActiveCellInputValue}
+
+    handleSetActiveCellInputAutoFocusOn={handleSetActiveCellInputAutoFocusOn}
+    handleSetActiveCellInputAutoFocusOff={handleSetActiveCellInputAutoFocusOff}
   />
 );
 
@@ -744,7 +758,7 @@ class EventRedux extends PureComponent {
   changeActiveInputValue(value) {
     const { handleUpdateActiveCellInputValue } = this.props;
 
-    handleUpdateActiveCellInputValue(value);
+    handleUpdateActiveCellInputValue(value ? value: null);
   }
 
   changeValue(row, column, data) {
@@ -759,6 +773,16 @@ class EventRedux extends PureComponent {
     ];
 
     handleChangeSheetCellData(activeSheetName, newSheetCellData);
+  }
+
+  focusFormulaInput() {
+    this.setEditModeOn();
+
+    this.setInputAutoFocusOff();
+  }
+
+  blurFormulaInput() {
+    this.setInputAutoFocusOn();
   }
 
   clickRowHeader(row, ctrlKey) {
@@ -1034,6 +1058,16 @@ class EventRedux extends PureComponent {
     if(activeCellInputValue !== value) handleUpdateActiveCellInputValue(value ? value: "");
 
     handleUpdateActiveCellPosition({ x: newX, y: newY });
+  }
+
+  setInputAutoFocusOn() {
+    const { activeCellInputAutoFocus, handleSetActiveCellInputAutoFocusOn } = this.props;
+    if(!activeCellInputAutoFocus) handleSetActiveCellInputAutoFocusOn();
+  }
+
+  setInputAutoFocusOff() {
+    const { activeCellInputAutoFocus, handleSetActiveCellInputAutoFocusOff } = this.props;
+    if(activeCellInputAutoFocus) handleSetActiveCellInputAutoFocusOff();
   }
 
   render() {

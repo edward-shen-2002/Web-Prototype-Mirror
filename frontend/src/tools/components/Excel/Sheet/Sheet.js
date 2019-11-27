@@ -154,9 +154,7 @@ let SheetWindow = ({
 
 SheetWindow = connect(mapStateToProps)(SheetWindow);
 
-const Sheet = ({ eventListenerRef }) => {
-  const sheetContainerRef = useRef(null);
-
+const Sheet = ({ eventListenerRef, sheetContainerRef }) => {
   const handleKeyDown = (event) => {
     const { key, shiftKey, ctrlKey } = event;
     const { current: EventListenerInstance } = eventListenerRef;

@@ -5,6 +5,7 @@ import activeCellPosition from "./activeCellPosition";
 import activeCellSelectionAreaIndex from "./activeCellSelectionAreaIndex";
 import activeSheetName from "./activeSheetName";
 import activeSelectionArea from "./activeSelectionArea";
+import activeCellInputAutoFocus from "./activeCellInputAutoFocus";
 
 import stagnantSelectionAreas from "./stagnantSelectionAreas";
 import sheetNames from "./sheetNames";
@@ -26,6 +27,7 @@ const excelReducer = combineReducers({
   activeSelectionArea,
   activeCellPosition,
   activeCellSelectionAreaIndex,
+  activeCellInputAutoFocus,
   
   stagnantSelectionAreas,
   sheetNames,

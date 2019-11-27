@@ -19,6 +19,7 @@ const Excel = ({
   handleSaveWorkbook
 }) => {
   const eventListenerRef = useRef(null);
+  const sheetContainerRef = useRef(null);
 
   return (
     <div className="excel">
@@ -31,9 +32,13 @@ const Excel = ({
       <Divider/>
       <ToolBar/>
       <Divider/>
-      <FormulaBar/>
+      <FormulaBar
+        eventListenerRef={eventListenerRef}
+        sheetContainerRef={sheetContainerRef}
+      />
       <Divider/>
       <Sheet
+        sheetContainerRef={sheetContainerRef}
         eventListenerRef={eventListenerRef}
       />
       <Divider/>

@@ -15,16 +15,19 @@ const DEFAULT_ACTIVE_CELL_STYLE = {
 const mapStateToProps = ({
   ui: {
     excel: {
-      activeCellInputValue
+      activeCellInputValue,
+      activeCellInputAutoFocus
     }
   }
 }) => ({
-  activeCellInputValue
+  activeCellInputValue,
+  activeCellInputAutoFocus
 });
 
 let ActiveInputCell = ({ 
   activeCellStyle,
   activeCellInputValue,
+  activeCellInputAutoFocus,
   handleChangeActiveInputValue
 }) => {
   const handleChangeInputValue = ({ target: { value } }) => handleChangeActiveInputValue(value);
@@ -35,7 +38,7 @@ let ActiveInputCell = ({
       style={activeCellStyle} 
       value={activeCellInputValue}
       onChange={handleChangeInputValue}
-      autoFocus
+      autoFocus={activeCellInputAutoFocus}
     />
   );
 };
