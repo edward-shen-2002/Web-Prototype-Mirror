@@ -202,10 +202,10 @@ class EventRedux extends PureComponent {
     let { x, y } = activeCellPosition;
     
     event.preventDefault();
+
+    const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
     
     if(shiftKey) { 
-      const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
-
       if(stagnantSelectionAreasLength) {
         let focusedStagnantSelectionArea = { ...stagnantSelectionAreas[activeCellSelectionAreaIndex] };
 
@@ -249,7 +249,7 @@ class EventRedux extends PureComponent {
       y--;
   
       if(y > 0) this.updateActiveCellPosition(y, x);
-      if(stagnantSelectionAreas) handleResetStagnantSelectionAreas();
+      if(stagnantSelectionAreasLength) handleResetStagnantSelectionAreas();
       if(activeCellSelectionAreaIndex >= 0) handleResetActiveCellSelectionAreaIndex();
     }
   }
@@ -276,9 +276,9 @@ class EventRedux extends PureComponent {
 
     const sheetRowCount = sheetsRowCount[activeSheetName];
     
-    if(shiftKey) { 
-      const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
+    const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
 
+    if(shiftKey) { 
       if(stagnantSelectionAreasLength) {
         let focusedStagnantSelectionArea = { ...stagnantSelectionAreas[activeCellSelectionAreaIndex] };
 
@@ -321,7 +321,7 @@ class EventRedux extends PureComponent {
       y++;
   
       if(y < sheetRowCount) this.updateActiveCellPosition(y, x);
-      if(stagnantSelectionAreas) handleResetStagnantSelectionAreas();
+      if(stagnantSelectionAreasLength) handleResetStagnantSelectionAreas();
       if(activeCellSelectionAreaIndex >= 0) handleResetActiveCellSelectionAreaIndex();
     }
   }
@@ -344,9 +344,9 @@ class EventRedux extends PureComponent {
     
     event.preventDefault();
     
-    if(shiftKey) { 
-      const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
+    const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
 
+    if(shiftKey) { 
       if(stagnantSelectionAreasLength) {
         let focusedStagnantSelectionArea = { ...stagnantSelectionAreas[activeCellSelectionAreaIndex] };
 
@@ -388,7 +388,7 @@ class EventRedux extends PureComponent {
       x--;
   
       if(x > 0) this.updateActiveCellPosition(y, x);
-      if(stagnantSelectionAreas) handleResetStagnantSelectionAreas();
+      if(stagnantSelectionAreasLength) handleResetStagnantSelectionAreas();
       if(activeCellSelectionAreaIndex >= 0) handleResetActiveCellSelectionAreaIndex();
     }
   }
@@ -414,10 +414,9 @@ class EventRedux extends PureComponent {
     event.preventDefault();
     
     const sheetColumnCount = sheetsColumnCount[activeSheetName];
+    const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
     
     if(shiftKey) { 
-      const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
-
       if(stagnantSelectionAreasLength) {
         let focusedStagnantSelectionArea = { ...stagnantSelectionAreas[activeCellSelectionAreaIndex] };
 
@@ -460,7 +459,7 @@ class EventRedux extends PureComponent {
       x++;
   
       if(x < sheetColumnCount) this.updateActiveCellPosition(y, x);
-      if(stagnantSelectionAreas) handleResetStagnantSelectionAreas();
+      if(stagnantSelectionAreasLength) handleResetStagnantSelectionAreas();
       if(activeCellSelectionAreaIndex >= 0) handleResetActiveCellSelectionAreaIndex();
     }
   }
