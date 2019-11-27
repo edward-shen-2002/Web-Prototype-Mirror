@@ -84,7 +84,7 @@ let SheetWindow = ({
 
   const handleClickRowHeader = (row, ctrlKey) => EventListenerInstance.clickRowHeader(row, ctrlKey);
 
-  const handleClickRootHeader = () => EventListenerInstance.clickRootHeader();
+  const handleClickRootHeader = () => EventListenerInstance.selectAll();
 
   const handleChangeActiveInputValue = (value) => EventListenerInstance.changeActiveInputValue(value);
 
@@ -160,7 +160,7 @@ const Sheet = () => {
   const sheetContainerRef = useRef(null);
 
   const handleKeyDown = (event) => {
-    const { key, shiftKey } = event;
+    const { key, shiftKey, ctrlKey } = event;
     const { current: EventListenerInstance } = eventListenerRef;
     
     if(key === "ArrowUp") {
@@ -179,6 +179,8 @@ const Sheet = () => {
       EventListenerInstance.delete();
     } else if(key === "Escape") {
       EventListenerInstance.escape(sheetContainerRef);
+    } else if(key === "a" && ctrlKey) {
+      EventListenerInstance.selectAll(event);
     } else if(inputCharacterRegex.test(key)) {
       EventListenerInstance.startEditMode(key);
     }

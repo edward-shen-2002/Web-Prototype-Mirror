@@ -849,7 +849,7 @@ class EventRedux extends PureComponent {
     }
   }
 
-  clickRootHeader() {
+  selectAll(event) {
     const {
       activeSheetName,
       sheetsColumnCount,
@@ -858,6 +858,8 @@ class EventRedux extends PureComponent {
       handleUpdateActiveCellSelectionAreaIndex,
       handleUpdateActiveCellPosition
     } = this.props;
+
+    if(event) event.preventDefault();
 
     const sheetColumnCount = sheetsColumnCount[activeSheetName];
     const sheetRowCount = sheetsRowCount[activeSheetName];
