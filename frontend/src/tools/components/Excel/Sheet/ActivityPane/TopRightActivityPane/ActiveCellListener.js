@@ -37,7 +37,7 @@ let ActiveCellListener = ({
 
   sheetGridRef,
 
-  handleChangeValue
+  handleChangeActiveInputValue
 }) => {
   const activeCellRef = useRef(null);
   const { x, y } = activeCellPosition;
@@ -61,9 +61,7 @@ let ActiveCellListener = ({
   return (
     <ActiveCell 
       ref={activeCellRef}
-      x={x}
-      y={y}
-      handleChangeValue={handleChangeValue}
+      handleChangeActiveInputValue={handleChangeActiveInputValue}
     />
   );
 };

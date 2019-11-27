@@ -6,6 +6,8 @@ import { VariableSizeGrid } from "react-window";
 
 import AutoSizer from "react-virtualized-auto-sizer";
 
+import { inputCharacterRegex } from "tools/regex";
+
 import EventListener from "./EventListener";
 import WindowListener from "./WindowListener";
 
@@ -76,15 +78,15 @@ let SheetWindow = ({
 
   const handleSelectionOver = (x2, y2, ctrlKey) => EventListenerInstance.selectOver(x2, y2, ctrlKey);
 
-  const handleDoubleClickEditableCell = () => EventListenerInstance.setEditModeOn();
+  const handleDoubleClickEditableCell = () => EventListenerInstance.doubleClickEditableCell();
 
   const handleClickColumnHeader = (column, ctrlKey) => EventListenerInstance.clickColumnHeader(column, ctrlKey);
 
   const handleClickRowHeader = (row, ctrlKey) => EventListenerInstance.clickRowHeader(row, ctrlKey);
 
   const handleClickRootHeader = () => EventListenerInstance.clickRootHeader();
-  
-  const handleChangeValue = (row, column, value) => EventListenerInstance.changeValue(row, column, value);
+
+  const handleChangeActiveInputValue = (value) => EventListenerInstance.changeActiveInputValue(value);
 
 
   const itemData = { 
@@ -103,9 +105,7 @@ let SheetWindow = ({
     handleClickRootHeader
   };
 
-
-
-  const commonSelectionPaneProps = { sheetGridRef, handleChangeValue };
+  const commonSelectionPaneProps = { sheetGridRef, handleChangeActiveInputValue };
 
   return (
     <AutoSizer>
@@ -177,6 +177,10 @@ const Sheet = () => {
       EventListenerInstance.enter(event, shiftKey, sheetContainerRef);
     } else if(key === "Delete" || key === "Backspace") {
       EventListenerInstance.delete();
+    } else if(key === "Escape") {
+      EventListenerInstance.escape(sheetContainerRef);
+    } else if(inputCharacterRegex.test(key)) {
+      EventListenerInstance.startEditMode(key);
     }
   };
   

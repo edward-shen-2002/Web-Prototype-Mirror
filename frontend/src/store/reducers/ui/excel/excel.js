@@ -1,18 +1,16 @@
 import { combineReducers } from "redux";
 
-import activeSelectionArea from "./activeSelectionArea";
+import activeCellInputValue from "./activeCellInputValue";
 import activeCellPosition from "./activeCellPosition";
-
+import activeCellSelectionAreaIndex from "./activeCellSelectionAreaIndex";
 import activeSheetName from "./activeSheetName";
+import activeSelectionArea from "./activeSelectionArea";
+
+import stagnantSelectionAreas from "./stagnantSelectionAreas";
+import sheetNames from "./sheetNames";
 
 import isSelectionMode from "./isSelectionMode";
 import isEditMode from "./isEditMode";
-
-import sheetNames from "./sheetNames";
-
-import stagnantSelectionAreas from "./stagnantSelectionAreas";
-
-import activeCellSelectionAreaIndex from "./activeCellSelectionAreaIndex";
 
 import sheetsCellData from "./sheetsCellData";
 import sheetsColumnCount from "./sheetsColumnCount";
@@ -23,16 +21,15 @@ import sheetsRowHeights from "./sheetsRowHeights";
 import sheetsFreezeRowCount from "./sheetsFreezeRowCount";
 
 const excelReducer = combineReducers({ 
-  
+  activeCellInputValue,
   activeSheetName,
-  sheetNames,
-  
   activeSelectionArea,
-  stagnantSelectionAreas,
-
   activeCellPosition,
   activeCellSelectionAreaIndex,
   
+  stagnantSelectionAreas,
+  sheetNames,
+
   isSelectionMode, 
   isEditMode,
 

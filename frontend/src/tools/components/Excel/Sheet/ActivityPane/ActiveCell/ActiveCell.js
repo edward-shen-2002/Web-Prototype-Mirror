@@ -1,5 +1,7 @@
 import React, { PureComponent } from "react";
 
+import { connect } from "react-redux";
+
 import "./ActiveCell.scss";
 
 const DEFAULT_ACTIVE_CELL_STYLE = { 
@@ -10,22 +12,35 @@ const DEFAULT_ACTIVE_CELL_STYLE = {
   height: 0 
 };
 
-const ActiveInputCell = ({ 
-  activeCellStyle,
-  x,
-  y,
-  handleChangeValue
-}) => {
-  const handleKeyDown = ({ key, target: { value } }) => {
-    if(key === "Enter" || key === "Tab") {
-      handleChangeValue(y, x, { value });
+const mapStateToProps = ({
+  ui: {
+    excel: {
+      activeCellInputValue
     }
-  };
+  }
+}) => ({
+  activeCellInputValue
+});
+
+let ActiveInputCell = ({ 
+  activeCellStyle,
+  activeCellInputValue,
+  handleChangeActiveInputValue
+}) => {
+  const handleChangeInputValue = ({ target: { value } }) => handleChangeActiveInputValue(value);
 
   return (
-    <input className="activeCell activeCell--editMode" style={activeCellStyle} autoFocus onKeyDown={handleKeyDown}/>
+    <input 
+      className="activeCell activeCell--feditMode" 
+      style={activeCellStyle} 
+      defaultValue={activeCellInputValue}
+      onChange={handleChangeInputValue}
+      autoFocus
+    />
   );
 };
+
+ActiveInputCell = connect(mapStateToProps)(ActiveInputCell);
 
 class ActiveCell extends PureComponent {
   constructor(props) {
@@ -60,13 +75,16 @@ class ActiveCell extends PureComponent {
   }
 
   render() {
-    const { x, y, handleChangeValue } = this.props;
+    const { handleChangeActiveInputValue } = this.props;
     const { activeCellStyle, isNormalMode } = this.state;
 
     return (
       isNormalMode 
         ? <div className="activeCell activeCell--normalMode" style={activeCellStyle}/>
-        : <ActiveInputCell activeCellStyle={activeCellStyle} x={x} y={y} handleChangeValue={handleChangeValue} autoFocus/>
+        : <ActiveInputCell 
+            activeCellStyle={activeCellStyle} 
+            handleChangeActiveInputValue={handleChangeActiveInputValue}
+          />
     );
   }
 };

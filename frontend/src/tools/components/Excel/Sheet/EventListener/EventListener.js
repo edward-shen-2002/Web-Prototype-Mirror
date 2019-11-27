@@ -2,6 +2,7 @@ import React, { PureComponent } from "react";
 
 import { connect } from "react-redux";
 
+import { updateActiveCellInputValue, resetActiveCellInputValue } from "actions/ui/excel/activeCellInputValue";
 import { updateActiveCellPosition } from "actions/ui/excel/activeCellPosition";
 import { updateActiveSelectionArea, resetActiveSelectionArea } from "actions/ui/excel/activeSelectionArea";
 import { updateActiveCellSelectionAreaIndex, resetActiveCellSelectionAreaIndex } from "actions/ui/excel/activeCellSelectionAreaIndex";
@@ -18,6 +19,7 @@ import { isPositionEqualArea } from "tools/excel";
 const mapStateToProps = ({ 
   ui: { 
     excel: { 
+      activeCellInputValue,
       activeCellPosition,
       activeSelectionArea, 
       activeCellSelectionAreaIndex,
@@ -36,6 +38,7 @@ const mapStateToProps = ({
     } 
   } 
 }) => ({ 
+  activeCellInputValue,
   activeCellPosition,
   activeSelectionArea, 
   activeCellSelectionAreaIndex,
@@ -71,27 +74,29 @@ const mapDispatchToProps = (dispatch) => ({
   handleSetEditModeOn: () => dispatch(setEditModeOn()),
   handleSetEditModeOff: () => dispatch(setEditModeOff()),
 
-  handleChangeSheetCellData: (sheetName, sheetsCellData) => dispatch(updateSheetCellData(sheetName, sheetsCellData))
+  handleChangeSheetCellData: (sheetName, sheetsCellData) => dispatch(updateSheetCellData(sheetName, sheetsCellData)),
+
+  handleUpdateActiveCellInputValue: (value) => dispatch(updateActiveCellInputValue(value)),
+  handleResetActiveCellInputValue: () => dispatch(resetActiveCellInputValue())
 });
 
 let EventListener = ({ 
   eventListenerRef, 
-
+  
+  activeCellInputValue,
   activeSheetName,
-
   activeCellPosition,
   activeSelectionArea,
   activeCellSelectionAreaIndex,
 
   sheetsColumnCount,
   sheetsRowCount,
+  sheetsCellData,
 
   isSelectionMode,
   isEditMode,
 
   stagnantSelectionAreas,
-
-  sheetsCellData,
 
   handleUpdateActiveCellPosition,
 
@@ -110,16 +115,20 @@ let EventListener = ({
   handleSetEditModeOn,
   handleSetEditModeOff,
 
-  handleChangeSheetCellData
+  handleChangeSheetCellData,
+
+  handleUpdateActiveCellInputValue,
+  handleResetActiveCellInputValue
 }) => (
   <EventRedux 
     ref={eventListenerRef} 
 
     sheetsRowCount={sheetsRowCount}
     sheetsColumnCount={sheetsColumnCount}
-
+    sheetsCellData={sheetsCellData}
+    
+    activeCellInputValue={activeCellInputValue}
     activeSheetName={activeSheetName}
-
     activeCellPosition={activeCellPosition}
     activeSelectionArea={activeSelectionArea}
     activeCellSelectionAreaIndex={activeCellSelectionAreaIndex}
@@ -128,8 +137,6 @@ let EventListener = ({
 
     isSelectionMode={isSelectionMode}
     isEditMode={isEditMode}
-
-    sheetsCellData={sheetsCellData}
 
     handleUpdateActiveCellSelectionAreaIndex={handleUpdateActiveCellSelectionAreaIndex}
     handleResetActiveCellSelectionAreaIndex={handleResetActiveCellSelectionAreaIndex} 
@@ -149,6 +156,9 @@ let EventListener = ({
     handleSetEditModeOff={handleSetEditModeOff}
 
     handleChangeSheetCellData={handleChangeSheetCellData}
+
+    handleUpdateActiveCellInputValue={handleUpdateActiveCellInputValue}
+    handleResetActiveCellInputValue={handleResetActiveCellInputValue}
   />
 );
 
@@ -470,8 +480,11 @@ class EventRedux extends PureComponent {
     const sheetRowCount = sheetsRowCount[activeSheetName];
     const sheetColumnCount = sheetsColumnCount[activeSheetName];
 
+    let { x, y } = activeCellPosition;
+
     if(isEditMode) {
-      handleSetEditModeOff();
+      this.saveActiveCellInputValue();
+
       SheetContainerInstance.focus();
     }
 
@@ -508,8 +521,7 @@ class EventRedux extends PureComponent {
     }
 
     let { x1, y1, x2, y2 } = selectionArea;
-    let { x, y } = activeCellPosition;
-
+    
     // When shift key is enabled, perform the reverse of tab. We can do the same for y for the bounded case since we are not using y for unbounded
     if(shiftKey) {
       x--;
@@ -579,12 +591,15 @@ class EventRedux extends PureComponent {
 
     event.preventDefault();
 
+    let { x, y } = activeCellPosition;
+
     const { current: SheetContainerInstance } = sheetContainerRef;
     const sheetRowCount = sheetsRowCount[activeSheetName];
     const sheetColumnCount = sheetsColumnCount[activeSheetName];
 
     if(isEditMode) {
-      handleSetEditModeOff();
+      this.saveActiveCellInputValue();
+
       SheetContainerInstance.focus();
     }
 
@@ -621,7 +636,6 @@ class EventRedux extends PureComponent {
     }
 
     let { x1, y1, x2, y2 } = selectionArea;
-    let { x, y } = activeCellPosition;
 
     if(shiftKey) {
       x--;
@@ -676,7 +690,6 @@ class EventRedux extends PureComponent {
       activeSheetName,
 
       isEditMode,
-      isSelectionMode,
       activeCellSelectionAreaIndex,
       activeSelectionArea,
       activeCellPosition,
@@ -742,8 +755,14 @@ class EventRedux extends PureComponent {
     } else {
       const { x, y } = activeCellPosition;
 
-      this.changeValue(y, x, { value: null });
+      this.changeValue(y, x, { value: undefined });
     }
+  }
+
+  changeActiveInputValue(value) {
+    const { handleUpdateActiveCellInputValue } = this.props;
+
+    handleUpdateActiveCellInputValue(value);
   }
 
   changeValue(row, column, data) {
@@ -773,7 +792,7 @@ class EventRedux extends PureComponent {
     
     const sheetColumnCount = sheetsColumnCount[activeSheetName];
 
-    this.setEditModeOff();
+    this.saveActiveCellInputValue();
 
     handleUpdateActiveCellPosition({ x: 1, y: row });
 
@@ -801,7 +820,7 @@ class EventRedux extends PureComponent {
 
     const sheetRowCount = sheetsRowCount[activeSheetName];
 
-    this.setEditModeOff();
+    this.saveActiveCellInputValue();
 
     handleUpdateActiveCellPosition({ x: column, y: 1 });
 
@@ -813,6 +832,20 @@ class EventRedux extends PureComponent {
     } else {
       handleUpdateActiveCellSelectionAreaIndex(0);
       handleUpdateStagnantSelectionAreas([ columnArea ]);
+    }
+  }
+
+  saveActiveCellInputValue() {
+    const { isEditMode, activeCellInputValue, activeCellPosition } = this.props;
+
+    if(isEditMode) {
+      const { x, y } = activeCellPosition;
+
+      this.changeValue(y, x, { value: activeCellInputValue });
+
+      this.resetActiveCellInputValue();
+
+      this.setEditModeOff();
     }
   }
 
@@ -829,12 +862,50 @@ class EventRedux extends PureComponent {
     const sheetColumnCount = sheetsColumnCount[activeSheetName];
     const sheetRowCount = sheetsRowCount[activeSheetName];
 
-    this.setEditModeOff();
+    this.saveActiveCellInputValue();
 
     handleUpdateActiveCellPosition({ x: 1, y: 1 });
 
     handleUpdateActiveCellSelectionAreaIndex(0);
     handleUpdateStagnantSelectionAreas([ { x1: 1, y1: 1, x2: sheetColumnCount - 1, y2: sheetRowCount - 1 } ]);
+  }
+
+  startEditMode(key) {
+    const { isEditMode, handleUpdateActiveCellInputValue } = this.props;
+
+    if(isEditMode) return;
+
+    handleUpdateActiveCellInputValue(key);
+
+    this.setEditModeOn();
+  }
+
+  doubleClickEditableCell() {
+    const { activeCellPosition, activeSheetName, sheetsCellData, handleUpdateActiveCellInputValue } = this.props;
+
+    const { x, y } = activeCellPosition;
+
+    const sheetCellData = sheetsCellData[activeSheetName];
+
+    const cellData = sheetCellData[y][x];
+
+    const { value } = cellData;
+
+    if(value) handleUpdateActiveCellInputValue(value);
+
+    this.setEditModeOn();
+  }
+
+  escape(sheetContainerRef) {
+    const { isEditMode } = this.props;
+
+    if(isEditMode) {
+      const { current: SheetContainerInstance } = sheetContainerRef;
+
+      this.setEditModeOff();
+      this.resetActiveCellInputValue();
+      SheetContainerInstance.focus();
+    }
   }
 
   // ! TODO - Break squares, and deselect stagnant areas with the same area as the active selection
@@ -885,7 +956,8 @@ class EventRedux extends PureComponent {
 
     if(!ctrlKey && stagnantSelectionAreasLength) handleResetStagnantSelectionAreas(); 
 
-    this.setEditModeOff();
+    this.saveActiveCellInputValue();
+
     this.setSelectionModeOn();
 
     if(ctrlKey) {
@@ -958,6 +1030,12 @@ class EventRedux extends PureComponent {
     const { activeCellSelectionAreaIndex, handleResetActiveCellSelectionAreaIndex } = this.props;
 
     if(activeCellSelectionAreaIndex >= 0) handleResetActiveCellSelectionAreaIndex();
+  }
+
+  resetActiveCellInputValue() {
+    const { activeCellInputValue, handleResetActiveCellInputValue } = this.props;
+
+    if(activeCellInputValue) handleResetActiveCellInputValue();
   }
 
   render() {
