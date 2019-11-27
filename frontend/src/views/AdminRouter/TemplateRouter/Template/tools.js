@@ -87,7 +87,7 @@ export const getSheetCellData = (sheet) => {
 
       if(row && column) {
         const cellValue = sheet.row(row).cell(column).value();
-        rowValues.push({ value: cellValue ? cellValue: "" });
+        rowValues.push({ value: cellValue ? cellValue: null });
       } else {
         rowValues.push({ value: null });
       }

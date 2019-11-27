@@ -49,9 +49,10 @@ export const getWorkbookInstance = async ({
       for(let column = 1; column < sheetColumnCount; column++) {
         const { value } = sheetCellData[row][column];
 
-        const sheetCell = sheet.row(row).cell(column);
-
-        sheetCell.setValue(value);
+        if(value) {
+          const sheetCell = sheet.row(row).cell(column);
+          sheetCell.setValue(value);
+        }
       }
     }
 

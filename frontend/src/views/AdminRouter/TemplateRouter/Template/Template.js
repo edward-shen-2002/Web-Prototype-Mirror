@@ -14,6 +14,8 @@ import XlsxPopulate from "xlsx-populate";
 import { REST_ADMIN_TEMPLATES } from "constants/rest";
 import { ROUTE_ADMIN_TEMPLATE_TEMPLATES } from "constants/routes";
 
+import { DEFAULT_EXCEL_SHEET_ROW_COUNT, DEFAULT_EXCEL_SHEET_COLUMN_COUNT } from "constants/excel";
+
 import Loading from "tools/components/Loading";
 
 import "./Template.scss";
@@ -70,6 +72,10 @@ let Template = ({
             const sheet = WorkbookInstance.sheet(name);
 
             let { columnCount, rowCount } = getHeaderCount(sheet);
+
+            columnCount = Math.max(columnCount, DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1);
+            rowCount = Math.max(rowCount, DEFAULT_EXCEL_SHEET_ROW_COUNT + 1);
+
             let sheetCellData = getSheetCellData(sheet);
             let columnWidths = getColumnWidths(sheet);
             let rowHeights = getRowHeights(sheet);
