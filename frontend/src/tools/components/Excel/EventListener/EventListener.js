@@ -758,7 +758,7 @@ class EventRedux extends PureComponent {
   changeActiveInputValue(value) {
     const { handleUpdateActiveCellInputValue } = this.props;
 
-    handleUpdateActiveCellInputValue(value ? value: null);
+    handleUpdateActiveCellInputValue(value ? value: "");
   }
 
   changeValue(row, column, data) {
