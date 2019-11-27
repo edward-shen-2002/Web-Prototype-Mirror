@@ -8,7 +8,6 @@ import AutoSizer from "react-virtualized-auto-sizer";
 
 import { inputCharacterRegex } from "tools/regex";
 
-import EventListener from "./EventListener";
 import WindowListener from "./WindowListener";
 
 import Cell from "./Cell";
@@ -155,8 +154,7 @@ let SheetWindow = ({
 
 SheetWindow = connect(mapStateToProps)(SheetWindow);
 
-const Sheet = () => {
-  const eventListenerRef = useRef(null);
+const Sheet = ({ eventListenerRef }) => {
   const sheetContainerRef = useRef(null);
 
   const handleKeyDown = (event) => {
@@ -189,7 +187,7 @@ const Sheet = () => {
   return (
     <div ref={sheetContainerRef} className="sheet" tabIndex="0" onKeyDown={handleKeyDown}>
       <SheetWindow sheetContainerRef={sheetContainerRef} eventListenerRef={eventListenerRef}/>
-      <EventListener eventListenerRef={eventListenerRef}/>
+      
       <WindowListener eventListenerRef={eventListenerRef}/>
     </div>
   );
