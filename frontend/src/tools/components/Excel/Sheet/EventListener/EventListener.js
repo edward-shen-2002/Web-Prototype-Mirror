@@ -671,6 +671,66 @@ class EventRedux extends PureComponent {
     }
   }
 
+  delete() {
+    const { 
+      activeSheetName,
+
+      isEditMode,
+      isSelectionMode,
+      activeCellSelectionAreaIndex,
+      activeSelectionArea,
+      activeCellPosition,
+      stagnantSelectionAreas,
+
+      sheetsCellData,
+      sheetsRowCount,
+      sheetsColumnCount,
+
+      handleChangeSheetCellData
+    } = this.props;
+
+    if(isEditMode) return;
+
+    if(activeCellSelectionAreaIndex >= 0) {
+      const sheetRowCount = sheetsRowCount[activeSheetName];
+      const sheetColumnCount = sheetsColumnCount[activeSheetName];
+      const sheetCellData = sheetsCellData[activeSheetName];
+
+      // Range on stagnant or active selection area
+      let { x1, x2, y1, y2 } = isSelectionMode ? activeSelectionArea : stagnantSelectionAreas[activeCellSelectionAreaIndex];
+
+      let newSheetCellData = [];
+
+      let startRow = Math.min(y1, y2);
+      let endRow = Math.max(y1, y2);
+
+      let startColumn = Math.min(x1, x2);
+      let endColumn = Math.max(x1, x2);
+
+
+      for(let row = 0; row < sheetRowCount; row++) {
+        let rowData = [];
+        for(let column = 0; column < sheetColumnCount; column++) {
+          const cellData = sheetCellData[row][column];
+
+          rowData.push(
+            (startRow <= row && row <= endRow && startColumn <= column && column <= endColumn) 
+              ? { ...cellData, value: "" }
+              : cellData
+          );
+        }
+
+        newSheetCellData.push(rowData);
+      }
+
+      handleChangeSheetCellData(activeSheetName, newSheetCellData);
+    } else {
+      const { x, y } = activeCellPosition;
+
+      this.changeValue(y, x, { value: null });
+    }
+  }
+
   changeValue(row, column, data) {
     const { activeSheetName, sheetsCellData, handleChangeSheetCellData } = this.props;
 

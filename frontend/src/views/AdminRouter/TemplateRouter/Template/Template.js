@@ -7,7 +7,7 @@ import { adminTemplateRoleAxios } from "tools/rest";
 import { loadWorkbook, resetWorkbook } from "tools/redux";
 import Excel from "tools/components/Excel";
 
-import { getHeaderCount, getColumnWidths, getRowHeights, getSheetData, getFreezeHeader } from "./tools";
+import { getHeaderCount, getColumnWidths, getRowHeights, getSheetCellData, getFreezeHeader } from "./tools";
 
 import XlsxPopulate from "xlsx-populate";
 
@@ -70,7 +70,7 @@ let Template = ({
             const sheet = WorkbookInstance.sheet(name);
 
             let { columnCount, rowCount } = getHeaderCount(sheet);
-            let sheetCellData = getSheetData(sheet);
+            let sheetCellData = getSheetCellData(sheet);
             let columnWidths = getColumnWidths(sheet);
             let rowHeights = getRowHeights(sheet);
             let { freezeRowCount, freezeColumnCount } = getFreezeHeader(sheet);

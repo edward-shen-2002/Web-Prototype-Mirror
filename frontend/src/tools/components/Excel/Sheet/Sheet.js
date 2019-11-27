@@ -175,6 +175,8 @@ const Sheet = () => {
       EventListenerInstance.tab(event, shiftKey, sheetContainerRef);
     } else if(key === "Enter") {
       EventListenerInstance.enter(event, shiftKey, sheetContainerRef);
+    } else if(key === "Delete" || key === "Backspace") {
+      EventListenerInstance.delete();
     }
   };
   

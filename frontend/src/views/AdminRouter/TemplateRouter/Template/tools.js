@@ -77,15 +77,20 @@ export const getRowHeights = (sheet) => {
   return rowHeights;
 };
 
-export const getSheetData = (sheet) => {
+export const getSheetCellData = (sheet) => {
   let sheetCellData = [];
 
   for(let row = 0; row <= DEFAULT_EXCEL_SHEET_ROW_COUNT; row++) {
     let rowValues = [];
     for(let column = 0; column <= DEFAULT_EXCEL_SHEET_COLUMN_COUNT; column++) {
-      rowValues.push({
-        value: row && column ? sheet.row(row).cell(column).value() : null
-      });
+      // ! Check undefined
+
+      if(row && column) {
+        const cellValue = sheet.row(row).cell(column).value();
+        rowValues.push({ value: cellValue ? cellValue: "" });
+      } else {
+        rowValues.push({ value: null });
+      }
     }
 
     sheetCellData.push(rowValues);
