@@ -578,11 +578,11 @@ class EventRedux extends PureComponent {
     let { 
       isEditMode,
 
+      activeCellSelectionAreaIndex,
       activeSheetName,
       activeCellPosition, 
       activeSelectionArea, 
       stagnantSelectionAreas, 
-      activeCellSelectionAreaIndex,
 
       sheetsRowCount,
       sheetsColumnCount,
@@ -602,6 +602,10 @@ class EventRedux extends PureComponent {
       this.saveActiveCellInputValue();
 
       SheetContainerInstance.focus();
+    } else if(!isEditMode && activeCellSelectionAreaIndex === -1) {
+      this.setEditModeOn();
+
+      return;
     }
 
     let selectionArea;
