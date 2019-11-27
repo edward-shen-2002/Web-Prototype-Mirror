@@ -177,7 +177,6 @@ class EventRedux extends PureComponent {
       activeCellSelectionAreaIndex,
       isEditMode,
       stagnantSelectionAreas,
-      handleUpdateActiveCellPosition,
       handleUpdateStagnantSelectionAreas,
       handleUpdateActiveCellSelectionAreaIndex,
       handleResetStagnantSelectionAreas,
@@ -235,7 +234,7 @@ class EventRedux extends PureComponent {
     } else {
       y--;
   
-      if(y > 0) handleUpdateActiveCellPosition({ y });
+      if(y > 0) this.updateActiveCellPosition(y, x);
       if(stagnantSelectionAreas) handleResetStagnantSelectionAreas();
       if(activeCellSelectionAreaIndex >= 0) handleResetActiveCellSelectionAreaIndex();
     }
@@ -249,7 +248,6 @@ class EventRedux extends PureComponent {
       activeCellSelectionAreaIndex,
       sheetsRowCount,
       stagnantSelectionAreas,
-      handleUpdateActiveCellPosition,
       handleUpdateStagnantSelectionAreas,
       handleUpdateActiveCellSelectionAreaIndex,
       handleResetStagnantSelectionAreas,
@@ -308,7 +306,7 @@ class EventRedux extends PureComponent {
     } else {
       y++;
   
-      if(y < sheetRowCount) handleUpdateActiveCellPosition({ y });
+      if(y < sheetRowCount) this.updateActiveCellPosition(y, x);
       if(stagnantSelectionAreas) handleResetStagnantSelectionAreas();
       if(activeCellSelectionAreaIndex >= 0) handleResetActiveCellSelectionAreaIndex();
     }
@@ -320,7 +318,6 @@ class EventRedux extends PureComponent {
       activeCellSelectionAreaIndex,
       isEditMode,
       stagnantSelectionAreas,
-      handleUpdateActiveCellPosition,
       handleUpdateStagnantSelectionAreas,
       handleUpdateActiveCellSelectionAreaIndex,
       handleResetStagnantSelectionAreas,
@@ -376,7 +373,7 @@ class EventRedux extends PureComponent {
     } else {
       x--;
   
-      if(x > 0) handleUpdateActiveCellPosition({ x });
+      if(x > 0) this.updateActiveCellPosition(y, x);
       if(stagnantSelectionAreas) handleResetStagnantSelectionAreas();
       if(activeCellSelectionAreaIndex >= 0) handleResetActiveCellSelectionAreaIndex();
     }
@@ -390,7 +387,6 @@ class EventRedux extends PureComponent {
       isEditMode,
       sheetsColumnCount,
       stagnantSelectionAreas,
-      handleUpdateActiveCellPosition,
       handleUpdateStagnantSelectionAreas,
       handleUpdateActiveCellSelectionAreaIndex,
       handleResetStagnantSelectionAreas,
@@ -449,7 +445,7 @@ class EventRedux extends PureComponent {
     } else {
       x++;
   
-      if(x < sheetColumnCount) handleUpdateActiveCellPosition({ x });
+      if(x < sheetColumnCount) this.updateActiveCellPosition(y, x);
       if(stagnantSelectionAreas) handleResetStagnantSelectionAreas();
       if(activeCellSelectionAreaIndex >= 0) handleResetActiveCellSelectionAreaIndex();
     }
@@ -468,8 +464,6 @@ class EventRedux extends PureComponent {
       sheetsRowCount,
       sheetsColumnCount,
 
-      handleSetEditModeOff,
-      handleUpdateActiveCellPosition,
       handleUpdateActiveCellSelectionAreaIndex
     } = this.props;
 
@@ -521,19 +515,14 @@ class EventRedux extends PureComponent {
     }
 
     let { x1, y1, x2, y2 } = selectionArea;
-    
-    // When shift key is enabled, perform the reverse of tab. We can do the same for y for the bounded case since we are not using y for unbounded
-    if(shiftKey) {
-      x--;
-      y--;
-    } else {
-      x++;
-      y++;
-    }
+
+    shiftKey ? x-- : x++;
     
     // Check for bounds -- do not update when isbounded and tab goes out bounds
     if((x < x1 && x < x2) || (x > x1 && x > x2)) {
       if(!isBounded) {
+        shiftKey ? y-- : y++;
+
         // Check for bounds in y
         if((y < y1 && y < y2) || (y > y1 && y > y2)) {
           // Need to switch selection areas. 
@@ -564,10 +553,10 @@ class EventRedux extends PureComponent {
           x = (x < x1 && x < x2) ? Math.max(x1, x2) : Math.min(x1, x2);
         }
 
-        handleUpdateActiveCellPosition({ x, y });
+        this.updateActiveCellPosition(y, x);
       }
     } else {
-      handleUpdateActiveCellPosition({ x });
+      this.updateActiveCellPosition(y, x);
     }
   }
 
@@ -584,8 +573,6 @@ class EventRedux extends PureComponent {
       sheetsRowCount,
       sheetsColumnCount,
 
-      handleSetEditModeOff,
-      handleUpdateActiveCellPosition,
       handleUpdateActiveCellSelectionAreaIndex
     } = this.props;
 
@@ -637,17 +624,12 @@ class EventRedux extends PureComponent {
 
     let { x1, y1, x2, y2 } = selectionArea;
 
-    if(shiftKey) {
-      x--;
-      y--;
-    } else {
-      x++;
-      y++;
-    }
+    shiftKey ? y-- : y++;
     
     // Check for bounds -- do not update when isbounded and tab goes out bounds
     if((y < y1 && y < y2) || (y > y1 && y > y2)) {
       if(!isBounded) {
+        shiftKey ? x-- : x++;
         // Check for bounds in x
         if((x < x1 && x < x2) || (x > x1 && x > x2)) {
           // Need to switch selection areas. 
@@ -678,10 +660,10 @@ class EventRedux extends PureComponent {
           y = (y < y1 && y < y2) ? Math.max(y1, y2) : Math.min(y1, y2);
         }
 
-        handleUpdateActiveCellPosition({ x, y });
+        this.updateActiveCellPosition(y, x);
       }
     } else {
-      handleUpdateActiveCellPosition({ y });
+      this.updateActiveCellPosition(y, x);
     }
   }
 
@@ -787,14 +769,13 @@ class EventRedux extends PureComponent {
       stagnantSelectionAreas,
       handleUpdateStagnantSelectionAreas, 
       handleUpdateActiveCellSelectionAreaIndex,
-      handleUpdateActiveCellPosition
     } = this.props;
     
     const sheetColumnCount = sheetsColumnCount[activeSheetName];
 
     this.saveActiveCellInputValue();
 
-    handleUpdateActiveCellPosition({ x: 1, y: row });
+    this.updateActiveCellPosition(row, 1);
 
     const rowArea = { x1: 1, y1: row, x2: sheetColumnCount - 1, y2: row };
 
@@ -815,14 +796,13 @@ class EventRedux extends PureComponent {
       stagnantSelectionAreas,
       handleUpdateStagnantSelectionAreas, 
       handleUpdateActiveCellSelectionAreaIndex,
-      handleUpdateActiveCellPosition
     } = this.props;
 
     const sheetRowCount = sheetsRowCount[activeSheetName];
 
     this.saveActiveCellInputValue();
 
-    handleUpdateActiveCellPosition({ x: column, y: 1 });
+    this.updateActiveCellPosition(1, column);
 
     const columnArea = { x1: column, y1: 1, x2: column, y2: sheetRowCount - 1 };
 
@@ -843,7 +823,7 @@ class EventRedux extends PureComponent {
 
       this.changeValue(y, x, { value: activeCellInputValue });
 
-      this.resetActiveCellInputValue();
+      // this.resetActiveCellInputValue();
 
       this.setEditModeOff();
     }
@@ -856,7 +836,6 @@ class EventRedux extends PureComponent {
       sheetsRowCount,
       handleUpdateStagnantSelectionAreas, 
       handleUpdateActiveCellSelectionAreaIndex,
-      handleUpdateActiveCellPosition
     } = this.props;
 
     if(event) event.preventDefault();
@@ -866,7 +845,7 @@ class EventRedux extends PureComponent {
 
     this.saveActiveCellInputValue();
 
-    handleUpdateActiveCellPosition({ x: 1, y: 1 });
+    this.updateActiveCellPosition(1, 1);
 
     handleUpdateActiveCellSelectionAreaIndex(0);
     handleUpdateStagnantSelectionAreas([ { x1: 1, y1: 1, x2: sheetColumnCount - 1, y2: sheetRowCount - 1 } ]);
@@ -948,7 +927,6 @@ class EventRedux extends PureComponent {
       activeCellPosition, 
       stagnantSelectionAreas, 
       handleResetStagnantSelectionAreas, 
-      handleUpdateActiveCellPosition, 
       handleUpdateStagnantSelectionAreas, 
       handleUpdateActiveSelectionArea, 
       handleUpdateActiveCellSelectionAreaIndex 
@@ -970,7 +948,7 @@ class EventRedux extends PureComponent {
       if(!stagnantSelectionAreasLength && x1 !== x && y1 !== y) handleUpdateStagnantSelectionAreas([ { x1: x, y1: y, x2: x, y2: y } ]);
     } 
 
-    handleUpdateActiveCellPosition({ x: x1, y: y1 });
+    this.updateActiveCellPosition(y1, x1);
   }
 
   selectOver(x2, y2, ctrlKey) {
@@ -1038,6 +1016,24 @@ class EventRedux extends PureComponent {
     const { activeCellInputValue, handleResetActiveCellInputValue } = this.props;
 
     if(activeCellInputValue) handleResetActiveCellInputValue();
+  }
+
+  updateActiveCellPosition(newY, newX) {
+    const { 
+      activeSheetName, 
+      activeCellInputValue,
+      sheetsCellData, 
+      handleUpdateActiveCellPosition, 
+      handleUpdateActiveCellInputValue 
+    } = this.props;
+
+    const sheetCellData = sheetsCellData[activeSheetName][newY][newX];
+
+    const { value } = sheetCellData;
+
+    if(activeCellInputValue !== value) handleUpdateActiveCellInputValue(value ? value: "");
+
+    handleUpdateActiveCellPosition({ x: newX, y: newY });
   }
 
   render() {
