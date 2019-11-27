@@ -33,7 +33,7 @@ let ActiveInputCell = ({
     <input 
       className="activeCell activeCell--editMode" 
       style={activeCellStyle} 
-      defaultValue={activeCellInputValue}
+      value={activeCellInputValue}
       onChange={handleChangeInputValue}
       autoFocus
     />
