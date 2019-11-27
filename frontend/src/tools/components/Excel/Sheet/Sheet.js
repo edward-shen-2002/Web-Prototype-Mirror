@@ -73,7 +73,7 @@ let SheetWindow = ({
   const rowHeight = (index) => rowHeights[index];
   const columnWidth = (index) => columnWidths[index];
 
-  const handleSelectionStart = (x1, y1, ctrlKey) => EventListenerInstance.startSelection(x1, y1, ctrlKey);
+  const handleSelectionStart = (x1, y1, ctrlKey, shiftKey) => EventListenerInstance.startSelection(x1, y1, ctrlKey, shiftKey);
 
   const handleSelectionOver = (x2, y2, ctrlKey) => EventListenerInstance.selectOver(x2, y2, ctrlKey);
 

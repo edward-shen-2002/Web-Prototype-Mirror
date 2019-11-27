@@ -950,7 +950,7 @@ class EventRedux extends PureComponent {
     }
   }
 
-  startSelection(x1, y1, ctrlKey) {
+  startSelection(x1, y1, ctrlKey, shiftKey) {
     const { 
       activeCellPosition, 
       stagnantSelectionAreas, 
@@ -960,21 +960,40 @@ class EventRedux extends PureComponent {
       handleUpdateActiveCellSelectionAreaIndex 
     } = this.props;
 
-    const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
+    const { x, y } = activeCellPosition;
 
-    if(!ctrlKey && stagnantSelectionAreasLength) handleResetStagnantSelectionAreas(); 
+    const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
+    
+    if((!ctrlKey && stagnantSelectionAreasLength) || shiftKey) handleResetStagnantSelectionAreas(); 
 
     this.saveActiveCellInputValue();
 
     this.setSelectionModeOn();
 
-    if(ctrlKey) {
-      const { x, y } = activeCellPosition;
-      handleUpdateActiveCellSelectionAreaIndex(stagnantSelectionAreasLength + 1);
-      handleUpdateActiveSelectionArea({ x1, y1, x2: x1, y2: y1 });
+    if(ctrlKey || shiftKey) {
+      let x2;
+      let y2;
 
-      if(!stagnantSelectionAreasLength && x1 !== x && y1 !== y) handleUpdateStagnantSelectionAreas([ { x1: x, y1: y, x2: x, y2: y } ]);
-    } 
+      let newActiveCellSelectionAreaIndex;
+      if(shiftKey) {
+        x2 = x1;
+        y2 = y1;
+        x1 = x;
+        y1 = y;
+  
+        newActiveCellSelectionAreaIndex = 0;
+      } else if(ctrlKey) {
+        x2 = x1;
+        y2 = y1;
+
+        newActiveCellSelectionAreaIndex = stagnantSelectionAreasLength + 1;
+        
+        if(!stagnantSelectionAreasLength && x1 !== x && y1 !== y) handleUpdateStagnantSelectionAreas([ { x1: x, y1: y, x2: x, y2: y } ]);
+      } 
+
+      handleUpdateActiveSelectionArea({ x1, y1, x2, y2 });
+      handleUpdateActiveCellSelectionAreaIndex(newActiveCellSelectionAreaIndex);
+    }
 
     this.updateActiveCellPosition(y1, x1);
   }
