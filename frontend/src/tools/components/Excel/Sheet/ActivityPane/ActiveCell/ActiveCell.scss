@@ -6,6 +6,9 @@
 
   &--editMode {
     @include shadow;
+
+    background-color: white;
+    z-index: 1;
   }
 
   &--normalMode {

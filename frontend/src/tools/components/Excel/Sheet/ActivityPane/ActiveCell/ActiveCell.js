@@ -31,7 +31,7 @@ let ActiveInputCell = ({
 
   return (
     <input 
-      className="activeCell activeCell--feditMode" 
+      className="activeCell activeCell--editMode" 
       style={activeCellStyle} 
       defaultValue={activeCellInputValue}
       onChange={handleChangeInputValue}
