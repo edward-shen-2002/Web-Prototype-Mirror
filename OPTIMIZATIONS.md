@@ -20,6 +20,12 @@ Two spread operators are being called twice, when it is only required once... Fi
 
 We can directly fetch sheet data by doing sheetData[ activeSheetName ]
 
+### State Modularization
+
+Event Listener is listening to too many state updates.
+
+It's possible that we could categorize and shrink the amount of functions.
+
 ## Cell Height and Width
 
 For many functions, we use the _getItemStyle(y, x) method to get the top, left, height, and width of the cell.
