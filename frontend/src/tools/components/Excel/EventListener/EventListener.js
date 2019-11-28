@@ -634,7 +634,7 @@ class EventRedux extends PureComponent {
       isBounded = true;
 
       x1 = 1;
-      y2 = 1;
+      y1 = 1;
       x2 = sheetColumnCount - 1;
       y2 = sheetRowCount - 1;
     }
