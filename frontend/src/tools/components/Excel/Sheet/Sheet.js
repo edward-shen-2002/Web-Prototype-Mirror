@@ -6,6 +6,8 @@ import { VariableSizeGrid } from "react-window";
 
 import AutoSizer from "react-virtualized-auto-sizer";
 
+import memoize from "memoize-one";
+
 import { inputCharacterRegex } from "tools/regex";
 
 import WindowListener from "./WindowListener";
@@ -42,6 +44,36 @@ const mapStateToProps = ({
   sheetsFreezeRowCount,
   sheetsFreezeColumnCount
 });
+
+const createItemData = memoize((    
+  sheetCellData, 
+    
+  columnCount,
+  rowCount,
+
+  handleDoubleClickEditableCell,
+
+  handleSelectionStart,
+  handleSelectionOver,
+
+  handleClickColumnHeader,
+  handleClickRowHeader,
+  handleClickRootHeader
+) => ({
+  sheetCellData, 
+    
+  columnCount,
+  rowCount,
+
+  handleDoubleClickEditableCell,
+
+  handleSelectionStart,
+  handleSelectionOver,
+
+  handleClickColumnHeader,
+  handleClickRowHeader,
+  handleClickRootHeader
+}));
 
 let SheetWindow = ({
   sheetGridRef,
@@ -89,7 +121,7 @@ let SheetWindow = ({
   const handleChangeActiveInputValue = (value) => EventListenerInstance.changeActiveInputValue(value);
 
 
-  const itemData = { 
+  const itemData = createItemData(
     sheetCellData, 
     
     columnCount,
@@ -103,7 +135,7 @@ let SheetWindow = ({
     handleClickColumnHeader,
     handleClickRowHeader,
     handleClickRootHeader
-  };
+  );
 
   const commonSelectionPaneProps = { sheetGridRef, handleChangeActiveInputValue };
 
