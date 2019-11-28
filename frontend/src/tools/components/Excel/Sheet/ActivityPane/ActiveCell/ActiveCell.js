@@ -26,6 +26,7 @@ let ActiveInputCell = ({
 
   return (
     <input 
+      key="active-cell-input"
       className="activeCell activeCell--editMode" 
       style={activeCellStyle} 
       value={activeCellInputValue}
@@ -39,7 +40,7 @@ ActiveInputCell = connect(mapStateToProps)(ActiveInputCell);
 
 const ActiveCell = ({ isNormalMode, activeCellStyle, handleChangeActiveInputValue }) => (
   isNormalMode 
-    ? <div className="activeCell activeCell--normalMode" style={activeCellStyle}/>
+    ? <div key="inactive-cell-input" className="activeCell activeCell--normalMode" style={activeCellStyle}/>
     : <ActiveInputCell 
         activeCellStyle={activeCellStyle} 
         handleChangeActiveInputValue={handleChangeActiveInputValue}

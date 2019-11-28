@@ -44,10 +44,8 @@ let ActiveCellListener = ({
   
   if(x <= sheetFreezeColumnCount || y <= sheetFreezeRowCount) return null;
 
-  const { top, left, height, width } = sheetCellOffsets[y][x];
+  const activeCellStyle = sheetCellOffsets[y][x];
 
-  const activeCellStyle = { top, left, width, height, display: null };
-  
   return (
     <ActiveCell 
       activeCellStyle={activeCellStyle}

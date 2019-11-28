@@ -44,13 +44,11 @@ let ActiveCellListener = ({
   
   if(x > sheetFreezeColumnCount || y <= sheetFreezeRowCount) return null;
 
-  let { top, left, height, width } = sheetCellOffsets[y][x];
+  let activeCellStyle = sheetCellOffsets[y][x];
 
   const { top: topFreeze, height: heightFreeze } = sheetCellOffsets[sheetFreezeRowCount][sheetFreezeColumnCount];
 
-  top = top - topFreeze - heightFreeze;
-
-  const activeCellStyle = { top, left, width, height, display: null };
+  activeCellStyle.top = activeCellStyle.top - topFreeze - heightFreeze;
   
   return (
     <ActiveCell 

@@ -175,7 +175,7 @@ const Sheet = ({ eventListenerRef, sheetContainerRef }) => {
     } else if(key === "a" && ctrlKey) {
       EventListenerInstance.selectAll(event);
     } else if(inputCharacterRegex.test(key)) {
-      EventListenerInstance.startEditMode(key);
+      EventListenerInstance.startEditMode();
     }
   };
   

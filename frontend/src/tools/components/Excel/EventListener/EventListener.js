@@ -853,13 +853,12 @@ class EventRedux extends PureComponent {
     handleUpdateStagnantSelectionAreas([ { x1: 1, y1: 1, x2: sheetColumnCount - 1, y2: sheetRowCount - 1 } ]);
   }
 
-  startEditMode(key) {
-    const { isEditMode, handleUpdateActiveCellInputValue } = this.props;
+  startEditMode() {
+    const { isEditMode } = this.props;
 
     if(isEditMode) return;
 
-    handleUpdateActiveCellInputValue(key);
-
+    this.resetActiveCellInputValue();
     this.setEditModeOn();
   }
 
