@@ -5,7 +5,6 @@ import { setOnline, setOffline } from "actions/app/isOnline";
 import { updateAccount, clearAccount } from "actions/domain/account";
 import { showAppNavigation, hideAppNavigation } from "actions/ui/isAppNavigationOpen";
 
-
 import { updateActiveCellInputValue, resetActiveCellInputValue } from "actions/ui/excel/activeCellInputValue";
 import { updateActiveSheetName, resetActiveSheetName } from "actions/ui/excel/activeSheetName";
 import { resetActiveSelectionArea } from "actions/ui/excel/activeSelectionArea";
@@ -14,6 +13,7 @@ import { resetActiveCellSelectionAreaIndex } from "actions/ui/excel/activeCellSe
 
 import { updateSheetNames, resetSheetNames } from "actions/ui/excel/sheetNames";
 import { resetStagnantSelectionAreas } from "actions/ui/excel/stagnantSelectionAreas";
+import { resetScrollData } from "actions/ui/excel/scrollData";
 
 import { setSelectionModeOff } from "actions/ui/excel/isSelectionMode";
 import { setEditModeOff } from "actions/ui/excel/isEditMode";
@@ -111,4 +111,5 @@ export const resetWorkbook = (dispatch) => {
   dispatch(resetActiveSelectionArea());
 
   dispatch(resetActiveCellInputValue());
+  dispatch(resetScrollData());
 };

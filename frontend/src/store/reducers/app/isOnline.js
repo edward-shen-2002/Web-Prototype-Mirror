@@ -3,10 +3,9 @@ import { isTokenSaved } from "tools/storage";
 
 const defaultIsOnline = isTokenSaved();
 
-const setOffline = () => false;
+const SET_OFFLINE = () => false;
+const SET_ONLINE = () => true;
 
-const setOnline = () => true;
-
-const isOnlineReducer = createReducer(defaultIsOnline, { SET_OFFLINE: setOffline, SET_ONLINE: setOnline });
+const isOnlineReducer = createReducer(defaultIsOnline, { SET_OFFLINE, SET_ONLINE });
 
 export default isOnlineReducer;

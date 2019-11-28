@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 
 import { Switch, Route, Redirect } from "react-router-dom";
 
+import { ROUTE_USER_DASHBOARD } from "constants/routes";
+
 import { loadUserState, resetUserState } from "tools/redux";
 import { authAxios, adminUserRoleAxios, adminOrganizationRoleAxios, adminSectorRoleAxios, adminTemplateRoleAxios } from "tools/rest";
 import { findAndSaveToken } from "tools/storage";
@@ -19,6 +21,8 @@ import Loading from "tools/components/Loading";
 import Navigation from "./Navigation";
 
 import AppHeader from "./Header";
+
+import { setShouldReconnectOn, setShouldReconnectOff } from "actions/app/shouldReconnect";
 
 import VerificationRouter from "./views/VerificationRouter";
 import PublicRouter from "./views/PublicRouter";
@@ -57,15 +61,28 @@ const mapStateToProps = ({ app: { shouldReconnect, isOnline }, domain: { account
 
 const mapDispatchToProps = (dispatch) => ({
   handleReconnect: () => {
+    dispatch(setShouldReconnectOff());
+
     authAxios.post(REST_AUTH_RECONNECT)
       .then(({ data: { data } }) => loadUserState(dispatch, data))
       .catch((error) => console.error(error));
   },
+  handleSetReconnectOn: () => dispatch(setShouldReconnectOn()),
   handleLogout: () => resetUserState(dispatch)
 });
 
 // ?Axios interceptor might not be overriden...
-let App = ({ shouldReconnect, isOnline, isAppNavigationOpen, account, handleReconnect, handleLogout, location, history }) => {
+let App = ({ 
+  shouldReconnect, 
+  isOnline, 
+  isAppNavigationOpen, 
+  account, 
+  location, 
+  history,
+  handleReconnect, 
+  handleLogout, 
+  handleSetReconnectOn
+}) => {
   // Set up auth middleware - only shared information among all auth requests must be present here to ensure functionality
   // TODO : Check edge cases - Will 'isOnline' parameter work for all cases? When can it fail?
   useMemo(() => {
@@ -86,6 +103,7 @@ let App = ({ shouldReconnect, isOnline, isAppNavigationOpen, account, handleReco
         handleLogout();
       } else if(status === HTTP_ERROR_UNAUTHORIZED) {
         history.push(ROUTE_USER_DASHBOARD);
+        handleSetReconnectOn();
       }
 
       return Promise.reject(error);
@@ -105,9 +123,7 @@ let App = ({ shouldReconnect, isOnline, isAppNavigationOpen, account, handleReco
   // Send a request to server with user's saved token, essentially login without replacing token
   findAndSaveToken();
 
-  useEffect(() => {
-    if(shouldReconnect) handleReconnect();
-  }, [ shouldReconnect ]);
+  if(shouldReconnect) handleReconnect();
 
   return (
     <div className="app">

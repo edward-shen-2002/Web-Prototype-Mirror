@@ -7,7 +7,8 @@ export const SET_OFFLINE = "SET_OFFLINE";
 export const SET_ONLINE = "SET_ONLINE";
 
 // Reconnection
-export const SET_SHOULD_RECONNECT = "SET_SHOULD_RECONNECT";
+export const SET_SHOULD_RECONNECT_ON = "SET_SHOULD_RECONNECT_ON";
+export const SET_SHOULD_RECONNECT_OFF = "SET_SHOULD_RECONNECT_OFF";
 
 /**
  * Domain data: data that the application needs to show, use, or modify
@@ -110,3 +111,6 @@ export const RESET_SHEET_CELL_OFFSETS = "RESET_SHEET_CELL_OFFSETS";
 
 export const SET_ACTIVE_CELL_INPUT_AUTO_FOCUS_ON =  "SET_ACTIVE_CELL_INPUT_AUTO_FOCUS_ON";
 export const SET_ACTIVE_CELL_INPUT_AUTO_FOCUS_OFF =  "SET_ACTIVE_CELL_INPUT_AUTO_FOCUS_OFF";
+
+export const UPDATE_SCROLL_DATA = "UPDATE_SCROLL_DATA"; 
+export const RESET_SCROLL_DATA = "RESET_SCROLL_DATA";
