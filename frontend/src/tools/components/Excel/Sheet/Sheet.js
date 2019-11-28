@@ -120,6 +120,7 @@ let SheetWindow = ({
 
   const handleChangeActiveInputValue = (value) => EventListenerInstance.changeActiveInputValue(value);
 
+  const handleScroll = (scrollData) => EventListenerInstance.scroll(scrollData); 
 
   const itemData = createItemData(
     sheetCellData, 
@@ -153,6 +154,8 @@ let SheetWindow = ({
           rowCount={rowCount}
           rowHeight={rowHeight}
           width={width}
+
+          onScroll={handleScroll}
           extraTopLeftElement={
             <TopLeftActivityPane 
               key="top-left-selection-pane" 

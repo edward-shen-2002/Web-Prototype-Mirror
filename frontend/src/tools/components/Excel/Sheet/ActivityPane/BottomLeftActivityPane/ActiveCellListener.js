@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { connect } from "react-redux";
 
@@ -29,7 +29,6 @@ const mapStateToProps = ({
 });
 
 let ActiveCellListener = ({
-  sheetGridRef,
   activeCellPosition,
 
   isEditMode,
@@ -50,13 +49,6 @@ let ActiveCellListener = ({
   const { top: topFreeze, height: heightFreeze } = sheetCellOffsets[sheetFreezeRowCount][sheetFreezeColumnCount];
 
   activeCellStyle.top = activeCellStyle.top - topFreeze - heightFreeze;
-
-  useEffect(() => {
-    sheetGridRef.current.scrollToItem({
-      columnIndex: x,
-      rowIndex: y
-    });
-  });
   
   return (
     <ActiveCell 

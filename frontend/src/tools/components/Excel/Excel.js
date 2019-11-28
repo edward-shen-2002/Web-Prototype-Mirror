@@ -47,6 +47,7 @@ const Excel = ({
       <SheetNavigator/>
 
       <EventListener 
+        sheetGridRef={sheetGridRef}
         eventListenerRef={eventListenerRef}
       />
     </div>

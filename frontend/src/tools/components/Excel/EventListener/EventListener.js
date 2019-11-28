@@ -89,6 +89,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 let EventListener = ({ 
   eventListenerRef, 
+  sheetGridRef,
   
   activeCellInputValue,
   activeSheetName,
@@ -134,6 +135,7 @@ let EventListener = ({
 }) => (
   <EventRedux 
     ref={eventListenerRef} 
+    sheetGridRef={sheetGridRef}
 
     sheetRowCount={sheetRowCount}
     sheetColumnCount={sheetColumnCount}
@@ -1061,11 +1063,14 @@ class EventRedux extends PureComponent {
 
   updateActiveCellPosition(newY, newX) {
     const { 
+      sheetGridRef,
       activeCellInputValue,
+      activeCellPosition,
       sheetCellData, 
       handleUpdateActiveCellPosition, 
       handleUpdateActiveCellInputValue 
     } = this.props;
+    const { x, y } = activeCellPosition;
 
     const cellData = sheetCellData[newY][newX];
 
@@ -1074,6 +1079,22 @@ class EventRedux extends PureComponent {
     if(activeCellInputValue !== value) handleUpdateActiveCellInputValue(value ? value: "");
 
     handleUpdateActiveCellPosition({ x: newX, y: newY });
+
+    /**
+     * Things to consider ...
+     * Freeze columns/rows - hard because 
+     * 
+     * Header cells - easy because its at the borders - we know the position
+     */
+    sheetGridRef.current.scrollToItem({
+      align: "smart",
+      columnIndex: x === newX ? undefined: newX,
+      rowIndex: y === newY ? undefined: newY
+    });
+  }
+
+  scroll(scrollData) {
+
   }
 
   setInputAutoFocusOn() {

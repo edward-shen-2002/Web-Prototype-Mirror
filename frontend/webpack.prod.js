@@ -13,7 +13,8 @@ module.exports = merge(common, {
     filename: "[name].bundle.js",
     chunkFilename: "[name].bundle.js",
     path: path.join(__dirname, "/build"),
-    publicPath: process.env.PUBLIC_URL
+    // publicPath: process.env.PUBLIC_URL
+    publicPath: "/"
   },
   devtool: "source-map",
   plugins: [
