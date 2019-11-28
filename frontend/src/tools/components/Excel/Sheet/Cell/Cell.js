@@ -98,8 +98,6 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
   let Component;
   let value;
 
-  console.log("rerendering")
-
   if(columnIndex > 0 && rowIndex > 0){
     cellData = sheetCellData[rowIndex][columnIndex];
 
