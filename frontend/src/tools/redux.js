@@ -6,10 +6,10 @@ import { updateAccount, clearAccount } from "actions/domain/account";
 import { showAppNavigation, hideAppNavigation } from "actions/ui/isAppNavigationOpen";
 
 
-import { resetActiveCellInputValue } from "actions/ui/excel/activeCellInputValue";
+import { updateActiveCellInputValue, resetActiveCellInputValue } from "actions/ui/excel/activeCellInputValue";
 import { updateActiveSheetName, resetActiveSheetName } from "actions/ui/excel/activeSheetName";
 import { resetActiveSelectionArea } from "actions/ui/excel/activeSelectionArea";
-import { resetActiveCellPosition } from "actions/ui/excel/activeCellPosition";
+import { updateActiveCellPosition, resetActiveCellPosition } from "actions/ui/excel/activeCellPosition";
 import { resetActiveCellSelectionAreaIndex } from "actions/ui/excel/activeCellSelectionAreaIndex";
 
 import { updateSheetNames, resetSheetNames } from "actions/ui/excel/sheetNames";
@@ -53,6 +53,8 @@ export const resetUserState = (dispatch) => {
 export const loadWorkbook = (
   dispatch, 
   { 
+    activeCellPosition,
+    activeCellInputValue,
     activeSheetName,
 
     sheetNames,
@@ -67,6 +69,8 @@ export const loadWorkbook = (
     sheetsCellOffsets
   }
 ) => {
+  dispatch(updateActiveCellInputValue(activeCellInputValue));
+  dispatch(updateActiveCellPosition(activeCellPosition));
   dispatch(updateActiveSheetName(activeSheetName));
   dispatch(updateSheetNames(sheetNames));
   

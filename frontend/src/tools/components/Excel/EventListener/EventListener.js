@@ -597,11 +597,18 @@ class EventRedux extends PureComponent {
     let selectionArea;
     let isBounded;
 
+    let x1;
+    let y1;
+    let x2;
+    let y2;
+
     const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
 
     // Get the rectangular scope that an active selection area can go in
     // TODO : clean up later
     if(activeSelectionArea || stagnantSelectionAreasLength) {
+      isBounded = false;
+
       if(activeSelectionArea) {
         // It is possible to have the active cell go over both active area and stagnant areas
         if(stagnantSelectionAreasLength) {
@@ -619,15 +626,19 @@ class EventRedux extends PureComponent {
         selectionArea = stagnantSelectionAreas[activeCellSelectionAreaIndex];
       } 
 
-      isBounded = false
+      x1 = selectionArea.x1;
+      y1 = selectionArea.y1;
+      x2 = selectionArea.x2;
+      y2 = selectionArea.y2;
     } else {
       isBounded = true;
 
-      selectionArea = { x1: 1, y1: 1, x2: sheetColumnCount - 1, y2: sheetRowCount - 1 };
+      x1 = 1;
+      y2 = 1;
+      x2 = sheetColumnCount - 1;
+      y2 = sheetRowCount - 1;
     }
-
-    let { x1, y1, x2, y2 } = selectionArea;
-
+    
     shiftKey ? y-- : y++;
     
     // Check for bounds -- do not update when isbounded and tab goes out bounds
@@ -725,7 +736,7 @@ class EventRedux extends PureComponent {
 
           rowData.push(
             (coveredRow && coveredRow[column]) 
-              ? { ...cellData, value: undefined }
+              ? { ...cellData, value: "" }
               : cellData
           );
         }
@@ -737,7 +748,7 @@ class EventRedux extends PureComponent {
     } else {
       const { x, y } = activeCellPosition;
 
-      this.changeValue(y, x, { value: undefined });
+      this.changeValue(y, x, { value: "" });
     }
   }
 
@@ -747,20 +758,26 @@ class EventRedux extends PureComponent {
     handleUpdateActiveCellInputValue(value ? value: "");
   }
 
-  changeValue(row, column, data) {
+  changeValue(row, column, newData) {
     const { 
       activeSheetName, 
       sheetCellData, 
       handleChangeSheetCellData 
     } = this.props;
 
-    const newSheetCellData = [
-      ...sheetCellData.slice(0, row),
-      [ ...sheetCellData[row].slice(0, column), { ...sheetCellData[row][column], ...data }, ...sheetCellData[row].slice(column + 1) ],
-      ...sheetCellData.slice(row + 1),
-    ];
+    
+    const { value: newValue } = newData;
+    const { value: currentValue } = sheetCellData[row][column];
 
-    handleChangeSheetCellData(activeSheetName, newSheetCellData);
+    if(currentValue !== newValue) {
+      const newSheetCellData = [
+        ...sheetCellData.slice(0, row),
+        [ ...sheetCellData[row].slice(0, column), { ...sheetCellData[row][column], ...newData }, ...sheetCellData[row].slice(column + 1) ],
+        ...sheetCellData.slice(row + 1),
+      ];
+  
+      handleChangeSheetCellData(activeSheetName, newSheetCellData);
+    } 
   }
 
   focusFormulaInput() {
@@ -827,9 +844,7 @@ class EventRedux extends PureComponent {
     if(isEditMode) {
       const { x, y } = activeCellPosition;
 
-      this.changeValue(y, x, { value: activeCellInputValue });
-
-      // this.resetActiveCellInputValue();
+      this.changeValue(y, x, { value: activeCellInputValue ? activeCellInputValue : "" });
 
       this.setEditModeOff();
     }

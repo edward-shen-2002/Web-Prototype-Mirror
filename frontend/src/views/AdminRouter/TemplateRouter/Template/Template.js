@@ -97,7 +97,18 @@ let Template = ({
             sheetsCellOffsets[name] = sheetCellOffsets;
           });
 
+          let activeCell = activeSheet.activeCell();
+          let activeRow = activeCell.rowNumber();
+          let activeColumn = activeCell.columnNumber();
+
+          let activeCellPosition = { x: activeColumn, y: activeRow };
+
+          let activeCellInputValue = sheetsCellData[activeSheetName][activeRow][activeColumn].value;
+
           handleLoadTemplate({
+            activeCellPosition,
+            activeCellInputValue,
+
             sheetsCellData,
 
             sheetsColumnCount,
