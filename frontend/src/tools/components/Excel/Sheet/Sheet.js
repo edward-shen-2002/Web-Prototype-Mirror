@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import { connect } from "react-redux";
 
@@ -54,8 +54,6 @@ let SheetWindow = ({
   sheetsRowHeights,
   eventListenerRef
 }) => {
-  const sheetGridRef = useRef(null);
-
   let EventListenerInstance;
 
   useEffect(() => {
@@ -104,13 +102,12 @@ let SheetWindow = ({
     handleClickRootHeader
   };
 
-  const commonSelectionPaneProps = { sheetGridRef, handleChangeActiveInputValue };
+  const commonSelectionPaneProps = { handleChangeActiveInputValue };
 
   return (
     <AutoSizer>
       {({ height, width }) => (
         <VariableSizeGrid
-          ref={sheetGridRef}
           freezeRowCount={tableFreezeRowCount}
           freezeColumnCount={tableFreezeColumnCount}
           columnCount={columnCount}

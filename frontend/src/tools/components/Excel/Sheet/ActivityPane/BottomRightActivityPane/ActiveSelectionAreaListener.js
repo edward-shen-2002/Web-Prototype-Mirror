@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 
 import { connect } from "react-redux";
 
@@ -14,53 +14,39 @@ const mapStateToProps = ({
       activeSelectionArea,
 
       sheetsFreezeColumnCount,
-      sheetsFreezeRowCount
+      sheetsFreezeRowCount,
+      sheetsCellOffsets
     }
   }
 }) => ({
-  activeSheetName,
   isSelectionMode,
   activeSelectionArea,
 
-  sheetsFreezeColumnCount,
-  sheetsFreezeRowCount
+  sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName],
+  sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName],
+  sheetCellOffsets: sheetsCellOffsets[activeSheetName]
 });
 
 let ActiveSelectionAreaListener = ({ 
-  activeSheetName,
-  sheetGridRef,
-
   isSelectionMode,
   activeSelectionArea,
 
-  sheetsFreezeColumnCount,
-  sheetsFreezeRowCount
+  sheetFreezeColumnCount,
+  sheetFreezeRowCount,
+
+  sheetCellOffsets
 }) => {
-  const activeSelectionAreaRef = useRef(null);
 
-  useEffect(() => {
-    const { current: ActiveSelectionAreaInstance } = activeSelectionAreaRef;
-    
-    const sheetFreezeColumnCount = sheetsFreezeColumnCount[activeSheetName];
-    const sheetFreezeRowCount = sheetsFreezeRowCount[activeSheetName];
+  if(!isSelectionMode || !activeSelectionArea) return null;
 
-    if(isSelectionMode && activeSelectionArea) {
-      const { x1, y1, x2, y2 } = activeSelectionArea;
-      
-      if((x1 <= sheetFreezeColumnCount && x2 <= sheetFreezeColumnCount) || (y1 <= sheetFreezeRowCount && y2 <= sheetFreezeRowCount)) return ActiveSelectionAreaInstance.resetActiveSelectionArea();
+  const { x1, y1, x2, y2 } = activeSelectionArea;
+  
+  if((x1 <= sheetFreezeColumnCount && x2 <= sheetFreezeColumnCount) || (y1 <= sheetFreezeRowCount && y2 <= sheetFreezeRowCount)) return null;
 
-      const { current: SheetInstance } = sheetGridRef;
-      
-      ActiveSelectionAreaInstance.setActiveSelectionAreaStyle(computeSelectionAreaStyle(SheetInstance, activeSelectionArea, sheetFreezeColumnCount, sheetFreezeRowCount, true));
-    } else {
-      ActiveSelectionAreaInstance.resetActiveSelectionArea();
-    }
-  });
+  const activeSelectionAreaStyle = computeSelectionAreaStyle(sheetCellOffsets, activeSelectionArea, sheetFreezeColumnCount, sheetFreezeRowCount, true);
 
   return (
-    <ActiveSelectionArea
-      ref={activeSelectionAreaRef}
-    />
+    <ActiveSelectionArea activeSelectionAreaStyle={activeSelectionAreaStyle}/>
   );
 };
 

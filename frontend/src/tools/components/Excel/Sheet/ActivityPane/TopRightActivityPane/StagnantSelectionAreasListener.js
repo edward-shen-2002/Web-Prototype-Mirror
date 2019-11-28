@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 
 import { connect } from "react-redux";
 
@@ -13,47 +13,34 @@ const mapStateToProps = ({
       activeSheetName,
       stagnantSelectionAreas,
 
+      sheetsFreezeRowCount,
       sheetsFreezeColumnCount,
-      sheetsFreezeRowCount
+      sheetsCellOffsets
     }
   }
 }) => ({
-  activeSheetName,
   stagnantSelectionAreas,
 
-  sheetsFreezeColumnCount,
-  sheetsFreezeRowCount
+  sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName],
+  sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName],
+  sheetCellOffsets: sheetsCellOffsets[activeSheetName]
 });
 
 let StagnantSelectionAreasListener = ({
-  activeSheetName,
-  sheetGridRef,
-
   stagnantSelectionAreas,
 
-  sheetsFreezeColumnCount,
-  sheetsFreezeRowCount
+  sheetFreezeColumnCount,
+  sheetFreezeRowCount,
+
+  sheetCellOffsets
 }) => {
-  const stagnantSelectionAreasRef = useRef(null);
+  const relevantStagnantSelectionAreas = stagnantSelectionAreas.filter(({ x1, y1, x2, y2 }) => (x1 > sheetFreezeColumnCount || x2 > sheetFreezeColumnCount) && (y1 <= sheetFreezeRowCount || y2 <= sheetFreezeRowCount));
 
-  useEffect(() => {
-    if(stagnantSelectionAreas) {
-      const { current: SheetInstance } = sheetGridRef;
-      const { current: StagnantSelectionAreasInstance } = stagnantSelectionAreasRef;
-      const sheetFreezeColumnCount = sheetsFreezeColumnCount[activeSheetName];
-      const sheetFreezeRowCount = sheetsFreezeRowCount[activeSheetName];
-
-      const relevantStagnantSelectionAreas = stagnantSelectionAreas.filter(({ x1, y1, x2, y2 }) => (x1 > sheetFreezeColumnCount || x2 > sheetFreezeColumnCount) && (y1 <= sheetFreezeRowCount || y2 <= sheetFreezeRowCount));
-
-      const relevantStagnantSelectionAreasStyles = relevantStagnantSelectionAreas.map((stagnantSelectionArea) => computeSelectionAreaStyle(SheetInstance, stagnantSelectionArea, sheetFreezeColumnCount, sheetFreezeRowCount, false));
-
-      StagnantSelectionAreasInstance.setStagnantSelectionAreasStyles(relevantStagnantSelectionAreasStyles);
-    }
-  });
+  const relevantStagnantSelectionAreasStyles = relevantStagnantSelectionAreas.map((stagnantSelectionArea) => computeSelectionAreaStyle(sheetCellOffsets, stagnantSelectionArea, sheetFreezeColumnCount, sheetFreezeRowCount, false));
 
   return (
     <StagnantSelectionAreas
-      ref={stagnantSelectionAreasRef}
+      relevantStagnantSelectionAreasStyles={relevantStagnantSelectionAreasStyles}
     />
   );
 };

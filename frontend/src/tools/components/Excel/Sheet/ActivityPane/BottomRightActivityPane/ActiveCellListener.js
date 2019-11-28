@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 
 import { connect } from "react-redux";
 
@@ -13,7 +13,8 @@ const mapStateToProps = ({
       isEditMode,
 
       sheetsFreezeColumnCount,
-      sheetsFreezeRowCount
+      sheetsFreezeRowCount,
+      sheetsCellOffsets
     }
   }
 }) => ({
@@ -21,46 +22,36 @@ const mapStateToProps = ({
   activeCellPosition,
 
   isEditMode,
-  
-  sheetsFreezeColumnCount,
-  sheetsFreezeRowCount
+
+  sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName],
+  sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName],
+  sheetCellOffsets: sheetsCellOffsets[activeSheetName]
 });
 
 let ActiveCellListener = ({
-  activeSheetName,
   activeCellPosition,
 
   isEditMode,
 
-  sheetsFreezeColumnCount,
-  sheetsFreezeRowCount,
+  sheetFreezeColumnCount,
+  sheetFreezeRowCount,
 
-  sheetGridRef,
+  sheetCellOffsets,
 
   handleChangeActiveInputValue
 }) => {
-  const activeCellRef = useRef(null);
   const { x, y } = activeCellPosition;
+  
+  if(x <= sheetFreezeColumnCount || y <= sheetFreezeRowCount) return null;
 
-  useEffect(() => {
-    const { current: ActiveCellInstance } = activeCellRef;
-    const { current: SheetInstance } = sheetGridRef;
-    const sheetFreezeColumnCount = sheetsFreezeColumnCount[activeSheetName];
-    const sheetFreezeRowCoutn = sheetsFreezeRowCount[activeSheetName];
+  const { top, left, height, width } = sheetCellOffsets[y][x];
 
-    if(x <= sheetFreezeColumnCount || y <= sheetFreezeRowCoutn) return ActiveCellInstance.resetActiveCell();
-
-    const { top, left, height, width } = SheetInstance._getItemStyle(y, x);
-
-    ActiveCellInstance.setActiveCell({ 
-      activeCellStyle: { top, left, width, height, display: null }, 
-      isNormalMode: !isEditMode 
-    });
-  });
-
+  const activeCellStyle = { top, left, width, height, display: null };
+  
   return (
     <ActiveCell 
-      ref={activeCellRef}
+      activeCellStyle={activeCellStyle}
+      isNormalMode={!isEditMode }
       handleChangeActiveInputValue={handleChangeActiveInputValue}
     />
   );

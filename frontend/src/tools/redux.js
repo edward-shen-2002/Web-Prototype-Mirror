@@ -25,6 +25,7 @@ import { updateSheetsColumnWidths, resetSheetsColumnWidths } from "actions/ui/ex
 import { updateSheetsRowHeights, resetSheetsRowHeights } from "actions/ui/excel/sheetsRowHeights";
 import { updateSheetsFreezeColumnCount, resetSheetsFreezeColumnCount } from "actions/ui/excel/sheetsFreezeColumnCount";
 import { updateSheetsFreezeRowCount, resetSheetsFreezeRowCount } from "actions/ui/excel/sheetsFreezeRowCount";
+import { updateSheetsCellOffsets, resetSheetsCellOffsets } from "actions/ui/excel/sheetsCellOffsets";
 
 
 export const loadUserState = (dispatch, { user, token }) => {
@@ -53,33 +54,30 @@ export const loadWorkbook = (
   dispatch, 
   { 
     activeSheetName,
+
+    sheetNames,
     
     sheetsCellData,
     sheetsColumnCount,
     sheetsRowCount,
-
     sheetsColumnWidths,
     sheetsRowHeights,
-    
     sheetsFreezeColumnCount,
     sheetsFreezeRowCount,
-
-    sheetNames
+    sheetsCellOffsets
   }
 ) => {
-  dispatch(updateSheetsCellData(sheetsCellData));
   dispatch(updateActiveSheetName(activeSheetName));
-
+  dispatch(updateSheetNames(sheetNames));
+  
+  dispatch(updateSheetsCellData(sheetsCellData));
   dispatch(updateSheetsColumnCount(sheetsColumnCount));
   dispatch(updateSheetsRowCount(sheetsRowCount));
-
   dispatch(updateSheetsColumnWidths(sheetsColumnWidths));
   dispatch(updateSheetsRowHeights(sheetsRowHeights));
-
   dispatch(updateSheetsFreezeColumnCount(sheetsFreezeColumnCount));
   dispatch(updateSheetsFreezeRowCount(sheetsFreezeRowCount));
-
-  dispatch(updateSheetNames(sheetNames));
+  dispatch(updateSheetsCellOffsets(sheetsCellOffsets));
 };
 
 export const resetWorkbook = (dispatch) => {
@@ -88,12 +86,11 @@ export const resetWorkbook = (dispatch) => {
 
   dispatch(resetSheetsColumnCount());
   dispatch(resetSheetsRowCount());
-
   dispatch(resetSheetsRowHeights());
   dispatch(resetSheetsColumnWidths());
-
   dispatch(resetSheetsFreezeColumnCount());
   dispatch(resetSheetsFreezeRowCount());
+  dispatch(resetSheetsCellOffsets());
 
   dispatch(resetSheetNames());
 

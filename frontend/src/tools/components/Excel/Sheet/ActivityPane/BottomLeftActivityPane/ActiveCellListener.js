@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 
 import { connect } from "react-redux";
 
@@ -13,7 +13,8 @@ const mapStateToProps = ({
       isEditMode,
 
       sheetsFreezeColumnCount,
-      sheetsFreezeRowCount
+      sheetsFreezeRowCount,
+      sheetsCellOffsets
     }
   }
 }) => ({
@@ -21,50 +22,40 @@ const mapStateToProps = ({
   activeCellPosition,
 
   isEditMode,
-  
-  sheetsFreezeColumnCount,
-  sheetsFreezeRowCount
+
+  sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName],
+  sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName],
+  sheetCellOffsets: sheetsCellOffsets[activeSheetName]
 });
 
 let ActiveCellListener = ({
-  activeSheetName,
   activeCellPosition,
 
   isEditMode,
 
-  sheetsFreezeColumnCount,
-  sheetsFreezeRowCount,
+  sheetFreezeColumnCount,
+  sheetFreezeRowCount,
 
-  sheetGridRef,
+  sheetCellOffsets,
 
   handleChangeActiveInputValue
 }) => {
-  const activeCellRef = useRef(null);
   const { x, y } = activeCellPosition;
   
-  useEffect(() => {
-    const { current: ActiveCellInstance } = activeCellRef;
-    const { current: SheetInstance } = sheetGridRef;
-    const sheetFreezeColumnCount = sheetsFreezeColumnCount[activeSheetName];
-    const sheetFreezeRowCount = sheetsFreezeRowCount[activeSheetName];
-    
-    if(x > sheetFreezeColumnCount || y <= sheetFreezeRowCount) return ActiveCellInstance.resetActiveCell();
+  if(x > sheetFreezeColumnCount || y <= sheetFreezeRowCount) return null;
 
-    let { top, left, height, width } = SheetInstance._getItemStyle(y, x);
+  let { top, left, height, width } = sheetCellOffsets[y][x];
 
-    const { top: topFreeze, height: heightFreeze } = SheetInstance._getItemStyle(sheetFreezeRowCount, sheetFreezeColumnCount);
+  const { top: topFreeze, height: heightFreeze } = sheetCellOffsets[sheetFreezeRowCount][sheetFreezeColumnCount];
 
-    top = top - topFreeze - heightFreeze;
+  top = top - topFreeze - heightFreeze;
 
-    ActiveCellInstance.setActiveCell({ 
-      activeCellStyle: { top, left, width, height, display: null }, 
-      isNormalMode: !isEditMode 
-    });
-  });
-
+  const activeCellStyle = { top, left, width, height, display: null };
+  
   return (
     <ActiveCell 
-      ref={activeCellRef}
+      activeCellStyle={activeCellStyle}
+      isNormalMode={!isEditMode }
       handleChangeActiveInputValue={handleChangeActiveInputValue}
     />
   );

@@ -6,7 +6,7 @@ import {
   STYLE_STAGNANT_SELECTION_BORDER_STYLE
 } from "constants/styles";
 
-export const computeSelectionAreaStyle = (SheetInstance, selectionArea, freezeColumnCount, freezeRowCount, isActive) => {
+export const computeSelectionAreaStyle = (sheetCelloffsets, selectionArea, freezeColumnCount, freezeRowCount, isActive) => {
   const { x1, y1, x2, y2 } = selectionArea;
 
   let borderStyle = isActive ? STYLE_ACTIVE_SELECTION_BORDER_STYLE : STYLE_STAGNANT_SELECTION_BORDER_STYLE;
@@ -24,10 +24,10 @@ export const computeSelectionAreaStyle = (SheetInstance, selectionArea, freezeCo
     borderTopStyle: borderStyle
   };
 
-  const { top: topStart, left: leftStart, width: widthStart, height: heightStart } = SheetInstance._getItemStyle(y1, x1);
-  const { top: topEnd, left: leftEnd, width: widthEnd, height: heightEnd } = SheetInstance._getItemStyle(y2, x2);
+  const { top: topStart, left: leftStart, width: widthStart, height: heightStart } = sheetCelloffsets[y1][x1];
+  const { top: topEnd, left: leftEnd, width: widthEnd, height: heightEnd } = sheetCelloffsets[y2][x2];
 
-  const { top: topFrozenEnd, left: leftFrozenEnd, width: widthFrozenEnd, height: heightFrozenEnd } = SheetInstance._getItemStyle(freezeRowCount, freezeColumnCount);
+  const { top: topFrozenEnd, left: leftFrozenEnd, width: widthFrozenEnd, height: heightFrozenEnd } = sheetCelloffsets[freezeRowCount][freezeColumnCount];
 
   const minLeft = x1 < x2 ? leftStart : leftEnd;
   left = minLeft;
