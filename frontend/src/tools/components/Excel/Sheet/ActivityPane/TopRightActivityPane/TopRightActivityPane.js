@@ -4,9 +4,10 @@ import ActiveCellListener from "./ActiveCellListener";
 import ActiveSelectionAreaListener from "./ActiveSelectionAreaListener";
 import StagnantSelectionAreasListener from "./StagnantSelectionAreasListener";
 
-const TopRightActivityPane = ({ handleChangeActiveInputValue }) => (
+const TopRightActivityPane = ({ sheetGridRef, handleChangeActiveInputValue }) => (
   <Fragment>
     <ActiveCellListener 
+      sheetGridRef={sheetGridRef}
       handleChangeActiveInputValue={handleChangeActiveInputValue}
     />
     <ActiveSelectionAreaListener/>

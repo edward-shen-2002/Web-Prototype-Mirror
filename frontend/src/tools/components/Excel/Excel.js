@@ -20,6 +20,7 @@ const Excel = ({
 }) => {
   const eventListenerRef = useRef(null);
   const sheetContainerRef = useRef(null);
+  const sheetGridRef = useRef(null);
 
   return (
     <div className="excel">
@@ -40,11 +41,14 @@ const Excel = ({
       <Sheet
         sheetContainerRef={sheetContainerRef}
         eventListenerRef={eventListenerRef}
+        sheetGridRef={sheetGridRef}
       />
       <Divider/>
       <SheetNavigator/>
 
-      <EventListener eventListenerRef={eventListenerRef}/>
+      <EventListener 
+        eventListenerRef={eventListenerRef}
+      />
     </div>
   );
 };

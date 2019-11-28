@@ -35,7 +35,8 @@ const mapStateToProps = ({
 
       sheetsColumnCount,
       sheetsRowCount,
-      sheetsCellData
+      sheetsCellData,
+      sheetsCellOffsets
     } 
   } 
 }) => ({ 
@@ -55,7 +56,8 @@ const mapStateToProps = ({
   // Active sheet
   sheetCellData: sheetsCellData[activeSheetName],
   sheetRowCount: sheetsRowCount[activeSheetName],
-  sheetColumnCount: sheetsColumnCount[activeSheetName]
+  sheetColumnCount: sheetsColumnCount[activeSheetName],
+  sheetCellOffsets: sheetsCellOffsets[activeSheetName]
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -98,6 +100,7 @@ let EventListener = ({
   sheetRowCount,
   sheetColumnCount,
   sheetCellData,
+  sheetCellOffsets,
 
   isSelectionMode,
   isEditMode,
@@ -135,6 +138,7 @@ let EventListener = ({
     sheetRowCount={sheetRowCount}
     sheetColumnCount={sheetColumnCount}
     sheetCellData={sheetCellData}
+    sheetCellOffsets={sheetCellOffsets}
     
     activeCellInputValue={activeCellInputValue}
     activeSheetName={activeSheetName}

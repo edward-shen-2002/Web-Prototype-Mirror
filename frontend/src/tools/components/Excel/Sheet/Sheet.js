@@ -44,15 +44,18 @@ const mapStateToProps = ({
 });
 
 let SheetWindow = ({
+  sheetGridRef,
+  eventListenerRef,
+
   activeSheetName,
+
   sheetsCellData,
   sheetsFreezeRowCount,
   sheetsFreezeColumnCount,
   sheetsColumnCount,
   sheetsRowCount,
   sheetsColumnWidths,
-  sheetsRowHeights,
-  eventListenerRef
+  sheetsRowHeights
 }) => {
   let EventListenerInstance;
 
@@ -102,12 +105,13 @@ let SheetWindow = ({
     handleClickRootHeader
   };
 
-  const commonSelectionPaneProps = { handleChangeActiveInputValue };
+  const commonSelectionPaneProps = { sheetGridRef, handleChangeActiveInputValue };
 
   return (
     <AutoSizer>
       {({ height, width }) => (
         <VariableSizeGrid
+          ref={sheetGridRef}
           freezeRowCount={tableFreezeRowCount}
           freezeColumnCount={tableFreezeColumnCount}
           columnCount={columnCount}
@@ -151,7 +155,7 @@ let SheetWindow = ({
 
 SheetWindow = connect(mapStateToProps)(SheetWindow);
 
-const Sheet = ({ eventListenerRef, sheetContainerRef }) => {
+const Sheet = ({ eventListenerRef, sheetContainerRef, sheetGridRef }) => {
   const handleKeyDown = (event) => {
     const { key, shiftKey, ctrlKey } = event;
     const { current: EventListenerInstance } = eventListenerRef;
@@ -181,7 +185,11 @@ const Sheet = ({ eventListenerRef, sheetContainerRef }) => {
   
   return (
     <div ref={sheetContainerRef} className="sheet" tabIndex="0" onKeyDown={handleKeyDown}>
-      <SheetWindow sheetContainerRef={sheetContainerRef} eventListenerRef={eventListenerRef}/>
+      <SheetWindow 
+        sheetContainerRef={sheetContainerRef} 
+        eventListenerRef={eventListenerRef}
+        sheetGridRef={sheetGridRef}
+      />
       
       <WindowListener eventListenerRef={eventListenerRef}/>
     </div>
