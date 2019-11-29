@@ -1,6 +1,8 @@
-import React from "react";
+import React, { Fragment } from "react";
 
 import CommonActivityPane from "../CommonActivityPane";
+
+import { ColumnHeaderSelection } from "../HeaderSelection";
 
 import {
   STYLE_SELECTION_BORDER_COLOR,
@@ -82,18 +84,20 @@ const computeSelectionAreaStyle = (sheetCelloffsets, selectionArea, freezeColumn
   return customSelectionStyle;
 };
 
-
 const TopRightActivityPane = ({ handleChangeActiveInputValue }) => {
   const isActiveCellInCorrectPane = (x, y, sheetFreezeColumnCount, sheetFreezeRowCount) => (x > sheetFreezeColumnCount && y <= sheetFreezeRowCount);
   const isRelevantArea = (x1, y1, x2, y2, sheetFreezeColumnCount, sheetFreezeRowCount) => ((x1 > sheetFreezeColumnCount || x2 > sheetFreezeColumnCount) && (y1 <= sheetFreezeRowCount || y2 <= sheetFreezeRowCount));
 
   return (
-    <CommonActivityPane
-      isActiveCellInCorrectPane={isActiveCellInCorrectPane}
-      isRelevantArea={isRelevantArea}
-      computeSelectionAreaStyle={computeSelectionAreaStyle}
-      handleChangeActiveInputValue={handleChangeActiveInputValue}
-    />
+    <Fragment>
+      <CommonActivityPane
+        isActiveCellInCorrectPane={isActiveCellInCorrectPane}
+        isRelevantArea={isRelevantArea}
+        computeSelectionAreaStyle={computeSelectionAreaStyle}
+        handleChangeActiveInputValue={handleChangeActiveInputValue}
+      />
+      <ColumnHeaderSelection/>
+    </Fragment>
   );
 };
 

@@ -1,6 +1,8 @@
-import React from "react";
+import React, { Fragment } from "react";
 
 import CommonActivityPane from "../CommonActivityPane";
+
+import { RowHeaderSelection } from "../HeaderSelection";
 
 import {
   STYLE_SELECTION_BORDER_COLOR,
@@ -98,13 +100,16 @@ const BottomLeftActivityPane = ({
   const isRelevantArea = (x1, y1, x2, y2, sheetFreezeColumnCount, sheetFreezeRowCount) => ((x1 <= sheetFreezeColumnCount || x2 <= sheetFreezeColumnCount) && (y1 > sheetFreezeRowCount || y2 > sheetFreezeRowCount));
 
   return (
-    <CommonActivityPane
-      isActiveCellInCorrectPane={isActiveCellInCorrectPane}
-      isRelevantArea={isRelevantArea}
-      computeActiveCellStyle={computeActiveCellStyle}
-      computeSelectionAreaStyle={computeSelectionAreaStyle}
-      handleChangeActiveInputValue={handleChangeActiveInputValue}
-    />
+    <Fragment>
+      <CommonActivityPane
+        isActiveCellInCorrectPane={isActiveCellInCorrectPane}
+        isRelevantArea={isRelevantArea}
+        computeActiveCellStyle={computeActiveCellStyle}
+        computeSelectionAreaStyle={computeSelectionAreaStyle}
+        handleChangeActiveInputValue={handleChangeActiveInputValue}
+      />
+      <RowHeaderSelection/>
+    </Fragment>
   );
 };
 
