@@ -91,8 +91,8 @@ let Template = ({
 
             sheetsColumnWidths[name] = columnWidths;
             sheetsRowHeights[name] = rowHeights;
-            sheetsFreezeRowCount[name] = freezeRowCount;
-            sheetsFreezeColumnCount[name] = freezeColumnCount;
+            sheetsFreezeRowCount[name] = 4;
+            sheetsFreezeColumnCount[name] = 3;
 
             sheetsCellOffsets[name] = sheetCellOffsets;
           });
