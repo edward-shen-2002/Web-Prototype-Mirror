@@ -33,3 +33,11 @@ export const DEFAULT_EXCEL_ACTIVE_CELL_POSITION = {
   x: DEFAULT_EXCEL_CELL_ORIGIN_COLUMN,
   y: DEFAULT_EXCEL_CELL_ORIGIN_ROW
 };
+
+export const DEFAULT_EXCEL_SCROLL_DATA = {
+  horizontalScrollDirection: "forward",
+  scrollLeft: 0,
+  scrollTop: 0,
+  scrollUpdateWasRequested: false,
+  verticalScrollDirection: "forward"
+};

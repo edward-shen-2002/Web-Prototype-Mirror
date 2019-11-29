@@ -9,6 +9,7 @@ import activeCellInputAutoFocus from "./activeCellInputAutoFocus";
 
 import stagnantSelectionAreas from "./stagnantSelectionAreas";
 import sheetNames from "./sheetNames";
+import scrollData from "./scrollData";
 
 import isSelectionMode from "./isSelectionMode";
 import isEditMode from "./isEditMode";
@@ -32,6 +33,7 @@ const excelReducer = combineReducers({
   
   stagnantSelectionAreas,
   sheetNames,
+  scrollData,
 
   isSelectionMode, 
   isEditMode,

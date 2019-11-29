@@ -2,10 +2,10 @@ import { createReducer } from "store/tools/setup";
 
 const defaultEditMode = false;
 
-const setEditModeOn = () => true;
+const SET_EDIT_MODE_ON = () => true;
 
-const setEditModeOff = () => false;
+const SET_EDIT_MODE_OFF = () => false;
 
-const isEditMode = createReducer(defaultEditMode, { SET_EDIT_MODE_ON: setEditModeOn, SET_EDIT_MODE_OFF: setEditModeOff });
+const isEditMode = createReducer(defaultEditMode, { SET_EDIT_MODE_ON, SET_EDIT_MODE_OFF });
 
 export default isEditMode;

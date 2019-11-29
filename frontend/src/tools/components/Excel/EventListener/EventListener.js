@@ -10,6 +10,7 @@ import { updateActiveCellSelectionAreaIndex, resetActiveCellSelectionAreaIndex }
 
 import { setSelectionModeOn, setSelectionModeOff } from "actions/ui/excel/isSelectionMode";
 import { setEditModeOn, setEditModeOff } from "actions/ui/excel/isEditMode";
+import { updateScrollData } from "actions/ui/excel/scrollData";
 
 import { updateStagnantSelectionAreas, resetStagnantSelectionAreas } from "actions/ui/excel/stagnantSelectionAreas";
 
@@ -29,6 +30,8 @@ const mapStateToProps = ({
       activeSheetName,
 
       stagnantSelectionAreas,
+
+      scrollData,
       
       isSelectionMode, 
       isEditMode,
@@ -49,6 +52,8 @@ const mapStateToProps = ({
   activeSheetName,
 
   stagnantSelectionAreas,
+
+  scrollData,
   
   isSelectionMode, 
   isEditMode,
@@ -78,6 +83,8 @@ const mapDispatchToProps = (dispatch) => ({
   handleSetEditModeOn: () => dispatch(setEditModeOn()),
   handleSetEditModeOff: () => dispatch(setEditModeOff()),
 
+  handleUpdateScrollData: (scrollData) => dispatch(updateScrollData(scrollData)),
+
   handleChangeSheetCellData: (sheetName, sheetsCellData) => dispatch(updateSheetCellData(sheetName, sheetsCellData)),
 
   handleUpdateActiveCellInputValue: (value) => dispatch(updateActiveCellInputValue(value)),
@@ -105,6 +112,8 @@ let EventListener = ({
 
   isSelectionMode,
   isEditMode,
+  
+  scrollData,
 
   stagnantSelectionAreas,
 
@@ -124,6 +133,8 @@ let EventListener = ({
 
   handleSetEditModeOn,
   handleSetEditModeOff,
+
+  handleUpdateScrollData,
 
   handleChangeSheetCellData,
 
@@ -150,6 +161,8 @@ let EventListener = ({
     activeCellInputAutoFocus={activeCellInputAutoFocus}
 
     stagnantSelectionAreas={stagnantSelectionAreas}
+    
+    scrollData={scrollData}
 
     isSelectionMode={isSelectionMode}
     isEditMode={isEditMode}
@@ -172,6 +185,8 @@ let EventListener = ({
     handleSetEditModeOff={handleSetEditModeOff}
 
     handleChangeSheetCellData={handleChangeSheetCellData}
+
+    handleUpdateScrollData={handleUpdateScrollData}
 
     handleUpdateActiveCellInputValue={handleUpdateActiveCellInputValue}
     handleResetActiveCellInputValue={handleResetActiveCellInputValue}
@@ -1066,6 +1081,7 @@ class EventRedux extends PureComponent {
       sheetGridRef,
       activeCellInputValue,
       activeCellPosition,
+      scrollData,
       sheetCellData, 
       handleUpdateActiveCellPosition, 
       handleUpdateActiveCellInputValue 
@@ -1094,7 +1110,9 @@ class EventRedux extends PureComponent {
   }
 
   scroll(scrollData) {
+    const { handleUpdateScrollData } = this.props;
 
+    handleUpdateScrollData(scrollData);
   }
 
   setInputAutoFocusOn() {
