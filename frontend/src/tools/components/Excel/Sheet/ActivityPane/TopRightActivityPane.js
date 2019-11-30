@@ -1,8 +1,8 @@
 import React, { Fragment } from "react";
 
-import CommonActivityPane from "../CommonActivityPane";
+import CommonActivityPane from "./CommonActivityPane";
 
-import { ColumnHeaderSelection } from "../HeaderSelection";
+import { ColumnHeaderSelection } from "./HeaderSelection";
 
 import {
   STYLE_SELECTION_BORDER_COLOR,

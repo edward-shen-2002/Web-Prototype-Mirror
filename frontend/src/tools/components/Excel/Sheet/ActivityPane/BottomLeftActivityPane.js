@@ -1,8 +1,8 @@
 import React, { Fragment } from "react";
 
-import CommonActivityPane from "../CommonActivityPane";
+import CommonActivityPane from "./CommonActivityPane";
 
-import { HeaderSelection } from "../HeaderSelection";
+import { RowHeaderSelection } from "./HeaderSelection";
 
 import {
   STYLE_SELECTION_BORDER_COLOR,
@@ -25,19 +25,19 @@ const computeSelectionAreaStyle = (sheetCelloffsets, selectionArea, freezeColumn
     borderLeftWidth: STYLE_SELECTION_BORDER_WIDTH,
     borderLeftColor: STYLE_SELECTION_BORDER_COLOR,
     borderLeftStyle: borderStyle,
-    borderTopWidth: STYLE_SELECTION_BORDER_WIDTH,
-    borderTopColor: STYLE_SELECTION_BORDER_COLOR,
-    borderTopStyle: borderStyle
+    borderBottomWidth: STYLE_SELECTION_BORDER_WIDTH,
+    borderBottomColor: STYLE_SELECTION_BORDER_COLOR,
+    borderBottomStyle: borderStyle
   };
 
   const { top: topStart, left: leftStart, width: widthStart, height: heightStart } = sheetCelloffsets[y1][x1];
   const { top: topEnd, left: leftEnd, width: widthEnd, height: heightEnd } = sheetCelloffsets[y2][x2];
 
   const { top: topFrozenEnd, left: leftFrozenEnd, width: widthFrozenEnd, height: heightFrozenEnd } = sheetCelloffsets[freezeRowCount][freezeColumnCount];
-
+  
   const minLeft = x1 < x2 ? leftStart : leftEnd;
   left = minLeft;
-  
+
   if(x1 > freezeColumnCount || x2 > freezeColumnCount) {
     selectionAreaWidth = leftFrozenEnd + widthFrozenEnd - minLeft;
   } else {
@@ -49,54 +49,68 @@ const computeSelectionAreaStyle = (sheetCelloffsets, selectionArea, freezeColumn
 
     customSelectionStyle.borderRightWidth = STYLE_SELECTION_BORDER_WIDTH;
     customSelectionStyle.borderRightColor = STYLE_SELECTION_BORDER_COLOR;
+    customSelectionStyle.borderRightColor = STYLE_SELECTION_BORDER_COLOR;
     customSelectionStyle.borderRightStyle = borderStyle;
   }
 
-  const minTop = y1 < y2 ? topStart : topEnd;
-  top = minTop;
+  if(freezeRowCount && (y1 <= freezeRowCount || y2 <= freezeRowCount)) {
+    top = 0;
 
-  if(y1 > freezeRowCount || y2 > freezeRowCount) {
     if(y1 < y2) {
-      selectionAreaHeight = topFrozenEnd + heightFrozenEnd - minTop;
+      selectionAreaHeight = topEnd + heightEnd - topFrozenEnd - heightFrozenEnd;
     } else {
-      selectionAreaHeight = topFrozenEnd + heightFrozenEnd - minTop;
+      selectionAreaHeight = topStart + heightStart - topFrozenEnd - heightFrozenEnd;
     }
   } else {
     if(y1 < y2) {
-      selectionAreaHeight = topEnd + heightEnd - minTop;
+      top = topStart - topFrozenEnd - heightFrozenEnd;
+      selectionAreaHeight = topEnd + heightEnd - topStart;
     } else {
-      selectionAreaHeight = topStart + heightStart - minTop;
+      top = topEnd - topFrozenEnd - heightFrozenEnd;
+      selectionAreaHeight = topStart + heightStart - topEnd;
     }
 
-    customSelectionStyle.borderBottomWidth = STYLE_SELECTION_BORDER_WIDTH;
-    customSelectionStyle.borderBottomColor = STYLE_SELECTION_BORDER_COLOR;
-    customSelectionStyle.borderBottomStyle = borderStyle;
+    customSelectionStyle.borderTopWidth = STYLE_SELECTION_BORDER_WIDTH;
+    customSelectionStyle.borderTopColor = STYLE_SELECTION_BORDER_COLOR;
+    customSelectionStyle.borderTopStyle = borderStyle;
   }
 
   customSelectionStyle.left = left;
   customSelectionStyle.top = top;
   customSelectionStyle.width = selectionAreaWidth;
-  customSelectionStyle.height = selectionAreaHeight; 
+  customSelectionStyle.height = selectionAreaHeight;
   customSelectionStyle.display = null;
 
   return customSelectionStyle;
 };
 
-const TopLeftActivityPane = ({ handleChangeActiveInputValue }) => {
-  const isActiveCellInCorrectPane = (x, y, sheetFreezeColumnCount, sheetFreezeRowCount) => (x <= sheetFreezeColumnCount && y <= sheetFreezeRowCount);
-  const isRelevantArea = (x1, y1, x2, y2, sheetFreezeColumnCount, sheetFreezeRowCount) => ((x1 <= sheetFreezeColumnCount || x2 <= sheetFreezeColumnCount) && (y1 <= sheetFreezeRowCount || y2 <= sheetFreezeRowCount));
+const computeActiveCellStyle = (x, y, sheetCellOffsets, sheetFreezeColumnCount, sheetFreezeRowCount) => {
+  let activeCellStyle = { ...sheetCellOffsets[y][x] };
+  const { top: topFreeze, height: heightFreeze } = sheetCellOffsets[sheetFreezeRowCount][sheetFreezeColumnCount];
+
+  activeCellStyle.top = activeCellStyle.top - topFreeze - heightFreeze;
+
+  return activeCellStyle;
+};
+
+const BottomLeftActivityPane = ({ 
+  handleChangeActiveInputValue 
+}) => {
+  const isActiveCellInCorrectPane = (x, y, sheetFreezeColumnCount, sheetFreezeRowCount) => (x <= sheetFreezeColumnCount && y > sheetFreezeRowCount);
+  const isRelevantArea = (x1, y1, x2, y2, sheetFreezeColumnCount, sheetFreezeRowCount) => ((x1 <= sheetFreezeColumnCount || x2 <= sheetFreezeColumnCount) && (y1 > sheetFreezeRowCount || y2 > sheetFreezeRowCount));
 
   return (
     <Fragment>
       <CommonActivityPane
         isActiveCellInCorrectPane={isActiveCellInCorrectPane}
         isRelevantArea={isRelevantArea}
+        computeActiveCellStyle={computeActiveCellStyle}
         computeSelectionAreaStyle={computeSelectionAreaStyle}
         handleChangeActiveInputValue={handleChangeActiveInputValue}
       />
-      <HeaderSelection/>
+      <RowHeaderSelection/>
     </Fragment>
   );
 };
 
-export default TopLeftActivityPane;
+export default BottomLeftActivityPane;

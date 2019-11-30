@@ -217,9 +217,30 @@ const Sheet = ({ eventListenerRef, sheetContainerRef, sheetGridRef }) => {
       EventListenerInstance.startEditMode();
     }
   };
-  
+
+  // https://stackoverflow.com/questions/3169786/clear-text-selection-with-javascript
+  const handleDragStart = () => {
+    var selection = window.getSelection ? window.getSelection() : document.selection;
+
+    if (selection) {
+      if (selection.removeAllRanges) {
+        selection.removeAllRanges();
+      } else if (sel.empty) {
+        selection.empty();
+      }
+      
+      event.preventDefault();
+    }
+  };
+
   return (
-    <div ref={sheetContainerRef} className="sheet" tabIndex="0" onKeyDown={handleKeyDown}>
+    <div 
+      ref={sheetContainerRef} 
+      className="sheet" 
+      tabIndex="0" 
+      onKeyDown={handleKeyDown}
+      onDragStart={handleDragStart}
+    >
       <SheetWindow 
         sheetContainerRef={sheetContainerRef} 
         eventListenerRef={eventListenerRef}
