@@ -15,3 +15,51 @@ If we need the xlsx instance, we use the state to create the instance or output 
 ## Issues with Solution
 
 With the instance being represented as states, we have a major responsibility on doing the validation and other excel responsibilities ourselves.
+
+## Implementation
+
+Sample structure:
+
+For redo/undo action:
+
+```js
+{
+  CELL_UNDO: {
+    row_x: column_y
+    ...
+  }
+}
+```
+
+Cell history:
+
+```js
+{
+  row_x: {
+    column_y: {
+      history: [ ... ],
+      relativeHistoryIndex: int_z
+    }
+  }
+}
+```
+
+Action history:
+
+```js
+[
+  CELL_VALUE_UPDATE: {
+    row_x: {
+      column_y,
+      ...
+    }
+  },
+  ...
+]
+```
+
+Action index:
+
+```js
+index: int_z
+```

@@ -21,28 +21,3 @@ Two spread operators are being called twice, when it is only required once... Fi
 Event Listener is listening to too many state updates.
 
 It's possible that we could categorize and shrink the amount of functions.
-
-
-## Excel
-
-### Cell Height and Width
-
-For many functions, we use the _getItemStyle(y, x) method to get the top, left, height, and width of the cell.
-
-We already have height and width provided for us in the redux store.
-
-We can use a simple sum function to get top and left.
-
-This way, we don't rely on the method, which may be costly to perform (unsure).
-
-We also do not have to rely on the sheet ref as a result.
-
-### App bar
-
-Since we're using popper, which can be moved anywhere, its possible that we can have one popper instead of one every menu
-
-### Class (Helpers)
-
-These classes produce overhead and will lag rendering
-
-We do not need these (??? except for active selection?)
