@@ -796,14 +796,16 @@ class EventRedux extends PureComponent {
     } else {
       const { x, y } = activeCellPosition;
 
-      this.changeValue(y, x, { value: "" });
+      const cellData = sheetCellData[y][x];
+
+      this.changeValue(y, x, { ...cellData, value: "" });
     }
   }
 
   changeActiveInputValue(value) {
     const { handleUpdateActiveCellInputValue } = this.props;
 
-    handleUpdateActiveCellInputValue(value ? value: "");
+    handleUpdateActiveCellInputValue(value ? value : "");
   }
 
   changeValue(row, column, newData) {
@@ -1116,7 +1118,7 @@ class EventRedux extends PureComponent {
 
     const { value } = cellData;
 
-    if(activeCellInputValue !== value) handleUpdateActiveCellInputValue(value ? value: "");
+    if(activeCellInputValue !== value) handleUpdateActiveCellInputValue(value ? value : "");
 
     handleUpdateActiveCellPosition({ x: newX, y: newY });
 
