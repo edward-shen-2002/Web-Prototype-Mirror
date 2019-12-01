@@ -237,13 +237,15 @@ class EventRedux extends PureComponent {
       if(stagnantSelectionAreasLength) {
         let focusedStagnantSelectionArea = { ...stagnantSelectionAreas[activeCellSelectionAreaIndex] };
 
-        const { y1, y2 } = focusedStagnantSelectionArea;
+        const { x1, y1, x2, y2 } = focusedStagnantSelectionArea;
 
         if(y1 > y || y2 > y) {
           if(y1 > y) {
             focusedStagnantSelectionArea.y1 -= 1;
+            this._scrollTo(focusedStagnantSelectionArea.y1, x1)
           } else {
             focusedStagnantSelectionArea.y2 -= 1;
+            this._scrollTo(focusedStagnantSelectionArea.y2, x2);
           }
           
           if(isPositionEqualArea(activeCellPosition, focusedStagnantSelectionArea)) {
@@ -256,8 +258,10 @@ class EventRedux extends PureComponent {
         } else {
           if(y1 < y) {
             focusedStagnantSelectionArea.y1 -= 1;
+            this._scrollTo(focusedStagnantSelectionArea.y1, x1);
           } else {
             focusedStagnantSelectionArea.y2 -= 1;
+            this._scrollTo(focusedStagnantSelectionArea.y2, x2);
           }
 
           if(focusedStagnantSelectionArea.y1 > 0 && focusedStagnantSelectionArea.y2 > 0) {
@@ -268,6 +272,7 @@ class EventRedux extends PureComponent {
       } else {
         const y2 = y - 1;
 
+        this._scrollTo(y2, x);
         if(y2 > 0) {
           handleUpdateStagnantSelectionAreas([ { x1: x, x2: x, y1: y, y2 } ]);
           if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
@@ -307,13 +312,15 @@ class EventRedux extends PureComponent {
       if(stagnantSelectionAreasLength) {
         let focusedStagnantSelectionArea = { ...stagnantSelectionAreas[activeCellSelectionAreaIndex] };
 
-        const { y1, y2 } = focusedStagnantSelectionArea;
+        const { x1, y1, x2, y2 } = focusedStagnantSelectionArea;
 
         if(y1 < y || y2 < y) {
           if(y1 < y) {
             focusedStagnantSelectionArea.y1 += 1;
+            this._scrollTo(focusedStagnantSelectionArea.y2, x1)
           } else {
             focusedStagnantSelectionArea.y2 += 1;
+            this._scrollTo(focusedStagnantSelectionArea.y2, x2);
           }
 
           if(isPositionEqualArea(activeCellPosition, focusedStagnantSelectionArea)) {
@@ -326,8 +333,10 @@ class EventRedux extends PureComponent {
         } else {
           if(y1 > y) {
             focusedStagnantSelectionArea.y1 += 1;
+            this._scrollTo(focusedStagnantSelectionArea.y1, x1)
           } else {
             focusedStagnantSelectionArea.y2 += 1;
+            this._scrollTo(focusedStagnantSelectionArea.y2, x2);
           }
 
           if(focusedStagnantSelectionArea.y1 < sheetRowCount && focusedStagnantSelectionArea.y2 < sheetRowCount) {
@@ -339,12 +348,13 @@ class EventRedux extends PureComponent {
       } else {
         const y2 = y + 1;
 
+        this._scrollTo(y2, x);
         if(y2 < sheetRowCount) handleUpdateStagnantSelectionAreas([ { x1: x, x2: x, y1: y, y2 } ]);
         if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
       }
     } else {
       y++;
-  
+      
       if(y < sheetRowCount) this.updateActiveCellPosition(y, x);
       if(stagnantSelectionAreasLength) handleResetStagnantSelectionAreas();
       if(activeCellSelectionAreaIndex >= 0) handleResetActiveCellSelectionAreaIndex();
@@ -375,13 +385,15 @@ class EventRedux extends PureComponent {
       if(stagnantSelectionAreasLength) {
         let focusedStagnantSelectionArea = { ...stagnantSelectionAreas[activeCellSelectionAreaIndex] };
 
-        const { x1, x2 } = focusedStagnantSelectionArea;
+        const { x1, y1, x2, y2 } = focusedStagnantSelectionArea;
 
         if(x1 > x || x2 > x) {
           if(x1 > x) {
             focusedStagnantSelectionArea.x1 -= 1;
+            this._scrollTo(y1, focusedStagnantSelectionArea.x1)
           } else {
             focusedStagnantSelectionArea.x2 -= 1;
+            this._scrollTo(y2, focusedStagnantSelectionArea.x2);
           }
           
           if(isPositionEqualArea(activeCellPosition, focusedStagnantSelectionArea)) {
@@ -393,9 +405,11 @@ class EventRedux extends PureComponent {
           }
         } else {
           if(x1 < x) {
-            focusedStagnantSelectionArea.x1 -= 1;
+            focusedStagnantSelectionArea.x1 -= 1 ;
+            this._scrollTo(y1, focusedStagnantSelectionArea.x1) 
           } else {
             focusedStagnantSelectionArea.x2 -= 1;
+            this._scrollTo(y2, focusedStagnantSelectionArea.x2);
           }
 
           if(focusedStagnantSelectionArea.x1 > 0 && focusedStagnantSelectionArea.x2 > 0) {
@@ -406,6 +420,7 @@ class EventRedux extends PureComponent {
       } else {
         const x2 = x - 1;
 
+        this._scrollTo(y, x2);
         if(x2 > 0) handleUpdateStagnantSelectionAreas([ { x1: x, x2, y1: y, y2: y } ]);
         if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
       }
@@ -443,15 +458,17 @@ class EventRedux extends PureComponent {
       if(stagnantSelectionAreasLength) {
         let focusedStagnantSelectionArea = { ...stagnantSelectionAreas[activeCellSelectionAreaIndex] };
 
-        const { x1, x2 } = focusedStagnantSelectionArea;
+        const { x1, y1, x2, y2 } = focusedStagnantSelectionArea;
 
         if(x1 < x || x2 < x) {
           if(x1 < x) {
-            focusedStagnantSelectionArea.x1 += 1;
+            focusedStagnantSelectionArea.x1 += 1 
+            this._scrollTo(y1, focusedStagnantSelectionArea.x1);
           } else {
             focusedStagnantSelectionArea.x2 += 1;
+            this._scrollTo(y2, focusedStagnantSelectionArea.x2);
           }
-
+          
           if(isPositionEqualArea(activeCellPosition, focusedStagnantSelectionArea)) {
             handleResetStagnantSelectionAreas();
             handleResetActiveCellSelectionAreaIndex();
@@ -462,8 +479,10 @@ class EventRedux extends PureComponent {
         } else {
           if(x1 > x) {
             focusedStagnantSelectionArea.x1 += 1;
+            this._scrollTo(y1, focusedStagnantSelectionArea.x1);
           } else {
             focusedStagnantSelectionArea.x2 += 1;
+            this._scrollTo(y2, focusedStagnantSelectionArea.x2);
           }
 
           if(focusedStagnantSelectionArea.x1 < sheetColumnCount && focusedStagnantSelectionArea.x2 < sheetColumnCount) {
@@ -471,10 +490,10 @@ class EventRedux extends PureComponent {
             if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
           }
         }
-      
       } else {
         const x2 = x + 1;
 
+        this._scrollTo(y, x2);
         if(x2 < sheetColumnCount) handleUpdateStagnantSelectionAreas([ { x1: x, x2, y1: y, y2: y } ]);
         if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
       }
@@ -1086,23 +1105,13 @@ class EventRedux extends PureComponent {
 
   updateActiveCellPosition(newY, newX) {
     const { 
-      sheetGridRef,
-
       activeCellInputValue,
-      activeCellPosition,
 
-      sheetFreezeColumnCount,
-      sheetFreezeRowCount,
-      sheetCellOffsets,
       sheetCellData, 
-      
-      scrollData,
 
       handleUpdateActiveCellPosition, 
       handleUpdateActiveCellInputValue 
     } = this.props;
-    const { x, y } = activeCellPosition;
-
     const cellData = sheetCellData[newY][newX];
 
     const { value } = cellData;
@@ -1110,6 +1119,18 @@ class EventRedux extends PureComponent {
     if(activeCellInputValue !== value) handleUpdateActiveCellInputValue(value ? value: "");
 
     handleUpdateActiveCellPosition({ x: newX, y: newY });
+
+    this._scrollTo(newY, newX);
+  }
+
+  _scrollTo(newY, newX) {
+    const {
+      sheetGridRef,
+      sheetFreezeColumnCount,
+      sheetFreezeRowCount,
+      sheetCellOffsets,
+      scrollData,
+    } = this.props;
 
     let { scrollTop, scrollLeft } = scrollData;
 
