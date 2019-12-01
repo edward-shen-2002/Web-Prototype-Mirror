@@ -2,6 +2,79 @@ import XlsxPopulate from "xlsx-populate";
 
 import { sheetNameRegex } from "./regex";
 
+let size = -1;
+
+// This utility copied from "dom-helpers" package. -- from react-window
+export function getScrollbarSize(recalculate = false) {
+  if (size === -1 || recalculate) {
+    const div = document.createElement('div');
+    const style = div.style;
+    style.width = '50px';
+    style.height = '50px';
+    style.overflow = 'scroll';
+
+    ((document.body)).appendChild(div);
+
+    size = div.offsetWidth - div.clientWidth;
+
+    ((document.body)).removeChild(div);
+  }
+
+  return size;
+}
+
+// Copied from react-window
+export const getEstimatedTotalHeight = (
+  { rowCount },
+  { rowMetadataMap, estimatedRowHeight, lastMeasuredRowIndex }
+) => {
+  let totalSizeOfMeasuredRows = 0;
+
+  // Edge case check for when the number of items decreases while a scroll is in progress.
+  // https://github.com/bvaughn/react-window/pull/138
+  if (lastMeasuredRowIndex >= rowCount) {
+    lastMeasuredRowIndex = rowCount - 1;
+  }
+
+  if (lastMeasuredRowIndex >= 0) {
+    const itemMetadata = rowMetadataMap[lastMeasuredRowIndex];
+    totalSizeOfMeasuredRows = itemMetadata.offset + itemMetadata.size;
+  }
+
+  const numUnmeasuredItems = rowCount - lastMeasuredRowIndex - 1;
+  const totalSizeOfUnmeasuredItems = numUnmeasuredItems * estimatedRowHeight;
+
+  return totalSizeOfMeasuredRows + totalSizeOfUnmeasuredItems;
+};
+
+// Copied from react-window
+export const getEstimatedTotalWidth = (
+  { columnCount },
+  {
+    columnMetadataMap,
+    estimatedColumnWidth,
+    lastMeasuredColumnIndex,
+  }
+) => {
+  let totalSizeOfMeasuredRows = 0;
+
+  // Edge case check for when the number of items decreases while a scroll is in progress.
+  // https://github.com/bvaughn/react-window/pull/138
+  if (lastMeasuredColumnIndex >= columnCount) {
+    lastMeasuredColumnIndex = columnCount - 1;
+  }
+
+  if (lastMeasuredColumnIndex >= 0) {
+    const itemMetadata = columnMetadataMap[lastMeasuredColumnIndex];
+    totalSizeOfMeasuredRows = itemMetadata.offset + itemMetadata.size;
+  }
+
+  const numUnmeasuredItems = columnCount - lastMeasuredColumnIndex - 1;
+  const totalSizeOfUnmeasuredItems = numUnmeasuredItems * estimatedColumnWidth;
+
+  return totalSizeOfMeasuredRows + totalSizeOfUnmeasuredItems;
+};
+
 export const generateNewSheetName = (sheetNames) => {
   let uniqueSheetNumber = sheetNames.length + 1;
 

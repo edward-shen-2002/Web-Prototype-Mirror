@@ -16,7 +16,7 @@ import { updateStagnantSelectionAreas, resetStagnantSelectionAreas } from "actio
 
 import { updateSheetCellData } from "actions/ui/excel/sheetsCellData";
 
-import { isPositionEqualArea } from "tools/excel";
+import { isPositionEqualArea, getScrollbarSize, getEstimatedTotalHeight, getEstimatedTotalWidth } from "tools/excel";
 
 const mapStateToProps = ({ 
   ui: { 
@@ -39,7 +39,9 @@ const mapStateToProps = ({
       sheetsColumnCount,
       sheetsRowCount,
       sheetsCellData,
-      sheetsCellOffsets
+      sheetsCellOffsets,
+      sheetsFreezeColumnCount,
+      sheetsFreezeRowCount
     } 
   } 
 }) => ({ 
@@ -62,7 +64,9 @@ const mapStateToProps = ({
   sheetCellData: sheetsCellData[activeSheetName],
   sheetRowCount: sheetsRowCount[activeSheetName],
   sheetColumnCount: sheetsColumnCount[activeSheetName],
-  sheetCellOffsets: sheetsCellOffsets[activeSheetName]
+  sheetCellOffsets: sheetsCellOffsets[activeSheetName],
+  sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName],
+  sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName]
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -109,6 +113,8 @@ let EventListener = ({
   sheetColumnCount,
   sheetCellData,
   sheetCellOffsets,
+  sheetFreezeColumnCount,
+  sheetFreezeRowCount,
 
   isSelectionMode,
   isEditMode,
@@ -152,6 +158,8 @@ let EventListener = ({
     sheetColumnCount={sheetColumnCount}
     sheetCellData={sheetCellData}
     sheetCellOffsets={sheetCellOffsets}
+    sheetFreezeColumnCount={sheetFreezeColumnCount}
+    sheetFreezeRowCount={sheetFreezeRowCount}
     
     activeCellInputValue={activeCellInputValue}
     activeSheetName={activeSheetName}
@@ -1079,10 +1087,17 @@ class EventRedux extends PureComponent {
   updateActiveCellPosition(newY, newX) {
     const { 
       sheetGridRef,
+
       activeCellInputValue,
       activeCellPosition,
-      scrollData,
+
+      sheetFreezeColumnCount,
+      sheetFreezeRowCount,
+      sheetCellOffsets,
       sheetCellData, 
+      
+      scrollData,
+
       handleUpdateActiveCellPosition, 
       handleUpdateActiveCellInputValue 
     } = this.props;
@@ -1096,17 +1111,47 @@ class EventRedux extends PureComponent {
 
     handleUpdateActiveCellPosition({ x: newX, y: newY });
 
-    /**
-     * Things to consider ...
-     * Freeze columns/rows - hard because 
-     * 
-     * Header cells - easy because its at the borders - we know the position
-     */
-    sheetGridRef.current.scrollToItem({
-      align: "smart",
-      columnIndex: x === newX ? undefined: newX,
-      rowIndex: y === newY ? undefined: newY
-    });
+    let { scrollTop, scrollLeft } = scrollData;
+
+    const { top: topFreezeStart, left: leftFreezeStart, height: heightFreezeStart, width: widthFreezeStart } = sheetCellOffsets[sheetFreezeRowCount][sheetFreezeColumnCount];
+
+    const { top: topActiveStart, left: leftActiveStart, height: heightActiveStart, width: widthActiveStart } = sheetCellOffsets[newY][newX];
+
+    const freezeHeight = topFreezeStart + heightFreezeStart;
+    const freezeWidth = leftFreezeStart + widthFreezeStart;
+
+    const { current: { props, props: { height, width }, _instanceProps } } = sheetGridRef;
+
+    const scrollbarSize = getScrollbarSize();
+
+    let newScrollTop;
+    let newScrollLeft;
+
+    const estimatedTotalHeight = getEstimatedTotalHeight(props, _instanceProps);
+    const estimatedTotalWidth = getEstimatedTotalWidth(props, _instanceProps);
+
+    // The scrollbar size should be considered when scrolling an item into view,
+    // to ensure it's fully visible.
+    // But we only need to account for its size when it's actually visible.
+    const horizontalScrollbarSize = estimatedTotalWidth > width ? scrollbarSize : 0;
+    const verticalScrollbarSize = estimatedTotalHeight > height ? scrollbarSize : 0;
+
+    // Active cell is under freeze
+    if(newY > sheetFreezeRowCount && topActiveStart < scrollTop + freezeHeight) {
+      newScrollTop = topActiveStart - freezeHeight;
+    // Beyond bottom side
+    } else if(topActiveStart + heightActiveStart > scrollTop + height - horizontalScrollbarSize){
+      newScrollTop = topActiveStart + heightActiveStart - height + horizontalScrollbarSize;
+    }
+    
+    if(newX > sheetFreezeColumnCount &&  leftActiveStart < scrollLeft + freezeWidth) {
+      newScrollLeft = leftActiveStart - freezeWidth;
+    // Beyond visible right side
+    } else if(leftActiveStart + widthActiveStart > scrollLeft + width - verticalScrollbarSize){
+      newScrollLeft = leftActiveStart + widthActiveStart - width + verticalScrollbarSize;
+    }
+
+    if((newScrollTop !== undefined && newScrollTop !== scrollTop) || (newScrollLeft !== undefined && newScrollLeft !== scrollLeft)) sheetGridRef.current.scrollTo({ scrollTop: newScrollTop, scrollLeft: newScrollLeft });
   }
 
   scroll(scrollData) {

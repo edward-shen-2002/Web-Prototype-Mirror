@@ -190,7 +190,11 @@ let SheetWindow = ({
 
 SheetWindow = connect(mapStateToProps)(SheetWindow);
 
-const Sheet = ({ eventListenerRef, sheetContainerRef, sheetGridRef }) => {
+const Sheet = ({ 
+  eventListenerRef, 
+  sheetContainerRef, 
+  sheetGridRef
+}) => {
   const handleKeyDown = (event) => {
     const { key, shiftKey, ctrlKey } = event;
     const { current: EventListenerInstance } = eventListenerRef;
