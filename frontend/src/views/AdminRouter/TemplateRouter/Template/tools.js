@@ -136,34 +136,36 @@ const extractCellStyle = (cellData) => {
 
 const extractCellData = (cellData) => {
   const cellValue = cellData.value();
+
   const cellFormula = cellData.formula();
   const cellStyles = extractCellStyle(cellData);
   // !! TODO May be internal - ie in another sheet
   // const cellHyperlinkData = cellData.hyperlink();
 
-  return {
-    value: cellValue ? cellValue : undefined,
-    styles: cellStyles,
-    formula: cellFormula
-  };
+  let extractedCellData = {};
+
+  if(cellValue) extractedCellData.value = cellValue;
+  if(cellFormula) extractedCellData.formula = cellFormula;
+  if(cellStyles) extractedCellData.styles = cellStyles;
+
+  return isObjectEmpty(extractedCellData) ? undefined : extractedCellData;
 };
 
 export const getSheetCellData = (sheet) => {
-  let sheetCellData = [];
+  let sheetCellData = {};
 
   for(let row = 0; row <= DEFAULT_EXCEL_SHEET_ROW_COUNT; row++) {
-    let rowData = [];
     for(let column = 0; column <= DEFAULT_EXCEL_SHEET_COLUMN_COUNT; column++) {
       if(row && column) {
         const cellData = extractCellData(sheet.row(row).cell(column));
 
-        rowData.push(cellData);
-      } else {
-        rowData.push(undefined);
-      }
-    }
+        if(cellData) {
+          if(!sheetCellData[row]) sheetCellData[row] = {};
 
-    sheetCellData.push(rowData);
+          sheetCellData[row][column] = cellData;
+        }
+      } 
+    }
   }
 
   return sheetCellData;

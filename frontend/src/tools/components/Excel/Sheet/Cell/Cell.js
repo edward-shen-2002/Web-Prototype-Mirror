@@ -62,8 +62,8 @@ const EditableCell = ({
     handleDoubleClickEditableCell();
   };
 
-  const { value } = cellData;
-  
+  const value = cellData ? cellData.value : undefined;
+
   return (
     <div 
       className="cell" 
@@ -99,7 +99,7 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
   let value;
 
   if(columnIndex > 0 && rowIndex > 0){
-    cellData = sheetCellData[rowIndex][columnIndex];
+    cellData = sheetCellData[rowIndex] && sheetCellData[rowIndex][columnIndex] ? sheetCellData[rowIndex][columnIndex] : undefined;
 
     Component = (
       <EditableCell 

@@ -118,15 +118,21 @@ export const getWorkbookInstance = async ({
 
     sheet.freezePanes(sheetFreezeColumnCount, sheetFreezeRowCount);
 
-    for(let row = 1; row < sheetRowCount; row++) {
-      for(let column = 1; column < sheetColumnCount; column++) {
-        const { value } = sheetCellData[row][column];
+    for(let row in sheetCellData) {
+      row = parseInt(row);
+      
+      let columns = Object.keys(sheetCellData[row]);
 
+      columns.forEach((column) => {
+        column = parseInt(column);
+
+        const { value } = sheetCellData[row][column];
+  
         if(value) {
           const sheetCell = sheet.row(row).cell(column);
           sheetCell.setValue(value);
         }
-      }
+      })
     }
 
     // Set row heights
@@ -150,8 +156,8 @@ export const getWorkbookInstance = async ({
   return Workbook;
 };
 
-// export const getCellType = (cellValue) => {
-//   if(!cell) {
-//     return undefined;
-//   } else if(cell.formula())
-// };
+export const getCellData = (sheetCellData, row, column) => (
+  sheetCellData[row] && sheetCellData[row][column]
+    ? sheetCellData[row][column]
+    : undefined
+);

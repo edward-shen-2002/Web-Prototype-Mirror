@@ -105,7 +105,7 @@ let Template = ({
 
           let activeCellPosition = { x: activeColumn, y: activeRow };
 
-          let activeCellInputValue = sheetsCellData[activeSheetName][activeRow][activeColumn].value;
+          let activeCellInputValue = sheetsCellData[activeSheetName] && sheetsCellData[activeSheetName][activeRow] ? sheetsCellData[activeSheetName][activeRow][activeColumn].value : "";
 
           handleLoadTemplate({
             activeCellPosition,

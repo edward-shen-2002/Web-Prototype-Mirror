@@ -16,7 +16,7 @@ import { updateStagnantSelectionAreas, resetStagnantSelectionAreas } from "actio
 
 import { updateSheetCellData } from "actions/ui/excel/sheetsCellData";
 
-import { isPositionEqualArea, getScrollbarSize, getEstimatedTotalHeight, getEstimatedTotalWidth } from "tools/excel";
+import { isPositionEqualArea, getScrollbarSize, getEstimatedTotalHeight, getEstimatedTotalWidth, getCellData } from "tools/excel";
 
 const mapStateToProps = ({ 
   ui: { 
@@ -773,32 +773,24 @@ class EventRedux extends PureComponent {
         }
       });
 
-      let newSheetCellData = [];
+      let newSheetCellData = { ...sheetCellData };
 
-      for(let row = 0; row < sheetRowCount; row++) {
-        let rowData = [];
-        for(let column = 0; column < sheetColumnCount; column++) {
-          const cellData = sheetCellData[row][column];
+      for(let row in selectionAreaCoveredCells) {
+        let columns = Object.keys(selectionAreaCoveredCells[row]);
 
-          const coveredRow = selectionAreaCoveredCells[row];
-
-          rowData.push(
-            (coveredRow && coveredRow[column]) 
-              ? { ...cellData, value: "" }
-              : cellData
-          );
-        }
-
-        newSheetCellData.push(rowData);
+        columns.forEach((column) => {
+          // ! Consider when everything is undefined -- do you remove it from sheet data?
+          if(newSheetCellData[row] && newSheetCellData[row][column]) {
+            newSheetCellData[row][column] = { ...newSheetCellData[row][column], value: undefined };
+          }
+        });
       }
 
       handleChangeSheetCellData(activeSheetName, newSheetCellData);
     } else {
       const { x, y } = activeCellPosition;
 
-      const cellData = sheetCellData[y][x];
-
-      this.changeValue(y, x, { ...cellData, value: "" });
+      if(sheetCellData[y] && sheetCellData[y][x]) this.changeValue(y, x, { ...sheetCellData[y][x], value: undefined });
     }
   }
 
@@ -814,20 +806,26 @@ class EventRedux extends PureComponent {
       sheetCellData, 
       handleChangeSheetCellData 
     } = this.props;
-
     
     const { value: newValue } = newData;
-    const { value: currentValue } = sheetCellData[row][column];
 
-    if(currentValue !== newValue) {
-      const newSheetCellData = [
-        ...sheetCellData.slice(0, row),
-        [ ...sheetCellData[row].slice(0, column), { ...sheetCellData[row][column], ...newData }, ...sheetCellData[row].slice(column + 1) ],
-        ...sheetCellData.slice(row + 1),
-      ];
-  
+    const currentCellData = getCellData(sheetCellData, row, column);
+
+    // ! Need a deep clone here!
+    let newSheetCellData = { ...sheetCellData };
+
+    // ! Need to consider other parameters other than value!!
+    // ! Only update if data changed!
+    if(currentCellData) {
+      if(currentCellData !== newValue) {
+        newSheetCellData[row][column] = { ...currentCellData, value: newValue };
+        handleChangeSheetCellData(activeSheetName, newSheetCellData);
+      }
+    } else {
+      if(!newSheetCellData[row]) newSheetCellData[row] = {};
+      newSheetCellData[row][column] = { value: newValue };
       handleChangeSheetCellData(activeSheetName, newSheetCellData);
-    } 
+    }
   }
 
   focusFormulaInput() {
@@ -936,9 +934,9 @@ class EventRedux extends PureComponent {
 
     const { x, y } = activeCellPosition;
 
-    const cellData = sheetCellData[y][x];
+    const cellData = sheetCellData[y] && sheetCellData[y][x] ? sheetCellData[y][x] : undefined;
 
-    const { value } = cellData;
+    const value = cellData ? cellData.value : undefined;
 
     if(value) handleUpdateActiveCellInputValue(value);
 
@@ -1114,9 +1112,9 @@ class EventRedux extends PureComponent {
       handleUpdateActiveCellPosition, 
       handleUpdateActiveCellInputValue 
     } = this.props;
-    const cellData = sheetCellData[newY][newX];
+    const cellData = sheetCellData[newY] && sheetCellData[newY][newX] ? sheetCellData[newY][newX] : undefined;
 
-    const { value } = cellData;
+    const value = cellData ? cellData.value : undefined;
 
     if(activeCellInputValue !== value) handleUpdateActiveCellInputValue(value ? value : "");
 

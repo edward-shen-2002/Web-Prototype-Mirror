@@ -6,12 +6,12 @@ const RESET_SHEETS_CELL_DATA = () => ({});
 
 const UPDATE_SHEET_CELL_DATA = (state, { sheetName, sheetCellData }) => ({
   ...state,
-  [sheetName]: [ ...sheetCellData ]
+  [sheetName]: { ...sheetCellData }
 });
 
 const RESET_SHEET_CELL_DATA = (state, { sheetName }) => ({
   ...state,
-  [sheetName]: []
+  [sheetName]: {}
 });
 
 const sheetsCellData = createReducer({}, { 
