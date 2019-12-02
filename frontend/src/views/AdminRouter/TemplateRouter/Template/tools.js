@@ -15,6 +15,7 @@ import {
   DEFAULT_EXCEL_SHEET_FREEZE_COLUMN_COUNT
 } from "constants/excel";
 
+import { isObjectEmpty } from "tools/misc";
 
 export const getHeaderCount = (sheet) => {
   const sheetUsedRange = sheet.usedRange();
@@ -77,23 +78,92 @@ export const getRowHeights = (sheet) => {
   return rowHeights;
 };
 
+const extractCellStyle = (cellData) => {
+  let cellStyles = (
+    cellData
+      ? cellData.style([
+          "bold",
+          "italic",
+          "underline",
+          "strikethrough",
+          "subscript",
+          "superscript",
+          "fontSize",
+          "fontFamily",
+          "fontGenericFamily",
+          "fontScheme",
+          "fontColor",
+          "horizontalAlignment",
+          "justifyLastLine",
+          "indent",
+          "verticalAlignment",
+          "wrapText",
+          "shrinkToFit",
+          "textDirection",
+          "textRotation",
+          "angleTextCounterclockwise",
+          "angleTextClockwise",
+          "rotateTextUp",
+          "rotateTextDown",
+          "verticalText",
+          "fill",
+          "border",
+          "borderColor",
+          "borderStyle",
+          "leftBorder", 
+          "rightBorder", 
+          "topBorder", 
+          "bottomBorder", 
+          "diagonalBorder",
+          "diagonalBorderDirection", 
+          "numberFormat"
+        ])
+      : {}
+  );
+
+  for(let styleName in cellStyles) {
+    const styleValue = cellStyles[styleName];
+
+    if(!styleValue) delete cellStyles[styleName];
+  }
+
+  if(cellStyles.numberFormat === "General") delete cellStyles["numberFormat"];
+
+  if(isObjectEmpty(cellStyles.border)) delete cellStyles["border"]; 
+
+  return isObjectEmpty(extractCellStyle) ? undefined : cellData;
+};
+
+const extractCellData = (cellData) => {
+  const cellValue = cellData.value();
+  const cellFormula = cellData.formula();
+  const cellStyles = extractCellStyle(cellData);
+  // !! TODO May be internal - ie in another sheet
+  // const cellHyperlinkData = cellData.hyperlink();
+
+  return {
+    value: cellValue ? cellValue : undefined,
+    styles: cellStyles,
+    formula: cellFormula
+  };
+};
+
 export const getSheetCellData = (sheet) => {
   let sheetCellData = [];
 
   for(let row = 0; row <= DEFAULT_EXCEL_SHEET_ROW_COUNT; row++) {
-    let rowValues = [];
+    let rowData = [];
     for(let column = 0; column <= DEFAULT_EXCEL_SHEET_COLUMN_COUNT; column++) {
-      // ! Check undefined
-
       if(row && column) {
-        const cellValue = sheet.row(row).cell(column).value();
-        rowValues.push({ value: cellValue ? cellValue: "" });
+        const cellData = extractCellData(sheet.row(row).cell(column));
+
+        rowData.push(cellData);
       } else {
-        rowValues.push({ value: "" });
+        rowData.push(undefined);
       }
     }
 
-    sheetCellData.push(rowValues);
+    sheetCellData.push(rowData);
   }
 
   return sheetCellData;

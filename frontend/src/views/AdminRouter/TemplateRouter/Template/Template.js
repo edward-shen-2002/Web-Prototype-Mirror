@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { showAppNavigation, hideAppNavigation } from "actions/ui/isAppNavigationOpen"; 
 
+import { EditorState } from "draft-js";
+
 import { adminTemplateRoleAxios } from "tools/rest";
 import { loadWorkbook, resetWorkbook } from "tools/redux";
 import Excel from "tools/components/Excel";

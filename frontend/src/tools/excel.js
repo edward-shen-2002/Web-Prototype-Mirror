@@ -149,3 +149,9 @@ export const getWorkbookInstance = async ({
 
   return Workbook;
 };
+
+// export const getCellType = (cellValue) => {
+//   if(!cell) {
+//     return undefined;
+//   } else if(cell.formula())
+// };

@@ -6,6 +6,8 @@ import Divider from "@material-ui/core/Divider";
 
 import InputBase from "@material-ui/core/InputBase";
 
+import { Editor } from "draft-js";
+
 import "./FormulaBar.scss";
 
 const mapStateToProps = ({
@@ -39,6 +41,12 @@ let InputField = ({
   const handleChange = ({ target: { value } }) => eventListenerRef.current.changeActiveInputValue(value);
   const handleFocus = () => eventListenerRef.current.focusFormulaInput();
   const handleBlur = () => eventListenerRef.current.blurFormulaInput();
+
+  // return (
+  //   <Editor
+  //     editorState={activeCellInputValue}
+  //   />
+  // );
 
   return (
     <InputBase
