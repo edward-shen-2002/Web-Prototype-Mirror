@@ -1128,11 +1128,26 @@ class EventRedux extends PureComponent {
   _scrollTo(newY, newX) {
     const {
       sheetGridRef,
+      sheetColumnCount,
+      sheetRowCount,
       sheetFreezeColumnCount,
       sheetFreezeRowCount,
       sheetCellOffsets,
       scrollData,
     } = this.props;
+
+    if(newY >= sheetRowCount) {
+      newY = sheetRowCount - 1;
+    } else if(newY <= 0) {
+      newY = 1;
+    }
+
+    if(newX >= sheetColumnCount) {
+      newX = sheetColumnCount - 1;
+    } else if(newX <= 0) {
+      newX = 1;
+    }
+    
 
     let { scrollTop, scrollLeft } = scrollData;
 
