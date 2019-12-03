@@ -744,8 +744,6 @@ class EventRedux extends PureComponent {
       activeCellPosition,
       stagnantSelectionAreas,
 
-      sheetRowCount,
-      sheetColumnCount,
       sheetCellData,
 
       handleChangeSheetCellData
@@ -1152,7 +1150,6 @@ class EventRedux extends PureComponent {
     } else if(newX <= 0) {
       newX = 1;
     }
-    
 
     let { scrollTop, scrollLeft } = scrollData;
 
