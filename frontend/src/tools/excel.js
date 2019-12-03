@@ -95,10 +95,10 @@ export const getWorkbookInstance = async ({
   activeCellPosition,
   sheetsCellData,
   sheetsColumnCount,
-  sheetsColumnWidths,
+  sheetsColumnWidthsData,
   sheetsFreezeColumnCount,
   sheetsRowCount,
-  sheetsRowHeights,
+  sheetsRowHeightsData,
   sheetsFreezeRowCount
 }) => {
   let Workbook = await XlsxPopulate.fromBlankAsync();
@@ -107,10 +107,10 @@ export const getWorkbookInstance = async ({
   sheetNames.forEach((sheetName) => {
     const sheetCellData = sheetsCellData[sheetName];
     const sheetColumnCount = sheetsColumnCount[sheetName];
-    const sheetColumnWidths = sheetsColumnWidths[sheetName];
+    const sheetColumnWidths = sheetsColumnWidths[sheetName].columnWidths;
     const sheetFreezeColumnCount = sheetsFreezeColumnCount[sheetName];
     const sheetRowCount = sheetsRowCount[sheetName];
-    const sheetRowHeights = sheetsRowHeights[sheetName];
+    const sheetRowHeights = sheetsRowHeightsData[sheetName].rowHeights;
     const sheetFreezeRowCount = sheetsFreezeRowCount[sheetName];
 
     // May be a default sheet

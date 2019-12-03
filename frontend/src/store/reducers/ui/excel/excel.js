@@ -16,10 +16,10 @@ import isEditMode from "./isEditMode";
 
 import sheetsCellData from "./sheetsCellData";
 import sheetsColumnCount from "./sheetsColumnCount";
-import sheetsColumnWidths from "./sheetsColumnWidths";
+import sheetsColumnWidthsData from "./sheetsColumnWidthsData";
 import sheetsFreezeColumnCount from "./sheetsFreezeColumnCount";
 import sheetsRowCount from "./sheetsRowCount";
-import sheetsRowHeights from "./sheetsRowHeights";
+import sheetsRowHeightsData from "./sheetsRowHeightsData";
 import sheetsFreezeRowCount from "./sheetsFreezeRowCount";
 import sheetsCellOffsets from "./sheetsCellOffsets";
 
@@ -40,10 +40,10 @@ const excelReducer = combineReducers({
 
   sheetsCellData,
   sheetsColumnCount,
-  sheetsColumnWidths,
+  sheetsColumnWidthsData,
   sheetsFreezeColumnCount,
   sheetsRowCount,
-  sheetsRowHeights,
+  sheetsRowHeightsData,
   sheetsFreezeRowCount,
   sheetsCellOffsets
 });

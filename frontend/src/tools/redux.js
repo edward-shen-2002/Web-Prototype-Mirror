@@ -21,8 +21,8 @@ import { setEditModeOff } from "actions/ui/excel/isEditMode";
 import { updateSheetsCellData, resetSheetsCellData } from "actions/ui/excel/sheetsCellData";
 import { updateSheetsColumnCount, resetSheetsColumnCount } from "actions/ui/excel/sheetsColumnCount";
 import { updateSheetsRowCount, resetSheetsRowCount } from "actions/ui/excel/sheetsRowCount";
-import { updateSheetsColumnWidths, resetSheetsColumnWidths } from "actions/ui/excel/sheetsColumnWidths";
-import { updateSheetsRowHeights, resetSheetsRowHeights } from "actions/ui/excel/sheetsRowHeights";
+import { updateSheetsColumnWidthsData, resetSheetsColumnWidthsData } from "actions/ui/excel/sheetsColumnWidthsData";
+import { updateSheetsRowHeightsData, resetSheetsRowHeightsData } from "actions/ui/excel/sheetsRowHeightsData";
 import { updateSheetsFreezeColumnCount, resetSheetsFreezeColumnCount } from "actions/ui/excel/sheetsFreezeColumnCount";
 import { updateSheetsFreezeRowCount, resetSheetsFreezeRowCount } from "actions/ui/excel/sheetsFreezeRowCount";
 import { updateSheetsCellOffsets, resetSheetsCellOffsets } from "actions/ui/excel/sheetsCellOffsets";
@@ -77,8 +77,10 @@ export const loadWorkbook = (
   dispatch(updateSheetsCellData(sheetsCellData));
   dispatch(updateSheetsColumnCount(sheetsColumnCount));
   dispatch(updateSheetsRowCount(sheetsRowCount));
-  dispatch(updateSheetsColumnWidths(sheetsColumnWidths));
-  dispatch(updateSheetsRowHeights(sheetsRowHeights));
+
+  dispatch(updateSheetsColumnWidthsData(sheetsColumnWidths));
+  dispatch(updateSheetsRowHeightsData(sheetsRowHeights));
+
   dispatch(updateSheetsFreezeColumnCount(sheetsFreezeColumnCount));
   dispatch(updateSheetsFreezeRowCount(sheetsFreezeRowCount));
   dispatch(updateSheetsCellOffsets(sheetsCellOffsets));
@@ -90,8 +92,10 @@ export const resetWorkbook = (dispatch) => {
 
   dispatch(resetSheetsColumnCount());
   dispatch(resetSheetsRowCount());
-  dispatch(resetSheetsRowHeights());
-  dispatch(resetSheetsColumnWidths());
+
+  dispatch(resetSheetsRowHeightsData());
+  dispatch(resetSheetsColumnWidthsData());
+  
   dispatch(resetSheetsFreezeColumnCount());
   dispatch(resetSheetsFreezeRowCount());
   dispatch(resetSheetsCellOffsets());

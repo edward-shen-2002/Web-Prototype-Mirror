@@ -28,8 +28,8 @@ const mapStateToProps = ({
       sheetsCellData,
       sheetsColumnCount,
       sheetsRowCount,
-      sheetsColumnWidths,
-      sheetsRowHeights,
+      sheetsColumnWidthsData,
+      sheetsRowHeightsData,
       sheetsFreezeRowCount,
       sheetsFreezeColumnCount
     }
@@ -39,8 +39,8 @@ const mapStateToProps = ({
   sheetsCellData,
   sheetsColumnCount,
   sheetsRowCount,
-  sheetsColumnWidths,
-  sheetsRowHeights,
+  sheetsColumnWidthsData,
+  sheetsRowHeightsData,
   sheetsFreezeRowCount,
   sheetsFreezeColumnCount
 });
@@ -86,8 +86,8 @@ let SheetWindow = ({
   sheetsFreezeColumnCount,
   sheetsColumnCount,
   sheetsRowCount,
-  sheetsColumnWidths,
-  sheetsRowHeights
+  sheetsColumnWidthsData,
+  sheetsRowHeightsData
 }) => {
   let EventListenerInstance;
 
@@ -95,8 +95,8 @@ let SheetWindow = ({
     EventListenerInstance = eventListenerRef.current;
   });
 
-  const rowHeights = sheetsRowHeights[activeSheetName];
-  const columnWidths = sheetsColumnWidths[activeSheetName];
+  const { rowHeights } = sheetsRowHeightsData[activeSheetName];
+  const { columnWidths } = sheetsColumnWidthsData[activeSheetName];
   const tableFreezeRowCount = sheetsFreezeRowCount[activeSheetName] + 1;
   const tableFreezeColumnCount = sheetsFreezeColumnCount[activeSheetName] + 1;
   const rowCount = sheetsRowCount[activeSheetName];
