@@ -11,7 +11,8 @@ const mapHeaderStateToProps = ({
       activeCellPosition,
       activeSelectionArea,
       stagnantSelectionAreas,
-      sheetsCellOffsets,
+      sheetsColumnWidthsData,
+      sheetsRowHeightsData,
       sheetsFreezeColumnCount,
       sheetsFreezeRowCount
     }
@@ -20,7 +21,8 @@ const mapHeaderStateToProps = ({
   activeCellPosition,
   activeSelectionArea,
   stagnantSelectionAreas,
-  sheetCellOffset: sheetsCellOffsets[activeSheetName],
+  sheetColumnWidthsData: sheetsColumnWidthsData[activeSheetName],
+  sheetRowHeightsData: sheetsRowHeightsData[activeSheetName],
   sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName],
   sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName]
 });
@@ -63,7 +65,8 @@ export let HeaderSelection = ({
   activeCellPosition, 
   activeSelectionArea, 
   stagnantSelectionAreas,
-  sheetCellOffset,
+  sheetColumnWidthsData: { columnWidths, leftOffsets },
+  sheetRowHeightsData: { rowHeights, topOffsets },
   sheetFreezeColumnCount,
   sheetFreezeRowCount
 }) => {
@@ -99,8 +102,11 @@ export let HeaderSelection = ({
   const xElementarySegments = mergeSegments(xSegments);
 
   const rowHeaderStyles = yElementarySegments.map(([ start, end ]) => {
-    const { top: topStart, width } = sheetCellOffset[start][0];
-    const { top: topEnd, height: heightEnd } = sheetCellOffset[end][0];
+    const topStart = topOffsets[start];
+    const width = columnWidths[0];
+
+    const topEnd = topOffsets[end];
+    const heightEnd = rowHeights[end];
 
     return ({
       top: topStart,
@@ -111,8 +117,11 @@ export let HeaderSelection = ({
   });
 
   const columnHeaderStyles = xElementarySegments.map(([ start, end ]) => {
-    const { left: leftStart, height } = sheetCellOffset[0][start];
-    const { left: leftEnd, width: widthEnd } = sheetCellOffset[0][end];
+    const leftStart = leftOffsets[start];
+    const height = rowHeights[0];
+
+    const leftEnd = leftOffsets[end];
+    const widthEnd = columnWidths[end];
 
     return ({
       top: 0,
@@ -139,7 +148,8 @@ const mapColumnHeaderStateToProps = ({
       activeCellPosition,
       activeSelectionArea,
       stagnantSelectionAreas,
-      sheetsCellOffsets,
+      sheetsColumnWidthsData,
+      sheetsRowHeightsData,
       sheetsFreezeColumnCount
     }
   }
@@ -147,7 +157,8 @@ const mapColumnHeaderStateToProps = ({
   activeCellPosition,
   activeSelectionArea,
   stagnantSelectionAreas,
-  sheetCellOffset: sheetsCellOffsets[activeSheetName],
+  sheetColumnWidthsData: sheetsColumnWidthsData[activeSheetName],
+  sheetRowHeightsData: sheetsRowHeightsData[activeSheetName],
   sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName]
 });
 
@@ -155,7 +166,8 @@ export let ColumnHeaderSelection = ({
   activeCellPosition, 
   activeSelectionArea, 
   stagnantSelectionAreas,
-  sheetCellOffset,
+  sheetColumnWidthsData: { columnWidths, leftOffsets },
+  sheetRowHeightsData: { rowHeights },
   sheetFreezeColumnCount
 }) => {
   const { x } = activeCellPosition;
@@ -182,8 +194,11 @@ export let ColumnHeaderSelection = ({
   const xElementarySegments = mergeSegments(xSegments);
 
   const columnHeaderStyles = xElementarySegments.map(([ start, end ]) => {
-    const { left: leftStart, height } = sheetCellOffset[0][start];
-    const { left: leftEnd, width: widthEnd } = sheetCellOffset[0][end];
+    const leftStart = leftOffsets[start];
+    const height = rowHeights[0];
+    
+    const leftEnd = leftOffsets[end];
+    const widthEnd = columnWidths[end];
 
     return ({
       top: 0,
@@ -207,7 +222,10 @@ const mapRowHeaderStateToProps = ({
       activeCellPosition,
       activeSelectionArea,
       stagnantSelectionAreas,
-      sheetsCellOffsets,
+
+      sheetsColumnWidthsData,
+      sheetsRowHeightsData,
+
       sheetsFreezeRowCount
     }
   }
@@ -215,7 +233,8 @@ const mapRowHeaderStateToProps = ({
   activeCellPosition,
   activeSelectionArea,
   stagnantSelectionAreas,
-  sheetCellOffsets: sheetsCellOffsets[activeSheetName],
+  sheetColumnWidthsData: sheetsColumnWidthsData[activeSheetName],
+  sheetRowHeightsData: sheetsRowHeightsData[activeSheetName],
   sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName]
 });
 
@@ -223,7 +242,8 @@ export let RowHeaderSelection = ({
   activeCellPosition, 
   activeSelectionArea, 
   stagnantSelectionAreas,
-  sheetCellOffsets,
+  sheetColumnWidthsData: { columnWidths },
+  sheetRowHeightsData: { rowHeights, topOffsets },
   sheetFreezeRowCount
 }) => {
   const { y } = activeCellPosition;
@@ -250,10 +270,14 @@ export let RowHeaderSelection = ({
   const yElementarySegments = mergeSegments(ySegments);
 
   const rowHeaderStyles = yElementarySegments.map(([ start, end ]) => {
-    let { top: topStart, width } = sheetCellOffsets[start][0];
-    const { top: topEnd, height: heightEnd } = sheetCellOffsets[end][0];
+    let topStart = topOffsets[start];
+    let width = columnWidths[0];
 
-    const { top: topFreeze, height: heightFreeze } = sheetCellOffsets[sheetFreezeRowCount][0];
+    let topEnd = topOffsets[end];
+    let heightEnd = rowHeights[end];
+
+    let topFreeze = topOffsets[sheetFreezeRowCount];
+    let heightFreeze = rowHeights[sheetFreezeRowCount];
 
     return ({
       top: topStart - topFreeze - heightFreeze,

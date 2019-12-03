@@ -13,7 +13,9 @@ const mapStateToProps = ({
 
       sheetsFreezeColumnCount,
       sheetsFreezeRowCount,
-      sheetsCellOffsets
+
+      sheetsColumnWidthsData,
+      sheetsRowHeightsData
     }
   }
 }) => ({
@@ -22,7 +24,8 @@ const mapStateToProps = ({
 
   sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName],
   sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName],
-  sheetCellOffsets: sheetsCellOffsets[activeSheetName]
+  sheetColumnWidthsData: sheetsColumnWidthsData[activeSheetName],
+  sheetRowHeightsData: sheetsRowHeightsData[activeSheetName]
 });
 
 let ActiveSelectionArea = ({ 
@@ -35,7 +38,8 @@ let ActiveSelectionArea = ({
   sheetFreezeColumnCount,
   sheetFreezeRowCount,
 
-  sheetCellOffsets
+  sheetColumnWidthsData: { columnWidths, leftOffsets },
+  sheetRowHeightsData: { rowHeights, topOffsets }
 }) => {
   if(!isSelectionMode || !activeSelectionArea) return null;
 
@@ -44,7 +48,10 @@ let ActiveSelectionArea = ({
   if(!isRelevantArea(x1, y1, x2, y2, sheetFreezeColumnCount, sheetFreezeRowCount)) return null;
 
   const activeSelectionAreaStyle = computeSelectionAreaStyle(
-    sheetCellOffsets, 
+    columnWidths, 
+    leftOffsets, 
+    rowHeights, 
+    topOffsets,
     activeSelectionArea, 
     sheetFreezeColumnCount, 
     sheetFreezeRowCount, 

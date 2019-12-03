@@ -16,10 +16,10 @@ const mapStateToProps = ({
       activeCellPosition,
       sheetsCellData,
       sheetsColumnCount,
-      sheetsColumnWidths,
+      sheetsColumnWidthsData,
       sheetsFreezeColumnCount,
       sheetsRowCount,
-      sheetsRowHeights,
+      sheetsRowHeightsData,
       sheetsFreezeRowCount
     }
   }
@@ -29,10 +29,10 @@ const mapStateToProps = ({
   activeCellPosition,
   sheetsCellData,
   sheetsColumnCount,
-  sheetsColumnWidths,
+  sheetsColumnWidthsData,
   sheetsFreezeColumnCount,
   sheetsRowCount,
-  sheetsRowHeights,
+  sheetsRowHeightsData,
   sheetsFreezeRowCount
 });
 
@@ -44,10 +44,10 @@ let File = ({
   activeCellPosition,
   sheetsCellData,
   sheetsColumnCount,
-  sheetsColumnWidths,
+  sheetsColumnWidthsData,
   sheetsFreezeColumnCount,
   sheetsRowCount,
-  sheetsRowHeights,
+  sheetsRowHeightsData,
   sheetsFreezeRowCount,
 
   handleClickMenu, 
@@ -65,10 +65,10 @@ let File = ({
         activeCellPosition,
         sheetsCellData,
         sheetsColumnCount,
-        sheetsColumnWidths,
+        sheetsColumnWidthsData,
         sheetsFreezeColumnCount,
         sheetsRowCount,
-        sheetsRowHeights,
+        sheetsRowHeightsData,
         sheetsFreezeRowCount
       });
 

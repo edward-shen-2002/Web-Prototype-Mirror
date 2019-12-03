@@ -12,7 +12,7 @@ import {
   STYLE_STAGNANT_SELECTION_BORDER_STYLE
 } from "constants/styles";
 
-const computeSelectionAreaStyle = (sheetCelloffsets, selectionArea, freezeColumnCount, freezeRowCount, isActive) => {
+const computeSelectionAreaStyle = (columnWidths, leftOffsets, rowHeights, topOffsets, selectionArea, freezeColumnCount, freezeRowCount, isActive) => {
   const { x1, y1, x2, y2 } = selectionArea;
 
   let borderStyle = isActive ? STYLE_ACTIVE_SELECTION_BORDER_STYLE : STYLE_STAGNANT_SELECTION_BORDER_STYLE;
@@ -30,11 +30,21 @@ const computeSelectionAreaStyle = (sheetCelloffsets, selectionArea, freezeColumn
     borderBottomStyle: borderStyle
   };
 
-  const { top: topStart, left: leftStart, width: widthStart, height: heightStart } = sheetCelloffsets[y1][x1];
-  const { top: topEnd, left: leftEnd, width: widthEnd, height: heightEnd } = sheetCelloffsets[y2][x2];
+  const topStart = topOffsets[y1];
+  const leftStart = leftOffsets[x1];
+  const widthStart = columnWidths[x1];
+  const heightStart = rowHeights[y1];
 
-  const { top: topFrozenEnd, left: leftFrozenEnd, width: widthFrozenEnd, height: heightFrozenEnd } = sheetCelloffsets[freezeRowCount][freezeColumnCount];
-  
+  const topEnd = topOffsets[y2];
+  const leftEnd = leftOffsets[x2];
+  const widthEnd = columnWidths[x2];
+  const heightEnd = rowHeights[y2];
+
+  const topFrozenEnd = topOffsets[freezeRowCount];
+  const leftFrozenEnd = leftOffsets[freezeColumnCount];
+  const widthFrozenEnd = columnWidths[freezeColumnCount];
+  const heightFrozenEnd = rowHeights[freezeRowCount];
+
   const minLeft = x1 < x2 ? leftStart : leftEnd;
   left = minLeft;
 
@@ -84,9 +94,11 @@ const computeSelectionAreaStyle = (sheetCelloffsets, selectionArea, freezeColumn
   return customSelectionStyle;
 };
 
-const computeActiveCellStyle = (x, y, sheetCellOffsets, sheetFreezeColumnCount, sheetFreezeRowCount) => {
-  let activeCellStyle = { ...sheetCellOffsets[y][x] };
-  const { top: topFreeze, height: heightFreeze } = sheetCellOffsets[sheetFreezeRowCount][sheetFreezeColumnCount];
+const computeActiveCellStyle = (x, y, columnWidths, leftOffsets, rowHeights, topOffsets, _sheetFreezeColumnCount, sheetFreezeRowCount) => {
+  let activeCellStyle = { top: topOffsets[y], left: leftOffsets[x], height: rowHeights[y], width: columnWidths[x] };
+
+  let topFreeze = topOffsets[sheetFreezeRowCount];
+  let heightFreeze = rowHeights[sheetFreezeRowCount];
 
   activeCellStyle.top = activeCellStyle.top - topFreeze - heightFreeze;
 

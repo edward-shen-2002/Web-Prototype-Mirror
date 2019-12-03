@@ -25,8 +25,6 @@ import { updateSheetsColumnWidthsData, resetSheetsColumnWidthsData } from "actio
 import { updateSheetsRowHeightsData, resetSheetsRowHeightsData } from "actions/ui/excel/sheetsRowHeightsData";
 import { updateSheetsFreezeColumnCount, resetSheetsFreezeColumnCount } from "actions/ui/excel/sheetsFreezeColumnCount";
 import { updateSheetsFreezeRowCount, resetSheetsFreezeRowCount } from "actions/ui/excel/sheetsFreezeRowCount";
-import { updateSheetsCellOffsets, resetSheetsCellOffsets } from "actions/ui/excel/sheetsCellOffsets";
-
 
 export const loadUserState = (dispatch, { user, token }) => {
   if(token) {
@@ -65,8 +63,7 @@ export const loadWorkbook = (
     sheetsColumnWidths,
     sheetsRowHeights,
     sheetsFreezeColumnCount,
-    sheetsFreezeRowCount,
-    sheetsCellOffsets
+    sheetsFreezeRowCount
   }
 ) => {
   dispatch(updateActiveCellInputValue(activeCellInputValue));
@@ -83,7 +80,6 @@ export const loadWorkbook = (
 
   dispatch(updateSheetsFreezeColumnCount(sheetsFreezeColumnCount));
   dispatch(updateSheetsFreezeRowCount(sheetsFreezeRowCount));
-  dispatch(updateSheetsCellOffsets(sheetsCellOffsets));
 };
 
 export const resetWorkbook = (dispatch) => {
@@ -98,7 +94,6 @@ export const resetWorkbook = (dispatch) => {
   
   dispatch(resetSheetsFreezeColumnCount());
   dispatch(resetSheetsFreezeRowCount());
-  dispatch(resetSheetsCellOffsets());
 
   dispatch(resetSheetNames());
 

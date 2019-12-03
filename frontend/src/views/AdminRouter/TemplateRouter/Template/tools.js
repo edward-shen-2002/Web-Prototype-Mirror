@@ -186,37 +186,3 @@ export const getFreezeHeader = (sheet) => {
 
   return freezeHeader;
 };
-
-// ! TODO
-export const getCellOffsets = (rowHeights, columnWidths) => {
-  const rowHeightsLength = rowHeights.length;
-  const columnWidthsLength = columnWidths.length;
-
-  let offsets = [];
-
-  let topOffsetTotal = 0;
-  let topOffsets = [ 0 ];
-
-  // Do not include the last element total. We're only concered with the top (beginning, not end/bottom)
-  for(let row = 1; row < rowHeightsLength; row ++) {
-    topOffsetTotal += rowHeights[ row - 1 ];
-    topOffsets.push(topOffsetTotal);
-  }
-
-  let leftOffsetTotal = 0;
-  let leftOffsets = [ 0 ];
-
-  for(let column = 1; column < columnWidthsLength; column++) {
-    leftOffsetTotal += columnWidths[ column - 1 ];
-    leftOffsets.push(leftOffsetTotal);
-  }
-
-  for(let row = 0; row < rowHeightsLength; row++) {
-    let rowOffsets = [];
-    for(let column = 0; column < columnWidthsLength; column++) rowOffsets.push({ top: topOffsets[row], left: leftOffsets[column], height: rowHeights[row], width: columnWidths[column] });
-
-    offsets.push(rowOffsets);
-  }
-
-  return offsets;
-};

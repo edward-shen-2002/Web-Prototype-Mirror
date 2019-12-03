@@ -9,7 +9,7 @@ import { adminTemplateRoleAxios } from "tools/rest";
 import { loadWorkbook, resetWorkbook } from "tools/redux";
 import Excel from "tools/components/Excel";
 
-import { getHeaderCount, getColumnWidths, getRowHeights, getSheetCellData, getFreezeHeader, getCellOffsets } from "./tools";
+import { getHeaderCount, getColumnWidths, getRowHeights, getSheetCellData, getFreezeHeader } from "./tools";
 
 import XlsxPopulate from "xlsx-populate";
 
@@ -70,8 +70,6 @@ let Template = ({
           let sheetsFreezeRowCount = {};
           let sheetsCellData = {};
 
-          let sheetsCellOffsets = {};
-
           sheetNames.forEach((name) => {
             const sheet = WorkbookInstance.sheet(name);
 
@@ -85,8 +83,6 @@ let Template = ({
             let rowHeights = getRowHeights(sheet);
             let { freezeRowCount, freezeColumnCount } = getFreezeHeader(sheet);
 
-            let sheetCellOffsets = getCellOffsets(rowHeights, columnWidths);
-
             sheetsColumnCount[name] = columnCount;
             sheetsRowCount[name] = rowCount;
             sheetsCellData[name] = sheetCellData;
@@ -95,8 +91,6 @@ let Template = ({
             sheetsRowHeights[name] = rowHeights;
             sheetsFreezeRowCount[name] = freezeRowCount;
             sheetsFreezeColumnCount[name] = freezeColumnCount;
-
-            sheetsCellOffsets[name] = sheetCellOffsets;
           });
 
           let activeCell = activeSheet.activeCell();
@@ -122,9 +116,7 @@ let Template = ({
             sheetsRowHeights,
 
             activeSheetName,
-            sheetNames,
-
-            sheetsCellOffsets
+            sheetNames
           });
 
           setTemplate(template);

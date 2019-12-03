@@ -38,8 +38,9 @@ const mapStateToProps = ({
 
       sheetsColumnCount,
       sheetsRowCount,
+      sheetsColumnWidthsData,
+      sheetsRowHeightsData,
       sheetsCellData,
-      sheetsCellOffsets,
       sheetsFreezeColumnCount,
       sheetsFreezeRowCount
     } 
@@ -64,7 +65,8 @@ const mapStateToProps = ({
   sheetCellData: sheetsCellData[activeSheetName],
   sheetRowCount: sheetsRowCount[activeSheetName],
   sheetColumnCount: sheetsColumnCount[activeSheetName],
-  sheetCellOffsets: sheetsCellOffsets[activeSheetName],
+  sheetColumnWidthsData: sheetsColumnWidthsData[activeSheetName],
+  sheetRowHeightsData: sheetsRowHeightsData[activeSheetName],
   sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName],
   sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName]
 });
@@ -112,9 +114,10 @@ let EventListener = ({
   sheetRowCount,
   sheetColumnCount,
   sheetCellData,
-  sheetCellOffsets,
   sheetFreezeColumnCount,
   sheetFreezeRowCount,
+  sheetColumnWidthsData,
+  sheetRowHeightsData,
 
   isSelectionMode,
   isEditMode,
@@ -157,9 +160,10 @@ let EventListener = ({
     sheetRowCount={sheetRowCount}
     sheetColumnCount={sheetColumnCount}
     sheetCellData={sheetCellData}
-    sheetCellOffsets={sheetCellOffsets}
     sheetFreezeColumnCount={sheetFreezeColumnCount}
     sheetFreezeRowCount={sheetFreezeRowCount}
+    sheetColumnWidthsData={sheetColumnWidthsData}
+    sheetRowHeightsData={sheetRowHeightsData}
     
     activeCellInputValue={activeCellInputValue}
     activeSheetName={activeSheetName}
@@ -1130,7 +1134,10 @@ class EventRedux extends PureComponent {
       sheetRowCount,
       sheetFreezeColumnCount,
       sheetFreezeRowCount,
-      sheetCellOffsets,
+
+      sheetColumnWidthsData: { columnWidths, leftOffsets },
+      sheetRowHeightsData: { rowHeights, topOffsets },
+
       scrollData,
     } = this.props;
 
@@ -1149,9 +1156,15 @@ class EventRedux extends PureComponent {
 
     let { scrollTop, scrollLeft } = scrollData;
 
-    const { top: topFreezeStart, left: leftFreezeStart, height: heightFreezeStart, width: widthFreezeStart } = sheetCellOffsets[sheetFreezeRowCount][sheetFreezeColumnCount];
+    const topFreezeStart = topOffsets[sheetFreezeRowCount];
+    const leftFreezeStart = leftOffsets[sheetFreezeColumnCount];
+    const heightFreezeStart = rowHeights[sheetFreezeRowCount];
+    const widthFreezeStart = columnWidths[sheetFreezeColumnCount];
 
-    const { top: topActiveStart, left: leftActiveStart, height: heightActiveStart, width: widthActiveStart } = sheetCellOffsets[newY][newX];
+    const topActiveStart = topOffsets[newY];
+    const leftActiveStart = leftOffsets[newX];
+    const heightActiveStart = rowHeights[newY];
+    const widthActiveStart = columnWidths[newX];
 
     const freezeHeight = topFreezeStart + heightFreezeStart;
     const freezeWidth = leftFreezeStart + widthFreezeStart;

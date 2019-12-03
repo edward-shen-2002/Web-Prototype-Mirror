@@ -16,7 +16,8 @@ const mapStateToProps = ({
 
       sheetsFreezeRowCount,
       sheetsFreezeColumnCount,
-      sheetsCellOffsets
+      sheetsColumnWidthsData,
+      sheetsRowHeightsData
     }
   }
 }) => ({
@@ -24,7 +25,8 @@ const mapStateToProps = ({
 
   sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName],
   sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName],
-  sheetCellOffsets: sheetsCellOffsets[activeSheetName]
+  sheetColumnWidthsData: sheetsColumnWidthsData[activeSheetName],
+  sheetRowHeightsData: sheetsRowHeightsData[activeSheetName]
 });
 
 let StagnantSelectionAreas = ({
@@ -33,14 +35,15 @@ let StagnantSelectionAreas = ({
   sheetFreezeColumnCount,
   sheetFreezeRowCount,
 
-  sheetCellOffsets,
+  sheetColumnWidthsData: { columnWidths, leftOffsets },
+  sheetRowHeightsData: { rowHeights, topOffsets },
 
   isRelevantArea,
   computeSelectionAreaStyle
 }) => {
   const relevantStagnantSelectionAreas = stagnantSelectionAreas.filter(({ x1, y1, x2, y2 }) => isRelevantArea(x1, y1, x2, y2, sheetFreezeColumnCount, sheetFreezeRowCount));
 
-  const relevantStagnantSelectionAreasStyles = relevantStagnantSelectionAreas.map((stagnantSelectionArea) => computeSelectionAreaStyle(sheetCellOffsets, stagnantSelectionArea, sheetFreezeColumnCount, sheetFreezeRowCount, false));
+  const relevantStagnantSelectionAreasStyles = relevantStagnantSelectionAreas.map((stagnantSelectionArea) => computeSelectionAreaStyle(columnWidths, leftOffsets, rowHeights, topOffsets, stagnantSelectionArea, sheetFreezeColumnCount, sheetFreezeRowCount, false));
 
   return (
     <StagnantSelectionAreasComponents

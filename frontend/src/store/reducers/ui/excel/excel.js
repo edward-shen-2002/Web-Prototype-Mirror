@@ -21,7 +21,6 @@ import sheetsFreezeColumnCount from "./sheetsFreezeColumnCount";
 import sheetsRowCount from "./sheetsRowCount";
 import sheetsRowHeightsData from "./sheetsRowHeightsData";
 import sheetsFreezeRowCount from "./sheetsFreezeRowCount";
-import sheetsCellOffsets from "./sheetsCellOffsets";
 
 const excelReducer = combineReducers({ 
   activeCellInputValue,
@@ -44,8 +43,7 @@ const excelReducer = combineReducers({
   sheetsFreezeColumnCount,
   sheetsRowCount,
   sheetsRowHeightsData,
-  sheetsFreezeRowCount,
-  sheetsCellOffsets
+  sheetsFreezeRowCount
 });
 
 export default excelReducer;

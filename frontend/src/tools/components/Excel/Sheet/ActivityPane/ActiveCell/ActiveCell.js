@@ -36,7 +36,9 @@ const mapStateToProps = ({
 
       sheetsFreezeColumnCount,
       sheetsFreezeRowCount,
-      sheetsCellOffsets
+
+      sheetsColumnWidthsData,
+      sheetsRowHeightsData
     }
   }
 }) => ({
@@ -49,7 +51,9 @@ const mapStateToProps = ({
 
   sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName],
   sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName],
-  sheetCellOffsets: sheetsCellOffsets[activeSheetName]
+
+  sheetColumnWidthsData: sheetsColumnWidthsData[activeSheetName],
+  sheetRowHeightsData: sheetsRowHeightsData[activeSheetName]
 });
 
 let ActiveCell = ({ 
@@ -61,7 +65,9 @@ let ActiveCell = ({
 
   sheetFreezeColumnCount,
   sheetFreezeRowCount,
-  sheetCellOffsets,
+
+  sheetColumnWidthsData: { columnWidths, leftOffsets },
+  sheetRowHeightsData: { rowHeights, topOffsets },
 
   isActiveCellInCorrectPane,
 
@@ -77,8 +83,8 @@ let ActiveCell = ({
 
   const activeCellStyle = (
     computeActiveCellStyle 
-      ? computeActiveCellStyle(x, y, sheetCellOffsets, sheetFreezeColumnCount, sheetFreezeRowCount)
-      : sheetCellOffsets[y][x]
+      ? computeActiveCellStyle(x, y, columnWidths, leftOffsets, rowHeights, topOffsets, sheetFreezeColumnCount, sheetFreezeRowCount)
+      : { top: topOffsets[y], left: leftOffsets[x], height: rowHeights[y], width: columnWidths[x] }
   );
 
   return (
