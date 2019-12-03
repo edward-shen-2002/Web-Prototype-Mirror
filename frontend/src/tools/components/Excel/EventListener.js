@@ -629,7 +629,6 @@ class EventRedux extends PureComponent {
 
       handleUpdateActiveCellSelectionAreaIndex
     } = this.props;
-
     event.preventDefault();
 
     let { x, y } = activeCellPosition;

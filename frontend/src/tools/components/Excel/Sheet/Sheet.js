@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 
 import { connect } from "react-redux";
 
+import { updateScrollData } from "actions/ui/excel/scrollData";
+
 import { VariableSizeGrid } from "react-window";
 
 import AutoSizer from "react-virtualized-auto-sizer";
@@ -45,6 +47,10 @@ const mapStateToProps = ({
   sheetsFreezeColumnCount
 });
 
+const mapDispatchToProps = (dispatch) => ({
+  handleUpdateScrollData: (scrollData) => dispatch(updateScrollData(scrollData)),
+});
+
 const createItemData = memoize((    
   sheetCellData, 
     
@@ -72,7 +78,7 @@ const createItemData = memoize((
 
   handleClickColumnHeader,
   handleClickRowHeader,
-  handleClickRootHeader
+  handleClickRootHeader,
 }));
 
 let SheetWindow = ({
@@ -87,7 +93,9 @@ let SheetWindow = ({
   sheetsColumnCount,
   sheetsRowCount,
   sheetsColumnWidthsData,
-  sheetsRowHeightsData
+  sheetsRowHeightsData,
+
+  handleUpdateScrollData
 }) => {
   let EventListenerInstance;
 
@@ -120,7 +128,7 @@ let SheetWindow = ({
 
   const handleChangeActiveInputValue = (value) => EventListenerInstance.changeActiveInputValue(value);
 
-  const handleScroll = (scrollData) => EventListenerInstance.scroll(scrollData); 
+  const handleScroll = (scrollData) => handleUpdateScrollData(scrollData); 
 
   const itemData = createItemData(
     sheetCellData, 
@@ -188,7 +196,7 @@ let SheetWindow = ({
   );
 };
 
-SheetWindow = connect(mapStateToProps)(SheetWindow);
+SheetWindow = connect(mapStateToProps, mapDispatchToProps)(SheetWindow);
 
 const Sheet = ({ 
   eventListenerRef, 
