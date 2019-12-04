@@ -126,7 +126,7 @@ let SheetWindow = ({
 
   const handleClickRootHeader = () => EventListenerInstance.selectAll();
 
-  const handleChangeActiveInputValue = (value) => EventListenerInstance.changeActiveInputValue(value);
+  const handleChangeActiveInputData = (value) => EventListenerInstance.changeActiveInputData(value);
 
   const handleScroll = (scrollData) => handleUpdateScrollData(scrollData); 
 
@@ -146,7 +146,7 @@ let SheetWindow = ({
     handleClickRootHeader
   );
 
-  const commonSelectionPaneProps = { sheetGridRef, handleChangeActiveInputValue };
+  const commonSelectionPaneProps = { sheetGridRef, handleChangeActiveInputData };
 
   return (
     <AutoSizer>
@@ -203,9 +203,14 @@ const Sheet = ({
   sheetContainerRef, 
   sheetGridRef
 }) => {
+  let EventListenerInstance;
+
+  useEffect(() => {
+    EventListenerInstance = eventListenerRef.current;
+  });
+
   const handleKeyDown = (event) => {
-    const { key, shiftKey, ctrlKey } = event;
-    const { current: EventListenerInstance } = eventListenerRef;
+    const { key, shiftKey, ctrlKey, altKey } = event;
     
     if(key === "ArrowUp") {
       EventListenerInstance.arrowUp(event, shiftKey);
@@ -217,7 +222,7 @@ const Sheet = ({
       EventListenerInstance.arrowRight(event, shiftKey);
     } else if(key === "Tab") {
       EventListenerInstance.tab(event, shiftKey, sheetContainerRef);
-    } else if(key === "Enter") {
+    } else if(key === "Enter" && !ctrlKey && !altKey) {
       EventListenerInstance.enter(event, shiftKey, sheetContainerRef);
     } else if(key === "Delete" || key === "Backspace") {
       EventListenerInstance.delete();
@@ -245,6 +250,10 @@ const Sheet = ({
     }
   };
 
+  const handleClick = () => {
+    EventListenerInstance.setInputAutoFocusOn();
+  };
+
   return (
     <div 
       ref={sheetContainerRef} 
@@ -252,6 +261,7 @@ const Sheet = ({
       tabIndex="0" 
       onKeyDown={handleKeyDown}
       onDragStart={handleDragStart}
+      onClick={handleClick}
     >
       <SheetWindow 
         sheetContainerRef={sheetContainerRef} 

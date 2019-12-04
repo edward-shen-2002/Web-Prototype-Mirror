@@ -1,33 +1,48 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { connect } from "react-redux";
+
+import { Editor } from "draft-js";
 
 import "./ActiveCell.scss";
 
 const ActiveInputCell = ({ 
   activeCellStyle,
-  activeCellInputValue,
+  editorState,
   activeCellInputAutoFocus,
-  handleChangeActiveInputValue
+  handleChangeActiveInputData
 }) => {
-  const handleChangeInputValue = ({ target: { value } }) => handleChangeActiveInputValue(value);
+  const [ isMounted, setIsMounted ] = useState(false);
+  const editorRef = useRef(null);
+  const handleChangeInputValue = (newEditorState) => handleChangeActiveInputData({ editorState: newEditorState });
+
+  useEffect(() => {
+    if(!isMounted) {
+      // if(!activeCellInputAutoFocus) editorRef.current.blur();
+      setIsMounted(true);
+    }
+  });
+
+  const handleReturn = ({ key, ctrlKey, altKey }) => key === "Enter" && (!ctrlKey && !altKey) ? "handled" : "not-handled";
 
   return (
-    <input 
-      key="active-cell-input"
-      className="activeCell activeCell--editMode" 
-      style={activeCellStyle} 
-      value={activeCellInputValue}
-      onChange={handleChangeInputValue}
-      autoFocus={activeCellInputAutoFocus}
-    />
+    <div className="activeCell activeCell--editMode" style={{ ...activeCellStyle, minHeight: "fit-content" }}>
+      <Editor
+        key="active-cell-input"
+        ref={editorRef}
+        editorState={editorState}
+        onChange={handleChangeInputValue}
+        readOnly={!activeCellInputAutoFocus}
+        handleReturn={handleReturn}
+      />
+    </div>
   );
 };
 
 const mapStateToProps = ({
   ui: {
     excel: {
-      activeCellInputValue,
+      activeCellInputData: { editorState },
       activeCellInputAutoFocus,
       activeSheetName,
       activeCellPosition,
@@ -42,7 +57,7 @@ const mapStateToProps = ({
     }
   }
 }) => ({
-  activeCellInputValue,
+  editorState,
   activeCellInputAutoFocus,
 
   activeCellPosition,
@@ -58,7 +73,7 @@ const mapStateToProps = ({
 
 let ActiveCell = ({ 
   isEditMode, 
-  activeCellInputValue,
+  editorState,
   activeCellInputAutoFocus,
 
   activeCellPosition,
@@ -73,13 +88,11 @@ let ActiveCell = ({
 
   computeActiveCellStyle,
 
-  handleChangeActiveInputValue
+  handleChangeActiveInputData
 }) => {
   const { x, y } = activeCellPosition;
 
-  if(!isActiveCellInCorrectPane(x, y, sheetFreezeColumnCount, sheetFreezeRowCount)) {
-    return null;
-  };
+  if(!isActiveCellInCorrectPane(x, y, sheetFreezeColumnCount, sheetFreezeRowCount)) return null;
 
   const activeCellStyle = (
     computeActiveCellStyle 
@@ -91,9 +104,9 @@ let ActiveCell = ({
     isEditMode 
       ? <ActiveInputCell 
           activeCellStyle={activeCellStyle} 
-          activeCellInputValue={activeCellInputValue}
+          editorState={editorState}
           activeCellInputAutoFocus={activeCellInputAutoFocus}
-          handleChangeActiveInputValue={handleChangeActiveInputValue}
+          handleChangeActiveInputData={handleChangeActiveInputData}
         />
       : <div key="inactive-cell-input" className="activeCell activeCell--normalMode" style={activeCellStyle}/>
   );

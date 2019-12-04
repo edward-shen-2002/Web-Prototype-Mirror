@@ -3,13 +3,13 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { showAppNavigation, hideAppNavigation } from "actions/ui/isAppNavigationOpen"; 
 
-import { EditorState } from "draft-js";
+import { RichText } from "xlsx-populate";
 
 import { adminTemplateRoleAxios } from "tools/rest";
 import { loadWorkbook, resetWorkbook } from "tools/redux";
 import Excel from "tools/components/Excel";
 
-import { getHeaderCount, getColumnWidths, getRowHeights, getSheetCellData, getFreezeHeader } from "./tools";
+import { getHeaderCount, getColumnWidths, getRowHeights, getSheetCellData, getFreezeHeader, convertRichTextToEditorState, convertPlainTextToEditorState } from "tools/excel";
 
 import XlsxPopulate from "xlsx-populate";
 
@@ -99,11 +99,21 @@ let Template = ({
 
           let activeCellPosition = { x: activeColumn, y: activeRow };
 
-          let activeCellInputValue = sheetsCellData[activeSheetName] && sheetsCellData[activeSheetName][activeRow] ? sheetsCellData[activeSheetName][activeRow][activeColumn].value : "";
+          const activeCellInputValueData = (
+            sheetsCellData[activeSheetName] && sheetsCellData[activeSheetName][activeRow] 
+              ? sheetsCellData[activeSheetName][activeRow][activeColumn].value 
+              : ""
+          );
+
+          let activeCellInputData = (
+            activeCellInputValueData instanceof RichText 
+              ? { editorState: convertRichTextToEditorState(activeCellInputValueData) }
+              : { editorState: convertPlainTextToEditorState(activeCellInputValueData) }
+          );
 
           handleLoadTemplate({
             activeCellPosition,
-            activeCellInputValue,
+            activeCellInputData,
 
             sheetsCellData,
 

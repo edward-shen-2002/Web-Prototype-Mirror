@@ -5,7 +5,7 @@ import { setOnline, setOffline } from "actions/app/isOnline";
 import { updateAccount, clearAccount } from "actions/domain/account";
 import { showAppNavigation, hideAppNavigation } from "actions/ui/isAppNavigationOpen";
 
-import { updateActiveCellInputValue, resetActiveCellInputValue } from "actions/ui/excel/activeCellInputValue";
+import { updateActiveCellInputData, resetActiveCellInputData } from "actions/ui/excel/activeCellInputData";
 import { updateActiveSheetName, resetActiveSheetName } from "actions/ui/excel/activeSheetName";
 import { resetActiveSelectionArea } from "actions/ui/excel/activeSelectionArea";
 import { updateActiveCellPosition, resetActiveCellPosition } from "actions/ui/excel/activeCellPosition";
@@ -17,6 +17,8 @@ import { resetScrollData } from "actions/ui/excel/scrollData";
 
 import { setSelectionModeOff } from "actions/ui/excel/isSelectionMode";
 import { setEditModeOff } from "actions/ui/excel/isEditMode";
+
+import { setActiveCellInputAutoFocusOff } from "actions/ui/excel/activeCellInputAutoFocus";
 
 import { updateSheetsCellData, resetSheetsCellData } from "actions/ui/excel/sheetsCellData";
 import { updateSheetsColumnCount, resetSheetsColumnCount } from "actions/ui/excel/sheetsColumnCount";
@@ -52,7 +54,7 @@ export const loadWorkbook = (
   dispatch, 
   { 
     activeCellPosition,
-    activeCellInputValue,
+    activeCellInputData,
     activeSheetName,
 
     sheetNames,
@@ -66,7 +68,7 @@ export const loadWorkbook = (
     sheetsFreezeRowCount
   }
 ) => {
-  dispatch(updateActiveCellInputValue(activeCellInputValue));
+  dispatch(updateActiveCellInputData(activeCellInputData));
   dispatch(updateActiveCellPosition(activeCellPosition));
   dispatch(updateActiveSheetName(activeSheetName));
   dispatch(updateSheetNames(sheetNames));
@@ -109,6 +111,8 @@ export const resetWorkbook = (dispatch) => {
   dispatch(resetStagnantSelectionAreas());
   dispatch(resetActiveSelectionArea());
 
-  dispatch(resetActiveCellInputValue());
+  dispatch(resetActiveCellInputData());
   dispatch(resetScrollData());
+
+  dispatch(setActiveCellInputAutoFocusOff());
 };

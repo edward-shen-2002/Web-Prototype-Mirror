@@ -94,7 +94,7 @@ const computeSelectionAreaStyle = (columnWidths, leftOffsets, rowHeights, topOff
   return customSelectionStyle;
 };
 
-const TopRightActivityPane = ({ handleChangeActiveInputValue }) => {
+const TopRightActivityPane = ({ handleChangeActiveInputData }) => {
   const isActiveCellInCorrectPane = (x, y, sheetFreezeColumnCount, sheetFreezeRowCount) => (x > sheetFreezeColumnCount && y <= sheetFreezeRowCount);
   const isRelevantArea = (x1, y1, x2, y2, sheetFreezeColumnCount, sheetFreezeRowCount) => ((x1 > sheetFreezeColumnCount || x2 > sheetFreezeColumnCount) && (y1 <= sheetFreezeRowCount || y2 <= sheetFreezeRowCount));
 
@@ -104,7 +104,7 @@ const TopRightActivityPane = ({ handleChangeActiveInputValue }) => {
         isActiveCellInCorrectPane={isActiveCellInCorrectPane}
         isRelevantArea={isRelevantArea}
         computeSelectionAreaStyle={computeSelectionAreaStyle}
-        handleChangeActiveInputValue={handleChangeActiveInputValue}
+        handleChangeActiveInputData={handleChangeActiveInputData}
       />
       <ColumnHeaderSelection/>
     </Fragment>

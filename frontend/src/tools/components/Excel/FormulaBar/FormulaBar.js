@@ -13,17 +13,17 @@ import "./FormulaBar.scss";
 const mapStateToProps = ({
   ui: {
     excel: {
-      activeCellInputValue
+      activeCellInputData: { rawText }
     }
   }
 }) => ({
-  activeCellInputValue
+  rawText
 });
 
 let InputField = ({ 
   eventListenerRef, 
   sheetContainerRef,
-  activeCellInputValue
+  rawText
 }) => {
 
   const handleKeyDown = ({ key }) => {
@@ -38,21 +38,15 @@ let InputField = ({
     }
   };
 
-  const handleChange = ({ target: { value } }) => eventListenerRef.current.changeActiveInputValue(value);
+  const handleChange = ({ target: { value } }) => eventListenerRef.current.changeActiveInputData({ rawText: value });
   const handleFocus = () => eventListenerRef.current.focusFormulaInput();
   const handleBlur = () => eventListenerRef.current.blurFormulaInput();
-
-  // return (
-  //   <Editor
-  //     editorState={activeCellInputValue}
-  //   />
-  // );
 
   return (
     <InputBase
       className="formulaBar__input"
       type="text"
-      value={activeCellInputValue}
+      value={rawText}
       onFocus={handleFocus}
       onBlur={handleBlur}
       onChange={handleChange}
