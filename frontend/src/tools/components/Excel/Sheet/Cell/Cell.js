@@ -2,6 +2,10 @@ import React from "react";
 
 import { columnNumberToName } from "xlsx-populate/lib/addressConverter";
 
+import { RichText } from "xlsx-populate";
+
+import { RichTextCellContent } from "tools/components/excelComponents";
+
 import "./Cell.scss";
 
 // ! Selection algorithms is a bit too complicated and time consuming to implement. Leave for now.
@@ -62,7 +66,13 @@ const EditableCell = ({
     handleDoubleClickEditableCell();
   };
 
-  const value = cellData ? cellData.value : undefined;
+  let value = cellData ? cellData.value : undefined;
+
+  if(value instanceof RichText) value = RichTextCellContent(value);
+
+  if(cellData && cellData.styles) {
+    style = { ...style, ...cellData.styles };
+  }
 
   return (
     <div 

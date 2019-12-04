@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 
 let templateSchema = new Schema({
-  name: { type: String, required: true, unique: true },
+  name: { type: String, required: true },
 
   file: { type: String },
 

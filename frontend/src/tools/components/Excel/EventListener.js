@@ -16,7 +16,7 @@ import { updateStagnantSelectionAreas, resetStagnantSelectionAreas } from "actio
 
 import { updateSheetCellData } from "actions/ui/excel/sheetsCellData";
 
-import { isPositionEqualArea, getScrollbarSize, getEstimatedTotalHeight, getEstimatedTotalWidth, getCellData, convertPlainTextToEditorState, convertRichTextToEditorState } from "tools/excel";
+import { isPositionEqualArea, getScrollbarSize, getEstimatedTotalHeight, getEstimatedTotalWidth, getCellData, convertTextToEditorState, convertRichTextToEditorState } from "tools/excel";
 
 import { RichText } from "xlsx-populate";
 
@@ -1102,7 +1102,7 @@ class EventRedux extends PureComponent {
 
     const value = cellData ? cellData.value : undefined;
 
-    handleUpdateActiveCellInputData({ editorState: value instanceof RichText ? convertRichTextToEditorState(value) : convertPlainTextToEditorState(value) });
+    handleUpdateActiveCellInputData({ editorState: value instanceof RichText ? convertRichTextToEditorState(value) : convertTextToEditorState(value) });
 
     handleUpdateActiveCellPosition({ x: newX, y: newY });
 

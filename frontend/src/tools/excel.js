@@ -124,8 +124,12 @@ export const getWorkbookInstance = async ({
 }) => {
   let Workbook = await XlsxPopulate.fromBlankAsync();
   const { x, y } = activeCellPosition;
-  
-  sheetNames.forEach((sheetName) => {
+
+  const sheetNamesLength = sheetNames.length;
+
+  for(let sheetNameIndex = 0; sheetNameIndex < sheetNamesLength; sheetNameIndex++) {
+    const sheetName = sheetNames[sheetNameIndex];
+
     const sheetCellData = sheetsCellData[sheetName];
     const sheetColumnCount = sheetsColumnCount[sheetName];
     const sheetColumnWidths = sheetsColumnWidthsData[sheetName].columnWidths;
@@ -135,7 +139,7 @@ export const getWorkbookInstance = async ({
     const sheetFreezeRowCount = sheetsFreezeRowCount[sheetName];
 
     // May be a default sheet
-    let sheet =  sheetName === "Sheet1" ? Workbook.sheet(sheetName) : Workbook.addSheet(sheetName);
+    let sheet =  sheetName === "Sheet1" ? await Workbook.sheet(sheetName) : await Workbook.addSheet(sheetName);
 
     sheet.freezePanes(sheetFreezeColumnCount, sheetFreezeRowCount);
 
@@ -167,7 +171,7 @@ export const getWorkbookInstance = async ({
       const sheetColumnWidth = sheetColumnWidths[column];
       sheet.column(column).width(sheetColumnWidth);
     }
-  });
+  };
 
   // Set active sheet and cell
   const activeSheet = Workbook.sheet(activeSheetName);
@@ -215,7 +219,7 @@ export const getColumnWidths = (sheet) => {
     } else {
       width = sheetColumn.width();
 
-      if(!width) width = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH
+      width = width ? width * 9.69 : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH;
     }
 
     columnWidths.push(width);
@@ -236,7 +240,7 @@ export const getRowHeights = (sheet) => {
     } else {
       height = sheetRow.height();
 
-      if(!height) height = DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
+      height = height ? height * 1.666 : DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
     }
 
     rowHeights.push(height);
@@ -298,7 +302,9 @@ export const extractCellStyle = (cellData) => {
 
   if(isObjectEmpty(cellStyles.border)) delete cellStyles["border"]; 
 
-  return isObjectEmpty(extractCellStyle) ? undefined : cellData;
+  // console.log(cellStyles)
+
+  return isObjectEmpty(cellStyles) ? undefined : cellStyles;
 };
 
 const extractCellData = (cellData) => {
@@ -383,10 +389,14 @@ export const convertRichTextToEditorState = (richText) => {
   return EditorState.moveFocusToEnd(editorState);
 };
 
-export const convertPlainTextToEditorState = (plainText) => (
-  EditorState.moveFocusToEnd((
-    plainText 
-      ? EditorState.createWithContent(ContentState.createFromText(plainText)) 
-      : EditorState.createEmpty()
-  ))
-);
+export const convertTextToEditorState = (text) => {
+  if(text !== undefined && typeof text !== "string") text = text.toString();
+
+  return (
+    EditorState.moveFocusToEnd((
+      text 
+        ? EditorState.createWithContent(ContentState.createFromText(text)) 
+        : EditorState.createEmpty()
+    ))
+  );
+}

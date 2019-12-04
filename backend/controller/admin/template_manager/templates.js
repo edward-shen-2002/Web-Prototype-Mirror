@@ -61,6 +61,16 @@ const templates = ({ router, TemplateModel }) => {
     }
   });
 
+  router.post(`${ROUTE_ADMIN_TEMPLATES}/upload`, async (req, res, next) => {
+    let { newTemplate } = req.body;
+    
+    TemplateModel.create(newTemplate)
+      .then((template) => {
+        res.json({ message: MESSAGE_SUCCESS_TEMPLATES_CREATE, data: { template: { _id: template._id } } });
+      })
+      .catch(next);
+  });
+
   router.put(ROUTE_ADMIN_TEMPLATES, (req, res, next) => {
     const { newTemplate, oldTemplate } = req.body; 
     const { _id } = oldTemplate;

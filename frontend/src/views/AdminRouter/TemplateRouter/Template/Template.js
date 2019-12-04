@@ -3,15 +3,13 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { showAppNavigation, hideAppNavigation } from "actions/ui/isAppNavigationOpen"; 
 
-import { RichText } from "xlsx-populate";
+import XlsxPopulate, { RichText, Range } from "xlsx-populate";
 
 import { adminTemplateRoleAxios } from "tools/rest";
 import { loadWorkbook, resetWorkbook } from "tools/redux";
 import Excel from "tools/components/Excel";
 
-import { getHeaderCount, getColumnWidths, getRowHeights, getSheetCellData, getFreezeHeader, convertRichTextToEditorState, convertPlainTextToEditorState } from "tools/excel";
-
-import XlsxPopulate from "xlsx-populate";
+import { getHeaderCount, getColumnWidths, getRowHeights, getSheetCellData, getFreezeHeader, convertRichTextToEditorState, convertTextToEditorState } from "tools/excel";
 
 import { REST_ADMIN_TEMPLATES } from "constants/rest";
 import { ROUTE_ADMIN_TEMPLATE_TEMPLATES } from "constants/routes";
@@ -94,21 +92,31 @@ let Template = ({
           });
 
           let activeCell = activeSheet.activeCell();
-          let activeRow = activeCell.rowNumber();
-          let activeColumn = activeCell.columnNumber();
+
+          let activeRow;
+
+          let activeColumn;
+
+          if(activeCell instanceof Range) {
+            activeRow = activeCell._minRowNumber;
+            activeColumn = activeCell._minColumnNumber;
+          } else {
+            activeRow = activeCell.rowNumber();
+            activeColumn = activeCell.columnNumber();
+          }
 
           let activeCellPosition = { x: activeColumn, y: activeRow };
 
           const activeCellInputValueData = (
-            sheetsCellData[activeSheetName] && sheetsCellData[activeSheetName][activeRow] 
-              ? sheetsCellData[activeSheetName][activeRow][activeColumn].value 
+            sheetsCellData[activeSheetName] && sheetsCellData[activeSheetName][activeRow] && sheetsCellData[activeSheetName][activeRow][activeColumn]
+              ? sheetsCellData[activeSheetName][activeRow][activeColumn].value
               : ""
           );
 
           let activeCellInputData = (
             activeCellInputValueData instanceof RichText 
               ? { editorState: convertRichTextToEditorState(activeCellInputValueData) }
-              : { editorState: convertPlainTextToEditorState(activeCellInputValueData) }
+              : { editorState: convertTextToEditorState(activeCellInputValueData) }
           );
 
           handleLoadTemplate({

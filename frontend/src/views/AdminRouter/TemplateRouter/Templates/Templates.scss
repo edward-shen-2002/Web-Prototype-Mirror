@@ -7,6 +7,20 @@
   padding: 20px;
 }
 
+.dragNDrop {
+  margin-bottom: 10px;
+  
+  padding: 5px;
+  
+  &__content {
+    background-color: rgba(10, 10, 10, 0.1);
+    padding: 20px;
+    border: 1px dashed lightgray;
+
+    text-align: center;
+  }
+}
+
 .header {
   display: flex;
   justify-content: space-between;

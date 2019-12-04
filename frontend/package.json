@@ -33,6 +33,7 @@
     "react-bootstrap": "^1.0.0-beta.8",
     "react-dnd": "^9.4.0",
     "react-dom": "^16.8.6",
+    "react-dropzone": "^10.2.1",
     "react-redux": "^7.0.3",
     "react-router-dom": "^5.0.0",
     "react-select": "^3.0.8",

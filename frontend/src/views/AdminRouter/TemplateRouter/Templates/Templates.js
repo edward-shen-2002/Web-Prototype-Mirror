@@ -1,4 +1,8 @@
-import React, { useState, useEffect, useMemo, lazy } from "react";
+import React, { useState, useEffect, useCallback, lazy } from "react";
+
+import { useDropzone } from "react-dropzone";
+
+import XlsxPopulate from "xlsx-populate";
 
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -31,6 +35,61 @@ const Header = ({ handleQueryChange, handleCreateTemplate }) => (
     <HeaderActions handleQueryChange={handleQueryChange} handleCreateTemplate={handleCreateTemplate}/>
   </Paper>
 );
+
+const FileDropzone = ({ templates, handleUpdateTemplates }) => {
+  const handleDrop = useCallback(async (acceptedFiles) => {
+    let newTemplates = [];
+
+    const acceptedFilesLength = acceptedFiles.length;
+
+    try {
+      for(let fileIndex = 0; fileIndex < acceptedFilesLength; fileIndex++) {
+        const fileData = acceptedFiles[fileIndex];
+  
+        const name = fileData.name;
+  
+        const extension = name.split(".").pop();
+  
+        if(extension === "xlsx") {
+          const WorkbookInstance = await XlsxPopulate.fromDataAsync(fileData);
+  
+          const file = await WorkbookInstance.outputAsync("base64");
+  
+          const newTemplate = { name, file };
+  
+          
+          const templateData = await adminTemplateRoleAxios.post(`${REST_ADMIN_TEMPLATES}/upload`, { newTemplate });
+          
+          const { data: { data: { template: { _id } } } } = templateData;
+
+          const tableTemplate = { name, _id };
+  
+          newTemplates.push(tableTemplate);
+        }
+      }
+      
+    } catch(error) {
+      console.error(error);
+    }
+
+    if(newTemplates.length) handleUpdateTemplates(newTemplates);
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop: handleDrop });
+
+  return (
+    <Paper className="dragNDrop">
+      <div {...getRootProps()} className="dragNDrop__content">
+        <input {...getInputProps()} />
+        {
+          isDragActive ?
+            <p>Drop the files here ...</p> :
+            <p>Drag 'n' drop some files here, or click to select files</p>
+        }
+      </div>
+    </Paper>
+  );
+};
 
 const TemplatesTable = ({ templates, history, handleRowAdd, handleRowDelete, handleRowUpdate }) => {
   const handleOpenTemplate = (_event, template) => {
@@ -66,7 +125,7 @@ const TemplatesContainer = ({ history }) => {
   const [ isTableView, setIsTableView ] = useState(true);
 
   useEffect(() => {
-    if(!isDateFetched) {  
+    if(!isDateFetched) { 
       adminTemplateRoleAxios.get(REST_ADMIN_TEMPLATES)
         .then(({ data: { data: { templates } } }) => {
           setTemplates(templates);
@@ -105,7 +164,6 @@ const TemplatesContainer = ({ history }) => {
 
   const handleRowDelete = (template) => new Promise((resolve, reject) => {
     setTimeout(() => {
-
       adminTemplateRoleAxios.delete(`${REST_ADMIN_TEMPLATES}/${template._id}`)
         .then(() => {
           const templateIndex = templates.findIndex(({ _id }) => _id === template._id);
@@ -136,9 +194,14 @@ const TemplatesContainer = ({ history }) => {
     }, 1000);
   });
 
+  const handleUpdateTemplates = (newTemplates) => {
+    setTemplates((templates) => [ ...templates, ...newTemplates ]);
+  };
+
   return (
     <div>
       <Header handleQueryChange={handleQueryChange} handleCreateTemplate={handleCreateTemplate}/>
+      <FileDropzone templates={templates} handleUpdateTemplates={handleUpdateTemplates}/>
       <TemplatesContent templates={filteredTemplates} isTableView={isTableView} history={history} handleRowAdd={handleRowAdd} handleRowDelete={handleRowDelete} handleRowUpdate={handleRowUpdate}/>
     </div>
   );
