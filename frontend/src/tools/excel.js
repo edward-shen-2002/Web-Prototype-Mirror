@@ -4,7 +4,12 @@ import { sheetNameRegex } from "./regex";
 
 import { EditorState, ContentState, RichUtils } from "draft-js";
 
+import { isObjectEmpty } from "tools/misc";
+
 import { 
+  EXCEL_ROW_HEIGHT_SCALE,
+  EXCEL_COLUMN_WIDTH_SCALE,
+
   DEFAULT_EXCEL_SHEET_ROW_COUNT, 
   DEFAULT_EXCEL_SHEET_COLUMN_COUNT,
 
@@ -18,12 +23,10 @@ import {
   DEFAULT_EXCEL_SHEET_FREEZE_COLUMN_COUNT
 } from "constants/excel";
 
-import { isObjectEmpty } from "tools/misc";
-
 let size = -1;
 
 // This utility copied from "dom-helpers" package. -- from react-window
-export function getScrollbarSize(recalculate = false) {
+export const getScrollbarSize = (recalculate = false) => {
   if (size === -1 || recalculate) {
     const div = document.createElement('div');
     const style = div.style;
@@ -39,18 +42,19 @@ export function getScrollbarSize(recalculate = false) {
   }
 
   return size;
-}
+};
+
 
 // Copied from react-window
 export const getEstimatedTotalHeight = (
   { rowCount },
   { rowMetadataMap, estimatedRowHeight, lastMeasuredRowIndex }
-) => {
-  let totalSizeOfMeasuredRows = 0;
-
-  // Edge case check for when the number of items decreases while a scroll is in progress.
-  // https://github.com/bvaughn/react-window/pull/138
-  if (lastMeasuredRowIndex >= rowCount) {
+  ) => {
+    let totalSizeOfMeasuredRows = 0;
+    
+    // Edge case check for when the number of items decreases while a scroll is in progress.
+    // https://github.com/bvaughn/react-window/pull/138
+    if (lastMeasuredRowIndex >= rowCount) {
     lastMeasuredRowIndex = rowCount - 1;
   }
 
@@ -61,7 +65,7 @@ export const getEstimatedTotalHeight = (
 
   const numUnmeasuredItems = rowCount - lastMeasuredRowIndex - 1;
   const totalSizeOfUnmeasuredItems = numUnmeasuredItems * estimatedRowHeight;
-
+  
   return totalSizeOfMeasuredRows + totalSizeOfUnmeasuredItems;
 };
 
@@ -73,43 +77,46 @@ export const getEstimatedTotalWidth = (
     estimatedColumnWidth,
     lastMeasuredColumnIndex,
   }
-) => {
-  let totalSizeOfMeasuredRows = 0;
+  ) => {
+    let totalSizeOfMeasuredRows = 0;
+    
+    // Edge case check for when the number of items decreases while a scroll is in progress.
+    // https://github.com/bvaughn/react-window/pull/138
+    if (lastMeasuredColumnIndex >= columnCount) {
+      lastMeasuredColumnIndex = columnCount - 1;
+    }
+    
+    if (lastMeasuredColumnIndex >= 0) {
+      const itemMetadata = columnMetadataMap[lastMeasuredColumnIndex];
+      totalSizeOfMeasuredRows = itemMetadata.offset + itemMetadata.size;
+    }
+    
+    const numUnmeasuredItems = columnCount - lastMeasuredColumnIndex - 1;
+    const totalSizeOfUnmeasuredItems = numUnmeasuredItems * estimatedColumnWidth;
+    
+    return totalSizeOfMeasuredRows + totalSizeOfUnmeasuredItems;
+  };
 
-  // Edge case check for when the number of items decreases while a scroll is in progress.
-  // https://github.com/bvaughn/react-window/pull/138
-  if (lastMeasuredColumnIndex >= columnCount) {
-    lastMeasuredColumnIndex = columnCount - 1;
-  }
-
-  if (lastMeasuredColumnIndex >= 0) {
-    const itemMetadata = columnMetadataMap[lastMeasuredColumnIndex];
-    totalSizeOfMeasuredRows = itemMetadata.offset + itemMetadata.size;
-  }
-
-  const numUnmeasuredItems = columnCount - lastMeasuredColumnIndex - 1;
-  const totalSizeOfUnmeasuredItems = numUnmeasuredItems * estimatedColumnWidth;
-
-  return totalSizeOfMeasuredRows + totalSizeOfUnmeasuredItems;
-};
-
-export const generateNewSheetName = (sheetNames) => {
-  let uniqueSheetNumber = sheetNames.length + 1;
-
-  sheetNames.forEach((name) => {
-    const match = name.match(sheetNameRegex);
-
-    if(match && uniqueSheetNumber <= match[1]) uniqueSheetNumber++;
-  });
-
-  return `Sheet${uniqueSheetNumber}`;
-};
-
-export const isPositionEqualArea = ({ x, y }, { x1, y1, x2, y2 }) => x === x1 && x === x2 && y === y1 && y === y2;
-
-export const getWorkbookInstance = async ({
-  activeSheetName,
-  sheetNames,
+  export const generateNewSheetName = (sheetNames) => {
+    let uniqueSheetNumber = sheetNames.length + 1;
+    
+    sheetNames.forEach((name) => {
+      const match = name.match(sheetNameRegex);
+      
+      if(match && uniqueSheetNumber <= match[1]) uniqueSheetNumber++;
+    });
+    
+    return `Sheet${uniqueSheetNumber}`;
+  };
+  
+  export const isPositionEqualArea = ({ x, y }, { x1, y1, x2, y2 }) => x === x1 && x === x2 && y === y1 && y === y2;
+  
+  export const getNormalRowHeight = (rowHeight) => rowHeight ? rowHeight * EXCEL_ROW_HEIGHT_SCALE : DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
+  export const getNormalColumnWidth = (columnWidth) => columnWidth ? columnWidth * EXCEL_COLUMN_WIDTH_SCALE : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH;
+  
+  export const getWorkbookInstance = async ({
+    activeSheetName,
+    sheetNames,
   activeCellPosition,
   sheetsCellData,
   sheetsColumnCount,
@@ -160,13 +167,15 @@ export const getWorkbookInstance = async ({
     // Set row heights
     for(let row = 1; row < sheetRowCount; row++) {
       const sheetRowHeight = sheetRowHeights[row];
-      sheet.row(row).height(sheetRowHeight);
+
+      if(sheetRowHeight) sheet.row(row).height(sheetRowHeight);
     }
 
     // Set column widths
     for(let column = 1; column < sheetColumnCount; column++) {
       const sheetColumnWidth = sheetColumnWidths[column];
-      sheet.column(column).width(sheetColumnWidth);
+
+      if(sheetColumnWidth) sheet.column(column).width(sheetColumnWidth);
     }
   };
 
@@ -216,6 +225,7 @@ export const getColumnsData = (sheet, columnCount) => {
     if(sheetColumn.hidden()) hiddenColumns[column] = true;
 
     width = sheetColumn.width();
+
     if(width) columnWidths[column] = width;
   }
 
@@ -395,8 +405,7 @@ export const getTopOffsets = (rowHeights, rowCount) => {
   let topOffsets = [ 0, DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER];
 
   for(let row = 2; row < rowCount; row++) {
-    let rowHeight = rowHeights[row];
-    if(!rowHeight) rowHeight = DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
+    let rowHeight = getNormalRowHeight(rowHeights[row - 1]);
 
     topOffsetsTotal += rowHeight;
     topOffsets.push(topOffsetsTotal);
@@ -410,8 +419,7 @@ export const getLeftOffsets = (columnWidths, columnCount) => {
   let leftOffsets = [ 0, DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER ];
 
   for(let column = 2; column < columnCount; column++) {
-    let columnWidth = columnWidths[column];
-    if(!columnWidth) columnWidth = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH;
+    let columnWidth = getNormalColumnWidth(columnWidths[column - 1]);
 
     leftOffsetTotal += columnWidth;
     leftOffsets.push(leftOffsetTotal);

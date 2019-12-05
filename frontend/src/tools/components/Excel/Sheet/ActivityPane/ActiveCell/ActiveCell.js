@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import { Editor } from "draft-js";
 
-import { getTopOffsets, getLeftOffsets } from "tools/excel";
+import { getTopOffsets, getLeftOffsets, getNormalRowHeight, getNormalColumnWidth } from "tools/excel";
 
 import { DEFAULT_EXCEL_SHEET_ROW_HEIGHT, DEFAULT_EXCEL_SHEET_COLUMN_WIDTH } from "constants/excel";
 
@@ -114,11 +114,8 @@ let ActiveCell = ({
   if(computeActiveCellStyle) {
     activeCellStyle = computeActiveCellStyle(x, y, sheetColumnWidths, leftOffsets, rowHeights, topOffsets, sheetFreezeColumnCount, sheetFreezeRowCount);
   } else {
-    let height = sheetRowHeights[y];
-    let width = sheetColumnWidths[x];
-
-    if(!height) height = DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
-    if(!width) width = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH;
+    let height = getNormalRowHeight(sheetRowHeights[y]);
+    let width = getNormalColumnWidth(sheetColumnWidths[x]);
 
     activeCellStyle = {
       top: topOffsets[y], 

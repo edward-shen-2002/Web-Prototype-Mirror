@@ -25,7 +25,9 @@ import {
   getTopOffsets,
   getLeftOffsets,
   convertTextToEditorState, 
-  convertRichTextToEditorState 
+  convertRichTextToEditorState,
+  getNormalColumnWidth,
+  getNormalRowHeight
 } from "tools/excel";
 
 import { RichText } from "xlsx-populate";
@@ -1156,17 +1158,15 @@ class EventRedux extends PureComponent {
 
     let { scrollTop, scrollLeft } = scrollData;
 
-    // !! CHECK IF UNDEFINED WIDTH/HEIGHT
-
     const topFreezeStart = topOffsets[sheetFreezeRowCount];
     const leftFreezeStart = leftOffsets[sheetFreezeColumnCount];
-    const heightFreezeStart = sheetRowHeights[sheetFreezeRowCount];
-    const widthFreezeStart = sheetColumnWidths[sheetFreezeColumnCount];
+    const heightFreezeStart = getNormalRowHeight(sheetRowHeights[sheetFreezeRowCount]);
+    const widthFreezeStart = getNormalColumnWidth(sheetColumnWidths[sheetFreezeColumnCount]);
 
     const topActiveStart = topOffsets[newY];
     const leftActiveStart = leftOffsets[newX];
-    const heightActiveStart = sheetRowHeights[newY];
-    const widthActiveStart = sheetColumnWidths[newX];
+    const heightActiveStart = getNormalRowHeight(sheetRowHeights[newY]);
+    const widthActiveStart = getNormalColumnWidth(sheetColumnWidths[newX]);
 
     const freezeHeight = topFreezeStart + heightFreezeStart;
     const freezeWidth = leftFreezeStart + widthFreezeStart;

@@ -2,13 +2,16 @@ import React, { Fragment, useMemo } from "react";
 
 import { connect } from "react-redux";
 
-import { getTopOffsets, getLeftOffsets } from "tools/excel";
+import { 
+  getTopOffsets, 
+  getLeftOffsets,
+  getNormalColumnWidth,
+  getNormalRowHeight
+} from "tools/excel";
 
 import { 
   DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER, 
-  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER,
-  DEFAULT_EXCEL_SHEET_ROW_HEIGHT,
-  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH
+  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER
 } from "constants/excel";
 
 import "./HeaderSelection.scss";
@@ -125,8 +128,7 @@ export let HeaderSelection = ({
 
     const topEnd = topOffsets[end];
 
-    let heightEnd = sheetRowHeights[end];
-    if(!heightEnd) heightEnd = DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
+    const heightEnd = getNormalRowHeight(sheetRowHeights[end]);
 
     return ({
       top: topStart,
@@ -142,8 +144,7 @@ export let HeaderSelection = ({
 
     const leftEnd = leftOffsets[end];
     
-    let widthEnd = sheetColumnWidths[end];
-    if(!widthEnd) widthEnd = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH;
+    const widthEnd = getNormalColumnWidth(sheetColumnWidths[end]);
 
     return ({
       top: 0,
@@ -171,7 +172,6 @@ const mapColumnHeaderStateToProps = ({
       activeSelectionArea,
       stagnantSelectionAreas,
       sheetsColumnWidths,
-      sheetsColumnHeights,
       sheetsColumnCount,
       sheetsFreezeColumnCount
     }
@@ -223,9 +223,7 @@ export let ColumnHeaderSelection = ({
     const height = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER;
     
     const leftEnd = leftOffsets[end];
-    let widthEnd = sheetColumnWidths[end];
-
-    if(!widthEnd) widthEnd = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH;
+    const widthEnd = getNormalColumnWidth(sheetColumnWidths[end]);
 
     return ({
       top: 0,
@@ -300,16 +298,14 @@ export let RowHeaderSelection = ({
   const yElementarySegments = mergeSegments(ySegments);
 
   const rowHeaderStyles = yElementarySegments.map(([ start, end ]) => {
-    let topStart = topOffsets[start];
-    let width = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER;
+    const topStart = topOffsets[start];
+    const width = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER;
 
-    let topEnd = topOffsets[end];
-    let heightEnd = sheetRowHeights[end];
-    if(!heightEnd) heightEnd = DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
+    const topEnd = topOffsets[end];
+    const heightEnd = getNormalRowHeight(sheetRowHeights[end]);
 
-    let topFreeze = topOffsets[sheetFreezeRowCount];
-    let heightFreeze = sheetRowHeights[sheetFreezeRowCount];
-    if(!heightFreeze) heightFreeze = DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
+    const topFreeze = topOffsets[sheetFreezeRowCount];
+    const heightFreeze = getNormalRowHeight(sheetRowHeights[sheetFreezeRowCount]);
 
     return ({
       top: topStart - topFreeze - heightFreeze,

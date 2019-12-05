@@ -2,10 +2,7 @@ import React, { Fragment } from "react";
 
 import CommonActivityPane from "./CommonActivityPane";
 
-import {
-  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH,
-  DEFAULT_EXCEL_SHEET_ROW_HEIGHT
-} from "constants/excel";
+import { getNormalRowHeight, getNormalColumnWidth } from "tools/excel";
 
 import {
   STYLE_SELECTION_BORDER_COLOR,
@@ -32,30 +29,21 @@ const computeSelectionAreaStyle = (columnWidths, leftOffsets, rowHeights, topOff
     borderRightColor: STYLE_SELECTION_BORDER_COLOR,
     borderRightStyle: borderStyle
   };
-
+  
   const topStart = topOffsets[y1];
   const leftStart = leftOffsets[x1];
-  let widthStart = columnWidths[x1];
-  let heightStart = rowHeights[y1];
-
-  if(!widthStart) widthStart = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH;
-  if(!heightStart) heightStart = DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
+  const widthStart = getNormalColumnWidth(columnWidths[x1]);
+  const heightStart = getNormalRowHeight(rowHeights[y1]);
 
   const topEnd = topOffsets[y2];
   const leftEnd = leftOffsets[x2];
-  let widthEnd = columnWidths[x2];
-  let heightEnd = rowHeights[y2];
-
-  if(!widthEnd) widthEnd = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH;
-  if(!heightEnd) heightEnd = DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
+  const widthEnd = getNormalColumnWidth(columnWidths[x2]);
+  const heightEnd = getNormalRowHeight(rowHeights[y2]);
 
   const topFrozenEnd = topOffsets[freezeRowCount];
   const leftFrozenEnd = leftOffsets[freezeColumnCount];
-  let widthFrozenEnd = columnWidths[freezeColumnCount];
-  let heightFrozenEnd = rowHeights[freezeRowCount];
-
-  if(!widthFrozenEnd) widthFrozenEnd = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH;
-  if(!heightFrozenEnd) heightFrozenEnd = DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
+  const widthFrozenEnd = getNormalColumnWidth(columnWidths[freezeColumnCount]);
+  const heightFrozenEnd = getNormalRowHeight(rowHeights[freezeRowCount]);
   
   if(freezeColumnCount && (x1 <= freezeColumnCount || x2 <= freezeColumnCount)) {
     left = leftFrozenEnd + widthFrozenEnd;

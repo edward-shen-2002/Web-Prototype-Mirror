@@ -41,3 +41,6 @@ export const DEFAULT_EXCEL_SCROLL_DATA = {
   scrollUpdateWasRequested: false,
   verticalScrollDirection: "forward"
 };
+
+export const EXCEL_ROW_HEIGHT_SCALE = 2;
+export const EXCEL_COLUMN_WIDTH_SCALE = 11.07;

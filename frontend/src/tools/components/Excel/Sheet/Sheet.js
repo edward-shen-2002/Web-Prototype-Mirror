@@ -12,13 +12,7 @@ import memoize from "memoize-one";
 
 import { inputCharacterRegex } from "tools/regex";
 
-import { 
-  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER, 
-  DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
-
-  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH,
-  DEFAULT_EXCEL_SHEET_ROW_HEIGHT
-} from "constants/excel";
+import { getNormalRowHeight, getNormalColumnWidth } from "tools/excel";
 
 import WindowListener from "./WindowListener";
 
@@ -28,6 +22,11 @@ import TopLeftActivityPane from "./ActivityPane/TopLeftActivityPane";
 import TopRightActivityPane from "./ActivityPane/TopRightActivityPane";
 import BottomLeftActivityPane from "./ActivityPane/BottomLeftActivityPane";
 import BottomRightActivityPane from "./ActivityPane/BottomRightActivityPane";
+
+import { 
+  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER, 
+  DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER
+} from "constants/excel";
 
 import "./Sheet.scss";
 
@@ -92,8 +91,6 @@ let SheetWindow = ({
   sheetGridRef,
   eventListenerRef,
 
-  activeSheetName,
-
   sheetCellData,
   sheetFreezeRowCount,
   sheetFreezeColumnCount,
@@ -113,23 +110,15 @@ let SheetWindow = ({
   const tableColumnWidths = useMemo(() => {
     let columnWidths = [ DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER ];
 
-    for(let column = 1; column < sheetColumnCount; column ++) {
-      let columnWidth = sheetColumnWidths[column];
-
-      columnWidths.push(columnWidth ? columnWidth : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER );
-    }
+    for(let column = 1; column < sheetColumnCount; column ++) columnWidths.push(getNormalColumnWidth(sheetColumnWidths[column]));
 
     return columnWidths;
   });
 
   const tableRowHeights = useMemo(() => {
-    let rowHeights = [ DEFAULT_EXCEL_SHEET_ROW_HEIGHT ];
+    let rowHeights = [ DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER ];
 
-    for(let row = 1; row < sheetRowCount; row++) {
-      let rowHeight = sheetRowHeights[row];
-
-      rowHeights.push(rowHeight ? rowHeight : DEFAULT_EXCEL_SHEET_ROW_HEIGHT);
-    }
+    for(let row = 1; row < sheetRowCount; row++) rowHeights.push(getNormalRowHeight(sheetRowHeights[row]));
 
     return rowHeights;
   });
