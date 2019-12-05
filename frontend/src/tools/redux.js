@@ -27,6 +27,8 @@ import { updateSheetsColumnWidthsData, resetSheetsColumnWidthsData } from "actio
 import { updateSheetsRowHeightsData, resetSheetsRowHeightsData } from "actions/ui/excel/sheetsRowHeightsData";
 import { updateSheetsFreezeColumnCount, resetSheetsFreezeColumnCount } from "actions/ui/excel/sheetsFreezeColumnCount";
 import { updateSheetsFreezeRowCount, resetSheetsFreezeRowCount } from "actions/ui/excel/sheetsFreezeRowCount";
+import { updateSheetsHiddenColumns, resetSheetsHiddenColumns } from "actions/ui/excel/sheetsHiddenColumns";
+import { updateSheetsHiddenRows, resetSheetsHiddenRows } from "actions/ui/excel/sheetsHiddenRows";
 
 export const loadUserState = (dispatch, { user, token }) => {
   if(token) {
@@ -65,7 +67,9 @@ export const loadWorkbook = (
     sheetsColumnWidths,
     sheetsRowHeights,
     sheetsFreezeColumnCount,
-    sheetsFreezeRowCount
+    sheetsFreezeRowCount,
+    sheetsHiddenColumns,
+    sheetsHiddenRows
   }
 ) => {
   dispatch(updateActiveCellInputData(activeCellInputData));
@@ -82,6 +86,9 @@ export const loadWorkbook = (
 
   dispatch(updateSheetsFreezeColumnCount(sheetsFreezeColumnCount));
   dispatch(updateSheetsFreezeRowCount(sheetsFreezeRowCount));
+
+  dispatch(updateSheetsHiddenColumns(sheetsHiddenColumns));
+  dispatch(updateSheetsHiddenRows(sheetsHiddenRows));
 };
 
 export const resetWorkbook = (dispatch) => {
@@ -115,4 +122,7 @@ export const resetWorkbook = (dispatch) => {
   dispatch(resetScrollData());
 
   dispatch(setActiveCellInputAutoFocusOff());
+
+  dispatch(resetSheetsHiddenColumns());
+  dispatch(resetSheetsHiddenRows());
 };

@@ -9,7 +9,7 @@ import { adminTemplateRoleAxios } from "tools/rest";
 import { loadWorkbook, resetWorkbook } from "tools/redux";
 import Excel from "tools/components/Excel";
 
-import { getHeaderCount, getColumnWidths, getRowHeights, getSheetCellData, getFreezeHeader, convertRichTextToEditorState, convertTextToEditorState } from "tools/excel";
+import { getHeaderCount, getColumnsData, getRowsData, getSheetCellData, getFreezeHeader, convertRichTextToEditorState, convertTextToEditorState } from "tools/excel";
 
 import { REST_ADMIN_TEMPLATES } from "constants/rest";
 import { ROUTE_ADMIN_TEMPLATE_TEMPLATES } from "constants/routes";
@@ -67,6 +67,8 @@ let Template = ({
           let sheetsRowHeights = {};
           let sheetsFreezeRowCount = {};
           let sheetsCellData = {};
+          let sheetsHiddenColumns = {};
+          let sheetsHiddenRows = {};
 
           sheetNames.forEach((name) => {
             const sheet = WorkbookInstance.sheet(name);
@@ -76,9 +78,9 @@ let Template = ({
             columnCount = Math.max(columnCount, DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1);
             rowCount = Math.max(rowCount, DEFAULT_EXCEL_SHEET_ROW_COUNT + 1);
 
-            let sheetCellData = getSheetCellData(sheet);
-            let columnWidths = getColumnWidths(sheet);
-            let rowHeights = getRowHeights(sheet);
+            let sheetCellData = getSheetCellData(sheet, columnCount, rowCount);
+            let { columnWidths, hiddenColumns } = getColumnsData(sheet, columnCount);
+            let { rowHeights, hiddenRows } = getRowsData(sheet, rowCount);
             let { freezeRowCount, freezeColumnCount } = getFreezeHeader(sheet);
 
             sheetsColumnCount[name] = columnCount;
@@ -89,6 +91,8 @@ let Template = ({
             sheetsRowHeights[name] = rowHeights;
             sheetsFreezeRowCount[name] = freezeRowCount;
             sheetsFreezeColumnCount[name] = freezeColumnCount;
+            sheetsHiddenColumns[name] = hiddenColumns;
+            sheetsHiddenRows[name] = hiddenRows;
           });
 
           let activeCell = activeSheet.activeCell();
@@ -128,10 +132,11 @@ let Template = ({
             sheetsColumnCount,
             sheetsColumnWidths,
             sheetsFreezeColumnCount,
-            
             sheetsRowCount,
             sheetsFreezeRowCount,
             sheetsRowHeights,
+            sheetsHiddenColumns,
+            sheetsHiddenRows,
 
             activeSheetName,
             sheetNames

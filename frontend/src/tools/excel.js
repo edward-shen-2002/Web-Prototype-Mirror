@@ -206,15 +206,18 @@ export const getHeaderCount = (sheet) => {
   return headerCount;
 };
 
-export const getColumnWidths = (sheet) => {
+export const getColumnsData = (sheet, columnCount) => {
   let columnWidths = [ DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER ];
 
-  for(let column = 1; column <= DEFAULT_EXCEL_SHEET_COLUMN_COUNT; column++) {
+  let hiddenColumns = {};
+
+  for(let column = 1; column < columnCount; column++) {
     let width;
 
     const sheetColumn = sheet.column(column);
 
     if(sheetColumn.hidden()) {
+      hiddenColumns[column] = true;
       width = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HIDDEN;
     } else {
       width = sheetColumn.width();
@@ -225,17 +228,20 @@ export const getColumnWidths = (sheet) => {
     columnWidths.push(width);
   }
 
-  return columnWidths;
+  return { columnWidths, hiddenColumns };
 };
 
-export const getRowHeights = (sheet) => {
+export const getRowsData = (sheet, rowCount) => {
   let rowHeights = [ DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER ];
 
-  for(let row = 1; row <= DEFAULT_EXCEL_SHEET_ROW_COUNT; row++) {
+  let hiddenRows = {};
+
+  for(let row = 1; row < rowCount; row++) {
     let height;
     const sheetRow = sheet.row(row);
 
     if(sheetRow.hidden()) {
+      hiddenRows[row] = true;
       height = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HIDDEN;
     } else {
       height = sheetRow.height();
@@ -246,7 +252,7 @@ export const getRowHeights = (sheet) => {
     rowHeights.push(height);
   }
 
-  return rowHeights;
+  return { rowHeights, hiddenRows };
 };
 
 export const extractCellStyle = (cellData) => {
@@ -302,8 +308,6 @@ export const extractCellStyle = (cellData) => {
 
   if(isObjectEmpty(cellStyles.border)) delete cellStyles["border"]; 
 
-  // console.log(cellStyles)
-
   return isObjectEmpty(cellStyles) ? undefined : cellStyles;
 };
 
@@ -324,11 +328,11 @@ const extractCellData = (cellData) => {
   return isObjectEmpty(extractedCellData) ? undefined : extractedCellData;
 };
 
-export const getSheetCellData = (sheet) => {
+export const getSheetCellData = (sheet, columnCount, rowCount) => {
   let sheetCellData = {};
 
-  for(let row = 0; row <= DEFAULT_EXCEL_SHEET_ROW_COUNT; row++) {
-    for(let column = 0; column <= DEFAULT_EXCEL_SHEET_COLUMN_COUNT; column++) {
+  for(let row = 0; row < rowCount; row++) {
+    for(let column = 0; column < columnCount; column++) {
       if(row && column) {
         const cellData = extractCellData(sheet.row(row).cell(column));
 

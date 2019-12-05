@@ -50,25 +50,3 @@ const sheetsRowHeightsDataReducer = createReducer({}, {
 });
 
 export default sheetsRowHeightsDataReducer;
-
-// const rowHeightsLength = rowHeights.length;
-// const columnWidthsLength = columnWidths.length;
-
-// let offsets = [];
-
-// let topOffsetTotal = 0;
-// let topOffsets = [ 0 ];
-
-// // Do not include the last element total. We're only concered with the top (beginning, not end/bottom)
-// for(let row = 1; row < rowHeightsLength; row ++) {
-//   topOffsetTotal += rowHeights[ row - 1 ];
-//   topOffsets.push(topOffsetTotal);
-// }
-
-// let leftOffsetTotal = 0;
-// let leftOffsets = [ 0 ];
-
-// for(let column = 1; column < columnWidthsLength; column++) {
-//   leftOffsetTotal += columnWidths[ column - 1 ];
-//   leftOffsets.push(leftOffsetTotal);
-// }
