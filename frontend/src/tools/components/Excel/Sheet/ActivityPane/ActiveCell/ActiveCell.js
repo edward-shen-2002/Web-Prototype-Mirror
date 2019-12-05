@@ -1,8 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 
 import { connect } from "react-redux";
 
 import { Editor } from "draft-js";
+
+import { getTopOffsets, getLeftOffsets } from "tools/excel";
+
+import { DEFAULT_EXCEL_SHEET_ROW_HEIGHT, DEFAULT_EXCEL_SHEET_COLUMN_WIDTH } from "constants/excel";
 
 import "./ActiveCell.scss";
 
@@ -49,11 +53,13 @@ const mapStateToProps = ({
 
       isEditMode,
 
+      sheetsColumnCount,
+      sheetsRowCount,
       sheetsFreezeColumnCount,
       sheetsFreezeRowCount,
 
-      sheetsColumnWidthsData,
-      sheetsRowHeightsData
+      sheetsColumnWidths,
+      sheetsRowHeights
     }
   }
 }) => ({
@@ -67,8 +73,11 @@ const mapStateToProps = ({
   sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName],
   sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName],
 
-  sheetColumnWidthsData: sheetsColumnWidthsData[activeSheetName],
-  sheetRowHeightsData: sheetsRowHeightsData[activeSheetName]
+  sheetColumnCount: sheetsColumnCount[activeSheetName],
+  sheetRowCount: sheetsRowCount[activeSheetName],
+
+  sheetColumnWidths: sheetsColumnWidths[activeSheetName],
+  sheetRowHeights: sheetsRowHeights[activeSheetName]
 });
 
 let ActiveCell = ({ 
@@ -81,8 +90,11 @@ let ActiveCell = ({
   sheetFreezeColumnCount,
   sheetFreezeRowCount,
 
-  sheetColumnWidthsData: { columnWidths, leftOffsets },
-  sheetRowHeightsData: { rowHeights, topOffsets },
+  sheetColumnCount,
+  sheetRowCount,
+
+  sheetColumnWidths,
+  sheetRowHeights,
 
   isActiveCellInCorrectPane,
 
@@ -90,15 +102,31 @@ let ActiveCell = ({
 
   handleChangeActiveInputData
 }) => {
+  const topOffsets = useMemo(() => getTopOffsets(sheetRowHeights, sheetRowCount), [ sheetRowHeights, sheetRowCount ]);
+  const leftOffsets = useMemo(() => getLeftOffsets(sheetColumnWidths, sheetColumnCount), [ sheetColumnWidths, sheetColumnCount ]);
+
   const { x, y } = activeCellPosition;
 
   if(!isActiveCellInCorrectPane(x, y, sheetFreezeColumnCount, sheetFreezeRowCount)) return null;
 
-  const activeCellStyle = (
-    computeActiveCellStyle 
-      ? computeActiveCellStyle(x, y, columnWidths, leftOffsets, rowHeights, topOffsets, sheetFreezeColumnCount, sheetFreezeRowCount)
-      : { top: topOffsets[y], left: leftOffsets[x], height: rowHeights[y], width: columnWidths[x] }
-  );
+  let activeCellStyle;
+
+  if(computeActiveCellStyle) {
+    activeCellStyle = computeActiveCellStyle(x, y, sheetColumnWidths, leftOffsets, rowHeights, topOffsets, sheetFreezeColumnCount, sheetFreezeRowCount);
+  } else {
+    let height = sheetRowHeights[y];
+    let width = sheetColumnWidths[x];
+
+    if(!height) height = DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
+    if(!width) width = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH;
+
+    activeCellStyle = {
+      top: topOffsets[y], 
+      left: leftOffsets[x], 
+      height,
+      width
+    }
+  }
 
   return (
     isEditMode 

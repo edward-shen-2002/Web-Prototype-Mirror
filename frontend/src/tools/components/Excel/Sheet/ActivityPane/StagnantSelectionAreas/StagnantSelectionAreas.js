@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { connect } from "react-redux";
+
+import { getTopOffsets, getLeftOffsets } from "tools/excel";
 
 import "./StagnantSelectionAreas.scss";
 
@@ -16,8 +18,11 @@ const mapStateToProps = ({
 
       sheetsFreezeRowCount,
       sheetsFreezeColumnCount,
-      sheetsColumnWidthsData,
-      sheetsRowHeightsData
+      sheetsColumnWidths,
+      sheetsRowHeights,
+
+      sheetsRowCount,
+      sheetsColumnCount
     }
   }
 }) => ({
@@ -25,8 +30,10 @@ const mapStateToProps = ({
 
   sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName],
   sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName],
-  sheetColumnWidthsData: sheetsColumnWidthsData[activeSheetName],
-  sheetRowHeightsData: sheetsRowHeightsData[activeSheetName]
+  sheetColumnWidths: sheetsColumnWidths[activeSheetName],
+  sheetRowHeights: sheetsRowHeights[activeSheetName],
+  sheetColumnCount: sheetsColumnCount[activeSheetName],
+  sheetRowCount: sheetsRowCount[activeSheetName]
 });
 
 let StagnantSelectionAreas = ({
@@ -35,15 +42,21 @@ let StagnantSelectionAreas = ({
   sheetFreezeColumnCount,
   sheetFreezeRowCount,
 
-  sheetColumnWidthsData: { columnWidths, leftOffsets },
-  sheetRowHeightsData: { rowHeights, topOffsets },
+  sheetColumnWidths,
+  sheetRowHeights,
+
+  sheetColumnCount,
+  sheetRowCount,
 
   isRelevantArea,
   computeSelectionAreaStyle
 }) => {
   const relevantStagnantSelectionAreas = stagnantSelectionAreas.filter(({ x1, y1, x2, y2 }) => isRelevantArea(x1, y1, x2, y2, sheetFreezeColumnCount, sheetFreezeRowCount));
 
-  const relevantStagnantSelectionAreasStyles = relevantStagnantSelectionAreas.map((stagnantSelectionArea) => computeSelectionAreaStyle(columnWidths, leftOffsets, rowHeights, topOffsets, stagnantSelectionArea, sheetFreezeColumnCount, sheetFreezeRowCount, false));
+  const topOffsets = useMemo(() => getTopOffsets(sheetRowHeights, sheetRowCount), [ sheetRowHeights, sheetRowCount ]);
+  const leftOffsets = useMemo(() => getLeftOffsets(sheetColumnWidths, sheetColumnCount), [ sheetColumnWidths, sheetColumnCount ]);
+
+  const relevantStagnantSelectionAreasStyles = relevantStagnantSelectionAreas.map((stagnantSelectionArea) => computeSelectionAreaStyle(sheetColumnWidths, leftOffsets, sheetRowHeights, topOffsets, stagnantSelectionArea, sheetFreezeColumnCount, sheetFreezeRowCount, false));
 
   return (
     <StagnantSelectionAreasComponents

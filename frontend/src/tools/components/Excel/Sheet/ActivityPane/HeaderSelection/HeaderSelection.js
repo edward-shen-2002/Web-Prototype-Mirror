@@ -1,6 +1,15 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
 
 import { connect } from "react-redux";
+
+import { getTopOffsets, getLeftOffsets } from "tools/excel";
+
+import { 
+  DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER, 
+  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER,
+  DEFAULT_EXCEL_SHEET_ROW_HEIGHT,
+  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH
+} from "constants/excel";
 
 import "./HeaderSelection.scss";
 
@@ -11,8 +20,10 @@ const mapHeaderStateToProps = ({
       activeCellPosition,
       activeSelectionArea,
       stagnantSelectionAreas,
-      sheetsColumnWidthsData,
-      sheetsRowHeightsData,
+      sheetsColumnWidths,
+      sheetsRowHeights,
+      sheetsRowCount,
+      sheetsColumnCount,
       sheetsFreezeColumnCount,
       sheetsFreezeRowCount
     }
@@ -21,8 +32,10 @@ const mapHeaderStateToProps = ({
   activeCellPosition,
   activeSelectionArea,
   stagnantSelectionAreas,
-  sheetColumnWidthsData: sheetsColumnWidthsData[activeSheetName],
-  sheetRowHeightsData: sheetsRowHeightsData[activeSheetName],
+  sheetColumnWidths: sheetsColumnWidths[activeSheetName],
+  sheetRowHeights: sheetsRowHeights[activeSheetName],
+  sheetRowCount: sheetsRowCount[activeSheetName],
+  sheetColumnCount: sheetsColumnCount[activeSheetName],
   sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName],
   sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName]
 });
@@ -65,11 +78,16 @@ export let HeaderSelection = ({
   activeCellPosition, 
   activeSelectionArea, 
   stagnantSelectionAreas,
-  sheetColumnWidthsData: { columnWidths, leftOffsets },
-  sheetRowHeightsData: { rowHeights, topOffsets },
+  sheetColumnWidths,
+  sheetRowHeights,
+  sheetRowCount,
+  sheetColumnCount,
   sheetFreezeColumnCount,
   sheetFreezeRowCount
 }) => {
+  const topOffsets = useMemo(() => getTopOffsets(sheetRowHeights, sheetRowCount), [ sheetRowHeights, sheetRowCount ]);
+  const leftOffsets = useMemo(() => getLeftOffsets(sheetColumnWidths, sheetColumnCount), [ sheetColumnWidths, sheetColumnCount ]);
+
   const { x, y } = activeCellPosition;
   // Combine/merge x and y segments
   // Format active cell position
@@ -103,10 +121,12 @@ export let HeaderSelection = ({
 
   const rowHeaderStyles = yElementarySegments.map(([ start, end ]) => {
     const topStart = topOffsets[start];
-    const width = columnWidths[0];
+    const width = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER;
 
     const topEnd = topOffsets[end];
-    const heightEnd = rowHeights[end];
+
+    let heightEnd = sheetRowHeights[end];
+    if(!heightEnd) heightEnd = DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
 
     return ({
       top: topStart,
@@ -118,10 +138,12 @@ export let HeaderSelection = ({
 
   const columnHeaderStyles = xElementarySegments.map(([ start, end ]) => {
     const leftStart = leftOffsets[start];
-    const height = rowHeights[0];
+    const height = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER;
 
     const leftEnd = leftOffsets[end];
-    const widthEnd = columnWidths[end];
+    
+    let widthEnd = sheetColumnWidths[end];
+    if(!widthEnd) widthEnd = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH;
 
     return ({
       top: 0,
@@ -148,8 +170,9 @@ const mapColumnHeaderStateToProps = ({
       activeCellPosition,
       activeSelectionArea,
       stagnantSelectionAreas,
-      sheetsColumnWidthsData,
-      sheetsRowHeightsData,
+      sheetsColumnWidths,
+      sheetsColumnHeights,
+      sheetsColumnCount,
       sheetsFreezeColumnCount
     }
   }
@@ -157,8 +180,8 @@ const mapColumnHeaderStateToProps = ({
   activeCellPosition,
   activeSelectionArea,
   stagnantSelectionAreas,
-  sheetColumnWidthsData: sheetsColumnWidthsData[activeSheetName],
-  sheetRowHeightsData: sheetsRowHeightsData[activeSheetName],
+  sheetColumnWidths: sheetsColumnWidths[activeSheetName],
+  sheetColumnCount: sheetsColumnCount[activeSheetName],
   sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName]
 });
 
@@ -166,10 +189,12 @@ export let ColumnHeaderSelection = ({
   activeCellPosition, 
   activeSelectionArea, 
   stagnantSelectionAreas,
-  sheetColumnWidthsData: { columnWidths, leftOffsets },
-  sheetRowHeightsData: { rowHeights },
+  sheetColumnWidths,
+  sheetColumnCount,
   sheetFreezeColumnCount
 }) => {
+  const leftOffsets = useMemo(() => getLeftOffsets(sheetColumnWidths, sheetColumnCount), [ sheetColumnWidths, sheetColumnCount ]);
+
   const { x } = activeCellPosition;
   // Combine/merge x and y segments
   // Format active cell position
@@ -195,10 +220,12 @@ export let ColumnHeaderSelection = ({
 
   const columnHeaderStyles = xElementarySegments.map(([ start, end ]) => {
     const leftStart = leftOffsets[start];
-    const height = rowHeights[0];
+    const height = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER;
     
     const leftEnd = leftOffsets[end];
-    const widthEnd = columnWidths[end];
+    let widthEnd = sheetColumnWidths[end];
+
+    if(!widthEnd) widthEnd = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH;
 
     return ({
       top: 0,
@@ -223,8 +250,9 @@ const mapRowHeaderStateToProps = ({
       activeSelectionArea,
       stagnantSelectionAreas,
 
-      sheetsColumnWidthsData,
-      sheetsRowHeightsData,
+      sheetsRowHeights,
+
+      sheetsRowCount,
 
       sheetsFreezeRowCount
     }
@@ -233,8 +261,8 @@ const mapRowHeaderStateToProps = ({
   activeCellPosition,
   activeSelectionArea,
   stagnantSelectionAreas,
-  sheetColumnWidthsData: sheetsColumnWidthsData[activeSheetName],
-  sheetRowHeightsData: sheetsRowHeightsData[activeSheetName],
+  sheetRowHeights: sheetsRowHeights[activeSheetName],
+  sheetRowCount: sheetsRowCount[activeSheetName],
   sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName]
 });
 
@@ -242,10 +270,12 @@ export let RowHeaderSelection = ({
   activeCellPosition, 
   activeSelectionArea, 
   stagnantSelectionAreas,
-  sheetColumnWidthsData: { columnWidths },
-  sheetRowHeightsData: { rowHeights, topOffsets },
+  sheetRowHeights,
+  sheetRowCount,
   sheetFreezeRowCount
 }) => {
+  const topOffsets = useMemo(() => getTopOffsets(sheetRowHeights, sheetRowCount), [ sheetRowHeights, sheetRowCount ]);
+
   const { y } = activeCellPosition;
   // Combine/merge x and y segments
   // Format active cell position
@@ -271,13 +301,15 @@ export let RowHeaderSelection = ({
 
   const rowHeaderStyles = yElementarySegments.map(([ start, end ]) => {
     let topStart = topOffsets[start];
-    let width = columnWidths[0];
+    let width = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER;
 
     let topEnd = topOffsets[end];
-    let heightEnd = rowHeights[end];
+    let heightEnd = sheetRowHeights[end];
+    if(!heightEnd) heightEnd = DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
 
     let topFreeze = topOffsets[sheetFreezeRowCount];
-    let heightFreeze = rowHeights[sheetFreezeRowCount];
+    let heightFreeze = sheetRowHeights[sheetFreezeRowCount];
+    if(!heightFreeze) heightFreeze = DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
 
     return ({
       top: topStart - topFreeze - heightFreeze,

@@ -5,6 +5,11 @@ import CommonActivityPane from "./CommonActivityPane";
 import { RowHeaderSelection } from "./HeaderSelection";
 
 import {
+  DEFAULT_EXCEL_SHEET_ROW_HEIGHT,
+  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH
+} from "constants/excel";
+
+import {
   STYLE_SELECTION_BORDER_COLOR,
   STYLE_SELECTION_BORDER_WIDTH,
 
@@ -32,18 +37,27 @@ const computeSelectionAreaStyle = (columnWidths, leftOffsets, rowHeights, topOff
 
   const topStart = topOffsets[y1];
   const leftStart = leftOffsets[x1];
-  const widthStart = columnWidths[x1];
-  const heightStart = rowHeights[y1];
+  let widthStart = columnWidths[x1];
+  let heightStart = rowHeights[y1];
+
+  if(!widthStart) widthStart = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH;
+  if(!heightStart) heightStart = DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
 
   const topEnd = topOffsets[y2];
   const leftEnd = leftOffsets[x2];
-  const widthEnd = columnWidths[x2];
-  const heightEnd = rowHeights[y2];
+  let widthEnd = columnWidths[x2];
+  let heightEnd = rowHeights[y2];
+
+  if(!widthEnd) widthEnd = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH;
+  if(!heightEnd) heightEnd = DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
 
   const topFrozenEnd = topOffsets[freezeRowCount];
   const leftFrozenEnd = leftOffsets[freezeColumnCount];
-  const widthFrozenEnd = columnWidths[freezeColumnCount];
-  const heightFrozenEnd = rowHeights[freezeRowCount];
+  let widthFrozenEnd = columnWidths[freezeColumnCount];
+  let heightFrozenEnd = rowHeights[freezeRowCount];
+
+  if(!widthFrozenEnd) widthFrozenEnd = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH;
+  if(!heightFrozenEnd) heightFrozenEnd = DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
 
   const minLeft = x1 < x2 ? leftStart : leftEnd;
   left = minLeft;

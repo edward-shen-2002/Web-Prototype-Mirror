@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { connect } from "react-redux";
 
@@ -11,6 +11,14 @@ import AutoSizer from "react-virtualized-auto-sizer";
 import memoize from "memoize-one";
 
 import { inputCharacterRegex } from "tools/regex";
+
+import { 
+  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER, 
+  DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
+
+  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH,
+  DEFAULT_EXCEL_SHEET_ROW_HEIGHT
+} from "constants/excel";
 
 import WindowListener from "./WindowListener";
 
@@ -30,21 +38,20 @@ const mapStateToProps = ({
       sheetsCellData,
       sheetsColumnCount,
       sheetsRowCount,
-      sheetsColumnWidthsData,
-      sheetsRowHeightsData,
+      sheetsColumnWidths,
+      sheetsRowHeights,
       sheetsFreezeRowCount,
       sheetsFreezeColumnCount
     }
   }
 }) => ({
-  activeSheetName,
-  sheetsCellData,
-  sheetsColumnCount,
-  sheetsRowCount,
-  sheetsColumnWidthsData,
-  sheetsRowHeightsData,
-  sheetsFreezeRowCount,
-  sheetsFreezeColumnCount
+  sheetCellData: sheetsCellData[activeSheetName],
+  sheetColumnCount: sheetsColumnCount[activeSheetName],
+  sheetRowCount: sheetsRowCount[activeSheetName],
+  sheetColumnWidths: sheetsColumnWidths[activeSheetName],
+  sheetRowHeights: sheetsRowHeights[activeSheetName],
+  sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName],
+  sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName]
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -87,13 +94,13 @@ let SheetWindow = ({
 
   activeSheetName,
 
-  sheetsCellData,
-  sheetsFreezeRowCount,
-  sheetsFreezeColumnCount,
-  sheetsColumnCount,
-  sheetsRowCount,
-  sheetsColumnWidthsData,
-  sheetsRowHeightsData,
+  sheetCellData,
+  sheetFreezeRowCount,
+  sheetFreezeColumnCount,
+  sheetColumnCount,
+  sheetRowCount,
+  sheetColumnWidths,
+  sheetRowHeights,
 
   handleUpdateScrollData
 }) => {
@@ -103,16 +110,35 @@ let SheetWindow = ({
     EventListenerInstance = eventListenerRef.current;
   });
 
-  const { rowHeights } = sheetsRowHeightsData[activeSheetName];
-  const { columnWidths } = sheetsColumnWidthsData[activeSheetName];
-  const tableFreezeRowCount = sheetsFreezeRowCount[activeSheetName] + 1;
-  const tableFreezeColumnCount = sheetsFreezeColumnCount[activeSheetName] + 1;
-  const rowCount = sheetsRowCount[activeSheetName];
-  const columnCount = sheetsColumnCount[activeSheetName];
-  const sheetCellData = sheetsCellData[activeSheetName];
+  const tableColumnWidths = useMemo(() => {
+    let columnWidths = [ DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER ];
 
-  const rowHeight = (index) => rowHeights[index];
-  const columnWidth = (index) => columnWidths[index];
+    for(let column = 1; column < sheetColumnCount; column ++) {
+      let columnWidth = sheetColumnWidths[column];
+
+      columnWidths.push(columnWidth ? columnWidth : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER );
+    }
+
+    return columnWidths;
+  });
+
+  const tableRowHeights = useMemo(() => {
+    let rowHeights = [ DEFAULT_EXCEL_SHEET_ROW_HEIGHT ];
+
+    for(let row = 1; row < sheetRowCount; row++) {
+      let rowHeight = sheetRowHeights[row];
+
+      rowHeights.push(rowHeight ? rowHeight : DEFAULT_EXCEL_SHEET_ROW_HEIGHT);
+    }
+
+    return rowHeights;
+  });
+
+  const tableFreezeRowCount = sheetFreezeRowCount + 1;
+  const tableFreezeColumnCount = sheetFreezeColumnCount + 1;
+
+  const rowHeight = (index) => tableRowHeights[index];
+  const columnWidth = (index) => tableColumnWidths[index];
 
   const handleSelectionStart = (x1, y1, ctrlKey, shiftKey) => EventListenerInstance.startSelection(x1, y1, ctrlKey, shiftKey);
 
@@ -133,8 +159,8 @@ let SheetWindow = ({
   const itemData = createItemData(
     sheetCellData, 
     
-    columnCount,
-    rowCount,
+    sheetColumnCount,
+    sheetRowCount,
 
     handleDoubleClickEditableCell,
 
@@ -155,11 +181,11 @@ let SheetWindow = ({
           ref={sheetGridRef}
           freezeRowCount={tableFreezeRowCount}
           freezeColumnCount={tableFreezeColumnCount}
-          columnCount={columnCount}
+          columnCount={sheetColumnCount}
           columnWidth={columnWidth}
           height={height}
           itemData={itemData}
-          rowCount={rowCount}
+          rowCount={sheetRowCount}
           rowHeight={rowHeight}
           width={width}
 

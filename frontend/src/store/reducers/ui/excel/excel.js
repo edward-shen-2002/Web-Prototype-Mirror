@@ -16,10 +16,10 @@ import isEditMode from "./isEditMode";
 
 import sheetsCellData from "./sheetsCellData";
 import sheetsColumnCount from "./sheetsColumnCount";
-import sheetsColumnWidthsData from "./sheetsColumnWidthsData";
+import sheetsColumnWidths from "./sheetsColumnWidths";
 import sheetsFreezeColumnCount from "./sheetsFreezeColumnCount";
 import sheetsRowCount from "./sheetsRowCount";
-import sheetsRowHeightsData from "./sheetsRowHeightsData";
+import sheetsRowHeights from "./sheetsRowHeights";
 import sheetsFreezeRowCount from "./sheetsFreezeRowCount";
 import sheetsHiddenColumns from "./sheetsHiddenColumns";
 import sheetsHiddenRows from "./sheetsHiddenRows";
@@ -41,10 +41,10 @@ const excelReducer = combineReducers({
 
   sheetsCellData,
   sheetsColumnCount,
-  sheetsColumnWidthsData,
+  sheetsColumnWidths,
   sheetsFreezeColumnCount,
   sheetsRowCount,
-  sheetsRowHeightsData,
+  sheetsRowHeights,
   sheetsFreezeRowCount,
   sheetsHiddenColumns,
   sheetsHiddenRows

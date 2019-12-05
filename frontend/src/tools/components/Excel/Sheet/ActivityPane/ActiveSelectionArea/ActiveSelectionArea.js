@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { connect } from "react-redux";
+
+import { getTopOffsets, getLeftOffsets } from "tools/excel";
 
 import "./ActiveSelectionArea.scss";
 
@@ -14,8 +16,11 @@ const mapStateToProps = ({
       sheetsFreezeColumnCount,
       sheetsFreezeRowCount,
 
-      sheetsColumnWidthsData,
-      sheetsRowHeightsData
+      sheetsColumnWidths,
+      sheetsRowHeights,
+
+      sheetsColumnCount,
+      sheetsRowCount
     }
   }
 }) => ({
@@ -24,8 +29,10 @@ const mapStateToProps = ({
 
   sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName],
   sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName],
-  sheetColumnWidthsData: sheetsColumnWidthsData[activeSheetName],
-  sheetRowHeightsData: sheetsRowHeightsData[activeSheetName]
+  sheetColumnWidths: sheetsColumnWidths[activeSheetName],
+  sheetRowHeights: sheetsRowHeights[activeSheetName],
+  sheetColumnCount: sheetsColumnCount[activeSheetName],
+  sheetRowCount: sheetsRowCount[activeSheetName]
 });
 
 let ActiveSelectionArea = ({ 
@@ -38,19 +45,25 @@ let ActiveSelectionArea = ({
   sheetFreezeColumnCount,
   sheetFreezeRowCount,
 
-  sheetColumnWidthsData: { columnWidths, leftOffsets },
-  sheetRowHeightsData: { rowHeights, topOffsets }
+  sheetColumnWidths,
+  sheetRowHeights,
+
+  sheetColumnCount,
+  sheetRowCount
 }) => {
   if(!isSelectionMode || !activeSelectionArea) return null;
+
+  const topOffsets = useMemo(() => getTopOffsets(sheetRowHeights, sheetRowCount), [ sheetRowHeights, sheetRowCount ]);
+  const leftOffsets = useMemo(() => getLeftOffsets(sheetColumnWidths, sheetColumnCount), [ sheetColumnWidths, sheetColumnCount ]);
 
   const { x1, y1, x2, y2 } = activeSelectionArea;
 
   if(!isRelevantArea(x1, y1, x2, y2, sheetFreezeColumnCount, sheetFreezeRowCount)) return null;
 
   const activeSelectionAreaStyle = computeSelectionAreaStyle(
-    columnWidths, 
+    sheetColumnWidths, 
     leftOffsets, 
-    rowHeights, 
+    sheetRowHeights, 
     topOffsets,
     activeSelectionArea, 
     sheetFreezeColumnCount, 

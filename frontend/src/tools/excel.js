@@ -2,7 +2,7 @@ import XlsxPopulate from "xlsx-populate";
 
 import { sheetNameRegex } from "./regex";
 
-import { EditorState, ContentState, RichUtils, SelectionState } from "draft-js";
+import { EditorState, ContentState, RichUtils } from "draft-js";
 
 import { 
   DEFAULT_EXCEL_SHEET_ROW_COUNT, 
@@ -11,9 +11,6 @@ import {
   DEFAULT_EXCEL_SHEET_ROW_HEIGHT,
   DEFAULT_EXCEL_SHEET_COLUMN_WIDTH,
 
-  DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HIDDEN,
-  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HIDDEN,
-  
   DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
   DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER,
 
@@ -116,10 +113,10 @@ export const getWorkbookInstance = async ({
   activeCellPosition,
   sheetsCellData,
   sheetsColumnCount,
-  sheetsColumnWidthsData,
+  sheetsColumnWidths,
   sheetsFreezeColumnCount,
   sheetsRowCount,
-  sheetsRowHeightsData,
+  sheetsRowHeights,
   sheetsFreezeRowCount
 }) => {
   let Workbook = await XlsxPopulate.fromBlankAsync();
@@ -132,10 +129,10 @@ export const getWorkbookInstance = async ({
 
     const sheetCellData = sheetsCellData[sheetName];
     const sheetColumnCount = sheetsColumnCount[sheetName];
-    const sheetColumnWidths = sheetsColumnWidthsData[sheetName].columnWidths;
+    const sheetColumnWidths = sheetsColumnWidths[sheetName];
     const sheetFreezeColumnCount = sheetsFreezeColumnCount[sheetName];
     const sheetRowCount = sheetsRowCount[sheetName];
-    const sheetRowHeights = sheetsRowHeightsData[sheetName].rowHeights;
+    const sheetRowHeights = sheetsRowHeights[sheetName];
     const sheetFreezeRowCount = sheetsFreezeRowCount[sheetName];
 
     // May be a default sheet
@@ -392,3 +389,33 @@ export const convertTextToEditorState = (text) => {
     ))
   );
 }
+
+export const getTopOffsets = (rowHeights, rowCount) => {
+  let topOffsetsTotal = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER;
+  let topOffsets = [ 0, DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER];
+
+  for(let row = 2; row < rowCount; row++) {
+    let rowHeight = rowHeights[row];
+    if(!rowHeight) rowHeight = DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
+
+    topOffsetsTotal += rowHeight;
+    topOffsets.push(topOffsetsTotal);
+  }
+
+  return topOffsets;
+};
+
+export const getLeftOffsets = (columnWidths, columnCount) => {
+  let leftOffsetTotal = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER;
+  let leftOffsets = [ 0, DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER ];
+
+  for(let column = 2; column < columnCount; column++) {
+    let columnWidth = columnWidths[column];
+    if(!columnWidth) columnWidth = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH;
+
+    leftOffsetTotal += columnWidth;
+    leftOffsets.push(leftOffsetTotal);
+  }
+
+  return leftOffsets;
+};

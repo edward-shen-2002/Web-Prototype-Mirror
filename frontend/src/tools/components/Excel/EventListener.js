@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent, useMemo } from "react";
 
 import { connect } from "react-redux";
 
@@ -16,7 +16,17 @@ import { updateStagnantSelectionAreas, resetStagnantSelectionAreas } from "actio
 
 import { updateSheetCellData } from "actions/ui/excel/sheetsCellData";
 
-import { isPositionEqualArea, getScrollbarSize, getEstimatedTotalHeight, getEstimatedTotalWidth, getCellData, convertTextToEditorState, convertRichTextToEditorState } from "tools/excel";
+import { 
+  isPositionEqualArea, 
+  getScrollbarSize, 
+  getEstimatedTotalHeight, 
+  getEstimatedTotalWidth, 
+  getCellData, 
+  getTopOffsets,
+  getLeftOffsets,
+  convertTextToEditorState, 
+  convertRichTextToEditorState 
+} from "tools/excel";
 
 import { RichText } from "xlsx-populate";
 
@@ -40,8 +50,8 @@ const mapStateToProps = ({
 
       sheetsColumnCount,
       sheetsRowCount,
-      sheetsColumnWidthsData,
-      sheetsRowHeightsData,
+      sheetsColumnWidths,
+      sheetsRowHeights,
       sheetsCellData,
       sheetsFreezeColumnCount,
       sheetsFreezeRowCount
@@ -67,8 +77,8 @@ const mapStateToProps = ({
   sheetCellData: sheetsCellData[activeSheetName],
   sheetRowCount: sheetsRowCount[activeSheetName],
   sheetColumnCount: sheetsColumnCount[activeSheetName],
-  sheetColumnWidthsData: sheetsColumnWidthsData[activeSheetName],
-  sheetRowHeightsData: sheetsRowHeightsData[activeSheetName],
+  sheetColumnWidths: sheetsColumnWidths[activeSheetName],
+  sheetRowHeights: sheetsRowHeights[activeSheetName],
   sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName],
   sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName]
 });
@@ -118,8 +128,8 @@ let EventListener = ({
   sheetCellData,
   sheetFreezeColumnCount,
   sheetFreezeRowCount,
-  sheetColumnWidthsData,
-  sheetRowHeightsData,
+  sheetColumnWidths,
+  sheetRowHeights,
 
   isSelectionMode,
   isEditMode,
@@ -154,61 +164,68 @@ let EventListener = ({
 
   handleSetActiveCellInputAutoFocusOn,
   handleSetActiveCellInputAutoFocusOff
-}) => (
-  <EventRedux 
-    ref={eventListenerRef} 
-    sheetGridRef={sheetGridRef}
+}) => {
+  const topOffsets = useMemo(() => getTopOffsets(sheetRowHeights, sheetRowCount), [ sheetRowHeights, sheetRowCount ]);
+  const leftOffsets = useMemo(() => getLeftOffsets(sheetColumnWidths, sheetColumnCount), [ sheetColumnWidths, sheetColumnCount ]);
 
-    sheetRowCount={sheetRowCount}
-    sheetColumnCount={sheetColumnCount}
-    sheetCellData={sheetCellData}
-    sheetFreezeColumnCount={sheetFreezeColumnCount}
-    sheetFreezeRowCount={sheetFreezeRowCount}
-    sheetColumnWidthsData={sheetColumnWidthsData}
-    sheetRowHeightsData={sheetRowHeightsData}
-    
-    activeCellInputData={activeCellInputData}
-    activeSheetName={activeSheetName}
-    activeCellPosition={activeCellPosition}
-    activeSelectionArea={activeSelectionArea}
-    activeCellSelectionAreaIndex={activeCellSelectionAreaIndex}
-    activeCellInputAutoFocus={activeCellInputAutoFocus}
-
-    stagnantSelectionAreas={stagnantSelectionAreas}
-    
-    scrollData={scrollData}
-
-    isSelectionMode={isSelectionMode}
-    isEditMode={isEditMode}
-
-    handleUpdateActiveCellSelectionAreaIndex={handleUpdateActiveCellSelectionAreaIndex}
-    handleResetActiveCellSelectionAreaIndex={handleResetActiveCellSelectionAreaIndex} 
-
-    handleUpdateStagnantSelectionAreas={handleUpdateStagnantSelectionAreas}
-    handleResetStagnantSelectionAreas={handleResetStagnantSelectionAreas}
-
-    handleUpdateActiveCellPosition={handleUpdateActiveCellPosition}
-
-    handleUpdateActiveSelectionArea={handleUpdateActiveSelectionArea}
-    handleResetActiveSelectionArea={handleResetActiveSelectionArea}
-
-    handleSetSelectionModeOn={handleSetSelectionModeOn}
-    handleSetSelectionModeOff={handleSetSelectionModeOff}
-
-    handleSetEditModeOn={handleSetEditModeOn}
-    handleSetEditModeOff={handleSetEditModeOff}
-
-    handleChangeSheetCellData={handleChangeSheetCellData}
-
-    handleUpdateScrollData={handleUpdateScrollData}
-
-    handleUpdateActiveCellInputData={handleUpdateActiveCellInputData}
-    handleResetActiveCellInputData={handleResetActiveCellInputData}
-
-    handleSetActiveCellInputAutoFocusOn={handleSetActiveCellInputAutoFocusOn}
-    handleSetActiveCellInputAutoFocusOff={handleSetActiveCellInputAutoFocusOff}
-  />
-);
+  return (
+    <EventRedux 
+      ref={eventListenerRef} 
+      sheetGridRef={sheetGridRef}
+  
+      sheetRowCount={sheetRowCount}
+      sheetColumnCount={sheetColumnCount}
+      sheetCellData={sheetCellData}
+      sheetFreezeColumnCount={sheetFreezeColumnCount}
+      sheetFreezeRowCount={sheetFreezeRowCount}
+      sheetColumnWidths={sheetColumnWidths}
+      sheetRowHeights={sheetRowHeights}
+      leftOffsets={leftOffsets}
+      topOffsets={topOffsets}
+      
+      activeCellInputData={activeCellInputData}
+      activeSheetName={activeSheetName}
+      activeCellPosition={activeCellPosition}
+      activeSelectionArea={activeSelectionArea}
+      activeCellSelectionAreaIndex={activeCellSelectionAreaIndex}
+      activeCellInputAutoFocus={activeCellInputAutoFocus}
+  
+      stagnantSelectionAreas={stagnantSelectionAreas}
+      
+      scrollData={scrollData}
+  
+      isSelectionMode={isSelectionMode}
+      isEditMode={isEditMode}
+  
+      handleUpdateActiveCellSelectionAreaIndex={handleUpdateActiveCellSelectionAreaIndex}
+      handleResetActiveCellSelectionAreaIndex={handleResetActiveCellSelectionAreaIndex} 
+  
+      handleUpdateStagnantSelectionAreas={handleUpdateStagnantSelectionAreas}
+      handleResetStagnantSelectionAreas={handleResetStagnantSelectionAreas}
+  
+      handleUpdateActiveCellPosition={handleUpdateActiveCellPosition}
+  
+      handleUpdateActiveSelectionArea={handleUpdateActiveSelectionArea}
+      handleResetActiveSelectionArea={handleResetActiveSelectionArea}
+  
+      handleSetSelectionModeOn={handleSetSelectionModeOn}
+      handleSetSelectionModeOff={handleSetSelectionModeOff}
+  
+      handleSetEditModeOn={handleSetEditModeOn}
+      handleSetEditModeOff={handleSetEditModeOff}
+  
+      handleChangeSheetCellData={handleChangeSheetCellData}
+  
+      handleUpdateScrollData={handleUpdateScrollData}
+  
+      handleUpdateActiveCellInputData={handleUpdateActiveCellInputData}
+      handleResetActiveCellInputData={handleResetActiveCellInputData}
+  
+      handleSetActiveCellInputAutoFocusOn={handleSetActiveCellInputAutoFocusOn}
+      handleSetActiveCellInputAutoFocusOff={handleSetActiveCellInputAutoFocusOff}
+    />  
+  );
+};
 
 EventListener = connect(mapStateToProps, mapDispatchToProps)(EventListener);
 
@@ -1117,8 +1134,10 @@ class EventRedux extends PureComponent {
       sheetFreezeColumnCount,
       sheetFreezeRowCount,
 
-      sheetColumnWidthsData: { columnWidths, leftOffsets },
-      sheetRowHeightsData: { rowHeights, topOffsets },
+      topOffsets,
+      leftOffsets,
+      sheetColumnWidths,
+      sheetRowHeights,
 
       scrollData,
     } = this.props;
@@ -1137,15 +1156,17 @@ class EventRedux extends PureComponent {
 
     let { scrollTop, scrollLeft } = scrollData;
 
+    // !! CHECK IF UNDEFINED WIDTH/HEIGHT
+
     const topFreezeStart = topOffsets[sheetFreezeRowCount];
     const leftFreezeStart = leftOffsets[sheetFreezeColumnCount];
-    const heightFreezeStart = rowHeights[sheetFreezeRowCount];
-    const widthFreezeStart = columnWidths[sheetFreezeColumnCount];
+    const heightFreezeStart = sheetRowHeights[sheetFreezeRowCount];
+    const widthFreezeStart = sheetColumnWidths[sheetFreezeColumnCount];
 
     const topActiveStart = topOffsets[newY];
     const leftActiveStart = leftOffsets[newX];
-    const heightActiveStart = rowHeights[newY];
-    const widthActiveStart = columnWidths[newX];
+    const heightActiveStart = sheetRowHeights[newY];
+    const widthActiveStart = sheetColumnWidths[newX];
 
     const freezeHeight = topFreezeStart + heightFreezeStart;
     const freezeWidth = leftFreezeStart + widthFreezeStart;
