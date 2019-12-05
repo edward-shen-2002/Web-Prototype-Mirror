@@ -207,7 +207,7 @@ export const getHeaderCount = (sheet) => {
 };
 
 export const getColumnsData = (sheet, columnCount) => {
-  let columnWidths = [ DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER ];
+  let columnWidths = {};
 
   let hiddenColumns = {};
 
@@ -216,23 +216,17 @@ export const getColumnsData = (sheet, columnCount) => {
 
     const sheetColumn = sheet.column(column);
 
-    if(sheetColumn.hidden()) {
-      hiddenColumns[column] = true;
-      width = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HIDDEN;
-    } else {
-      width = sheetColumn.width();
+    if(sheetColumn.hidden()) hiddenColumns[column] = true;
 
-      width = width ? width * 9.69 : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH;
-    }
-
-    columnWidths.push(width);
+    width = sheetColumn.width();
+    if(width) columnWidths[column] = width;
   }
 
   return { columnWidths, hiddenColumns };
 };
 
 export const getRowsData = (sheet, rowCount) => {
-  let rowHeights = [ DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER ];
+  let rowHeights = {};
 
   let hiddenRows = {};
 
@@ -240,16 +234,10 @@ export const getRowsData = (sheet, rowCount) => {
     let height;
     const sheetRow = sheet.row(row);
 
-    if(sheetRow.hidden()) {
-      hiddenRows[row] = true;
-      height = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HIDDEN;
-    } else {
-      height = sheetRow.height();
+    if(sheetRow.hidden()) hiddenRows[row] = true;
 
-      height = height ? height * 1.666 : DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
-    }
-
-    rowHeights.push(height);
+    height = sheetRow.height();
+    if(height) rowHeights[row] = height;
   }
 
   return { rowHeights, hiddenRows };

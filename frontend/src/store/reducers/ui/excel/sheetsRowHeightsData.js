@@ -1,12 +1,13 @@
 import { createReducer } from "store/tools/setup";
 
-const getTopOffsets = (rowHeights) => {
-  const rowHeightsLength = rowHeights.length;
-
+// ! Change this later - this shouldn't be here since it's precalculated/predetermined by heights
+// ! Consider heigth scaling
+const getTopOffsets = (rowHeights, rowCount) => {
   let topOffsetsTotal = 0;
   let topOffsets = [ 0 ];
 
-  for(let row = 1; row < rowHeightsLength; row++) {
+  for(let row = 1; row < rowCount; row++) {
+    if(rowHeights)
     topOffsetsTotal += rowHeights[ row - 1 ];
     topOffsets.push(topOffsetsTotal);
   }
