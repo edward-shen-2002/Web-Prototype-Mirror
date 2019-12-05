@@ -402,7 +402,7 @@ export const convertTextToEditorState = (text) => {
 
 export const getTopOffsets = (rowHeights, rowCount) => {
   let topOffsetsTotal = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER;
-  let topOffsets = [ 0, DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER];
+  let topOffsets = [ 0, DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER ];
 
   for(let row = 2; row < rowCount; row++) {
     let rowHeight = getNormalRowHeight(rowHeights[row - 1]);

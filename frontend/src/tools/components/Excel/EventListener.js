@@ -30,6 +30,11 @@ import {
   getNormalRowHeight
 } from "tools/excel";
 
+import {
+  DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
+  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER
+} from "constants/excel";
+
 import { RichText } from "xlsx-populate";
 
 const mapStateToProps = ({ 
@@ -1158,10 +1163,10 @@ class EventRedux extends PureComponent {
 
     let { scrollTop, scrollLeft } = scrollData;
 
-    const topFreezeStart = topOffsets[sheetFreezeRowCount];
-    const leftFreezeStart = leftOffsets[sheetFreezeColumnCount];
-    const heightFreezeStart = getNormalRowHeight(sheetRowHeights[sheetFreezeRowCount]);
-    const widthFreezeStart = getNormalColumnWidth(sheetColumnWidths[sheetFreezeColumnCount]);
+    const topFreezeStart = topOffsets[sheetFreezeRowCount + 1];
+    const leftFreezeStart = leftOffsets[sheetFreezeColumnCount + 1];
+    const heightFreezeStart = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER;
+    const widthFreezeStart = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER;
 
     const topActiveStart = topOffsets[newY];
     const leftActiveStart = leftOffsets[newX];
@@ -1189,14 +1194,14 @@ class EventRedux extends PureComponent {
 
     // Active cell is under freeze
     if(newY > sheetFreezeRowCount && topActiveStart < scrollTop + freezeHeight) {
-      newScrollTop = topActiveStart - freezeHeight;
+      newScrollTop = topActiveStart + DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER - freezeHeight;
     // Beyond bottom side
     } else if(topActiveStart + heightActiveStart > scrollTop + height - horizontalScrollbarSize){
       newScrollTop = topActiveStart + heightActiveStart - height + horizontalScrollbarSize;
     }
     
     if(newX > sheetFreezeColumnCount &&  leftActiveStart < scrollLeft + freezeWidth) {
-      newScrollLeft = leftActiveStart - freezeWidth;
+      newScrollLeft = leftActiveStart + DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER - freezeWidth;
     // Beyond visible right side
     } else if(leftActiveStart + widthActiveStart > scrollLeft + width - verticalScrollbarSize){
       newScrollLeft = leftActiveStart + widthActiveStart - width + verticalScrollbarSize;

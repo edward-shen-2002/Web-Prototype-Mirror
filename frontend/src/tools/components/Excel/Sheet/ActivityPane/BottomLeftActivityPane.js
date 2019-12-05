@@ -97,10 +97,15 @@ const computeSelectionAreaStyle = (columnWidths, leftOffsets, rowHeights, topOff
 };
 
 const computeActiveCellStyle = (x, y, columnWidths, leftOffsets, rowHeights, topOffsets, _sheetFreezeColumnCount, sheetFreezeRowCount) => {
-  let activeCellStyle = { top: topOffsets[y], left: leftOffsets[x], height: rowHeights[y], width: columnWidths[x] };
+  let activeCellStyle = { 
+    top: topOffsets[y], 
+    left: leftOffsets[x], 
+    height: getNormalRowHeight(rowHeights[y]), 
+    width: getNormalColumnWidth(columnWidths[x]) 
+  };
 
   let topFreeze = topOffsets[sheetFreezeRowCount];
-  let heightFreeze = rowHeights[sheetFreezeRowCount];
+  let heightFreeze = getNormalRowHeight(rowHeights[sheetFreezeRowCount]);
 
   activeCellStyle.top = activeCellStyle.top - topFreeze - heightFreeze;
 

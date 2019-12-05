@@ -112,7 +112,7 @@ let ActiveCell = ({
   let activeCellStyle;
 
   if(computeActiveCellStyle) {
-    activeCellStyle = computeActiveCellStyle(x, y, sheetColumnWidths, leftOffsets, rowHeights, topOffsets, sheetFreezeColumnCount, sheetFreezeRowCount);
+    activeCellStyle = computeActiveCellStyle(x, y, sheetColumnWidths, leftOffsets, sheetRowHeights, topOffsets, sheetFreezeColumnCount, sheetFreezeRowCount);
   } else {
     let height = getNormalRowHeight(sheetRowHeights[y]);
     let width = getNormalColumnWidth(sheetColumnWidths[x]);

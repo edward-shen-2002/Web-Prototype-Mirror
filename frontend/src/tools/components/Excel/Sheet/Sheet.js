@@ -252,7 +252,7 @@ const Sheet = ({
 
   // https://stackoverflow.com/questions/3169786/clear-text-selection-with-javascript
   const handleDragStart = () => {
-    var selection = window.getSelection ? window.getSelection() : document.selection;
+    let selection = window.getSelection ? window.getSelection() : document.selection;
 
     if (selection) {
       if (selection.removeAllRanges) {
