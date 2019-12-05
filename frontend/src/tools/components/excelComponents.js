@@ -2,7 +2,7 @@ import { extractCellStyle } from "tools/excel";
 
 import uniqid from "uniqid";
 
-export const RichTextCellContent = ({ richText }) => {
+export const RichTextCellContent = (richText) => {
   let Fragments = [];
 
   const richTextLength = richText.length;
