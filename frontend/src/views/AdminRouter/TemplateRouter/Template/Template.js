@@ -49,7 +49,6 @@ let Template = ({
 
   useEffect(() => {
     if(!isDataFetched) {
-      console.time("Process");
       adminTemplateRoleAxios.get(`${REST_ADMIN_TEMPLATES}/${_id}`)
         .then(async ({ data: { data: { template } } }) => {
           const { file } = template;
@@ -121,8 +120,6 @@ let Template = ({
               ? { editorState: convertRichTextToEditorState(activeCellInputValueData) }
               : { editorState: convertTextToEditorState(activeCellInputValueData) }
           );
-
-          console.timeEnd("Process");
 
           handleLoadTemplate({
             activeCellPosition,

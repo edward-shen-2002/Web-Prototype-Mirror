@@ -2,6 +2,9 @@ import React from "react";
 
 import { connect } from "react-redux";
 
+import { updateSheetNames } from "actions/ui/excel/sheetNames";
+import { updateActiveSheetName } from "actions/ui/excel/activeSheetName";
+
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import Button from "@material-ui/core/Button";
@@ -18,11 +21,16 @@ const AddButton = ({ handleClick }) => (
   </Button>
 );
 
-const SheetNameDraggable = ({ provided, sheetName, activeSheetName }) => {
+const SheetNameDraggable = ({ 
+  provided, 
+  sheetName, 
+  activeSheetName,
+  handleChangeActiveSheet
+}) => {
   const isActive = activeSheetName === sheetName;
 
   const handleClick = () => {
-    // if(!isActive) handleChangeSheet(index);
+    if(!isActive) handleChangeActiveSheet(sheetName);
   };
 
   return (
@@ -39,28 +47,55 @@ const SheetNameDraggable = ({ provided, sheetName, activeSheetName }) => {
   );
 };
 
-const SheetNamesDraggables = ({ sheetNames, activeSheetName }) => sheetNames.map((sheetName, index) => (
+const SheetNamesDraggables = ({ 
+  sheetNames, 
+  activeSheetName, 
+  handleChangeActiveSheet 
+}) => sheetNames.map((sheetName, index) => (
   <Draggable key={`sheet-name-${sheetName}`} draggableId={sheetName} index={index}>
     {(provided) => (
-      <SheetNameDraggable provided={provided} sheetName={sheetName} activeSheetName={activeSheetName} index={index}/>
+      <SheetNameDraggable 
+        provided={provided} 
+        sheetName={sheetName} 
+        activeSheetName={activeSheetName} 
+        index={index}
+        handleChangeActiveSheet={handleChangeActiveSheet}
+      />
     )}
   </Draggable>
 ));
 
-const SheetNamesDroppable = ({ sheetNames, activeSheetName }) => (
+const SheetNamesDroppable = ({ 
+  sheetNames, 
+  activeSheetName,
+  handleChangeActiveSheet
+}) => (
   <Droppable droppableId="droppable" direction="horizontal">
     {(provided) => (
       <div ref={provided.innerRef} className="sheetNavigator__droppable" {...provided.droppableProps}>
-        <SheetNamesDraggables sheetNames={sheetNames} activeSheetName={activeSheetName}/>
+        <SheetNamesDraggables 
+          sheetNames={sheetNames} 
+          activeSheetName={activeSheetName}
+          handleChangeActiveSheet={handleChangeActiveSheet}
+        />
         {provided.placeholder}
       </div>
     )}
   </Droppable>
 );
 
-const SheetSelectionContext = ({ activeSheetName, sheetNames, handleDragEnd }) => (
+const SheetSelectionContext = ({ 
+  activeSheetName, 
+  sheetNames, 
+  handleDragEnd,
+  handleChangeActiveSheet 
+}) => (
   <DragDropContext onDragEnd={handleDragEnd}>
-    <SheetNamesDroppable sheetNames={sheetNames} activeSheetName={activeSheetName}/>
+    <SheetNamesDroppable 
+      sheetNames={sheetNames} 
+      activeSheetName={activeSheetName} 
+      handleChangeActiveSheet={handleChangeActiveSheet}
+    />
   </DragDropContext>
 );
 
@@ -76,35 +111,41 @@ const mapStateToProps = ({
   activeSheetName
 });
 
-let SheetNavigator = ({ activeSheetName, sheetNames }) => {
+const mapDispatchToProps = (dispatch) => ({
+  handleChangeActiveSheet: (activeSheetName) => dispatch(updateActiveSheetName(activeSheetName)),
+  handleChangeSheetNames: (sheetNames) => dispatch(updateSheetNames(sheetNames)) 
+});
+
+let SheetNavigator = ({ 
+  activeSheetName, 
+  sheetNames,
+
+  handleChangeActiveSheet,
+  handleChangeSheetNames
+}) => {
   // ! Think carefully about this one...
   const handleAddSheet = () => {
     // const newSheetName = generateNewSheetName(sheetNames);
 
-    // workbook.addSheet(newSheetName);
     // handleUpdateSheetNames([ ...sheetNames, newSheetName ]);
   };
 
   const handleDragEnd = (result) => {
     if(!result.destination) return;
 
-    // const newSheetNames = DnDReorder(sheetNames, result.source.index, result.destination.index);
+    const newSheetNames = DnDReorder(sheetNames, result.source.index, result.destination.index);
 
-    // const movedSheet = workbook.sheet(result.source.index);
-
-    // const sheetName = movedSheet.name();
-
-    // workbook.moveSheet(sheetName, result.destination.index);
+    handleChangeSheetNames(newSheetNames);
   };
 
   return (
     <div className="sheetNavigator">
       <AddButton handleClick={handleAddSheet}/>
-      <SheetSelectionContext sheetNames={sheetNames} activeSheetName={activeSheetName} handleDragEnd={handleDragEnd}/>
+      <SheetSelectionContext sheetNames={sheetNames} activeSheetName={activeSheetName} handleDragEnd={handleDragEnd} handleChangeActiveSheet={handleChangeActiveSheet}/>
     </div>
   );
 };
 
-SheetNavigator = connect(mapStateToProps)(SheetNavigator);
+SheetNavigator = connect(mapStateToProps, mapDispatchToProps)(SheetNavigator);
 
 export default SheetNavigator;
