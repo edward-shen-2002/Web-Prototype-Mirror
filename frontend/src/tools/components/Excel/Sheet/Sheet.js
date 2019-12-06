@@ -277,13 +277,13 @@ const Sheet = ({
       onKeyDown={handleKeyDown}
       onDragStart={handleDragStart}
       onClick={handleClick}
+      onContextMenu={(event) => event.preventDefault()}
     >
       <SheetWindow 
         sheetContainerRef={sheetContainerRef} 
         eventListenerRef={eventListenerRef}
         sheetGridRef={sheetGridRef}
       />
-      
       <WindowListener eventListenerRef={eventListenerRef}/>
     </div>
   );

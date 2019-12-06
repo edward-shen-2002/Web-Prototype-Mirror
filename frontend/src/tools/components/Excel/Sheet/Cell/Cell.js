@@ -4,9 +4,35 @@ import { columnNumberToName } from "xlsx-populate/lib/addressConverter";
 
 import { RichText } from "xlsx-populate";
 
-import { RichTextCellContent } from "tools/components/excelComponents";
+import { extractCellRichTextStyle } from "tools/excel";
+
+import uniqid from "uniqid";
 
 import "./Cell.scss";
+
+const RichTextCellContent = (richText) => {
+  let Fragments = [];
+
+  const richTextLength = richText.length;
+
+  for(let fragmentIndex = 0; fragmentIndex < richTextLength; fragmentIndex++) {
+    const fragment = richText.get(fragmentIndex);
+
+    const fragmentStyles = extractCellRichTextStyle(fragment);
+
+    if(fragmentStyles) {
+      const fragmentText = fragment.value();
+
+      Fragments.push(
+        <span key={uniqid()} style={fragmentStyles}>
+          {fragmentText}
+        </span>
+      );
+    }
+  }
+
+  return Fragments;
+};
 
 // ! Selection algorithms is a bit too complicated and time consuming to implement. Leave for now.
 

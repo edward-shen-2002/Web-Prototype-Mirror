@@ -7,6 +7,11 @@ const WindowListener = ({ eventListenerRef }) => {
       eventListenerRef.current.mouseUp(ctrlKey);
     };
 
+    // ! Handle scroll when outside sheet grid
+    window.onmousemove = ({ clientX, clientY }) => {
+      
+    };
+
     return () => {
       window.onmouseup = null;
     };

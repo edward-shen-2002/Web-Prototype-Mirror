@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import { getWorkbookInstance } from "tools/excel";
 
-import MenuItems from "../MenuItems";
+import MenuItems from "tools/components/Excel/commonComponents/MenuItems";
 
 import SaveIcon from "@material-ui/icons/Save";
 

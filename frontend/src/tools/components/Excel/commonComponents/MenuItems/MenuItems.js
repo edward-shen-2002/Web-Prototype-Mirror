@@ -52,7 +52,7 @@ const MenuOptionsContainer = ({ options }) => (
   </List>
 );
 
-const MenuOptions = ({ isOpen, options, anchorEl }) => (
+export const MenuOptions = ({ isOpen, options, anchorEl }) => (
   <Popper
     className="menuOptionsContainer"
     open={isOpen}
