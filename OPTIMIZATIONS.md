@@ -21,3 +21,7 @@ Two spread operators are being called twice, when it is only required once... Fi
 Event Listener is listening to too many state updates.
 
 It's possible that we could categorize and shrink the amount of functions.
+
+### Excel State
+
+The active sheet is the only important item that's visible. The other sheet states are not being used and are just taking up space. We could compress/serialize the inactive sheets and only decompress/convert back to state when activated.
