@@ -8,10 +8,8 @@
     @include shadow;
     
     height: fit-content !important;
+    width: fit-content !important;
     background-color: white;
-    min-height: fit-content;
-    min-width: fit-content;
-    height: fit-content;
     z-index: 1;
   }
 

@@ -251,6 +251,17 @@ export const getRowsData = (sheet, rowCount) => {
 };
 
 // TODO
+const convertXlsxColorToCss = ({ rgb, theme }) => {
+  let convertedStyle;
+
+  if(rgb) {
+    convertedStyle = `#${rgb.length === 6 ? rgb : rgb.substring(2)}`;
+  } 
+
+  return convertedStyle;
+};
+
+// TODO
 export const convertXlsxStyleToInlineStyle = (xlsxStyle) => {
   let inlineStyle = {};
 
@@ -299,40 +310,28 @@ export const convertXlsxStyleToInlineStyle = (xlsxStyle) => {
   if(subscript) inlineStyle.verticalAlign = "sub";
   if(superscript) inlineStyle.verticalAlign = "super";
   if(fontSize) inlineStyle.fontSize = fontSize;
+
   if(fontFamily) inlineStyle.fontFamily = fontFamily;
 
-  if(fontColor) {
-    const { rgb, theme } = fontColor;
-
-    if(rgb) {
-      // rgb === [ "System Foreground", "System Background", "#000000" ]
-      inlineStyle.color = `#${rgb.length === 6 ? rgb : rgb.substring(2)}`;
-    } 
-    // else if(theme) {
-    // }
-  }
+  if(fontColor) inlineStyle.color = convertXlsxColorToCss(fontColor);
 
   if(fill) {
     const { type, color } = fill;
 
-    if(type === "solid") {
-      const { rgb, theme } = color;
-
-      if(rgb) {
-        inlineStyle.backgroundColor = `#${rgb.length === 6 ? rgb : rgb.substring(2)}`;
-      }
-    }
+    if(type === "solid") inlineStyle.backgroundColor = convertXlsxColorToCss(color);
   }
 
   if(horizontalAlignment) inlineStyle.textAlign = horizontalAlignment;
 
   // if(verticalAlignment) inlineStyle.verticalAlign = verticalAlignment;
 
-  if(bottomBorder) console.log(bottomBorder)
+
+  // if(bottomBorder) console.log(bottomBorder)
 
   return inlineStyle;
 };
 
+// TODO
 export const convertInlineStyleToXlsxStyle = (inlineStyle) => {
   let xlsxStyle ={};
 
@@ -394,6 +393,33 @@ export const extractCellStyle = (cellData) => {
   return isObjectEmpty(cellStyles) ? undefined : convertXlsxStyleToInlineStyle(cellStyles);
 };
 
+export const extractCellRichTextStyle = (cellData) => {
+  let cellStyles = (
+    cellData
+      ? cellData.style([
+        "bold", 
+        "italic", 
+        "underline", 
+        "strikethrough", 
+        "subscript", 
+        "fontSize", 
+        "fontFamily", 
+        "fontGenericFamily", 
+        "fontScheme", 
+        "fontColor"
+        ])
+      : {}
+  );
+
+  for(let styleName in cellStyles) {
+    const styleValue = cellStyles[styleName];
+
+    if(!styleValue) delete cellStyles[styleName];
+  }
+
+  return isObjectEmpty(cellStyles) ? undefined : convertXlsxStyleToInlineStyle(cellStyles);
+};
+
 const extractCellData = (cellData) => {
   const cellValue = cellData.value();
 
@@ -447,15 +473,13 @@ export const getFreezeHeader = (sheet) => {
   return freezeHeader;
 };
 
-export const convertRichTextToEditorState = (richText) => {
+export const convertRichTextToEditorState = (richText, editorState = EditorState.createEmpty()) => {
   const richTextLength = richText.length;
-
-  let editorState = EditorState.createEmpty();
   
   for(let fragmentIndex = 0; fragmentIndex < richTextLength; fragmentIndex++) {
     const fragment = richText.get(fragmentIndex);
 
-    const fragmentStyles = extractCellStyle(fragment);
+    const fragmentStyles = extractCellRichTextStyle(fragment);
 
     if(fragmentStyles) {
       editorState = RichUtils.toggleInlineStyle(

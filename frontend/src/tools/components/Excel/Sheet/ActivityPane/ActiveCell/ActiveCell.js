@@ -6,8 +6,6 @@ import { Editor } from "draft-js";
 
 import { getTopOffsets, getLeftOffsets, getNormalRowHeight, getNormalColumnWidth } from "tools/excel";
 
-import { DEFAULT_EXCEL_SHEET_ROW_HEIGHT, DEFAULT_EXCEL_SHEET_COLUMN_WIDTH } from "constants/excel";
-
 import "./ActiveCell.scss";
 
 const ActiveInputCell = ({ 
@@ -30,7 +28,7 @@ const ActiveInputCell = ({
   const handleReturn = ({ key, ctrlKey, altKey }) => key === "Enter" && (!ctrlKey && !altKey) ? "handled" : "not-handled";
 
   return (
-    <div className="activeCell activeCell--editMode" style={{ ...activeCellStyle, minHeight: "fit-content" }}>
+    <div className="activeCell activeCell--editMode" style={activeCellStyle}>
       <Editor
         key="active-cell-input"
         ref={editorRef}
@@ -121,7 +119,9 @@ let ActiveCell = ({
       top: topOffsets[y], 
       left: leftOffsets[x], 
       height,
-      width
+      width,
+      minHeight: height,
+      minWidth: width
     }
   }
 

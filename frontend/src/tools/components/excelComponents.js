@@ -1,4 +1,6 @@
-import { extractCellStyle } from "tools/excel";
+import React from "react";
+
+import { extractCellRichTextStyle } from "tools/excel";
 
 import uniqid from "uniqid";
 
@@ -10,7 +12,7 @@ export const RichTextCellContent = (richText) => {
   for(let fragmentIndex = 0; fragmentIndex < richTextLength; fragmentIndex++) {
     const fragment = richText.get(fragmentIndex);
 
-    const fragmentStyles = extractCellStyle(fragment);
+    const fragmentStyles = extractCellRichTextStyle(fragment);
 
     if(fragmentStyles) {
       const fragmentText = fragment.value();
