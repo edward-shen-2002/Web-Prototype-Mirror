@@ -250,6 +250,94 @@ export const getRowsData = (sheet, rowCount) => {
   return { rowHeights, hiddenRows };
 };
 
+// TODO
+export const convertXlsxStyleToInlineStyle = (xlsxStyle) => {
+  let inlineStyle = {};
+
+  const {
+    bold,
+    italic,
+    underline,
+    strikethrough,
+    subscript,
+    superscript,
+    fontSize,
+    fontFamily,
+    fontGenericFamily,
+    fontScheme,
+    fontColor,
+    horizontalAlignment,
+    justifyLastLine,
+    indent,
+    verticalAlignment,
+    wrapText,
+    shrinkToFit,
+    textDirection,
+    textRotation,
+    angleTextCounterclockwise,
+    angleTextClockwise,
+    rotateTextUp,
+    rotateTextDown,
+    verticalText,
+    fill,
+    border,
+    borderColor,
+    borderStyle,
+    leftBorder, 
+    rightBorder, 
+    topBorder, 
+    bottomBorder, 
+    diagonalBorder,
+    diagonalBorderDirection, 
+    numberFormat
+  } = xlsxStyle;
+
+  if(bold) inlineStyle.fontWeight = "bold";
+  if(italic) inlineStyle.fontStyle = "italic";
+  if(underline) inlineStyle.textDecoration = "underline";
+  if(strikethrough) inlineStyle.textDecoration = underline ? inlineStyle.textDecoration + " line-through" : "line-through";
+  if(subscript) inlineStyle.verticalAlign = "sub";
+  if(superscript) inlineStyle.verticalAlign = "super";
+  if(fontSize) inlineStyle.fontSize = fontSize;
+  if(fontFamily) inlineStyle.fontFamily = fontFamily;
+
+  if(fontColor) {
+    const { rgb, theme } = fontColor;
+
+    if(rgb) {
+      // rgb === [ "System Foreground", "System Background", "#000000" ]
+      inlineStyle.color = `#${rgb.length === 6 ? rgb : rgb.substring(2)}`;
+    } 
+    // else if(theme) {
+    // }
+  }
+
+  if(fill) {
+    const { type, color } = fill;
+
+    if(type === "solid") {
+      const { rgb, theme } = color;
+
+      if(rgb) {
+        inlineStyle.backgroundColor = `#${rgb.length === 6 ? rgb : rgb.substring(2)}`;
+      }
+    }
+  }
+
+  if(horizontalAlignment) inlineStyle.textAlign = horizontalAlignment;
+
+  // if(verticalAlignment) inlineStyle.verticalAlign = verticalAlignment;
+
+  if(bottomBorder) console.log(bottomBorder)
+
+  return inlineStyle;
+};
+
+export const convertInlineStyleToXlsxStyle = (inlineStyle) => {
+  let xlsxStyle ={};
+
+};
+
 export const extractCellStyle = (cellData) => {
   let cellStyles = (
     cellData
@@ -303,7 +391,7 @@ export const extractCellStyle = (cellData) => {
 
   if(isObjectEmpty(cellStyles.border)) delete cellStyles["border"]; 
 
-  return isObjectEmpty(cellStyles) ? undefined : cellStyles;
+  return isObjectEmpty(cellStyles) ? undefined : convertXlsxStyleToInlineStyle(cellStyles);
 };
 
 const extractCellData = (cellData) => {
