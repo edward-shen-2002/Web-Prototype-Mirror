@@ -25,3 +25,9 @@ It's possible that we could categorize and shrink the amount of functions.
 ### Excel State
 
 The active sheet is the only important item that's visible. The other sheet states are not being used and are just taking up space. We could compress/serialize the inactive sheets and only decompress/convert back to state when activated.
+
+### Sockets
+
+Currently, this is not possible to implement with the time constraints, and may be even too ambitious to attempt.
+
+This lifts a lot of the heavy work on the client's machine as the bulk of the work handled by the server. With the server, browser constraints are removed, and full processing power and multi-threading might be possible to utilize. Need to research SSR, socketsk, ...
