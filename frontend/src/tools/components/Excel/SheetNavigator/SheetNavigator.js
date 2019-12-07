@@ -22,6 +22,7 @@ const AddButton = ({ handleClick }) => (
 );
 
 const SheetNameDraggable = ({ 
+  sheetGridRef,
   provided, 
   sheetName, 
   activeSheetName,
@@ -30,7 +31,10 @@ const SheetNameDraggable = ({
   const isActive = activeSheetName === sheetName;
 
   const handleClick = () => {
-    if(!isActive) handleChangeActiveSheet(sheetName);
+    if(!isActive) {
+      handleChangeActiveSheet(sheetName);
+      sheetGridRef.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
+    }
   };
 
   return (
@@ -48,6 +52,7 @@ const SheetNameDraggable = ({
 };
 
 const SheetNamesDraggables = ({ 
+  sheetGridRef,
   sheetNames, 
   activeSheetName, 
   handleChangeActiveSheet 
@@ -55,6 +60,7 @@ const SheetNamesDraggables = ({
   <Draggable key={`sheet-name-${sheetName}`} draggableId={sheetName} index={index}>
     {(provided) => (
       <SheetNameDraggable 
+        sheetGridRef={sheetGridRef}
         provided={provided} 
         sheetName={sheetName} 
         activeSheetName={activeSheetName} 
@@ -66,6 +72,7 @@ const SheetNamesDraggables = ({
 ));
 
 const SheetNamesDroppable = ({ 
+  sheetGridRef,
   sheetNames, 
   activeSheetName,
   handleChangeActiveSheet
@@ -74,6 +81,7 @@ const SheetNamesDroppable = ({
     {(provided) => (
       <div ref={provided.innerRef} className="sheetNavigator__droppable" {...provided.droppableProps}>
         <SheetNamesDraggables 
+          sheetGridRef={sheetGridRef}
           sheetNames={sheetNames} 
           activeSheetName={activeSheetName}
           handleChangeActiveSheet={handleChangeActiveSheet}
@@ -85,6 +93,7 @@ const SheetNamesDroppable = ({
 );
 
 const SheetSelectionContext = ({ 
+  sheetGridRef,
   activeSheetName, 
   sheetNames, 
   handleDragEnd,
@@ -92,6 +101,7 @@ const SheetSelectionContext = ({
 }) => (
   <DragDropContext onDragEnd={handleDragEnd}>
     <SheetNamesDroppable 
+      sheetGridRef={sheetGridRef}
       sheetNames={sheetNames} 
       activeSheetName={activeSheetName} 
       handleChangeActiveSheet={handleChangeActiveSheet}
@@ -136,7 +146,6 @@ let SheetNavigator = ({
 
     const newSheetNames = DnDReorder(sheetNames, result.source.index, result.destination.index);
 
-    sheetGridRef.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
     handleChangeSheetNames(newSheetNames);
   };
 
@@ -144,6 +153,7 @@ let SheetNavigator = ({
     <div className="sheetNavigator">
       <AddButton handleClick={handleAddSheet}/>
       <SheetSelectionContext 
+        sheetGridRef={sheetGridRef}
         sheetNames={sheetNames} 
         activeSheetName={activeSheetName} 
         handleDragEnd={handleDragEnd} 

@@ -155,7 +155,7 @@ let SheetWindow = ({
   );
 
   const commonSelectionPaneProps = { sheetGridRef, handleChangeActiveInputData };
-  
+
   return (
     <AutoSizer>
       {({ height, width }) => (

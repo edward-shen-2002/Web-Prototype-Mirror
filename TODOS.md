@@ -12,7 +12,6 @@
 - [ ] Resize excel headers
 - [ ] Compress inactive sheets
 - [ ] Upload excel in serialized state instead of base 64 xlsx-populate
-- [ ] Update excel states when switching sheets
 
 ## Unprioritized
 
