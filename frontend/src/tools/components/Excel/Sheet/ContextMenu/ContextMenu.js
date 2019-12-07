@@ -9,7 +9,7 @@ const ContextMenu = () => {
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
       <div>
-        <MenuItems/>
+        <MenuOptions />
       </div>
     </ClickAwayListener>
   );

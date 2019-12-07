@@ -13,7 +13,6 @@
 - [ ] Compress inactive sheets
 - [ ] Upload excel in serialized state instead of base 64 xlsx-populate
 - [ ] Update excel states when switching sheets
-- [ ] Cannot select multiple single cells on the same column/row
 
 ## Unprioritized
 

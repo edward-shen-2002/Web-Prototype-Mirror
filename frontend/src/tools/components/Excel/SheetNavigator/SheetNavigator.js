@@ -117,6 +117,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 let SheetNavigator = ({ 
+  sheetGridRef,
   activeSheetName, 
   sheetNames,
 
@@ -135,13 +136,19 @@ let SheetNavigator = ({
 
     const newSheetNames = DnDReorder(sheetNames, result.source.index, result.destination.index);
 
+    sheetGridRef.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
     handleChangeSheetNames(newSheetNames);
   };
 
   return (
     <div className="sheetNavigator">
       <AddButton handleClick={handleAddSheet}/>
-      <SheetSelectionContext sheetNames={sheetNames} activeSheetName={activeSheetName} handleDragEnd={handleDragEnd} handleChangeActiveSheet={handleChangeActiveSheet}/>
+      <SheetSelectionContext 
+        sheetNames={sheetNames} 
+        activeSheetName={activeSheetName} 
+        handleDragEnd={handleDragEnd} 
+        handleChangeActiveSheet={handleChangeActiveSheet}
+      />
     </div>
   );
 };

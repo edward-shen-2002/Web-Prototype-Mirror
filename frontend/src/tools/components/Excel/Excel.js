@@ -44,8 +44,9 @@ const Excel = ({
         sheetGridRef={sheetGridRef}
       />
       <Divider/>
-      <SheetNavigator/>
-
+      <SheetNavigator
+        sheetGridRef={sheetGridRef}
+      />
       <EventListener 
         sheetGridRef={sheetGridRef}
         eventListenerRef={eventListenerRef}

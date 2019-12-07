@@ -1039,7 +1039,7 @@ class EventRedux extends PureComponent {
 
         newActiveCellSelectionAreaIndex = stagnantSelectionAreasLength + 1;
         
-        if(!stagnantSelectionAreasLength && x1 !== x && y1 !== y) handleUpdateStagnantSelectionAreas([ { x1: x, y1: y, x2: x, y2: y } ]);
+        if(!stagnantSelectionAreasLength && (x1 !== x || y1 !== y)) handleUpdateStagnantSelectionAreas([ { x1: x, y1: y, x2: x, y2: y } ]);
       } 
 
       handleUpdateActiveSelectionArea({ x1, y1, x2, y2 });

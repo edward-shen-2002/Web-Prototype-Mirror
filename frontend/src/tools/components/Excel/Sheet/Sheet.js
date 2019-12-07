@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 
 import { connect } from "react-redux";
 
@@ -63,6 +63,9 @@ const createItemData = memoize((
   columnCount,
   rowCount,
 
+  sheetColumnWidths,
+  sheetRowHeights,
+
   handleDoubleClickEditableCell,
 
   handleSelectionStart,
@@ -76,6 +79,9 @@ const createItemData = memoize((
     
   columnCount,
   rowCount,
+
+  sheetColumnWidths,
+  sheetRowHeights,
 
   handleDoubleClickEditableCell,
 
@@ -107,27 +113,11 @@ let SheetWindow = ({
     EventListenerInstance = eventListenerRef.current;
   });
 
-  const tableColumnWidths = useMemo(() => {
-    let columnWidths = [ DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER ];
-
-    for(let column = 1; column < sheetColumnCount; column ++) columnWidths.push(getNormalColumnWidth(sheetColumnWidths[column]));
-
-    return columnWidths;
-  });
-
-  const tableRowHeights = useMemo(() => {
-    let rowHeights = [ DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER ];
-
-    for(let row = 1; row < sheetRowCount; row++) rowHeights.push(getNormalRowHeight(sheetRowHeights[row]));
-
-    return rowHeights;
-  });
-
   const tableFreezeRowCount = sheetFreezeRowCount + 1;
   const tableFreezeColumnCount = sheetFreezeColumnCount + 1;
 
-  const rowHeight = (index) => tableRowHeights[index];
-  const columnWidth = (index) => tableColumnWidths[index];
+  const rowHeight = (index) => index ? getNormalRowHeight(sheetRowHeights[index]) : DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER
+  const columnWidth = (index) => index ? getNormalColumnWidth(sheetColumnWidths[index]) : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER;
 
   const handleSelectionStart = (x1, y1, ctrlKey, shiftKey) => EventListenerInstance.startSelection(x1, y1, ctrlKey, shiftKey);
 
@@ -151,6 +141,9 @@ let SheetWindow = ({
     sheetColumnCount,
     sheetRowCount,
 
+    sheetColumnWidths,
+    sheetRowHeights,
+
     handleDoubleClickEditableCell,
 
     handleSelectionStart,
@@ -162,7 +155,7 @@ let SheetWindow = ({
   );
 
   const commonSelectionPaneProps = { sheetGridRef, handleChangeActiveInputData };
-
+  
   return (
     <AutoSizer>
       {({ height, width }) => (
