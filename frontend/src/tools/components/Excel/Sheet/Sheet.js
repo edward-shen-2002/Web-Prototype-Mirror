@@ -63,9 +63,6 @@ const createItemData = memoize((
   columnCount,
   rowCount,
 
-  sheetColumnWidths,
-  sheetRowHeights,
-
   handleDoubleClickEditableCell,
 
   handleSelectionStart,
@@ -79,9 +76,6 @@ const createItemData = memoize((
     
   columnCount,
   rowCount,
-
-  sheetColumnWidths,
-  sheetRowHeights,
 
   handleDoubleClickEditableCell,
 
@@ -140,9 +134,6 @@ let SheetWindow = ({
     
     sheetColumnCount,
     sheetRowCount,
-
-    sheetColumnWidths,
-    sheetRowHeights,
 
     handleDoubleClickEditableCell,
 

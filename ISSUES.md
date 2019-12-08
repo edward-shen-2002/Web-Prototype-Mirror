@@ -11,3 +11,7 @@ Some components that have large resource requirements may not yet be set for unm
 ## Responsiveness
 
 TODO
+
+## Xlsx-populate
+
+- No support for saved multiple selection (use multiple selection then save the excel file). No work around at the moment.

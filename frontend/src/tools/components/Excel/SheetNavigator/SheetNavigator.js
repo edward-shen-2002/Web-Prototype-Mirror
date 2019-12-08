@@ -10,7 +10,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 
-import { generateNewSheetName } from "tools/excel";
+// import { generateNewSheetName } from "tools/excel";
 import { DnDReorder } from "tools/misc";
 
 import "./SheetNavigator.scss";
