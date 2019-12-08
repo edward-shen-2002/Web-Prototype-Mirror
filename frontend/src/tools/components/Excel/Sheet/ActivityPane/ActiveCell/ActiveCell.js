@@ -111,6 +111,8 @@ let ActiveCell = ({
 
   if(computeActiveCellStyle) {
     activeCellStyle = computeActiveCellStyle(x, y, sheetColumnWidths, leftOffsets, sheetRowHeights, topOffsets, sheetFreezeColumnCount, sheetFreezeRowCount);
+    activeCellStyle.minHeight = activeCellStyle.height;
+    activeCellStyle.minWidth = activeCellStyle.width;
   } else {
     let height = getNormalRowHeight(sheetRowHeights[y]);
     let width = getNormalColumnWidth(sheetColumnWidths[x]);
