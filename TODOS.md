@@ -11,7 +11,6 @@
 - [ ] Convert excel editor state to Xlsx-populate rich text
 - [ ] Resize excel headers
 - [ ] Compress inactive sheets
-- [ ] Upload excel in serialized state instead of base 64 xlsx-populate
 
 ## Unprioritized
 

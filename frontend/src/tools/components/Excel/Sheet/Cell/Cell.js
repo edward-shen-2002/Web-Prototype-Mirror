@@ -10,29 +10,11 @@ import uniqid from "uniqid";
 
 import "./Cell.scss";
 
-const RichTextCellContent = (richText) => {
-  let Fragments = [];
-
-  const richTextLength = richText.length;
-
-  for(let fragmentIndex = 0; fragmentIndex < richTextLength; fragmentIndex++) {
-    const fragment = richText.get(fragmentIndex);
-
-    const fragmentStyles = extractCellRichTextStyle(fragment);
-
-    if(fragmentStyles) {
-      const fragmentText = fragment.value();
-
-      Fragments.push(
-        <span key={uniqid()} style={fragmentStyles}>
-          {fragmentText}
-        </span>
-      );
-    }
-  }
-
-  return Fragments;
-};
+const RichTextCellContent = (richText) => richText.map(({ styles, text }) => {
+  <span key={uniqid()} style={styles}>
+    {text}
+  </span>
+});
 
 // ! Selection algorithms is a bit too complicated and time consuming to implement. Leave for now.
 
@@ -93,12 +75,11 @@ const EditableCell = ({
   };
 
   let value = cellData ? cellData.value : undefined;
+  let type = cellData ? cellData.type : undefined;
 
-  if(value instanceof RichText) value = RichTextCellContent(value);
+  if(type === "rich-text") value = RichTextCellContent(value);
 
-  if(cellData && cellData.styles) {
-    style = { ...style, ...cellData.styles };
-  }
+  if(cellData && cellData.styles) style = { ...style, ...cellData.styles };
 
   return (
     <div 

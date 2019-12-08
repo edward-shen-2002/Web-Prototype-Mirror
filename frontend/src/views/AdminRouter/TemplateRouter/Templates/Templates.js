@@ -2,8 +2,6 @@ import React, { useState, useEffect, useCallback, lazy } from "react";
 
 import { useDropzone } from "react-dropzone";
 
-import XlsxPopulate from "xlsx-populate";
-
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
@@ -15,6 +13,7 @@ import LaunchIcon from "@material-ui/icons/Launch";
 
 import { adminTemplateRoleAxios } from "tools/rest";
 import { REST_ADMIN_TEMPLATES } from "constants/rest";
+import { convertExcelFileToState } from "tools/excel";
 
 import { ROUTE_ADMIN_TEMPLATE_TEMPLATES } from "constants/routes";
 
@@ -51,12 +50,9 @@ const FileDropzone = ({ templates, handleUpdateTemplates }) => {
         const extension = name.split(".").pop();
   
         if(extension === "xlsx") {
-          const WorkbookInstance = await XlsxPopulate.fromDataAsync(fileData);
+          let fileStates = await convertExcelFileToState(fileData);
   
-          const file = await WorkbookInstance.outputAsync("base64");
-  
-          const newTemplate = { name, file };
-  
+          const newTemplate = { name, fileStates };
           
           const templateData = await adminTemplateRoleAxios.post(`${REST_ADMIN_TEMPLATES}/upload`, { newTemplate });
           
@@ -67,7 +63,6 @@ const FileDropzone = ({ templates, handleUpdateTemplates }) => {
           newTemplates.push(tableTemplate);
         }
       }
-      
     } catch(error) {
       console.error(error);
     }

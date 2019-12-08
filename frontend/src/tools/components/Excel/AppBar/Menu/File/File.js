@@ -2,8 +2,6 @@ import React from "react";
 
 import { connect } from "react-redux";
 
-import { getWorkbookInstance } from "tools/excel";
-
 import MenuItems from "tools/components/Excel/commonComponents/MenuItems";
 
 import SaveIcon from "@material-ui/icons/Save";
@@ -20,7 +18,9 @@ const mapStateToProps = ({
       sheetsFreezeColumnCount,
       sheetsRowCount,
       sheetsRowHeights,
-      sheetsFreezeRowCount
+      sheetsFreezeRowCount,
+      sheetsHiddenColumns,
+      sheetsHiddenRows
     }
   }
 }) => ({
@@ -33,7 +33,9 @@ const mapStateToProps = ({
   sheetsFreezeColumnCount,
   sheetsRowCount,
   sheetsRowHeights,
-  sheetsFreezeRowCount
+  sheetsFreezeRowCount,
+  sheetsHiddenColumns,
+  sheetsHiddenRows
 });
 
 let File = ({ 
@@ -49,6 +51,8 @@ let File = ({
   sheetsRowCount,
   sheetsRowHeights,
   sheetsFreezeRowCount,
+  sheetsHiddenColumns,
+  sheetsHiddenRows,
 
   handleClickMenu, 
   handleHoverMenu,
@@ -59,7 +63,7 @@ let File = ({
     icon: <SaveIcon/>,
     label: "Save",
     handleClick: async () => {
-      let Workbook = await getWorkbookInstance({
+      handleSaveWorkbook({
         activeSheetName,
         sheetNames,
         activeCellPosition,
@@ -69,13 +73,10 @@ let File = ({
         sheetsFreezeColumnCount,
         sheetsRowCount,
         sheetsRowHeights,
-        sheetsFreezeRowCount
+        sheetsFreezeRowCount,
+        sheetsHiddenColumns,
+        sheetsHiddenRows
       });
-
-      // Output the file
-      const workbookData = await Workbook.outputAsync("base64");
-      
-      handleSaveWorkbook(workbookData);
     }
   };
 

@@ -1,4 +1,4 @@
-import XlsxPopulate from "xlsx-populate";
+import XlsxPopulate, { RichText, Range } from "xlsx-populate";
 
 import { sheetNameRegex } from "./regex";
 
@@ -420,6 +420,23 @@ export const extractCellRichTextStyle = (cellData) => {
   return isObjectEmpty(cellStyles) ? undefined : convertXlsxStyleToInlineStyle(cellStyles);
 };
 
+const extractRichTextData = (richText) => {
+  let plainRichTextObject = [];
+
+  const richTextLength = richText.length;
+
+  for(let fragmentIndex = 0; fragmentIndex < richTextLength; fragmentIndex++) {
+    const fragment = richText.get(fragmentIndex);
+
+    const styles = extractCellRichTextStyle(fragment);
+    const text = fragment.value();
+
+    plainRichTextObject.push({ styles, text });
+  }
+
+  return plainRichTextObject;
+};
+
 const extractCellData = (cellData) => {
   const cellValue = cellData.value();
 
@@ -430,7 +447,16 @@ const extractCellData = (cellData) => {
 
   let extractedCellData = {};
 
-  if(cellValue) extractedCellData.value = cellValue;
+  if(cellValue) {
+    // extractedCellData.value = cellValue instanceof RichText ?  : cellValue;
+    if(cellValue instanceof RichText) {
+      extractedCellData.type = "rich-text";
+      extractedCellData.value = extractRichTextData(cellValue);
+    } else {
+      extractedCellData.type = "normal";
+      extractedCellData.value = cellValue;
+    }
+  }
   if(cellFormula) extractedCellData.formula = cellFormula;
   if(cellStyles) extractedCellData.styles = cellStyles;
 
@@ -474,29 +500,16 @@ export const getFreezeHeader = (sheet) => {
 };
 
 export const convertRichTextToEditorState = (richText, editorState = EditorState.createEmpty()) => {
-  const richTextLength = richText.length;
+  richText.forEach(({ styles, text }) => {
+    if(styles) editorState = RichUtils.toggleInlineStyle(editorState, styles);
+    
+    editorState = EditorState.push(
+      editorState,
+      ContentState.createFromText(text ? text : ""),
+      "change-inline-style"
+    );
+  })
   
-  for(let fragmentIndex = 0; fragmentIndex < richTextLength; fragmentIndex++) {
-    const fragment = richText.get(fragmentIndex);
-
-    const fragmentStyles = extractCellRichTextStyle(fragment);
-
-    if(fragmentStyles) {
-      editorState = RichUtils.toggleInlineStyle(
-        editorState,
-        fragmentStyles
-      );
-
-      const fragmentText = fragment.value();
-
-      editorState = EditorState.push(
-        editorState,
-        ContentState.createFromText(fragmentText ? fragmentText : ""),
-        "change-inline-style"
-      );
-    }
-  }
-
   return EditorState.moveFocusToEnd(editorState);
 };
 
@@ -538,4 +551,106 @@ export const getLeftOffsets = (columnWidths, columnCount) => {
   }
 
   return leftOffsets;
+};
+
+export const getActiveCellInputData = (sheetsCellData, activeSheetName, activeRow, activeColumn) => {
+  const activeCellInputValueData = (
+    sheetsCellData[activeSheetName] && sheetsCellData[activeSheetName][activeRow] && sheetsCellData[activeSheetName][activeRow][activeColumn]
+      ? sheetsCellData[activeSheetName][activeRow][activeColumn]
+      : undefined
+  );
+  
+  return (
+    activeCellInputValueData && activeCellInputValueData.type === "rich-text"
+      ? { editorState: convertRichTextToEditorState(activeCellInputValueData.value) }
+      : { editorState: convertTextToEditorState(activeCellInputValueData ? activeCellInputValueData.value : undefined) }
+  );
+};
+
+export const convertExcelFileToState = async (excelFile) => {
+  const WorkbookInstance = await XlsxPopulate.fromDataAsync(excelFile);
+          
+  const sheetNames = WorkbookInstance.sheets().map((sheet) => sheet.name());
+
+  const activeSheet = WorkbookInstance.activeSheet();
+  const activeSheetName = activeSheet.name();
+
+  let sheetsColumnCount = {};
+  let sheetsColumnWidths = {};
+  let sheetsFreezeColumnCount = {};
+  let sheetsRowCount = {};
+  let sheetsRowHeights = {};
+  let sheetsFreezeRowCount = {};
+  let sheetsCellData = {};
+  let sheetsHiddenColumns = {};
+  let sheetsHiddenRows = {};
+
+  sheetNames.forEach((name) => {
+    const sheet = WorkbookInstance.sheet(name);
+
+    let { columnCount, rowCount } = getHeaderCount(sheet);
+
+    columnCount = Math.max(columnCount, DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1);
+    rowCount = Math.max(rowCount, DEFAULT_EXCEL_SHEET_ROW_COUNT + 1);
+
+    let sheetCellData = getSheetCellData(sheet, columnCount, rowCount);
+    let { columnWidths, hiddenColumns } = getColumnsData(sheet, columnCount);
+    let { rowHeights, hiddenRows } = getRowsData(sheet, rowCount);
+    let { freezeRowCount, freezeColumnCount } = getFreezeHeader(sheet);
+
+    sheetsColumnCount[name] = columnCount;
+    sheetsRowCount[name] = rowCount;
+    sheetsCellData[name] = sheetCellData;
+
+    sheetsColumnWidths[name] = columnWidths;
+    sheetsRowHeights[name] = rowHeights;
+    sheetsFreezeRowCount[name] = freezeRowCount;
+    sheetsFreezeColumnCount[name] = freezeColumnCount;
+    sheetsHiddenColumns[name] = hiddenColumns;
+    sheetsHiddenRows[name] = hiddenRows;
+  });
+
+  // ! Issue here when there is multi-selection saved in excel
+  let activeCell = activeSheet.activeCell();
+  let activeRow;
+  let activeColumn;
+
+  if(activeCell instanceof Range) {
+    activeRow = activeCell._minRowNumber;
+    activeColumn = activeCell._minColumnNumber;
+  } else {
+    activeRow = activeCell.rowNumber();
+    activeColumn = activeCell.columnNumber();
+  }
+
+  let activeCellPosition = { x: activeColumn, y: activeRow };
+
+  return {
+    activeCellPosition,
+    sheetsCellData,
+
+    sheetsColumnCount,
+    sheetsColumnWidths,
+    sheetsFreezeColumnCount,
+    sheetsRowCount,
+    sheetsFreezeRowCount,
+    sheetsRowHeights,
+    sheetsHiddenColumns,
+    sheetsHiddenRows,
+
+    activeSheetName,
+    sheetNames
+  };
+};
+
+
+export const convertStateToReactState = (state) => {
+  const { activeCellPosition: { x, y }, sheetsCellData, activeSheetName } = state;
+
+  const activeCellInputData = getActiveCellInputData(sheetsCellData, activeSheetName, y, x);
+
+  return {
+    ...state,
+    activeCellInputData
+  }
 };

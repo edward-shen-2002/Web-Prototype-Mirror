@@ -33,6 +33,7 @@ const templates = ({ router, TemplateModel }) => {
 
   // Instantiate a blank template. Change the title if there's a duplicate.
   // Default title is Untitled Workbook (?version)
+  // ! NEED TO CHANGE THIS - INITIALIZE THE STATES ON THE FRONTEND?
   router.post(ROUTE_ADMIN_TEMPLATES, async (req, res, next) => {
     let { newTemplate } = req.body;
     

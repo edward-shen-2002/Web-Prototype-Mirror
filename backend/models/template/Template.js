@@ -3,7 +3,7 @@ import { Schema, model } from "mongoose";
 let templateSchema = new Schema({
   name: { type: String, required: true },
 
-  file: { type: String },
+  fileStates: {},
 
   sheets: [{
     name: { type: String },

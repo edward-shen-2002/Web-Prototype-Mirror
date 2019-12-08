@@ -3,18 +3,14 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { showAppNavigation, hideAppNavigation } from "actions/ui/isAppNavigationOpen"; 
 
-import XlsxPopulate, { RichText, Range } from "xlsx-populate";
-
 import { adminTemplateRoleAxios } from "tools/rest";
 import { loadWorkbook, resetWorkbook } from "tools/redux";
 import Excel from "tools/components/Excel";
 
-import { getHeaderCount, getColumnsData, getRowsData, getSheetCellData, getFreezeHeader, convertRichTextToEditorState, convertTextToEditorState } from "tools/excel";
+import { convertStateToReactState } from "tools/excel";
 
 import { REST_ADMIN_TEMPLATES } from "constants/rest";
 import { ROUTE_ADMIN_TEMPLATE_TEMPLATES } from "constants/routes";
-
-import { DEFAULT_EXCEL_SHEET_ROW_COUNT, DEFAULT_EXCEL_SHEET_COLUMN_COUNT } from "constants/excel";
 
 import Loading from "tools/components/Loading";
 
@@ -51,96 +47,9 @@ let Template = ({
     if(!isDataFetched) {
       adminTemplateRoleAxios.get(`${REST_ADMIN_TEMPLATES}/${_id}`)
         .then(async ({ data: { data: { template } } }) => {
-          const { file } = template;
-          
-          const WorkbookInstance = await XlsxPopulate.fromDataAsync(file, { base64: true });
-          
-          const sheetNames = WorkbookInstance.sheets().map((sheet) => sheet.name());
+          let { fileStates } = template;
 
-          const activeSheet = WorkbookInstance.activeSheet();
-          const activeSheetName = activeSheet.name();
-
-          let sheetsColumnCount = {};
-          let sheetsColumnWidths = {};
-          let sheetsFreezeColumnCount = {};
-          let sheetsRowCount = {};
-          let sheetsRowHeights = {};
-          let sheetsFreezeRowCount = {};
-          let sheetsCellData = {};
-          let sheetsHiddenColumns = {};
-          let sheetsHiddenRows = {};
-
-          sheetNames.forEach((name) => {
-            const sheet = WorkbookInstance.sheet(name);
-
-            let { columnCount, rowCount } = getHeaderCount(sheet);
-
-            columnCount = Math.max(columnCount, DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1);
-            rowCount = Math.max(rowCount, DEFAULT_EXCEL_SHEET_ROW_COUNT + 1);
-
-            let sheetCellData = getSheetCellData(sheet, columnCount, rowCount);
-            let { columnWidths, hiddenColumns } = getColumnsData(sheet, columnCount);
-            let { rowHeights, hiddenRows } = getRowsData(sheet, rowCount);
-            let { freezeRowCount, freezeColumnCount } = getFreezeHeader(sheet);
-
-            sheetsColumnCount[name] = columnCount;
-            sheetsRowCount[name] = rowCount;
-            sheetsCellData[name] = sheetCellData;
-
-            sheetsColumnWidths[name] = columnWidths;
-            sheetsRowHeights[name] = rowHeights;
-            sheetsFreezeRowCount[name] = freezeRowCount;
-            sheetsFreezeColumnCount[name] = freezeColumnCount;
-            sheetsHiddenColumns[name] = hiddenColumns;
-            sheetsHiddenRows[name] = hiddenRows;
-          });
-
-          // ! Issue here when there is multi-selection saved in excel
-          let activeCell = activeSheet.activeCell();
-          let activeRow;
-          let activeColumn;
-
-          if(activeCell instanceof Range) {
-            activeRow = activeCell._minRowNumber;
-            activeColumn = activeCell._minColumnNumber;
-          } else {
-            activeRow = activeCell.rowNumber();
-            activeColumn = activeCell.columnNumber();
-          }
-
-          let activeCellPosition = { x: activeColumn, y: activeRow };
-
-          const activeCellInputValueData = (
-            sheetsCellData[activeSheetName] && sheetsCellData[activeSheetName][activeRow] && sheetsCellData[activeSheetName][activeRow][activeColumn]
-              ? sheetsCellData[activeSheetName][activeRow][activeColumn].value
-              : ""
-          );
-
-          let activeCellInputData = (
-            activeCellInputValueData instanceof RichText 
-              ? { editorState: convertRichTextToEditorState(activeCellInputValueData) }
-              : { editorState: convertTextToEditorState(activeCellInputValueData) }
-          );
-
-          handleLoadTemplate({
-            activeCellPosition,
-            activeCellInputData,
-
-            sheetsCellData,
-
-            sheetsColumnCount,
-            sheetsColumnWidths,
-            sheetsFreezeColumnCount,
-            sheetsRowCount,
-            sheetsFreezeRowCount,
-            sheetsRowHeights,
-            sheetsHiddenColumns,
-            sheetsHiddenRows,
-
-            activeSheetName,
-            sheetNames
-          });
-
+          handleLoadTemplate(convertStateToReactState(fileStates));
           setTemplate(template);
         })
         .catch((error) => console.error(error))
@@ -163,8 +72,8 @@ let Template = ({
     );
   };
 
-  const handleSaveWorkbook = (file) => {
-    const newTemplate = { file };
+  const handleSaveWorkbook = (fileStates) => {
+    const newTemplate = { fileStates };
 
     return (
       adminTemplateRoleAxios.put(`${REST_ADMIN_TEMPLATES}/${_id}`, { newTemplate })

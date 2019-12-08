@@ -849,8 +849,9 @@ class EventRedux extends PureComponent {
         handleChangeSheetCellData(activeSheetName, newSheetCellData);
       }
     } else {
+      // ! Change type?
       if(!newSheetCellData[row]) newSheetCellData[row] = {};
-      newSheetCellData[row][column] = { value: newValue };
+      newSheetCellData[row][column] = { type: "normal", value: newValue };
       handleChangeSheetCellData(activeSheetName, newSheetCellData);
     }
   }
