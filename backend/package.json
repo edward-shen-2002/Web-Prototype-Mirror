@@ -42,6 +42,6 @@
     "password-validator": "^5.0.2",
     "systeminformation": "^4.14.8",
     "uniqid": "^5.1.0",
-    "xlsx-populate": "https://github.com/greylemon/xlsx-populate#Haonan"
+    "xlsx-populate": "https://github.com/greylemon/xlsx-populate"
   }
 }
