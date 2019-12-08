@@ -26,6 +26,8 @@ It's possible that we could categorize and shrink the amount of functions.
 
 The active sheet is the only important item that's visible. The other sheet states are not being used and are just taking up space. We could compress/serialize the inactive sheets and only decompress/convert back to state when activated.
 
+We could also put the inactive sheet data in the local storage and transfer it out when needed.
+
 ### Sockets
 
 Currently, this is not possible to implement with the time constraints, and may be even too ambitious to attempt. A big benefit is that sockets allow multi-collaboration.
