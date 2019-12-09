@@ -6,36 +6,38 @@ import MenuItems from "tools/components/Excel/commonComponents/MenuItems";
 
 import SaveIcon from "@material-ui/icons/Save";
 
+import { extractReactAndWorkbookState } from "tools/excel";
+
 const mapStateToProps = ({
   ui: {
     excel: {
       activeSheetName,
       sheetNames,
       activeCellPosition,
-      sheetsCellData,
-      sheetsColumnCount,
-      sheetsColumnWidths,
-      sheetsFreezeColumnCount,
-      sheetsRowCount,
-      sheetsRowHeights,
-      sheetsFreezeRowCount,
-      sheetsHiddenColumns,
-      sheetsHiddenRows
+      sheetCellData,
+      sheetColumnCount,
+      sheetColumnWidths,
+      sheetFreezeColumnCount,
+      sheetRowCount,
+      sheetRowHeights,
+      sheetFreezeRowCount,
+      sheetHiddenColumns,
+      sheetHiddenRows
     }
   }
 }) => ({
   activeSheetName,
   sheetNames,
   activeCellPosition,
-  sheetsCellData,
-  sheetsColumnCount,
-  sheetsColumnWidths,
-  sheetsFreezeColumnCount,
-  sheetsRowCount,
-  sheetsRowHeights,
-  sheetsFreezeRowCount,
-  sheetsHiddenColumns,
-  sheetsHiddenRows
+  sheetCellData,
+  sheetColumnCount,
+  sheetColumnWidths,
+  sheetFreezeColumnCount,
+  sheetRowCount,
+  sheetRowHeights,
+  sheetFreezeRowCount,
+  sheetHiddenColumns,
+  sheetHiddenRows
 });
 
 let File = ({ 
@@ -44,15 +46,15 @@ let File = ({
   activeSheetName,
   sheetNames,
   activeCellPosition,
-  sheetsCellData,
-  sheetsColumnCount,
-  sheetsColumnWidths,
-  sheetsFreezeColumnCount,
-  sheetsRowCount,
-  sheetsRowHeights,
-  sheetsFreezeRowCount,
-  sheetsHiddenColumns,
-  sheetsHiddenRows,
+  sheetCellData,
+  sheetColumnCount,
+  sheetColumnWidths,
+  sheetFreezeColumnCount,
+  sheetRowCount,
+  sheetRowHeights,
+  sheetFreezeRowCount,
+  sheetHiddenColumns,
+  sheetHiddenRows,
 
   handleClickMenu, 
   handleHoverMenu,
@@ -63,20 +65,20 @@ let File = ({
     icon: <SaveIcon/>,
     label: "Save",
     handleClick: async () => {
-      handleSaveWorkbook({
+      handleSaveWorkbook(extractReactAndWorkbookState({
         activeSheetName,
         sheetNames,
         activeCellPosition,
-        sheetsCellData,
-        sheetsColumnCount,
-        sheetsColumnWidths,
-        sheetsFreezeColumnCount,
-        sheetsRowCount,
-        sheetsRowHeights,
-        sheetsFreezeRowCount,
-        sheetsHiddenColumns,
-        sheetsHiddenRows
-      });
+        sheetCellData,
+        sheetColumnCount,
+        sheetColumnWidths,
+        sheetFreezeColumnCount,
+        sheetRowCount,
+        sheetRowHeights,
+        sheetFreezeRowCount,
+        sheetHiddenColumns,
+        sheetHiddenRows
+      }));
     }
   };
 

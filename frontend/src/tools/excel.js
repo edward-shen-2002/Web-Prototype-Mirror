@@ -647,3 +647,48 @@ export const convertStateToReactState = (state) => {
     workbookData: undefined
   };
 };
+
+export const getWorkbookData = (activeSheetName, activeSheetData) => {
+  const inactiveSheetsData = sessionStorage.getItem("inactiveSheets");
+  
+  const rawInactiveSheetsData = JSON.parse(inactiveSheetsData);
+
+  return { ...rawInactiveSheetsData, [activeSheetName]: pako.deflate(JSON.stringify(activeSheetData), { to: "string" }) };
+};
+
+export const extractReactAndWorkbookState = (state) => {
+  const {
+    activeSheetName,
+    sheetNames,
+    activeCellPosition,
+
+    sheetCellData,
+    sheetColumnCount,
+    sheetColumnWidths,
+    sheetFreezeColumnCount,
+    sheetRowCount,
+    sheetRowHeights,
+    sheetFreezeRowCount,
+    sheetHiddenColumns,
+    sheetHiddenRows
+  } = state;
+
+  const workbookData = getWorkbookData(activeSheetName, {
+    sheetCellData,
+    sheetColumnCount,
+    sheetColumnWidths,
+    sheetFreezeColumnCount,
+    sheetRowCount,
+    sheetRowHeights,
+    sheetFreezeRowCount,
+    sheetHiddenColumns,
+    sheetHiddenRows
+  });
+
+  return {
+    activeCellPosition,
+    activeSheetName,
+    sheetNames,
+    workbookData
+  };
+};

@@ -121,4 +121,6 @@ export const resetWorkbook = (dispatch) => {
   dispatch(resetScrollData());
 
   dispatch(setActiveCellInputAutoFocusOff());
+
+  sessionStorage.removeItem("inactiveSheets");
 };
