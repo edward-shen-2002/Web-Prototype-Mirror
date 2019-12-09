@@ -517,7 +517,6 @@ export const convertRichTextToEditorState = (richText, editorState = EditorState
 
 export const convertTextToEditorState = (text) => {
   if(text !== undefined && typeof text !== "string") text = text.toString();
-  console.log(text)
 
   return (
     EditorState.moveFocusToEnd((

@@ -14,6 +14,11 @@ import scrollData from "./scrollData";
 import isSelectionMode from "./isSelectionMode";
 import isEditMode from "./isEditMode";
 
+import rowResizeData from "./rowResizeData";
+import columnResizeData from "./columnResizeData";
+import freezeRowResizeData from "./freezeRowResizeData";
+import freezeColumnResizeData from "./freezeColumnResizeData";
+
 import sheetCellData from "./sheetCellData";
 import sheetColumnCount from "./sheetColumnCount";
 import sheetColumnWidths from "./sheetColumnWidths";
@@ -31,6 +36,11 @@ const excelReducer = combineReducers({
   activeCellPosition,
   activeCellSelectionAreaIndex,
   activeCellInputAutoFocus,
+
+  rowResizeData,
+  columnResizeData,
+  freezeRowResizeData,
+  freezeColumnResizeData,
   
   stagnantSelectionAreas,
   sheetNames,
