@@ -605,16 +605,22 @@ export const convertExcelFileToState = async (excelFile) => {
   });
 
   // ! Issue here when there is multi-selection saved in excel
-  let activeCell = activeSheet.activeCell();
   let activeRow;
   let activeColumn;
 
-  if(activeCell instanceof Range) {
-    activeRow = activeCell._minRowNumber;
-    activeColumn = activeCell._minColumnNumber;
-  } else {
-    activeRow = activeCell.rowNumber();
-    activeColumn = activeCell.columnNumber();
+  try {
+    let activeCell = activeSheet.activeCell();
+  
+    if(activeCell instanceof Range) {
+      activeRow = activeCell._minRowNumber;
+      activeColumn = activeCell._minColumnNumber;
+    } else {
+      activeRow = activeCell.rowNumber();
+      activeColumn = activeCell.columnNumber();
+    }
+  } catch(error) {
+    activeRow = 1;
+    activeColumn = 1;
   }
 
   let activeCellPosition = { x: activeColumn, y: activeRow };
