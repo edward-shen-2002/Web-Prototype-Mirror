@@ -1,7 +1,8 @@
 @import "~styles/mixins/shadows";
 
 .cell {
-  padding: 0 4px 0 4px;
+  // position: relative;
+  // padding: 0 4px 0 4px;
 
   outline: 1px solid #CCCCCC;
   
@@ -19,6 +20,12 @@
     background-color: #F7F8F9;
   }
 
+  &--header {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+  }
+
   &--active {
     outline: 2px #1A73E8 solid;
     outline-offset: -2px;
@@ -31,5 +38,32 @@
 
     outline: 2px #1A73E8 solid;
     outline-offset: -2px;
+  }
+}
+
+.rowDragger {
+  position: absolute;
+  bottom: 0;
+
+  width: 100%;
+  height: 5px;
+  
+  &--indicator {
+    background-color: #1E90FF;
+    cursor: ns-resize;
+  }
+}
+
+.columnDragger {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  width: 5px;
+  height: 100%;
+  
+  &--indicator {
+    background-color: #1E90FF;
+    cursor: ew-resize;
   }
 }
