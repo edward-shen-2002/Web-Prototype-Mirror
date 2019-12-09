@@ -2,8 +2,6 @@ import React, { PureComponent, useMemo } from "react";
 
 import { connect } from "react-redux";
 
-import { EditorState, ContentState } from "draft-js";
-
 import { setActiveCellInputAutoFocusOn, setActiveCellInputAutoFocusOff } from "actions/ui/excel/activeCellInputAutoFocus";
 import { updateActiveCellInputData, resetActiveCellInputData } from "actions/ui/excel/activeCellInputData";
 import { updateActiveCellPosition } from "actions/ui/excel/activeCellPosition";
@@ -29,16 +27,13 @@ import {
   convertTextToEditorState, 
   convertRichTextToEditorState,
   getNormalColumnWidth,
-  getNormalRowHeight,
-  getCellDataText
+  getNormalRowHeight
 } from "tools/excel";
 
 import {
   DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
   DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER
 } from "constants/excel";
-
-import { RichText } from "xlsx-populate";
 
 const mapStateToProps = ({ 
   ui: { 
