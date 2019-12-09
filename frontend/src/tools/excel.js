@@ -99,26 +99,26 @@ export const getEstimatedTotalWidth = (
     return totalSizeOfMeasuredRows + totalSizeOfUnmeasuredItems;
   };
 
-  export const generateNewSheetName = (sheetNames) => {
-    let uniqueSheetNumber = sheetNames.length + 1;
+export const generateNewSheetName = (sheetNames) => {
+  let uniqueSheetNumber = sheetNames.length + 1;
+  
+  sheetNames.forEach((name) => {
+    const match = name.match(sheetNameRegex);
     
-    sheetNames.forEach((name) => {
-      const match = name.match(sheetNameRegex);
-      
-      if(match && uniqueSheetNumber <= match[1]) uniqueSheetNumber++;
-    });
-    
-    return `Sheet${uniqueSheetNumber}`;
-  };
+    if(match && uniqueSheetNumber <= match[1]) uniqueSheetNumber++;
+  });
   
-  export const isPositionEqualArea = ({ x, y }, { x1, y1, x2, y2 }) => x === x1 && x === x2 && y === y1 && y === y2;
+  return `Sheet${uniqueSheetNumber}`;
+};
+
+export const isPositionEqualArea = ({ x, y }, { x1, y1, x2, y2 }) => x === x1 && x === x2 && y === y1 && y === y2;
+
+export const getNormalRowHeight = (rowHeight) => rowHeight ? rowHeight * EXCEL_ROW_HEIGHT_SCALE : DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
+export const getNormalColumnWidth = (columnWidth) => columnWidth ? columnWidth * EXCEL_COLUMN_WIDTH_SCALE : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH;
   
-  export const getNormalRowHeight = (rowHeight) => rowHeight ? rowHeight * EXCEL_ROW_HEIGHT_SCALE : DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
-  export const getNormalColumnWidth = (columnWidth) => columnWidth ? columnWidth * EXCEL_COLUMN_WIDTH_SCALE : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH;
-  
-  export const getWorkbookInstance = async ({
-    activeSheetName,
-    sheetNames,
+export const getWorkbookInstance = async ({
+  activeSheetName,
+  sheetNames,
   activeCellPosition,
   sheetsCellData,
   sheetsColumnCount,
@@ -589,7 +589,28 @@ export const convertExcelFileToState = async (excelFile) => {
     const { sheetRowHeights, sheetHiddenRows } = getSheetRowsData(sheet, sheetRowCount);
     const { sheetFreezeRowCount, sheetFreezeColumnCount } = getSheetFreezeHeader(sheet);
 
+    let activeRow;
+    let activeColumn;
+  
+    try {
+      let activeCell = sheet.activeCell();
+    
+      if(activeCell instanceof Range) {
+        activeRow = activeCell._minRowNumber;
+        activeColumn = activeCell._minColumnNumber;
+      } else {
+        activeRow = activeCell.rowNumber();
+        activeColumn = activeCell.columnNumber();
+      }
+    } catch(error) {
+      activeRow = 1;
+      activeColumn = 1;
+    }
+  
+    let activeCellPosition = { x: activeColumn, y: activeRow };  
+
     const sheetContent = {
+      activeCellPosition,
       sheetCellData,
       sheetColumnCount,
       sheetColumnWidths,
@@ -605,28 +626,8 @@ export const convertExcelFileToState = async (excelFile) => {
   });
 
   // ! Issue here when there is multi-selection saved in excel
-  let activeRow;
-  let activeColumn;
-
-  try {
-    let activeCell = activeSheet.activeCell();
-  
-    if(activeCell instanceof Range) {
-      activeRow = activeCell._minRowNumber;
-      activeColumn = activeCell._minColumnNumber;
-    } else {
-      activeRow = activeCell.rowNumber();
-      activeColumn = activeCell.columnNumber();
-    }
-  } catch(error) {
-    activeRow = 1;
-    activeColumn = 1;
-  }
-
-  let activeCellPosition = { x: activeColumn, y: activeRow };
 
   return {
-    activeCellPosition,
     workbookData,
     activeSheetName,
     sheetNames
@@ -634,11 +635,11 @@ export const convertExcelFileToState = async (excelFile) => {
 };
 
 export const convertStateToReactState = (state) => {
-  const { activeCellPosition: { x, y } } = state;
-
+  
   const workbookData = state.workbookData;
   const activeSheetName = state.activeSheetName;
   const activeSheetData = JSON.parse(pako.inflate(workbookData[activeSheetName], { to: "string" }));
+  const { activeCellPosition: { x, y } } = activeSheetData;
 
   const activeCellInputData = getActiveCellInputData(activeSheetData.sheetCellData, y, x);
 
@@ -680,6 +681,7 @@ export const extractReactAndWorkbookState = (state) => {
   } = state;
 
   const workbookData = getWorkbookData(activeSheetName, {
+    activeCellPosition,
     sheetCellData,
     sheetColumnCount,
     sheetColumnWidths,
@@ -692,7 +694,6 @@ export const extractReactAndWorkbookState = (state) => {
   });
 
   return {
-    activeCellPosition,
     activeSheetName,
     sheetNames,
     workbookData

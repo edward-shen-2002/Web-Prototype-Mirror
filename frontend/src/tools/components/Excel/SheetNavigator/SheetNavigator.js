@@ -183,6 +183,7 @@ let SheetNavigator = ({
 
   const handleClickSheet = (sheetName) => {
     let currentSheetData = {
+      activeCellPosition,
       sheetCellData,
       sheetColumnCount,
       sheetColumnWidths,
@@ -206,7 +207,6 @@ let SheetNavigator = ({
     handleLoadWorkbook({
       ...newActiveSheetData,
       activeSheetName: sheetName,
-      activeCellPosition,
       activeCellInputData
     });
 
