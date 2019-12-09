@@ -33,7 +33,7 @@ const RowHeaderCell = ({ style, row, handleClickRowHeader }) => {
   const value = row;
 
   return (
-    <div className="cell cell--positionIndicator cell--rowHeader" style={style} onClick={handleClick}>
+    <div className="cell cell--positionIndicator cell--header" style={style} onClick={handleClick}>
       <div>{value}</div>
       <RowDragger/>
     </div>
