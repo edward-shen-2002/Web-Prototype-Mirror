@@ -4,10 +4,12 @@
 
   height: 40px;
   padding-left: 40px;
-
+  
+  
   &__droppable {
     display: flex;
     flex-flow: row nowrap;
+    overflow: auto;
   }
 
   &__draggable {
@@ -15,6 +17,12 @@
     justify-content: center;
     align-content: center;
     flex-direction: column;
+
+    min-width: fit-content;
+
+    padding: 10px;
+
+    border: 2px solid lightgray;
 
     &--active {
       background-color: white;
