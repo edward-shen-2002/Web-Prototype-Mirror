@@ -11,21 +11,29 @@ import "./ActiveCell.scss";
 const ActiveInputCell = ({ 
   activeCellStyle,
   editorState,
-  activeCellInputAutoFocus,
   handleChangeActiveInputData
 }) => {
   const [ isMounted, setIsMounted ] = useState(false);
   const editorRef = useRef(null);
-  const handleChangeInputValue = (newEditorState) => handleChangeActiveInputData({ editorState: newEditorState });
+  const handleChangeInputValue = (newEditorState) => {
+    const currentContentState = editorState.getCurrentContent();
+    const newContentState = newEditorState.getCurrentContent();
+
+    if(currentContentState !== newContentState) handleChangeActiveInputData({ editorState: newEditorState });
+  };
 
   useEffect(() => {
     if(!isMounted) {
-      // if(!activeCellInputAutoFocus) editorRef.current.blur();
+      // if(activeCellInputAutoFocus) editorRef.current.focus();
       setIsMounted(true);
     }
   });
 
-  const handleReturn = ({ key, ctrlKey, altKey }) => key === "Enter" && (!ctrlKey && !altKey) ? "handled" : "not-handled";
+  const handleReturn = (event) => {
+    const { key, ctrlKey, altKey } = event;
+    if(key === "Escape") event.preventDefault();
+    return key === "Enter" && (!ctrlKey && !altKey) ? "handled" : "not-handled";
+  };
 
   return (
     <div className="activeCell activeCell--editMode" style={activeCellStyle}>
@@ -34,7 +42,7 @@ const ActiveInputCell = ({
         ref={editorRef}
         editorState={editorState}
         onChange={handleChangeInputValue}
-        readOnly={!activeCellInputAutoFocus}
+        // readOnly={!activeCellInputAutoFocus}
         handleReturn={handleReturn}
       />
     </div>

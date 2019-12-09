@@ -2,6 +2,8 @@ import React, { PureComponent, useMemo } from "react";
 
 import { connect } from "react-redux";
 
+import { EditorState, ContentState } from "draft-js";
+
 import { setActiveCellInputAutoFocusOn, setActiveCellInputAutoFocusOff } from "actions/ui/excel/activeCellInputAutoFocus";
 import { updateActiveCellInputData, resetActiveCellInputData } from "actions/ui/excel/activeCellInputData";
 import { updateActiveCellPosition } from "actions/ui/excel/activeCellPosition";
@@ -27,7 +29,8 @@ import {
   convertTextToEditorState, 
   convertRichTextToEditorState,
   getNormalColumnWidth,
-  getNormalRowHeight
+  getNormalRowHeight,
+  getCellDataText
 } from "tools/excel";
 
 import {
@@ -763,10 +766,13 @@ class EventRedux extends PureComponent {
 
       sheetCellData,
 
-      handleChangeSheetCellData
+      handleChangeSheetCellData,
+      handleUpdateActiveCellInputData
     } = this.props;
 
     if(isEditMode) return;
+
+    const { x, y } = activeCellPosition;
 
     if(activeCellSelectionAreaIndex >= 0) {
       // { row: column }
@@ -799,6 +805,7 @@ class EventRedux extends PureComponent {
 
         columns.forEach((column) => {
           // ! Consider when everything is undefined -- do you remove it from sheet data?
+          // ! Consider normal/rich text
           if(newSheetCellData[row] && newSheetCellData[row][column]) {
             newSheetCellData[row][column] = { ...newSheetCellData[row][column], value: undefined };
           }
@@ -807,10 +814,16 @@ class EventRedux extends PureComponent {
 
       handleChangeSheetCellData(newSheetCellData);
     } else {
-      const { x, y } = activeCellPosition;
-
+      
       if(sheetCellData[y] && sheetCellData[y][x]) this.changeValue(y, x, { ...sheetCellData[y][x], value: undefined });
     }
+
+    const cellData = sheetCellData[y] && sheetCellData[y][x] ? sheetCellData[y][x] : undefined;
+
+    const type = cellData ? cellData.type : undefined;
+    const value = cellData ? cellData.value : undefined;
+
+    handleUpdateActiveCellInputData({ editorState: type === "rich-text" ? convertRichTextToEditorState(value) : convertTextToEditorState(value) });
   }
 
   changeActiveInputData(data) {
@@ -949,13 +962,26 @@ class EventRedux extends PureComponent {
   }
 
   escape(sheetContainerRef) {
-    const { isEditMode } = this.props;
+    const { 
+      isEditMode,
+      // activeCellInputAutoFocus,
+      sheetCellData,
+      activeCellPosition: { x, y },
+      handleUpdateActiveCellInputData
+    } = this.props;
 
     if(isEditMode) {
       const { current: SheetContainerInstance } = sheetContainerRef;
-
+      
       this.setEditModeOff();
-      this.resetActiveCellInputData();
+
+      const cellData = sheetCellData[y] && sheetCellData[y][x] ? sheetCellData[y][x] : undefined;
+
+      const type = cellData ? cellData.type : undefined;
+      const value = cellData ? cellData.value : undefined;
+      
+      handleUpdateActiveCellInputData({ editorState: type === "rich-text" ? convertRichTextToEditorState(value) : convertTextToEditorState(value) });
+
       SheetContainerInstance.focus();
     }
   }
@@ -1116,9 +1142,10 @@ class EventRedux extends PureComponent {
     } = this.props;
     const cellData = sheetCellData[newY] && sheetCellData[newY][newX] ? sheetCellData[newY][newX] : undefined;
 
+    const type = cellData ? cellData.type : undefined;
     const value = cellData ? cellData.value : undefined;
 
-    handleUpdateActiveCellInputData({ editorState: value instanceof RichText ? convertRichTextToEditorState(value) : convertTextToEditorState(value) });
+    handleUpdateActiveCellInputData({ editorState: type === "rich-text" ? convertRichTextToEditorState(value) : convertTextToEditorState(value) });
 
     handleUpdateActiveCellPosition({ x: newX, y: newY });
 

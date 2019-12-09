@@ -517,12 +517,13 @@ export const convertRichTextToEditorState = (richText, editorState = EditorState
 
 export const convertTextToEditorState = (text) => {
   if(text !== undefined && typeof text !== "string") text = text.toString();
+  console.log(text)
 
   return (
     EditorState.moveFocusToEnd((
       text 
         ? EditorState.createWithContent(ContentState.createFromText(text)) 
-        : EditorState.createEmpty()
+        : EditorState.createWithContent(ContentState.createFromText(""))
     ))
   );
 }
@@ -698,4 +699,20 @@ export const extractReactAndWorkbookState = (state) => {
     sheetNames,
     workbookData
   };
+};
+
+export const getCellDataText = (cellData) => {
+  if(!cellData) return "";
+
+  let { type, value } = cellData;
+
+  let text;
+
+  if(type === "rich-text") {
+    text = value.reduce((resultText, { text }) => resultText + text);
+  } else {
+    text = value ? value : "";
+  }
+
+  return text;
 };
