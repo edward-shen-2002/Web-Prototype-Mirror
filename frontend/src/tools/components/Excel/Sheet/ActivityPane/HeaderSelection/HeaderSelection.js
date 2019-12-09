@@ -19,28 +19,27 @@ import "./HeaderSelection.scss";
 const mapHeaderStateToProps = ({
   ui: {
     excel: {
-      activeSheetName,
       activeCellPosition,
       activeSelectionArea,
       stagnantSelectionAreas,
-      sheetsColumnWidths,
-      sheetsRowHeights,
-      sheetsRowCount,
-      sheetsColumnCount,
-      sheetsFreezeColumnCount,
-      sheetsFreezeRowCount
+      sheetColumnWidths,
+      sheetRowHeights,
+      sheetRowCount,
+      sheetColumnCount,
+      sheetFreezeColumnCount,
+      sheetFreezeRowCount
     }
   }
 }) => ({
   activeCellPosition,
   activeSelectionArea,
   stagnantSelectionAreas,
-  sheetColumnWidths: sheetsColumnWidths[activeSheetName],
-  sheetRowHeights: sheetsRowHeights[activeSheetName],
-  sheetRowCount: sheetsRowCount[activeSheetName],
-  sheetColumnCount: sheetsColumnCount[activeSheetName],
-  sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName],
-  sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName]
+  sheetColumnWidths,
+  sheetRowHeights,
+  sheetRowCount,
+  sheetColumnCount,
+  sheetFreezeColumnCount,
+  sheetFreezeRowCount
 });
 
 const mergeSegments = (segments) => {
@@ -167,22 +166,21 @@ HeaderSelection = connect(mapHeaderStateToProps)(HeaderSelection);
 const mapColumnHeaderStateToProps = ({
   ui: {
     excel: {
-      activeSheetName,
       activeCellPosition,
       activeSelectionArea,
       stagnantSelectionAreas,
-      sheetsColumnWidths,
-      sheetsColumnCount,
-      sheetsFreezeColumnCount
+      sheetColumnWidths,
+      sheetColumnCount,
+      sheetFreezeColumnCount
     }
   }
 }) => ({
   activeCellPosition,
   activeSelectionArea,
   stagnantSelectionAreas,
-  sheetColumnWidths: sheetsColumnWidths[activeSheetName],
-  sheetColumnCount: sheetsColumnCount[activeSheetName],
-  sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName]
+  sheetColumnWidths,
+  sheetColumnCount,
+  sheetFreezeColumnCount
 });
 
 export let ColumnHeaderSelection = ({
@@ -243,25 +241,22 @@ ColumnHeaderSelection = connect(mapColumnHeaderStateToProps)(ColumnHeaderSelecti
 const mapRowHeaderStateToProps = ({
   ui: {
     excel: {
-      activeSheetName,
       activeCellPosition,
       activeSelectionArea,
       stagnantSelectionAreas,
 
-      sheetsRowHeights,
-
-      sheetsRowCount,
-
-      sheetsFreezeRowCount
+      sheetRowHeights,
+      sheetRowCount,
+      sheetFreezeRowCount
     }
   }
 }) => ({
   activeCellPosition,
   activeSelectionArea,
   stagnantSelectionAreas,
-  sheetRowHeights: sheetsRowHeights[activeSheetName],
-  sheetRowCount: sheetsRowCount[activeSheetName],
-  sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName]
+  sheetRowHeights,
+  sheetRowCount,
+  sheetFreezeRowCount
 });
 
 export let RowHeaderSelection = ({ 

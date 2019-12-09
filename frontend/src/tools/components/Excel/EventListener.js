@@ -14,7 +14,7 @@ import { updateScrollData } from "actions/ui/excel/scrollData";
 
 import { updateStagnantSelectionAreas, resetStagnantSelectionAreas } from "actions/ui/excel/stagnantSelectionAreas";
 
-import { updateSheetCellData } from "actions/ui/excel/sheetsCellData";
+import { updateSheetCellData } from "actions/ui/excel/sheetCellData";
 
 import { 
   isPositionEqualArea, 
@@ -46,8 +46,6 @@ const mapStateToProps = ({
       activeCellSelectionAreaIndex,
       activeCellInputAutoFocus,
 
-      activeSheetName,
-
       stagnantSelectionAreas,
 
       scrollData,
@@ -55,13 +53,13 @@ const mapStateToProps = ({
       isSelectionMode, 
       isEditMode,
 
-      sheetsColumnCount,
-      sheetsRowCount,
-      sheetsColumnWidths,
-      sheetsRowHeights,
-      sheetsCellData,
-      sheetsFreezeColumnCount,
-      sheetsFreezeRowCount
+      sheetCellData,
+      sheetRowCount,
+      sheetColumnCount,
+      sheetColumnWidths,
+      sheetRowHeights,
+      sheetFreezeColumnCount,
+      sheetFreezeRowCount
     } 
   } 
 }) => ({ 
@@ -71,8 +69,6 @@ const mapStateToProps = ({
   activeCellSelectionAreaIndex,
   activeCellInputAutoFocus,
 
-  activeSheetName,
-
   stagnantSelectionAreas,
 
   scrollData,
@@ -81,13 +77,13 @@ const mapStateToProps = ({
   isEditMode,
 
   // Active sheet
-  sheetCellData: sheetsCellData[activeSheetName],
-  sheetRowCount: sheetsRowCount[activeSheetName],
-  sheetColumnCount: sheetsColumnCount[activeSheetName],
-  sheetColumnWidths: sheetsColumnWidths[activeSheetName],
-  sheetRowHeights: sheetsRowHeights[activeSheetName],
-  sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName],
-  sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName]
+  sheetCellData,
+  sheetRowCount,
+  sheetColumnCount,
+  sheetColumnWidths,
+  sheetRowHeights,
+  sheetFreezeColumnCount,
+  sheetFreezeRowCount
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -124,7 +120,6 @@ let EventListener = ({
   sheetGridRef,
   
   activeCellInputData,
-  activeSheetName,
   activeCellPosition,
   activeSelectionArea,
   activeCellSelectionAreaIndex,
@@ -191,7 +186,6 @@ let EventListener = ({
       topOffsets={topOffsets}
       
       activeCellInputData={activeCellInputData}
-      activeSheetName={activeSheetName}
       activeCellPosition={activeCellPosition}
       activeSelectionArea={activeSelectionArea}
       activeCellSelectionAreaIndex={activeCellSelectionAreaIndex}
@@ -761,8 +755,6 @@ class EventRedux extends PureComponent {
 
   delete() {
     const { 
-      activeSheetName,
-
       isEditMode,
       activeCellSelectionAreaIndex,
       activeSelectionArea,
@@ -813,7 +805,7 @@ class EventRedux extends PureComponent {
         });
       }
 
-      handleChangeSheetCellData(activeSheetName, newSheetCellData);
+      handleChangeSheetCellData(newSheetCellData);
     } else {
       const { x, y } = activeCellPosition;
 
@@ -829,7 +821,6 @@ class EventRedux extends PureComponent {
 
   changeValue(row, column, newData) {
     const { 
-      activeSheetName, 
       sheetCellData, 
       handleChangeSheetCellData 
     } = this.props;
@@ -846,13 +837,13 @@ class EventRedux extends PureComponent {
     if(currentCellData) {
       if(currentCellData !== newValue) {
         newSheetCellData[row][column] = { ...currentCellData, value: newValue };
-        handleChangeSheetCellData(activeSheetName, newSheetCellData);
+        handleChangeSheetCellData(newSheetCellData);
       }
     } else {
       // ! Change type?
       if(!newSheetCellData[row]) newSheetCellData[row] = {};
       newSheetCellData[row][column] = { type: "normal", value: newValue };
-      handleChangeSheetCellData(activeSheetName, newSheetCellData);
+      handleChangeSheetCellData(newSheetCellData);
     }
   }
 

@@ -13,6 +13,10 @@ import AddIcon from "@material-ui/icons/Add";
 // import { generateNewSheetName } from "tools/excel";
 import { DnDReorder } from "tools/misc";
 
+import { loadWorkbook } from "tools/redux";
+
+import pako from "pako";
+
 import "./SheetNavigator.scss";
 
 const AddButton = ({ handleClick }) => (
@@ -112,33 +116,101 @@ const SheetSelectionContext = ({
 const mapStateToProps = ({
   ui: {
     excel: {
+      activeCellPosition,
+      activeCellInputData,
       sheetNames,
-      activeSheetName
+      activeSheetName,
+      sheetCellData,
+      sheetColumnCount,
+      sheetColumnWidths,
+      sheetFreezeColumnCount,
+      sheetRowCount,
+      sheetFreezeRowCount,
+      sheetRowHeights,
+      sheetHiddenColumns,
+      sheetHiddenRows
     }
   }
 }) => ({
+  activeCellPosition,
+  activeCellInputData,
   sheetNames,
-  activeSheetName
+  activeSheetName,
+  sheetCellData,
+  sheetColumnCount,
+  sheetColumnWidths,
+  sheetFreezeColumnCount,
+  sheetRowCount,
+  sheetFreezeRowCount,
+  sheetRowHeights,
+  sheetHiddenColumns,
+  sheetHiddenRows
 });
 
 const mapDispatchToProps = (dispatch) => ({
   handleChangeActiveSheet: (activeSheetName) => dispatch(updateActiveSheetName(activeSheetName)),
-  handleChangeSheetNames: (sheetNames) => dispatch(updateSheetNames(sheetNames)) 
+  handleChangeSheetNames: (sheetNames) => dispatch(updateSheetNames(sheetNames)),
+  handleLoadWorkbook: (workbookData) => loadWorkbook(dispatch, workbookData)
 });
 
 let SheetNavigator = ({ 
   sheetGridRef,
+  activeCellPosition,
+  activeCellInputData,
   activeSheetName, 
   sheetNames,
 
+  sheetCellData,
+  sheetColumnCount,
+  sheetColumnWidths,
+  sheetFreezeColumnCount,
+  sheetRowCount,
+  sheetFreezeRowCount,
+  sheetRowHeights,
+  sheetHiddenColumns,
+  sheetHiddenRows,
+
   handleChangeActiveSheet,
-  handleChangeSheetNames
+  handleChangeSheetNames,
+  handleLoadWorkbook
 }) => {
   // ! Think carefully about this one...
   const handleAddSheet = () => {
     // const newSheetName = generateNewSheetName(sheetNames);
 
     // handleUpdateSheetNames([ ...sheetNames, newSheetName ]);
+  };
+
+  const handleClickSheet = (sheetName) => {
+    let currentSheetData = {
+      sheetCellData,
+      sheetColumnCount,
+      sheetColumnWidths,
+      sheetFreezeColumnCount,
+      sheetRowCount,
+      sheetFreezeRowCount,
+      sheetRowHeights,
+      sheetHiddenColumns,
+      sheetHiddenRows
+    };
+    
+    let currentInactiveSheets = JSON.parse(sessionStorage.getItem("inactiveSheets"));
+    const newActiveSheetData = JSON.parse(pako.inflate(currentInactiveSheets[sheetName], { to: "string" }));
+
+    currentInactiveSheets[activeSheetName] = pako.deflate(JSON.stringify(currentSheetData), { to: "string" });
+    currentInactiveSheets[sheetName] = undefined;
+
+    sessionStorage.setItem("inactiveSheets", JSON.stringify(currentInactiveSheets));
+
+    // ! Need to updae active cell input data!
+    handleLoadWorkbook({
+      ...newActiveSheetData,
+      activeSheetName: sheetName,
+      activeCellPosition,
+      activeCellInputData
+    });
+
+    handleChangeActiveSheet(sheetName);
   };
 
   const handleDragEnd = (result) => {
@@ -157,7 +229,7 @@ let SheetNavigator = ({
         sheetNames={sheetNames} 
         activeSheetName={activeSheetName} 
         handleDragEnd={handleDragEnd} 
-        handleChangeActiveSheet={handleChangeActiveSheet}
+        handleChangeActiveSheet={handleClickSheet}
       />
     </div>
   );

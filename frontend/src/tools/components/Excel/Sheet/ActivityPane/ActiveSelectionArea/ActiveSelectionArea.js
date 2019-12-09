@@ -9,30 +9,27 @@ import "./ActiveSelectionArea.scss";
 const mapStateToProps = ({
   ui: {
     excel: {
-      activeSheetName,
       isSelectionMode,
       activeSelectionArea,
 
-      sheetsFreezeColumnCount,
-      sheetsFreezeRowCount,
-
-      sheetsColumnWidths,
-      sheetsRowHeights,
-
-      sheetsColumnCount,
-      sheetsRowCount
+      sheetFreezeColumnCount,
+      sheetFreezeRowCount,
+      sheetColumnWidths,
+      sheetRowHeights,
+      sheetColumnCount,
+      sheetRowCount
     }
   }
 }) => ({
   isSelectionMode,
   activeSelectionArea,
 
-  sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName],
-  sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName],
-  sheetColumnWidths: sheetsColumnWidths[activeSheetName],
-  sheetRowHeights: sheetsRowHeights[activeSheetName],
-  sheetColumnCount: sheetsColumnCount[activeSheetName],
-  sheetRowCount: sheetsRowCount[activeSheetName]
+  sheetFreezeColumnCount,
+  sheetFreezeRowCount,
+  sheetColumnWidths,
+  sheetRowHeights,
+  sheetColumnCount,
+  sheetRowCount
 });
 
 let ActiveSelectionArea = ({ 

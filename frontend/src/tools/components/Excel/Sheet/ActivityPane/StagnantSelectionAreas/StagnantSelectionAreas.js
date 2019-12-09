@@ -13,27 +13,25 @@ const StagnantSelectionAreasComponents = ({ relevantStagnantSelectionAreasStyles
 const mapStateToProps = ({
   ui: {
     excel: {
-      activeSheetName,
       stagnantSelectionAreas,
 
-      sheetsFreezeRowCount,
-      sheetsFreezeColumnCount,
-      sheetsColumnWidths,
-      sheetsRowHeights,
-
-      sheetsRowCount,
-      sheetsColumnCount
+      sheetFreezeColumnCount,
+      sheetFreezeRowCount,
+      sheetColumnWidths,
+      sheetRowHeights,
+      sheetColumnCount,
+      sheetRowCount
     }
   }
 }) => ({
   stagnantSelectionAreas,
 
-  sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName],
-  sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName],
-  sheetColumnWidths: sheetsColumnWidths[activeSheetName],
-  sheetRowHeights: sheetsRowHeights[activeSheetName],
-  sheetColumnCount: sheetsColumnCount[activeSheetName],
-  sheetRowCount: sheetsRowCount[activeSheetName]
+  sheetFreezeColumnCount,
+  sheetFreezeRowCount,
+  sheetColumnWidths,
+  sheetRowHeights,
+  sheetColumnCount,
+  sheetRowCount
 });
 
 let StagnantSelectionAreas = ({

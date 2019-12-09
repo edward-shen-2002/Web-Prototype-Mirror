@@ -46,18 +46,16 @@ const mapStateToProps = ({
     excel: {
       activeCellInputData: { editorState },
       activeCellInputAutoFocus,
-      activeSheetName,
       activeCellPosition,
 
       isEditMode,
 
-      sheetsColumnCount,
-      sheetsRowCount,
-      sheetsFreezeColumnCount,
-      sheetsFreezeRowCount,
-
-      sheetsColumnWidths,
-      sheetsRowHeights
+      sheetFreezeColumnCount,
+      sheetFreezeRowCount,
+      sheetColumnCount,
+      sheetRowCount,
+      sheetColumnWidths,
+      sheetRowHeights
     }
   }
 }) => ({
@@ -68,14 +66,12 @@ const mapStateToProps = ({
 
   isEditMode,
 
-  sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName],
-  sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName],
-
-  sheetColumnCount: sheetsColumnCount[activeSheetName],
-  sheetRowCount: sheetsRowCount[activeSheetName],
-
-  sheetColumnWidths: sheetsColumnWidths[activeSheetName],
-  sheetRowHeights: sheetsRowHeights[activeSheetName]
+  sheetFreezeColumnCount,
+  sheetFreezeRowCount,
+  sheetColumnCount,
+  sheetRowCount,
+  sheetColumnWidths,
+  sheetRowHeights
 });
 
 let ActiveCell = ({ 

@@ -20,15 +20,17 @@ import { setEditModeOff } from "actions/ui/excel/isEditMode";
 
 import { setActiveCellInputAutoFocusOff } from "actions/ui/excel/activeCellInputAutoFocus";
 
-import { updateSheetsCellData, resetSheetsCellData } from "actions/ui/excel/sheetsCellData";
-import { updateSheetsColumnCount, resetSheetsColumnCount } from "actions/ui/excel/sheetsColumnCount";
-import { updateSheetsRowCount, resetSheetsRowCount } from "actions/ui/excel/sheetsRowCount";
-import { updateSheetsColumnWidths, resetSheetsColumnWidths } from "actions/ui/excel/sheetsColumnWidths";
-import { updateSheetsRowHeights, resetSheetsRowHeights } from "actions/ui/excel/sheetsRowHeights";
-import { updateSheetsFreezeColumnCount, resetSheetsFreezeColumnCount } from "actions/ui/excel/sheetsFreezeColumnCount";
-import { updateSheetsFreezeRowCount, resetSheetsFreezeRowCount } from "actions/ui/excel/sheetsFreezeRowCount";
-import { updateSheetsHiddenColumns, resetSheetsHiddenColumns } from "actions/ui/excel/sheetsHiddenColumns";
-import { updateSheetsHiddenRows, resetSheetsHiddenRows } from "actions/ui/excel/sheetsHiddenRows";
+import { updateSheetCellData, resetSheetCellData } from "actions/ui/excel/sheetCellData";
+import { updateSheetColumnCount, resetSheetColumnCount } from "actions/ui/excel/sheetColumnCount";
+import { updateSheetRowCount, resetSheetRowCount } from "actions/ui/excel/sheetRowCount";
+import { updateSheetColumnWidths, resetSheetColumnWidths } from "actions/ui/excel/sheetColumnWidths";
+import { updateSheetRowHeights, resetSheetRowHeights } from "actions/ui/excel/sheetRowHeights";
+import { updateSheetFreezeColumnCount, resetSheetFreezeColumnCount } from "actions/ui/excel/sheetFreezeColumnCount";
+import { updateSheetFreezeRowCount, resetSheetFreezeRowCount } from "actions/ui/excel/sheetFreezeRowCount";
+import { updateSheetHiddenColumns, resetSheetHiddenColumns } from "actions/ui/excel/sheetHiddenColumns";
+import { updateSheetHiddenRows, resetSheetHiddenRows } from "actions/ui/excel/sheetHiddenRows";
+
+import pako from "pako";
 
 export const loadUserState = (dispatch, { user, token }) => {
   if(token) {
@@ -61,48 +63,45 @@ export const loadWorkbook = (
 
     sheetNames,
     
-    sheetsCellData,
-    sheetsColumnCount,
-    sheetsRowCount,
-    sheetsColumnWidths,
-    sheetsRowHeights,
-    sheetsFreezeColumnCount,
-    sheetsFreezeRowCount,
-    sheetsHiddenColumns,
-    sheetsHiddenRows
+    sheetCellData,
+    sheetColumnCount,
+    sheetRowCount,
+    sheetColumnWidths,
+    sheetRowHeights,
+    sheetFreezeColumnCount,
+    sheetFreezeRowCount,
+    sheetHiddenColumns,
+    sheetHiddenRows
   }
 ) => {
   dispatch(updateActiveCellInputData(activeCellInputData));
   dispatch(updateActiveCellPosition(activeCellPosition));
   dispatch(updateActiveSheetName(activeSheetName));
-  dispatch(updateSheetNames(sheetNames));
   
-  dispatch(updateSheetsCellData(sheetsCellData));
-  dispatch(updateSheetsColumnCount(sheetsColumnCount));
-  dispatch(updateSheetsRowCount(sheetsRowCount));
+  if(sheetNames) dispatch(updateSheetNames(sheetNames));
 
-  dispatch(updateSheetsColumnWidths(sheetsColumnWidths));
-  dispatch(updateSheetsRowHeights(sheetsRowHeights));
-
-  dispatch(updateSheetsFreezeColumnCount(sheetsFreezeColumnCount));
-  dispatch(updateSheetsFreezeRowCount(sheetsFreezeRowCount));
-
-  dispatch(updateSheetsHiddenColumns(sheetsHiddenColumns));
-  dispatch(updateSheetsHiddenRows(sheetsHiddenRows));
+  dispatch(updateSheetCellData(sheetCellData));
+  dispatch(updateSheetRowCount(sheetRowCount));
+  dispatch(updateSheetColumnCount(sheetColumnCount));
+  dispatch(updateSheetColumnWidths(sheetColumnWidths));
+  dispatch(updateSheetRowHeights(sheetRowHeights));
+  dispatch(updateSheetFreezeColumnCount(sheetFreezeColumnCount));
+  dispatch(updateSheetFreezeRowCount(sheetFreezeRowCount));
+  dispatch(updateSheetHiddenColumns(sheetHiddenColumns));
+  dispatch(updateSheetHiddenRows(sheetHiddenRows));
 };
 
 export const resetWorkbook = (dispatch) => {
-  dispatch(resetSheetsCellData());
+  dispatch(resetSheetCellData());
   dispatch(resetActiveSheetName());
-
-  dispatch(resetSheetsColumnCount());
-  dispatch(resetSheetsRowCount());
-
-  dispatch(resetSheetsRowHeights());
-  dispatch(resetSheetsColumnWidths());
-  
-  dispatch(resetSheetsFreezeColumnCount());
-  dispatch(resetSheetsFreezeRowCount());
+  dispatch(resetSheetColumnCount());
+  dispatch(resetSheetRowCount());
+  dispatch(resetSheetRowHeights());
+  dispatch(resetSheetColumnWidths());
+  dispatch(resetSheetFreezeColumnCount());
+  dispatch(resetSheetFreezeRowCount());
+  dispatch(resetSheetHiddenColumns());
+  dispatch(resetSheetHiddenRows());
 
   dispatch(resetSheetNames());
 
@@ -122,7 +121,4 @@ export const resetWorkbook = (dispatch) => {
   dispatch(resetScrollData());
 
   dispatch(setActiveCellInputAutoFocusOff());
-
-  dispatch(resetSheetsHiddenColumns());
-  dispatch(resetSheetsHiddenRows());
 };

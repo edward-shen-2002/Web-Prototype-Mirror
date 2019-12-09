@@ -33,24 +33,23 @@ import "./Sheet.scss";
 const mapStateToProps = ({
   ui: {
     excel: {
-      activeSheetName,
-      sheetsCellData,
-      sheetsColumnCount,
-      sheetsRowCount,
-      sheetsColumnWidths,
-      sheetsRowHeights,
-      sheetsFreezeRowCount,
-      sheetsFreezeColumnCount
+      sheetCellData,
+      sheetColumnCount,
+      sheetRowCount,
+      sheetColumnWidths,
+      sheetRowHeights,
+      sheetFreezeRowCount,
+      sheetFreezeColumnCount
     }
   }
 }) => ({
-  sheetCellData: sheetsCellData[activeSheetName],
-  sheetColumnCount: sheetsColumnCount[activeSheetName],
-  sheetRowCount: sheetsRowCount[activeSheetName],
-  sheetColumnWidths: sheetsColumnWidths[activeSheetName],
-  sheetRowHeights: sheetsRowHeights[activeSheetName],
-  sheetFreezeRowCount: sheetsFreezeRowCount[activeSheetName],
-  sheetFreezeColumnCount: sheetsFreezeColumnCount[activeSheetName]
+  sheetCellData,
+  sheetColumnCount,
+  sheetRowCount,
+  sheetColumnWidths,
+  sheetRowHeights,
+  sheetFreezeRowCount,
+  sheetFreezeColumnCount
 });
 
 const mapDispatchToProps = (dispatch) => ({

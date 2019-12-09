@@ -6,6 +6,8 @@ import { EditorState, ContentState, RichUtils } from "draft-js";
 
 import { isObjectEmpty } from "tools/misc";
 
+import pako from "pako";
+
 import { 
   EXCEL_ROW_HEIGHT_SCALE,
   EXCEL_COLUMN_WIDTH_SCALE,
@@ -194,7 +196,7 @@ export const getCellData = (sheetCellData, row, column) => (
 );
 
 
-export const getHeaderCount = (sheet) => {
+export const getSheetHeaderCount = (sheet) => {
   const sheetUsedRange = sheet.usedRange();
 
   let headerCount = {};
@@ -202,52 +204,52 @@ export const getHeaderCount = (sheet) => {
   if(sheetUsedRange) {
     const { _maxColumnNumber, _maxRowNumber } = sheetUsedRange;
 
-    headerCount.columnCount = _maxColumnNumber + 1;
-    headerCount.rowCount = _maxRowNumber + 1;
+    headerCount.sheetColumnCount = Math.max(_maxColumnNumber + 1, DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1);
+    headerCount.sheetRowCount = Math.max(_maxRowNumber + 1, DEFAULT_EXCEL_SHEET_ROW_COUNT + 1);
   } else {
-    headerCount.columnCount = DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1;
-    headerCount.rowCount = DEFAULT_EXCEL_SHEET_ROW_COUNT + 1;
+    headerCount.sheetColumnCount = DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1;
+    headerCount.sheetRowCount = DEFAULT_EXCEL_SHEET_ROW_COUNT + 1;
   }
 
   return headerCount;
 };
 
-export const getColumnsData = (sheet, columnCount) => {
-  let columnWidths = {};
+export const getSheetColumnsData = (sheet, columnCount) => {
+  let sheetColumnWidths = {};
 
-  let hiddenColumns = {};
+  let sheetHiddenColumns = {};
 
   for(let column = 1; column < columnCount; column++) {
     let width;
 
     const sheetColumn = sheet.column(column);
 
-    if(sheetColumn.hidden()) hiddenColumns[column] = true;
+    if(sheetColumn.hidden()) sheetHiddenColumns[column] = true;
 
     width = sheetColumn.width();
 
-    if(width) columnWidths[column] = width;
+    if(width) sheetColumnWidths[column] = width;
   }
 
-  return { columnWidths, hiddenColumns };
+  return { sheetColumnWidths, sheetHiddenColumns };
 };
 
-export const getRowsData = (sheet, rowCount) => {
-  let rowHeights = {};
+export const getSheetRowsData = (sheet, rowCount) => {
+  let sheetRowHeights = {};
 
-  let hiddenRows = {};
+  let sheetHiddenRows = {};
 
   for(let row = 1; row < rowCount; row++) {
     let height;
     const sheetRow = sheet.row(row);
 
-    if(sheetRow.hidden()) hiddenRows[row] = true;
+    if(sheetRow.hidden()) sheetHiddenRows[row] = true;
 
     height = sheetRow.height();
-    if(height) rowHeights[row] = height;
+    if(height) sheetRowHeights[row] = height;
   }
 
-  return { rowHeights, hiddenRows };
+  return { sheetRowHeights, sheetHiddenRows };
 };
 
 // TODO
@@ -483,17 +485,17 @@ export const getSheetCellData = (sheet, columnCount, rowCount) => {
   return sheetCellData;
 };
 
-export const getFreezeHeader = (sheet) => {
+export const getSheetFreezeHeader = (sheet) => {
   const freezeHeader = {};
   
   const panes = sheet.panes();
           
   if(panes && panes.state === "frozen") {
-    freezeHeader.freezeRowCount = panes.ySplit;
-    freezeHeader.freezeColumnCount = panes.xSplit;
+    freezeHeader.sheetFreezeRowCount = panes.ySplit;
+    freezeHeader.sheetFreezeColumnCount = panes.xSplit;
   } else {
-    freezeHeader.freezeRowCount = DEFAULT_EXCEL_SHEET_FREEZE_ROW_COUNT;
-    freezeHeader.freezeColumnCount = DEFAULT_EXCEL_SHEET_FREEZE_COLUMN_COUNT; 
+    freezeHeader.sheetFreezeRowCount = DEFAULT_EXCEL_SHEET_FREEZE_ROW_COUNT;
+    freezeHeader.sheetFreezeColumnCount = DEFAULT_EXCEL_SHEET_FREEZE_COLUMN_COUNT; 
   }
 
   return freezeHeader;
@@ -553,10 +555,10 @@ export const getLeftOffsets = (columnWidths, columnCount) => {
   return leftOffsets;
 };
 
-export const getActiveCellInputData = (sheetsCellData, activeSheetName, activeRow, activeColumn) => {
+export const getActiveCellInputData = (sheetCellData, activeRow, activeColumn) => {
   const activeCellInputValueData = (
-    sheetsCellData[activeSheetName] && sheetsCellData[activeSheetName][activeRow] && sheetsCellData[activeSheetName][activeRow][activeColumn]
-      ? sheetsCellData[activeSheetName][activeRow][activeColumn]
+    sheetCellData && sheetCellData[activeRow] && sheetCellData[activeRow][activeColumn]
+      ? sheetCellData[activeRow][activeColumn]
       : undefined
   );
   
@@ -575,39 +577,31 @@ export const convertExcelFileToState = async (excelFile) => {
   const activeSheet = WorkbookInstance.activeSheet();
   const activeSheetName = activeSheet.name();
 
-  let sheetsColumnCount = {};
-  let sheetsColumnWidths = {};
-  let sheetsFreezeColumnCount = {};
-  let sheetsRowCount = {};
-  let sheetsRowHeights = {};
-  let sheetsFreezeRowCount = {};
-  let sheetsCellData = {};
-  let sheetsHiddenColumns = {};
-  let sheetsHiddenRows = {};
+  let workbookData = {};
 
   sheetNames.forEach((name) => {
     const sheet = WorkbookInstance.sheet(name);
 
-    let { columnCount, rowCount } = getHeaderCount(sheet);
+    const { sheetColumnCount, sheetRowCount } = getSheetHeaderCount(sheet);
 
-    columnCount = Math.max(columnCount, DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1);
-    rowCount = Math.max(rowCount, DEFAULT_EXCEL_SHEET_ROW_COUNT + 1);
+    const sheetCellData = getSheetCellData(sheet, sheetColumnCount, sheetRowCount);
+    const { sheetColumnWidths, sheetHiddenColumns } = getSheetColumnsData(sheet, sheetColumnCount);
+    const { sheetRowHeights, sheetHiddenRows } = getSheetRowsData(sheet, sheetRowCount);
+    const { sheetFreezeRowCount, sheetFreezeColumnCount } = getSheetFreezeHeader(sheet);
 
-    let sheetCellData = getSheetCellData(sheet, columnCount, rowCount);
-    let { columnWidths, hiddenColumns } = getColumnsData(sheet, columnCount);
-    let { rowHeights, hiddenRows } = getRowsData(sheet, rowCount);
-    let { freezeRowCount, freezeColumnCount } = getFreezeHeader(sheet);
+    const sheetContent = {
+      sheetCellData,
+      sheetColumnCount,
+      sheetColumnWidths,
+      sheetFreezeColumnCount,
+      sheetRowCount,
+      sheetFreezeRowCount,
+      sheetRowHeights,
+      sheetHiddenColumns,
+      sheetHiddenRows
+    };
 
-    sheetsColumnCount[name] = columnCount;
-    sheetsRowCount[name] = rowCount;
-    sheetsCellData[name] = sheetCellData;
-
-    sheetsColumnWidths[name] = columnWidths;
-    sheetsRowHeights[name] = rowHeights;
-    sheetsFreezeRowCount[name] = freezeRowCount;
-    sheetsFreezeColumnCount[name] = freezeColumnCount;
-    sheetsHiddenColumns[name] = hiddenColumns;
-    sheetsHiddenRows[name] = hiddenRows;
+    workbookData[name] = pako.deflate(JSON.stringify(sheetContent), { to: "string" });
   });
 
   // ! Issue here when there is multi-selection saved in excel
@@ -627,30 +621,29 @@ export const convertExcelFileToState = async (excelFile) => {
 
   return {
     activeCellPosition,
-    sheetsCellData,
-
-    sheetsColumnCount,
-    sheetsColumnWidths,
-    sheetsFreezeColumnCount,
-    sheetsRowCount,
-    sheetsFreezeRowCount,
-    sheetsRowHeights,
-    sheetsHiddenColumns,
-    sheetsHiddenRows,
-
+    workbookData,
     activeSheetName,
     sheetNames
   };
 };
 
-
 export const convertStateToReactState = (state) => {
-  const { activeCellPosition: { x, y }, sheetsCellData, activeSheetName } = state;
+  const { activeCellPosition: { x, y } } = state;
 
-  const activeCellInputData = getActiveCellInputData(sheetsCellData, activeSheetName, y, x);
+  const workbookData = state.workbookData;
+  const activeSheetName = state.activeSheetName;
+  const activeSheetData = JSON.parse(pako.inflate(workbookData[activeSheetName], { to: "string" }));
+
+  const activeCellInputData = getActiveCellInputData(activeSheetData.sheetCellData, y, x);
+
+  let inactiveSheetsData = JSON.stringify({ ...workbookData, [activeSheetName]: undefined });
+
+  sessionStorage.setItem("inactiveSheets", inactiveSheetsData);
 
   return {
     ...state,
-    activeCellInputData
-  }
+    ...activeSheetData,
+    activeCellInputData,
+    workbookData: undefined
+  };
 };

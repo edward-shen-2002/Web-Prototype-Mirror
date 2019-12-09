@@ -14,15 +14,15 @@ import scrollData from "./scrollData";
 import isSelectionMode from "./isSelectionMode";
 import isEditMode from "./isEditMode";
 
-import sheetsCellData from "./sheetsCellData";
-import sheetsColumnCount from "./sheetsColumnCount";
-import sheetsColumnWidths from "./sheetsColumnWidths";
-import sheetsFreezeColumnCount from "./sheetsFreezeColumnCount";
-import sheetsRowCount from "./sheetsRowCount";
-import sheetsRowHeights from "./sheetsRowHeights";
-import sheetsFreezeRowCount from "./sheetsFreezeRowCount";
-import sheetsHiddenColumns from "./sheetsHiddenColumns";
-import sheetsHiddenRows from "./sheetsHiddenRows";
+import sheetCellData from "./sheetCellData";
+import sheetColumnCount from "./sheetColumnCount";
+import sheetColumnWidths from "./sheetColumnWidths";
+import sheetFreezeColumnCount from "./sheetFreezeColumnCount";
+import sheetRowCount from "./sheetRowCount";
+import sheetRowHeights from "./sheetRowHeights";
+import sheetFreezeRowCount from "./sheetFreezeRowCount";
+import sheetHiddenColumns from "./sheetHiddenColumns";
+import sheetHiddenRows from "./sheetHiddenRows";
 
 const excelReducer = combineReducers({ 
   activeCellInputData,
@@ -39,15 +39,15 @@ const excelReducer = combineReducers({
   isSelectionMode, 
   isEditMode,
 
-  sheetsCellData,
-  sheetsColumnCount,
-  sheetsColumnWidths,
-  sheetsFreezeColumnCount,
-  sheetsRowCount,
-  sheetsRowHeights,
-  sheetsFreezeRowCount,
-  sheetsHiddenColumns,
-  sheetsHiddenRows
+  sheetCellData,
+  sheetColumnCount,
+  sheetColumnWidths,
+  sheetFreezeColumnCount,
+  sheetRowCount,
+  sheetRowHeights,
+  sheetFreezeRowCount,
+  sheetHiddenColumns,
+  sheetHiddenRows
 });
 
 export default excelReducer;
