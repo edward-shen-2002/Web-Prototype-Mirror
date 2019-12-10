@@ -525,7 +525,7 @@ export const convertTextToEditorState = (text) => {
         : EditorState.createWithContent(ContentState.createFromText(""))
     ))
   );
-}
+};
 
 export const getTopOffsets = (rowHeights, rowCount) => {
   let topOffsetsTotal = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER;

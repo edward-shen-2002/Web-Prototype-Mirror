@@ -8,6 +8,8 @@ import { updateActiveCellPosition } from "actions/ui/excel/activeCellPosition";
 import { updateActiveSelectionArea, resetActiveSelectionArea } from "actions/ui/excel/activeSelectionArea";
 import { updateActiveCellSelectionAreaIndex, resetActiveCellSelectionAreaIndex } from "actions/ui/excel/activeCellSelectionAreaIndex";
 
+
+
 import { setSelectionModeOn, setSelectionModeOff } from "actions/ui/excel/isSelectionMode";
 import { setEditModeOn, setEditModeOff } from "actions/ui/excel/isEditMode";
 import { updateScrollData } from "actions/ui/excel/scrollData";
@@ -1207,14 +1209,14 @@ class EventRedux extends PureComponent {
     const verticalScrollbarSize = estimatedTotalHeight > height ? scrollbarSize : 0;
 
     // Active cell is under freeze
-    if(newY > sheetFreezeRowCount && topActiveStart < scrollTop + freezeHeight) {
+    if(newY > sheetFreezeRowCount && topActiveStart + heightActiveStart < scrollTop + freezeHeight) {
       newScrollTop = topActiveStart + DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER - freezeHeight;
     // Beyond bottom side
     } else if(topActiveStart + heightActiveStart > scrollTop + height - horizontalScrollbarSize){
       newScrollTop = topActiveStart + heightActiveStart - height + horizontalScrollbarSize;
     }
     
-    if(newX > sheetFreezeColumnCount &&  leftActiveStart < scrollLeft + freezeWidth) {
+    if(newX > sheetFreezeColumnCount && leftActiveStart < scrollLeft + freezeWidth) {
       newScrollLeft = leftActiveStart + DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER - freezeWidth;
     // Beyond visible right side
     } else if(leftActiveStart + widthActiveStart > scrollLeft + width - verticalScrollbarSize){
