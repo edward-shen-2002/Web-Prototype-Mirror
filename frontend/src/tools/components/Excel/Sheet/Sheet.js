@@ -33,6 +33,7 @@ import "./Sheet.scss";
 const mapStateToProps = ({
   ui: {
     excel: {
+      cursorType,
       sheetCellData,
       sheetColumnCount,
       sheetRowCount,
@@ -43,6 +44,7 @@ const mapStateToProps = ({
     }
   }
 }) => ({
+  cursorType,
   sheetCellData,
   sheetColumnCount,
   sheetRowCount,
@@ -56,37 +58,9 @@ const mapDispatchToProps = (dispatch) => ({
   handleUpdateScrollData: (scrollData) => dispatch(updateScrollData(scrollData)),
 });
 
-const createItemData = memoize((    
-  sheetCellData, 
-    
-  columnCount,
-  rowCount,
+const createItemData = memoize((itemData) => (itemData));
 
-  handleDoubleClickEditableCell,
-
-  handleSelectionStart,
-  handleSelectionOver,
-
-  handleClickColumnHeader,
-  handleClickRowHeader,
-  handleClickRootHeader
-) => ({
-  sheetCellData, 
-    
-  columnCount,
-  rowCount,
-
-  handleDoubleClickEditableCell,
-
-  handleSelectionStart,
-  handleSelectionOver,
-
-  handleClickColumnHeader,
-  handleClickRowHeader,
-  handleClickRootHeader,
-}));
-
-let SheetWindow = ({
+const SheetWindow = ({
   sheetGridRef,
   eventListenerRef,
 
@@ -113,22 +87,17 @@ let SheetWindow = ({
   const columnWidth = (index) => index ? getNormalColumnWidth(sheetColumnWidths[index]) : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER;
 
   const handleSelectionStart = (x1, y1, ctrlKey, shiftKey) => EventListenerInstance.startSelection(x1, y1, ctrlKey, shiftKey);
-
   const handleSelectionOver = (x2, y2, ctrlKey) => EventListenerInstance.selectOver(x2, y2, ctrlKey);
-
   const handleDoubleClickEditableCell = () => EventListenerInstance.doubleClickEditableCell();
-
   const handleClickColumnHeader = (column, ctrlKey) => EventListenerInstance.clickColumnHeader(column, ctrlKey);
-
   const handleClickRowHeader = (row, ctrlKey) => EventListenerInstance.clickRowHeader(row, ctrlKey);
-
   const handleClickRootHeader = () => EventListenerInstance.selectAll();
-
   const handleChangeActiveInputData = (value) => EventListenerInstance.changeActiveInputData(value);
-
+  const handleRowDragStart = (row) => EventListenerInstance.startRowDrag(row);
+  const handleColumnDragStart = (column) => EventListenerInstance.startColumnDrag(column);
   const handleScroll = (scrollData) => handleUpdateScrollData(scrollData); 
 
-  const itemData = createItemData(
+  const itemData = createItemData({
     sheetCellData, 
     
     sheetColumnCount,
@@ -139,10 +108,13 @@ let SheetWindow = ({
     handleSelectionStart,
     handleSelectionOver,
 
+    handleRowDragStart,
+    handleColumnDragStart,
+
     handleClickColumnHeader,
     handleClickRowHeader,
     handleClickRootHeader
-  );
+  });
 
   const commonSelectionPaneProps = { sheetGridRef, handleChangeActiveInputData };
 
@@ -160,7 +132,6 @@ let SheetWindow = ({
           rowCount={sheetRowCount}
           rowHeight={rowHeight}
           width={width}
-
           onScroll={handleScroll}
           extraTopLeftElement={
             <TopLeftActivityPane 
@@ -194,12 +165,21 @@ let SheetWindow = ({
   );
 };
 
-SheetWindow = connect(mapStateToProps, mapDispatchToProps)(SheetWindow);
-
-const Sheet = ({ 
+let Sheet = ({ 
   eventListenerRef, 
   sheetContainerRef, 
-  sheetGridRef
+  sheetGridRef,
+
+  cursorType,
+  sheetCellData,
+  sheetFreezeRowCount,
+  sheetFreezeColumnCount,
+  sheetColumnCount,
+  sheetRowCount,
+  sheetColumnWidths,
+  sheetRowHeights,
+
+  handleUpdateScrollData
 }) => {
   let EventListenerInstance;
 
@@ -252,10 +232,13 @@ const Sheet = ({
     EventListenerInstance.setInputAutoFocusOn();
   };
 
+  const style = { cursor: cursorType };
+
   return (
     <div 
       ref={sheetContainerRef} 
       className="sheet" 
+      style={style}
       tabIndex="0" 
       onKeyDown={handleKeyDown}
       onDragStart={handleDragStart}
@@ -266,10 +249,22 @@ const Sheet = ({
         sheetContainerRef={sheetContainerRef} 
         eventListenerRef={eventListenerRef}
         sheetGridRef={sheetGridRef}
+
+        sheetCellData={sheetCellData}
+        sheetFreezeRowCount={sheetFreezeRowCount}
+        sheetFreezeColumnCount={sheetFreezeColumnCount}
+        sheetColumnCount={sheetColumnCount}
+        sheetRowCount={sheetRowCount}
+        sheetColumnWidths={sheetColumnWidths}
+        sheetRowHeights={sheetRowHeights}
+      
+        handleUpdateScrollData={handleUpdateScrollData}
       />
       <WindowListener eventListenerRef={eventListenerRef}/>
     </div>
   );
 };
+
+Sheet = connect(mapStateToProps, mapDispatchToProps)(Sheet);
 
 export default Sheet;

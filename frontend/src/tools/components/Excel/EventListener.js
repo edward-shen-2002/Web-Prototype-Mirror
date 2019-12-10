@@ -8,7 +8,12 @@ import { updateActiveCellPosition } from "actions/ui/excel/activeCellPosition";
 import { updateActiveSelectionArea, resetActiveSelectionArea } from "actions/ui/excel/activeSelectionArea";
 import { updateActiveCellSelectionAreaIndex, resetActiveCellSelectionAreaIndex } from "actions/ui/excel/activeCellSelectionAreaIndex";
 
+import { updateCursorType, resetCursorType } from "actions/ui/excel/cursorType";
 
+import { updateRowResizeData, resetRowResizeData } from "actions/ui/excel/rowResizeData";
+import { updateColumnResizeData, resetColumnResizeData } from "actions/ui/excel/columnResizeData";
+import { updateFreezeRowResizeData, resetFreezeRowResizeData } from "actions/ui/excel/freezeRowResizeData";
+import { updateFreezeColumnResizeData, resetFreezeColumnResizeData } from "actions/ui/excel/freezeColumnResizeData";
 
 import { setSelectionModeOn, setSelectionModeOff } from "actions/ui/excel/isSelectionMode";
 import { setEditModeOn, setEditModeOff } from "actions/ui/excel/isEditMode";
@@ -46,8 +51,12 @@ const mapStateToProps = ({
       activeCellSelectionAreaIndex,
       activeCellInputAutoFocus,
 
-      stagnantSelectionAreas,
+      rowResizeData,
+      columnResizeData,
+      freezeRowResizeData,
+      freezeColumnResizeData,
 
+      stagnantSelectionAreas,
       scrollData,
       
       isSelectionMode, 
@@ -69,8 +78,12 @@ const mapStateToProps = ({
   activeCellSelectionAreaIndex,
   activeCellInputAutoFocus,
 
-  stagnantSelectionAreas,
+  rowResizeData,
+  columnResizeData,
+  freezeRowResizeData,
+  freezeColumnResizeData,
 
+  stagnantSelectionAreas,
   scrollData,
   
   isSelectionMode, 
@@ -113,117 +126,35 @@ const mapDispatchToProps = (dispatch) => ({
 
   handleSetActiveCellInputAutoFocusOn: () => dispatch(setActiveCellInputAutoFocusOn()),
   handleSetActiveCellInputAutoFocusOff: () => dispatch(setActiveCellInputAutoFocusOff()),
+
+  handleUpdateCursorType: (cursorType) => dispatch(updateCursorType(cursorType)),
+  handleResetCursorType: () => dispatch(resetCursorType()),
+
+  handleUpdateRowResizeData: (rowResizeData) => dispatch(updateRowResizeData(rowResizeData)),
+  handleResetRowResizeData: () => dispatch(resetRowResizeData()),
+  
+  handleUpdateColumnResizeData: (columnResizeData) => dispatch(updateColumnResizeData(columnResizeData)),
+  handleRsetColumnResizeData: () => dispatch(resetColumnResizeData()),
+  
+  handleUpdateFreezeRowResizeData: (freezeRowResizeData) => dispatch(updateFreezeRowResizeData(freezeRowResizeData)),
+  handleResetFreezeRowResizeData: () => dispatch(resetFreezeRowResizeData()),
+  
+  handleUpdateFreezeColumnResizeData: (freezeColumnResizeData) => dispatch(updateFreezeColumnResizeData(freezeColumnResizeData)),
+  handleResetFreezeColumnResizeData: () => dispatch(resetFreezeColumnResizeData()),
 });
 
-let EventListener = ({ 
-  eventListenerRef, 
-  sheetGridRef,
-  
-  activeCellInputData,
-  activeCellPosition,
-  activeSelectionArea,
-  activeCellSelectionAreaIndex,
-  activeCellInputAutoFocus,
+let EventListener = (props) => {
+  const { sheetRowHeights, sheetRowCount, sheetColumnWidths, sheetColumnCount } = props;
 
-  sheetRowCount,
-  sheetColumnCount,
-  sheetCellData,
-  sheetFreezeColumnCount,
-  sheetFreezeRowCount,
-  sheetColumnWidths,
-  sheetRowHeights,
-
-  isSelectionMode,
-  isEditMode,
-  
-  scrollData,
-
-  stagnantSelectionAreas,
-
-  handleUpdateActiveCellPosition,
-
-  handleUpdateActiveCellSelectionAreaIndex,
-  handleResetActiveCellSelectionAreaIndex,
-
-  handleUpdateActiveSelectionArea,
-  handleResetActiveSelectionArea,
-
-  handleUpdateStagnantSelectionAreas,
-  handleResetStagnantSelectionAreas,
-
-  handleSetSelectionModeOn,
-  handleSetSelectionModeOff,
-
-  handleSetEditModeOn,
-  handleSetEditModeOff,
-
-  handleUpdateScrollData,
-
-  handleChangeSheetCellData,
-
-  handleUpdateActiveCellInputData,
-  handleResetActiveCellInputData,
-
-  handleSetActiveCellInputAutoFocusOn,
-  handleSetActiveCellInputAutoFocusOff
-}) => {
   const topOffsets = useMemo(() => getTopOffsets(sheetRowHeights, sheetRowCount), [ sheetRowHeights, sheetRowCount ]);
   const leftOffsets = useMemo(() => getLeftOffsets(sheetColumnWidths, sheetColumnCount), [ sheetColumnWidths, sheetColumnCount ]);
 
   return (
     <EventRedux 
-      ref={eventListenerRef} 
-      sheetGridRef={sheetGridRef}
-  
-      sheetRowCount={sheetRowCount}
-      sheetColumnCount={sheetColumnCount}
-      sheetCellData={sheetCellData}
-      sheetFreezeColumnCount={sheetFreezeColumnCount}
-      sheetFreezeRowCount={sheetFreezeRowCount}
-      sheetColumnWidths={sheetColumnWidths}
-      sheetRowHeights={sheetRowHeights}
-      leftOffsets={leftOffsets}
+      ref={props.eventListenerRef} 
       topOffsets={topOffsets}
-      
-      activeCellInputData={activeCellInputData}
-      activeCellPosition={activeCellPosition}
-      activeSelectionArea={activeSelectionArea}
-      activeCellSelectionAreaIndex={activeCellSelectionAreaIndex}
-      activeCellInputAutoFocus={activeCellInputAutoFocus}
-  
-      stagnantSelectionAreas={stagnantSelectionAreas}
-      
-      scrollData={scrollData}
-  
-      isSelectionMode={isSelectionMode}
-      isEditMode={isEditMode}
-  
-      handleUpdateActiveCellSelectionAreaIndex={handleUpdateActiveCellSelectionAreaIndex}
-      handleResetActiveCellSelectionAreaIndex={handleResetActiveCellSelectionAreaIndex} 
-  
-      handleUpdateStagnantSelectionAreas={handleUpdateStagnantSelectionAreas}
-      handleResetStagnantSelectionAreas={handleResetStagnantSelectionAreas}
-  
-      handleUpdateActiveCellPosition={handleUpdateActiveCellPosition}
-  
-      handleUpdateActiveSelectionArea={handleUpdateActiveSelectionArea}
-      handleResetActiveSelectionArea={handleResetActiveSelectionArea}
-  
-      handleSetSelectionModeOn={handleSetSelectionModeOn}
-      handleSetSelectionModeOff={handleSetSelectionModeOff}
-  
-      handleSetEditModeOn={handleSetEditModeOn}
-      handleSetEditModeOff={handleSetEditModeOff}
-  
-      handleChangeSheetCellData={handleChangeSheetCellData}
-  
-      handleUpdateScrollData={handleUpdateScrollData}
-  
-      handleUpdateActiveCellInputData={handleUpdateActiveCellInputData}
-      handleResetActiveCellInputData={handleResetActiveCellInputData}
-  
-      handleSetActiveCellInputAutoFocusOn={handleSetActiveCellInputAutoFocusOn}
-      handleSetActiveCellInputAutoFocusOff={handleSetActiveCellInputAutoFocusOff}
+      leftOffsets={leftOffsets}
+      {...props}
     />  
   );
 };
@@ -987,6 +918,12 @@ class EventRedux extends PureComponent {
   mouseUp(ctrlKey) {
     const { 
       isSelectionMode, 
+
+      columnResizeData,
+      rowResizeData,
+      freezeColumnResizeData,
+      freezeRowResizeData,
+
       activeSelectionArea, 
       stagnantSelectionAreas, 
       handleResetActiveSelectionArea, 
@@ -995,24 +932,39 @@ class EventRedux extends PureComponent {
       handleResetActiveCellSelectionAreaIndex 
     } = this.props;
 
-    if(!isSelectionMode) return;
-
-    this.setSelectionModeOff();
-
-    if(activeSelectionArea) {
-      const { x1, y1, x2, y2 } = activeSelectionArea;
+    if(isSelectionMode) {
+      this.setSelectionModeOff();
   
-      if((x1 !== x2 || y1 !== y2) || ctrlKey) {
-        const newStagnantSelectionAreas = [ ...stagnantSelectionAreas, activeSelectionArea ];
-        handleUpdateStagnantSelectionAreas(newStagnantSelectionAreas);
-        handleUpdateActiveCellSelectionAreaIndex(newStagnantSelectionAreas.length - 1);
-      } else {
+      if(activeSelectionArea) {
+        const { x1, y1, x2, y2 } = activeSelectionArea;
+    
+        if((x1 !== x2 || y1 !== y2) || ctrlKey) {
+          const newStagnantSelectionAreas = [ ...stagnantSelectionAreas, activeSelectionArea ];
+          handleUpdateStagnantSelectionAreas(newStagnantSelectionAreas);
+          handleUpdateActiveCellSelectionAreaIndex(newStagnantSelectionAreas.length - 1);
+        } else {
+          handleResetActiveCellSelectionAreaIndex();
+        }
+    
+        handleResetActiveSelectionArea();
+      } else if(!ctrlKey) {
         handleResetActiveCellSelectionAreaIndex();
-      }
-  
-      handleResetActiveSelectionArea();
-    } else if(!ctrlKey) {
-      handleResetActiveCellSelectionAreaIndex();
+      } 
+      
+      // else if(isHeaderDragMode) {
+      //   this.setHeaderDragModeOff();
+
+      //   // Apply change
+      //   if(rowResizeData) {
+          
+      //   } else if(columnResizeData) {
+
+      //   } else if(freezeRowResizeData) {
+
+      //   } else {
+
+      //   }
+      // }
     }
   }
 
@@ -1240,6 +1192,16 @@ class EventRedux extends PureComponent {
   setInputAutoFocusOff() {
     const { activeCellInputAutoFocus, handleSetActiveCellInputAutoFocusOff } = this.props;
     if(activeCellInputAutoFocus) handleSetActiveCellInputAutoFocusOff();
+  }
+
+  startColumnDrag(column) {
+    const { leftOffsets, handleUpdateColumnResizeData } = this.props;
+
+  }
+
+  startRowDrag(row) {
+    // const { , handleUpdateRowResizeData, handleChangeSheetCellData } = this.props;
+
   }
 
   render() {

@@ -10,10 +10,10 @@ import activeCellInputAutoFocus from "./activeCellInputAutoFocus";
 import stagnantSelectionAreas from "./stagnantSelectionAreas";
 import sheetNames from "./sheetNames";
 import scrollData from "./scrollData";
+import cursorType from "./cursorType";
 
 import isSelectionMode from "./isSelectionMode";
 import isEditMode from "./isEditMode";
-import isHeaderDragMode from "./isHeaderDragMode";
 
 import rowResizeData from "./rowResizeData";
 import columnResizeData from "./columnResizeData";
@@ -46,10 +46,10 @@ const excelReducer = combineReducers({
   stagnantSelectionAreas,
   sheetNames,
   scrollData,
+  cursorType,
 
   isSelectionMode, 
   isEditMode,
-  isHeaderDragMode,
 
   sheetCellData,
   sheetColumnCount,

@@ -9,6 +9,7 @@ import "./Cell.scss";
 
 const Cell = ({ style, data, columnIndex, rowIndex }) => {
   const {
+    eventListenerRef,
     sheetCellData,
 
     columnCount,
@@ -18,6 +19,9 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
     handleSelectionOver,
 
     handleDoubleClickEditableCell,
+
+    handleRowDragStart,
+    handleColumnDragStart,
 
     handleClickColumnHeader,
     handleClickRowHeader,
@@ -50,6 +54,7 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         style={style} 
         column={columnIndex}
         rowCount={rowCount}
+        handleColumnDragStart={handleColumnDragStart}
         handleClickColumnHeader={handleClickColumnHeader}
       />
     );
@@ -59,6 +64,7 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         style={style} 
         row={rowIndex}
         columnCount={columnCount}
+        handleRowDragStart={handleRowDragStart}
         handleClickRowHeader={handleClickRowHeader}
       />
     );

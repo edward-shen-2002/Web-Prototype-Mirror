@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 
+import { connect } from "react-redux";
+
 import { columnNumberToName } from "xlsx-populate/lib/addressConverter";
 
-const ColumnDragger = () => {
+const ColumnDragger = ({
+  column,
+  handleColumnDragStart
+}) => {
 
   const [ isIndicatorActive, setIsIndicatorActive ] = useState(false);
 
@@ -14,8 +19,8 @@ const ColumnDragger = () => {
     setIsIndicatorActive(false);
   };
 
-  const handleMouseClick = () => {
-    // Prevent propagation?
+  const handleClick = (event) => {
+    event.stopPropagation();
   };
 
   return (
@@ -23,13 +28,33 @@ const ColumnDragger = () => {
       className={`columnDragger ${isIndicatorActive ? "columnDragger--indicator" : "" }`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
     >
     </div>
   );
 };
 
+const mapStateToProps = ({
+  ui: {
+    excel: {
+      cursorType,
+      isSelectionMode
+    }
+  }
+}) => ({
+  cursorType,
+  isSelectionMode
+});
 
-const ColumnHeaderCell = ({ style, column, handleClickColumnHeader }) => {
+
+let ColumnHeaderCell = ({ 
+  style, 
+  column, 
+  cursorType,
+  isSelectionMode,
+  handleColumnDragStart,
+  handleClickColumnHeader 
+}) => {
   const handleClick = ({ ctrlKey }) => handleClickColumnHeader(column, ctrlKey);
 
   const value = columnNumberToName(column);
@@ -37,9 +62,11 @@ const ColumnHeaderCell = ({ style, column, handleClickColumnHeader }) => {
   return (
     <div className="cell cell--positionIndicator" style={style} onClick={handleClick}>
       <div>{value}</div>
-      <ColumnDragger/>
+      {!isSelectionMode && cursorType === "default" && <ColumnDragger column={column} handleColumnDragStart={handleColumnDragStart}/>}
     </div>
   );
 };
+
+ColumnHeaderCell =  connect(mapStateToProps)(ColumnHeaderCell);
 
 export default ColumnHeaderCell;
