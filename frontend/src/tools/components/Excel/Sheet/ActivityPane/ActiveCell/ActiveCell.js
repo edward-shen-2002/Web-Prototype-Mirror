@@ -10,6 +10,7 @@ import "./ActiveCell.scss";
 
 const ActiveInputCell = ({ 
   activeCellStyle,
+  activeCellInputAutoFocus,
   editorState,
   handleChangeActiveInputData
 }) => {
@@ -42,7 +43,7 @@ const ActiveInputCell = ({
         ref={editorRef}
         editorState={editorState}
         onChange={handleChangeInputValue}
-        // readOnly={!activeCellInputAutoFocus}
+        readOnly={!activeCellInputAutoFocus}
         handleReturn={handleReturn}
       />
     </div>

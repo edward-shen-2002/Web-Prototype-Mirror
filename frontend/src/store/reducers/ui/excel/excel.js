@@ -13,6 +13,7 @@ import scrollData from "./scrollData";
 
 import isSelectionMode from "./isSelectionMode";
 import isEditMode from "./isEditMode";
+import isHeaderDragMode from "./isHeaderDragMode";
 
 import rowResizeData from "./rowResizeData";
 import columnResizeData from "./columnResizeData";
@@ -48,6 +49,7 @@ const excelReducer = combineReducers({
 
   isSelectionMode, 
   isEditMode,
+  isHeaderDragMode,
 
   sheetCellData,
   sheetColumnCount,
