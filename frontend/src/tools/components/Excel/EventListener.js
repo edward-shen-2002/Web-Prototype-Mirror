@@ -1209,7 +1209,7 @@ class EventRedux extends PureComponent {
     const verticalScrollbarSize = estimatedTotalHeight > height ? scrollbarSize : 0;
 
     // Active cell is under freeze
-    if(newY > sheetFreezeRowCount && topActiveStart + heightActiveStart < scrollTop + freezeHeight) {
+    if(newY > sheetFreezeRowCount && topActiveStart < scrollTop + freezeHeight) {
       newScrollTop = topActiveStart + DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER - freezeHeight;
     // Beyond bottom side
     } else if(topActiveStart + heightActiveStart > scrollTop + height - horizontalScrollbarSize){
