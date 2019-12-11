@@ -8,7 +8,6 @@ const ColumnDragger = ({
   column,
   handleColumnDragStart
 }) => {
-
   const [ isIndicatorActive, setIsIndicatorActive ] = useState(false);
 
   const handleMouseEnter = () => {
@@ -23,12 +22,17 @@ const ColumnDragger = ({
     event.stopPropagation();
   };
 
+  const handleMouseDown = () => {
+    handleColumnDragStart(column);
+  };
+
   return (
     <div 
       className={`columnDragger ${isIndicatorActive ? "columnDragger--indicator" : "" }`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
+      onMouseDown={handleMouseDown}
     >
     </div>
   );

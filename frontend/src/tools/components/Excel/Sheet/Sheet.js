@@ -232,7 +232,9 @@ let Sheet = ({
     EventListenerInstance.setInputAutoFocusOn();
   };
 
-  const style = { cursor: cursorType };
+  let style = {};
+
+  if(cursorType !== "default") style.cursor = cursorType;
 
   return (
     <div 
@@ -260,7 +262,10 @@ let Sheet = ({
       
         handleUpdateScrollData={handleUpdateScrollData}
       />
-      <WindowListener eventListenerRef={eventListenerRef}/>
+      <WindowListener 
+        eventListenerRef={eventListenerRef}
+        sheetContainerRef={sheetContainerRef}
+      />
     </div>
   );
 };

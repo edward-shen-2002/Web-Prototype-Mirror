@@ -715,3 +715,39 @@ export const getCellDataText = (cellData) => {
 
   return text;
 };
+
+export const clearEditorStateText = (richText) => convertRichTextToEditorState(richText.length ? richText[0] : []);
+
+export const getResizeOffset = (
+  headerNumber, 
+  freezeNumber, 
+  headerOffset,
+  mouseOffset, 
+  clientDimension, 
+  scrollOffset, 
+  componentOffset, 
+  freezeEndOffset
+  ) => {
+  const scrollbarSize = getScrollbarSize();
+
+  // Do not consider scroll offset when freeze
+  let adjustedScrollOffset = headerNumber <= freezeNumber ? 0 : scrollOffset; 
+
+  const minScrollOffset = adjustedScrollOffset;
+  const maxScrollOffset = adjustedScrollOffset + clientDimension - scrollbarSize;
+
+  const possibleMaxOffset = Math.max(headerOffset, maxScrollOffset);
+  const possibleMinOffset = Math.max(headerOffset, minScrollOffset);
+
+  let adjustedOffset = mouseOffset + adjustedScrollOffset - componentOffset;
+
+  if(adjustedOffset < possibleMinOffset) {
+    adjustedOffset = possibleMinOffset;
+  } else if(adjustedOffset > possibleMaxOffset) {
+    adjustedOffset = possibleMaxOffset;
+  }
+
+  if(adjustedOffset > freezeEndOffset) adjustedOffset += scrollOffset;
+
+  return adjustedOffset;
+};

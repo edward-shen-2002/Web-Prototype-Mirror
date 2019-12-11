@@ -1,15 +1,17 @@
 import { useEffect } from "react";
 
-const WindowListener = ({ eventListenerRef }) => {
+const WindowListener = ({ eventListenerRef, sheetContainerRef }) => {
   useEffect(() => {
+    const { current: EventListenerInstance } = eventListenerRef;
+
     window.onmouseup = (event) => {
       const { ctrlKey } = event;
-      eventListenerRef.current.mouseUp(ctrlKey);
+      EventListenerInstance.mouseUp(ctrlKey);
     };
 
     // ! Handle scroll when outside sheet grid
     window.onmousemove = ({ clientX, clientY }) => {
-      
+      EventListenerInstance.mouseMove(sheetContainerRef, clientX, clientY);
     };
 
     return () => {

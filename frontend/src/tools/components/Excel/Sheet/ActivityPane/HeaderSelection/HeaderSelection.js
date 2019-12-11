@@ -121,6 +121,8 @@ export let HeaderSelection = ({
   const yElementarySegments = mergeSegments(ySegments);
   const xElementarySegments = mergeSegments(xSegments);
 
+  if(!yElementarySegments.length && !xElementarySegments.length) return null;
+
   const rowHeaderStyles = yElementarySegments.map(([ start, end ]) => {
     const topStart = topOffsets[start];
     const width = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER;
@@ -216,6 +218,8 @@ export let ColumnHeaderSelection = ({
 
   const xElementarySegments = mergeSegments(xSegments);
 
+  if(!xElementarySegments.length) return null;
+
   const columnHeaderStyles = xElementarySegments.map(([ start, end ]) => {
     const leftStart = leftOffsets[start];
     const height = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER;
@@ -292,6 +296,8 @@ export let RowHeaderSelection = ({
 
   const yElementarySegments = mergeSegments(ySegments);
 
+  if(!yElementarySegments.length) return null;
+
   const rowHeaderStyles = yElementarySegments.map(([ start, end ]) => {
     const topStart = topOffsets[start];
     const width = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER;
@@ -309,6 +315,7 @@ export let RowHeaderSelection = ({
       width
     });
   });
+
 
   return (
     <HeaderSelectionComponents headerStyles={rowHeaderStyles}/>

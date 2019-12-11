@@ -15,6 +15,11 @@ import cursorType from "./cursorType";
 import isSelectionMode from "./isSelectionMode";
 import isEditMode from "./isEditMode";
 
+import isFreezeColumnResizeMode from "./isFreezeColumnResizeMode";
+import isFreezeRowResizeMode from "./isFreezeRowResizeMode";
+import isColumnResizeMode from "./isColumnResizeMode";
+import isRowResizeMode from "./isRowResizeMode";
+
 import rowResizeData from "./rowResizeData";
 import columnResizeData from "./columnResizeData";
 import freezeRowResizeData from "./freezeRowResizeData";
@@ -50,6 +55,11 @@ const excelReducer = combineReducers({
 
   isSelectionMode, 
   isEditMode,
+  
+  isColumnResizeMode,
+  isFreezeColumnResizeMode,
+  isRowResizeMode,
+  isFreezeRowResizeMode,
 
   sheetCellData,
   sheetColumnCount,
