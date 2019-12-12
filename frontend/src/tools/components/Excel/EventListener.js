@@ -993,6 +993,8 @@ class EventRedux extends PureComponent {
       handleResetCursorType();
 
       if(rowResizeData) {
+        console.log(rowResizeData)
+
         handleSetRowResizeModeOff();
         handleResetRowResizeData();
       } else if(columnResizeData) {
@@ -1048,6 +1050,7 @@ class EventRedux extends PureComponent {
       const { row } = rowResizeData;
       const rowOffset = topOffsets[row];
       const { clientHeight } = SheetContainerInstance;
+      const freezeRowOffset = topOffsets[sheetFreezeRowCount] + getNormalRowHeight(sheetRowHeights[sheetFreezeRowCount]);
 
       const componentOffset = SheetContainerInstance.offsetTop;
 
@@ -1069,11 +1072,14 @@ class EventRedux extends PureComponent {
       } else if(adjustedOffset > possibleMaxOffset) {
         adjustedOffset = possibleMaxOffset;
       };
+
+      if(adjustedOffset > freezeRowOffset && row <= sheetFreezeRowCount) adjustedOffset += scrollTop;
     
       handleUpdateRowResizeData({ offset: adjustedOffset });
     } else if(isColumnResizeMode) {
       const { column } = columnResizeData;
       const columnOffset = leftOffsets[column];
+      const freezeColumnOffset = leftOffsets[sheetFreezeColumnCount] + getNormalColumnWidth(sheetColumnWidths[sheetFreezeColumnCount]);
 
       const { clientWidth } = SheetContainerInstance;
 
@@ -1097,6 +1103,10 @@ class EventRedux extends PureComponent {
       } else if(adjustedOffset > possibleMaxOffset) {
         adjustedOffset = possibleMaxOffset;
       };
+
+      if(adjustedOffset > freezeColumnOffset && column <= sheetFreezeColumnCount) {
+        adjustedOffset += scrollLeft;
+      }
 
       handleUpdateColumnResizeData({ offset: adjustedOffset });
     } else if(isFreezeRowResizeMode) {
