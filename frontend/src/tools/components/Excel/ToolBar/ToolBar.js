@@ -2,6 +2,8 @@ import React from "react";
 
 import { connect } from "react-redux";
 
+import { openTemplateIdMappingDialog } from "actions/ui/excel/isTemplateIdMappingDialogOpen";
+
 import Button from "@material-ui/core/Button";
 
 import LowPriorityIcon from "@material-ui/icons/LowPriority";
@@ -24,19 +26,22 @@ const TemplateIdMappingTool = ({ handleClick }) => (
   </ToolBarButton>
 );
 
-let TemplateToolBarSection = () => {
-  const handleClickTemplateIdMappingTool = () => {
+const mapTemplateDispatchToProps = (dispatch) => ({
+  handleOpenTemplateIdMappingDialog: () => dispatch(openTemplateIdMappingDialog())
+});
 
-  };
+let TemplateToolBarSection = ({
+  handleOpenTemplateIdMappingDialog
+}) => {
 
   return (
     <div>
-      <TemplateIdMappingTool handleClick={handleClickTemplateIdMappingTool}/>
+      <TemplateIdMappingTool handleClick={handleOpenTemplateIdMappingDialog}/>
     </div>
   );
 };
 
-TemplateToolBarSection = connect(null)(TemplateToolBarSection);
+TemplateToolBarSection = connect(null, mapTemplateDispatchToProps)(TemplateToolBarSection);
 
 const ToolBar = ({
   type

@@ -1,0 +1,16 @@
+.mapping {
+  &__enabler {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__input {
+    border: 2px solid lightgray;
+    padding: 10px;
+    border-radius: 2px;
+  }
+
+  &_title {
+    margin: auto 0;
+  }
+}

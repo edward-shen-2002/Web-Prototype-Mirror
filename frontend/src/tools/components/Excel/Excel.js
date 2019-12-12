@@ -22,9 +22,10 @@ const Excel = ({
   const eventListenerRef = useRef(null);
   const sheetContainerRef = useRef(null);
   const sheetGridRef = useRef(null);
+  const excelRef = useRef(null);
 
   return (
-    <div className="excel">
+    <div ref={excelRef} className="excel">
       <AppBar 
         name={name} 
         returnLink={returnLink} 
@@ -55,7 +56,7 @@ const Excel = ({
       />
 
       {/* Dialogues */}
-      {type === "template" && <TemplateDialogue/>}
+      {type === "template" && <TemplateDialogue excelRef={excelRef}/>}
     </div>
   );
 };
