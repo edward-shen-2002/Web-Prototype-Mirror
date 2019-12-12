@@ -5,6 +5,7 @@ import ToolBar from "./ToolBar";
 import FormulaBar from "./FormulaBar";
 import Sheet from "./Sheet";
 import SheetNavigator from "./SheetNavigator";
+import TemplateDialogue from "./dialogues/TemplateDialogue";
 
 import EventListener from "./EventListener";
 
@@ -14,9 +15,9 @@ const Divider = () => <hr className="divider"/>;
 
 const Excel = ({ 
   name, 
+  type,
   returnLink, 
-  handleSubmitName,
-  handleSaveWorkbook
+  handleUpdateTemplate
 }) => {
   const eventListenerRef = useRef(null);
   const sheetContainerRef = useRef(null);
@@ -27,11 +28,12 @@ const Excel = ({
       <AppBar 
         name={name} 
         returnLink={returnLink} 
-        handleSubmitName={handleSubmitName}
-        handleSaveWorkbook={handleSaveWorkbook}
-      />
+        handleUpdateTemplate={handleUpdateTemplate}
+        />
       <Divider/>
-      <ToolBar/>
+      <ToolBar
+        type={type}
+      />
       <Divider/>
       <FormulaBar
         eventListenerRef={eventListenerRef}
@@ -51,6 +53,9 @@ const Excel = ({
         sheetGridRef={sheetGridRef}
         eventListenerRef={eventListenerRef}
       />
+
+      {/* Dialogues */}
+      {type === "template" && <TemplateDialogue/>}
     </div>
   );
 };

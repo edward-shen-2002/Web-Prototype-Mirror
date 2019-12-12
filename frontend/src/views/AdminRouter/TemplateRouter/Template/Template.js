@@ -50,7 +50,7 @@ let Template = ({
           let { fileStates } = template;
 
           handleLoadTemplate(convertStateToReactState(fileStates));
-          setTemplate(template);
+          setTemplate({ ...template, fileStates: undefined });
         })
         .catch((error) => console.error(error))
         .finally(() => setIsDataFetched(true));
@@ -61,36 +61,21 @@ let Template = ({
     };
   }, [ isDataFetched ]);
 
-  const handleSubmitName = (name) => {
-    const newTemplate = { name };
-    return (
-      adminTemplateRoleAxios.put(`${REST_ADMIN_TEMPLATES}/${_id}`, { newTemplate })
-        .then(() => {
-          setTemplate({ ...template, ...newTemplate });
-        })
-        .catch((error) => console.error(error))
-    );
-  };
-
-  const handleSaveWorkbook = (fileStates) => {
-    const newTemplate = { fileStates };
-
-    return (
-      adminTemplateRoleAxios.put(`${REST_ADMIN_TEMPLATES}/${_id}`, { newTemplate })
-        .then(() => {
-          setTemplate({ ...template, ...newTemplate });
-        })
-        .catch((error) => console.error(error))
-    );
-  };
+  const handleUpdateTemplate = (newTemplate) => (
+    adminTemplateRoleAxios.put(`${REST_ADMIN_TEMPLATES}/${_id}`, { newTemplate })
+      .then(() => {
+        setTemplate({ ...template, ...newTemplate, fileStates: undefined });
+      })
+      .catch((error) => console.error(error))
+  );
 
   return (
     isDataFetched 
       ? <Excel 
           name={name} 
+          type="template"
           returnLink={ROUTE_ADMIN_TEMPLATE_TEMPLATES} 
-          handleSubmitName={handleSubmitName}
-          handleSaveWorkbook={handleSaveWorkbook}
+          handleUpdateTemplate={handleUpdateTemplate}
         />
       : <Loading/>
   );

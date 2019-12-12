@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import InputBase from "@material-ui/core/InputBase";
 
 // TODO : Make input width contain text - react virtualized
-const Title = ({ name, handleSubmitName }) => {
+const Title = ({ name, handleUpdateTemplate }) => {
   const [ title, setTitle ] = useState(name);
 
   const handleChange = ({ target: { value } }) => setTitle(value);
@@ -14,7 +14,7 @@ const Title = ({ name, handleSubmitName }) => {
 
   // Changes the workbook title when and only when blur occurs
   const handleBlur = () => {
-    handleSubmitName(title)
+    handleUpdateTemplate({ name: title })
       .catch(() => setTitle(name));
   };
 

@@ -59,26 +59,28 @@ let File = ({
   handleClickMenu, 
   handleHoverMenu,
 
-  handleSaveWorkbook
+  handleUpdateTemplate
 }) => {
   const saveMenu = {
     icon: <SaveIcon/>,
     label: "Save",
-    handleClick: async () => {
-      handleSaveWorkbook(extractReactAndWorkbookState({
-        activeSheetName,
-        sheetNames,
-        activeCellPosition,
-        sheetCellData,
-        sheetColumnCount,
-        sheetColumnWidths,
-        sheetFreezeColumnCount,
-        sheetRowCount,
-        sheetRowHeights,
-        sheetFreezeRowCount,
-        sheetHiddenColumns,
-        sheetHiddenRows
-      }));
+    handleClick: () => {
+      handleUpdateTemplate({
+        fileStates: extractReactAndWorkbookState({
+          activeSheetName,
+          sheetNames,
+          activeCellPosition,
+          sheetCellData,
+          sheetColumnCount,
+          sheetColumnWidths,
+          sheetFreezeColumnCount,
+          sheetRowCount,
+          sheetRowHeights,
+          sheetFreezeRowCount,
+          sheetHiddenColumns,
+          sheetHiddenRows
+        })
+    });
     }
   };
 

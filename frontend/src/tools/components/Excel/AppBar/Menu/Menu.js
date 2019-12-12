@@ -5,7 +5,7 @@ import Edit from "./Edit";
 
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
-const Menu = ({ handleSaveWorkbook }) => {
+const Menu = ({ handleUpdateTemplate }) => {
   const [ isMenuOpenable, setIsMenuOpenable ] = useState(false);
   const [ openedMenuName, setOpenedMenuName ] = useState(null);
 
@@ -33,7 +33,7 @@ const Menu = ({ handleSaveWorkbook }) => {
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
       <div className="appBar__menu">
-        <File handleSaveWorkbook={handleSaveWorkbook} {...commonMenuItemProps}/>
+        <File handleUpdateTemplate={handleUpdateTemplate} {...commonMenuItemProps}/>
         <Edit {...commonMenuItemProps}/>
       </div>
     </ClickAwayListener>
