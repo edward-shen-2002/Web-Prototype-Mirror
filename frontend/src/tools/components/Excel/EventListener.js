@@ -27,6 +27,8 @@ import { updateScrollData } from "actions/ui/excel/scrollData";
 import { updateStagnantSelectionAreas, resetStagnantSelectionAreas } from "actions/ui/excel/stagnantSelectionAreas";
 
 import { updateSheetCellData } from "actions/ui/excel/sheetCellData";
+import { updateSheetColumnWidths } from "actions/ui/excel/sheetColumnWidths";
+import { updateSheetRowHeights } from "actions/ui/excel/sheetRowHeights";
 
 import { 
   isPositionEqualArea, 
@@ -40,6 +42,8 @@ import {
   convertRichTextToEditorState,
   getNormalColumnWidth,
   getNormalRowHeight,
+  getExcelColumnWidth,
+  getExcelRowHeight,
   getResizeOffset,
   clearEditorStateText
 } from "tools/excel";
@@ -171,7 +175,11 @@ const mapDispatchToProps = (dispatch) => ({
   handleSetFreezeColumnResizeModeOff: () => dispatch(setFreezeColumnResizeModeOff()),
   
   handleSetFreezeRowResizeModeOn: () => dispatch(setFreezeRowResizeModeOn()),
-  handleSetFreezeRowResizeModeOff: () => dispatch(setFreezeRowResizeModeOff())
+  handleSetFreezeRowResizeModeOff: () => dispatch(setFreezeRowResizeModeOff()),
+
+  handleUpdateSheetRowHeights: (sheetRowHeights) => dispatch(updateSheetRowHeights(sheetRowHeights)),
+
+  handleUpdateSheetColumnWidths: (sheetColumnWidths) => dispatch(updateSheetColumnWidths(sheetColumnWidths))
 });
 
 let EventListener = (props) => {
@@ -950,6 +958,7 @@ class EventRedux extends PureComponent {
   // ! TODO - Break squares, and deselect stagnant areas with the same area as the active selection
   mouseUp(ctrlKey) {
     const { 
+      sheetGridRef,
       isSelectionMode, 
       cursorType,
 
@@ -957,6 +966,12 @@ class EventRedux extends PureComponent {
       rowResizeData,
       freezeColumnResizeData,
       freezeRowResizeData,
+
+      sheetRowHeights,
+      sheetColumnWidths,
+
+      leftOffsets,
+      topOffsets,
 
       activeSelectionArea, 
       stagnantSelectionAreas, 
@@ -968,7 +983,9 @@ class EventRedux extends PureComponent {
       handleResetColumnResizeData,
       handleSetRowResizeModeOff,
       handleResetRowResizeData,
-      handleSetColumnResizeModeOff
+      handleSetColumnResizeModeOff,
+      handleUpdateSheetRowHeights,
+      handleUpdateSheetColumnWidths
     } = this.props;
 
     if(isSelectionMode) {
@@ -993,11 +1010,32 @@ class EventRedux extends PureComponent {
       handleResetCursorType();
 
       if(rowResizeData) {
-        console.log(rowResizeData)
+        const { row, offset } = rowResizeData;
+        const rowTopOffset = topOffsets[row];
+        const rowHeight = sheetRowHeights[row];
+        const currentOffset = rowTopOffset + rowHeight;
 
+        const newRowHeight = offset - rowTopOffset;
+        if(offset !== currentOffset) {
+          handleUpdateSheetRowHeights({ ...sheetRowHeights, [row]: getExcelRowHeight(newRowHeight) });
+          sheetGridRef.current.resetAfterRowIndex(row);
+        }
+        
         handleSetRowResizeModeOff();
         handleResetRowResizeData();
       } else if(columnResizeData) {
+        const { column, offset } = columnResizeData;
+
+        const columnLeftOffset = leftOffsets[column];
+        const columnWidth = sheetColumnWidths[column];
+        const currentOffset = columnLeftOffset + columnWidth;
+
+        const newColumnWidth = offset - columnLeftOffset;
+        if(offset !== currentOffset) {
+          handleUpdateSheetColumnWidths({ ...sheetColumnWidths, [column]: getExcelColumnWidth(newColumnWidth) });
+          sheetGridRef.current.resetAfterColumnIndex(column);
+        }
+
         handleSetColumnResizeModeOff();
         handleResetColumnResizeData();
       } else if(freezeRowResizeData) {
