@@ -1047,50 +1047,58 @@ class EventRedux extends PureComponent {
     if(isRowResizeMode) {
       const { row } = rowResizeData;
       const rowOffset = topOffsets[row];
-      const freezeRowOffset = topOffsets[sheetFreezeRowCount];
-      const freezeRowHeight = getNormalRowHeight(sheetRowHeights[sheetFreezeRowCount]);
-      const freezeRowEndOffset = freezeRowOffset + freezeRowHeight;
-      
       const { clientHeight } = SheetContainerInstance;
 
       const componentOffset = SheetContainerInstance.offsetTop;
 
-      const adjustedYOffset = getResizeOffset(
-        row, 
-        sheetFreezeRowCount, 
-        rowOffset, 
-        yOffset,
-        clientHeight, 
-        scrollTop, 
-        componentOffset, 
-        freezeRowEndOffset
-      );
+      const scrollbarSize = getScrollbarSize();
 
-      handleUpdateRowResizeData({ offset: adjustedYOffset });
+      // Do not consider scroll offset when freeze
+      let adjustedScrollOffset = row <= sheetFreezeRowCount ? 0 : scrollTop; 
+    
+      const minScrollOffset = adjustedScrollOffset;
+      const maxScrollOffset = adjustedScrollOffset + clientHeight - scrollbarSize;
+    
+      const possibleMaxOffset = Math.max(rowOffset, maxScrollOffset);
+      const possibleMinOffset = Math.max(rowOffset, minScrollOffset);
+    
+      let adjustedOffset = yOffset + adjustedScrollOffset - componentOffset;
+    
+      if(adjustedOffset < possibleMinOffset) {
+        adjustedOffset = possibleMinOffset;
+      } else if(adjustedOffset > possibleMaxOffset) {
+        adjustedOffset = possibleMaxOffset;
+      };
+    
+      handleUpdateRowResizeData({ offset: adjustedOffset });
     } else if(isColumnResizeMode) {
       const { column } = columnResizeData;
       const columnOffset = leftOffsets[column];
-      const freezeColumnOffset = leftOffsets[sheetFreezeColumnCount];
-      const freezeColumnWidth = getNormalColumnWidth(sheetColumnWidths[sheetFreezeColumnCount]);
-      const freezeColumnEndOffset = freezeColumnOffset + freezeColumnWidth;
 
       const { clientWidth } = SheetContainerInstance;
 
       const componentOffset = SheetContainerInstance.offsetLeft;
 
+      const scrollbarSize = getScrollbarSize();
 
-      const adjustedXOffset = getResizeOffset(
-        column, 
-        sheetFreezeRowCount, 
-        columnOffset, 
-        xOffset,
-        clientWidth, 
-        scrollLeft, 
-        componentOffset, 
-        freezeColumnEndOffset
-      );
+      // Do not consider scroll offset when freeze
+      let adjustedScrollOffset = column <= sheetFreezeColumnCount ? 0 : scrollLeft; 
+    
+      const minScrollOffset = adjustedScrollOffset;
+      const maxScrollOffset = adjustedScrollOffset + clientWidth - scrollbarSize;
+    
+      const possibleMaxOffset = Math.max(columnOffset, maxScrollOffset);
+      const possibleMinOffset = Math.max(columnOffset, minScrollOffset);
+    
+      let adjustedOffset = xOffset + adjustedScrollOffset - componentOffset;
+    
+      if(adjustedOffset < possibleMinOffset) {
+        adjustedOffset = possibleMinOffset;
+      } else if(adjustedOffset > possibleMaxOffset) {
+        adjustedOffset = possibleMaxOffset;
+      };
 
-      handleUpdateColumnResizeData({ offset: adjustedXOffset });
+      handleUpdateColumnResizeData({ offset: adjustedOffset });
     } else if(isFreezeRowResizeMode) {
 
     } else if(isFreezeColumnResizeMode) {
@@ -1332,7 +1340,7 @@ class EventRedux extends PureComponent {
       handleSetColumnResizeModeOn,
       handleUpdateCursorType
     } = this.props;
-    const width = sheetColumnWidths[column];
+    const width = getNormalColumnWidth(sheetColumnWidths[column]);
     const columnOffset = leftOffsets[column];
     const offset = columnOffset + width;
 
@@ -1349,7 +1357,7 @@ class EventRedux extends PureComponent {
       handleSetRowResizeModeOn,
       handleUpdateCursorType 
     } = this.props;
-    const height = sheetRowHeights[row];
+    const height = getNormalRowHeight(sheetRowHeights[row]);
     const rowOffset = topOffsets[row];
     const offset = rowOffset + height;
 

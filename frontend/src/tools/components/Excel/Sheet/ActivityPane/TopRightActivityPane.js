@@ -6,6 +6,8 @@ import { ColumnHeaderSelection } from "./HeaderSelection";
 
 import { getNormalRowHeight, getNormalColumnWidth } from "tools/excel";
 
+import { ColumnHeaderIndicator } from "./HeaderResize";
+
 import {
   STYLE_SELECTION_BORDER_COLOR,
   STYLE_SELECTION_BORDER_WIDTH,
@@ -99,8 +101,8 @@ const computeSelectionAreaStyle = (columnWidths, leftOffsets, rowHeights, topOff
 const TopRightActivityPane = ({ handleChangeActiveInputData }) => {
   const isActiveCellInCorrectPane = (x, y, sheetFreezeColumnCount, sheetFreezeRowCount) => (x > sheetFreezeColumnCount && y <= sheetFreezeRowCount);
   const isRelevantArea = (x1, y1, x2, y2, sheetFreezeColumnCount, sheetFreezeRowCount) => ((x1 > sheetFreezeColumnCount || x2 > sheetFreezeColumnCount) && (y1 <= sheetFreezeRowCount || y2 <= sheetFreezeRowCount));
-  const isRelevantRowOffset = (topOffsets, sheetFreezeRowCount, rowOffset) => rowOffset <= topOffsets[sheetFreezeRowCount];
-  const isRelevantColumnOffset = (leftOffsets, sheetFreezeColumnCount, columnOffset) => columnOffset > leftOffsets[sheetFreezeColumnCount];
+  const isRelevantRowOffset = (rowOffset, freezeRowOffset) => rowOffset <= freezeRowOffset;
+  const isRelevantColumnOffset = (columnOffset, freezeColumnOffset) => columnOffset > freezeColumnOffset;
 
   return (
     <Fragment>
@@ -111,6 +113,9 @@ const TopRightActivityPane = ({ handleChangeActiveInputData }) => {
         handleChangeActiveInputData={handleChangeActiveInputData}
       />
       <ColumnHeaderSelection/>
+      <ColumnHeaderIndicator
+        isRelevantColumnOffset={isRelevantColumnOffset}
+      />
     </Fragment>
   );
 };
