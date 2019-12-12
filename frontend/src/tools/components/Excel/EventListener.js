@@ -1012,7 +1012,7 @@ class EventRedux extends PureComponent {
         handleResetActiveCellSelectionAreaIndex();
       } 
     } else if(cursorType) {
-      handleResetCursorType();
+      if(cursorType !== "default") handleResetCursorType();
 
       if(rowResizeData) {
         const { row, offset } = rowResizeData;
