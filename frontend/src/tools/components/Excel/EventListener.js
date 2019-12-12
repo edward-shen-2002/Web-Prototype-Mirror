@@ -967,11 +967,16 @@ class EventRedux extends PureComponent {
       freezeColumnResizeData,
       freezeRowResizeData,
 
+      sheetFreezeColumnCount,
+      sheetFreezeRowCount,
+
       sheetRowHeights,
       sheetColumnWidths,
 
       leftOffsets,
       topOffsets,
+
+      scrollData,
 
       activeSelectionArea, 
       stagnantSelectionAreas, 
@@ -1012,10 +1017,17 @@ class EventRedux extends PureComponent {
       if(rowResizeData) {
         const { row, offset } = rowResizeData;
         const rowTopOffset = topOffsets[row];
+        const { scrollTop } = scrollData;
+
+        const sheetFreezeRowEndOffset = topOffsets[sheetFreezeRowCount] + getNormalRowHeight(sheetRowHeights[sheetFreezeRowCount]);
+
         const rowHeight = sheetRowHeights[row];
         const currentOffset = rowTopOffset + rowHeight;
+        
+        let newRowHeight = offset - rowTopOffset;
 
-        const newRowHeight = offset - rowTopOffset;
+        if(row <= sheetFreezeRowCount && offset > sheetFreezeRowEndOffset) newRowHeight -= scrollTop;
+
         if(offset !== currentOffset) {
           handleUpdateSheetRowHeights({ ...sheetRowHeights, [row]: getExcelRowHeight(newRowHeight) });
           sheetGridRef.current.resetAfterRowIndex(row);
@@ -1025,12 +1037,18 @@ class EventRedux extends PureComponent {
         handleResetRowResizeData();
       } else if(columnResizeData) {
         const { column, offset } = columnResizeData;
+        const { scrollLeft } = scrollData;
+
+        const sheetFreezeColumnEndOffset = leftOffsets[sheetFreezeColumnCount] + getNormalColumnWidth(sheetColumnWidths[sheetFreezeColumnCount]);
 
         const columnLeftOffset = leftOffsets[column];
         const columnWidth = sheetColumnWidths[column];
         const currentOffset = columnLeftOffset + columnWidth;
 
-        const newColumnWidth = offset - columnLeftOffset;
+        let newColumnWidth = offset - columnLeftOffset;
+
+        if(column <= sheetFreezeColumnCount && offset > sheetFreezeColumnEndOffset) newColumnWidth -= scrollLeft;
+
         if(offset !== currentOffset) {
           handleUpdateSheetColumnWidths({ ...sheetColumnWidths, [column]: getExcelColumnWidth(newColumnWidth) });
           sheetGridRef.current.resetAfterColumnIndex(column);
