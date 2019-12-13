@@ -59,7 +59,6 @@ export const MenuOptions = ({ isOpen, options, anchorEl }) => (
     placement="bottom-start"
     anchorEl={anchorEl}
   >
-    {console.log(anchorEl)}
     <MenuOptionsContainer options={options}/>
   </Popper>
 );

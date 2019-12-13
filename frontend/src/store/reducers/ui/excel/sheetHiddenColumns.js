@@ -1,6 +1,6 @@
 import { createReducer } from "store/tools/setup";
 
-const UPDATE_SHEET_HIDDEN_COLUMNS = (state, { sheetName, sheetHiddenColumns }) => sheetHiddenColumns;
+const UPDATE_SHEET_HIDDEN_COLUMNS = (_state, { sheetHiddenColumns }) => sheetHiddenColumns;
 
 const RESET_SHEET_HIDDEN_COLUMNS = () => ({});
 

@@ -2,10 +2,10 @@ import { createReducer } from "store/tools/setup";
 
 import { DEFAULT_EXCEL_STAGNANT_SELECTION_AREAS } from "constants/excel";
 
-const updateStagnantSelectionAreas = (_state, { stagnantSelectionAreas }) => [ ...stagnantSelectionAreas ];
+const UPDATE_STAGNANT_SELECTION_AREAS = (_state, { stagnantSelectionAreas }) => [ ...stagnantSelectionAreas ];
 
-const resetStagnantSelectionAreas = () => DEFAULT_EXCEL_STAGNANT_SELECTION_AREAS;
+const RESET_STAGNANT_SELECTION_AREAS = () => DEFAULT_EXCEL_STAGNANT_SELECTION_AREAS;
 
-const stagnantSelectionAreasReducer = createReducer(DEFAULT_EXCEL_STAGNANT_SELECTION_AREAS, { UPDATE_STAGNANT_SELECTION_AREAS: updateStagnantSelectionAreas, RESET_STAGNANT_SELECTION_AREAS: resetStagnantSelectionAreas });
+const stagnantSelectionAreasReducer = createReducer(DEFAULT_EXCEL_STAGNANT_SELECTION_AREAS, { UPDATE_STAGNANT_SELECTION_AREAS, RESET_STAGNANT_SELECTION_AREAS });
 
 export default stagnantSelectionAreasReducer;
