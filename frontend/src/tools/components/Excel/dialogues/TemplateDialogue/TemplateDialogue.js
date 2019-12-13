@@ -47,15 +47,16 @@ const TemplateDialogActions = ({ handleCloseDialog }) => (
 
 const Mapping = ({ 
   type, 
+  isEnabled,
   idPosition, 
   valuePosition,
   handleChangeIdPosition,
   handleChangeValuePosition
 }) => (
   <div>
-    <MappingInput value={idPosition} placeholder={`${type} of ID`} onChange={handleChangeIdPosition}/>
+    <MappingInput value={idPosition} disabled={!isEnabled} placeholder={`${type} of ID`} onChange={handleChangeIdPosition}/>
     —
-    <MappingInput value={valuePosition} placeholder={`${type} of ID's Values`} onChange={handleChangeValuePosition}/>
+    <MappingInput value={valuePosition} disabled={!isEnabled} placeholder={`${type} of ID's Values`} onChange={handleChangeValuePosition}/>
   </div>
 );
 
@@ -89,6 +90,7 @@ const MappingSection = ({
       />
       <Mapping 
         type={type}
+        isEnabled={isEnabled}
         idPosition={idPosition} 
         valuePosition={valuePosition}
         handleChangeIdPosition={handleChangeIdPosition}
