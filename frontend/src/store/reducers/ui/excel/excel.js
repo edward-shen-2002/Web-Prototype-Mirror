@@ -34,6 +34,7 @@ import sheetRowHeights from "./sheetRowHeights";
 import sheetFreezeRowCount from "./sheetFreezeRowCount";
 import sheetHiddenColumns from "./sheetHiddenColumns";
 import sheetHiddenRows from "./sheetHiddenRows";
+import sheetTemplateIdMapping from "./sheetTemplateIdMapping";
 
 import isTemplateIdMappingDialogOpen from "./isTemplateIdMappingDialogOpen";
 
@@ -72,6 +73,7 @@ const excelReducer = combineReducers({
   sheetFreezeRowCount,
   sheetHiddenColumns,
   sheetHiddenRows,
+  sheetTemplateIdMapping,
 
   isTemplateIdMappingDialogOpen
 });

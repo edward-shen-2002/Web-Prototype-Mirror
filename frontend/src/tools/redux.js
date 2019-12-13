@@ -30,7 +30,7 @@ import { updateSheetFreezeRowCount, resetSheetFreezeRowCount } from "actions/ui/
 import { updateSheetHiddenColumns, resetSheetHiddenColumns } from "actions/ui/excel/sheetHiddenColumns";
 import { updateSheetHiddenRows, resetSheetHiddenRows } from "actions/ui/excel/sheetHiddenRows";
 
-import pako from "pako";
+import { updateSheetTemplateIdMapping } from "actions/ui/excel/sheetTemplateIdMapping";
 
 export const loadUserState = (dispatch, { user, token }) => {
   if(token) {
@@ -71,7 +71,8 @@ export const loadWorkbook = (
     sheetFreezeColumnCount,
     sheetFreezeRowCount,
     sheetHiddenColumns,
-    sheetHiddenRows
+    sheetHiddenRows,
+    sheetTemplateIdMapping
   }
 ) => {
   dispatch(updateActiveCellInputData(activeCellInputData));
@@ -89,6 +90,8 @@ export const loadWorkbook = (
   dispatch(updateSheetFreezeRowCount(sheetFreezeRowCount));
   dispatch(updateSheetHiddenColumns(sheetHiddenColumns));
   dispatch(updateSheetHiddenRows(sheetHiddenRows));
+
+  if(sheetTemplateIdMapping) dispatch(updateSheetTemplateIdMapping(sheetTemplateIdMapping));
 };
 
 export const resetWorkbook = (dispatch) => {

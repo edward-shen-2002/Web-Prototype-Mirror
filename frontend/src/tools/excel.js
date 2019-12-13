@@ -25,6 +25,8 @@ import {
   DEFAULT_EXCEL_SHEET_FREEZE_COLUMN_COUNT
 } from "constants/excel";
 
+import { DEFAULT_SHEET_TEMPLATE_ID_MAPPING } from "constants/template";
+
 let size = -1;
 
 // This utility copied from "dom-helpers" package. -- from react-window
@@ -595,6 +597,7 @@ export const convertExcelFileToState = async (excelFile) => {
     let activeRow;
     let activeColumn;
   
+    // Hot-fix for saved multi-selection (not implemeneted in xlsx-populate)
     try {
       let activeCell = sheet.activeCell();
     
@@ -610,10 +613,12 @@ export const convertExcelFileToState = async (excelFile) => {
       activeColumn = 1;
     }
   
-    let activeCellPosition = { x: activeColumn, y: activeRow };  
+    let activeCellPosition = { x: activeColumn, y: activeRow };
+    const sheetTemplateIdMapping = DEFAULT_SHEET_TEMPLATE_ID_MAPPING;
 
     const sheetContent = {
       activeCellPosition,
+      sheetTemplateIdMapping,
       sheetCellData,
       sheetColumnCount,
       sheetColumnWidths,
@@ -627,8 +632,6 @@ export const convertExcelFileToState = async (excelFile) => {
 
     workbookData[name] = pako.deflate(JSON.stringify(sheetContent), { to: "string" });
   });
-
-  // ! Issue here when there is multi-selection saved in excel
 
   return {
     workbookData,

@@ -128,7 +128,8 @@ const mapStateToProps = ({
       sheetFreezeRowCount,
       sheetRowHeights,
       sheetHiddenColumns,
-      sheetHiddenRows
+      sheetHiddenRows,
+      sheetTemplateIdMapping
     }
   }
 }) => ({
@@ -144,7 +145,8 @@ const mapStateToProps = ({
   sheetFreezeRowCount,
   sheetRowHeights,
   sheetHiddenColumns,
-  sheetHiddenRows
+  sheetHiddenRows,
+  sheetTemplateIdMapping
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -169,6 +171,7 @@ let SheetNavigator = ({
   sheetRowHeights,
   sheetHiddenColumns,
   sheetHiddenRows,
+  sheetTemplateIdMapping,
 
   handleChangeActiveSheet,
   handleChangeSheetNames,
@@ -192,7 +195,8 @@ let SheetNavigator = ({
       sheetFreezeRowCount,
       sheetRowHeights,
       sheetHiddenColumns,
-      sheetHiddenRows
+      sheetHiddenRows,
+      sheetTemplateIdMapping
     };
     
     let currentInactiveSheets = JSON.parse(sessionStorage.getItem("inactiveSheets"));

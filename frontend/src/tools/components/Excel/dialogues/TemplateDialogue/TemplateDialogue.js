@@ -2,6 +2,7 @@ import React from "react";
 
 import { connect } from "react-redux";
 
+import { updateSheetTemplateIdMapping } from "actions/ui/excel/sheetTemplateIdMapping";
 import { closeTemplateIdMappingDialog } from "actions/ui/excel/isTemplateIdMappingDialogOpen";
 
 import Button from "@material-ui/core/Button";
@@ -15,26 +16,22 @@ import Switch from "@material-ui/core/Switch";
 
 import InputBase from "@material-ui/core/InputBase";
 
-import {
-  DEFAULT_TEMPLATE_ID_ROW,
-  DEFAULT_TEMPLATE_VALUE_ROW,
-  DEFAULT_TEMPLATE_ID_COLUMN,
-  DEFAULT_TEMPLATE_VALUE_COLUMN
-} from "constants/template";
-
 import "./TemplateDialogue.scss";
 
 const mapStateToProps = ({
   ui: {
     excel: {
-      isTemplateIdMappingDialogOpen
+      isTemplateIdMappingDialogOpen,
+      sheetTemplateIdMapping
     }
   }
 }) => ({
-  isTemplateIdMappingDialogOpen
+  isTemplateIdMappingDialogOpen,
+  sheetTemplateIdMapping
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  handleUpdateTemplateIdMapping: (sheetTemplateIdMapping) => dispatch(updateSheetTemplateIdMapping(sheetTemplateIdMapping)),
   handleCloseDialog: () => dispatch(closeTemplateIdMappingDialog())
 });
 
@@ -44,76 +41,112 @@ const MappingInput = (props) => (
 
 const TemplateDialogActions = ({ handleCloseDialog }) => (
   <DialogActions>
-    <Button>Save</Button>
     <Button onClick={handleCloseDialog}>Close</Button>
   </DialogActions>
 );
 
-const Mapping = ({ type, defaultIdPosition, defaultValuePosition }) => (
+const Mapping = ({ 
+  type, 
+  idPosition, 
+  valuePosition,
+  handleChangeIdPosition,
+  handleChangeValuePosition
+}) => (
   <div>
-    <MappingInput defaultValue={defaultIdPosition} placeholder={`${type} of ID`}/>
+    <MappingInput value={idPosition} placeholder={`${type} of ID`} onChange={handleChangeIdPosition}/>
     —
-    <MappingInput defaultValue={defaultValuePosition} placeholder={`${type} of ID's Values`}/>
+    <MappingInput value={valuePosition} placeholder={`${type} of ID's Values`} onChange={handleChangeValuePosition}/>
   </div>
 );
 
 const MappingEnabler = ({
-  type
+  type,
+  isEnabled,
+  handleToggleEnabler
 }) => (
   <div className="mapping__enabler">
     <h5 className="mapping_title">{type} Mapping (ID {type}—Value {type})</h5>
-    <Switch color="primary"/>
+    <Switch color="primary" checked={isEnabled} onChange={handleToggleEnabler}/>
   </div>
 );
 
 const MappingSection = ({
   type,
-  defaultIdPosition,
-  defaultValuePosition
-}) => (
-  <div>
-    <MappingEnabler type={type}/>
-    <Mapping 
-      type={type}
-      defaultIdPosition={defaultIdPosition} 
-      defaultValuePosition={defaultValuePosition}
-    />
-  </div>
-);
+  idPosition,
+  valuePosition,
+  isEnabled,
+  handleUpdateTemplateIdMapping
+}) => {
+  const handleChangeIdPosition = ({ target: { value } }) => handleUpdateTemplateIdMapping({ [`id${type}`]: value });
+  const handleChangeValuePosition = ({ target: { value } }) => handleUpdateTemplateIdMapping({ [`value${type}`]: value });
+  const handleToggleEnabler = ({ target: { checked } }) => handleUpdateTemplateIdMapping({ [`is${type}Enabled`]: checked });
+  return (
+    <div>
+      <MappingEnabler 
+        type={type}
+        isEnabled={isEnabled}
+        handleToggleEnabler={handleToggleEnabler}
+      />
+      <Mapping 
+        type={type}
+        idPosition={idPosition} 
+        valuePosition={valuePosition}
+        handleChangeIdPosition={handleChangeIdPosition}
+        handleChangeValuePosition={handleChangeValuePosition}
+      />
+    </div>
+  );
+};
 
-const TemplateDialogContent = () => (
+const TemplateDialogContent = ({ 
+  sheetTemplateIdMapping: {
+    idRow,
+    valueRow,
+    isRowEnabled,
+    idColumn,
+    valueColumn,
+    isColumnEnabled
+  },
+  handleUpdateTemplateIdMapping
+}) => (
   <DialogContent>
     <MappingSection 
       type="Row" 
-      defaultIdPosition={DEFAULT_TEMPLATE_ID_ROW} 
-      defaultValuePosition={DEFAULT_TEMPLATE_VALUE_ROW}
+      idPosition={idRow} 
+      valuePosition={valueRow}
+      isEnabled={isRowEnabled}
+      handleUpdateTemplateIdMapping={handleUpdateTemplateIdMapping}
     />
     <MappingSection 
       type="Column" 
-      defaultIdPosition={DEFAULT_TEMPLATE_ID_COLUMN} 
-      defaultValuePosition={DEFAULT_TEMPLATE_VALUE_COLUMN}
+      idPosition={idColumn} 
+      valuePosition={valueColumn}
+      isEnabled={isColumnEnabled}
+      handleUpdateTemplateIdMapping={handleUpdateTemplateIdMapping}
     />
   </DialogContent>
 );
 
 let TemplateDialogue = ({
   isTemplateIdMappingDialogOpen,
-  handleCloseDialog
-}) => {
-
-  return (
-    <Dialog
-      open={isTemplateIdMappingDialogOpen}
-      onClose={handleCloseDialog}
-    >
-      <DialogTitle>Template ID Mapping</DialogTitle>
-      <TemplateDialogContent/>
-      <TemplateDialogActions 
-        handleCloseDialog={handleCloseDialog}
-      />
-    </Dialog>
-  );
-};
+  sheetTemplateIdMapping,
+  handleCloseDialog,
+  handleUpdateTemplateIdMapping
+}) => (
+  <Dialog
+    open={isTemplateIdMappingDialogOpen}
+    onClose={handleCloseDialog}
+  >
+    <DialogTitle>Template ID Mapping</DialogTitle>
+    <TemplateDialogContent 
+      sheetTemplateIdMapping={sheetTemplateIdMapping}
+      handleUpdateTemplateIdMapping={handleUpdateTemplateIdMapping}
+    />
+    <TemplateDialogActions 
+      handleCloseDialog={handleCloseDialog}
+    />
+  </Dialog>
+);
 
 TemplateDialogue = connect(mapStateToProps, mapDispatchToProps)(TemplateDialogue);
 
