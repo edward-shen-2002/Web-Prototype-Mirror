@@ -1021,7 +1021,7 @@ class EventRedux extends PureComponent {
 
         const sheetFreezeRowEndOffset = topOffsets[sheetFreezeRowCount] + getNormalRowHeight(sheetRowHeights[sheetFreezeRowCount]);
 
-        const rowHeight = sheetRowHeights[row];
+        const rowHeight = getNormalRowHeight(sheetRowHeights[row]);
         const currentOffset = rowTopOffset + rowHeight;
         
         let newRowHeight = offset - rowTopOffset;
@@ -1031,7 +1031,7 @@ class EventRedux extends PureComponent {
         if(offset !== currentOffset) {
           handleUpdateSheetRowHeights({ ...sheetRowHeights, [row]: getExcelRowHeight(newRowHeight) });
           sheetGridRef.current.resetAfterRowIndex(row);
-        }
+        } 
         
         handleSetRowResizeModeOff();
         handleResetRowResizeData();
@@ -1042,7 +1042,7 @@ class EventRedux extends PureComponent {
         const sheetFreezeColumnEndOffset = leftOffsets[sheetFreezeColumnCount] + getNormalColumnWidth(sheetColumnWidths[sheetFreezeColumnCount]);
 
         const columnLeftOffset = leftOffsets[column];
-        const columnWidth = sheetColumnWidths[column];
+        const columnWidth = getNormalColumnWidth(sheetColumnWidths[column]);
         const currentOffset = columnLeftOffset + columnWidth;
 
         let newColumnWidth = offset - columnLeftOffset;
