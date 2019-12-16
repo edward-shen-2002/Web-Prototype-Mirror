@@ -449,7 +449,9 @@ const extractCellData = (cellData) => {
   const cellFormula = cellData.formula();
   const cellStyles = extractCellStyle(cellData);
   // !! TODO May be internal - ie in another sheet
-  // const cellHyperlinkData = cellData.hyperlink();
+  const cellHyperlinkData = cellData.hyperlink();
+
+  // if(cellHyperlinkData) console.log(cellHyperlinkData)
 
   let extractedCellData = {};
 
@@ -458,12 +460,23 @@ const extractCellData = (cellData) => {
     if(cellValue instanceof RichText) {
       extractedCellData.type = "rich-text";
       extractedCellData.value = extractRichTextData(cellValue);
+    } else if(cellFormula) {
+      const { _error } = cellValue;
+
+      if(_error) {
+        console.log(cellFormula)
+        console.log("error", _error)
+      }
+      
+      extractedCellData.value = _error ? _error : cellValue;
+
+      extractedCellData.type = "formula";
+      extractedCellData.formula = cellFormula;
     } else {
       extractedCellData.type = "normal";
       extractedCellData.value = cellValue;
     }
   }
-  if(cellFormula) extractedCellData.formula = cellFormula;
   if(cellStyles) extractedCellData.styles = cellStyles;
 
   return isObjectEmpty(extractedCellData) ? undefined : extractedCellData;

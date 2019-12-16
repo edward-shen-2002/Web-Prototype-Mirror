@@ -24,7 +24,6 @@ import uniqid from "uniqid";
 const templates = ({ router, TemplateModel }) => {
   router.get(ROUTE_ADMIN_TEMPLATES, (req, res, next) => {
     TemplateModel.find({})
-      .select("_id name")
       .then((templates) => {
         res.json({ message: MESSAGE_SUCCESS_TEMPLATES, data: { templates } })
       })

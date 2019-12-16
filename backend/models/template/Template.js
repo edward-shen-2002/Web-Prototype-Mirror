@@ -5,17 +5,7 @@ let templateSchema = new Schema({
 
   fileStates: {},
 
-  sheets: [{
-    name: { type: String },
-
-    // ! attributes: { $id: { position, value, ... } }
-    attributes: {},
-  
-    // ! categories: { $id: { position, value, ... } }
-    categories: {}
-
-    // ! Are templates, solely templates - they contain the categories and attributes to fill cells up?
-  }]
+  published: { type: Boolean, default: false }
 }, { minimize: false });
 
 export default model("Template", templateSchema);

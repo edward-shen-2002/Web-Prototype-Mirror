@@ -92,7 +92,8 @@ const TemplatesTable = ({ templates, history, handleRowAdd, handleRowDelete, han
   };
 
   const columns = [
-    { title: "Name", field: "name" }
+    { title: "Name", field: "name" },
+    { title: "Published", field: "published", type: "boolean" }
   ];
 
   const actions = [
@@ -101,7 +102,7 @@ const TemplatesTable = ({ templates, history, handleRowAdd, handleRowDelete, han
 
   const editable = { onRowAdd: handleRowAdd, onRowUpdate: handleRowUpdate, onRowDelete: handleRowDelete };
 
-  const options = { actionsColumnIndex: -1, search: false, header: false, showTitle: false };
+  const options = { actionsColumnIndex: -1, search: false, showTitle: false };
 
   return (
     <MaterialTable columns={columns} actions={actions} data={templates} editable={editable} options={options}/>
