@@ -1019,7 +1019,7 @@ class EventRedux extends PureComponent {
         const rowTopOffset = topOffsets[row];
         const { scrollTop } = scrollData;
 
-        const sheetFreezeRowEndOffset = topOffsets[sheetFreezeRowCount] + getNormalRowHeight(sheetRowHeights[sheetFreezeRowCount]);
+        const sheetFreezeRowEndOffset = topOffsets[sheetFreezeRowCount] + (sheetFreezeRowCount ? getNormalRowHeight(sheetRowHeights[sheetFreezeRowCount]) : DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER);
 
         const rowHeight = getNormalRowHeight(sheetRowHeights[row]);
         const currentOffset = rowTopOffset + rowHeight;
@@ -1039,7 +1039,7 @@ class EventRedux extends PureComponent {
         const { column, offset } = columnResizeData;
         const { scrollLeft } = scrollData;
 
-        const sheetFreezeColumnEndOffset = leftOffsets[sheetFreezeColumnCount] + getNormalColumnWidth(sheetColumnWidths[sheetFreezeColumnCount]);
+        const sheetFreezeColumnEndOffset = leftOffsets[sheetFreezeColumnCount] + (sheetFreezeColumnCount ? getNormalColumnWidth(sheetColumnWidths[sheetFreezeColumnCount]) : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER);
 
         const columnLeftOffset = leftOffsets[column];
         const columnWidth = getNormalColumnWidth(sheetColumnWidths[column]);
@@ -1106,7 +1106,7 @@ class EventRedux extends PureComponent {
       const { row } = rowResizeData;
       const rowOffset = topOffsets[row];
       const { clientHeight } = SheetContainerInstance;
-      const freezeRowOffset = topOffsets[sheetFreezeRowCount] + getNormalRowHeight(sheetRowHeights[sheetFreezeRowCount]);
+      const freezeRowOffset = topOffsets[sheetFreezeRowCount] + (sheetFreezeRowCount ? getNormalRowHeight(sheetRowHeights[sheetFreezeRowCount]) : DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER);
 
       const componentOffset = SheetContainerInstance.offsetTop;
 
@@ -1135,7 +1135,7 @@ class EventRedux extends PureComponent {
     } else if(isColumnResizeMode) {
       const { column } = columnResizeData;
       const columnOffset = leftOffsets[column];
-      const freezeColumnOffset = leftOffsets[sheetFreezeColumnCount] + getNormalColumnWidth(sheetColumnWidths[sheetFreezeColumnCount]);
+      const freezeColumnOffset = leftOffsets[sheetFreezeColumnCount] + (sheetFreezeColumnCount ? getNormalColumnWidth(sheetColumnWidths[sheetFreezeColumnCount]) : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER);
 
       const { clientWidth } = SheetContainerInstance;
 
@@ -1335,10 +1335,10 @@ class EventRedux extends PureComponent {
 
     let { scrollTop, scrollLeft } = scrollData;
 
-    const topFreezeStart = topOffsets[sheetFreezeRowCount + 1];
-    const leftFreezeStart = leftOffsets[sheetFreezeColumnCount + 1];
-    const heightFreezeStart = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER;
-    const widthFreezeStart = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER;
+    const topFreezeStart = topOffsets[sheetFreezeRowCount];
+    const leftFreezeStart = leftOffsets[sheetFreezeColumnCount];
+    const heightFreezeStart = sheetFreezeRowCount ? getNormalRowHeight(sheetRowHeights[sheetFreezeRowCount]) : DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER;
+    const widthFreezeStart = sheetFreezeColumnCount ? getNormalColumnWidth(sheetColumnWidths[sheetFreezeColumnCount]) : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER;
 
     const topActiveStart = topOffsets[newY];
     const leftActiveStart = leftOffsets[newX];
@@ -1366,14 +1366,14 @@ class EventRedux extends PureComponent {
 
     // Active cell is under freeze
     if(newY > sheetFreezeRowCount && topActiveStart < scrollTop + freezeHeight) {
-      newScrollTop = topActiveStart + DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER - freezeHeight;
+      newScrollTop = topActiveStart - freezeHeight;
     // Beyond bottom side
     } else if(topActiveStart + heightActiveStart > scrollTop + height - horizontalScrollbarSize){
       newScrollTop = topActiveStart + heightActiveStart - height + horizontalScrollbarSize;
     }
     
     if(newX > sheetFreezeColumnCount && leftActiveStart < scrollLeft + freezeWidth) {
-      newScrollLeft = leftActiveStart + DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER - freezeWidth;
+      newScrollLeft = leftActiveStart - freezeWidth;
     // Beyond visible right side
     } else if(leftActiveStart + widthActiveStart > scrollLeft + width - verticalScrollbarSize){
       newScrollLeft = leftActiveStart + widthActiveStart - width + verticalScrollbarSize;
