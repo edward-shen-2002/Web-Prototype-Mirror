@@ -200,20 +200,23 @@ export const getCellData = (sheetCellData, row, column) => (
 );
 
 
-export const getSheetHeaderCount = (sheet) => {
+export const getSheetHeaderCount = (sheet, activeRow, activeColumn) => {
   const sheetUsedRange = sheet.usedRange();
 
   let headerCount = {};
 
+  let maxColumnNumber = 1;
+  let maxRowNumber = 1;
+
   if(sheetUsedRange) {
     const { _maxColumnNumber, _maxRowNumber } = sheetUsedRange;
 
-    headerCount.sheetColumnCount = Math.max(_maxColumnNumber + 1, DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1);
-    headerCount.sheetRowCount = Math.max(_maxRowNumber + 1, DEFAULT_EXCEL_SHEET_ROW_COUNT + 1);
-  } else {
-    headerCount.sheetColumnCount = DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1;
-    headerCount.sheetRowCount = DEFAULT_EXCEL_SHEET_ROW_COUNT + 1;
-  }
+    maxColumnNumber = _maxColumnNumber + 1;
+    maxRowNumber = _maxRowNumber + 1;
+  } 
+
+  headerCount.sheetColumnCount = Math.max(activeColumn, maxColumnNumber, DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1);
+  headerCount.sheetRowCount = Math.max(activeRow, maxRowNumber, DEFAULT_EXCEL_SHEET_ROW_COUNT + 1);
 
   return headerCount;
 };
@@ -462,11 +465,6 @@ const extractCellData = (cellData) => {
       extractedCellData.value = extractRichTextData(cellValue);
     } else if(cellFormula) {
       const { _error } = cellValue;
-
-      if(_error) {
-        console.log(cellFormula)
-        console.log("error", _error)
-      }
       
       extractedCellData.value = _error ? _error : cellValue;
 
@@ -600,16 +598,6 @@ export const convertExcelFileToState = async (excelFile) => {
   sheetNames.forEach((name) => {
     const sheet = WorkbookInstance.sheet(name);
 
-    const { sheetColumnCount, sheetRowCount } = getSheetHeaderCount(sheet);
-
-    const sheetCellData = getSheetCellData(sheet, sheetColumnCount, sheetRowCount);
-    const { sheetColumnWidths, sheetHiddenColumns } = getSheetColumnsData(sheet, sheetColumnCount);
-    const { sheetRowHeights, sheetHiddenRows } = getSheetRowsData(sheet, sheetRowCount);
-    const { sheetFreezeRowCount, sheetFreezeColumnCount } = getSheetFreezeHeader(sheet);
-
-    let activeRow;
-    let activeColumn;
-  
     // Hot-fix for saved multi-selection (not implemeneted in xlsx-populate)
     try {
       let activeCell = sheet.activeCell();
@@ -625,6 +613,18 @@ export const convertExcelFileToState = async (excelFile) => {
       activeRow = 1;
       activeColumn = 1;
     }
+
+    const { sheetColumnCount, sheetRowCount } = getSheetHeaderCount(sheet, activeRow, activeColumn);
+
+    const sheetCellData = getSheetCellData(sheet, sheetColumnCount, sheetRowCount);
+    const { sheetColumnWidths, sheetHiddenColumns } = getSheetColumnsData(sheet, sheetColumnCount);
+    const { sheetRowHeights, sheetHiddenRows } = getSheetRowsData(sheet, sheetRowCount);
+    const { sheetFreezeRowCount, sheetFreezeColumnCount } = getSheetFreezeHeader(sheet);
+
+    let activeRow;
+    let activeColumn;
+  
+
   
     let activeCellPosition = { x: activeColumn, y: activeRow };
     const sheetTemplateIdMapping = DEFAULT_SHEET_TEMPLATE_ID_MAPPING;
