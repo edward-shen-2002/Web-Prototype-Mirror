@@ -20,7 +20,7 @@ const Title = ({ name, handleUpdateTemplate }) => {
 
   return (
     <InputBase 
-      className="appBar__title" 
+      className="appBarMain__title" 
       type="text" 
       value={title} 
       onBlur={handleBlur} 

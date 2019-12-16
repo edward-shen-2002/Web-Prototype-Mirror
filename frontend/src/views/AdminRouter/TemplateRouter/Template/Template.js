@@ -40,7 +40,6 @@ let Template = ({
   const [ isDataFetched, setIsDataFetched ] = useState(false);
 
   const { name } = template;
-
   if(isAppNavigationOpen) handleHideAppNavigation();
 
   useEffect(() => {
@@ -50,7 +49,8 @@ let Template = ({
           let { fileStates } = template;
 
           handleLoadTemplate(convertStateToReactState(fileStates));
-          setTemplate({ ...template, fileStates: undefined });
+          delete template.fileStates;
+          setTemplate(template);
         })
         .catch((error) => console.error(error))
         .finally(() => setIsDataFetched(true));
@@ -74,6 +74,7 @@ let Template = ({
       ? <Excel 
           name={name} 
           type="template"
+          templateData={template}
           returnLink={ROUTE_ADMIN_TEMPLATE_TEMPLATES} 
           handleUpdateTemplate={handleUpdateTemplate}
         />

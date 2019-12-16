@@ -8,12 +8,17 @@
   }
 }
 
-.appBar {
+.appBarContainer {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.appBarMain {
   display: flex;
   flex-flow: row nowrap;
   
-  margin-top: 10px;
-
   &__menu {
     display: flex;
     width: fit-content;
@@ -41,4 +46,8 @@
       }
     }
   }
+}
+
+.appBarSide {
+  margin: auto 20px;
 }

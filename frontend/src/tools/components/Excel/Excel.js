@@ -17,7 +17,9 @@ const Excel = ({
   name, 
   type,
   returnLink, 
-  handleUpdateTemplate
+  templateData,
+  handleUpdateTemplate,
+  handleToggleTemplatePublish
 }) => {
   const eventListenerRef = useRef(null);
   const sheetContainerRef = useRef(null);
@@ -28,8 +30,11 @@ const Excel = ({
     <div ref={excelRef} className="excel">
       <AppBar 
         name={name} 
+        type={type}
         returnLink={returnLink} 
+        templateData={templateData}
         handleUpdateTemplate={handleUpdateTemplate}
+        handleToggleTemplatePublish={handleToggleTemplatePublish}
         />
       <Divider/>
       <ToolBar

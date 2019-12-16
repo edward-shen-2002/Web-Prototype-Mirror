@@ -32,7 +32,7 @@ const Menu = ({ handleUpdateTemplate }) => {
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
-      <div className="appBar__menu">
+      <div className="appBarMain__menu">
         <File handleUpdateTemplate={handleUpdateTemplate} {...commonMenuItemProps}/>
         <Edit {...commonMenuItemProps}/>
       </div>
