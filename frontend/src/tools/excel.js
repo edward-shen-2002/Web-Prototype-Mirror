@@ -452,7 +452,7 @@ const extractCellData = (cellData) => {
   const cellFormula = cellData.formula();
   const cellStyles = extractCellStyle(cellData);
   // !! TODO May be internal - ie in another sheet
-  const cellHyperlinkData = cellData.hyperlink();
+  // const cellHyperlinkData = cellData.hyperlink();
 
   // if(cellHyperlinkData) console.log(cellHyperlinkData)
 
