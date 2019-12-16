@@ -11,6 +11,7 @@
 - [ ] Convert excel editor state to Xlsx-populate rich text
 - [ ] Resize excel headers
 - [ ] Compress inactive sheets
+- [ ] Excel formulas
 
 ## Unprioritized
 
