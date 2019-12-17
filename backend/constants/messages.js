@@ -40,3 +40,9 @@ export const MESSAGE_SUCCESS_TEMPLATES_CREATE = "Successfully created template";
 export const MESSAGE_SUCCESS_TEMPLATES_TEMPLATE = "Successfully fetched template";
 export const MESSAGE_SUCCESS_TEMPLATES_DELETE = "Successfully deleted template";
 export const MESSAGE_SUCCESS_TEMPLATES_UPDATE = "Successfully updated template";
+
+export const MESSAGE_SUCCESS_BUSINESS_CONCEPTS = "Successfully fetched business concepts";
+export const MESSAGE_SUCCESS_BUSINESS_CONCEPTS_CREATE = "Successfully created business concepts";
+export const MESSAGE_SUCCESS_BUSINESS_CONCEPTS_UPDATE = "Successfully fetched business concepts"; 
+export const MESSAGE_SUCCESS_BUSINESS_CONCEPTS_DELETE = "Successfully deleted business concepts";
+export const MESSAGE_SUCCESS_BUSINESS_CONCEPTS_TEMPLATE = "Successfully updated business concepts"; 

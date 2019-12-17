@@ -1,11 +1,14 @@
 import React from "react";
 
+import { connect } from "react-redux";
+
 import { Link } from "react-router-dom";
 
 import Button from "@material-ui/core/Button";
 
 import FileTableOutline from "mdi-material-ui/FileTableOutline"; 
 import DoubleArrowIcon from "@material-ui/icons/DoubleArrow";
+import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 
 import Title from "./Title";
 
@@ -29,22 +32,50 @@ const Header = ({ name, handleUpdateTemplate }) => (
   </div>
 );
 
-const DoubleArrowIconButton = ({ text, handleClick }) => (
-  <Button variant="contained" color="primary" onClick={handleClick}>
+const DoubleArrowIconButton = ({ buttonStyle, text, handleClick }) => (
+  <Button style={buttonStyle} variant="contained" color="primary" onClick={handleClick}>
     <DoubleArrowIcon/>
     {text}
   </Button>
 );
 
-const SideOptions = ({ type, templateData: { published }, handleUpdateTemplate } ) => {
+const PlaylistAddIconButton = ({ buttonStyle, text, handleClick }) => (
+  <Button style={buttonStyle} variant="contained" color="primary" onClick={handleClick}>
+    <PlaylistAddIcon/>
+    {text}
+  </Button>
+);
+
+const mapStateToProps = ({
+  ui: {
+    excel: {
+      
+    }
+  }
+}) => ({
+
+});
+
+let TemplateOptions = ({ templateData: { published }, handleUpdateTemplate }) => {
   const handleToggleTemplatePublish = () => handleUpdateTemplate({ published: !published });
 
+  const importIDStyle = { marginRight: 5 };
+
   return (
-    <div className="appBarSide">
-      {type === "template" && <DoubleArrowIconButton text={published ? "Unpublish" : "Publish"} handleClick={handleToggleTemplatePublish}/>}
+    <div>
+      <PlaylistAddIconButton buttonStyle={importIDStyle} text="Import IDs"/>
+      <DoubleArrowIconButton text={published ? "Unpublish" : "Publish"} handleClick={handleToggleTemplatePublish}/>
     </div>
   );
 };
+
+
+
+const SideOptions = ({ type, templateData, handleUpdateTemplate } ) => (
+  <div className="appBarSide">
+    {type === "template" && <TemplateOptions templateData={templateData} handleUpdateTemplate={handleUpdateTemplate}/>}
+  </div>
+);
 
 const MainAppBarOptions = ({
   name,

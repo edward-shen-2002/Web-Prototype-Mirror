@@ -15,6 +15,9 @@ import {
   DEFAULT_EXCEL_SHEET_ROW_COUNT, 
   DEFAULT_EXCEL_SHEET_COLUMN_COUNT,
 
+  EXCEL_SHEET_MAX_ROW_COUNT,
+  EXCEL_SHEET_MAX_COLUMN_COUNT,
+
   DEFAULT_EXCEL_SHEET_ROW_HEIGHT,
   DEFAULT_EXCEL_SHEET_COLUMN_WIDTH,
 
@@ -200,7 +203,7 @@ export const getCellData = (sheetCellData, row, column) => (
 );
 
 
-export const getSheetHeaderCount = (sheet, activeRow, activeColumn) => {
+export const getSheetHeaderCount = (sheet) => {
   const sheetUsedRange = sheet.usedRange();
 
   let headerCount = {};
@@ -211,12 +214,12 @@ export const getSheetHeaderCount = (sheet, activeRow, activeColumn) => {
   if(sheetUsedRange) {
     const { _maxColumnNumber, _maxRowNumber } = sheetUsedRange;
 
-    maxColumnNumber = _maxColumnNumber + 1;
-    maxRowNumber = _maxRowNumber + 1;
+    maxColumnNumber = Math.min(_maxColumnNumber + 1, EXCEL_SHEET_MAX_COLUMN_COUNT);
+    maxRowNumber = Math.min(_maxRowNumber + 1, EXCEL_SHEET_MAX_ROW_COUNT);
   } 
 
-  headerCount.sheetColumnCount = Math.max(activeColumn, maxColumnNumber, DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1);
-  headerCount.sheetRowCount = Math.max(activeRow, maxRowNumber, DEFAULT_EXCEL_SHEET_ROW_COUNT + 1);
+  headerCount.sheetColumnCount = Math.max(maxColumnNumber, DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1);
+  headerCount.sheetRowCount = Math.max(maxRowNumber, DEFAULT_EXCEL_SHEET_ROW_COUNT + 1);
 
   return headerCount;
 };
@@ -584,7 +587,29 @@ export const getActiveCellInputData = (sheetCellData, activeRow, activeColumn) =
   );
 };
 
+const getMaxSheetRange = (sheetCellData) => {
+  let maxColumnRange = DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1;
+  let maxRowRange = DEFAULT_EXCEL_SHEET_ROW_COUNT + 1;
+
+  for(let row in sheetCellData) {
+    const rowNumber = parseInt(row);
+    if(rowNumber + 1 > maxRowRange) maxRowRange = rowNumber + 1;
+
+    let columns = sheetCellData[row];
+
+    for(let column in columns) {
+      const columnNumber = parseInt(column);
+      if(columnNumber + 1 > maxColumnRange) {
+        maxColumnRange = columnNumber + 1;
+      }
+    }
+  }
+
+  return { maxRowRange, maxColumnRange };
+};
+
 // ! Add template id mapping / sheet
+// ! ISSUE HERE WHEN UPLOADING THE RELEVANT EXCEL TEMPLATES
 export const convertExcelFileToState = async (excelFile) => {
   const WorkbookInstance = await XlsxPopulate.fromDataAsync(excelFile);
           
@@ -594,9 +619,25 @@ export const convertExcelFileToState = async (excelFile) => {
   const activeSheetName = activeSheet.name();
 
   let workbookData = {};
-
   sheetNames.forEach((name) => {
     const sheet = WorkbookInstance.sheet(name);
+
+    let { sheetColumnCount, sheetRowCount } = getSheetHeaderCount(sheet);
+
+    const sheetCellData = getSheetCellData(sheet, sheetColumnCount, sheetRowCount);
+
+    // Make sure to set about enough column/rows for the used cells
+    const { maxColumnRange, maxRowRange } = getMaxSheetRange(sheetCellData);
+
+    sheetColumnCount = maxColumnRange;
+    sheetRowCount = maxRowRange;
+
+    const { sheetColumnWidths, sheetHiddenColumns } = getSheetColumnsData(sheet, sheetColumnCount);
+    const { sheetRowHeights, sheetHiddenRows } = getSheetRowsData(sheet, sheetRowCount);
+    const { sheetFreezeRowCount, sheetFreezeColumnCount } = getSheetFreezeHeader(sheet);
+
+    let activeRow;
+    let activeColumn;
 
     // Hot-fix for saved multi-selection (not implemeneted in xlsx-populate)
     try {
@@ -609,23 +650,14 @@ export const convertExcelFileToState = async (excelFile) => {
         activeRow = activeCell.rowNumber();
         activeColumn = activeCell.columnNumber();
       }
+
+      if(activeColumn > sheetColumnCount) activeColumn = sheetColumnCount;
+      if(activeRow > sheetRowCount) activeRow = sheetRowCount;  
     } catch(error) {
       activeRow = 1;
       activeColumn = 1;
     }
 
-    const { sheetColumnCount, sheetRowCount } = getSheetHeaderCount(sheet, activeRow, activeColumn);
-
-    const sheetCellData = getSheetCellData(sheet, sheetColumnCount, sheetRowCount);
-    const { sheetColumnWidths, sheetHiddenColumns } = getSheetColumnsData(sheet, sheetColumnCount);
-    const { sheetRowHeights, sheetHiddenRows } = getSheetRowsData(sheet, sheetRowCount);
-    const { sheetFreezeRowCount, sheetFreezeColumnCount } = getSheetFreezeHeader(sheet);
-
-    let activeRow;
-    let activeColumn;
-  
-
-  
     let activeCellPosition = { x: activeColumn, y: activeRow };
     const sheetTemplateIdMapping = DEFAULT_SHEET_TEMPLATE_ID_MAPPING;
 

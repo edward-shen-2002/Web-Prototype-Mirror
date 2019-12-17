@@ -31,6 +31,7 @@ export const ROUTE_ADMIN_SECTORS = "/sectors";
 
 export const ROUTE_GROUP_ADMIN_TEMPLATE = `${ROUTE_GROUP_ADMIN}/template_manager`;
 export const ROUTE_ADMIN_TEMPLATES = "/templates";
+export const ROUTE_ADMIN_BUSINESS_CONCEPTS = "/business_concepts";
 
 /** HTTP response status codes */
 //Success codes
