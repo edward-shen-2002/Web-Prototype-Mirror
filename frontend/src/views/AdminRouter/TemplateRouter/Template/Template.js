@@ -33,6 +33,7 @@ let Template = ({
   isAppNavigationOpen, 
   handleHideAppNavigation, 
   match: { params: { _id } }, 
+  history,
   handleExitTemplate, 
   handleLoadTemplate
 }) => {
@@ -51,9 +52,12 @@ let Template = ({
           handleLoadTemplate(convertStateToReactState(fileStates));
           delete template.fileStates;
           setTemplate(template);
+          setIsDataFetched(true);
         })
-        .catch((error) => console.error(error))
-        .finally(() => setIsDataFetched(true));
+        .catch((error) => {
+          console.error(error);
+          history.push(ROUTE_ADMIN_TEMPLATE_TEMPLATES);
+        });
     }
 
     return () => {

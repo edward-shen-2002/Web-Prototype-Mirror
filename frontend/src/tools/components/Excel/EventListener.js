@@ -56,17 +56,19 @@ import {
 const mapStateToProps = ({ 
   ui: { 
     excel: { 
+      activeSheetName,
       activeCellInputData,
       activeCellPosition,
       activeSelectionArea, 
       activeCellSelectionAreaIndex,
       activeCellInputAutoFocus,
-
+      
       rowResizeData,
       columnResizeData,
       freezeRowResizeData,
       freezeColumnResizeData,
-
+      
+      sheetNames,
       cursorType,
       stagnantSelectionAreas,
       scrollData,
@@ -85,21 +87,25 @@ const mapStateToProps = ({
       sheetColumnWidths,
       sheetRowHeights,
       sheetFreezeColumnCount,
-      sheetFreezeRowCount
+      sheetFreezeRowCount,
+      sheetHiddenColumns,
+      sheetHiddenRows
     } 
   } 
 }) => ({ 
+  activeSheetName,
   activeCellInputData,
   activeCellPosition,
   activeSelectionArea, 
   activeCellSelectionAreaIndex,
   activeCellInputAutoFocus,
-
+  
   rowResizeData,
   columnResizeData,
   freezeRowResizeData,
   freezeColumnResizeData,
-
+  
+  sheetNames,
   cursorType,
   stagnantSelectionAreas,
   scrollData,
@@ -112,14 +118,15 @@ const mapStateToProps = ({
   isRowResizeMode,
   isFreezeRowResizeMode,    
 
-  // Active sheet
   sheetCellData,
   sheetRowCount,
   sheetColumnCount,
   sheetColumnWidths,
   sheetRowHeights,
   sheetFreezeColumnCount,
-  sheetFreezeRowCount
+  sheetFreezeRowCount,
+  sheetHiddenColumns,
+  sheetHiddenRows
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -1431,6 +1438,25 @@ class EventRedux extends PureComponent {
     handleUpdateRowResizeData({ row, offset });
     handleUpdateCursorType("ns-resize");
   }
+
+  // saveWorkbook(type, handleSaveWorkbook) {
+  //   const {
+  //     activeSheetName,
+  //     sheetNames,
+  //     activeCellPosition,
+  //     sheetCellData,
+  //     sheetColumnCount,
+  //     sheetColumnWidths,
+  //     sheetFreezeColumnCount,
+  //     sheetRowCount,
+  //     sheetRowHeights,
+  //     sheetFreezeRowCount,
+  //     sheetHiddenColumns,
+  //     sheetHiddenRows
+  //   } = this.props;
+
+  //   if(type === "template") 
+  // }
 
   render() {
     return null;
