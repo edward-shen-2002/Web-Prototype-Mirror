@@ -22,7 +22,8 @@ const mapStateToProps = ({
       sheetRowHeights,
       sheetFreezeRowCount,
       sheetHiddenColumns,
-      sheetHiddenRows
+      sheetHiddenRows,
+      sheetTemplateIdMapping
     }
   }
 }) => ({
@@ -37,7 +38,8 @@ const mapStateToProps = ({
   sheetRowHeights,
   sheetFreezeRowCount,
   sheetHiddenColumns,
-  sheetHiddenRows
+  sheetHiddenRows,
+  sheetTemplateIdMapping
 });
 
 let File = ({ 
@@ -55,6 +57,7 @@ let File = ({
   sheetFreezeRowCount,
   sheetHiddenColumns,
   sheetHiddenRows,
+  sheetTemplateIdMapping,
 
   handleClickMenu, 
   handleHoverMenu,
@@ -78,7 +81,8 @@ let File = ({
           sheetRowHeights,
           sheetFreezeRowCount,
           sheetHiddenColumns,
-          sheetHiddenRows
+          sheetHiddenRows,
+          sheetTemplateIdMapping
         })
     });
     }

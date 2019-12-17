@@ -728,7 +728,8 @@ export const extractReactAndWorkbookState = (state) => {
     sheetRowHeights,
     sheetFreezeRowCount,
     sheetHiddenColumns,
-    sheetHiddenRows
+    sheetHiddenRows,
+    sheetTemplateIdMapping
   } = state;
 
   const workbookData = getWorkbookData(activeSheetName, {
@@ -741,7 +742,8 @@ export const extractReactAndWorkbookState = (state) => {
     sheetRowHeights,
     sheetFreezeRowCount,
     sheetHiddenColumns,
-    sheetHiddenRows
+    sheetHiddenRows,
+    sheetTemplateIdMapping
   });
 
   return {

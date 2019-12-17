@@ -26,6 +26,7 @@ const Title = ({ name, handleUpdateTemplate }) => {
       onBlur={handleBlur} 
       onKeyDown={handleKeyDown} 
       onChange={handleChange}
+      fullWidth
     />
   );
 };

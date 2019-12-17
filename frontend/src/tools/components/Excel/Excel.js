@@ -29,6 +29,7 @@ const Excel = ({
   return (
     <div ref={excelRef} className="excel">
       <AppBar 
+        eventListenerRef={eventListenerRef}
         name={name} 
         type={type}
         returnLink={returnLink} 

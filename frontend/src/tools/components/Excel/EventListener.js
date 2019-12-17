@@ -2,6 +2,8 @@ import React, { PureComponent, useMemo } from "react";
 
 import { connect } from "react-redux";
 
+import pako from "pako";
+
 import { setActiveCellInputAutoFocusOn, setActiveCellInputAutoFocusOff } from "actions/ui/excel/activeCellInputAutoFocus";
 import { updateActiveCellInputData, resetActiveCellInputData } from "actions/ui/excel/activeCellInputData";
 import { updateActiveCellPosition } from "actions/ui/excel/activeCellPosition";
@@ -89,7 +91,8 @@ const mapStateToProps = ({
       sheetFreezeColumnCount,
       sheetFreezeRowCount,
       sheetHiddenColumns,
-      sheetHiddenRows
+      sheetHiddenRows,
+      sheetTemplateIdMapping
     } 
   } 
 }) => ({ 
@@ -126,7 +129,8 @@ const mapStateToProps = ({
   sheetFreezeColumnCount,
   sheetFreezeRowCount,
   sheetHiddenColumns,
-  sheetHiddenRows
+  sheetHiddenRows,
+  sheetTemplateIdMapping
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -1437,6 +1441,69 @@ class EventRedux extends PureComponent {
     handleSetRowResizeModeOn();
     handleUpdateRowResizeData({ row, offset });
     handleUpdateCursorType("ns-resize");
+  }
+
+  importId() {
+    const { sheetCellData, sheetTemplateIdMapping } = this.props;
+
+    let idMap = {};
+
+    let sheets = [ { sheetCellData, sheetTemplateIdMapping } ];
+
+    const currentInactiveSheets = JSON.parse(sessionStorage.getItem("inactiveSheets"));
+
+    for(let sheetName in currentInactiveSheets) sheets.push(JSON.parse(pako.inflate(currentInactiveSheets[sheetName], { to: "string" })));
+
+    sheets.forEach((sheetData, index) => {
+      const { 
+        sheetCellData, 
+        sheetTemplateIdMapping: {
+          idRow,
+          valueRow,
+          isRowEnabled,
+          idColumn,
+          valueColumn,
+          isColumnEnabled
+        }
+      } = sheetData;
+
+      if(isRowEnabled) {
+        let rowIds = sheetCellData[idRow];
+        let rowValues = sheetCellData[valueRow];
+
+        if(rowIds && rowValues) {
+          for(let column in rowIds) {
+            const columnIdData = rowIds[column];
+            const columnValueData = rowValues[column];
+            if(columnIdData && columnValueData) {
+              const { value: id } = columnIdData;
+              const { value } = columnValueData;
+              if(parseInt(id) && value && value !== "undefined") idMap[id] = value;
+            }
+          }
+        }
+      }
+
+      if(isColumnEnabled) {
+        for(let row in sheetCellData) {
+          const rowData = sheetCellData[row];
+          
+          if(rowData) {
+            const rowIdData = rowData[idColumn];
+            const rowValueData = rowData[valueColumn];
+
+            if(rowIdData && rowValueData) {
+              const { value: id } = rowIdData;
+              const { value } = rowValueData;
+
+              if(parseInt(id) && value && value !== "undefined") idMap[id] = value;
+            }
+          }
+        }
+      }
+    });
+
+
   }
 
   // saveWorkbook(type, handleSaveWorkbook) {
