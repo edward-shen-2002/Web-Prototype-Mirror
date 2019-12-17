@@ -37,4 +37,4 @@ const serverSetup = async (app, passport, options = {}) => {
   setupRouteGroups(helpers);
 };
 
-export default serverSetup;/./
+export default serverSetup;
