@@ -1,5 +1,7 @@
 import React, { PureComponent, useMemo } from "react";
 
+import { adminTemplateRoleAxios } from "tools/rest";
+
 import { connect } from "react-redux";
 
 import pako from "pako";
@@ -54,6 +56,8 @@ import {
   DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
   DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER
 } from "constants/excel";
+
+import { REST_ADMIN_BUSINESS_CONCEPTS } from "constants/rest";
 
 const mapStateToProps = ({ 
   ui: { 
@@ -1446,7 +1450,7 @@ class EventRedux extends PureComponent {
   importId() {
     const { sheetCellData, sheetTemplateIdMapping } = this.props;
 
-    let idMap = {};
+    let businessConcepts = {};
 
     let sheets = [ { sheetCellData, sheetTemplateIdMapping } ];
 
@@ -1454,7 +1458,7 @@ class EventRedux extends PureComponent {
 
     for(let sheetName in currentInactiveSheets) sheets.push(JSON.parse(pako.inflate(currentInactiveSheets[sheetName], { to: "string" })));
 
-    sheets.forEach((sheetData, index) => {
+    sheets.forEach((sheetData) => {
       const { 
         sheetCellData, 
         sheetTemplateIdMapping: {
@@ -1478,7 +1482,7 @@ class EventRedux extends PureComponent {
             if(columnIdData && columnValueData) {
               const { value: id } = columnIdData;
               const { value } = columnValueData;
-              if(parseInt(id) && value && value !== "undefined") idMap[id] = value;
+              if(parseInt(id) && value && value !== "undefined") businessConcepts[id] = value;
             }
           }
         }
@@ -1496,34 +1500,21 @@ class EventRedux extends PureComponent {
               const { value: id } = rowIdData;
               const { value } = rowValueData;
 
-              if(parseInt(id) && value && value !== "undefined") idMap[id] = value;
+              if(parseInt(id) && value && value !== "undefined") businessConcepts[id] = value;
             }
           }
         }
       }
     });
 
-
+    adminTemplateRoleAxios.post(`${REST_ADMIN_BUSINESS_CONCEPTS}/import`, { businessConcepts })
+      .then(() => {
+        console.log("Successs")
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
-
-  // saveWorkbook(type, handleSaveWorkbook) {
-  //   const {
-  //     activeSheetName,
-  //     sheetNames,
-  //     activeCellPosition,
-  //     sheetCellData,
-  //     sheetColumnCount,
-  //     sheetColumnWidths,
-  //     sheetFreezeColumnCount,
-  //     sheetRowCount,
-  //     sheetRowHeights,
-  //     sheetFreezeRowCount,
-  //     sheetHiddenColumns,
-  //     sheetHiddenRows
-  //   } = this.props;
-
-  //   if(type === "template") 
-  // }
 
   render() {
     return null;

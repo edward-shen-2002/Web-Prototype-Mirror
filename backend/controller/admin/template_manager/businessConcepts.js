@@ -1,4 +1,4 @@
-import { ROUTE_ADMIN_BUSINESS_CONCEPTS } from "../../../constants/rest";
+import { ROUTE_ADMIN_BUSINESS_CONCEPTS, ROUTE_GROUP_ADMIN_TEMPLATE } from "../../../constants/rest";
 
 import { 
   MESSAGE_SUCCESS_BUSINESS_CONCEPTS,
@@ -8,7 +8,7 @@ import {
   MESSAGE_SUCCESS_BUSINESS_CONCEPTS_TEMPLATE 
 } from "../../../constants/messages";
 
-const businessConcepts = ({ router, BusinessConceptsModel }) => {
+const businessConcepts = ({ router, BusinessConceptModel }) => {
   router.get(ROUTE_ADMIN_BUSINESS_CONCEPTS, (req, res, next) => {
     BusinessConceptModel.find({})
       .then((businessConcepts) => {
@@ -29,10 +29,29 @@ const businessConcepts = ({ router, BusinessConceptsModel }) => {
     res.end();
   });
 
+  // https://docs.mongodb.com/manual/reference/operator/update/addToSet/
+  // ! Currently overwrites the values of ids
   router.post(`${ROUTE_ADMIN_BUSINESS_CONCEPTS}/import`, (req, res, next) => {
     const { businessConcepts } = req.body;
 
-    // BusinessConceptsModel
+    let operations = [];
+
+    for(let id in businessConcepts) {
+      const value = businessConcepts[id];
+      operations.push({
+        updateOne: {
+          filter: { id },
+          update: { id, value },
+          upsert: true
+        }
+      });
+    }
+
+    BusinessConceptModel.bulkWrite(operations)
+      .then(() => {
+        res.json({ message: MESSAGE_SUCCESS_BUSINESS_CONCEPTS_UPDATE });
+      })
+      .catch(next);
   });
 };
 

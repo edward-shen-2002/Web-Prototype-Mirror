@@ -31,6 +31,7 @@ export const REST_ADMIN_SECTORS = "/sectors";
 
 export const REST_GROUP_ADMIN_TEMPLATE = `${REST_GROUP_ADMIN}/template_manager`;
 export const REST_ADMIN_TEMPLATES = "/templates";
+export const REST_ADMIN_BUSINESS_CONCEPTS = "/business_concepts";
 
 // HTTP error codes
 export const HTTP_ERROR_INVALID_TOKEN = 401;

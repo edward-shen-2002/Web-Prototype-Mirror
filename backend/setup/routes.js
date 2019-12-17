@@ -31,6 +31,7 @@ import registrationController from "../controller/admin/user_manager/registratio
 import organizationController from "../controller/admin/organization_manager/organizations";
 import sectorController from "../controller/admin/sector_manager/sectors";
 import templateController from "../controller/admin/template_manager/templates";
+import businessConceptController from "../controller/admin/template_manager/businessConcepts";
 
 import { ROUTE_GROUP_PUBLIC, ROUTE_GROUP_AUTH, ROUTE_GROUP_ADMIN, ROUTE_GROUP_ADMIN_USER, ROUTE_GROUP_VERIFICATION, ROUTE_GROUP_ADMIN_ORGANIZATION, ROUTE_GROUP_ADMIN_SECTOR, ROUTE_GROUP_ADMIN_TEMPLATE } from "../constants/rest";
 
@@ -123,7 +124,8 @@ const templateRoleRoutes = (helpers) => {
 
   router.use(templateRoleMiddleware());
 
-  templateController({ ...helpers, router });  
+  templateController({ ...helpers, router }); 
+  businessConceptController({ ...helpers, router }); 
 
   return router;
 };
