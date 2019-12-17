@@ -25,6 +25,7 @@ export const ROUTE_ADMIN_USER_REGISTRATIONS = `${ROUTE_ADMIN_USER}/registrations
 export const ROUTE_ADMIN_TEMPLATE = `${ROUTE_ADMIN_ROOT}/template_manager`;
 export const ROUTE_ADMIN_TEMPLATE_TEMPLATES = `${ROUTE_ADMIN_TEMPLATE}/templates`;
 export const ROUTE_ADMIN_TEMPLATE_TEMPLATE = `${ROUTE_ADMIN_TEMPLATE_TEMPLATES}/:_id`;
+export const ROUTE_ADMIN_TEMPLATE_BUSINESS_CONCEPTS = `${ROUTE_ADMIN_TEMPLATE}/business_concepts`;
 
 export const ROUTE_ADMIN_PACKAGE = `${ROUTE_ADMIN_ROOT}/package_manager`;
 export const ROUTE_ADMIN_PACKAGE_PACKAGES = `${ROUTE_ADMIN_PACKAGE}/packages`;

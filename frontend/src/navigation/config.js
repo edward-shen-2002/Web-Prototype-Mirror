@@ -14,7 +14,8 @@ import {
 
   ROUTE_ADMIN_SECTOR_SECTORS,
 
-  ROUTE_ADMIN_TEMPLATE_TEMPLATES
+  ROUTE_ADMIN_TEMPLATE_TEMPLATES,
+  ROUTE_ADMIN_TEMPLATE_BUSINESS_CONCEPTS
 } from "constants/routes";
 
 import { ROLE_LEVEL_NOT_APPLICABLE } from "constants/roles";
@@ -24,7 +25,8 @@ const roleNavMap = {
     name: "Templates",
     icon: "mdi mdi-note-multiple",
     children: [
-      { name: "Templates", url: ROUTE_ADMIN_TEMPLATE_TEMPLATES, icon: "mdi mdi-table-large" }
+      { name: "Templates", url: ROUTE_ADMIN_TEMPLATE_TEMPLATES, icon: "mdi mdi-table-large" },
+      { name: "Business Concepts", url: ROUTE_ADMIN_TEMPLATE_BUSINESS_CONCEPTS, icon: "mdi mdi-buffer" }
     ]
   },
   PACKAGE_MANAGER: {
