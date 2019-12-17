@@ -59,12 +59,13 @@ const mapStateToProps = ({
 let TemplateOptions = ({ templateData: { published }, handleUpdateTemplate }) => {
   const handleToggleTemplatePublish = () => handleUpdateTemplate({ published: !published });
 
-  const importIDStyle = { marginRight: 5 };
+  const importIDStyle = { marginRight: 8, minWidth: 140 };
+  const publishStyle = { minWidth: 140 };
 
   return (
     <div>
       <PlaylistAddIconButton buttonStyle={importIDStyle} text="Import IDs"/>
-      <DoubleArrowIconButton text={published ? "Unpublish" : "Publish"} handleClick={handleToggleTemplatePublish}/>
+      <DoubleArrowIconButton buttonStyle={publishStyle} text={published ? "Unpublish" : "Publish"} handleClick={handleToggleTemplatePublish}/>
     </div>
   );
 };
