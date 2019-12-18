@@ -31,7 +31,7 @@ const HierchyEntitiesListItems = ({ entities, handleAddEntity }) => entities.map
 });
 
 const EntitiesList = ({ entities, handleAddEntity }) => (
-  <List>
+  <List className="allEntitiesContent__items">
     <HierchyEntitiesListItems entities={entities} handleAddEntity={handleAddEntity}/>
   </List>
 );
@@ -64,7 +64,7 @@ const UserEntititesListItems = ({ userEntities, handleDeleteUserEntity }) => use
 });
 
 const UserEntitiesList = ({ userEntities, handleDeleteUserEntity }) => (
-  <List>
+  <List className="userEntitiesContent__items">
     <UserEntititesListItems userEntities={userEntities} handleDeleteUserEntity={handleDeleteUserEntity}/>
   </List>
 );
