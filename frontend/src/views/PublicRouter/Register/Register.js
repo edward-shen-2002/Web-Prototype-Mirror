@@ -19,7 +19,7 @@ import Button from "@material-ui/core/Button";
 import Slide from "@material-ui/core/Slide";
 
 import RolesDialog from "tools/components/RolesDialog";
-import HierarchyEntititesDialog from "tools/components/HierarchyEntitiesDialog";
+import EntitiesDialog from "tools/components/EntitiesDialog";
 
 import * as yup from "yup";
 
@@ -252,7 +252,7 @@ const RegisterFormContainer = (props) => {
     <div>
       <RegisterForm handleOpenRolesDialog={handleOpenRolesDialog} handleOpenOrganizationsDialog={handleOpenOrganizationsDialog} {...props}/>
       <RolesDialog open={isRolesDialogOpen} userRoles={roles} handleClose={handleCloseRolesDialog} handleChangeRoleScope={handleChangeRoleScope} handleAddRoleEntity={handleAddRoleEntity} handleDeleteRoleEntity={handleDeleteRoleEntity}/>
-      <HierarchyEntititesDialog
+      <EntitiesDialog
          open={isOrganizationsDialogOpen}
          userEntities={userOrganizations} 
          entities={organizations} 

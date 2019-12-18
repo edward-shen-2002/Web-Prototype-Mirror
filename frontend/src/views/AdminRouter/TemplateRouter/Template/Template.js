@@ -46,7 +46,7 @@ let Template = ({
   useEffect(() => {
     if(!isDataFetched) {
       adminTemplateRoleAxios.get(`${REST_ADMIN_TEMPLATES}/${_id}`)
-        .then(async ({ data: { data: { template } } }) => {
+        .then(({ data: { data: { template } } }) => {
           let { fileStates } = template;
 
           handleLoadTemplate(convertStateToReactState(fileStates));

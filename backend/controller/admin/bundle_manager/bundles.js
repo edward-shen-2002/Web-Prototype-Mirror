@@ -4,7 +4,8 @@ import {
   MESSAGE_SUCCESS_BUNDLES,
   MESSAGE_SUCCESS_BUNDLES_CREATE,
   MESSAGE_SUCCESS_BUNDLES_UPDATE, 
-  MESSAGE_SUCCESS_BUNDLES_DELETE
+  MESSAGE_SUCCESS_BUNDLES_DELETE,
+  MESSAGE_SUCCESS_BUNDLES_BUNDLE
 } from "../../../constants/messages";
 
 import uniqid from "uniqid";
@@ -19,7 +20,9 @@ const bundles = ({ router, BundleModel }) => {
   });
   
   router.post(ROUTE_ADMIN_BUNDLES, (req, res, next) => {
-    const { newBundle } = req.body;
+    let { newBundle } = req.body;
+
+    if(!newBundle) newBundle = { name: uniqid() };
 
     BundleModel.create(newBundle)
       .then((bundle) => {
@@ -43,6 +46,16 @@ const bundles = ({ router, BundleModel }) => {
 
     BundleModel.findByIdAndRemove(_id)
       .then(() => res.json({ message: MESSAGE_SUCCESS_BUNDLES_DELETE }))
+      .catch(next);
+  });
+
+  router.get(`${ROUTE_ADMIN_BUNDLES}/:_id`, (req, res, next) => {
+    const { _id } = req.params;
+
+    BundleModel.findById(_id)
+      .then((bundle) => {
+        res.json({ message: MESSAGE_SUCCESS_BUNDLES_BUNDLE, data: { bundle } });
+      })
       .catch(next);
   });
 

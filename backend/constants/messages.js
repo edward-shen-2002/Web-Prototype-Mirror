@@ -54,3 +54,4 @@ export const MESSAGE_SUCCESS_BUNDLES = "Successfully fetched bundles";
 export const MESSAGE_SUCCESS_BUNDLES_CREATE = "Successfully created bundles";
 export const MESSAGE_SUCCESS_BUNDLES_UPDATE = "Successfully updated bundles";
 export const MESSAGE_SUCCESS_BUNDLES_DELETE = "Successfully deleted bundles";
+export const MESSAGE_SUCCESS_BUNDLES_BUNDLE = "Successfully fetched bundle";

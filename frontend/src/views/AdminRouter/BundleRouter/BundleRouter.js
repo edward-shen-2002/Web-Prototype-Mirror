@@ -12,7 +12,7 @@ import NotFound from "tools/components/NotFound";
 const BundleRouter = () => (
   <Switch>
     <Route exact path={ROUTE_ADMIN_BUNDLE_BUNDLES} component={Bundles}/>
-    <Route exact path={`${ROUTE_ADMIN_BUNDLE_BUNDLES}/_id`} component={Bundle}/>
+    <Route exact path={`${ROUTE_ADMIN_BUNDLE_BUNDLES}/:_id`} component={Bundle}/>
     <Route component={NotFound}/>
   </Switch>
 );

@@ -16,7 +16,7 @@ import Button from "@material-ui/core/Button";
 
 import { DeleteButton } from "tools/components/buttons";
 
-import "./HierarchyEntitiesDialog.scss";
+import "./EntitiesDialog.scss";
 
 const HierchyEntitiesListItems = ({ entities, handleAddEntity }) => entities.map((entity) => {
   const { name } = entity;
@@ -30,27 +30,27 @@ const HierchyEntitiesListItems = ({ entities, handleAddEntity }) => entities.map
   )
 });
 
-const HierarchyEntitiesList = ({ entities, handleAddEntity }) => (
+const EntitiesList = ({ entities, handleAddEntity }) => (
   <List>
     <HierchyEntitiesListItems entities={entities} handleAddEntity={handleAddEntity}/>
   </List>
 );
 
-const AllHierarchyEntitiesDialogContent = ({ entities, title, searchPlaceholder, handleQueryChange, handleAddEntity }) => (
-  <div className="allHierarchyEntitiesContent">
-    <h5 className="allHierarchyEntitiesContent__header">{title}</h5>
+const AllEntitiesDialogContent = ({ entities, title, searchPlaceholder, handleQueryChange, handleAddEntity }) => (
+  <div className="allEntitiesContent">
+    <h5 className="allEntitiesContent__header">{title}</h5>
     <TextField label={searchPlaceholder} type="search" onChange={handleQueryChange} variant="outlined" fullWidth/>
-    <HierarchyEntitiesList entities={entities} handleAddEntity={handleAddEntity}/>
+    <EntitiesList entities={entities} handleAddEntity={handleAddEntity}/>
   </div>
 );
 
-const UserHierarchyEntitiesListItemActions = ({ handleDeleteUserEntity }) => (
+const UserEntitiesListItemActions = ({ handleDeleteUserEntity }) => (
   <ListItemSecondaryAction>
     <DeleteButton handleDelete={handleDeleteUserEntity}/>
   </ListItemSecondaryAction>
 );
 
-const UserHierarchyEntititesListItems = ({ userEntities, handleDeleteUserEntity }) => userEntities.map((userEntity) => {
+const UserEntititesListItems = ({ userEntities, handleDeleteUserEntity }) => userEntities.map((userEntity) => {
   const { name } = userEntity;
 
   const handleDeleteUserEntityItem = () => handleDeleteUserEntity(userEntity);
@@ -58,26 +58,26 @@ const UserHierarchyEntititesListItems = ({ userEntities, handleDeleteUserEntity 
   return (
     <ListItem key={uniqid()} button>
       <ListItemText primary={name}/>
-      <UserHierarchyEntitiesListItemActions handleDeleteUserEntity={handleDeleteUserEntityItem}/>
+      <UserEntitiesListItemActions handleDeleteUserEntity={handleDeleteUserEntityItem}/>
     </ListItem>
   );
 });
 
-const UserHierarchyEntitiesList = ({ userEntities, handleDeleteUserEntity }) => (
+const UserEntitiesList = ({ userEntities, handleDeleteUserEntity }) => (
   <List>
-    <UserHierarchyEntititesListItems userEntities={userEntities} handleDeleteUserEntity={handleDeleteUserEntity}/>
+    <UserEntititesListItems userEntities={userEntities} handleDeleteUserEntity={handleDeleteUserEntity}/>
   </List>
 );
 
-const UserHierarchyEntitiesDialogContent = ({ userEntities, title, searchPlaceholder, handleQueryChange, handleDeleteUserEntity }) => (
-  <div className="userHierarchyEntitiesContent">
-    <h5 className="userHierarchyEntitiesContent__header">{title}</h5>
+const UserEntitiesDialogContent = ({ userEntities, title, searchPlaceholder, handleQueryChange, handleDeleteUserEntity }) => (
+  <div className="userEntitiesContent">
+    <h5 className="userEntitiesContent__header">{title}</h5>
     <TextField label={searchPlaceholder} type="search" onChange={handleQueryChange} variant="outlined" autoFocus fullWidth/>
-    <UserHierarchyEntitiesList userEntities={userEntities} handleDeleteUserEntity={handleDeleteUserEntity}/>
+    <UserEntitiesList userEntities={userEntities} handleDeleteUserEntity={handleDeleteUserEntity}/>
   </div>
 );
 
-const HierarchyEntitiesDialogContent = ({ userEntities, entities, userTitle, allTitle, userSearchPlaceholder, allSearchPlaceholder, handleAddEntity, handleDeleteUserEntity }) => {
+const EntitiesDialogContent = ({ userEntities, entities, userTitle, allTitle, userSearchPlaceholder, allSearchPlaceholder, handleAddEntity, handleDeleteUserEntity }) => {
   const [ userEntitiesQuery, setUserEntitiesQuery ] = useState("");
   const [ entitiesQuery, setEntitiesQuery ] = useState("");
 
@@ -88,24 +88,24 @@ const HierarchyEntitiesDialogContent = ({ userEntities, entities, userTitle, all
   const handleUserEntityQueryChange = ({ target: { value } }) => setUserEntitiesQuery(value);
 
   return (
-    <DialogContent className="hierchyEntitiesContent">
-      <UserHierarchyEntitiesDialogContent userEntities={filteredUserEntities} title={userTitle} searchPlaceholder={userSearchPlaceholder} handleQueryChange={handleUserEntityQueryChange} handleDeleteUserEntity={handleDeleteUserEntity}/>
+    <DialogContent className="entitiesContent">
+      <UserEntitiesDialogContent userEntities={filteredUserEntities} title={userTitle} searchPlaceholder={userSearchPlaceholder} handleQueryChange={handleUserEntityQueryChange} handleDeleteUserEntity={handleDeleteUserEntity}/>
       <div className="verticalSeparator"></div>
-      <AllHierarchyEntitiesDialogContent entities={filteredEntities} title={allTitle} searchPlaceholder={allSearchPlaceholder} handleQueryChange={handleEntityQueryChange} handleAddEntity={handleAddEntity}/>
+      <AllEntitiesDialogContent entities={filteredEntities} title={allTitle} searchPlaceholder={allSearchPlaceholder} handleQueryChange={handleEntityQueryChange} handleAddEntity={handleAddEntity}/>
     </DialogContent>
   );
 };
 
-const HierarchyEntitiesDialogActions = ({ handleClose }) => (
+const EntitiesDialogActions = ({ handleClose }) => (
   <DialogActions>
     <Button onClick={handleClose}>Close</Button>
   </DialogActions>
 );
 
-const HierarchyEntitiesDialog = ({ open, userEntities, entities, title, userTitle, allTitle, userSearchPlaceholder, allSearchPlaceholder, handleClose, handleAddEntity, handleDeleteUserEntity }) => (
+const EntitiesDialog = ({ open, userEntities, entities, title, userTitle, allTitle, userSearchPlaceholder, allSearchPlaceholder, handleClose, handleAddEntity, handleDeleteUserEntity }) => (
   <Dialog open={open} onClose={handleClose}>
     <DialogTitle>{title}</DialogTitle>
-    <HierarchyEntitiesDialogContent 
+    <EntitiesDialogContent 
       userEntities={userEntities} 
       entities={entities} 
       userTitle={userTitle} 
@@ -115,8 +115,8 @@ const HierarchyEntitiesDialog = ({ open, userEntities, entities, title, userTitl
       handleAddEntity={handleAddEntity} 
       handleDeleteUserEntity={handleDeleteUserEntity}
     />
-    <HierarchyEntitiesDialogActions handleClose={handleClose}/>
+    <EntitiesDialogActions handleClose={handleClose}/>
   </Dialog>
 );
 
-export default HierarchyEntitiesDialog;
+export default EntitiesDialog;

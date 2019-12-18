@@ -10,7 +10,7 @@ import EnhancedEncryptionIcon from "@material-ui/icons/EnhancedEncryption";
 
 import RolesDialog from "tools/components/RolesDialog";
 
-import HierarchyEntitiesDialog from "tools/components/HierarchyEntitiesDialog";
+import EntitiesDialog from "tools/components/EntitiesDialog";
 
 const MaterialTable = lazy(() => import("material-table"));
 
@@ -261,7 +261,7 @@ const Users = () => {
         editable={editable} 
         options={options}
       />
-      <HierarchyEntitiesDialog
+      <EntitiesDialog
         open={isOrganizationsDialogOpen}
         userEntities={userOrganizations} 
         entities={organizations} 

@@ -22,7 +22,7 @@ import SignalCellularAltIcon from "@material-ui/icons/SignalCellularAlt";
 
 import Select from "react-select";
 
-import HierarchyEntitiesDialog from "tools/components/HierarchyEntitiesDialog";
+import EntitiesDialog from "tools/components/EntitiesDialog";
 
 import { ROLE_SCOPES } from "constants/roles";
 
@@ -170,7 +170,7 @@ const RolesDialogContent = ({ userRoles, handleChangeRoleScope, handleAddRoleEnt
   return (
     <DialogContent className="rolesContent">
       <RolesList userRoles={userRoles} handleOpenEntityDialog={handleOpenEntityDialog} handleChangeRoleScope={handleChangeRoleScope}/>
-      <HierarchyEntitiesDialog 
+      <EntitiesDialog 
         open={isEntityDialogOpen}
         title={title}
         userTitle={userTitle}
