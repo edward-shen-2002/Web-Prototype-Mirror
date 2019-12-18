@@ -22,7 +22,7 @@
     "font-awesome": "^4.7.0",
     "formik": "^1.5.4",
     "jquery": "^3.4.1",
-    "material-table": "^1.52.0",
+    "material-table": "^1.54.2",
     "mdi-material-ui": "^6.8.0",
     "memoize-one": "^5.1.1",
     "pako": "^1.0.10",

@@ -1,11 +1,10 @@
-import { ROUTE_ADMIN_BUSINESS_CONCEPTS, ROUTE_GROUP_ADMIN_TEMPLATE } from "../../../constants/rest";
+import { ROUTE_ADMIN_BUSINESS_CONCEPTS } from "../../../constants/rest";
 
 import { 
   MESSAGE_SUCCESS_BUSINESS_CONCEPTS,
   MESSAGE_SUCCESS_BUSINESS_CONCEPTS_CREATE,
   MESSAGE_SUCCESS_BUSINESS_CONCEPTS_UPDATE, 
-  MESSAGE_SUCCESS_BUSINESS_CONCEPTS_DELETE,
-  MESSAGE_SUCCESS_BUSINESS_CONCEPTS_TEMPLATE 
+  MESSAGE_SUCCESS_BUSINESS_CONCEPTS_DELETE
 } from "../../../constants/messages";
 
 const businessConcepts = ({ router, BusinessConceptModel }) => {
@@ -18,15 +17,31 @@ const businessConcepts = ({ router, BusinessConceptModel }) => {
   });
   
   router.post(ROUTE_ADMIN_BUSINESS_CONCEPTS, (req, res, next) => {
-    res.end();
+    const { newBusinessConcept } = req.body;
+
+    BusinessConceptModel.create(newBusinessConcept)
+      .then((businessConcept) => {
+        res.json({ message: MESSAGE_SUCCESS_BUSINESS_CONCEPTS_CREATE, data: { businessConcept } });
+      })
+      .catch(next);
   });
   
   router.put(ROUTE_ADMIN_BUSINESS_CONCEPTS, (req, res, next) => {
-    res.end();
+    const { newBusinessConcept } = req.body;
+
+    const { _id } = newBusinessConcept;
+
+    BusinessConceptModel.findByIdAndUpdate(_id, newBusinessConcept)
+      .then(() => res.json({ message: MESSAGE_SUCCESS_BUSINESS_CONCEPTS_UPDATE }))
+      .catch(next);
   });
 
-  router.delete(ROUTE_ADMIN_BUSINESS_CONCEPTS, (req, res, next) => {
-    res.end();
+  router.delete(`${ROUTE_ADMIN_BUSINESS_CONCEPTS}/:_id`, (req, res, next) => {
+    const { _id } = req.params;
+
+    BusinessConceptModel.findByIdAndRemove(_id)
+      .then(() => res.json({ message: MESSAGE_SUCCESS_BUSINESS_CONCEPTS_DELETE }))
+      .catch(next);
   });
 
   // https://docs.mongodb.com/manual/reference/operator/update/addToSet/
