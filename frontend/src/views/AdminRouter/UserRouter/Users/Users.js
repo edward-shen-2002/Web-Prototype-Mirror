@@ -269,7 +269,7 @@ const Users = () => {
         userTitle="Current Organizations"
         allTitle="Add User Organization"
         userSearchPlaceholder="Search User Organizations..."
-        allSearchPlaceHolder="Search organizations..."
+        allSearchPlaceholder="Search organizations..."
         handleClose={handleCloseOrganizationsDialog} 
         handleAddEntity={handleAddOrganization} 
         handleDeleteUserEntity={handleDeleteUserOrganization}
