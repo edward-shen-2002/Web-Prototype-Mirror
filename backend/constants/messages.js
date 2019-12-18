@@ -28,7 +28,10 @@ export const MESSAGE_SUCCESS_USERS_CREATE = "Successfully created user";
 export const MESSAGE_SUCCESS_APPROVE = "Successfully approved user";
 
 export const MESSAGE_SUCCESS_ORGANIZATIONS = "Successfully fetched organizations";
-export const MESSAGE_SUCCESS_ORGANIZATIONS_CREATE = "Successfully created sector";
+export const MESSAGE_SUCCESS_ORGANIZATIONS_CREATE = "Successfully created organization";
+export const MESSAGE_SUCCESS_ORGANIZATIONS_UPDATE = "Successfully updated organization";
+export const MESSAGE_SUCCESS_ORGANIZATIONS_DELETE = "Successfully deleted organization";
+
 
 export const MESSAGE_SUCCESS_SECTORS = "Successfully fetched sectors";
 export const MESSAGE_SUCCESS_SECTORS_CREATE = "Successfully created sector";
