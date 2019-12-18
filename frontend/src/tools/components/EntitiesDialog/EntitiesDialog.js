@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 
 import uniqid from "uniqid";
 
@@ -36,13 +36,19 @@ const EntitiesList = ({ entities, handleAddEntity }) => (
   </List>
 );
 
-const AllEntitiesDialogContent = ({ entities, title, searchPlaceholder, handleQueryChange, handleAddEntity }) => (
-  <div className="allEntitiesContent">
-    <h5 className="allEntitiesContent__header">{title}</h5>
-    <TextField label={searchPlaceholder} type="search" onChange={handleQueryChange} variant="outlined" fullWidth/>
-    <EntitiesList entities={entities} handleAddEntity={handleAddEntity}/>
-  </div>
-);
+const AllEntitiesDialogContent = ({ entities, title, searchPlaceholder, handleAddEntity }) => {
+  const [ entitiesQuery, setEntitiesQuery ] = useState("");
+  let filteredEntities = entities.filter(({ name }) => name.toLowerCase().includes(entitiesQuery.toLowerCase()));
+  const handleEntityQueryChange = ({ target: { value } }) => setEntitiesQuery(value);
+
+  return (
+    <div className="allEntitiesContent">
+      <h5 className="allEntitiesContent__header">{title}</h5>
+      <TextField label={searchPlaceholder} type="search" onChange={handleEntityQueryChange} variant="outlined" fullWidth/>
+      <EntitiesList entities={filteredEntities} handleAddEntity={handleAddEntity}/>
+    </div>
+  );
+};
 
 const UserEntitiesListItemActions = ({ handleDeleteUserEntity }) => (
   <ListItemSecondaryAction>
@@ -69,32 +75,42 @@ const UserEntitiesList = ({ userEntities, handleDeleteUserEntity }) => (
   </List>
 );
 
-const UserEntitiesDialogContent = ({ userEntities, title, searchPlaceholder, handleQueryChange, handleDeleteUserEntity }) => (
-  <div className="userEntitiesContent">
-    <h5 className="userEntitiesContent__header">{title}</h5>
-    <TextField label={searchPlaceholder} type="search" onChange={handleQueryChange} variant="outlined" autoFocus fullWidth/>
-    <UserEntitiesList userEntities={userEntities} handleDeleteUserEntity={handleDeleteUserEntity}/>
-  </div>
-);
-
-const EntitiesDialogContent = ({ userEntities, entities, userTitle, allTitle, userSearchPlaceholder, allSearchPlaceholder, handleAddEntity, handleDeleteUserEntity }) => {
+const UserEntitiesDialogContent = ({ userEntities, title, searchPlaceholder, handleDeleteUserEntity }) => {
   const [ userEntitiesQuery, setUserEntitiesQuery ] = useState("");
-  const [ entitiesQuery, setEntitiesQuery ] = useState("");
-
   let filteredUserEntities = userEntities.filter(({ name }) => name.toLowerCase().includes(userEntitiesQuery.toLowerCase()));
-  let filteredEntities = entities.filter(({ name }) => name.toLowerCase().includes(entitiesQuery.toLowerCase()));
-
-  const handleEntityQueryChange = ({ target: { value } }) => setEntitiesQuery(value);
   const handleUserEntityQueryChange = ({ target: { value } }) => setUserEntitiesQuery(value);
 
   return (
-    <DialogContent className="entitiesContent">
-      <UserEntitiesDialogContent userEntities={filteredUserEntities} title={userTitle} searchPlaceholder={userSearchPlaceholder} handleQueryChange={handleUserEntityQueryChange} handleDeleteUserEntity={handleDeleteUserEntity}/>
-      <div className="verticalSeparator"></div>
-      <AllEntitiesDialogContent entities={filteredEntities} title={allTitle} searchPlaceholder={allSearchPlaceholder} handleQueryChange={handleEntityQueryChange} handleAddEntity={handleAddEntity}/>
-    </DialogContent>
+    <div className="userEntitiesContent">
+      <h5 className="userEntitiesContent__header">{title}</h5>
+      <TextField label={searchPlaceholder} type="search" onChange={handleUserEntityQueryChange} variant="outlined" autoFocus fullWidth/>
+      <UserEntitiesList userEntities={filteredUserEntities} handleDeleteUserEntity={handleDeleteUserEntity}/>
+    </div>
   );
 };
+
+export const EntitiesContent = ({
+  userEntities, 
+  entities, 
+  userTitle, 
+  allTitle, 
+  userSearchPlaceholder, 
+  allSearchPlaceholder, 
+  handleAddEntity, 
+  handleDeleteUserEntity
+}) => (
+  <Fragment>
+    <UserEntitiesDialogContent userEntities={userEntities} title={userTitle} searchPlaceholder={userSearchPlaceholder} handleDeleteUserEntity={handleDeleteUserEntity}/>
+    <div className="verticalSeparator"/>
+    <AllEntitiesDialogContent entities={entities} title={allTitle} searchPlaceholder={allSearchPlaceholder} handleAddEntity={handleAddEntity}/>
+  </Fragment>
+);
+
+const EntitiesDialogContent = (props) => (
+  <DialogContent className="entitiesContent">
+    <EntitiesContent {...props}/>
+  </DialogContent>
+);
 
 const EntitiesDialogActions = ({ handleClose }) => (
   <DialogActions>
