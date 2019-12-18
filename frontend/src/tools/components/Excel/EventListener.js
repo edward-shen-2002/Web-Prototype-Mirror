@@ -851,8 +851,10 @@ class EventRedux extends PureComponent {
     this.setInputAutoFocusOn();
   }
 
+  // TODO : Consider no stagnant selection area
   clickRowHeader(row, ctrlKey) {
     const {
+      activeCellPosition,
       sheetColumnCount,
       activeCellSelectionAreaIndex,
       stagnantSelectionAreas,
@@ -866,9 +868,18 @@ class EventRedux extends PureComponent {
 
     const rowArea = { x1: 1, y1: row, x2: sheetColumnCount - 1, y2: row };
 
+    
     if(ctrlKey) {
+      const { x, y } = activeCellPosition;
+
+      let newStagnantSelectionAreas = stagnantSelectionAreas.length 
+        ? [ ...stagnantSelectionAreas ]
+        : [ { x1: x, x2: x, y1: y, y2: y } ]; 
+
+      newStagnantSelectionAreas.push(rowArea);
+
       handleUpdateActiveCellSelectionAreaIndex(activeCellSelectionAreaIndex + 1);
-      handleUpdateStagnantSelectionAreas([ ...stagnantSelectionAreas, rowArea ]);
+      handleUpdateStagnantSelectionAreas(newStagnantSelectionAreas);
     } else {
       handleUpdateActiveCellSelectionAreaIndex(0);
       handleUpdateStagnantSelectionAreas([ rowArea ]);
@@ -877,6 +888,7 @@ class EventRedux extends PureComponent {
 
   clickColumnHeader(column, ctrlKey) {
     const {
+      activeCellPosition,
       sheetRowCount,
       activeCellSelectionAreaIndex,
       stagnantSelectionAreas,
@@ -891,8 +903,15 @@ class EventRedux extends PureComponent {
     const columnArea = { x1: column, y1: 1, x2: column, y2: sheetRowCount - 1 };
 
     if(ctrlKey) {
+      const { x, y } = activeCellPosition;
+
+      let newStagnantSelectionAreas = stagnantSelectionAreas.length 
+        ? [ ...stagnantSelectionAreas ]
+        : [ { x1: x, x2: x, y1: y, y2: y } ]; 
+        newStagnantSelectionAreas.push(columnArea);
+
       handleUpdateActiveCellSelectionAreaIndex(activeCellSelectionAreaIndex + 1);
-      handleUpdateStagnantSelectionAreas([ ...stagnantSelectionAreas, columnArea ]);
+      handleUpdateStagnantSelectionAreas(newStagnantSelectionAreas);
     } else {
       handleUpdateActiveCellSelectionAreaIndex(0);
       handleUpdateStagnantSelectionAreas([ columnArea ]);
@@ -922,8 +941,6 @@ class EventRedux extends PureComponent {
     if(event) event.preventDefault();
 
     this.saveActiveCellInputData();
-
-    this.updateActiveCellPosition(1, 1);
 
     handleUpdateActiveCellSelectionAreaIndex(0);
     handleUpdateStagnantSelectionAreas([ { x1: 1, y1: 1, x2: sheetColumnCount - 1, y2: sheetRowCount - 1 } ]);
@@ -1232,7 +1249,7 @@ class EventRedux extends PureComponent {
       handleUpdateActiveCellSelectionAreaIndex(newActiveCellSelectionAreaIndex);
     }
 
-    this.updateActiveCellPosition(y1, x1);
+    this.updateActiveCellPosition(y1, x1, false);
   }
 
   selectOver(x2, y2, ctrlKey) {
@@ -1301,7 +1318,7 @@ class EventRedux extends PureComponent {
     handleResetActiveCellInputData();
   }
 
-  updateActiveCellPosition(newY, newX) {
+  updateActiveCellPosition(newY, newX, shouldScroll = true) {
     const { 
       sheetCellData, 
 
@@ -1317,7 +1334,7 @@ class EventRedux extends PureComponent {
 
     handleUpdateActiveCellPosition({ x: newX, y: newY });
 
-    this._scrollTo(newY, newX);
+    if(shouldScroll) this._scrollTo(newY, newX);
   }
 
   _scrollTo(newY, newX) {

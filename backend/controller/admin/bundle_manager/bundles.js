@@ -7,6 +7,8 @@ import {
   MESSAGE_SUCCESS_BUNDLES_DELETE
 } from "../../../constants/messages";
 
+import uniqid from "uniqid";
+
 const bundles = ({ router, BundleModel }) => {
   router.get(ROUTE_ADMIN_BUNDLES, (req, res, next) => {
     BundleModel.find({})
