@@ -22,7 +22,11 @@ const bundles = ({ router, BundleModel }) => {
   router.post(ROUTE_ADMIN_BUNDLES, (req, res, next) => {
     let { newBundle } = req.body;
 
-    if(!newBundle) newBundle = { name: uniqid() };
+    if(!newBundle) newBundle = { 
+      name: uniqid(),
+      quarter: "Q1",
+      year: 2019
+    };
 
     BundleModel.create(newBundle)
       .then((bundle) => {

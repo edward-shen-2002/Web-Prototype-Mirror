@@ -1,0 +1,32 @@
+.bundlePage {
+  margin: 20px;
+  padding: 20px;
+  width: 100%;
+
+  &__title {
+    margin-bottom: 20px;
+  }
+}
+
+.field {
+  margin-top: 20px;
+  display: flex;
+
+  &__input {
+    margin: auto 0;
+  }
+
+  &__label {
+    margin: auto 0;
+    margin-right: 15px;
+
+    min-width: 150px;
+
+    border: 2px solid #907AD6;
+    background-color: #907AD6;
+    border-radius: 3px;
+
+    padding: 5px 10px;
+    color: white;
+  }
+}

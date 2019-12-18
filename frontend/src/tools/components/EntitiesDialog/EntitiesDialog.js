@@ -99,15 +99,15 @@ export const EntitiesContent = ({
   handleAddEntity, 
   handleDeleteUserEntity
 }) => (
-  <Fragment>
+  <div className="entitiesContent">
     <UserEntitiesDialogContent userEntities={userEntities} title={userTitle} searchPlaceholder={userSearchPlaceholder} handleDeleteUserEntity={handleDeleteUserEntity}/>
     <div className="verticalSeparator"/>
     <AllEntitiesDialogContent entities={entities} title={allTitle} searchPlaceholder={allSearchPlaceholder} handleAddEntity={handleAddEntity}/>
-  </Fragment>
+  </div>
 );
 
 const EntitiesDialogContent = (props) => (
-  <DialogContent className="entitiesContent">
+  <DialogContent>
     <EntitiesContent {...props}/>
   </DialogContent>
 );
