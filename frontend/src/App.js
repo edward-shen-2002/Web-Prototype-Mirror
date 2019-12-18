@@ -7,7 +7,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { ROUTE_USER_DASHBOARD } from "constants/routes";
 
 import { loadUserState, resetUserState } from "tools/redux";
-import { authAxios, adminUserRoleAxios, adminOrganizationRoleAxios, adminSectorRoleAxios, adminTemplateRoleAxios } from "tools/rest";
+import { authAxios, adminUserRoleAxios, adminOrganizationRoleAxios, adminSectorRoleAxios, adminTemplateRoleAxios, adminBundleRoleAxios } from "tools/rest";
 import { findAndSaveToken } from "tools/storage";
 import { ActivityRoute } from "tools/components/routes";
 
@@ -118,6 +118,7 @@ let App = ({
       setMiddleware(adminOrganizationRoleAxios, adminErrorMiddleware);
       setMiddleware(adminSectorRoleAxios, adminErrorMiddleware);
       setMiddleware(adminTemplateRoleAxios, adminErrorMiddleware);
+      setMiddleware(adminBundleRoleAxios, adminErrorMiddleware);
     }
   }, [ isOnline ]);
 

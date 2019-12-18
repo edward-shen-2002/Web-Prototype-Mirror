@@ -1,0 +1,36 @@
+.bundlesPage {
+  margin: 20px;
+  width: 100%;
+}
+
+.bundlesContent {
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 10px;
+
+  padding: 20px;
+}
+
+.headerActions {
+  width: 420px;
+
+  &__search {
+    width: 280px;
+  }
+
+  &__button {
+    height: 56px;
+    width: 130px;
+    margin-left: 10px;
+    padding: 0 20px;
+
+    border-radius: 4px;
+  }
+}

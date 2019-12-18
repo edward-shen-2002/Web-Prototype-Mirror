@@ -33,6 +33,9 @@ export const REST_GROUP_ADMIN_TEMPLATE = `${REST_GROUP_ADMIN}/template_manager`;
 export const REST_ADMIN_TEMPLATES = "/templates";
 export const REST_ADMIN_BUSINESS_CONCEPTS = "/business_concepts";
 
+export const REST_GROUP_ADMIN_BUNDLE = `${REST_GROUP_ADMIN}/bundle_manager`;
+export const REST_ADMIN_BUNDLES = "/bundles";
+
 // HTTP error codes
 export const HTTP_ERROR_INVALID_TOKEN = 401;
 export const HTTP_ERROR_UNAUTHORIZED = 403;

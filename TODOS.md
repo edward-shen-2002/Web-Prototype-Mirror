@@ -3,15 +3,12 @@
 ## Prioritized
 
 - [ ] Excel history - redo/undo
-- [x] Excel multiple selection
 - [ ] Excel sheet mouse auto-scroll
 - [ ] Package creation
-- [ ] Some fetch/update components may use the MongoDB item to update -- if that's the case, update the ID in the frontend
-- [ ] Modifying one hierarchy may affect other hierarchies -- update affected hierarchies (ie remove user from organization => remove organization in user)
+- [ ] Workflow features (editor, reviewer, approver)
 - [ ] Convert excel editor state to Xlsx-populate rich text
-- [ ] Resize excel headers
-- [ ] Compress inactive sheets
 - [ ] Excel formulas
+- [ ] Excel styles
 
 ## Unprioritized
 
@@ -23,7 +20,14 @@
 - [ ] Strengthen verfication ids (change MongoDB Id to a more secure Id -- MongoDB Id is too predicatable)
 - [ ] Keep styles considtent (ie, Profile and All packages headers/pages - mismatched styles)
 - [ ] It's possible that an admin updates his/her own roles - refetch data in that case (very unlikely case)
+- [ ] Modifying one hierarchy may affect other hierarchies -- update affected hierarchies (ie remove user from organization => remove organization in user)
 
 ## Important but Unprioritized (may be too time-consuming at the moment - work on it gradually)
 
 - [ ] Scope Checking
+
+## Finished
+
+- [x] Resize excel headers
+- [x] Compress inactive sheets
+- [x] Excel multiple selection

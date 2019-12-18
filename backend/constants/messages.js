@@ -49,3 +49,8 @@ export const MESSAGE_SUCCESS_BUSINESS_CONCEPTS_CREATE = "Successfully created bu
 export const MESSAGE_SUCCESS_BUSINESS_CONCEPTS_UPDATE = "Successfully fetched business concepts"; 
 export const MESSAGE_SUCCESS_BUSINESS_CONCEPTS_DELETE = "Successfully deleted business concepts";
 export const MESSAGE_SUCCESS_BUSINESS_CONCEPTS_TEMPLATE = "Successfully updated business concepts"; 
+
+export const MESSAGE_SUCCESS_BUNDLES = "Successfully fetched bundles";
+export const MESSAGE_SUCCESS_BUNDLES_CREATE = "Successfully created bundles";
+export const MESSAGE_SUCCESS_BUNDLES_UPDATE = "Successfully updated bundles";
+export const MESSAGE_SUCCESS_BUNDLES_DELETE = "Successfully deleted bundles";

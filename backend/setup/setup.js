@@ -14,6 +14,7 @@ import RegisterVerificationModel from "../models/user/RegisterVerification";
 import SectorModel from "../models/sector/Sector";
 import TemplateModel from "../models/template/Template";
 import BusinessConceptModel from "../models/template/BusinessConcept";
+import BundleModel from "../models/bundle/Bundle";
 
 const serverSetup = async (app, passport, options = {}) => {
   const helpers = { 
@@ -25,7 +26,8 @@ const serverSetup = async (app, passport, options = {}) => {
     RegisterVerificationModel, 
     SectorModel, 
     TemplateModel, 
-    BusinessConceptModel 
+    BusinessConceptModel,
+    BundleModel
   };
   
   passport.use(new LocalStrategy(UserModel.authenticate()));

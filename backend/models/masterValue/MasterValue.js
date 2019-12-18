@@ -1,7 +1,5 @@
 import { Schema, model } from "mongoose";
 
-const ObjectId = Schema.Types.ObjectId;
-
 /**
  * Contains the values of successfully approved workbooks
  * 
@@ -11,9 +9,6 @@ const ObjectId = Schema.Types.ObjectId;
  *   sectorName: "Health",
  *   year: 2010,
  *   quarter: "4",
- *   templateName: "Budget Request",
- *   sheetName: "Balance Sheet",
- *   sheetOrder: 7
  *   ...
  * }
  * 
@@ -23,15 +18,10 @@ const ObjectId = Schema.Types.ObjectId;
  *   $_sectorName_: {
  *     $_organizationCode_: {
  *       $_year_ : {
- *         $_templateName_: {
- *           $_sheetName_: {
- *             sheetOrder: $_sheetOrder_,
- *            attributePosition: $_attributePosition_,
- *            categoryPosition: $_cateogryPosition_,
- *            ..._otherOptionals_...,
-  *            quarter: $_quarter_,
- *           }
- *         }
+ *         attributePosition: $_attributePosition_,
+ *         categoryPosition: $_cateogryPosition_,
+ *         ..._otherOptionals_...,
+ *         quarter: $_quarter_
  *       }
  *     }
  *   }
@@ -49,9 +39,6 @@ let masterValueSchema = new Schema({
   year: { type: Number, required: true },
 
   quarter: { type: String },
-
-  template: { type: ObjectId, required: true },
-
   attributeId: { type: String, required: true },
   categoryId: { type: String, required: true },
 

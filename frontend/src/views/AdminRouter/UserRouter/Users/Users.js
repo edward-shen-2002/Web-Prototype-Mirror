@@ -16,6 +16,8 @@ const MaterialTable = lazy(() => import("material-table"));
 
 import "./Users.scss";
 
+const CreationDate = ({ creationDate }) => new Date(creationDate).toLocaleDateString();
+
 // TODO : Implement pagination
 // TODO : Hierarchy filter - organization, LHIN, ...
 const Users = () => {
@@ -235,7 +237,7 @@ const Users = () => {
     { title: "Last Name", field: "lastName" },
     { title: "Password", field: "password" },
     { title: "Phone Number", field: "phoneNumber" },
-    { title: "Creation Date", field: "creationDate", type: "date", render: ({ creationDate }) => new Date(creationDate).toLocaleDateString() },
+    { title: "Creation Date", field: "creationDate", type: "date", render: CreationDate },
     { title: "Active", field: "active", type: "boolean" }
   ];
 
@@ -250,7 +252,15 @@ const Users = () => {
 
   return (
     <div className="usersPage">
-      <MaterialTable className="usersPage__table" title="Users" columns={columns} actions={actions} data={users} editable={editable} options={options}/>
+      <MaterialTable 
+        className="usersPage__table" 
+        title="Users" 
+        columns={columns} 
+        actions={actions} 
+        data={users} 
+        editable={editable} 
+        options={options}
+      />
       <HierarchyEntitiesDialog
         open={isOrganizationsDialogOpen}
         userEntities={userOrganizations} 

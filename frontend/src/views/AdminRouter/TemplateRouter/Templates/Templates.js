@@ -137,10 +137,10 @@ const TemplatesContainer = ({ history }) => {
 
   const handleCreateTemplate = () => {
     adminTemplateRoleAxios.post(REST_ADMIN_TEMPLATES)
-    .then(({ data: { data: { template } } }) => {
-        history.push(`${ROUTE_ADMIN_TEMPLATE_TEMPLATES}/${template._id}`);
-      })
-      .catch((error) => console.error(error));
+      .then(({ data: { data: { template } } }) => {
+          history.push(`${ROUTE_ADMIN_TEMPLATE_TEMPLATES}/${template._id}`);
+        })
+        .catch((error) => console.error(error));
   };
 
   const handleRowAdd = (newTemplate) => new Promise((resolve, reject) => {

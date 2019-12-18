@@ -14,7 +14,16 @@ import { ROLE_LEVEL_ADMIN } from "../constants/roles";
  *   wipeDatabase: default false
  *   createDummyUser: default false
  */
-const setupMongoose = async (options, { UserModel, SectorModel, OrganizationModel, TemplateModel, RegistrationModel, RegisterVerificationModel, BusinessConceptModel }) => {
+const setupMongoose = async (options, { 
+  UserModel, 
+  SectorModel, 
+  OrganizationModel, 
+  TemplateModel, 
+  RegistrationModel, 
+  RegisterVerificationModel, 
+  BusinessConceptModel,
+  BundleModel
+}) => {
   const handleCreateDatabase = async () => {
     console.log("MongoDB: Creating collections in database");
     try {
@@ -26,6 +35,7 @@ const setupMongoose = async (options, { UserModel, SectorModel, OrganizationMode
       await SectorModel.createCollection();
       await TemplateModel.createCollection();
       await BusinessConceptModel.createCollection();
+      await BundleModel.createCollection();
       
       console.log("MongoDB: Successfully created collections");
     } catch(error) {
@@ -67,14 +77,13 @@ const setupMongoose = async (options, { UserModel, SectorModel, OrganizationMode
 
       let sampleOrganization = await OrganizationModel.findOneAndUpdate({ code: sampleOrganizationData.code }, sampleOrganizationData, { new: true, upsert: true });
 
-      const adminRoleControlConfig = { scope: ROLE_LEVEL_ADMIN, sectors: [], LHINs: [], organizations: [] };
+      const adminRoleControlConfig = { scope: ROLE_LEVEL_ADMIN, sectors: [], organizations: [] };
 
       const fullAdminControlRoles = {
         TEMPLATE_MANAGER: { ...adminRoleControlConfig }, 
-        PACKAGE_MANAGER: { ...adminRoleControlConfig }, 
+        BUNDLE_MANAGER: { ...adminRoleControlConfig }, 
         USER_MANAGER: { ...adminRoleControlConfig }, 
         ORGANIZATION_MANAGER: { ...adminRoleControlConfig }, 
-        LHIN_MANAGER: { ...adminRoleControlConfig }, 
         SECTOR_MANAGER: { ...adminRoleControlConfig }, 
         SYSTEM_MANAGER: { ...adminRoleControlConfig }
       };

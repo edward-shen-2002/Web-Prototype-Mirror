@@ -6,7 +6,7 @@ import {
   ROUTE_ADMIN_USER_USERS, 
   ROUTE_ADMIN_USER_REGISTRATIONS,
 
-  ROUTE_ADMIN_PACKAGE_PACKAGES,
+  ROUTE_ADMIN_BUNDLE_BUNDLES,
 
   ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS,
 
@@ -29,11 +29,11 @@ const roleNavMap = {
       { name: "Business Concepts", url: ROUTE_ADMIN_TEMPLATE_BUSINESS_CONCEPTS, icon: "mdi mdi-buffer" }
     ]
   },
-  PACKAGE_MANAGER: {
-    name: "Packages",
+  BUNDLE_MANAGER: {
+    name: "Bundles",
     icon: "mdi mdi-package-variant",
     children: [ 
-      { name: "Packages", url: ROUTE_ADMIN_PACKAGE_PACKAGES, icon: "mdi mdi-package" },
+      { name: "Bundles", url: ROUTE_ADMIN_BUNDLE_BUNDLES, icon: "mdi mdi-package" },
     ]
   },
   USER_MANAGER: {
