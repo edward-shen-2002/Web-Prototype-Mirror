@@ -10,12 +10,12 @@ import Chip from "@material-ui/core/Chip";
 
 import uniqid from "uniqid";
 
-import { ROLE_LEVEL_ADMIN, ROLE_LEVEL_LHIN, ROLE_LEVEL_ORGANIZATION, ROLE_LEVEL_NOT_APPLICABLE, } from "constants/roles";
+import { ROLE_LEVEL_ADMIN, ROLE_LEVEL_LHIN, ROLE_LEVEL_NOT_APPLICABLE } from "constants/roles";
 
 import "./Profile.scss";
 
-const Field = ({ label, value }) => (
-  <div className="profile__field">
+const Field = ({ label, value, style }) => (
+  <div style={style} className="profile__field">
     <strong>{label}</strong>: {value}
   </div>
 );
@@ -39,57 +39,63 @@ const TooltipTitle = ({ scope, LHINs, organizations }) => (
   </div>
 );
 
-const AccountInformation = ({ active, creationDate, roles }) => {
+const RelevantRoles = ({ roles }) => (
+  Object.keys(roles)
+    .filter(({ scope }) => scope !== ROLE_LEVEL_NOT_APPLICABLE)
+    .map((role) => {
+      let roleData = roles[role];
+      let { scope, LHINs, organizations } = roleData;
 
-  const RelevantRoles = () => (
-    Object.keys(roles)
-      .filter(({ scope }) => scope !== ROLE_LEVEL_NOT_APPLICABLE)
-      .map((role) => {
-        let roleData = roles[role];
-        let { scope, LHINs, organizations } = roleData;
+      let color;
 
-        let color;
+      if(scope === ROLE_LEVEL_ADMIN) {
+        color = "primary";
 
-        if(scope === ROLE_LEVEL_ADMIN) {
-          color = "primary";
+        LHINs = "*";
+        organizations = "*";
+      } else if(scope === ROLE_LEVEL_LHIN) {
+        color = "secondary";
+      } else {
+        color = "default";
+      }
 
-          LHINs = "*";
-          organizations = "*";
-        } else if(scope === ROLE_LEVEL_LHIN) {
-          color = "secondary";
-        } else {
-          color = "default";
-        }
+      return (
+        <Tooltip key={uniqid()} title={<TooltipTitle scope={scope} LHINs={LHINs} organizations={organizations}/>}>
+          <Chip className="profile__role" label={role} color={color}/>
+        </Tooltip>
+      );
+    })
+);
 
-        return (
-          <Tooltip key={uniqid()} title={<TooltipTitle scope={scope} LHINs={LHINs} organizations={organizations}/>}>
-            <Chip className="profile__role" label={role} color={color}/>
-          </Tooltip>
-        );
-      })
-  );
+const RolesContainer = ({ roles }) => (
+  <div>
+    <RelevantRoles roles={roles}/>
+  </div>
+);
+
+const AccountInformation = ({ creationDate, roles }) => {
+  const rolesStyle = { display: "flex", flexFlow: "row nowrap" };
 
   return (
     <div>
       <Typography className="profile__subtitle" variant="button" gutterBottom>Account Information</Typography>
       <hr/>
-      <Field label="Active" value={active.toString()}/>
       <Field label="Creation Date" value={<time>{new Date(creationDate).toLocaleString()}</time>}/>
-      <Field label="Roles" value={<RelevantRoles/>}/>
+      <Field label="Roles" style={rolesStyle} value={<RolesContainer roles={roles}/>}/>
     </div>
   );
 };
 
 const mapStateToProps = ({ domain: { account } }) => ({ account });
 
-let Profile = ({ account: { username, email, firstName, lastName, phoneNumber, active, creationDate, roles } }) => (
+let Profile = ({ account: { username, email, firstName, lastName, phoneNumber, creationDate, roles } }) => (
   <Fade in={true} timeout={500}>
     <Paper className="profile">
       <Typography variant="h5" gutterBottom>My Profile</Typography>
       <hr/>
       <BasicInformation username={username} email={email} firstName={firstName} lastName={lastName} phoneNumber={phoneNumber}/>
       <hr/>
-      <AccountInformation active={active} creationDate={creationDate} roles={roles}/>
+      <AccountInformation creationDate={creationDate} roles={roles}/>
     </Paper>
   </Fade>
 );

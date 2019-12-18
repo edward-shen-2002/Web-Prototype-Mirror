@@ -11,6 +11,12 @@
   margin-bottom: 10px;
   
   padding: 5px;
+
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
   
   &__content {
     background-color: rgba(10, 10, 10, 0.1);
@@ -40,8 +46,11 @@
   }
 
   &__button {
+    height: 56px;
     width: 130px;
     margin-left: 10px;
     padding: 0 20px;
+
+    border-radius: 4px;
   }
 }

@@ -2,11 +2,13 @@ import React from "react";
 
 import Paper from "@material-ui/core/Paper";
 
+import "./Package.scss";
+
 const Package = () => {
   
   return (
-    <Paper>
-      
+    <Paper className="package">
+      test
     </Paper>
   );
 };

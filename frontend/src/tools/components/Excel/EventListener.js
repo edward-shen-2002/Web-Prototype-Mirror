@@ -1508,9 +1508,6 @@ class EventRedux extends PureComponent {
     });
 
     adminTemplateRoleAxios.post(`${REST_ADMIN_BUSINESS_CONCEPTS}/import`, { businessConcepts })
-      .then(() => {
-        console.log("Successs")
-      })
       .catch((error) => {
         console.error(error);
       });
