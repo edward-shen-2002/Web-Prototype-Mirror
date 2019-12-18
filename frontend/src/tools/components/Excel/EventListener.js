@@ -872,9 +872,13 @@ class EventRedux extends PureComponent {
     if(ctrlKey) {
       const { x, y } = activeCellPosition;
 
-      let newStagnantSelectionAreas = stagnantSelectionAreas.length 
-        ? [ ...stagnantSelectionAreas ]
-        : [ { x1: x, x2: x, y1: y, y2: y } ]; 
+      let newStagnantSelectionAreas = [];
+
+      if(stagnantSelectionAreas.length) {
+        newStagnantSelectionAreas = [ ...stagnantSelectionAreas ];
+      } else if(y !== row) {
+        newStagnantSelectionAreas.push({ x1: x, x2: x, y1: y, y2: y });
+      }
 
       newStagnantSelectionAreas.push(rowArea);
 
@@ -898,17 +902,20 @@ class EventRedux extends PureComponent {
 
     this.saveActiveCellInputData();
 
-    this.updateActiveCellPosition(1, column);
-
     const columnArea = { x1: column, y1: 1, x2: column, y2: sheetRowCount - 1 };
 
     if(ctrlKey) {
       const { x, y } = activeCellPosition;
 
-      let newStagnantSelectionAreas = stagnantSelectionAreas.length 
-        ? [ ...stagnantSelectionAreas ]
-        : [ { x1: x, x2: x, y1: y, y2: y } ]; 
-        newStagnantSelectionAreas.push(columnArea);
+      let newStagnantSelectionAreas = [];
+
+      if(stagnantSelectionAreas.length) {
+        newStagnantSelectionAreas = [ ...stagnantSelectionAreas ];
+      } else if(x !== column) {
+        newStagnantSelectionAreas.push({ x1: x, x2: x, y1: y, y2: y });
+      }
+
+      newStagnantSelectionAreas.push(columnArea);
 
       handleUpdateActiveCellSelectionAreaIndex(activeCellSelectionAreaIndex + 1);
       handleUpdateStagnantSelectionAreas(newStagnantSelectionAreas);
@@ -916,6 +923,8 @@ class EventRedux extends PureComponent {
       handleUpdateActiveCellSelectionAreaIndex(0);
       handleUpdateStagnantSelectionAreas([ columnArea ]);
     }
+
+    this.updateActiveCellPosition(1, column);
   }
 
   saveActiveCellInputData() {
