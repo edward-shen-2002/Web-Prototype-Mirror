@@ -88,7 +88,7 @@ let Bundles = ({
     { icon: LaunchIcon, tooltip: "Open Bundle", onClick: handleOpenBundle }
   ];
 
-  const options = { actionsColumnIndex: -1, search: false, showTitle: false };
+  const options = { actionsColumnIndex: -1 };
 
   const columns = [
     { title: "Name", field: "name" },
@@ -101,7 +101,7 @@ let Bundles = ({
     <div className="bundles">
       <MaterialTable 
         className="bundles__table" 
-        title="Users" 
+        title="Bundles" 
         columns={columns} 
         actions={actions} 
         data={bundles} 

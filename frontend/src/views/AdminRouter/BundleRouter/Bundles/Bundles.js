@@ -39,7 +39,8 @@ const BundlesTable = ({ bundles, history }) => {
 
   const columns = [
     { title: "Name", field: "name" },
-    { title: "Creation Date", field: "createdAt", type: "date" }
+    { title: "Creation Date", field: "createdAt", type: "date" },
+    { title: "Published", field: "published", type: "boolean" }
   ];
 
   const actions = [

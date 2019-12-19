@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 
-import { adminBundleRoleAxios } from "tools/rest";
+import { publicAxios, adminBundleRoleAxios } from "tools/rest";
 
-import { REST_ADMIN_BUNDLES } from "constants/rest";
-import { ROUTE_ADMIN_BUNDLE_BUNDLES } from "constants/routes";
+import Loading from "tools/components/Loading";
+
+import { EntitiesContent } from "tools/components/EntitiesDialog";
 
 import Paper from "@material-ui/core/Paper";
 import Divider from "@material-ui/core/Divider";
@@ -12,9 +13,8 @@ import Button from "@material-ui/core/Button";
 
 import TextField from "@material-ui/core/TextField";
 
-import Loading from "tools/components/Loading";
-
-import { EntitiesContent } from "tools/components/EntitiesDialog";
+import { REST_PUBLIC_DATA, REST_ADMIN_BUNDLES } from "constants/rest";
+import { ROUTE_ADMIN_BUNDLE_BUNDLES } from "constants/routes";
 
 import "./Bundle.scss";
 
@@ -29,11 +29,9 @@ const BundleContent = ({
   name,
   templates,
   organizations,
-  sectors
+  sectors,
+  publicTemplates
 }) => {
-
-  // ! 
-  // TODO
   return (
     <Paper className="bundlePage">
       <Typography className="bundlePage__title" variant="h4">Bundle Editor</Typography>
@@ -41,8 +39,7 @@ const BundleContent = ({
       <NameField name={name}/>
       <EntitiesContent
         userEntities={templates} 
-        // Change!!!
-        entities={templates} 
+        entities={publicTemplates} 
         userTitle="Current Templates"
         allTitle="Add Templates"
         userSearchPlaceholder="Search current templates..."
@@ -65,6 +62,7 @@ const Bundle = ({
   const [ templates, setTemplates ] = useState([]); 
   const [ organizations, setOrganizations ] = useState([]);
   const [ sectors, setSectors ] = useState([]);
+  const [ publicTemplates, setPublicTemplates ] = useState([]);
 
   const [ isDataFetched, setIsDataFetched ] = useState(false);
 
@@ -73,8 +71,10 @@ const Bundle = ({
       const fetchData = async () => {
         try {
           const bundleData = await adminBundleRoleAxios.get(`${REST_ADMIN_BUNDLES}/${_id}`);
+          const templatesData = await publicAxios.get(`${REST_PUBLIC_DATA}/templates`);
 
           // ! Get publid template, organization, ... data
+          const { data: { data: { templates: publicTemplates } } } = templatesData;
 
           const { data: { data: { bundle } } } = bundleData;
           const { name, templates, organizations, sectors } = bundle;
@@ -83,6 +83,7 @@ const Bundle = ({
           setTemplates(templates);
           setOrganizations(organizations);
           setSectors(sectors);
+          setPublicTemplates(publicTemplates);
 
           setIsDataFetched(true);
         } catch(error) {
@@ -100,6 +101,7 @@ const Bundle = ({
       ? <BundleContent
           name={name}
           templates={templates}
+          publicTemplates={publicTemplates}
           organizations={organizations}
           sectors={sectors}
         />
