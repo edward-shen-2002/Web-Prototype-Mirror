@@ -9,6 +9,7 @@
 - [ ] Convert excel editor state to Xlsx-populate rich text
 - [ ] Excel formulas
 - [ ] Excel styles
+- [ ] Prevent application from mounting until user data is fetched
 
 ## Unprioritized
 
