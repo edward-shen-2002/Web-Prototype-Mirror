@@ -42,6 +42,7 @@ const Login = lazy(() => import("./views/PublicRouter/Login"));
 import NotFound from "tools/components/NotFound";
 
 import "./App.scss";
+import { useEffect } from "react";
 
 const AppPageContent = ({ isOnline }) => (
   <Suspense fallback={<Loading/>}>
@@ -155,12 +156,18 @@ let App = ({
   // Send a request to server with user's saved token, essentially login without replacing token
   findAndSaveToken();
 
-  if(shouldReconnect) handleReconnect(setIsDataFetched);
+  useEffect(() => {
+    if(!isDataFetched && shouldReconnect) {
+      handleReconnect(setIsDataFetched);
+    } else if(!isDataFetched) {
+      setIsDataFetched(true);
+    }
+  });
 
   return (
     <div className="appContainer">
       {
-        isDataFetched || !shouldReconnect 
+        isDataFetched
           ? <AppContent
               isOnline={isOnline} 
               isAppNavigationOpen={isAppNavigationOpen} 
