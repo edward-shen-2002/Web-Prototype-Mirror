@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 
 import { connect } from "react-redux";
 
+import Paper from "@material-ui/core/Paper";
+
 import {
   adminEditBundleRoleAxios,
   adminReviewBundleRoleAxios,
@@ -15,6 +17,8 @@ import {
 } from "constants/rest";
 
 import { ROLE_LEVEL_NOT_APPLICABLE } from "constants/roles";
+
+import "./Bundles.scss";
 
 const mapStateToProps = ({
   domain: {
@@ -68,16 +72,15 @@ let Bundles = ({
           ...(await checkAndFetchRoleData(APPROVE_BUNDLE_MANAGER, adminApproveBundleRoleAxios, REST_ADMIN_APPROVE_BUNDLES))
         ]);
       };
-
       fetchData();
       setIsDataFetched(true);
     }
   });
 
   return (
-    <div>
+    <Paper className="bundles">
       BUUUUUUUUUNDLES
-    </div>
+    </Paper>
   );
 };
 
