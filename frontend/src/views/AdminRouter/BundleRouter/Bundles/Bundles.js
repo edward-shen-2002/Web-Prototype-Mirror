@@ -87,9 +87,9 @@ const BundlesContainer = ({ history }) => {
   const handleCreateBundle = () => {
     adminBundleRoleAxios.post(REST_ADMIN_BUNDLES)
       .then(({ data: { data: { bundle } } }) => {
-          history.push(`${ROUTE_ADMIN_BUNDLE_BUNDLES}/${bundle._id}`);
-        })
-        .catch((error) => console.error(error));
+        history.push(`${ROUTE_ADMIN_BUNDLE_BUNDLES}/${bundle._id}`);
+      })
+      .catch((error) => console.error(error));
   };
 
   return (

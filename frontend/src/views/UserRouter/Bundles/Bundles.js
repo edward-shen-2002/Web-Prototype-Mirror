@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { lazy, useState, useEffect } from "react";
 
 import { connect } from "react-redux";
 
-import Paper from "@material-ui/core/Paper";
+import LaunchIcon from "@material-ui/icons/Launch";
+
+const MaterialTable = lazy(() => import("material-table"));
 
 import {
   adminEditBundleRoleAxios,
@@ -17,6 +19,8 @@ import {
 } from "constants/rest";
 
 import { ROLE_LEVEL_NOT_APPLICABLE } from "constants/roles";
+
+import { ROUTE_USER_BUNDLES } from "constants/routes";
 
 import "./Bundles.scss";
 
@@ -58,7 +62,8 @@ const checkAndFetchRoleData = async (role, axiosRouter, route) => {
 let Bundles = ({
   EDIT_BUNDLE_MANAGER,
   REVIEW_BUNDLE_MANAGER,
-  APPROVE_BUNDLE_MANAGER
+  APPROVE_BUNDLE_MANAGER,
+  history
 }) => {
   const [ bundles, setBundles ] = useState([]);
   const [ isDataFetched, setIsDataFetched ] = useState(false);
@@ -76,11 +81,33 @@ let Bundles = ({
       setIsDataFetched(true);
     }
   });
+  
+  const handleOpenBundle = (_event, { _id, phase }) => history.push(`${ROUTE_USER_BUNDLES}/${phase}/${_id}`);
+
+  const actions = [
+    { icon: LaunchIcon, tooltip: "Open Bundle", onClick: handleOpenBundle }
+  ];
+
+  const options = { actionsColumnIndex: -1, search: false, showTitle: false };
+
+  const columns = [
+    { title: "Name", field: "name" },
+    { title: "Organization", field: "organization" },
+    { title: "Status", field: "status" },
+    { title: "Phase", field: "phase" }
+  ];
 
   return (
-    <Paper className="bundles">
-      BUUUUUUUUUNDLES
-    </Paper>
+    <div className="bundles">
+      <MaterialTable 
+        className="bundles__table" 
+        title="Users" 
+        columns={columns} 
+        actions={actions} 
+        data={bundles} 
+        options={options}
+      />
+    </div>
   );
 };
 

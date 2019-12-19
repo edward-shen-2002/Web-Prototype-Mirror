@@ -14,7 +14,9 @@ import {
   adminSectorRoleAxios, 
   adminTemplateRoleAxios, 
   adminBundleRoleAxios,
-
+  adminEditBundleRoleAxios,
+  adminReviewBundleRoleAxios,
+  adminApproveBundleRoleAxios
 } from "tools/rest";
 import { findAndSaveToken } from "tools/storage";
 import { ActivityRoute } from "tools/components/routes";
@@ -150,6 +152,10 @@ let App = ({
       setMiddleware(adminSectorRoleAxios, adminErrorMiddleware);
       setMiddleware(adminTemplateRoleAxios, adminErrorMiddleware);
       setMiddleware(adminBundleRoleAxios, adminErrorMiddleware);
+      
+      setMiddleware(adminEditBundleRoleAxios, adminErrorMiddleware);
+      setMiddleware(adminReviewBundleRoleAxios, adminErrorMiddleware);
+      setMiddleware(adminApproveBundleRoleAxios, adminErrorMiddleware);
     }
   }, [ isOnline ]);
 
