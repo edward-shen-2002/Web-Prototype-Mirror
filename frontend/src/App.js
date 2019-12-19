@@ -73,11 +73,13 @@ const mapDispatchToProps = (dispatch) => ({
     authAxios.post(REST_AUTH_RECONNECT)
       .then(({ data: { data } }) => {
         loadUserState(dispatch, data);
-        setIsDataFetched(true);
       })
       .catch((error) => {
         console.error(error);
         resetUserState(dispatch);
+      })
+      .finally(() => {
+        setIsDataFetched(true);
       });
   },
   handleSetReconnectOn: () => dispatch(setShouldReconnectOn()),
@@ -158,7 +160,7 @@ let App = ({
   return (
     <div className="appContainer">
       {
-        isDataFetched 
+        isDataFetched || !shouldReconnect 
           ? <AppContent
               isOnline={isOnline} 
               isAppNavigationOpen={isAppNavigationOpen} 
