@@ -1,4 +1,4 @@
-import React, { lazy, useEffect, useMemo, Suspense } from "react";
+import React, { lazy, useState, useMemo, Suspense } from "react";
 
 import { connect } from "react-redux";
 
@@ -7,7 +7,15 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { ROUTE_USER_DASHBOARD } from "constants/routes";
 
 import { loadUserState, resetUserState } from "tools/redux";
-import { authAxios, adminUserRoleAxios, adminOrganizationRoleAxios, adminSectorRoleAxios, adminTemplateRoleAxios, adminBundleRoleAxios } from "tools/rest";
+import { 
+  authAxios, 
+  adminUserRoleAxios, 
+  adminOrganizationRoleAxios, 
+  adminSectorRoleAxios, 
+  adminTemplateRoleAxios, 
+  adminBundleRoleAxios,
+
+} from "tools/rest";
 import { findAndSaveToken } from "tools/storage";
 import { ActivityRoute } from "tools/components/routes";
 
@@ -60,16 +68,34 @@ const AppPage = ({ isOnline, isAppNavigationOpen, account: { roles }, location, 
 const mapStateToProps = ({ app: { shouldReconnect, isOnline }, domain: { account }, ui: { isAppNavigationOpen } }) => ({ shouldReconnect, isOnline, isAppNavigationOpen, account });
 
 const mapDispatchToProps = (dispatch) => ({
-  handleReconnect: () => {
+  handleReconnect: (setIsDataFetched) => {
     dispatch(setShouldReconnectOff());
-
     authAxios.post(REST_AUTH_RECONNECT)
-      .then(({ data: { data } }) => loadUserState(dispatch, data))
-      .catch((error) => console.error(error));
+      .then(({ data: { data } }) => {
+        loadUserState(dispatch, data);
+        setIsDataFetched(true);
+      })
+      .catch((error) => {
+        console.error(error);
+        resetUserState(dispatch);
+      });
   },
   handleSetReconnectOn: () => dispatch(setShouldReconnectOn()),
   handleLogout: () => resetUserState(dispatch)
 });
+
+let AppContent = ({
+  isOnline, 
+  isAppNavigationOpen, 
+  account, 
+  location, 
+  history
+}) => (
+  <div className="app">
+    {isAppNavigationOpen && <AppHeader history={history}/>}
+    <AppPage isOnline={isOnline} isAppNavigationOpen={isAppNavigationOpen} location={location} history={history} account={account}/>
+  </div>
+);
 
 // ?Axios interceptor might not be overriden...
 let App = ({ 
@@ -83,6 +109,8 @@ let App = ({
   handleLogout, 
   handleSetReconnectOn
 }) => {
+  const [ isDataFetched, setIsDataFetched ] = useState(false);
+
   // Set up auth middleware - only shared information among all auth requests must be present here to ensure functionality
   // TODO : Check edge cases - Will 'isOnline' parameter work for all cases? When can it fail?
   useMemo(() => {
@@ -125,12 +153,21 @@ let App = ({
   // Send a request to server with user's saved token, essentially login without replacing token
   findAndSaveToken();
 
-  if(shouldReconnect) handleReconnect();
+  if(shouldReconnect) handleReconnect(setIsDataFetched);
 
   return (
-    <div className="app">
-      {isAppNavigationOpen && <AppHeader history={history}/>}
-      <AppPage isOnline={isOnline} isAppNavigationOpen={isAppNavigationOpen} location={location} history={history} account={account}/>
+    <div className="appContainer">
+      {
+        isDataFetched 
+          ? <AppContent
+              isOnline={isOnline} 
+              isAppNavigationOpen={isAppNavigationOpen} 
+              account={account} 
+              location={location} 
+              history={history}
+            /> 
+          : <Loading/>
+      }
     </div>
   );
 };

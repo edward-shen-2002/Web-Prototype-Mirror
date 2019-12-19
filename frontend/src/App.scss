@@ -2,6 +2,10 @@
 @import "~@coreui/coreui/scss/coreui.scss";
 @import "~bootstrap/dist/css/bootstrap.min.css";
 
+.appContainer {
+  height: 100vh;
+}
+
 .app {
   min-width: fit-content;
 

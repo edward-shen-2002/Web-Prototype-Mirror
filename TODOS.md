@@ -9,7 +9,6 @@
 - [ ] Convert excel editor state to Xlsx-populate rich text
 - [ ] Excel formulas
 - [ ] Excel styles
-- [ ] Prevent application from mounting until user data is fetched
 
 ## Unprioritized
 
@@ -32,3 +31,4 @@
 - [x] Resize excel headers
 - [x] Compress inactive sheets
 - [x] Excel multiple selection
+- [x] Prevent application from mounting until user data is fetched
