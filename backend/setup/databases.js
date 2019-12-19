@@ -85,7 +85,10 @@ const setupMongoose = async (options, {
         USER_MANAGER: { ...adminRoleControlConfig }, 
         ORGANIZATION_MANAGER: { ...adminRoleControlConfig }, 
         SECTOR_MANAGER: { ...adminRoleControlConfig }, 
-        SYSTEM_MANAGER: { ...adminRoleControlConfig }
+        SYSTEM_MANAGER: { ...adminRoleControlConfig },
+        EDIT_BUNDLE_MANAGER: { ...adminRoleControlConfig },
+        REVIEW_BUNDLE_MANAGER: { ...adminRoleControlConfig },
+        APPROVE_BUNDLE_MANAGER: { ...adminRoleControlConfig }
       };
 
       let userOrganizations = {};

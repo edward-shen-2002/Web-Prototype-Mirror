@@ -36,6 +36,15 @@ export const REST_ADMIN_BUSINESS_CONCEPTS = "/business_concepts";
 export const REST_GROUP_ADMIN_BUNDLE = `${REST_GROUP_ADMIN}/bundle_manager`;
 export const REST_ADMIN_BUNDLES = "/bundles";
 
+export const REST_GROUP_ADMIN_EDIT_BUNDLE = `${REST_GROUP_ADMIN}/edit_bundle_manager`;
+export const REST_ADMIN_EDIT_BUNDLES = "/edit_bundles";
+
+export const REST_GROUP_ADMIN_REVIEW_BUNDLE = `${REST_GROUP_ADMIN}/review_bundle_manager`;
+export const REST_ADMIN_REVIEW_BUNDLES = "/review_bundles";
+
+export const REST_GROUP_ADMIN_APPROVE_BUNDLE = `${REST_GROUP_ADMIN}/approve_bundle_manager`;
+export const REST_ADMIN_APPROVE_BUNDLES = "/approve_bundles";
+
 // HTTP error codes
 export const HTTP_ERROR_INVALID_TOKEN = 401;
 export const HTTP_ERROR_UNAUTHORIZED = 403;

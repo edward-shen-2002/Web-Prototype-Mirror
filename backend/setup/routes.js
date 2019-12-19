@@ -11,6 +11,10 @@ import {
   templateRoleMiddleware,
   bundleRoleMiddleware,
 
+  editBundleRoleMiddleware,
+  reviewBundleRoleMiddleware,
+  approveBundleRoleMiddleware,
+
   generalErrorHandler 
 } from "./authentication";
 
@@ -35,6 +39,10 @@ import templateController from "../controller/admin/template_manager/templates";
 import businessConceptController from "../controller/admin/template_manager/businessConcepts";
 import bundleController from "../controller/admin/bundle_manager/bundles";
 
+import editBundleController from "../controller/admin/edit_bundle_manager/editBundles";
+import reviewBundleController from "../controller/admin/review_bundle_manager/reviewBundles";
+import approveBundleController from "../controller/admin/approve_bundle_manager/approveBundles";
+
 import { 
   ROUTE_GROUP_PUBLIC, 
   ROUTE_GROUP_AUTH, 
@@ -44,7 +52,10 @@ import {
   ROUTE_GROUP_ADMIN_ORGANIZATION, 
   ROUTE_GROUP_ADMIN_SECTOR, 
   ROUTE_GROUP_ADMIN_TEMPLATE,
-  ROUTE_GROUP_ADMIN_BUNDLE
+  ROUTE_GROUP_ADMIN_BUNDLE,
+  ROUTE_GROUP_ADMIN_EDIT_BUNDLE,
+  ROUTE_GROUP_ADMIN_REVIEW_BUNDLE,
+  ROUTE_GROUP_ADMIN_APPROVE_BUNDLE
 } from "../constants/rest";
 
 /**
@@ -152,6 +163,36 @@ const bundleRoleRoutes = (helpers) => {
   return router;
 };
 
+const editBundleRoleRoutes = (helpers) => {
+  let router = new Router();
+
+  router.use(editBundleRoleMiddleware());
+
+  editBundleController({ ...helpers, router });
+
+  return router;
+};
+
+const reviewBundleRoleRoutes = (helpers) => {
+  let router = new Router();
+
+  router.use(reviewBundleRoleMiddleware());
+
+  reviewBundleController({ ...helpers, router });
+
+  return router;
+};
+
+const approveBundleRoleRoutes = (helpers) => {
+  let router = new Router();
+
+  router.use(approveBundleRoleMiddleware());
+
+  approveBundleController({ ...helpers, router });
+
+  return router;
+};
+
 // Routes are grouped to fully utilize shared middleware
 const setupRouteGroups = (helpers) => {
   console.log("REST: Setting up routes");
@@ -171,6 +212,11 @@ const setupRouteGroups = (helpers) => {
     app.use(ROUTE_GROUP_ADMIN_SECTOR, sectorRoleRoutes(helpers), generalErrorHandler());
     app.use(ROUTE_GROUP_ADMIN_TEMPLATE, templateRoleRoutes(helpers), generalErrorHandler());
     app.use(ROUTE_GROUP_ADMIN_BUNDLE, bundleRoleRoutes(helpers), generalErrorHandler());
+
+    // Worflow routes - edit/review/approve bundles
+    app.use(ROUTE_GROUP_ADMIN_EDIT_BUNDLE, editBundleRoleRoutes(helpers), generalErrorHandler());
+    app.use(ROUTE_GROUP_ADMIN_REVIEW_BUNDLE, reviewBundleRoleRoutes(helpers), generalErrorHandler());
+    app.use(ROUTE_GROUP_ADMIN_APPROVE_BUNDLE, approveBundleRoleRoutes(helpers), generalErrorHandler());
     
     console.log("REST: Successfully set up routes");
   } catch(error) {

@@ -9,7 +9,10 @@ import {
   REST_GROUP_VERIFICATION, 
   REST_GROUP_ADMIN_SECTOR, 
   REST_GROUP_ADMIN_TEMPLATE,
-  REST_GROUP_ADMIN_BUNDLE
+  REST_GROUP_ADMIN_BUNDLE,
+  REST_GROUP_ADMIN_EDIT_BUNDLE,
+  REST_GROUP_ADMIN_REVIEW_BUNDLE,
+  REST_GROUP_ADMIN_APPROVE_BUNDLE
 } from "constants/rest";
 
 export const publicAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_PUBLIC}` });
@@ -24,6 +27,10 @@ export const adminSectorRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST
 export const adminTemplateRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_TEMPLATE}` });
 export const adminBundleRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_BUNDLE}` });
 
+export const adminEditBundleRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_EDIT_BUNDLE}` });
+export const adminReviewBundleRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_REVIEW_BUNDLE}` });
+export const adminApproveBundleRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_APPROVE_BUNDLE}` });
+
 const _setAxiosToken = (routeAxios, token) => routeAxios.defaults.headers.common = { ...routeAxios.defaults.headers.common, Authorization: `Bearer ${token}` };
 
 const tokenAxiosList = [ 
@@ -31,7 +38,11 @@ const tokenAxiosList = [
   adminUserRoleAxios, 
   adminOrganizationRoleAxios, 
   adminSectorRoleAxios, 
-  adminTemplateRoleAxios 
+  adminTemplateRoleAxios,
+  adminBundleRoleAxios,
+  adminEditBundleRoleAxios,
+  adminReviewBundleRoleAxios,
+  adminApproveBundleRoleAxios
 ];
 
 // Token is the same for all requests - representation of an authenticated registered user
