@@ -10,7 +10,7 @@ export const ROUTE_PUBLIC_RECOVERY = `${ROUTE_PUBLIC}/recovery`;
 export const ROUTE_USER = `${ROUTE_ROOT}user`;
 export const ROUTE_USER_PROFILE = `${ROUTE_USER}/profile`;
 export const ROUTE_USER_DASHBOARD = `${ROUTE_USER}/dashboard`;
-export const ROUTE_USER_PACKAGES = `${ROUTE_USER}/packages`;
+export const ROUTE_USER_BUNDLES = `${ROUTE_USER}/bundles`;
 
 export const ROUTE_VERIFICATION = `${ROUTE_ROOT}verification`;
 export const ROUTE_VERIFICATION_VERIFICATION = `${ROUTE_VERIFICATION}/:_id`;

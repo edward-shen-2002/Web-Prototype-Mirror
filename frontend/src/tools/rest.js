@@ -37,7 +37,7 @@ const tokenAxiosList = [
 // Token is the same for all requests - representation of an authenticated registered user
 export const setAxiosToken = (token) => tokenAxiosList.forEach((routeAxios) => _setAxiosToken(routeAxios, token));
 
-const _isAxiostokenSet = (routeAxios) => typeof routeAxios.defaults.headers.common.Authorization !== "undefined";
+const _isAxiostokenSet = (routeAxios) => routeAxios.defaults.headers.common.Authorization !== undefined;
 
 export const isAxiosTokenSet = () =>  tokenAxiosList.reduce((accumulator, routeAxios) => accumulator && _isAxiostokenSet(routeAxios), true);
 
