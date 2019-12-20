@@ -25,7 +25,7 @@ const bundles = ({ router, BundleModel }) => {
     if(!newBundle) newBundle = { 
       name: uniqid(),
       quarter: "Q1",
-      year: 2019
+      year: new Date().getFullYear()
     };
 
     BundleModel.create(newBundle)

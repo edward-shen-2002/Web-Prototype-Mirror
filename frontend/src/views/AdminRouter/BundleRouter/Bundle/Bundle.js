@@ -27,7 +27,7 @@ const EditorActions = ({
   handleCancel
 }) => (
   <ButtonGroup className="bundleActions" fullWidth>
-    <Button variant="contained" onClick={handleSave}>Save Draft</Button>
+    <Button variant="contained" onClick={handleSave}>Save</Button>
     <Button variant="contained" color="primary" onClick={handlePublish}>Publish</Button>
     <Button variant="contained" color="secondary" onClick={handleCancel}>Cancel</Button>
   </ButtonGroup>
@@ -130,6 +130,7 @@ const BundleContent = ({
       templates,
       organizations,
       sectors,
+      published: true
     };
 
     adminBundleRoleAxios.put(`${REST_ADMIN_BUNDLES}/publish`, { newBundle })
