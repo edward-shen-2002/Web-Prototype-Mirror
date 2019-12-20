@@ -45,6 +45,21 @@ const bundles = ({ router, BundleModel }) => {
       .catch(next);
   });
 
+  router.put(`${ROUTE_ADMIN_BUNDLES}/publish`, async (req, res, next) => {
+    const { newBundle } = req.body;
+
+    const { _id } = newBundle;
+
+    try {
+      await BundleModel.findByIdAndUpdate(_id, newBundle);
+      // !~ do prepopulation...
+
+      res.json({ message: MESSAGE_SUCCESS_BUNDLES_UPDATE });
+    } catch(error) {
+      next(error);
+    }
+  });
+
   router.delete(`${ROUTE_ADMIN_BUNDLES}/:_id`, (req, res, next) => {
     const { _id } = req.params;
 

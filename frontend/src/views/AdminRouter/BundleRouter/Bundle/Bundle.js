@@ -21,11 +21,15 @@ import { ROUTE_ADMIN_BUNDLE_BUNDLES } from "constants/routes";
 
 import "./Bundle.scss";
 
-const EditorActions = () => (
+const EditorActions = ({
+  handleSave,
+  handlePublish,
+  handleCancel
+}) => (
   <ButtonGroup className="bundleActions" fullWidth>
-    <Button variant="contained">Save Draft</Button>
-    <Button variant="contained" color="primary">Publish</Button>
-    <Button variant="contained" color="secondary">Cancel</Button>
+    <Button variant="contained" onClick={handleSave}>Save Draft</Button>
+    <Button variant="contained" color="primary" onClick={handlePublish}>Publish</Button>
+    <Button variant="contained" color="secondary" onClick={handleCancel}>Cancel</Button>
   </ButtonGroup>
 );
 
@@ -101,6 +105,41 @@ const BundleContent = ({
       });
   };
 
+  const handleSaveBundle = () => {
+    const newBundle = {
+      _id,
+      name,
+      year,
+      quarter,
+      templates,
+      organizations,
+      sectors,
+    };
+
+    adminBundleRoleAxios.put(REST_ADMIN_BUNDLES, { newBundle })
+      .then(() => console.log("success"))
+      .catch((error) => console.error(error));
+  };
+
+  const handlePublishBundle = () => {
+    const newBundle = {
+      _id,
+      name,
+      year,
+      quarter,
+      templates,
+      organizations,
+      sectors,
+    };
+
+    adminBundleRoleAxios.put(`${REST_ADMIN_BUNDLES}/publish`, { newBundle })
+      .catch((error) => console.error(error));
+  };
+
+  const handleCancelChanges = () => {
+    history.push(ROUTE_ADMIN_BUNDLE_BUNDLES);
+  };
+
   const currentQuarter = quarter ? { label: quarter, value: quarter } : null;
 
   let quarters = [];
@@ -157,7 +196,11 @@ const BundleContent = ({
         handleAddEntity={handleAddSector} 
         handleDeleteUserEntity={handleDeleteSector}
       />
-      <EditorActions/>
+      <EditorActions 
+        handleSave={handleSaveBundle}
+        handlePublish={handlePublishBundle}
+        handleCancel={handleCancelChanges}
+      />
       <TextDialog 
         open={isDeleteDialogOpen} 
         title="Delete Bundle" 
