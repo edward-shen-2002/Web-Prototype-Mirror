@@ -92,7 +92,7 @@ let Bundles = ({
 
   const columns = [
     { title: "Name", field: "name" },
-    { title: "Organization", field: "organization" },
+    { title: "Organization", field: "organization.name" },
     { title: "Status", field: "status" },
     { title: "Phase", field: "phase" }
   ];

@@ -6,6 +6,7 @@ const editBundles = ({ router, OrganizationBundleModel }) => {
   router.get(ROUTE_ADMIN_EDIT_BUNDLES, (req, res, next) => {
     OrganizationBundleModel.find({ phase: "edit" })
       .then((bundles) => {
+        console.log("edit",bundles)
         res.json({ data: { bundles } });
       })
       .catch(next);

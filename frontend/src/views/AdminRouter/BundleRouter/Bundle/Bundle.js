@@ -33,10 +33,10 @@ const EditorActions = ({
   </ButtonGroup>
 );
 
-const BundleTextField = ({ label, text, handleChange }) => (
+const BundleTextField = ({ label, text, textFieldProps, handleChange }) => (
   <div className="field">
     <Typography className="field__label">{label}</Typography>
-    <TextField className="field__input" value={text} onChange={handleChange} fullWidth/>
+    <TextField className="field__input" value={text} onChange={handleChange} {...textFieldProps} fullWidth/>
   </div>
 );
 
@@ -157,6 +157,16 @@ const BundleContent = ({
     borderRadius: 3
   };
 
+  const descriptionTextFieldProps = {
+    variant: "outlined",
+    multiline: true,
+    InputProps: {
+      style: {
+        minHeight: 200
+      }
+    }
+  };
+
   return (
     <Paper className="bundlePage">
       <BundleHeader handleOpenDeleteWarningDialog={handleOpenDeleteWarningDialog}/>
@@ -164,6 +174,7 @@ const BundleContent = ({
       <BundleTextField label="Name" text={name} handleChange={handleChangeName}/>
       <BundleTextField label="Year" text={year} handleChange={handleChangeYear}/>
       <BundleSelectField label="Quarter" value={currentQuarter} options={quarters} handleChange={handleChangeQuarter}/>
+      <BundleTextField label="Description" textFieldProps={descriptionTextFieldProps}/>
       <EntitiesContent
         style={entityStyles}
         userEntities={templates} 

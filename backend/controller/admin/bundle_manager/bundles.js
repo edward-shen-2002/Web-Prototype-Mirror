@@ -1,3 +1,7 @@
+import mongoose from "mongoose";
+
+import uniqid from "uniqid";
+
 import { ROUTE_ADMIN_BUNDLES } from "../../../constants/rest";
 
 import { 
@@ -8,9 +12,14 @@ import {
   MESSAGE_SUCCESS_BUNDLES_BUNDLE
 } from "../../../constants/messages";
 
-import uniqid from "uniqid";
 
-const bundles = ({ router, BundleModel }) => {
+const bundles = ({ 
+  router, 
+  BundleModel, 
+  OrganizationBundleModel, 
+  TemplateModel,
+  OrganizationModel
+}) => {
   router.get(ROUTE_ADMIN_BUNDLES, (req, res, next) => {
     BundleModel.find({})
       .then((bundles) => {
@@ -48,11 +57,62 @@ const bundles = ({ router, BundleModel }) => {
   router.put(`${ROUTE_ADMIN_BUNDLES}/publish`, async (req, res, next) => {
     const { newBundle } = req.body;
 
-    const { _id } = newBundle;
+    const { name, templates, sectors, organizations, year, quarter } = newBundle;
+
+    const { _id: bundleId } = newBundle;
 
     try {
-      await BundleModel.findByIdAndUpdate(_id, newBundle);
-      // !~ do prepopulation...
+      await BundleModel.findByIdAndUpdate(bundleId, newBundle);
+
+      let workbooksData = {
+        workbooks: {},
+        ids: []
+      };
+
+      const templatesCount = templates.length;
+      for(let i = 0; i < templatesCount; i++) {
+        const id = uniqid();
+        // ! TODO ~ do prepopulation...
+        workbooksData.workbooks[id] = await TemplateModel.findById(templates[i]._id);
+        workbooksData.ids.push(id);
+      }
+
+      // Get organizations belonging to sector
+      let sectorIds = sectors.map(({ _id }) => _id);
+      let organizationIds = organizations.map(({ _id }) => _id);
+      const combinedOrganizations = await OrganizationModel.find({ $or: [ { "sector.sectorId": { $in: sectorIds } }, { _id: { $in: organizationIds } } ] }).select("_id name");
+
+      const combinedOrganizationsCount = combinedOrganizations.length;
+
+      for(let i = 0; i < combinedOrganizationsCount; i++) {
+        const organization = combinedOrganizations[i];
+        const { _id: organizationId } = organization;
+        const possibleDuplication = await OrganizationBundleModel.find({ "organization._id": organizationId, bundleId });
+
+        if(possibleDuplication.length) {
+          
+          await OrganizationBundleModel.findOneAndUpdate({ 
+              bundleId
+            }, 
+            {
+              name, 
+              // ! Removed for now since user data may be lost!
+              workbooksData: possibleDuplication.workbooksData ? undefined : workbooksData, 
+              organization,
+              year,
+              quarter
+            });
+        } else {
+          await OrganizationBundleModel.create({ 
+            bundleId,
+            name, 
+            workbooksData, 
+            organization,
+            year,
+            quarter
+          });
+        }
+      }
 
       res.json({ message: MESSAGE_SUCCESS_BUNDLES_UPDATE });
     } catch(error) {
@@ -60,12 +120,18 @@ const bundles = ({ router, BundleModel }) => {
     }
   });
 
-  router.delete(`${ROUTE_ADMIN_BUNDLES}/:_id`, (req, res, next) => {
+  router.delete(`${ROUTE_ADMIN_BUNDLES}/:_id`, async (req, res, next) => {
     const { _id } = req.params;
 
-    BundleModel.findByIdAndRemove(_id)
-      .then(() => res.json({ message: MESSAGE_SUCCESS_BUNDLES_DELETE }))
-      .catch(next);
+    try {
+      await BundleModel.findByIdAndRemove(_id);
+
+      // !change to delete one
+      await OrganizationBundleModel.deleteMany({ bundleId: _id });
+      res.json({ message: MESSAGE_SUCCESS_BUNDLES_DELETE });
+    } catch(error) {
+      next(error)
+    }
   });
 
   router.get(`${ROUTE_ADMIN_BUNDLES}/:_id`, (req, res, next) => {
