@@ -3,6 +3,7 @@
   padding: 20px;
   width: 100%;
 
+  height: fit-content;
   &__title {
     margin-bottom: 20px;
   }
@@ -17,16 +18,25 @@
   }
 
   &__label {
-    margin: auto 0;
+    text-align: center;
     margin-right: 15px;
 
     min-width: 150px;
 
-    border: 2px solid #907AD6;
-    background-color: #907AD6;
+    border: 2px solid #2F353A;
+    background-color: #2F353A;
     border-radius: 3px;
 
     padding: 5px 10px;
     color: white;
   }
+
+  &__select {
+    width: 100%;
+    background-color: white;
+  }
+}
+
+.bundleActions {
+  margin-top: 20px;
 }

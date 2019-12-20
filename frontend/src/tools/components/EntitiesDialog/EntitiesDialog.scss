@@ -2,29 +2,29 @@
   display: flex;
 }
 
-.userEntitiesContent {
+.entity {
+  min-width: 50%;
   width: 300px;
-  margin-right: 10px;
+
+  &--user {
+    padding-right: 10px;
+  }
+
+  &--all {
+    padding-left: 10px;
+  }
 
   &__items {
     overflow: auto;
+    max-height: 300px;
   }
 
   &__header {
     margin-bottom: 20px;
   }
-}
 
-.allEntitiesContent {
-  width: 300px;
-  margin-left: 10px;
-  
-  &__items {
-    overflow: auto;
-  }
-
-  &__header {
-    margin-bottom: 20px;
+  &__placeholder {
+    z-index: 0;
   }
 }
 

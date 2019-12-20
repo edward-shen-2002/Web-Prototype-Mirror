@@ -31,7 +31,7 @@ const HierchyEntitiesListItems = ({ entities, handleAddEntity }) => entities.map
 });
 
 const EntitiesList = ({ entities, handleAddEntity }) => (
-  <List className="allEntitiesContent__items">
+  <List className="entity__items">
     <HierchyEntitiesListItems entities={entities} handleAddEntity={handleAddEntity}/>
   </List>
 );
@@ -42,9 +42,9 @@ const AllEntitiesDialogContent = ({ entities, title, searchPlaceholder, handleAd
   const handleEntityQueryChange = ({ target: { value } }) => setEntitiesQuery(value);
 
   return (
-    <div className="allEntitiesContent">
-      <h5 className="allEntitiesContent__header">{title}</h5>
-      <TextField label={searchPlaceholder} type="search" onChange={handleEntityQueryChange} variant="outlined" fullWidth/>
+    <div className="entity entity--all">
+      <h5 className="entity__header">{title}</h5>
+      <TextField className="entity__placeholder" label={searchPlaceholder} type="search" onChange={handleEntityQueryChange} variant="outlined" fullWidth/>
       <EntitiesList entities={filteredEntities} handleAddEntity={handleAddEntity}/>
     </div>
   );
@@ -70,7 +70,7 @@ const UserEntititesListItems = ({ userEntities, handleDeleteUserEntity }) => use
 });
 
 const UserEntitiesList = ({ userEntities, handleDeleteUserEntity }) => (
-  <List className="userEntitiesContent__items">
+  <List className="entity__items">
     <UserEntititesListItems userEntities={userEntities} handleDeleteUserEntity={handleDeleteUserEntity}/>
   </List>
 );
@@ -81,15 +81,16 @@ const UserEntitiesDialogContent = ({ userEntities, title, searchPlaceholder, han
   const handleUserEntityQueryChange = ({ target: { value } }) => setUserEntitiesQuery(value);
 
   return (
-    <div className="userEntitiesContent">
-      <h5 className="userEntitiesContent__header">{title}</h5>
-      <TextField label={searchPlaceholder} type="search" onChange={handleUserEntityQueryChange} variant="outlined" autoFocus fullWidth/>
+    <div className="entity entity--user">
+      <h5 className="entity__header">{title}</h5>
+      <TextField className="entity__placeholder" label={searchPlaceholder} type="search" onChange={handleUserEntityQueryChange} variant="outlined" autoFocus fullWidth/>
       <UserEntitiesList userEntities={filteredUserEntities} handleDeleteUserEntity={handleDeleteUserEntity}/>
     </div>
   );
 };
 
 export const EntitiesContent = ({
+  style,
   userEntities, 
   entities, 
   userTitle, 
@@ -99,7 +100,7 @@ export const EntitiesContent = ({
   handleAddEntity, 
   handleDeleteUserEntity
 }) => (
-  <div className="entitiesContent">
+  <div className="entitiesContent" style={style}>
     <UserEntitiesDialogContent userEntities={userEntities} title={userTitle} searchPlaceholder={userSearchPlaceholder} handleDeleteUserEntity={handleDeleteUserEntity}/>
     <div className="verticalSeparator"/>
     <AllEntitiesDialogContent entities={entities} title={allTitle} searchPlaceholder={allSearchPlaceholder} handleAddEntity={handleAddEntity}/>
@@ -118,7 +119,19 @@ const EntitiesDialogActions = ({ handleClose }) => (
   </DialogActions>
 );
 
-const EntitiesDialog = ({ open, userEntities, entities, title, userTitle, allTitle, userSearchPlaceholder, allSearchPlaceholder, handleClose, handleAddEntity, handleDeleteUserEntity }) => (
+const EntitiesDialog = ({ 
+  open, 
+  userEntities, 
+  entities, 
+  title, 
+  userTitle, 
+  allTitle, 
+  userSearchPlaceholder, 
+  allSearchPlaceholder, 
+  handleClose, 
+  handleAddEntity, 
+  handleDeleteUserEntity 
+}) => (
   <Dialog open={open} onClose={handleClose}>
     <DialogTitle>{title}</DialogTitle>
     <EntitiesDialogContent 
