@@ -10,9 +10,7 @@ You must have MongoDB set up locally. Install [here](https://www.mongodb.com/dow
 
 #### Package Manager
 
-You can either use [Yarn](https://yarnpkg.com/lang/en/) or [npm (Node.js comes with npm)](https://nodejs.org/en/).
-
-Currently, the script commands are only set for yarn.
+Currently, the script commands are only set for [yarn](https://yarnpkg.com/lang/en/) (not npm).
 
 #### Installing Dependencies
 
