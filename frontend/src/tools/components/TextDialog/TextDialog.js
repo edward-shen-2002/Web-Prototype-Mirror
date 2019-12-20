@@ -27,9 +27,9 @@ const TextDialogActionsButtons = ({
   </ButtonGroup>
 );
 
-const TextDialogActions = ({ handleClose }) => (
+const TextDialogActions = ({ handleDelete, handleClose }) => (
   <DialogActions>
-    <TextDialogActionsButtons handleClose={handleClose}/>
+    <TextDialogActionsButtons handleDelete={handleDelete} handleClose={handleClose}/>
   </DialogActions>
 );
 
