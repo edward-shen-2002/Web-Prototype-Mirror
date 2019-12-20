@@ -32,7 +32,7 @@ const data = ({
   });
 
   router.get(`${ROUTE_DATA}/templates`, (_req, res, next) => {
-    TemplateModel.find({})
+    TemplateModel.find({ published: true })
       .select("_id name")
       .then((templates) => {
         res.json({ message: MESSAGE_SUCCESS_TEMPLATES, data: { templates } });
