@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 
 import { publicAxios, adminBundleRoleAxios } from "tools/rest";
 
-import Loading from "tools/components/Loading";
-
 import Select from "react-select";
 
+import Loading from "tools/components/Loading";
+import TextDialog from "tools/components/TextDialog";
 import { EntitiesContent, deleteItemAndGetUpdatedList, addItemAndGetUpdatedList } from "tools/components/EntitiesDialog";
 
 import Paper from "@material-ui/core/Paper";
@@ -51,6 +51,7 @@ const BundleHeader = ({ handleOpenDeleteWarningDialog }) => (
 );
 
 const BundleContent = ({
+  _id,
   name,
   year,
   quarter,
@@ -65,8 +66,11 @@ const BundleContent = ({
   setOrganizations,
   setSectors,
   setQuarter,
-  setYear
+  setYear,
+  history
 }) => {
+  const [ isDeleteDialogOpen, setIsDeleteDialogOpen ] = useState(false);
+
   const handleChangeName = ({ target: { value } }) => setName(value);
 
   const handleChangeYear = ({ target: { value } }) => setYear(value);
@@ -85,8 +89,16 @@ const BundleContent = ({
 
   const handleDeleteOrganization = (organization) => setOrganizations(deleteItemAndGetUpdatedList(organizations, organization));
 
-  const handleOpenDeleteWarningDialog = () => {
-
+  const handleOpenDeleteWarningDialog = () => setIsDeleteDialogOpen(true);
+  const handleCloseDeleteWarningDialog = () => setIsDeleteDialogOpen(false);
+  const handleDeleteBundle = () => {
+    adminBundleRoleAxios.delete(`${REST_ADMIN_BUNDLES}/${_id}`)
+      .then(() => {
+        history.push(ROUTE_ADMIN_BUNDLE_BUNDLES);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const currentQuarter = quarter ? { label: quarter, value: quarter } : null;
@@ -146,6 +158,13 @@ const BundleContent = ({
         handleDeleteUserEntity={handleDeleteSector}
       />
       <EditorActions/>
+      <TextDialog 
+        open={isDeleteDialogOpen} 
+        title="Delete Bundle" 
+        message="Are you sure you want to delete this bundle?"
+        handleClose={handleCloseDeleteWarningDialog}
+        handleDelete={handleDeleteBundle}
+      />
     </Paper>
   );
 };
@@ -207,6 +226,7 @@ const Bundle = ({
   return (
     isDataFetched 
       ? <BundleContent
+          _id={_id}
           name={name}
           year={year}
           quarter={quarter}
@@ -222,6 +242,7 @@ const Bundle = ({
           setSectors={setSectors}
           setYear={setYear}
           setQuarter={setQuarter}
+          history={history}
         />
       : <Loading/>
   );
