@@ -102,7 +102,7 @@ const UserEntitiesDialogContent = ({ userEntities, title, searchPlaceholder, han
   return (
     <div className="entity entity--user">
       <h5 className="entity__header">{title}</h5>
-      <TextField className="entity__placeholder" label={searchPlaceholder} type="search" onChange={handleUserEntityQueryChange} variant="outlined" autoFocus fullWidth/>
+      <TextField className="entity__placeholder" label={searchPlaceholder} type="search" onChange={handleUserEntityQueryChange} variant="outlined" fullWidth/>
       <UserEntitiesList userEntities={filteredUserEntities} handleDeleteUserEntity={handleDeleteUserEntity}/>
     </div>
   );
