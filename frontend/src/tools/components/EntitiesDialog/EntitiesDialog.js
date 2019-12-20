@@ -18,6 +18,25 @@ import { DeleteButton } from "tools/components/buttons";
 
 import "./EntitiesDialog.scss";
 
+export const deleteItemAndGetUpdatedList = (items, itemToDelete) => {
+  const itemToDeleteIndex = items.indexOf(itemToDelete);
+
+  const newItems = [ ...items.slice(0, itemToDeleteIndex), ...items.slice(itemToDeleteIndex + 1) ];
+  
+  return newItems;
+};
+
+export const addItemAndGetUpdatedList = (items, itemToAdd) => {
+  let newItems = [ ...items ];
+  if(items.find(({ _id }) => _id === itemToAdd._id)) {
+    console.error("Item is already present");
+  } else {
+    newItems.push(itemToAdd);
+  }
+
+  return newItems;
+};
+
 const HierchyEntitiesListItems = ({ entities, handleAddEntity }) => entities.map((entity) => {
   const { name } = entity;
 

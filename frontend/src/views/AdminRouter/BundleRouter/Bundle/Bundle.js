@@ -6,7 +6,7 @@ import Loading from "tools/components/Loading";
 
 import Select from "react-select";
 
-import { EntitiesContent } from "tools/components/EntitiesDialog";
+import { EntitiesContent, deleteItemAndGetUpdatedList, addItemAndGetUpdatedList } from "tools/components/EntitiesDialog";
 
 import Paper from "@material-ui/core/Paper";
 import Divider from "@material-ui/core/Divider";
@@ -23,9 +23,9 @@ import "./Bundle.scss";
 
 const EditorActions = () => (
   <ButtonGroup className="bundleActions" fullWidth>
-    <Button>Save</Button>
-    <Button>Publish</Button>
-    <Button>Cancel</Button>
+    <Button variant="contained">Save Draft</Button>
+    <Button variant="contained" color="primary">Publish</Button>
+    <Button variant="contained" color="secondary">Cancel</Button>
   </ButtonGroup>
 );
 
@@ -36,10 +36,17 @@ const BundleTextField = ({ label, text, handleChange }) => (
   </div>
 );
 
-const BundleSelectField = ({ label, items, handleChange }) => (
+const BundleSelectField = ({ label, options, value, handleChange }) => (
   <div className="field">
     <Typography className="field__label">{label}</Typography>
-    <Select className="field__select" options={items}/>
+    <Select className="field__select" options={options} value={value} onChange={handleChange}/>
+  </div>
+);
+
+const BundleHeader = ({ handleOpenDeleteWarningDialog }) => (
+  <div className="bundleHeader">
+    <Typography variant="h4">Bundle Editor</Typography>
+    <Button variant="contained" color="secondary" onClick={handleOpenDeleteWarningDialog}>Delete Bundle</Button>
   </div>
 );
 
@@ -56,39 +63,40 @@ const BundleContent = ({
   setName,
   setTemplates,
   setOrganizations,
-  setSectors
+  setSectors,
+  setQuarter,
+  setYear
 }) => {
   const handleChangeName = ({ target: { value } }) => setName(value);
 
-  const handleAddTemplate = (newTemplate) => {
+  const handleChangeYear = ({ target: { value } }) => setYear(value);
+
+  const handleChangeQuarter = ({ value }) => setQuarter(value);
+
+  const handleAddTemplate = (newTemplate) => setTemplates(addItemAndGetUpdatedList(templates, newTemplate));
+
+  const handleDeleteTemplate = (template) => setTemplates(deleteItemAndGetUpdatedList(templates, template));
+
+  const handleAddSector = (newSector) => setSectors(addItemAndGetUpdatedList(sectors, newSector));
+
+  const handleDeleteSector = (sector) => setSectors(deleteItemAndGetUpdatedList(sectors, sector));
+
+  const handleAddOrganization = (newOrganization) => setOrganizations(addItemAndGetUpdatedList(organizations, newOrganization));
+
+  const handleDeleteOrganization = (organization) => setOrganizations(deleteItemAndGetUpdatedList(organizations, organization));
+
+  const handleOpenDeleteWarningDialog = () => {
 
   };
 
-  const handleDeleteTemplate = (template) => {
-
-  };
-
-  const handleAddSector = () => {
-
-  };
-
-  const handleDeleteSector = () => {
-
-  };
-
-  const handleAddOrganization = () => {
-
-  };
-
-  const handleDeleteOrganization = () => {
-
-  };
-
-  const currentQuarter = { label: quarter, value: quarter };
+  const currentQuarter = quarter ? { label: quarter, value: quarter } : null;
 
   let quarters = [];
 
-  for(let i = 1; i < 5; i++) quarters.push({ label: i, value: i });
+  for(let i = 1; i < 5; i++) {
+    const quarterString = `Q${i}`;
+    quarters.push({ label: quarterString, value: quarterString });
+  }
 
   const entityStyles = {
     marginTop: 20,
@@ -99,11 +107,11 @@ const BundleContent = ({
 
   return (
     <Paper className="bundlePage">
-      <Typography className="bundlePage__title" variant="h4">Bundle Editor</Typography>
+      <BundleHeader handleOpenDeleteWarningDialog={handleOpenDeleteWarningDialog}/>
       <Divider/>
       <BundleTextField label="Name" text={name} handleChange={handleChangeName}/>
-      <BundleTextField label="Year" text={year}/>
-      <BundleSelectField label="Quarter" value={currentQuarter} items={quarters}/>
+      <BundleTextField label="Year" text={year} handleChange={handleChangeYear}/>
+      <BundleSelectField label="Quarter" value={currentQuarter} options={quarters} handleChange={handleChangeQuarter}/>
       <EntitiesContent
         style={entityStyles}
         userEntities={templates} 
@@ -212,6 +220,8 @@ const Bundle = ({
           setTemplates={setTemplates}
           setOrganizations={setOrganizations}
           setSectors={setSectors}
+          setYear={setYear}
+          setQuarter={setQuarter}
         />
       : <Loading/>
   );
