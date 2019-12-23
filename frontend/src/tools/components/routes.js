@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import { Route, Redirect } from "react-router-dom";
 
-import { ROUTE_USER_DASHBOARD, ROUTE_PUBLIC_LOGIN } from "constants/routes";
+import { ROUTE_USER_PROFILE, ROUTE_PUBLIC_LOGIN } from "constants/routes";
 
 import { ROLE_LEVEL_NOT_APPLICABLE } from "constants/roles";
 
@@ -21,7 +21,7 @@ export let ActivityRoute = ({ isOnline, requiredState, exact, path, Component })
 
       // Make username the parameter to determine if user is fetched for now...
       if(isOnline && requiredState === OFFLINE){
-        RouteComponent = <Redirect to={ROUTE_USER_DASHBOARD}/>
+        RouteComponent = <Redirect to={ROUTE_USER_PROFILE}/>
       } else if((!isOnline && requiredState === ONLINE)) {
         RouteComponent = <Redirect to={ROUTE_PUBLIC_LOGIN}/>
       } else {
@@ -46,7 +46,7 @@ export let AdminRoleRoute = ({ account, requiredRole, exact, path, Component }) 
 
       // Make username the parameter to determine if user is fetched for now...
       if(account.username && account.roles[requiredRole].scope === ROLE_LEVEL_NOT_APPLICABLE){
-        RouteComponent = <Redirect to={ROUTE_USER_DASHBOARD}/>
+        RouteComponent = <Redirect to={ROUTE_USER_PROFILE}/>
       } else {
         RouteComponent = <Component {...props}/>;
       }

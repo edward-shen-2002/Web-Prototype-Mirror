@@ -4,8 +4,6 @@ import { connect } from "react-redux";
 
 import { Switch, Route, Redirect } from "react-router-dom";
 
-import { ROUTE_USER_DASHBOARD } from "constants/routes";
-
 import { loadUserState, resetUserState } from "tools/redux";
 import { 
   authAxios, 
@@ -136,7 +134,7 @@ let App = ({
       if(status === HTTP_ERROR_INVALID_TOKEN) {
         handleLogout();
       } else if(status === HTTP_ERROR_UNAUTHORIZED) {
-        history.push(ROUTE_USER_DASHBOARD);
+        history.push(ROUTE_USER_PROFILE);
         handleSetReconnectOn();
       }
 

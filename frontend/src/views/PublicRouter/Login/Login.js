@@ -15,7 +15,7 @@ import { publicAxios, setAxiosToken } from "tools/rest";
 import { saveToken } from "tools/storage";
 
 import { REST_PUBLIC_LOGIN } from "constants/rest";
-import { ROUTE_PUBLIC_REGISTER, ROUTE_PUBLIC_RECOVERY, ROUTE_USER_DASHBOARD } from "constants/routes";
+import { ROUTE_PUBLIC_REGISTER, ROUTE_PUBLIC_RECOVERY, ROUTE_USER_PROFILE } from "constants/routes";
 
 import "./Login.scss";
 
@@ -70,7 +70,7 @@ const mapStateToProps = ({ isOnline }) => ({ isOnline });
 const mapDispatchToProps = (dispatch) => ({
   login: (isOnline, history, { username, password }, setSubmitting, setGeneralError) => {
     if(isOnline) {
-      history.push(ROUTE_USER_DASHBOARD);
+      history.push(ROUTE_USER_PROFILE);
     } else {
       publicAxios.post(REST_PUBLIC_LOGIN, { username, password })
         .then(({ data: { data: { token, user } } }) => {
