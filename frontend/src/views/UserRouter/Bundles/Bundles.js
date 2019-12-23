@@ -49,7 +49,7 @@ const checkAndFetchRoleData = async (role, axiosRouter, route) => {
 
   if(role.scope !== ROLE_LEVEL_NOT_APPLICABLE) {
     try {
-      const { data: { data: { bundles } } } = await axiosRouter.get(route);
+      const { data: { data: { bundles } } } = await axiosRouter.get(`${route}/general`);
       data = bundles;
     } catch(error) {
       console.error(error);
