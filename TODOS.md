@@ -9,6 +9,7 @@
 - [ ] Convert excel editor state to Xlsx-populate rich text
 - [ ] Excel formulas
 - [ ] Excel styles
+- [ ] Add Excel type (template, edit, review, approve, ...) state to Redux store
 
 ## Unprioritized
 
