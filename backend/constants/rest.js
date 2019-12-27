@@ -42,6 +42,8 @@ export const ROUTE_GROUP_ADMIN_REVIEW_BUNDLE = `${ROUTE_GROUP_ADMIN}/review_bund
 
 export const ROUTE_GROUP_ADMIN_APPROVE_BUNDLE = `${ROUTE_GROUP_ADMIN}/approve_bundle_manager`;
 
+export const ROUTE_ADMIN_BUNDLES_WORKFLOW = `${ROUTE_ADMIN_BUNDLES}/workflow`;
+
 /** HTTP response status codes */
 //Success codes
 export const HTTP_SUCCESS = 200;

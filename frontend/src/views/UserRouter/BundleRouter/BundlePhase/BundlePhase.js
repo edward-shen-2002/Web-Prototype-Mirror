@@ -12,12 +12,13 @@ import Button from "@material-ui/core/Button";
 import { 
   adminEditBundleRoleAxios, 
   adminReviewBundleRoleAxios, 
-  adminApproveBundleRoleAxios 
+  adminApproveBundleRoleAxios,
+  adminBundleRoleAxios
 } from "tools/rest";
 
 import TextDialog from "tools/components/TextDialog";
 
-import { REST_ADMIN_BUNDLES } from "constants/rest";
+import { REST_ADMIN_BUNDLES_WORKFLOW } from "constants/rest";
 import { ROUTE_USER_BUNDLES } from "constants/routes";
 
 import "./BundlePhase.scss";
@@ -71,8 +72,8 @@ const BundlePhaseNotes = ({ notesPhase, phase, label, text, handleChange }) => (
 
 const BundlePhaseActions = ({ phase, handleSave, handleSubmit, handleCancel }) => (
   <ButtonGroup className="bundleActions" variant="contained" fullWidth>
-    <Button color="primary" onClick={handleSave}>Save</Button>
-    <Button color="secondary" onClick={handleSubmit}>Submit</Button>
+    {phase !== "null" && <Button color="primary" onClick={handleSave}>Save</Button>}
+    {phase !== "null" && <Button color="secondary" onClick={handleSubmit}>Submit</Button>}
     <Button onClick={handleCancel}>Cancel</Button>
   </ButtonGroup>
 );
@@ -160,9 +161,11 @@ const BundlePhase = ({
       return adminEditBundleRoleAxios;
     } else if(phase === "review") {
       return adminReviewBundleRoleAxios;
-    } 
+    } else if(phase === "approve") {
+      return adminApproveBundleRoleAxios;
+    }
 
-    return adminApproveBundleRoleAxios;
+    return adminBundleRoleAxios;
   }, [ phase ]);
 
   const handleChangeEditorNotes = ({ target: { value } }) => setEditorNotes(value);
@@ -175,9 +178,9 @@ const BundlePhase = ({
       bundle.editorNotes = editorNotes;
     } else if(phase === "review") {
       bundle.reviewerNotes = reviewerNotes;
-    } else {
+    } else if(phase === "approve") {
       bundle.approverNotes = approverNotes;
-    }
+    } 
 
     return bundle;
   });
@@ -188,14 +191,14 @@ const BundlePhase = ({
   };
 
   const handleSaveBundle = () => {
-    bundlePhaseRoleAxios.put(`${REST_ADMIN_BUNDLES}/${_id}`, { bundle })
+    bundlePhaseRoleAxios.put(`${REST_ADMIN_BUNDLES_WORKFLOW}/${_id}`, { bundle })
       .catch((error) => {
         console.error(error);
       });
   };
 
   const handleSubmitBundle = () => {
-    bundlePhaseRoleAxios.put(`${REST_ADMIN_BUNDLES}/${_id}/submit`, { bundle })
+    bundlePhaseRoleAxios.put(`${REST_ADMIN_BUNDLES_WORKFLOW}/${_id}/submit`, { bundle })
       .then(() => handleGoBack())
       .catch((error) => {
         console.error(error);
@@ -209,7 +212,7 @@ const BundlePhase = ({
   const handleCloseReturnBundleDialog = () => setIsReturnBundleDialogOpen(false);
 
   const handleReturnBundle = () => {
-    bundlePhaseRoleAxios.put(`${REST_ADMIN_BUNDLES}/${_id}/return`, { bundle })
+    bundlePhaseRoleAxios.put(`${REST_ADMIN_BUNDLES_WORKFLOW}/${_id}/return`, { bundle })
       .then(() => handleGoBack())
       .catch((error) => {
         console.error(error);
@@ -218,7 +221,7 @@ const BundlePhase = ({
 
   useEffect(() => {
     if(!isDataFetched) {
-      bundlePhaseRoleAxios.get(`${REST_ADMIN_BUNDLES}/${_id}`)
+      bundlePhaseRoleAxios.get(`${REST_ADMIN_BUNDLES_WORKFLOW}/${_id}`)
         .then(({ data: { data: { bundle } } }) => {
           const { 
             name,

@@ -9,10 +9,11 @@ const MaterialTable = lazy(() => import("material-table"));
 import {
   adminEditBundleRoleAxios,
   adminReviewBundleRoleAxios,
-  adminApproveBundleRoleAxios
+  adminApproveBundleRoleAxios,
+  adminBundleRoleAxios
 } from "tools/rest";
 
-import { REST_ADMIN_BUNDLES } from "constants/rest";
+import { REST_ADMIN_BUNDLES_WORKFLOW } from "constants/rest";
 
 import { ROLE_LEVEL_NOT_APPLICABLE } from "constants/roles";
 
@@ -26,29 +27,31 @@ const mapStateToProps = ({
       roles: {
         EDIT_BUNDLE_MANAGER,
         REVIEW_BUNDLE_MANAGER,
-        APPROVE_BUNDLE_MANAGER
+        APPROVE_BUNDLE_MANAGER,
+        BUNDLE_MANAGER
       }
     }
   }
 }) => ({
   EDIT_BUNDLE_MANAGER,
   REVIEW_BUNDLE_MANAGER,
-  APPROVE_BUNDLE_MANAGER
+  APPROVE_BUNDLE_MANAGER,
+  BUNDLE_MANAGER
 });
 
 const mapDispatchToProps = (dispatch) => ({
 
 });
 
-const checkAndFetchRoleData = async (role, axiosRouter, route) => {
+const checkAndFetchRoleData = async (role, axiosRouter) => {
   let data = [];
 
   if(role.scope !== ROLE_LEVEL_NOT_APPLICABLE) {
     try {
-      const { data: { data: { bundles } } } = await axiosRouter.get(`${REST_ADMIN_BUNDLES}/general`);
+      const { data: { data: { bundles } } } = await axiosRouter.get(`${REST_ADMIN_BUNDLES_WORKFLOW}/general`);
       data = bundles;
     } catch(error) {
-      console.error(error);
+      // Not actually an error
     }
   }
 
@@ -59,6 +62,7 @@ let Bundles = ({
   EDIT_BUNDLE_MANAGER,
   REVIEW_BUNDLE_MANAGER,
   APPROVE_BUNDLE_MANAGER,
+  BUNDLE_MANAGER,
   history
 }) => {
   const [ bundles, setBundles ] = useState([]);
@@ -70,7 +74,8 @@ let Bundles = ({
         setBundles([
           ...(await checkAndFetchRoleData(EDIT_BUNDLE_MANAGER, adminEditBundleRoleAxios)),
           ...(await checkAndFetchRoleData(REVIEW_BUNDLE_MANAGER, adminReviewBundleRoleAxios)),
-          ...(await checkAndFetchRoleData(APPROVE_BUNDLE_MANAGER, adminApproveBundleRoleAxios))
+          ...(await checkAndFetchRoleData(APPROVE_BUNDLE_MANAGER, adminApproveBundleRoleAxios)),
+          ...(await checkAndFetchRoleData(BUNDLE_MANAGER, adminBundleRoleAxios))
         ]);
       };
       fetchData();

@@ -1,10 +1,10 @@
-import { ROUTE_ADMIN_BUNDLES } from "../../../constants/rest";
+import { ROUTE_ADMIN_BUNDLES_WORKFLOW } from "../../../constants/rest";
 import { HTTP_ERROR_NOT_FOUND } from "../../../constants/rest";
 import { MESSAGE_ERROR_NOT_FOUND } from "../../../constants/messages";
 
 // Reviewers can only write review notes/comments, return to editor, or pass to approver (proceed workflow)
 const reviewBundles = ({ router, OrganizationBundleModel }) => {
-  router.get(`${ROUTE_ADMIN_BUNDLES}/general`, (req, res, next) => {
+  router.get(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/general`, (req, res, next) => {
     OrganizationBundleModel.find({ phase: "review" })
       .select("_id name organization status phase")
       .then((bundles) => {
@@ -13,7 +13,7 @@ const reviewBundles = ({ router, OrganizationBundleModel }) => {
       .catch(next);
   });
 
-  router.get(`${ROUTE_ADMIN_BUNDLES}/:_id`, (req, res, next) => {
+  router.get(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/:_id`, (req, res, next) => {
     const { _id } = req.params;
     
     OrganizationBundleModel.findOne({ _id, phase: "review" })
@@ -28,7 +28,7 @@ const reviewBundles = ({ router, OrganizationBundleModel }) => {
       .catch(next);
   });
 
-  router.put(`${ROUTE_ADMIN_BUNDLES}/:_id`, (req, res, next) => {
+  router.put(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/:_id`, (req, res, next) => {
     const { _id } = req.params;
     const { bundle: { reviewerNotes } } = req.body;
 
@@ -43,7 +43,7 @@ const reviewBundles = ({ router, OrganizationBundleModel }) => {
       .catch(next);
   });
 
-  router.put(`${ROUTE_ADMIN_BUNDLES}/:_id/return`, (req, res, next) => {
+  router.put(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/:_id/return`, (req, res, next) => {
     const { _id } = req.params;
     const { bundle: { reviewerNotes } } = req.body;
 
@@ -58,7 +58,7 @@ const reviewBundles = ({ router, OrganizationBundleModel }) => {
       .catch(next);
   });
 
-  router.put(`${ROUTE_ADMIN_BUNDLES}/:_id/submit`, (req, res, next) => {
+  router.put(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/:_id/submit`, (req, res, next) => {
     const { _id } = req.params;
     const { bundle: { reviewerNotes } } = req.body;
 
@@ -73,7 +73,7 @@ const reviewBundles = ({ router, OrganizationBundleModel }) => {
       .catch(next);
   });
 
-  router.get(`${ROUTE_ADMIN_BUNDLES}/:bundleId/workbook/:workbookId`, (req, res, next) => {
+  router.get(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/:bundleId/workbook/:workbookId`, (req, res, next) => {
     const { bundleId, workbookId } = req.params;
 
     OrganizationBundleModel.findOne({ _id: bundleId, phase: "review" })

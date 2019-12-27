@@ -1,9 +1,9 @@
-import { ROUTE_ADMIN_BUNDLES } from "../../../constants/rest";
+import { ROUTE_ADMIN_BUNDLES_WORKFLOW } from "../../../constants/rest";
 import { HTTP_ERROR_NOT_FOUND } from "../../../constants/rest";
 import { MESSAGE_ERROR_NOT_FOUND } from "../../../constants/messages";
 
 const approveBundles = ({ router, OrganizationBundleModel }) => {
-  router.get(`${ROUTE_ADMIN_BUNDLES}/general`, (req, res, next) => {
+  router.get(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/general`, (req, res, next) => {
     OrganizationBundleModel.find({ phase: "approve" })
       .select("_id name organization status phase")
       .then((bundles) => {
@@ -12,7 +12,7 @@ const approveBundles = ({ router, OrganizationBundleModel }) => {
       .catch(next);
   });
 
-  router.get(`${ROUTE_ADMIN_BUNDLES}/:_id`, (req, res, next) => {
+  router.get(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/:_id`, (req, res, next) => {
     const { _id } = req.params;
     
     OrganizationBundleModel.findOne({ _id, phase: "approve" })
@@ -27,7 +27,7 @@ const approveBundles = ({ router, OrganizationBundleModel }) => {
       .catch(next);
   });
 
-  router.put(`${ROUTE_ADMIN_BUNDLES}/:_id`, (req, res, next) => {
+  router.put(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/:_id`, (req, res, next) => {
     const { _id } = req.params;
     const { bundle: { approverNotes } } = req.body;
 
@@ -42,11 +42,11 @@ const approveBundles = ({ router, OrganizationBundleModel }) => {
       .catch(next);
   });
 
-  router.put(`${ROUTE_ADMIN_BUNDLES}/:_id/submit`, (req, res, next) => {
+  router.put(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/:_id/submit`, (req, res, next) => {
     const { _id } = req.params;
     const { bundle: { approverNotes } } = req.body;
 
-    OrganizationBundleModel.findOneAndUpdate({ _id, phase: "approve" }, { approverNotes, phase: null, status: "APPROVED" })
+    OrganizationBundleModel.findOneAndUpdate({ _id, phase: "approve" }, { approverNotes, phase: undefined, status: "APPROVED" })
       .then((bundle) => {
         if(bundle) {
           // ! Populate master table !
@@ -58,7 +58,7 @@ const approveBundles = ({ router, OrganizationBundleModel }) => {
       .catch(next);
   });
 
-  router.put(`${ROUTE_ADMIN_BUNDLES}/:_id/return`, (req, res, next) => {
+  router.put(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/:_id/return`, (req, res, next) => {
     const { _id } = req.params;
     const { bundle: { approverNotes } } = req.body;
 
@@ -73,7 +73,7 @@ const approveBundles = ({ router, OrganizationBundleModel }) => {
       .catch(next);
   });
 
-  router.get(`${ROUTE_ADMIN_BUNDLES}/:bundleId/workbook/:workbookId`, (req, res, next) => {
+  router.get(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/:bundleId/workbook/:workbookId`, (req, res, next) => {
     const { bundleId, workbookId } = req.params;
 
     OrganizationBundleModel.findOne({ _id: bundleId, phase: "approve" })
