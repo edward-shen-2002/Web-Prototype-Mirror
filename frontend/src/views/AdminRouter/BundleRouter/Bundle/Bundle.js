@@ -218,7 +218,7 @@ const BundleContent = ({
         title="Delete Bundle" 
         message="Are you sure you want to delete this bundle?"
         handleClose={handleCloseDeleteWarningDialog}
-        handleDelete={handleDeleteBundle}
+        handleConfirm={handleDeleteBundle}
       />
     </Paper>
   );

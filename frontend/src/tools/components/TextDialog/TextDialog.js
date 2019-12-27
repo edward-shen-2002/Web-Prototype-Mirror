@@ -18,18 +18,18 @@ const TextDialogContent = ({ message }) => (
 );
 
 const TextDialogActionsButtons = ({
-  handleDelete,
+  handleConfirm,
   handleClose
 }) => (
   <ButtonGroup>
-    <Button color="secondary" variant="contained" onClick={handleDelete}>Delete</Button>
+    <Button color="secondary" variant="contained" onClick={handleConfirm}>Confirm</Button>
     <Button variant="contained" onClick={handleClose}>Cancel</Button>
   </ButtonGroup>
 );
 
-const TextDialogActions = ({ handleDelete, handleClose }) => (
+const TextDialogActions = ({ handleConfirm, handleClose }) => (
   <DialogActions>
-    <TextDialogActionsButtons handleDelete={handleDelete} handleClose={handleClose}/>
+    <TextDialogActionsButtons handleConfirm={handleConfirm} handleClose={handleClose}/>
   </DialogActions>
 );
 
@@ -37,13 +37,13 @@ const TextDialog = ({
   open,
   title, 
   message,
-  handleDelete,
+  handleConfirm,
   handleClose
 }) => (
   <Dialog open={open} onClose={handleClose}>
     <DialogTitle>{title}</DialogTitle>
     <TextDialogContent message={message}/>
-    <TextDialogActions handleDelete={handleDelete} handleClose={handleClose}/>
+    <TextDialogActions handleConfirm={handleConfirm} handleClose={handleClose}/>
   </Dialog>
 );
 

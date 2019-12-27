@@ -1,42 +1,132 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+
 import Paper from "@material-ui/core/Paper";
 
-import Typographpy from "@material-ui/core/Typography";
+import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
 import Divider from "@material-ui/core/Divider";
-import Button from "@material-ui/core/Button";
 import Chip from "@material-ui/core/Chip";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
+import Button from "@material-ui/core/Button";
 
-import { adminEditBundleRoleAxios } from "tools/rest";
+import { 
+  adminEditBundleRoleAxios, 
+  adminReviewBundleRoleAxios, 
+  adminApproveBundleRoleAxios 
+} from "tools/rest";
+
+import TextDialog from "tools/components/TextDialog";
 
 import { REST_ADMIN_BUNDLES } from "constants/rest";
 import { ROUTE_USER_BUNDLES } from "constants/routes";
 
 import "./BundlePhase.scss";
 
-const BundleWorkbooks = ({ workbookIds, workbookNames }) => workbookIds.map((id, index) => {
+const BundleWorkbooks = ({ 
+  workbookIds, 
+  workbookNames, 
+  history, 
+  bundleId, 
+  phase 
+}) => workbookIds.map((id, index) => {
   const name = workbookNames[index];
+  const handleClick = () => history.push(`${ROUTE_USER_BUNDLES}/${phase}/${bundleId}/workbook/${id}`);
 
   return (
     <Chip
-      className="bundle__workbook"
+      className="bundleWorkbooks__workbook"
       key={`${id} ${name}`}
       label={name}
       size="medium"
       clickable
+      onClick={handleClick}
     />
   );
 });
 
+const BundleTextField = ({ label, text, textFieldProps, handleChange }) => (
+  <div className="field">
+    <Typography className="field__label">{label}</Typography>
+    <TextField className="field__input" value={text} onChange={handleChange} {...textFieldProps} fullWidth/>
+  </div>
+);
+
+const BundlePhaseNotes = ({ notesPhase, phase, label, text, handleChange }) => (
+  <BundleTextField 
+    label={label} 
+    text={text} 
+    textFieldProps={{ 
+      disabled: notesPhase !== phase,
+      variant: "outlined",
+      multiline: true,
+      InputProps: {
+        style: {
+          minHeight: 100
+        }
+      }
+    }}
+    handleChange={handleChange}
+  />
+);
+
+const BundlePhaseActions = ({ phase, handleSave, handleSubmit, handleCancel }) => (
+  <ButtonGroup className="bundleActions" variant="contained" fullWidth>
+    <Button color="primary" onClick={handleSave}>Save</Button>
+    <Button color="secondary" onClick={handleSubmit}>Submit</Button>
+    <Button onClick={handleCancel}>Cancel</Button>
+  </ButtonGroup>
+);
+
 const BundleWorkbooksSection = ({
   workbookNames,
-  workbookIds
+  workbookIds,
+  history,
+  bundleId,
+  phase,
+  editorNotes,
+  reviewerNotes,
+  approverNotes,
+  handleChangeEditorNotes,
+  handleChangeReviewerNotes,
+  handleChangeApproverNotes
 }) => (
   <div>
-    <Typographpy variant="h6">Workbooks</Typographpy>
+    <Typography variant="h6">Workbooks</Typography>
     <BundleWorkbooks
       workbookNames={workbookNames}
       workbookIds={workbookIds}
+      history={history}
+      bundleId={bundleId}
+      phase={phase}
     />
+    <BundlePhaseNotes 
+      label="Editor Notes" 
+      text={editorNotes} 
+      phase={phase} 
+      notesPhase="edit"
+      handleChange={handleChangeEditorNotes}
+    />
+    <BundlePhaseNotes 
+      label="Reviewer Notes" 
+      text={reviewerNotes} 
+      phase={phase} 
+      notesPhase="review"
+      handleChange={handleChangeReviewerNotes}
+    />
+    <BundlePhaseNotes 
+      label="Approver Notes" 
+      text={approverNotes} 
+      phase={phase} 
+      notesPhase="approve"
+      handleChange={handleChangeApproverNotes}
+    />
+  </div>
+);
+
+const BundleHeader = ({ name, phase, handleOpenReturnBundleDialog }) => (
+  <div className="bundleHeader">
+    <Typography variant="h4">Bundle: {name}</Typography>
+    {phase !== "edit" && <Button variant="contained" color="secondary" onClick={handleOpenReturnBundleDialog}>Return Bundle</Button>}
   </div>
 );
 
@@ -58,13 +148,77 @@ const BundlePhase = ({
   const [ workbookNames, setWorkbookNames ] = useState([]);
   const [ createdAt, setCreatedAt ] = useState("");
 
-  const [ userNotes, setUserNotes ] = useState("");
+  const [ editorNotes, setEditorNotes ] = useState("");
   const [ reviewerNotes, setReviewerNotes ] = useState("");
   const [ approverNotes, setApproverNotes ] = useState("");
 
+  const [ isBundleSubmitDialogOpen, setIsBundleSubmitDialogOpen ] = useState(false);
+  const [ isReturnBundleDialogOpen, setIsReturnBundleDialogOpen ] = useState(false);
+
+  const bundlePhaseRoleAxios = useMemo(() => {
+    if(phase === "edit") {
+      return adminEditBundleRoleAxios;
+    } else if(phase === "review") {
+      return adminReviewBundleRoleAxios;
+    } 
+
+    return adminApproveBundleRoleAxios;
+  }, [ phase ]);
+
+  const handleChangeEditorNotes = ({ target: { value } }) => setEditorNotes(value);
+  const handleChangeReviewerNotes = ({ target: { value } }) => setReviewerNotes(value);
+  const handleChangeApproverNotes = ({ target: { value } }) => setApproverNotes(value);
+
+  const bundle = useMemo(() => {
+    let bundle = {};
+    if(phase === "edit") {
+      bundle.editorNotes = editorNotes;
+    } else if(phase === "review") {
+      bundle.reviewerNotes = reviewerNotes;
+    } else {
+      bundle.approverNotes = approverNotes;
+    }
+
+    return bundle;
+  });
+
+  
+  const handleGoBack = () => {
+    history.push(ROUTE_USER_BUNDLES);
+  };
+
+  const handleSaveBundle = () => {
+    bundlePhaseRoleAxios.put(`${REST_ADMIN_BUNDLES}/${_id}`, { bundle })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const handleSubmitBundle = () => {
+    bundlePhaseRoleAxios.put(`${REST_ADMIN_BUNDLES}/${_id}/submit`, { bundle })
+      .then(() => handleGoBack())
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const handleOpenBundleSubmitDialog = () => setIsBundleSubmitDialogOpen(true);
+  const handleCloseBundleSubmitDialog = () => setIsBundleSubmitDialogOpen(false);
+
+  const handleOpenReturnBundleDialog = () => setIsReturnBundleDialogOpen(true);
+  const handleCloseReturnBundleDialog = () => setIsReturnBundleDialogOpen(false);
+
+  const handleReturnBundle = () => {
+    bundlePhaseRoleAxios.put(`${REST_ADMIN_BUNDLES}/${_id}/return`, { bundle })
+      .then(() => handleGoBack())
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   useEffect(() => {
     if(!isDataFetched) {
-      adminEditBundleRoleAxios.get(`${REST_ADMIN_BUNDLES}/${_id}`)
+      bundlePhaseRoleAxios.get(`${REST_ADMIN_BUNDLES}/${_id}`)
         .then(({ data: { data: { bundle } } }) => {
           const { 
             name,
@@ -72,7 +226,7 @@ const BundlePhase = ({
             quarter,
             status,
             createdAt,
-            userNotes, 
+            editorNotes, 
             reviewerNotes, 
             approverNotes, 
             workbooksData: { ids, names } 
@@ -83,7 +237,7 @@ const BundlePhase = ({
           setQuarter(quarter);
           setStatus(status);
           setCreatedAt(createdAt);
-          setUserNotes(userNotes);
+          setEditorNotes(editorNotes);
           setReviewerNotes(reviewerNotes);
           setApproverNotes(approverNotes);
           setWorkbookNames(names);
@@ -99,11 +253,44 @@ const BundlePhase = ({
 
   return (
     <Paper className="bundlePhase">
-      <Typographpy variant="h5">Bundle</Typographpy>
+      <BundleHeader 
+        name={name} 
+        phase={phase}
+        handleOpenReturnBundleDialog={handleOpenReturnBundleDialog}
+      />
       <Divider/>
       <BundleWorkbooksSection
         workbookNames={workbookNames}
         workbookIds={workbookIds}
+        bundleId={_id}
+        history={history}
+        phase={phase}
+        editorNotes={editorNotes}
+        reviewerNotes={reviewerNotes}
+        approverNotes={approverNotes}
+        handleChangeEditorNotes={handleChangeEditorNotes}
+        handleChangeReviewerNotes={handleChangeReviewerNotes}
+        handleChangeApproverNotes={handleChangeApproverNotes}
+      />
+      <BundlePhaseActions
+        phase={phase}
+        handleSave={handleSaveBundle}
+        handleSubmit={handleOpenBundleSubmitDialog}
+        handleCancel={handleGoBack}
+      />
+      <TextDialog
+        open={isBundleSubmitDialogOpen}
+        title="Submit Bundle"
+        message="Are you sure you want to submit this bundle? It will proceed to the next stage, which you may not have access to."
+        handleConfirm={handleSubmitBundle}
+        handleClose={handleCloseBundleSubmitDialog}
+      />
+      <TextDialog
+        open={isReturnBundleDialogOpen}
+        title="Return Bundle"
+        message="Are you sure you want to return this bundle? It will go to the previous stage, which you may not have access to."
+        handleConfirm={handleReturnBundle}
+        handleClose={handleCloseReturnBundleDialog}
       />
     </Paper>
   );
