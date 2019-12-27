@@ -201,7 +201,6 @@ const BundlePhase = ({
     return bundle;
   });
 
-  
   const handleGoBack = () => {
     history.push(ROUTE_USER_BUNDLES);
   };
