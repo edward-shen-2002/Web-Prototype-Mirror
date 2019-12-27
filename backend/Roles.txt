@@ -1,9 +1,0 @@
-Template manager
-Cell Data manager
-Organization manager
-User manager
-Package manager
-
-Unsure: 
-Sector manager
-System manager
