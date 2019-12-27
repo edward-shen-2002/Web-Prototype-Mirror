@@ -45,6 +45,25 @@ const BundleWorkbooks = ({
   );
 });
 
+const BundleWorkbooksSection = ({
+  workbookIds, 
+  workbookNames, 
+  history, 
+  bundleId, 
+  phase 
+}) => (
+  <div>
+    <Typography variant="h6">Workbooks</Typography>
+    <BundleWorkbooks
+      workbookIds={workbookIds} 
+      workbookNames={workbookNames} 
+      history={history} 
+      bundleId={bundleId} 
+      phase={phase} 
+    />
+  </div>
+);
+
 const BundleTextField = ({ label, text, textFieldProps, handleChange }) => (
   <div className="field">
     <Typography className="field__label">{label}</Typography>
@@ -78,11 +97,16 @@ const BundlePhaseActions = ({ phase, handleSave, handleSubmit, handleCancel }) =
   </ButtonGroup>
 );
 
-const BundleWorkbooksSection = ({
-  workbookNames,
-  workbookIds,
-  history,
-  bundleId,
+const BundlePhaseMisc = ({ status, createdAt, year, quarter }) => (
+  <div className="bundleMisc">
+    <BundleTextField label="Status" text={status} textFieldProps={{ disabled: true }}/>
+    <BundleTextField label="Created At" text={createdAt} textFieldProps={{ disabled: true }}/>
+    <BundleTextField label="Year" text={year} textFieldProps={{ disabled: true }}/>
+    <BundleTextField label="Quarter" text={quarter} textFieldProps={{ disabled: true }}/>
+  </div>
+);
+
+const BundleNotesSection = ({
   phase,
   editorNotes,
   reviewerNotes,
@@ -92,14 +116,6 @@ const BundleWorkbooksSection = ({
   handleChangeApproverNotes
 }) => (
   <div>
-    <Typography variant="h6">Workbooks</Typography>
-    <BundleWorkbooks
-      workbookNames={workbookNames}
-      workbookIds={workbookIds}
-      history={history}
-      bundleId={bundleId}
-      phase={phase}
-    />
     <BundlePhaseNotes 
       label="Editor Notes" 
       text={editorNotes} 
@@ -122,7 +138,7 @@ const BundleWorkbooksSection = ({
       handleChange={handleChangeApproverNotes}
     />
   </div>
-);
+)
 
 const BundleHeader = ({ name, phase, handleOpenReturnBundleDialog }) => (
   <div className="bundleHeader">
@@ -267,6 +283,15 @@ const BundlePhase = ({
         workbookIds={workbookIds}
         bundleId={_id}
         history={history}
+        phase={phase}
+      />
+      <BundlePhaseMisc 
+        status={status}
+        createdAt={createdAt}
+        quarter={quarter} 
+        year={year}
+      />
+      <BundleNotesSection
         phase={phase}
         editorNotes={editorNotes}
         reviewerNotes={reviewerNotes}

@@ -22,9 +22,15 @@
   margin-top: 20px;
 }
 
+.bundleMisc {
+  margin-bottom: 20px;
+}
+
 .field {
   margin-top: 20px;
   display: flex;
+
+  width: 100%;
 
   &__input {
     margin: auto 0;
