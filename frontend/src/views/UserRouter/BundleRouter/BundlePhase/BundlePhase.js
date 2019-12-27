@@ -8,10 +8,10 @@ import Chip from "@material-ui/core/Chip";
 
 import { adminEditBundleRoleAxios } from "tools/rest";
 
-import { REST_ADMIN_EDIT_BUNDLES } from "constants/rest";
+import { REST_ADMIN_BUNDLES } from "constants/rest";
 import { ROUTE_USER_BUNDLES } from "constants/routes";
 
-import "./BundleEdit.scss";
+import "./BundlePhase.scss";
 
 const BundleWorkbooks = ({ workbookIds, workbookNames }) => workbookIds.map((id, index) => {
   const name = workbookNames[index];
@@ -40,8 +40,13 @@ const BundleWorkbooksSection = ({
   </div>
 );
 
-const BundleEdit = ({
-  match: { params: { _id } },
+const BundlePhase = ({
+  match: {
+    params: {
+      phase,
+      _id
+    }
+  },
   history
 }) => {
   const [ isDataFetched, setIsDataFetched ] = useState(false);
@@ -59,7 +64,7 @@ const BundleEdit = ({
 
   useEffect(() => {
     if(!isDataFetched) {
-      adminEditBundleRoleAxios.get(`${REST_ADMIN_EDIT_BUNDLES}/${_id}`)
+      adminEditBundleRoleAxios.get(`${REST_ADMIN_BUNDLES}/${_id}`)
         .then(({ data: { data: { bundle } } }) => {
           const { 
             name,
@@ -93,7 +98,7 @@ const BundleEdit = ({
   });
 
   return (
-    <Paper className="bundleEdit">
+    <Paper className="bundlePhase">
       <Typographpy variant="h5">Bundle</Typographpy>
       <Divider/>
       <BundleWorkbooksSection
@@ -104,4 +109,4 @@ const BundleEdit = ({
   );
 };
 
-export default BundleEdit;
+export default BundlePhase;

@@ -37,13 +37,10 @@ export const ROUTE_GROUP_ADMIN_BUNDLE = `${ROUTE_GROUP_ADMIN}/bundle_manager`;
 export const ROUTE_ADMIN_BUNDLES = "/bundles";
 
 export const ROUTE_GROUP_ADMIN_EDIT_BUNDLE = `${ROUTE_GROUP_ADMIN}/edit_bundle_manager`;
-export const ROUTE_ADMIN_EDIT_BUNDLES = "/edit_bundles";
 
 export const ROUTE_GROUP_ADMIN_REVIEW_BUNDLE = `${ROUTE_GROUP_ADMIN}/review_bundle_manager`;
-export const ROUTE_ADMIN_REVIEW_BUNDLES = "/review_bundles";
 
 export const ROUTE_GROUP_ADMIN_APPROVE_BUNDLE = `${ROUTE_GROUP_ADMIN}/approve_bundle_manager`;
-export const ROUTE_ADMIN_APPROVE_BUNDLES = "/approve_bundles";
 
 /** HTTP response status codes */
 //Success codes

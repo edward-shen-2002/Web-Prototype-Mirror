@@ -12,11 +12,7 @@ import {
   adminApproveBundleRoleAxios
 } from "tools/rest";
 
-import {
-  REST_ADMIN_EDIT_BUNDLES,
-  REST_ADMIN_REVIEW_BUNDLES,
-  REST_ADMIN_APPROVE_BUNDLES
-} from "constants/rest";
+import { REST_ADMIN_BUNDLES } from "constants/rest";
 
 import { ROLE_LEVEL_NOT_APPLICABLE } from "constants/roles";
 
@@ -49,7 +45,7 @@ const checkAndFetchRoleData = async (role, axiosRouter, route) => {
 
   if(role.scope !== ROLE_LEVEL_NOT_APPLICABLE) {
     try {
-      const { data: { data: { bundles } } } = await axiosRouter.get(`${route}/general`);
+      const { data: { data: { bundles } } } = await axiosRouter.get(`${REST_ADMIN_BUNDLES}/general`);
       data = bundles;
     } catch(error) {
       console.error(error);
@@ -72,9 +68,9 @@ let Bundles = ({
     if(!isDataFetched) {
       const fetchData = async () => {
         setBundles([
-          ...(await checkAndFetchRoleData(EDIT_BUNDLE_MANAGER, adminEditBundleRoleAxios, REST_ADMIN_EDIT_BUNDLES)),
-          ...(await checkAndFetchRoleData(REVIEW_BUNDLE_MANAGER, adminReviewBundleRoleAxios, REST_ADMIN_REVIEW_BUNDLES)),
-          ...(await checkAndFetchRoleData(APPROVE_BUNDLE_MANAGER, adminApproveBundleRoleAxios, REST_ADMIN_APPROVE_BUNDLES))
+          ...(await checkAndFetchRoleData(EDIT_BUNDLE_MANAGER, adminEditBundleRoleAxios)),
+          ...(await checkAndFetchRoleData(REVIEW_BUNDLE_MANAGER, adminReviewBundleRoleAxios)),
+          ...(await checkAndFetchRoleData(APPROVE_BUNDLE_MANAGER, adminApproveBundleRoleAxios))
         ]);
       };
       fetchData();

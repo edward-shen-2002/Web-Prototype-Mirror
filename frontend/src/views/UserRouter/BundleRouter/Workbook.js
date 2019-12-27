@@ -11,13 +11,19 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  handleLoadWorkbook: (_id) => {
+  handleLoadWorkbook: (bundleId, workbookId) => {
     
   }
 });
 
 let Workbook = ({
-  match: { params: { _id } },
+  match: {
+    params: {
+      phase, 
+      bundleId, 
+      workbookId 
+    } 
+  },
   handleLoadWorkbook
 }) => {
   const [ isDataFetched, setIsDataFetched ] = useState(false);
@@ -25,7 +31,7 @@ let Workbook = ({
   useEffect(() => {
     if(!isDataFetched) {
       // Set Excel Redux states
-      handleLoadWorkbook(_id);
+      handleLoadWorkbook(bundleId, workbookId);
       setIsDataFetched(true);
     }
   });
@@ -34,8 +40,8 @@ let Workbook = ({
     isDataFetched 
       ? <Excel 
           name={name} 
-          returnLink={`${ROUTE_USER_BUNDLES}/edit/${_id}`} 
-          handleUpdateTemplate={handleUpdateTemplate}
+          returnLink={`${ROUTE_USER_BUNDLES}/${phase}/${bundleId}`}
+          type={phase}
         />
       : <Loading/>
   );
