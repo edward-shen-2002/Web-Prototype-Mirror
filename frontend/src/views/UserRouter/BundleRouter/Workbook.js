@@ -16,7 +16,7 @@ const mapDispatchToProps = (dispatch) => ({
   }
 });
 
-let WorkbookEdit = ({
+let Workbook = ({
   match: { params: { _id } },
   handleLoadWorkbook
 }) => {
@@ -41,6 +41,6 @@ let WorkbookEdit = ({
   );
 };
 
-WorkbookEdit = connect(mapStateToProps, mapDispatchToProps)(WorkbookEdit);
+Workbook = connect(mapStateToProps, mapDispatchToProps)(Workbook);
 
-export default WorkbookEdit;
+export default Workbook;
