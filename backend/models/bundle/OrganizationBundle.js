@@ -8,7 +8,10 @@ let organizationBundleSchema = new Schema({
   year: { type: Number },
   quarter: { type: String },
   phase: { type: String, default: "edit" },
-  status: { type: String, default: "TBD" }
+  status: { type: String, default: "TBD" },
+  userNotes: { type: String, default: "" },
+  reviewerNotes: { type: String, default: "" },
+  approverNotes: { type: String, default: "" }
 }, { minimize: false, timestamps: true });
 
 export default model("OrganizationBundle", organizationBundleSchema);

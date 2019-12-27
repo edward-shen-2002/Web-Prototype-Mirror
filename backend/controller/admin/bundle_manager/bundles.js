@@ -66,15 +66,21 @@ const bundles = ({
 
       let workbooksData = {
         workbooks: {},
+        names: [],
         ids: []
       };
 
       const templatesCount = templates.length;
       for(let i = 0; i < templatesCount; i++) {
-        const id = uniqid();
+        const templateData = templates[i];
+        const { _id: templateId, name } = templateData;
         // ! TODO ~ do prepopulation...
-        workbooksData.workbooks[id] = await TemplateModel.findById(templates[i]._id);
-        workbooksData.ids.push(id);
+        workbooksData.workbooks[templateId] = (
+          await TemplateModel.findById(templateId)
+            .select("-published")
+        );
+        workbooksData.names.push(name);
+        workbooksData.ids.push(templateId);
       }
 
       // Get organizations belonging to sector

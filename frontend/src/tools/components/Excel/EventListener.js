@@ -61,81 +61,9 @@ import { REST_ADMIN_BUSINESS_CONCEPTS } from "constants/rest";
 
 const mapStateToProps = ({ 
   ui: { 
-    excel: { 
-      activeSheetName,
-      activeCellInputData,
-      activeCellPosition,
-      activeSelectionArea, 
-      activeCellSelectionAreaIndex,
-      activeCellInputAutoFocus,
-      
-      rowResizeData,
-      columnResizeData,
-      freezeRowResizeData,
-      freezeColumnResizeData,
-      
-      sheetNames,
-      cursorType,
-      stagnantSelectionAreas,
-      scrollData,
-      
-      isSelectionMode, 
-      isEditMode,
-
-      isColumnResizeMode,
-      isFreezeColumnResizeMode,
-      isRowResizeMode,
-      isFreezeRowResizeMode,    
-
-      sheetCellData,
-      sheetRowCount,
-      sheetColumnCount,
-      sheetColumnWidths,
-      sheetRowHeights,
-      sheetFreezeColumnCount,
-      sheetFreezeRowCount,
-      sheetHiddenColumns,
-      sheetHiddenRows,
-      sheetTemplateIdMapping
-    } 
+    excel
   } 
-}) => ({ 
-  activeSheetName,
-  activeCellInputData,
-  activeCellPosition,
-  activeSelectionArea, 
-  activeCellSelectionAreaIndex,
-  activeCellInputAutoFocus,
-  
-  rowResizeData,
-  columnResizeData,
-  freezeRowResizeData,
-  freezeColumnResizeData,
-  
-  sheetNames,
-  cursorType,
-  stagnantSelectionAreas,
-  scrollData,
-  
-  isSelectionMode, 
-  isEditMode,
-
-  isColumnResizeMode,
-  isFreezeColumnResizeMode,
-  isRowResizeMode,
-  isFreezeRowResizeMode,    
-
-  sheetCellData,
-  sheetRowCount,
-  sheetColumnCount,
-  sheetColumnWidths,
-  sheetRowHeights,
-  sheetFreezeColumnCount,
-  sheetFreezeRowCount,
-  sheetHiddenColumns,
-  sheetHiddenRows,
-  sheetTemplateIdMapping
-});
+}) => excel;
 
 const mapDispatchToProps = (dispatch) => ({
   handleUpdateActiveCellPosition: (activeCellPosition) => dispatch(updateActiveCellPosition(activeCellPosition)),

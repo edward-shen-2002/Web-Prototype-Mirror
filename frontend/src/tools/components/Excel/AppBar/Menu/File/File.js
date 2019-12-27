@@ -84,7 +84,7 @@ let File = ({
           sheetHiddenRows,
           sheetTemplateIdMapping
         })
-    });
+      });
     }
   };
 

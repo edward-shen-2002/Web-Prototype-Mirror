@@ -11,9 +11,11 @@ import BundleApprove from "./BundleApprove";
 const Profile = lazy(() => import("./Profile"));
 const Dashboard = lazy(() => import("./Dashboard"));
 const Bundles = lazy(() => import("./Bundles"));
+const WorkbookEdit = lazy(() => import("./BundleEdit/WorkbookEdit"));
 
 import NotFound from "tools/components/NotFound";
 
+// ! Change this structure later!!!
 const UserRouter = () => (
   <Switch>
     <Route exact path={ROUTE_USER_DASHBOARD} component={Dashboard}/>
@@ -22,6 +24,7 @@ const UserRouter = () => (
     <Route exact path={`${ROUTE_USER_BUNDLES}/edit/:_id`} component={BundleEdit}/>
     <Route exact path={`${ROUTE_USER_BUNDLES}/review/:_id`} component={BundleReview}/>
     <Route exact path={`${ROUTE_USER_BUNDLES}/approve/:_id`} component={BundleApprove}/>
+    <Route exact path={`${ROUTE_USER_BUNDLES}/edit/workbook/:_id`} component={WorkbookEdit}/>
 
     <Route component={NotFound}/>
   </Switch>

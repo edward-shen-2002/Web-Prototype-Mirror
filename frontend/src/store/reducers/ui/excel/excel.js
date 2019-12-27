@@ -37,6 +37,7 @@ import sheetHiddenRows from "./sheetHiddenRows";
 import sheetTemplateIdMapping from "./sheetTemplateIdMapping";
 
 import isTemplateIdMappingDialogOpen from "./isTemplateIdMappingDialogOpen";
+import contextMenuData from "./contextMenuData";
 
 const excelReducer = combineReducers({ 
   activeCellInputData,
@@ -75,7 +76,8 @@ const excelReducer = combineReducers({
   sheetHiddenRows,
   sheetTemplateIdMapping,
 
-  isTemplateIdMappingDialogOpen
+  isTemplateIdMappingDialogOpen,
+  contextMenuData
 });
 
 export default excelReducer;

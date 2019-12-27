@@ -1,4 +1,5 @@
 import { ROUTE_ADMIN_APPROVE_BUNDLES } from "../../../constants/rest";
+// import {  } from "../../../constants/messages";
 
 const approveBundles = ({ router, OrganizationBundleModel }) => {
   router.get(`${ROUTE_ADMIN_APPROVE_BUNDLES}/general`, (req, res, next) => {
@@ -6,6 +7,19 @@ const approveBundles = ({ router, OrganizationBundleModel }) => {
       .select("_id name organization status phase")
       .then((bundles) => {
         res.json({ data: { bundles } });
+      })
+      .catch(next);
+  });
+
+  router.get(`${ROUTE_ADMIN_APPROVE_BUNDLES}/:_id`, (req, res, next) => {
+    const { _id } = req.params;
+    OrganizationBundleModel.find({ _id, phase: "approve" })
+      .then((bundle) => {
+        if(bundle) {
+          res.json({ data: { bundle } });
+        } else {
+          res.status(HTTP_ERROR_NOT_FOUND);
+        }
       })
       .catch(next);
   });

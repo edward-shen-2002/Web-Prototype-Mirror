@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { connect } from "react-redux";
 
@@ -15,6 +15,8 @@ import { inputCharacterRegex } from "tools/regex";
 import { getNormalRowHeight, getNormalColumnWidth } from "tools/excel";
 
 import WindowListener from "./WindowListener";
+
+import ContextMenu from "./ContextMenu";
 
 import Cell from "./Cell";
 
@@ -181,6 +183,7 @@ let Sheet = ({
 
   handleUpdateScrollData
 }) => {
+  const [ contextMenuData, setContextMenuData ] = useState({ isOpen: false, anchorEl: null });
   let EventListenerInstance;
 
   useEffect(() => {
@@ -228,9 +231,16 @@ let Sheet = ({
     }
   };
 
-  const handleClick = () => {
-    EventListenerInstance.setInputAutoFocusOn();
+  const handleClick = () => EventListenerInstance.setInputAutoFocusOn();
+
+  const handleOpenContextMenu = (event) => {
+    event.preventDefault();
+
+    const anchorEl = event.currentTarget;
+    setContextMenuData({ isOpen: true, anchorEl });
   };
+
+  const handleCloseContextMenu = () => setContextMenuData({ isOpen: false, anchorEl: null });
 
   let style = {};
 
@@ -245,7 +255,7 @@ let Sheet = ({
       onKeyDown={handleKeyDown}
       onDragStart={handleDragStart}
       onClick={handleClick}
-      onContextMenu={(event) => event.preventDefault()}
+      onContextMenu={handleOpenContextMenu}
     >
       <SheetWindow 
         sheetContainerRef={sheetContainerRef} 
@@ -261,6 +271,10 @@ let Sheet = ({
         sheetRowHeights={sheetRowHeights}
       
         handleUpdateScrollData={handleUpdateScrollData}
+      />
+      <ContextMenu 
+        handleCloseContextMenu={handleCloseContextMenu}
+        {...contextMenuData} 
       />
       <WindowListener 
         eventListenerRef={eventListenerRef}

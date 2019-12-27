@@ -27,7 +27,7 @@ const MenuOptionItemLabel = ({ label }) => (
 // ! Recurse here when menu item has children
 const MenuOption = ({ icon, label, handleClick }) => (
   <ListItem onClick={handleClick} button>
-    <MenuOptionItemIcon icon={icon}/>
+    {icon && <MenuOptionItemIcon icon={icon}/>}
     <MenuOptionItemLabel label={label}/>
 
     {/* RECURSE */}
@@ -56,7 +56,7 @@ export const MenuOptions = ({ isOpen, options, anchorEl }) => (
   <Popper
     className="menuOptionsContainer"
     open={isOpen}
-    placement="bottom-start"
+    // placement="bottom-start"
     anchorEl={anchorEl}
   >
     <MenuOptionsContainer options={options}/>

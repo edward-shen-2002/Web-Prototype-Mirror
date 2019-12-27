@@ -1,0 +1,11 @@
+.bundleEdit {
+  margin: 20px;
+  padding: 20px;
+  width: 100%;
+}
+
+.bundle {
+  &__workbook {
+    border-radius: 3px !important;
+  }
+}
