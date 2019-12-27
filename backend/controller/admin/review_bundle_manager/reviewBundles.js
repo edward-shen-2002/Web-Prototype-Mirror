@@ -32,7 +32,7 @@ const reviewBundles = ({ router, OrganizationBundleModel }) => {
     const { _id } = req.params;
     const { bundle: { reviewerNotes } } = req.body;
 
-    OrganizationBundleModel.findOneAndUpdate({ _id, phase: "edit" }, { reviewerNotes })
+    OrganizationBundleModel.findOneAndUpdate({ _id, phase: "review" }, { reviewerNotes })
       .then((bundle) => {
         if(bundle) {
           res.end();
