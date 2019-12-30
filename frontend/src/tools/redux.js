@@ -89,8 +89,8 @@ export const loadWorkbook = (
     bundleId
   }
 ) => {
-  dispatch(updateWorkbookName(name));
-  dispatch(updateExcelType(type));
+  if(name !== undefined) dispatch(updateWorkbookName(name));
+  if(type !== undefined) dispatch(updateExcelType(type));
   dispatch(updateActiveCellInputData(activeCellInputData));
   dispatch(updateActiveCellPosition(activeCellPosition));
   dispatch(updateActiveSheetName(activeSheetName));
