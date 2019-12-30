@@ -1,91 +1,21 @@
 import React from "react";
 
-import { connect } from "react-redux";
-
 import MenuItems from "tools/components/Excel/commonComponents/MenuItems";
 
 import SaveIcon from "@material-ui/icons/Save";
 
-import { extractReactAndWorkbookState } from "tools/excel";
-
-const mapStateToProps = ({
-  ui: {
-    excel: {
-      activeSheetName,
-      sheetNames,
-      activeCellPosition,
-      sheetCellData,
-      sheetColumnCount,
-      sheetColumnWidths,
-      sheetFreezeColumnCount,
-      sheetRowCount,
-      sheetRowHeights,
-      sheetFreezeRowCount,
-      sheetHiddenColumns,
-      sheetHiddenRows,
-      sheetTemplateIdMapping
-    }
-  }
-}) => ({
-  activeSheetName,
-  sheetNames,
-  activeCellPosition,
-  sheetCellData,
-  sheetColumnCount,
-  sheetColumnWidths,
-  sheetFreezeColumnCount,
-  sheetRowCount,
-  sheetRowHeights,
-  sheetFreezeRowCount,
-  sheetHiddenColumns,
-  sheetHiddenRows,
-  sheetTemplateIdMapping
-});
-
-let File = ({ 
+const File = ({ 
   openedMenuName, 
-
-  activeSheetName,
-  sheetNames,
-  activeCellPosition,
-  sheetCellData,
-  sheetColumnCount,
-  sheetColumnWidths,
-  sheetFreezeColumnCount,
-  sheetRowCount,
-  sheetRowHeights,
-  sheetFreezeRowCount,
-  sheetHiddenColumns,
-  sheetHiddenRows,
-  sheetTemplateIdMapping,
 
   handleClickMenu, 
   handleHoverMenu,
 
-  handleUpdateTemplate
+  eventListenerRef
 }) => {
   const saveMenu = {
     icon: <SaveIcon/>,
     label: "Save",
-    handleClick: () => {
-      handleUpdateTemplate({
-        fileStates: extractReactAndWorkbookState({
-          activeSheetName,
-          sheetNames,
-          activeCellPosition,
-          sheetCellData,
-          sheetColumnCount,
-          sheetColumnWidths,
-          sheetFreezeColumnCount,
-          sheetRowCount,
-          sheetRowHeights,
-          sheetFreezeRowCount,
-          sheetHiddenColumns,
-          sheetHiddenRows,
-          sheetTemplateIdMapping
-        })
-      });
-    }
+    handleClick: () => eventListenerRef.current.save()
   };
 
   const options = [ saveMenu ];
@@ -100,7 +30,5 @@ let File = ({
     />
   );
 };
-
-File = connect(mapStateToProps)(File);
 
 export default File;

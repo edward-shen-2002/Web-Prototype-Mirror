@@ -39,10 +39,13 @@ const ExcelIconButton = ({ returnLink }) => (
 /**
  * The header of the workbook, which contains the title (?and related actions)
  */
-const Header = ({ name, handleUpdateTemplate }) => (
+const Header = ({ 
+  name, 
+  eventListenerRef 
+}) => (
   <div>
-    <Title name={name} handleUpdateTemplate={handleUpdateTemplate}/>
-    <Menu handleUpdateTemplate={handleUpdateTemplate}/>
+    <Title name={name}/>
+    <Menu eventListenerRef={eventListenerRef}/>
   </div>
 );
 
@@ -60,7 +63,11 @@ const PlaylistAddIconButton = ({ buttonStyle, text, handleClick }) => (
   </Button>
 );
 
-let TemplateOptions = ({ eventListenerRef, isTemplatePublished, handleTogglePublish }) => {
+let TemplateOptions = ({ 
+  eventListenerRef, 
+  isTemplatePublished, 
+  handleTogglePublish 
+}) => {
   const handleImportId = () => eventListenerRef.current.importId();
 
   const importIDStyle = { marginRight: 8, minWidth: 140 };
@@ -91,10 +98,10 @@ const mapTemplateStateToProps = ({
 });
 
 let SideOptions = ({ 
-  eventListenerRef,
   type,
   isTemplatePublished,
-  handleTogglePublish
+  handleTogglePublish,
+  eventListenerRef
 }) => (
   <div className="appBarSide">
     {type === "template" && <TemplateOptions eventListenerRef={eventListenerRef} isTemplatePublished={isTemplatePublished} handleTogglePublish={handleTogglePublish}/>}
@@ -106,11 +113,14 @@ SideOptions = connect(mapTemplateStateToProps, mapTemplateDispatchToProps)(SideO
 const MainAppBarOptions = ({
   name,
   returnLink,
-  handleUpdateTemplate
+  eventListenerRef,
 }) => (
   <div className="appBarMain">
     <ExcelIconButton returnLink={returnLink}/>
-    <Header name={name} handleUpdateTemplate={handleUpdateTemplate}/>
+    <Header 
+      name={name} 
+      eventListenerRef={eventListenerRef}
+    />
   </div>
 );
 
@@ -120,19 +130,17 @@ const AppBar = ({
   type,
   returnLink, 
   templateData,
-  handleUpdateTemplate
 }) => (
   <div className="appBarContainer">
     <MainAppBarOptions 
       name={name} 
       returnLink={returnLink} 
-      handleUpdateTemplate={handleUpdateTemplate}
+      eventListenerRef={eventListenerRef}
     />
     <SideOptions 
       eventListenerRef={eventListenerRef}
       type={type} 
       templateData={templateData} 
-      handleUpdateTemplate={handleUpdateTemplate}
     />
   </div>
 );

@@ -718,6 +718,7 @@ export const getWorkbookData = (activeSheetName, activeSheetData) => {
 
 export const extractReactAndWorkbookState = (state) => {
   const {
+    name,
     activeSheetName,
     sheetNames,
     activeCellPosition,
@@ -749,6 +750,7 @@ export const extractReactAndWorkbookState = (state) => {
   });
 
   return {
+    name,
     activeSheetName,
     sheetNames,
     workbookData

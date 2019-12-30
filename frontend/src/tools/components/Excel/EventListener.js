@@ -6,6 +6,8 @@ import { connect } from "react-redux";
 
 import pako from "pako";
 
+import { extractReactAndWorkbookState } from "tools/excel";
+
 import { setActiveCellInputAutoFocusOn, setActiveCellInputAutoFocusOff } from "actions/ui/excel/activeCellInputAutoFocus";
 import { updateActiveCellInputData, resetActiveCellInputData } from "actions/ui/excel/activeCellInputData";
 import { updateActiveCellPosition } from "actions/ui/excel/activeCellPosition";
@@ -34,6 +36,7 @@ import { updateSheetCellData } from "actions/ui/excel/sheetCellData";
 import { updateSheetColumnWidths } from "actions/ui/excel/sheetColumnWidths";
 import { updateSheetRowHeights } from "actions/ui/excel/sheetRowHeights";
 
+
 import { 
   isPositionEqualArea, 
   getScrollbarSize, 
@@ -57,7 +60,8 @@ import {
   DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER
 } from "constants/excel";
 
-import { REST_ADMIN_BUSINESS_CONCEPTS } from "constants/rest";
+
+import { REST_ADMIN_BUSINESS_CONCEPTS, REST_ADMIN_TEMPLATES } from "constants/rest";
 
 const mapStateToProps = ({ 
   ui: { 
@@ -1465,6 +1469,78 @@ class EventRedux extends PureComponent {
       .catch((error) => {
         console.error(error);
       });
+  }
+
+  saveTemplate(commonProps) {
+    const {
+      sheetTemplateIdMapping,
+      isTemplatePublished,
+      templateId
+    } = this.props;
+
+    commonProps.sheetTemplateIdMapping = sheetTemplateIdMapping;
+    commonProps.isTemplatePublished = isTemplatePublished;
+
+    const fileStates = extractReactAndWorkbookState(commonProps);
+
+    const newTemplate = {
+      published: isTemplatePublished,
+      fileStates,
+      name: fileStates.name
+    };
+
+    // ! Add more checks
+    adminTemplateRoleAxios.put(`${REST_ADMIN_TEMPLATES}/${templateId}`, { newTemplate })
+      .catch((error) => console.error(error))
+  }
+
+  saveBundleWorkbook() {
+
+  }
+
+  save() {
+    const {
+      type,
+      name,
+      activeSheetName,
+      sheetNames,
+      activeCellPosition,
+      sheetCellData,
+      sheetColumnCount,
+      sheetColumnWidths,
+      sheetFreezeColumnCount,
+      sheetRowCount,
+      sheetRowHeights,
+      sheetFreezeRowCount,
+      sheetHiddenColumns,
+      sheetHiddenRows
+    } = this.props;
+
+    let commonProps = {
+      name,
+      activeSheetName,
+      sheetNames,
+      activeCellPosition,
+      sheetCellData,
+      sheetColumnCount,
+      sheetColumnWidths,
+      sheetFreezeColumnCount,
+      sheetRowCount,
+      sheetRowHeights,
+      sheetFreezeRowCount,
+      sheetHiddenColumns,
+      sheetHiddenRows,
+    };
+
+    if(type === "template") {
+      this.saveTemplate(commonProps);
+    } else if(type === "bundle_edit") {
+      
+    } else if(type === "bundle_review") {
+
+    } else if(type === "bundle_approve") {
+
+    }
   }
 
   render() {

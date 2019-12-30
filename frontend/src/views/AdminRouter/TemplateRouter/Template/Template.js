@@ -48,6 +48,7 @@ let Template = ({
           let { fileStates, published } = template;
           fileStates.isTemplatePublished = published;
           fileStates.type = "template";
+          fileStates.templateId = _id;
 
           handleLoadTemplate(convertStateToReactState(fileStates));
           if(isAppNavigationOpen) handleHideAppNavigation();

@@ -35,6 +35,7 @@ import { updateSheetHiddenRows, resetSheetHiddenRows } from "actions/ui/excel/sh
 
 import { updateSheetTemplateIdMapping, resetSheetTemplateIdMapping } from "actions/ui/excel/sheetTemplateIdMapping";
 import { updatePublishTemplate, unpublishTemplate } from "actions/ui/excel/isTemplatePublished";
+import { updateTemplateId, resetTemplateId } from "actions/ui/excel/templateId";
 
 export const loadUserState = (dispatch, { user, token }) => {
   if(token) {
@@ -66,6 +67,8 @@ export const loadWorkbook = (
     activeCellPosition,
     activeCellInputData,
     activeSheetName,
+
+    templateId,
 
     sheetNames,
     
@@ -102,6 +105,7 @@ export const loadWorkbook = (
 
   if(sheetTemplateIdMapping) dispatch(updateSheetTemplateIdMapping(sheetTemplateIdMapping));
   if(isTemplatePublished !== undefined) dispatch(updatePublishTemplate(isTemplatePublished));
+  if(templateId !== undefined) dispatch(updateTemplateId(templateId));
 };
 
 export const resetWorkbook = (dispatch) => {
@@ -140,6 +144,8 @@ export const resetWorkbook = (dispatch) => {
 
   dispatch(unpublishTemplate());
   dispatch(resetSheetTemplateIdMapping());
+
+  dispatch(resetTemplateId());
 
   sessionStorage.removeItem("inactiveSheets");
 };
