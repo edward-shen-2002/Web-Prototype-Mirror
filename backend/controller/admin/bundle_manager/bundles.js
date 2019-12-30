@@ -114,8 +114,9 @@ const bundles = ({
         // ! TODO ~ do prepopulation...
         // ! Specific emplate data is still present here - not desired in bundle - will have to decompress and remove if needed
         workbooksData.workbooks[templateId] = (
-          await TemplateModel.findById(templateId)
-            .select("-published")
+          (await TemplateModel.findById(templateId)
+            .select("fileStates")
+          ).fileStates
         );
         workbooksData.names.push(name);
         workbooksData.ids.push(templateId);

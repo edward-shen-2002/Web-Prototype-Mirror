@@ -1,6 +1,12 @@
 import React, { PureComponent, useMemo } from "react";
 
-import { adminTemplateRoleAxios } from "tools/rest";
+import { 
+  adminTemplateRoleAxios,
+  adminEditBundleRoleAxios, 
+  adminReviewBundleRoleAxios, 
+  adminApproveBundleRoleAxios,
+  adminBundleRoleAxios
+} from "tools/rest";
 
 import { connect } from "react-redux";
 
@@ -61,7 +67,11 @@ import {
 } from "constants/excel";
 
 
-import { REST_ADMIN_BUSINESS_CONCEPTS, REST_ADMIN_TEMPLATES } from "constants/rest";
+import { 
+  REST_ADMIN_BUSINESS_CONCEPTS, 
+  REST_ADMIN_TEMPLATES,
+  REST_ADMIN_BUNDLES_WORKFLOW
+} from "constants/rest";
 
 const mapStateToProps = ({ 
   ui: { 
@@ -1495,7 +1505,20 @@ class EventRedux extends PureComponent {
   }
 
   saveEditBundle(commonProps) {
-    
+    const {
+      bundleId,
+      templateId
+    } = this.props;
+
+    const fileStates = extractReactAndWorkbookState(commonProps);
+
+    adminEditBundleRoleAxios.put(
+      `${REST_ADMIN_BUNDLES_WORKFLOW}/${bundleId}/workbook/${templateId}`,
+      { workbook: fileStates }
+      )
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   saveReviewBundle(commonProps) {
@@ -1503,6 +1526,10 @@ class EventRedux extends PureComponent {
   }
 
   saveApproveBundle(commonProps) {
+
+  }
+
+  saveManagerBundle(commonProps) {
 
   }
 
@@ -1537,7 +1564,7 @@ class EventRedux extends PureComponent {
       sheetRowHeights,
       sheetFreezeRowCount,
       sheetHiddenColumns,
-      sheetHiddenRows,
+      sheetHiddenRows
     };
 
     if(type === "template") {

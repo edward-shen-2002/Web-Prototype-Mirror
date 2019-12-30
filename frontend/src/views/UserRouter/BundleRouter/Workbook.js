@@ -74,13 +74,12 @@ let Workbook = ({
     if(!isDataFetched) {
       bundlePhaseRoleAxios.get(`${REST_ADMIN_BUNDLES_WORKFLOW}/${bundleId}/workbook/${workbookId}`)
         .then(({ data: { data: { workbook } } }) => {
-          let { fileStates } = workbook;
 
-          fileStates.bundleId = bundleId;
-          fileStates.type = `bundle_${phase}`;
-          fileStates.templateId = workbookId;
+          workbook.bundleId = bundleId;
+          workbook.type = `bundle_${phase}`;
+          workbook.templateId = workbookId;
 
-          handleLoadWorkbook(convertStateToReactState(fileStates));
+          handleLoadWorkbook(convertStateToReactState(workbook));
           if(isAppNavigationOpen) handleHideAppNavigation();
           setIsDataFetched(true);
         })
