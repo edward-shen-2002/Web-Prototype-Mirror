@@ -4,7 +4,6 @@
 
 - [ ] Excel history - redo/undo
 - [ ] Excel sheet mouse auto-scroll
-- [ ] Package creation
 - [ ] Adjust z-index of cells when value is present
 - [ ] Convert excel editor state to Xlsx-populate rich text
 - [ ] Excel formulas
@@ -19,7 +18,7 @@
 - [ ] Miscellaneous information - ie: job positions
 - [ ] General and route error handlers- should everything be handled here or do it in the original route? (General error handler handles most errors but may not make sense for some routes)
 - [ ] Strengthen verfication ids (change MongoDB Id to a more secure Id -- MongoDB Id is too predicatable)
-- [ ] Keep styles considtent (ie, Profile and All packages headers/pages - mismatched styles)
+- [ ] Keep styles consistent (ie, Profile and All packages headers/pages - mismatched styles)
 - [ ] It's possible that an admin updates his/her own roles - refetch data in that case (very unlikely case)
 - [ ] Modifying one hierarchy may affect other hierarchies -- update affected hierarchies (ie remove user from organization => remove organization in user)
 
@@ -33,4 +32,5 @@
 - [x] Compress inactive sheets
 - [x] Excel multiple selection
 - [x] Prevent application from mounting until user data is fetched
+- [x] Package creation
 - [x] Workflow features (editor, reviewer, approver)

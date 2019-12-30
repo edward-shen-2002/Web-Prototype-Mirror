@@ -64,15 +64,19 @@ const BundleWorkbooksSection = ({
   </div>
 );
 
-const BundleTextField = ({ label, text, textFieldProps, handleChange }) => (
+const LabeledTextField = ({ label, text, textFieldProps, handleChange }) => (
   <div className="field">
     <Typography className="field__label">{label}</Typography>
     <TextField className="field__input" value={text} onChange={handleChange} {...textFieldProps} fullWidth/>
   </div>
 );
 
+const DisabledLabledTextField = (props) => (
+  <LabeledTextField {...props} textFieldProps={{ disabled: true }}/>
+);
+
 const BundlePhaseNotes = ({ notesPhase, phase, label, text, handleChange }) => (
-  <BundleTextField 
+  <LabeledTextField 
     label={label} 
     text={text} 
     textFieldProps={{ 
@@ -97,12 +101,13 @@ const BundlePhaseActions = ({ phase, handleSave, handleSubmit, handleCancel }) =
   </ButtonGroup>
 );
 
-const BundlePhaseMisc = ({ status, createdAt, year, quarter }) => (
+const BundlePhaseMisc = ({ phase, status, createdAt, year, quarter }) => (
   <div className="bundleMisc">
-    <BundleTextField label="Status" text={status} textFieldProps={{ disabled: true }}/>
-    <BundleTextField label="Created At" text={createdAt} textFieldProps={{ disabled: true }}/>
-    <BundleTextField label="Year" text={year} textFieldProps={{ disabled: true }}/>
-    <BundleTextField label="Quarter" text={quarter} textFieldProps={{ disabled: true }}/>
+    <DisabledLabledTextField label="Phase" text={phase}/>
+    <DisabledLabledTextField label="Status" text={status}/>
+    <DisabledLabledTextField label="Created At" text={createdAt}/>
+    <DisabledLabledTextField label="Year" text={year}/>
+    <DisabledLabledTextField label="Quarter" text={quarter}/>
   </div>
 );
 
@@ -138,7 +143,7 @@ const BundleNotesSection = ({
       handleChange={handleChangeApproverNotes}
     />
   </div>
-)
+);
 
 const BundleHeader = ({ name, phase, handleOpenReturnBundleDialog }) => (
   <div className="bundleHeader">
@@ -285,6 +290,7 @@ const BundlePhase = ({
         phase={phase}
       />
       <BundlePhaseMisc 
+        phase={phase}
         status={status}
         createdAt={createdAt}
         quarter={quarter} 

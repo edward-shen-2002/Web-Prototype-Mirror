@@ -212,6 +212,20 @@ const bundles = ({
       })
       .catch(next);
   });
+
+  router.get(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/:bundleId/workbook/:workbookId`, (req, res, next) => {
+    const { bundleId, workbookId } = req.params;
+
+    OrganizationBundleModel.findOne({ _id: bundleId, phase: null })
+      .then((bundle) => {
+        if(bundle && bundle.workbooksData.workbooks[workbookId]) {
+          res.json({ data: { workbook: bundle.workbooksData.workbooks[workbookId] } });
+        } else {
+          res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_NOT_FOUND });
+        }
+      })
+      .catch(next);
+  });
 };
 
 export default bundles;
