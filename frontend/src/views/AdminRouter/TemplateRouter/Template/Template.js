@@ -20,6 +20,7 @@ const mapStateToProps = ({ ui: { isAppNavigationOpen } }) => ({ isAppNavigationO
 
 const mapDispatchToProps = (dispatch) => ({
   handleHideAppNavigation: () => dispatch(hideAppNavigation()),
+  handleShowAppNavigation: () => dispatch(showAppNavigation()),
   handleExitTemplate: (isAppNavigationOpen) => {
     if(!isAppNavigationOpen) dispatch(showAppNavigation());
     resetWorkbook(dispatch);
@@ -31,31 +32,30 @@ const mapDispatchToProps = (dispatch) => ({
 
 let Template = ({ 
   isAppNavigationOpen, 
-  handleHideAppNavigation, 
   match: { params: { _id } }, 
   history,
   handleExitTemplate, 
-  handleLoadTemplate
+  handleLoadTemplate,
+  handleHideAppNavigation, 
+  handleShowAppNavigation
 }) => {
-  const [ template, setTemplate ] = useState({});
   const [ isDataFetched, setIsDataFetched ] = useState(false);
-
-  const { name } = template;
-  if(isAppNavigationOpen) handleHideAppNavigation();
 
   useEffect(() => {
     if(!isDataFetched) {
       adminTemplateRoleAxios.get(`${REST_ADMIN_TEMPLATES}/${_id}`)
         .then(({ data: { data: { template } } }) => {
-          let { fileStates } = template;
+          let { fileStates, published } = template;
+          fileStates.isTemplatePublished = published;
+          fileStates.type = "template";
 
           handleLoadTemplate(convertStateToReactState(fileStates));
-          delete template.fileStates;
-          setTemplate(template);
+          if(isAppNavigationOpen) handleHideAppNavigation();
           setIsDataFetched(true);
         })
         .catch((error) => {
           console.error(error);
+          if(!isAppNavigationOpen) handleShowAppNavigation();
           history.push(ROUTE_ADMIN_TEMPLATE_TEMPLATES);
         });
     }
@@ -65,22 +65,12 @@ let Template = ({
     };
   }, [ isDataFetched ]);
 
-  const handleUpdateTemplate = (newTemplate) => (
-    adminTemplateRoleAxios.put(`${REST_ADMIN_TEMPLATES}/${_id}`, { newTemplate })
-      .then(() => {
-        setTemplate({ ...template, ...newTemplate, fileStates: undefined });
-      })
-      .catch((error) => console.error(error))
-  );
-
   return (
     isDataFetched 
       ? <Excel 
           name={name} 
           type="template"
-          templateData={template}
           returnLink={ROUTE_ADMIN_TEMPLATE_TEMPLATES} 
-          handleUpdateTemplate={handleUpdateTemplate}
         />
       : <Loading/>
   );

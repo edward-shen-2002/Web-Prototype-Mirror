@@ -5,6 +5,9 @@ import { setOnline, setOffline } from "actions/app/isOnline";
 import { updateAccount, clearAccount } from "actions/domain/account";
 import { showAppNavigation, hideAppNavigation } from "actions/ui/isAppNavigationOpen";
 
+import { updateWorkbookName, resetWorkbookName } from "actions/ui/excel/name";
+import { updateExcelType, resetExcelType } from "actions/ui/excel/type";
+
 import { updateActiveCellInputData, resetActiveCellInputData } from "actions/ui/excel/activeCellInputData";
 import { updateActiveSheetName, resetActiveSheetName } from "actions/ui/excel/activeSheetName";
 import { resetActiveSelectionArea } from "actions/ui/excel/activeSelectionArea";
@@ -30,7 +33,8 @@ import { updateSheetFreezeRowCount, resetSheetFreezeRowCount } from "actions/ui/
 import { updateSheetHiddenColumns, resetSheetHiddenColumns } from "actions/ui/excel/sheetHiddenColumns";
 import { updateSheetHiddenRows, resetSheetHiddenRows } from "actions/ui/excel/sheetHiddenRows";
 
-import { updateSheetTemplateIdMapping } from "actions/ui/excel/sheetTemplateIdMapping";
+import { updateSheetTemplateIdMapping, resetSheetTemplateIdMapping } from "actions/ui/excel/sheetTemplateIdMapping";
+import { updatePublishTemplate, unpublishTemplate } from "actions/ui/excel/isTemplatePublished";
 
 export const loadUserState = (dispatch, { user, token }) => {
   if(token) {
@@ -57,6 +61,8 @@ export const resetUserState = (dispatch) => {
 export const loadWorkbook = (
   dispatch, 
   { 
+    name,
+    type,
     activeCellPosition,
     activeCellInputData,
     activeSheetName,
@@ -72,9 +78,12 @@ export const loadWorkbook = (
     sheetFreezeRowCount,
     sheetHiddenColumns,
     sheetHiddenRows,
-    sheetTemplateIdMapping
+    sheetTemplateIdMapping,
+    isTemplatePublished
   }
 ) => {
+  dispatch(updateWorkbookName(name));
+  dispatch(updateExcelType(type));
   dispatch(updateActiveCellInputData(activeCellInputData));
   dispatch(updateActiveCellPosition(activeCellPosition));
   dispatch(updateActiveSheetName(activeSheetName));
@@ -92,9 +101,13 @@ export const loadWorkbook = (
   dispatch(updateSheetHiddenRows(sheetHiddenRows));
 
   if(sheetTemplateIdMapping) dispatch(updateSheetTemplateIdMapping(sheetTemplateIdMapping));
+  if(isTemplatePublished !== undefined) dispatch(updatePublishTemplate(isTemplatePublished));
 };
 
 export const resetWorkbook = (dispatch) => {
+  dispatch(resetWorkbookName());
+  dispatch(resetExcelType());
+  
   dispatch(resetSheetCellData());
   dispatch(resetActiveSheetName());
   dispatch(resetSheetColumnCount());
@@ -124,6 +137,9 @@ export const resetWorkbook = (dispatch) => {
   dispatch(resetScrollData());
 
   dispatch(setActiveCellInputAutoFocusOff());
+
+  dispatch(unpublishTemplate());
+  dispatch(resetSheetTemplateIdMapping());
 
   sessionStorage.removeItem("inactiveSheets");
 };

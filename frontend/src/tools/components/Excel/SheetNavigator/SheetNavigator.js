@@ -116,6 +116,7 @@ const SheetSelectionContext = ({
 const mapStateToProps = ({
   ui: {
     excel: {
+      name,
       activeCellPosition,
       activeCellInputData,
       sheetNames,
@@ -133,6 +134,7 @@ const mapStateToProps = ({
     }
   }
 }) => ({
+  name,
   activeCellPosition,
   activeCellInputData,
   sheetNames,
@@ -157,6 +159,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 let SheetNavigator = ({ 
   sheetGridRef,
+  name,
   activeCellPosition,
   activeCellInputData,
   activeSheetName, 
@@ -186,6 +189,7 @@ let SheetNavigator = ({
 
   const handleClickSheet = (sheetName) => {
     let currentSheetData = {
+      name,
       activeCellPosition,
       sheetCellData,
       sheetColumnCount,

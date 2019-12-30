@@ -612,6 +612,7 @@ const getMaxSheetRange = (sheetCellData) => {
 // ! ISSUE HERE WHEN UPLOADING THE RELEVANT EXCEL TEMPLATES
 export const convertExcelFileToState = async (excelFile) => {
   const WorkbookInstance = await XlsxPopulate.fromDataAsync(excelFile);
+  const name = excelFile.name;
           
   const sheetNames = WorkbookInstance.sheets().map((sheet) => sheet.name());
 
@@ -679,6 +680,7 @@ export const convertExcelFileToState = async (excelFile) => {
   });
 
   return {
+    name,
     workbookData,
     activeSheetName,
     sheetNames

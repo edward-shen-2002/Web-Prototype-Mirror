@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 
 import name from "./name";
+import type from "./type";
 
 import activeCellInputData from "./activeCellInputData";
 import activeCellPosition from "./activeCellPosition";
@@ -38,11 +39,13 @@ import sheetHiddenColumns from "./sheetHiddenColumns";
 import sheetHiddenRows from "./sheetHiddenRows";
 import sheetTemplateIdMapping from "./sheetTemplateIdMapping";
 
-import isTemplateIdMappingDialogOpen from "./isTemplateIdMappingDialogOpen";
 import contextMenuData from "./contextMenuData";
+import isTemplateIdMappingDialogOpen from "./isTemplateIdMappingDialogOpen";
+import isTemplatePublished from "./isTemplatePublished";
 
 const excelReducer = combineReducers({ 
   name,
+  type,
   
   activeCellInputData,
   activeSheetName,
@@ -80,8 +83,9 @@ const excelReducer = combineReducers({
   sheetHiddenRows,
   sheetTemplateIdMapping,
 
+  contextMenuData,
   isTemplateIdMappingDialogOpen,
-  contextMenuData
+  isTemplatePublished,
 });
 
 export default excelReducer;
