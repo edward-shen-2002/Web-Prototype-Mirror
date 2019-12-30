@@ -1504,7 +1504,7 @@ class EventRedux extends PureComponent {
       .catch((error) => console.error(error))
   }
 
-  saveEditBundle(commonProps) {
+  saveBundle(bundleAxiosRouter, commonProps) {
     const {
       bundleId,
       templateId
@@ -1512,7 +1512,7 @@ class EventRedux extends PureComponent {
 
     const fileStates = extractReactAndWorkbookState(commonProps);
 
-    adminEditBundleRoleAxios.put(
+    bundleAxiosRouter.put(
       `${REST_ADMIN_BUNDLES_WORKFLOW}/${bundleId}/workbook/${templateId}`,
       { workbook: fileStates }
       )
@@ -1521,16 +1521,20 @@ class EventRedux extends PureComponent {
       });
   }
 
-  saveReviewBundle(commonProps) {
+  saveEditBundle(commonProps) {
+    this.saveBundle(adminEditBundleRoleAxios, commonProps);
+  }
 
+  saveReviewBundle(commonProps) {
+    this.saveBundle(adminReviewBundleRoleAxios, commonProps);
   }
 
   saveApproveBundle(commonProps) {
-
+    this.saveBundle(adminApproveBundleRoleAxios, commonProps);
   }
 
   saveManagerBundle(commonProps) {
-
+    this.saveBundle(adminBundleRoleAxios, commonProps);
   }
 
   save() {
