@@ -5,7 +5,7 @@
 - [ ] Excel history - redo/undo
 - [ ] Excel sheet mouse auto-scroll
 - [ ] Package creation
-- [ ] Workflow features (editor, reviewer, approver)
+- [ ] Adjust z-index of cells when value is present
 - [ ] Convert excel editor state to Xlsx-populate rich text
 - [ ] Excel formulas
 - [ ] Excel styles
@@ -33,3 +33,4 @@
 - [x] Compress inactive sheets
 - [x] Excel multiple selection
 - [x] Prevent application from mounting until user data is fetched
+- [x] Workflow features (editor, reviewer, approver)
