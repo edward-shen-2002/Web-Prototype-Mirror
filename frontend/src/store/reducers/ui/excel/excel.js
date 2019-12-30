@@ -1,5 +1,7 @@
 import { combineReducers } from "redux";
 
+import name from "./name";
+
 import activeCellInputData from "./activeCellInputData";
 import activeCellPosition from "./activeCellPosition";
 import activeCellSelectionAreaIndex from "./activeCellSelectionAreaIndex";
@@ -40,6 +42,8 @@ import isTemplateIdMappingDialogOpen from "./isTemplateIdMappingDialogOpen";
 import contextMenuData from "./contextMenuData";
 
 const excelReducer = combineReducers({ 
+  name,
+  
   activeCellInputData,
   activeSheetName,
   activeSelectionArea,
