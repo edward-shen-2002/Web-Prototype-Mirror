@@ -112,6 +112,7 @@ const bundles = ({
         const templateData = templates[i];
         const { _id: templateId, name } = templateData;
         // ! TODO ~ do prepopulation...
+        // ! Specific emplate data is still present here - not desired in bundle - will have to decompress and remove if needed
         workbooksData.workbooks[templateId] = (
           await TemplateModel.findById(templateId)
             .select("-published")
@@ -133,7 +134,6 @@ const bundles = ({
         const possibleDuplication = await OrganizationBundleModel.find({ "organization._id": organizationId, bundleId });
 
         if(possibleDuplication.length) {
-          
           await OrganizationBundleModel.findOneAndUpdate({ 
               bundleId
             }, 
@@ -173,7 +173,7 @@ const bundles = ({
       await OrganizationBundleModel.deleteMany({ bundleId: _id });
       res.json({ message: MESSAGE_SUCCESS_BUNDLES_DELETE });
     } catch(error) {
-      next(error)
+      next(error);
     }
   });
 
@@ -181,7 +181,7 @@ const bundles = ({
     const { _id } = req.params;
 
     BundleModel.findById(_id)
-    .select("-workbooksData.workbooks")
+      .select("-workbooksData.workbooks")
       .then((bundle) => {
         res.json({ message: MESSAGE_SUCCESS_BUNDLES_BUNDLE, data: { bundle } });
       })

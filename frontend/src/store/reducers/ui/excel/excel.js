@@ -44,6 +44,8 @@ import isTemplateIdMappingDialogOpen from "./isTemplateIdMappingDialogOpen";
 import isTemplatePublished from "./isTemplatePublished";
 import templateId from "./templateId";
 
+import bundleId from "./bundleId";
+
 const excelReducer = combineReducers({ 
   name,
   type,
@@ -87,7 +89,9 @@ const excelReducer = combineReducers({
   contextMenuData,
   isTemplateIdMappingDialogOpen,
   isTemplatePublished,
-  templateId
+  templateId,
+
+  bundleId
 });
 
 export default excelReducer;

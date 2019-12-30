@@ -29,6 +29,7 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = (dispatch) => ({
   handleHideAppNavigation: () => dispatch(hideAppNavigation()),
+  handleShowAppNavigation: () => dispatch(showAppNavigation),
   handleExitWorkbook: (isAppNavigationOpen) => {
     if(!isAppNavigationOpen) dispatch(showAppNavigation());
     resetWorkbook(dispatch);
@@ -46,15 +47,14 @@ let Workbook = ({
       workbookId 
     } 
   },
+  history,
   isAppNavigationOpen,
   handleHideAppNavigation,
   handleLoadWorkbook,
   handleExitWorkbook,
-  history
+  handleShowAppNavigation
 }) => {
   const [ isDataFetched, setIsDataFetched ] = useState(false);
-
-  if(isAppNavigationOpen) handleHideAppNavigation();
 
   const returnLink = `${ROUTE_USER_BUNDLES}/${phase}/${bundleId}`;
 
@@ -76,11 +76,17 @@ let Workbook = ({
         .then(({ data: { data: { workbook } } }) => {
           let { fileStates } = workbook;
 
+          fileStates.bundleId = bundleId;
+          fileStates.type = `bundle_${phase}`;
+          fileStates.templateId = workbookId;
+
           handleLoadWorkbook(convertStateToReactState(fileStates));
+          if(isAppNavigationOpen) handleHideAppNavigation();
           setIsDataFetched(true);
         })
         .catch((error) => {
           console.error(error);
+          handleShowAppNavigation();
           history.push(returnLink);
         });
     }

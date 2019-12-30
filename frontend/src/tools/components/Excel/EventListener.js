@@ -1494,7 +1494,15 @@ class EventRedux extends PureComponent {
       .catch((error) => console.error(error))
   }
 
-  saveBundleWorkbook() {
+  saveEditBundle(commonProps) {
+    
+  }
+
+  saveReviewBundle(commonProps) {
+
+  }
+
+  saveApproveBundle(commonProps) {
 
   }
 
@@ -1535,11 +1543,11 @@ class EventRedux extends PureComponent {
     if(type === "template") {
       this.saveTemplate(commonProps);
     } else if(type === "bundle_edit") {
-      
+      this.saveEditBundle(commonProps);
     } else if(type === "bundle_review") {
-
+      this.saveReviewBundle(commonProps);
     } else if(type === "bundle_approve") {
-
+      this.saveApproveBundle(commonProps);
     }
   }
 
