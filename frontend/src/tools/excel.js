@@ -608,8 +608,6 @@ const getMaxSheetRange = (sheetCellData) => {
   return { maxRowRange, maxColumnRange };
 };
 
-// ! Add template id mapping / sheet
-// ! ISSUE HERE WHEN UPLOADING THE RELEVANT EXCEL TEMPLATES
 export const convertExcelFileToState = async (excelFile) => {
   const WorkbookInstance = await XlsxPopulate.fromDataAsync(excelFile);
   const name = excelFile.name;

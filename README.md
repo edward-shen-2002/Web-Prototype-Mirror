@@ -48,4 +48,4 @@ There are many functions of Excel that has not been implemented in Xlsx-populate
 
 ## Resources
 
-[Todos](docs/TODOS.md), [Bugs](docs/BUGS.md), [Redo/Undo](docs/HISTORY.md), [Notes](docs/NOTES.md), [Workflow](docs/WORKFLOW.md), [Optimizations](docs/OPTIMIZATIONS.md)
+[Todos](docs/TODOS.md), [Bugs](docs/BUGS.md), [Redo/Undo](docs/HISTORY.md), [Notes](docs/NOTES.md), [Optimizations](docs/OPTIMIZATIONS.md)
