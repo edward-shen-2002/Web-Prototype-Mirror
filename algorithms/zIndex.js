@@ -1,4 +1,4 @@
-export const getRowsZIndex = (rows, rowCount, columnCount) => {
+const getRowsZIndex = (rows, rowCount, columnCount) => {
   let rowsZIndexList = [];
 
   for(let row = 0; row < rowCount; row++) {
@@ -18,7 +18,7 @@ export const getRowsZIndex = (rows, rowCount, columnCount) => {
   return rowsZIndexList;
 };
 
-export const mergeSegments = (segments) => {
+const mergeSegments = (segments) => {
   if(!segments.length) return [];
 
   segments.sort((segment1, segment2) => segment1[0] - segment2[0]);

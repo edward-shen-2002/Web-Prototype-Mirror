@@ -134,8 +134,8 @@ let App = ({
       if(status === HTTP_ERROR_INVALID_TOKEN) {
         handleLogout();
       } else if(status === HTTP_ERROR_UNAUTHORIZED) {
-        history.push(ROUTE_USER_PROFILE);
         handleSetReconnectOn();
+        history.push(ROUTE_USER_PROFILE);
       }
 
       return Promise.reject(error);
@@ -161,7 +161,7 @@ let App = ({
   findAndSaveToken();
 
   useEffect(() => {
-    if(!isDataFetched && shouldReconnect) {
+    if(shouldReconnect) {
       handleReconnect(setIsDataFetched);
     } else if(!isDataFetched) {
       setIsDataFetched(true);
