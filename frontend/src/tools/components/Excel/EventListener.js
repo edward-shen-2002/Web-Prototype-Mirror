@@ -910,6 +910,12 @@ class EventRedux extends PureComponent {
   }
 
   doubleClickEditableCell() {
+    const {
+      isSelectionMode
+    } = this.props;
+
+    if(isSelectionMode) return;
+
     this.setEditModeOn();
   }
 
