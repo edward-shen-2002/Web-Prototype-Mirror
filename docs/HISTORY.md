@@ -212,11 +212,11 @@ Redo:
 ```js
 [
   {
-    ...appState_1
+    ...desiredAppStates_1
   },
   ...,
   {
-    ...appState_x
+    ...desiredAppStates_x
   }
 ]
 ```
