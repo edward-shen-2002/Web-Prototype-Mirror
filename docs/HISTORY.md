@@ -26,7 +26,7 @@ Storage: Changed values in storage, history indices, action history, and action 
 
 ### Structure
 
-#### Redo/undo action
+#### Redo/undo Action
 
 Undo:
 
@@ -50,7 +50,7 @@ Redo:
 }
 ```
 
-#### Cell history
+#### Cell History
 
 ```js
 {
@@ -77,7 +77,7 @@ Redo:
 ]
 ```
 
-#### Action index
+#### Action Index
 
 ```js
 index: int_z
