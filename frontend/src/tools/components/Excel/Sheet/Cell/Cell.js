@@ -31,7 +31,7 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
   let cellData;
   let Component;
 
-  if(columnIndex > 0 && rowIndex > 0){
+  if(columnIndex && rowIndex) {
     cellData = sheetCellData[rowIndex] && sheetCellData[rowIndex][columnIndex] ? sheetCellData[rowIndex][columnIndex] : undefined;
 
     Component = (
@@ -48,7 +48,7 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         handleDoubleClickEditableCell={handleDoubleClickEditableCell}
       />
     );
-  } else if(columnIndex > 0 && rowIndex === 0) {
+  } else if(columnIndex) {
     Component = (
       <ColumnHeaderCell 
         style={style} 
@@ -58,7 +58,7 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         handleClickColumnHeader={handleClickColumnHeader}
       />
     );
-  } else if(columnIndex === 0 && rowIndex > 0) {
+  } else if(rowIndex) {
     Component = (
       <RowHeaderCell 
         style={style} 

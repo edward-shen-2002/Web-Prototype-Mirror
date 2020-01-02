@@ -2,11 +2,13 @@ import React from "react";
 
 import uniqid from "uniqid";
 
-const RichTextCellContent = (richText) => richText.map(({ styles, text }) => {
-  <span key={uniqid()} style={styles}>
+import { getCellInlineStyle, getBlockStyle } from "tools/excel";
+
+const RichTextCellContent = (richText, firstFragmentStyle) => richText.map(({ styles, text }, index) => (
+  <span key={uniqid()} style={index ? styles : firstFragmentStyle}>
     {text}
   </span>
-});
+));
 
 const EditableCell = ({ 
   style, 
@@ -32,12 +34,23 @@ const EditableCell = ({
     handleDoubleClickEditableCell();
   };
 
-  let value = cellData ? cellData.value : undefined;
-  let type = cellData ? cellData.type : undefined;
+  let value;
+  let type;
 
-  if(type === "rich-text") value = RichTextCellContent(value);
+  if(cellData) {
+    value = cellData.value;
+    type = cellData.type;
+    
+    if(type === "rich-text") {
+      const firstFragmentStyle = getCellInlineStyle(cellData.styles);
+      const containerStyle = getBlockStyle(cellData.styles);
+      value = RichTextCellContent(value, firstFragmentStyle);
 
-  if(cellData && cellData.styles) style = { ...style, ...cellData.styles };
+      style = { ...style, ...containerStyle };
+    } else {
+      style = { ...style, ...cellData.styles };
+    }
+  }
 
   return (
     <div 

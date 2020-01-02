@@ -353,6 +353,8 @@ export const extractCellStyle = (cellData) => {
   let cellStyles = (
     cellData
       ? cellData.style([
+          // Can be block style or rich text
+          // If cell is richtext, this is the data that is on the first fragment
           "bold",
           "italic",
           "underline",
@@ -364,6 +366,8 @@ export const extractCellStyle = (cellData) => {
           "fontGenericFamily",
           "fontScheme",
           "fontColor",
+
+          // Strictly block styles
           "horizontalAlignment",
           "justifyLastLine",
           "indent",
@@ -432,6 +436,44 @@ export const extractCellRichTextStyle = (cellData) => {
   return isObjectEmpty(cellStyles) ? undefined : convertXlsxStyleToInlineStyle(cellStyles);
 };
 
+// ! TODO - missing some styles
+export const getCellInlineStyle = (cellSyles) => {
+  if(cellSyles === undefined) return undefined;
+
+  const {
+    fontWeight, 
+    fontStyle, 
+    textDecoration, 
+    verticalAlign, 
+    fontSize, 
+    fontFamily, 
+  } = cellSyles;
+
+  return {
+    fontWeight, 
+    fontStyle, 
+    textDecoration, 
+    verticalAlign, 
+    fontSize, 
+    fontFamily, 
+  };
+};
+
+// ! TODO - missing some styles
+export const getBlockStyle = (cellStyles) => {
+  if(cellStyles === undefined) return undefined;
+  
+  const {
+    fill,
+    horizontalAlignment
+  } = cellStyles;
+
+  return {
+    fill,
+    horizontalAlignment
+  };
+};
+
 const extractRichTextData = (richText) => {
   let plainRichTextObject = [];
 
@@ -453,7 +495,7 @@ const extractCellData = (cellData) => {
   const cellValue = cellData.value();
 
   const cellFormula = cellData.formula();
-  const cellStyles = extractCellStyle(cellData);
+  
   // !! TODO May be internal - ie in another sheet
   // const cellHyperlinkData = cellData.hyperlink();
 
@@ -478,7 +520,9 @@ const extractCellData = (cellData) => {
       extractedCellData.value = cellValue;
     }
   }
-  if(cellStyles) extractedCellData.styles = cellStyles;
+
+  const cellStyles = extractCellStyle(cellData);
+ if(cellStyles) extractedCellData.styles = cellStyles;
 
   return isObjectEmpty(extractedCellData) ? undefined : extractedCellData;
 };
