@@ -6,21 +6,35 @@ The issue when working with Xlsx-populate workbook instance and react redux is t
 
 When implementing redux redo/undo, Xlsx-populate will have to be directly computed at each step which causes tedious calculations and is simply impractical (There might be great ways to solve this, which I have not found yet).
 
-## Solution
+## Solutions
 
-However, we can represent the Xlsx-populate workbook as states. With this we will have no issue with redo and undo.
+## Implementation 1
 
-If we need the xlsx instance, we use the state to create the instance or output the file.
+Add a history to state values. Hard to implement but best solution in terms of performance.
 
-## Issues with Solution
+### Analysis
 
-With the instance being represented as states, we have a major responsibility on doing the validation and other excel responsibilities ourselves.
+#### Cost
 
-## Implementation
+Run-time: O(1) - Just update the history index
 
-Sample structure:
+Storage: Changed values in storage, history indices, action history, and action state/key (to know which index to update)
 
-For redo/undo action:
+#### Pros
+
+- Quick run-time
+
+- No unecessary re-renders
+
+#### Cons
+
+- Hard implementation, especially if state is dynamic - need to understand the structure of each state
+
+### Structure
+
+#### Redo/undo action
+
+Undo:
 
 ```js
 {
@@ -31,7 +45,18 @@ For redo/undo action:
 }
 ```
 
-Cell history:
+Redo:
+
+```js
+{
+  CELL_REDO: {
+    row_x: column_y
+    ...
+  }
+}
+```
+
+#### Cell history
 
 ```js
 {
@@ -44,7 +69,7 @@ Cell history:
 }
 ```
 
-Action history:
+#### Action History
 
 ```js
 [
@@ -58,7 +83,151 @@ Action history:
 ]
 ```
 
-Action index:
+#### Action index
+
+```js
+index: int_z
+```
+
+## Implementation 2
+
+Retrace history through action history - start from initial app state to desired state through actions
+
+### Analysis
+
+#### Cost
+
+Run-time: O(n) - Need to perform actions to go to desired state
+
+Storage: History index, action history and action values
+
+#### Pros
+
+- Quick run time
+
+- [Already implemented](https://github.com/JannicBeck/undox)
+
+#### Cons
+
+- Bad run-time
+
+- Have to retrace history from initial state to desired state - takes up to n actions and at least n re-renders (if values are different)
+
+#### Cons
+
+### Structure
+
+#### Redo/undo Action
+
+Undo:
+
+```js
+{
+  type: UDNO
+}
+```
+
+Redo:
+
+```js
+{
+  type: REDO
+}
+```
+
+#### Action History
+
+```js
+[
+  {
+    type: CELL_UPDATE,
+    values: {
+      row_x: {
+        col_y: {
+          value: "First change from initial state"
+        }
+      }
+    }
+  },
+  ...,
+  {
+    type: CELL_UPDATE,
+    values: {
+      row_x: {
+        col_y: {
+          value: "new value"
+        }
+      }
+    }
+  }
+]
+```
+
+#### Action Index
+
+```js
+index: int_z
+```
+
+## Implementation 3
+
+Have a history of the entire desired states
+
+### Analysis
+
+#### Cost
+
+Run-time: O(1) - Just update the history index
+
+Storage: History index, entire state
+
+#### Pros
+
+- Quick run-time
+
+- [Already implemented](https://github.com/omnidan/redux-undo)
+
+#### Cons
+
+- Stores values which have not changed
+
+- Storage is expensive and will slow the app down if the state is large
+
+### Structure
+
+#### Redo/undo Action
+
+Undo:
+
+```js
+{
+  type: UNDO
+}
+```
+
+Redo:
+
+```js
+{
+  type: REDO
+}
+```
+
+#### State History
+
+```js
+[
+  {
+    ...appState_1
+  },
+  ...,
+  {
+    ...appState_x
+  }
+]
+```
+
+#### Action Index
 
 ```js
 index: int_z

@@ -25,3 +25,5 @@ Only heavy loads, the application hangs. We could use a web-worker to handle the
 ## React Window
 
 Scrolling on the top left pane does not work (Could be absolute positioned ... Change to sticky!);
+
+When the width/height of the frozen column/rows is greater than the dimension of the visisble window, the frozen area can be scrolled.
