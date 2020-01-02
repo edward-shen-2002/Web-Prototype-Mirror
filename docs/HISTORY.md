@@ -4,7 +4,7 @@
 
 ## Implementation 1
 
-Add a history to state values. Hard to implement but best solution in terms of performance.
+Add a history to state values
 
 ### Analysis
 
