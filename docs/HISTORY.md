@@ -1,11 +1,5 @@
 # History - Redo and Undo
 
-## Background
-
-The issue when working with Xlsx-populate workbook instance and react redux is that they are two different modules which are not initially compatible.
-
-When implementing redux redo/undo, Xlsx-populate will have to be directly computed at each step which causes tedious calculations and is simply impractical (There might be great ways to solve this, which I have not found yet).
-
 ## Solutions
 
 ## Implementation 1
