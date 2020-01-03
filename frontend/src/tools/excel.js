@@ -169,7 +169,7 @@ export const getWorkbookInstance = async ({
 
         const { value } = sheetCellData[row][column];
   
-        if(value) {
+        if(value !== undefined) {
           const sheetCell = sheet.row(row).cell(column);
           sheetCell.setValue(value);
         }
@@ -200,7 +200,7 @@ export const getWorkbookInstance = async ({
 };
 
 export const getCellData = (sheetCellData, row, column) => (
-  sheetCellData[row] && sheetCellData[row][column]
+  sheetCellData[row] && sheetCellData[row][column] !== undefined
     ? sheetCellData[row][column]
     : undefined
 );
@@ -542,8 +542,7 @@ const extractCellData = (cellData) => {
 
   let extractedCellData = {};
 
-  if(cellValue) {
-    // extractedCellData.value = cellValue instanceof RichText ?  : cellValue;
+  if(cellValue !== undefined) {
     if(cellValue instanceof RichText) {
       extractedCellData.type = "rich-text";
       extractedCellData.value = extractRichTextData(cellValue);
@@ -658,7 +657,7 @@ export const getLeftOffsets = (columnWidths, columnCount) => {
 
 export const getActiveCellInputData = (sheetCellData, activeRow, activeColumn) => {
   const activeCellInputValueData = (
-    sheetCellData && sheetCellData[activeRow] && sheetCellData[activeRow][activeColumn]
+    sheetCellData && sheetCellData[activeRow] && sheetCellData[activeRow][activeColumn] !== undefined
       ? sheetCellData[activeRow][activeColumn]
       : undefined
   );
@@ -848,7 +847,7 @@ export const getCellDataText = (cellData) => {
   if(type === "rich-text") {
     text = value.reduce((resultText, { text }) => resultText + text);
   } else {
-    text = value ? value : "";
+    text = value !== undefined ? value : "";
   }
 
   return text;
