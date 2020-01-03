@@ -190,7 +190,7 @@ let Sheet = ({
     EventListenerInstance = eventListenerRef.current;
   });
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = async (event) => {
     const { key, shiftKey, ctrlKey, altKey } = event;
     
     if(key === "ArrowUp") {
@@ -231,6 +231,12 @@ let Sheet = ({
     }
   };
 
+  const handlePaste = ({ clipboardData }) => {
+    let paste = (clipboardData || window.clipboardData).getData("text/html");
+
+    console.log(paste);
+  };
+
   const handleClick = () => EventListenerInstance.setInputAutoFocusOn();
 
   const handleOpenContextMenu = (event) => {
@@ -256,6 +262,7 @@ let Sheet = ({
       onDragStart={handleDragStart}
       onClick={handleClick}
       onContextMenu={handleOpenContextMenu}
+      onPaste={handlePaste}
     >
       <SheetWindow 
         sheetContainerRef={sheetContainerRef} 

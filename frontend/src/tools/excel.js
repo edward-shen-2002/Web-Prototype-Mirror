@@ -8,6 +8,10 @@ import { isObjectEmpty } from "tools/misc";
 
 import pako from "pako";
 
+import Color from "color";
+
+import { themes } from "constants/styles";
+
 import { 
   EXCEL_ROW_HEIGHT_SCALE,
   EXCEL_COLUMN_WIDTH_SCALE,
@@ -50,7 +54,6 @@ export const getScrollbarSize = (recalculate = false) => {
 
   return size;
 };
-
 
 // Copied from react-window
 export const getEstimatedTotalHeight = (
@@ -263,14 +266,38 @@ export const getSheetRowsData = (sheet, rowCount) => {
 };
 
 // TODO
-const convertXlsxColorToCss = ({ rgb, theme }) => {
+const convertXlsxColorToCss = ({ rgb, theme, tint }) => {
   let convertedStyle;
 
   if(rgb) {
     convertedStyle = `#${rgb.length === 6 ? rgb : rgb.substring(2)}`;
-  } 
+  } else if (theme !== undefined) {
+    convertedStyle = themes[theme];
+
+    if(tint) convertedStyle = applyTintToColour(convertedStyle, tint);
+  }
 
   return convertedStyle;
+};
+
+// ! From https://github.com/Qix-/color/issues/53#issuecomment-487822576
+const lightenBy = (color, ratio) => {
+  const lightness = color.lightness();
+  return color.lightness(lightness + (100 - lightness) * ratio);
+};
+
+const darkenBy = (color, ratio) => color.lightness(color.lightness() * (1 - ratio));
+
+const applyTintToColour = (color, tint, isShade = false) => {
+  color = Color(color);
+
+  if(tint >= 0) {
+    color = lightenBy(color, tint);
+  } else {
+    color = darkenBy(color, -tint);
+  }
+
+  return color.hex();
 };
 
 // TODO
@@ -315,12 +342,21 @@ export const convertXlsxStyleToInlineStyle = (xlsxStyle) => {
     numberFormat
   } = xlsxStyle;
 
+  // ! TODO
+  if(borderColor) console.log("b", borderColor);
+  if(leftBorder) console.log("lb", leftBorder);
+  if(rightBorder) console.log("rb", rightBorder);
+  if(topBorder) console.log("tb", topBorder);
+  if(bottomBorder) console.log("bb", bottomBorder);
+  if(borderStyle) console.log("bs", borderStyle);
+
   if(bold) inlineStyle.fontWeight = "bold";
   if(italic) inlineStyle.fontStyle = "italic";
   if(underline) inlineStyle.textDecoration = "underline";
   if(strikethrough) inlineStyle.textDecoration = underline ? inlineStyle.textDecoration + " line-through" : "line-through";
   if(subscript) inlineStyle.verticalAlign = "sub";
   if(superscript) inlineStyle.verticalAlign = "super";
+
   if(fontSize) inlineStyle.fontSize = fontSize;
 
   if(fontFamily) inlineStyle.fontFamily = fontFamily;
@@ -328,7 +364,15 @@ export const convertXlsxStyleToInlineStyle = (xlsxStyle) => {
   if(fontColor) inlineStyle.color = convertXlsxColorToCss(fontColor);
 
   if(fill) {
-    const { type, color } = fill;
+    let { 
+      type, 
+      color: { 
+        theme, 
+        tint, 
+        rgb 
+      }, 
+      color 
+    } = fill;
 
     if(type === "solid") inlineStyle.backgroundColor = convertXlsxColorToCss(color);
   }
@@ -569,7 +613,7 @@ export const convertRichTextToEditorState = (richText, editorState = EditorState
     
     editorState = EditorState.push(
       editorState,
-      ContentState.createFromText(text ? text : ""),
+      ContentState.createFromText(text ? text.toString() : ""),
       "change-inline-style"
     );
   })

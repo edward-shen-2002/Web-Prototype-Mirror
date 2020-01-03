@@ -15,7 +15,6 @@ TODO
 ## Xlsx-populate
 
 - No support for saved multiple selection (use multiple selection then save the excel file). No work around at the moment.
-
 - Hyperlink call crashes website
 
 ## Heavy Loads
@@ -27,3 +26,7 @@ Only heavy loads, the application hangs. We could use a web-worker to handle the
 Scrolling on the top left pane does not work (Could be absolute positioned ... Change to sticky!);
 
 When the width/height of the frozen column/rows is greater than the dimension of the visisble window, the frozen area can be scrolled.
+
+## Excel
+
+- Default theme colours are hard-coded from excel (not really an issue if this never changes). It's possible that we could get the colours from Xlsx-populate and store it as a state: { ...appState, themes: { ... } }
