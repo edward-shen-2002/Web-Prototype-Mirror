@@ -209,6 +209,10 @@ let Sheet = ({
       EventListenerInstance.delete();
     } else if(key === "Escape") {
       EventListenerInstance.escape(sheetContainerRef);
+    } else if(key === "s" && ctrlKey) {
+      // ! Put this save higher up the component? In Excel container?
+      event.preventDefault();
+      EventListenerInstance.save();
     } else if(key === "a" && ctrlKey) {
       EventListenerInstance.selectAll(event);
     } else if(inputCharacterRegex.test(key)) {
