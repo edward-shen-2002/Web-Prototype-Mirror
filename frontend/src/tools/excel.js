@@ -343,12 +343,12 @@ export const convertXlsxStyleToInlineStyle = (xlsxStyle) => {
   } = xlsxStyle;
 
   // ! TODO
-  if(borderColor) console.log("b", borderColor);
-  if(leftBorder) console.log("lb", leftBorder);
-  if(rightBorder) console.log("rb", rightBorder);
-  if(topBorder) console.log("tb", topBorder);
-  if(bottomBorder) console.log("bb", bottomBorder);
-  if(borderStyle) console.log("bs", borderStyle);
+  // if(borderColor) console.log("b", borderColor);
+  // if(leftBorder) console.log("lb", leftBorder);
+  // if(rightBorder) console.log("rb", rightBorder);
+  // if(topBorder) console.log("tb", topBorder);
+  // if(bottomBorder) console.log("bb", bottomBorder);
+  // if(borderStyle) console.log("bs", borderStyle);
 
   if(bold) inlineStyle.fontWeight = "bold";
   if(italic) inlineStyle.fontStyle = "italic";
@@ -366,11 +366,6 @@ export const convertXlsxStyleToInlineStyle = (xlsxStyle) => {
   if(fill) {
     let { 
       type, 
-      color: { 
-        theme, 
-        tint, 
-        rgb 
-      }, 
       color 
     } = fill;
 
