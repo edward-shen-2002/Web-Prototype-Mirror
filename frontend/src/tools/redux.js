@@ -117,6 +117,7 @@ export const loadSheet = (
   stagnantSelectionAreas ? dispatch(updateStagnantSelectionAreas(stagnantSelectionAreas)) : dispatch(resetStagnantSelectionAreas());
 
   dispatch(resetActiveSelectionArea());
+  dispatch(setEditModeOff());
 };
 
 export const resetSheet = (dispatch) => {
