@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { connect } from "react-redux";
 import { showAppNavigation, hideAppNavigation } from "actions/ui/isAppNavigationOpen"; 
 
-import { loadWorkbook, resetWorkbook } from "tools/redux";
+import { loadSheet, resetSheet } from "tools/redux";
 import Excel from "tools/components/Excel";
 
 import { convertStateToReactState } from "tools/excel";
@@ -32,10 +32,10 @@ const mapDispatchToProps = (dispatch) => ({
   handleShowAppNavigation: () => dispatch(showAppNavigation),
   handleExitWorkbook: (isAppNavigationOpen) => {
     if(!isAppNavigationOpen) dispatch(showAppNavigation());
-    resetWorkbook(dispatch);
+    resetSheet(dispatch);
   },
-  handleLoadWorkbook: (excelData) => {
-    loadWorkbook(dispatch, excelData);
+  handleLoadSheet: (excelData) => {
+    loadSheet(dispatch, excelData);
   }
 });
 
@@ -50,7 +50,7 @@ let Workbook = ({
   history,
   isAppNavigationOpen,
   handleHideAppNavigation,
-  handleLoadWorkbook,
+  handleLoadSheet,
   handleExitWorkbook,
   handleShowAppNavigation
 }) => {
@@ -79,7 +79,7 @@ let Workbook = ({
           workbook.type = `bundle_${phase}`;
           workbook.templateId = workbookId;
 
-          handleLoadWorkbook(convertStateToReactState(workbook));
+          handleLoadSheet(convertStateToReactState(workbook));
           if(isAppNavigationOpen) handleHideAppNavigation();
           setIsDataFetched(true);
         })

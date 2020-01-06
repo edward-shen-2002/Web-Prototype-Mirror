@@ -15,7 +15,7 @@ import { updateActiveCellPosition, resetActiveCellPosition } from "actions/ui/ex
 import { resetActiveCellSelectionAreaIndex } from "actions/ui/excel/activeCellSelectionAreaIndex";
 
 import { updateSheetNames, resetSheetNames } from "actions/ui/excel/sheetNames";
-import { resetStagnantSelectionAreas } from "actions/ui/excel/stagnantSelectionAreas";
+import { updateStagnantSelectionAreas, resetStagnantSelectionAreas } from "actions/ui/excel/stagnantSelectionAreas";
 import { resetScrollData } from "actions/ui/excel/scrollData";
 
 import { setSelectionModeOff } from "actions/ui/excel/isSelectionMode";
@@ -61,7 +61,7 @@ export const resetUserState = (dispatch) => {
   dispatch(hideAppNavigation());
 };
 
-export const loadWorkbook = (
+export const loadSheet = (
   dispatch, 
   { 
     name,
@@ -83,6 +83,8 @@ export const loadWorkbook = (
     sheetFreezeRowCount,
     sheetHiddenColumns,
     sheetHiddenRows,
+    stagnantSelectionAreas,
+
     sheetTemplateIdMapping,
     isTemplatePublished,
     
@@ -111,9 +113,13 @@ export const loadWorkbook = (
   if(isTemplatePublished !== undefined) dispatch(updatePublishTemplate(isTemplatePublished));
   if(templateId !== undefined) dispatch(updateTemplateId(templateId));
   if(bundleId !== undefined) dispatch(updateBundleId(bundleId));
+
+  stagnantSelectionAreas ? dispatch(updateStagnantSelectionAreas(stagnantSelectionAreas)) : dispatch(resetStagnantSelectionAreas());
+
+  dispatch(resetActiveSelectionArea());
 };
 
-export const resetWorkbook = (dispatch) => {
+export const resetSheet = (dispatch) => {
   dispatch(resetWorkbookName());
   dispatch(resetExcelType());
   

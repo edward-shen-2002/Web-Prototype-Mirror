@@ -6,6 +6,8 @@ import { updateScrollData } from "actions/ui/excel/scrollData";
 
 import { VariableSizeGrid } from "react-window";
 
+import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
+
 import AutoSizer from "react-virtualized-auto-sizer";
 
 import memoize from "memoize-one";
@@ -15,8 +17,6 @@ import { inputCharacterRegex } from "tools/regex";
 import { getNormalRowHeight, getNormalColumnWidth } from "tools/excel";
 
 import WindowListener from "./WindowListener";
-
-import ContextMenu from "./ContextMenu";
 
 import Cell from "./Cell";
 
@@ -35,6 +35,7 @@ import "./Sheet.scss";
 const mapStateToProps = ({
   ui: {
     excel: {
+      isEditMode,
       cursorType,
       sheetCellData,
       sheetColumnCount,
@@ -46,6 +47,7 @@ const mapStateToProps = ({
     }
   }
 }) => ({
+  isEditMode,
   cursorType,
   sheetCellData,
   sheetColumnCount,
@@ -67,6 +69,7 @@ const SheetWindow = ({
   eventListenerRef,
 
   sheetCellData,
+  isEditMode,
   sheetFreezeRowCount,
   sheetFreezeColumnCount,
   sheetColumnCount,
@@ -123,45 +126,50 @@ const SheetWindow = ({
   return (
     <AutoSizer>
       {({ height, width }) => (
-        <VariableSizeGrid
-          ref={sheetGridRef}
-          freezeRowCount={tableFreezeRowCount}
-          freezeColumnCount={tableFreezeColumnCount}
-          columnCount={sheetColumnCount}
-          columnWidth={columnWidth}
-          height={height}
-          itemData={itemData}
-          rowCount={sheetRowCount}
-          rowHeight={rowHeight}
-          width={width}
-          onScroll={handleScroll}
-          extraTopLeftElement={
-            <TopLeftActivityPane 
-              key="top-left-selection-pane" 
-              {...commonSelectionPaneProps}
-            />
-          }
-          extraTopRightElement={
-            <TopRightActivityPane 
-              key="top-right-activity-pane" 
-              {...commonSelectionPaneProps}
-            />  
-          }
-          extraBottomLeftElement={
-            <BottomLeftActivityPane 
-              key="bottom-left-activity-pane" 
-              {...commonSelectionPaneProps}
-            />
-          }
-          extraBottomRightElement={
-            <BottomRightActivityPane 
-              key="bottom-right-activity-pane" 
-              {...commonSelectionPaneProps}
-            />
-          }
+        <ContextMenuTrigger 
+          id="sheetWindowContainer"
+          disable={isEditMode}
         >
-          {Cell}
-        </VariableSizeGrid>
+          <VariableSizeGrid
+            ref={sheetGridRef}
+            freezeRowCount={tableFreezeRowCount}
+            freezeColumnCount={tableFreezeColumnCount}
+            columnCount={sheetColumnCount}
+            columnWidth={columnWidth}
+            height={height}
+            itemData={itemData}
+            rowCount={sheetRowCount}
+            rowHeight={rowHeight}
+            width={width}
+            onScroll={handleScroll}
+            extraTopLeftElement={
+              <TopLeftActivityPane 
+                key="top-left-selection-pane" 
+                {...commonSelectionPaneProps}
+              />
+            }
+            extraTopRightElement={
+              <TopRightActivityPane 
+                key="top-right-activity-pane" 
+                {...commonSelectionPaneProps}
+              />  
+            }
+            extraBottomLeftElement={
+              <BottomLeftActivityPane 
+                key="bottom-left-activity-pane" 
+                {...commonSelectionPaneProps}
+              />
+            }
+            extraBottomRightElement={
+              <BottomRightActivityPane 
+                key="bottom-right-activity-pane" 
+                {...commonSelectionPaneProps}
+              />
+            }
+          >
+            {Cell}
+          </VariableSizeGrid>
+        </ContextMenuTrigger>
       )}
     </AutoSizer>
   );
@@ -173,6 +181,7 @@ let Sheet = ({
   sheetGridRef,
 
   cursorType,
+  isEditMode,
   sheetCellData,
   sheetFreezeRowCount,
   sheetFreezeColumnCount,
@@ -183,7 +192,6 @@ let Sheet = ({
 
   handleUpdateScrollData
 }) => {
-  const [ contextMenuData, setContextMenuData ] = useState({ isOpen: false, anchorEl: null });
   let EventListenerInstance;
 
   useEffect(() => {
@@ -243,15 +251,6 @@ let Sheet = ({
 
   const handleClick = () => EventListenerInstance.setInputAutoFocusOn();
 
-  const handleOpenContextMenu = (event) => {
-    event.preventDefault();
-
-    const anchorEl = event.currentTarget;
-    setContextMenuData({ isOpen: true, anchorEl });
-  };
-
-  const handleCloseContextMenu = () => setContextMenuData({ isOpen: false, anchorEl: null });
-
   let style = {};
 
   if(cursorType !== "default") style.cursor = cursorType;
@@ -265,13 +264,13 @@ let Sheet = ({
       onKeyDown={handleKeyDown}
       onDragStart={handleDragStart}
       onClick={handleClick}
-      onContextMenu={handleOpenContextMenu}
       onPaste={handlePaste}
     >
-      <SheetWindow 
-        sheetContainerRef={sheetContainerRef} 
+      <SheetWindow
         eventListenerRef={eventListenerRef}
         sheetGridRef={sheetGridRef}
+
+        isEditMode={isEditMode}
 
         sheetCellData={sheetCellData}
         sheetFreezeRowCount={sheetFreezeRowCount}
@@ -283,10 +282,18 @@ let Sheet = ({
       
         handleUpdateScrollData={handleUpdateScrollData}
       />
-      <ContextMenu 
-        handleCloseContextMenu={handleCloseContextMenu}
-        {...contextMenuData} 
-      />
+      <ContextMenu id="sheetWindowContainer">
+        <MenuItem data={{foo: 'bar'}}>
+          ContextMenu Item 1
+        </MenuItem>
+        <MenuItem data={{foo: 'bar'}}>
+          ContextMenu Item 2
+        </MenuItem>
+        <MenuItem divider />
+        <MenuItem data={{foo: 'bar'}}>
+   	      ContextMenu Item 3
+        </MenuItem>
+      </ContextMenu>
       <WindowListener 
         eventListenerRef={eventListenerRef}
         sheetContainerRef={sheetContainerRef}

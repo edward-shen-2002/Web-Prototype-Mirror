@@ -494,7 +494,7 @@ export const getCellInlineStyle = (cellSyles) => {
     textDecoration, 
     verticalAlign, 
     fontSize, 
-    fontFamily, 
+    fontFamily
   };
 };
 

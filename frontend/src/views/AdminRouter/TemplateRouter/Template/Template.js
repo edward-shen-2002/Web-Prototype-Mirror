@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { showAppNavigation, hideAppNavigation } from "actions/ui/isAppNavigationOpen"; 
 
 import { adminTemplateRoleAxios } from "tools/rest";
-import { loadWorkbook, resetWorkbook } from "tools/redux";
+import { loadSheet, resetSheet } from "tools/redux";
 import Excel from "tools/components/Excel";
 
 import { convertStateToReactState } from "tools/excel";
@@ -23,11 +23,9 @@ const mapDispatchToProps = (dispatch) => ({
   handleShowAppNavigation: () => dispatch(showAppNavigation()),
   handleExitTemplate: (isAppNavigationOpen) => {
     if(!isAppNavigationOpen) dispatch(showAppNavigation());
-    resetWorkbook(dispatch);
+    resetSheet(dispatch);
   },
-  handleLoadTemplate: (excelData) => {
-    loadWorkbook(dispatch, excelData);
-  }
+  handleLoadTemplate: (excelData) => loadSheet(dispatch, excelData)
 });
 
 let Template = ({ 

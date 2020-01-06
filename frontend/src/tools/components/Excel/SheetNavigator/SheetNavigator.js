@@ -13,7 +13,7 @@ import AddIcon from "@material-ui/icons/Add";
 // import { generateNewSheetName } from "tools/excel";
 import { DnDReorder } from "tools/misc";
 
-import { loadWorkbook } from "tools/redux";
+import { loadSheet } from "tools/redux";
 
 import pako from "pako";
 
@@ -130,6 +130,7 @@ const mapStateToProps = ({
       sheetRowHeights,
       sheetHiddenColumns,
       sheetHiddenRows,
+      stagnantSelectionAreas,
       sheetTemplateIdMapping
     }
   }
@@ -148,15 +149,17 @@ const mapStateToProps = ({
   sheetRowHeights,
   sheetHiddenColumns,
   sheetHiddenRows,
+  stagnantSelectionAreas,
   sheetTemplateIdMapping
 });
 
 const mapDispatchToProps = (dispatch) => ({
   handleChangeActiveSheet: (activeSheetName) => dispatch(updateActiveSheetName(activeSheetName)),
   handleChangeSheetNames: (sheetNames) => dispatch(updateSheetNames(sheetNames)),
-  handleLoadWorkbook: (workbookData) => loadWorkbook(dispatch, workbookData)
+  handleLoadSheet: (workbookData) => loadSheet(dispatch, workbookData)
 });
 
+// Move this state subscription and action to EventListener
 let SheetNavigator = ({ 
   sheetGridRef,
   name,
@@ -175,10 +178,11 @@ let SheetNavigator = ({
   sheetHiddenColumns,
   sheetHiddenRows,
   sheetTemplateIdMapping,
+  stagnantSelectionAreas,
 
   handleChangeActiveSheet,
   handleChangeSheetNames,
-  handleLoadWorkbook
+  handleLoadSheet
 }) => {
   // ! Think carefully about this one...
   const handleAddSheet = () => {
@@ -200,6 +204,7 @@ let SheetNavigator = ({
       sheetRowHeights,
       sheetHiddenColumns,
       sheetHiddenRows,
+      stagnantSelectionAreas,
       sheetTemplateIdMapping
     };
     
@@ -212,7 +217,7 @@ let SheetNavigator = ({
     sessionStorage.setItem("inactiveSheets", JSON.stringify(currentInactiveSheets));
 
     // ! Need to updae active cell input data!
-    handleLoadWorkbook({
+    handleLoadSheet({
       ...newActiveSheetData,
       activeSheetName: sheetName,
       activeCellInputData
