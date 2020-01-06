@@ -1558,7 +1558,8 @@ class EventRedux extends PureComponent {
       sheetRowHeights,
       sheetFreezeRowCount,
       sheetHiddenColumns,
-      sheetHiddenRows
+      sheetHiddenRows,
+      stagnantSelectionAreas
     } = this.props;
 
     let commonProps = {
@@ -1574,7 +1575,8 @@ class EventRedux extends PureComponent {
       sheetRowHeights,
       sheetFreezeRowCount,
       sheetHiddenColumns,
-      sheetHiddenRows
+      sheetHiddenRows,
+      stagnantSelectionAreas
     };
 
     if(type === "template") {

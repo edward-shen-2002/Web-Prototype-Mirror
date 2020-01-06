@@ -812,7 +812,8 @@ export const extractReactAndWorkbookState = (state) => {
     sheetFreezeRowCount,
     sheetHiddenColumns,
     sheetHiddenRows,
-    sheetTemplateIdMapping
+    stagnantSelectionAreas,
+    sheetTemplateIdMapping,
   } = state;
 
   const workbookData = getWorkbookData(activeSheetName, {
@@ -826,6 +827,7 @@ export const extractReactAndWorkbookState = (state) => {
     sheetFreezeRowCount,
     sheetHiddenColumns,
     sheetHiddenRows,
+    stagnantSelectionAreas,
     sheetTemplateIdMapping
   });
 
