@@ -909,6 +909,35 @@ class EventRedux extends PureComponent {
     this.setEditModeOn();
   }
 
+  // TODO
+  insertRow() {
+
+  }
+
+  // TODO
+  insertColumn() {
+
+  }
+
+  contextMenu(event, row, column) {
+    const {
+      stagnantSelectionAreas,
+      handleResetStagnantSelectionAreas
+    } = this.props;
+    event.preventDefault();
+
+    const stagnantSelectionAreasCount = stagnantSelectionAreas.length;
+
+    if(stagnantSelectionAreasCount) {
+      const { x1, x2, y1, y2 } = stagnantSelectionAreas[stagnantSelectionAreasCount - 1];
+
+      if(((x1 <= column && column <= x2) || (x2 <= column && column <= x1)) && ((y1 <= row && row <= y2) || (y2 <= row && row <= y1))) return;
+    } 
+
+    handleResetStagnantSelectionAreas();
+    this.updateActiveCellPosition(row, column);
+  }
+
   doubleClickEditableCell() {
     const {
       isSelectionMode

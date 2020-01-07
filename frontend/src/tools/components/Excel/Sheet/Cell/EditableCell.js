@@ -19,6 +19,7 @@ const EditableCell = ({
 
   handleSelectionStart,
   handleSelectionOver,
+  handleContextMenu,
 
   handleDoubleClickEditableCell
 }) => {
@@ -33,6 +34,8 @@ const EditableCell = ({
   const handleDoubleClick = () => {
     handleDoubleClickEditableCell();
   };
+
+  const handleRightClick = (event) => handleContextMenu(event, rowIndex, columnIndex);
 
   let value;
   let type;
@@ -59,6 +62,7 @@ const EditableCell = ({
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}
       onDoubleClick={handleDoubleClick}
+      onContextMenu={handleRightClick}
     >
       {value}
     </div>

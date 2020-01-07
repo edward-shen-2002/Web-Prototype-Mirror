@@ -6,7 +6,7 @@ import { updateScrollData } from "actions/ui/excel/scrollData";
 
 import { VariableSizeGrid } from "react-window";
 
-import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
+import { ContextMenuTrigger } from "react-contextmenu";
 
 import AutoSizer from "react-virtualized-auto-sizer";
 
@@ -15,6 +15,8 @@ import memoize from "memoize-one";
 import { inputCharacterRegex } from "tools/regex";
 
 import { getNormalRowHeight, getNormalColumnWidth } from "tools/excel";
+
+import ContextMenu from "./ContextMenu";
 
 import WindowListener from "./WindowListener";
 
@@ -101,6 +103,7 @@ const SheetWindow = ({
   const handleRowDragStart = (row) => EventListenerInstance.startRowDrag(row);
   const handleColumnDragStart = (column) => EventListenerInstance.startColumnDrag(column);
   const handleScroll = (scrollData) => handleUpdateScrollData(scrollData); 
+  const handleContextMenu = (event, row, column) => EventListenerInstance.contextMenu(event, row, column);
 
   const itemData = createItemData({
     sheetCellData, 
@@ -118,7 +121,8 @@ const SheetWindow = ({
 
     handleClickColumnHeader,
     handleClickRowHeader,
-    handleClickRootHeader
+    handleClickRootHeader,
+    handleContextMenu
   });
 
   const commonSelectionPaneProps = { sheetGridRef, handleChangeActiveInputData };
@@ -243,6 +247,7 @@ let Sheet = ({
     }
   };
 
+  // TODO
   const handlePaste = ({ clipboardData }) => {
     let paste = (clipboardData || window.clipboardData).getData("text/html");
 
@@ -282,18 +287,7 @@ let Sheet = ({
       
         handleUpdateScrollData={handleUpdateScrollData}
       />
-      <ContextMenu id="sheetWindowContainer">
-        <MenuItem data={{foo: 'bar'}}>
-          ContextMenu Item 1
-        </MenuItem>
-        <MenuItem data={{foo: 'bar'}}>
-          ContextMenu Item 2
-        </MenuItem>
-        <MenuItem divider />
-        <MenuItem data={{foo: 'bar'}}>
-   	      ContextMenu Item 3
-        </MenuItem>
-      </ContextMenu>
+      <ContextMenu/>
       <WindowListener 
         eventListenerRef={eventListenerRef}
         sheetContainerRef={sheetContainerRef}

@@ -25,7 +25,8 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
 
     handleClickColumnHeader,
     handleClickRowHeader,
-    handleClickRootHeader
+    handleClickRootHeader,
+    handleContextMenu
   } = data;
   
   let cellData;
@@ -38,13 +39,12 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
       <EditableCell 
         style={style} 
         cellData={cellData} 
-
         columnIndex={columnIndex} 
         rowIndex={rowIndex} 
 
+        handleContextMenu={handleContextMenu}
         handleSelectionStart={handleSelectionStart}
         handleSelectionOver={handleSelectionOver}
-
         handleDoubleClickEditableCell={handleDoubleClickEditableCell}
       />
     );
@@ -54,6 +54,7 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         style={style} 
         column={columnIndex}
         rowCount={rowCount}
+        handleContextMenu={handleContextMenu}
         handleColumnDragStart={handleColumnDragStart}
         handleClickColumnHeader={handleClickColumnHeader}
       />
@@ -64,6 +65,7 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         style={style} 
         row={rowIndex}
         columnCount={columnCount}
+        handleContextMenu={handleContextMenu}
         handleRowDragStart={handleRowDragStart}
         handleClickRowHeader={handleClickRowHeader}
       />
@@ -74,6 +76,7 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         style={style} 
         columnCount={columnCount}
         rowCount={rowCount}
+        handleContextMenu={handleContextMenu}
         handleClickRootHeader={handleClickRootHeader}
       />
     );
