@@ -924,8 +924,7 @@ class EventRedux extends PureComponent {
       stagnantSelectionAreas,
       handleResetStagnantSelectionAreas
     } = this.props;
-    event.preventDefault();
-
+    
     const stagnantSelectionAreasCount = stagnantSelectionAreas.length;
 
     if(stagnantSelectionAreasCount) {

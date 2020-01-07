@@ -256,6 +256,8 @@ let Sheet = ({
 
   const handleClick = () => EventListenerInstance.setInputAutoFocusOn();
 
+  const handleContextMenu = (event) => event.preventDefault();
+
   let style = {};
 
   if(cursorType !== "default") style.cursor = cursorType;
@@ -270,6 +272,7 @@ let Sheet = ({
       onDragStart={handleDragStart}
       onClick={handleClick}
       onPaste={handlePaste}
+      onContextMenu={handleContextMenu}
     >
       <SheetWindow
         eventListenerRef={eventListenerRef}
