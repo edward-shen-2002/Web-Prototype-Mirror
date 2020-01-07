@@ -19,7 +19,7 @@ const EditableCell = ({
 
   handleSelectionStart,
   handleSelectionOver,
-  handleContextMenu,
+  handleRightClickCell,
 
   handleDoubleClickEditableCell
 }) => {
@@ -35,7 +35,7 @@ const EditableCell = ({
     handleDoubleClickEditableCell();
   };
 
-  const handleRightClick = (event) => handleContextMenu(event, rowIndex, columnIndex);
+  const handleRightClick = (event) => handleRightClickCell(event, rowIndex, columnIndex);
 
   let value;
   let type;

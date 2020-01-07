@@ -103,7 +103,7 @@ const SheetWindow = ({
   const handleRowDragStart = (row) => EventListenerInstance.startRowDrag(row);
   const handleColumnDragStart = (column) => EventListenerInstance.startColumnDrag(column);
   const handleScroll = (scrollData) => handleUpdateScrollData(scrollData); 
-  const handleContextMenu = (event, row, column) => EventListenerInstance.contextMenu(event, row, column);
+  const handleRightClickCell = (event, row, column) => EventListenerInstance.rightClickCell(event, row, column);
 
   const itemData = createItemData({
     sheetCellData, 
@@ -122,7 +122,7 @@ const SheetWindow = ({
     handleClickColumnHeader,
     handleClickRowHeader,
     handleClickRootHeader,
-    handleContextMenu
+    handleRightClickCell
   });
 
   const commonSelectionPaneProps = { sheetGridRef, handleChangeActiveInputData };
@@ -132,6 +132,7 @@ const SheetWindow = ({
       {({ height, width }) => (
         <ContextMenuTrigger 
           id="sheetWindowContainer"
+          // ! Issue here
           disable={isEditMode}
         >
           <VariableSizeGrid

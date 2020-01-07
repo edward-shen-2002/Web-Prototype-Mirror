@@ -922,14 +922,51 @@ class EventRedux extends PureComponent {
 
   _offsetObjectAtIndex(data, start, offset) {
     let newData = {};
+    let startData = data[start];
+
     for(let offsetParam in data) {
       const paramData = data[offsetParam];
-      if(offsetParam >= start) {
+      if(offsetParam >= start && paramData) {
         const newOffsetParam = Number(offsetParam) + offset;
         newData[newOffsetParam] = paramData;
+
+        newData[offsetParam] = startData;
       } else {
         newData[offsetParam] = data[offsetParam];
       }
+    }
+
+    return newData;
+  }
+
+  _offsetSheetCellRowDataAtIndex(sheetCellData, start, offset) {
+    let newData = {};
+    let startData = sheetCellData[start];
+    let template = {};
+
+    const end = start + offset;
+
+    for(let column in startData) {
+      const { styles } = startData[column];
+
+      if(styles) template[column] = { type: "normal", styles };
+    }
+
+    // Offset data downwards
+    for(let offsetParam in sheetCellData) {
+      const paramData = sheetCellData[offsetParam];
+      if(start <= offsetParam && paramData) {
+        const newOffsetParam = Number(offsetParam) + offset;
+        newData[newOffsetParam] = paramData;
+
+      } else {
+        newData[offsetParam] = sheetCellData[offsetParam];
+      }
+    }
+
+    // Fill the gaps with styles
+    for(let offsetParam in sheetCellData) {
+      if(start <= offsetParam && offsetParam < end) newData[offsetParam] = template;
     }
 
     return newData;
@@ -969,7 +1006,7 @@ class EventRedux extends PureComponent {
 
     const newRowCount = sheetRowCount + rowsToInsert;
 
-    let newSheetCellData = this._offsetObjectAtIndex(sheetCellData, insertStart, rowsToInsert);
+    let newSheetCellData = this._offsetSheetCellRowDataAtIndex(sheetCellData, insertStart, rowsToInsert);
     let newRowHeights = this._offsetObjectAtIndex(sheetRowHeights, insertStart, rowsToInsert);
     let newHiddenRows = this._offsetObjectAtIndex(sheetHiddenRows, insertStart, rowsToInsert);
 
@@ -1010,11 +1047,13 @@ class EventRedux extends PureComponent {
     }
   }
 
-  contextMenu(event, row, column) {
+  rightClickCell(event, row, column) {
     const {
       stagnantSelectionAreas,
       handleResetStagnantSelectionAreas
     } = this.props;
+
+    event.preventDefault();
     this.setEditModeOff();
     
     const stagnantSelectionAreasCount = stagnantSelectionAreas.length;
