@@ -3,6 +3,7 @@ import React from "react";
 import { ContextMenu, MenuItem, SubMenu } from "react-contextmenu";
 
 import "./ContextMenu.scss";
+import { useEffect } from "react";
 
 const SheetContextSubMenu = ({ children }) => (
   <SubMenu>
@@ -49,7 +50,17 @@ const SheetContextMenuItem = ({
 );
 
 // ! HARD-CODED WIDTH!! 
-const SheetContextMenu = () => {
+const SheetContextMenu = ({
+  eventListenerRef
+}) => {
+  let EventListenerInstance;
+
+  useEffect(() => {
+    EventListenerInstance = eventListenerRef.current;
+  });
+
+  const handleInsertRow = () => EventListenerInstance.insertRow();
+  const handleInsertColumn = () => EventListenerInstance.insertColumn();
 
   return (
     <ContextMenu
@@ -74,9 +85,11 @@ const SheetContextMenu = () => {
       <hr className="menuDivider"/>
       <SheetContextMenuItem
         text="Insert row"
+        handleClick={handleInsertRow}
       />
       <SheetContextMenuItem
         text="Insert column"
+        handleClick={handleInsertColumn}
       />
     </ContextMenu>
   );

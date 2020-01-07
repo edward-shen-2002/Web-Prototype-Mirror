@@ -42,6 +42,11 @@ import { updateSheetCellData } from "actions/ui/excel/sheetCellData";
 import { updateSheetColumnWidths } from "actions/ui/excel/sheetColumnWidths";
 import { updateSheetRowHeights } from "actions/ui/excel/sheetRowHeights";
 
+import { updateSheetColumnCount } from "actions/ui/excel/sheetColumnCount";
+import { updateSheetRowCount } from "actions/ui/excel/sheetRowCount";
+
+import { updateSheetHiddenRows } from "actions/ui/excel/sheetHiddenRows";
+import { updateSheetHiddenColumns } from "actions/ui/excel/sheetHiddenColumns";
 
 import { 
   isPositionEqualArea, 
@@ -80,6 +85,12 @@ const mapStateToProps = ({
 }) => excel;
 
 const mapDispatchToProps = (dispatch) => ({
+  handleUpdateSheetRowCount: (sheetRowCount) => dispatch(updateSheetRowCount(sheetRowCount)),
+  handleUpdateSheetColumnCount: (sheetColumnCount) => dispatch(updateSheetColumnCount(sheetColumnCount)),
+
+  handleUpdateSheetHiddenRows: (sheetHiddenRows) => dispatch(updateSheetHiddenRows(sheetHiddenRows)),
+  handleUpdateSheetHiddenColumns: (sheetHiddenColumns) => dispatch(updateSheetHiddenColumns(sheetHiddenColumns)),
+
   handleUpdateActiveCellPosition: (activeCellPosition) => dispatch(updateActiveCellPosition(activeCellPosition)),
 
   handleUpdateActiveSelectionArea: (activeSelectionArea) => dispatch(updateActiveSelectionArea(activeSelectionArea)),
@@ -99,7 +110,7 @@ const mapDispatchToProps = (dispatch) => ({
 
   handleUpdateScrollData: (scrollData) => dispatch(updateScrollData(scrollData)),
 
-  handleChangeSheetCellData: (sheetName, sheetsCellData) => dispatch(updateSheetCellData(sheetName, sheetsCellData)),
+  handleUpdateSheetCellData: (sheetName, sheetsCellData) => dispatch(updateSheetCellData(sheetName, sheetsCellData)),
 
   handleUpdateActiveCellInputData: (value) => dispatch(updateActiveCellInputData(value)),
   handleResetActiveCellInputData: () => dispatch(resetActiveCellInputData()),
@@ -690,7 +701,7 @@ class EventRedux extends PureComponent {
 
       sheetCellData,
 
-      handleChangeSheetCellData,
+      handleUpdateSheetCellData,
       handleUpdateActiveCellInputData
     } = this.props;
 
@@ -736,7 +747,7 @@ class EventRedux extends PureComponent {
         });
       }
 
-      handleChangeSheetCellData(newSheetCellData);
+      handleUpdateSheetCellData(newSheetCellData);
     } else {
       
       if(sheetCellData[y] && sheetCellData[y][x]) this.changeValue(y, x, { ...sheetCellData[y][x], value: undefined });
@@ -759,7 +770,7 @@ class EventRedux extends PureComponent {
   changeValue(row, column, newData) {
     const { 
       sheetCellData, 
-      handleChangeSheetCellData 
+      handleUpdateSheetCellData 
     } = this.props;
     
     const { value: newValue } = newData;
@@ -774,13 +785,13 @@ class EventRedux extends PureComponent {
     if(currentCellData) {
       if(currentCellData !== newValue) {
         newSheetCellData[row][column] = { ...currentCellData, value: newValue };
-        handleChangeSheetCellData(newSheetCellData);
+        handleUpdateSheetCellData(newSheetCellData);
       }
     } else {
       // ! Change type?
       if(!newSheetCellData[row]) newSheetCellData[row] = {};
       newSheetCellData[row][column] = { type: "normal", value: newValue };
-      handleChangeSheetCellData(newSheetCellData);
+      handleUpdateSheetCellData(newSheetCellData);
     }
   }
 
@@ -909,14 +920,94 @@ class EventRedux extends PureComponent {
     this.setEditModeOn();
   }
 
+  _offsetObjectAtIndex(data, start, offset) {
+    let newData = {};
+    for(let offsetParam in data) {
+      const paramData = data[offsetParam];
+      if(offsetParam >= start) {
+        const newOffsetParam = Number(offsetParam) + offset;
+        newData[newOffsetParam] = paramData;
+      } else {
+        newData[offsetParam] = data[offsetParam];
+      }
+    }
+
+    return newData;
+  }
+
   // TODO
   insertRow() {
+    const {
+      sheetGridRef,
+      activeCellPosition,
+      sheetCellData,
+      sheetRowHeights,
+      sheetHiddenRows,
+      sheetRowCount,
+      stagnantSelectionAreas,
+      handleUpdateSheetCellData,
+      handleUpdateSheetRowHeights,
+      handleUpdateSheetRowCount,
+      handleUpdateSheetHiddenRows
+    } = this.props;
+    let insertStart;
+    let rowsToInsert;
 
+    const stagnantSelectionAreasCount = stagnantSelectionAreas.length;
+
+    if(stagnantSelectionAreasCount) {
+      const { y1, y2 } = stagnantSelectionAreas[stagnantSelectionAreasCount - 1];
+
+      insertStart = Math.min(y1, y2);
+      rowsToInsert = Math.abs(y2 - y1) + 1;
+    } else {
+      const { y } = activeCellPosition;
+
+      insertStart = y;
+      rowsToInsert = 1;
+    }
+
+    const newRowCount = sheetRowCount + rowsToInsert;
+
+    let newSheetCellData = this._offsetObjectAtIndex(sheetCellData, insertStart, rowsToInsert);
+    let newRowHeights = this._offsetObjectAtIndex(sheetRowHeights, insertStart, rowsToInsert);
+    let newHiddenRows = this._offsetObjectAtIndex(sheetHiddenRows, insertStart, rowsToInsert);
+
+    sheetGridRef.current.resetAfterRowIndex(insertStart);
+    handleUpdateSheetRowCount(newRowCount);
+    handleUpdateSheetCellData(newSheetCellData);
+    handleUpdateSheetRowHeights(newRowHeights);
+    handleUpdateSheetHiddenRows(newHiddenRows);
   }
 
   // TODO
   insertColumn() {
+    const {
+      sheetGridRef,
+      activeCellPosition,
+      sheetCellData,
+      sheetColumnWidths,
+      sheetHiddenColumns,
+      sheetColumnCount,
+      stagnantSelectionAreas,
+      handleUpdateSheetCellData,
+      handleUpdateSheetColumnWidths,
+      handleUpdateSheetColumnCount,
+      handleUpdateSheetHiddenColumns
+    } = this.props;
 
+    let insertStart;
+    let columnsToInsert;
+
+    const stagnantSelectionAreasCount = stagnantSelectionAreas.length;
+
+    if(stagnantSelectionAreasCount) {
+
+    } else {
+      const { y } = activeCellPosition;
+
+      insertStart = x;
+    }
   }
 
   contextMenu(event, row, column) {
@@ -924,6 +1015,7 @@ class EventRedux extends PureComponent {
       stagnantSelectionAreas,
       handleResetStagnantSelectionAreas
     } = this.props;
+    this.setEditModeOff();
     
     const stagnantSelectionAreasCount = stagnantSelectionAreas.length;
 
