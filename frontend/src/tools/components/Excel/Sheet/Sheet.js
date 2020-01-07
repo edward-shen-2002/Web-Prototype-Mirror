@@ -133,7 +133,7 @@ const SheetWindow = ({
         <ContextMenuTrigger 
           id="sheetWindowContainer"
           // ! Issue here
-          disable={isEditMode}
+          // disable={isEditMode}
         >
           <VariableSizeGrid
             ref={sheetGridRef}

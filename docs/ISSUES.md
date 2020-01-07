@@ -30,3 +30,7 @@ When the width/height of the frozen column/rows is greater than the dimension of
 ## Excel
 
 - Default theme colours are hard-coded from excel (not really an issue if this never changes). It's possible that we could get the colours from Xlsx-populate and store it as a state: { ...appState, themes: { ... } }
+
+## Context Menu
+
+- Disable context menu on edit mode - probably need another state
