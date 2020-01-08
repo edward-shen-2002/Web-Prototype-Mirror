@@ -34,6 +34,8 @@ import {
 
 import { DEFAULT_SHEET_TEMPLATE_ID_MAPPING } from "constants/template";
 
+import uniqid from "uniqid";
+
 let size = -1;
 
 // This utility copied from "dom-helpers" package. -- from react-window
@@ -688,6 +690,49 @@ const getMaxSheetRange = (sheetCellData) => {
   }
 
   return { maxRowRange, maxColumnRange };
+};
+
+export const createBlankReactState = () => {
+  const name = uniqid();
+  const activeCellPosition = { x: 1, y: 1 };
+  const sheetTemplateIdMapping = DEFAULT_SHEET_TEMPLATE_ID_MAPPING;
+  const sheetCellData = {};
+  const sheetColumnCount = DEFAULT_EXCEL_SHEET_COLUMN_COUNT;
+  const sheetRowCount = DEFAULT_EXCEL_SHEET_ROW_COUNT;
+  const sheetColumnWidths = {};
+  const sheetRowHeights = {};
+  const sheetFreezeColumnCount = 0;
+  const sheetFreezeRowCount = 0;
+  const sheetHiddenColumns = {};
+  const sheetHiddenRows = {};
+
+  const sheetName = "Sheet1";
+
+  const sheetContent = {
+    activeCellPosition,
+    sheetTemplateIdMapping,
+    sheetCellData,
+    sheetColumnCount,
+    sheetColumnWidths,
+    sheetFreezeColumnCount,
+    sheetRowCount,
+    sheetFreezeRowCount,
+    sheetRowHeights,
+    sheetHiddenColumns,
+    sheetHiddenRows
+  };
+
+  const workbookData = { [ sheetName ]: pako.deflate(JSON.stringify(sheetContent), { to: "string" }) };
+
+  const sheetNames = [ sheetName ];
+  const activeSheetName = sheetName;
+
+  return {
+    name,
+    workbookData,
+    activeSheetName,
+    sheetNames
+  };
 };
 
 export const convertExcelFileToState = async (excelFile) => {

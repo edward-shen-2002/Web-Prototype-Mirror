@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, lazy } from "react";
 
 import { useDropzone } from "react-dropzone";
+import uniqid from "uniqid";
 
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -13,7 +14,7 @@ import LaunchIcon from "@material-ui/icons/Launch";
 
 import { adminTemplateRoleAxios } from "tools/rest";
 import { REST_ADMIN_TEMPLATES } from "constants/rest";
-import { convertExcelFileToState } from "tools/excel";
+import { createBlankReactState, convertExcelFileToState } from "tools/excel";
 
 import { ROUTE_ADMIN_TEMPLATE_TEMPLATES } from "constants/routes";
 
@@ -136,7 +137,8 @@ const TemplatesContainer = ({ history }) => {
   const filteredTemplates = templates.filter(({ name }) => name.toLowerCase().includes(query.toLowerCase()));
 
   const handleCreateTemplate = () => {
-    adminTemplateRoleAxios.post(REST_ADMIN_TEMPLATES)
+    const newTemplate = { name: uniqid(), fileStates: createBlankReactState() };
+    adminTemplateRoleAxios.post(`${REST_ADMIN_TEMPLATES}/upload`, { newTemplate })
       .then(({ data: { data: { template } } }) => {
           history.push(`${ROUTE_ADMIN_TEMPLATE_TEMPLATES}/${template._id}`);
         })

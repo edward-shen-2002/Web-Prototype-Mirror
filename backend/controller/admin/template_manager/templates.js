@@ -33,33 +33,33 @@ const templates = ({ router, TemplateModel }) => {
   // Instantiate a blank template. Change the title if there's a duplicate.
   // Default title is Untitled Workbook (?version)
   // ! NEED TO CHANGE THIS - INITIALIZE THE STATES ON THE FRONTEND?
-  router.post(ROUTE_ADMIN_TEMPLATES, async (req, res, next) => {
-    let { newTemplate } = req.body;
+  // router.post(ROUTE_ADMIN_TEMPLATES, async (req, res, next) => {
+  //   let { newTemplate } = req.body;
     
-    const name = newTemplate ? newTemplate.name : uniqid();
+  //   const name = newTemplate ? newTemplate.name : uniqid();
 
-    try {
-      const blankWorkbook = await XlsxPopulate.fromBlankAsync();
+  //   try {
+  //     const blankWorkbook = await XlsxPopulate.fromBlankAsync();
 
-      const sheet = blankWorkbook.sheet(0);
+  //     const sheet = blankWorkbook.sheet(0);
 
-      for(let row = 1; row <= DEFAULT_EXCEL_ROWS; row++) sheet.row(row).height(DEFAULT_EXCEL_ROW_HEIGHT);
+  //     for(let row = 1; row <= DEFAULT_EXCEL_ROWS; row++) sheet.row(row).height(DEFAULT_EXCEL_ROW_HEIGHT);
 
-      for(let column = 1; column <= DEFAULT_EXCEL_COLUMNS; column++) sheet.column(column).width(DEFAULT_EXCEL_COLUMN_WIDTH);
+  //     for(let column = 1; column <= DEFAULT_EXCEL_COLUMNS; column++) sheet.column(column).width(DEFAULT_EXCEL_COLUMN_WIDTH);
 
-      sheet.row(DEFAULT_EXCEL_ROWS).cell(DEFAULT_EXCEL_COLUMNS).setValue(undefined);
+  //     sheet.row(DEFAULT_EXCEL_ROWS).cell(DEFAULT_EXCEL_COLUMNS).setValue(undefined);
 
-      const blankWorkbookData = await blankWorkbook.outputAsync("base64");
+  //     const blankWorkbookData = await blankWorkbook.outputAsync("base64");
 
-      TemplateModel.create({ name, file: blankWorkbookData })
-        .then((template) => {
-          res.json({ message: MESSAGE_SUCCESS_TEMPLATES_CREATE, data: { template: { _id: template._id, name: template.name } } });
-        })
-        .catch(next);
-    } catch(error) {
-      next(error);
-    }
-  });
+  //     TemplateModel.create({ name, file: blankWorkbookData })
+  //       .then((template) => {
+  //         res.json({ message: MESSAGE_SUCCESS_TEMPLATES_CREATE, data: { template: { _id: template._id, name: template.name } } });
+  //       })
+  //       .catch(next);
+  //   } catch(error) {
+  //     next(error);
+  //   }
+  // });
 
   router.post(`${ROUTE_ADMIN_TEMPLATES}/upload`, async (req, res, next) => {
     let { newTemplate } = req.body;
