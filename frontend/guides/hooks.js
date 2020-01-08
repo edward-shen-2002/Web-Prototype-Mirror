@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback, useRef, useEffect, useState } from 'react';
 
-// https://reactjs.org/docs/hooks-reference.html
+// Official docs: https://reactjs.org/docs/hooks-reference.html
 
 const handleCleanUp = () => {};
 
