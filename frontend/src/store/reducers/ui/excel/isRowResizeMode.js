@@ -1,9 +1,9 @@
 import { createReducer } from "store/tools/setup";
 
-const SET_ROW_RESIZE_MODE_ON = () => true;
+const ENABLE_ROW_RESIZE_MODE = () => true;
 
-const SET_ROW_RESIZE_MODE_OFF = () => false;
+const DISABLE_ROW_RESIZE_MODE = () => false;
 
-const isRowResizeModeReducer = createReducer(false, { SET_ROW_RESIZE_MODE_ON, SET_ROW_RESIZE_MODE_OFF });
+const isRowResizeModeReducer = createReducer(false, { ENABLE_ROW_RESIZE_MODE, DISABLE_ROW_RESIZE_MODE });
 
 export default isRowResizeModeReducer;

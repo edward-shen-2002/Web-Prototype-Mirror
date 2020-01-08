@@ -1,5 +1,5 @@
-import { SET_SELECTION_MDOE_ON, SET_SELECTION_MODE_OFF } from "actionCreators";
+import { ENABLE_SELECTION_MODE, DISABLE_SELECTION_MODE } from "actionCreators";
 
-export const setSelectionModeOn = () => ({ type: SET_SELECTION_MDOE_ON });
+export const enableSelectionMode = () => ({ type: ENABLE_SELECTION_MODE });
 
-export const setSelectionModeOff = () => ({ type: SET_SELECTION_MODE_OFF });
+export const disableSelectionMode = () => ({ type: DISABLE_SELECTION_MODE });

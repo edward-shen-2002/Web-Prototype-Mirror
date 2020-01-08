@@ -1,4 +1,4 @@
-import { SET_SHOULD_RECONNECT_ON, SET_SHOULD_RECONNECT_OFF } from "actionCreators";
+import { ENABLE_RECONNECTION, DISABLE_RECONNECTION } from "actionCreators";
 
-export const setShouldReconnectOn = () => ({ type: SET_SHOULD_RECONNECT_ON });
-export const setShouldReconnectOff = () => ({ type: SET_SHOULD_RECONNECT_OFF });
+export const enableReconnection = () => ({ type: ENABLE_RECONNECTION });
+export const disableReconnection = () => ({ type: DISABLE_RECONNECTION });

@@ -1,4 +1,4 @@
-import { SET_FREEZE_ROW_RESIZE_MODE_ON, SET_FREEZE_ROW_RESIZE_MODE_OFF } from "actionCreators";
+import { ENABLE_FREEZE_ROW_RESIZE_MODE, DISABLE_FREEZE_ROW_RESIZE_MODE } from "actionCreators";
 
-export const setFreezeRowResizeModeOn = () => ({ type: SET_FREEZE_ROW_RESIZE_MODE_ON });
-export const setFreezeRowResizeModeOff = () => ({ type: SET_FREEZE_ROW_RESIZE_MODE_OFF });
+export const enableFreezeRowResizeMode = () => ({ type: ENABLE_FREEZE_ROW_RESIZE_MODE });
+export const disableFreezeRowResizeMode = () => ({ type: DISABLE_FREEZE_ROW_RESIZE_MODE });

@@ -1,9 +1,9 @@
 import { createReducer } from "store/tools/setup";
 
-const SET_FREEZE_COLUMN_RESIZE_MODE_ON = () => true;
+const ENABLE_FREEZE_COLUMN_RESIZE_MODE = () => true;
 
-const SET_FREEZE_COLUMN_RESIZE_MODE_OFF = () => false;
+const DISABLE_FREEZE_COLUMN_RESIZE_MODE = () => false;
 
-const isFreezeColumnResizeModeReducer = createReducer(false, { SET_FREEZE_COLUMN_RESIZE_MODE_ON, SET_FREEZE_COLUMN_RESIZE_MODE_OFF });
+const isFreezeColumnResizeModeReducer = createReducer(false, { ENABLE_FREEZE_COLUMN_RESIZE_MODE, DISABLE_FREEZE_COLUMN_RESIZE_MODE });
 
 export default isFreezeColumnResizeModeReducer;

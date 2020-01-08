@@ -1,12 +1,12 @@
 import { createReducer } from "store/tools/setup";
 
-const SET_ACTIVE_CELL_INPUT_AUTO_FOCUS_ON = () => true;
+const ENABLE_ACTIVE_CELL_INPUT_AUTO_FOCUS = () => true;
 
-const SET_ACTIVE_CELL_INPUT_AUTO_FOCUS_OFF = () => false;
+const DISABLE_ACTIVE_CELL_INPUT_AUTO_FOCUS = () => false;
 
 const activeCellInputAutoFocusReducer = createReducer(true, { 
-  SET_ACTIVE_CELL_INPUT_AUTO_FOCUS_ON, 
-  SET_ACTIVE_CELL_INPUT_AUTO_FOCUS_OFF 
+  ENABLE_ACTIVE_CELL_INPUT_AUTO_FOCUS, 
+  DISABLE_ACTIVE_CELL_INPUT_AUTO_FOCUS 
 });
 
 export default activeCellInputAutoFocusReducer;

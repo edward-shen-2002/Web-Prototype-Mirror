@@ -1,4 +1,4 @@
-import { SET_COLUMN_RESIZE_MODE_ON, SET_COLUMN_RESIZE_MODE_OFF } from "actionCreators";
+import { ENABLE_COLUMN_RESIZE_MODE, DISABLE_COLUMN_RESIZE_MODE } from "actionCreators";
 
-export const setColumnResizeModeOn = () => ({ type: SET_COLUMN_RESIZE_MODE_ON });
-export const setColumnResizeModeOff = () => ({ type: SET_COLUMN_RESIZE_MODE_OFF });
+export const enableColumnResizeMode = () => ({ type: ENABLE_COLUMN_RESIZE_MODE });
+export const disableColumnResizeMode = () => ({ type: DISABLE_COLUMN_RESIZE_MODE });

@@ -1,5 +1,5 @@
-import { SET_ACTIVE_CELL_INPUT_AUTO_FOCUS_ON, SET_ACTIVE_CELL_INPUT_AUTO_FOCUS_OFF } from "actionCreators";
+import { ENABLE_ACTIVE_CELL_INPUT_AUTO_FOCUS, DISABLE_ACTIVE_CELL_INPUT_AUTO_FOCUS } from "actionCreators";
 
-export const setActiveCellInputAutoFocusOn = () => ({ type: SET_ACTIVE_CELL_INPUT_AUTO_FOCUS_ON });
+export const enableActiveCellInputAutoFocus = () => ({ type: ENABLE_ACTIVE_CELL_INPUT_AUTO_FOCUS });
 
-export const setActiveCellInputAutoFocusOff = () => ({ type: SET_ACTIVE_CELL_INPUT_AUTO_FOCUS_OFF });
+export const disableActiveCellInputAutoFocus = () => ({ type: DISABLE_ACTIVE_CELL_INPUT_AUTO_FOCUS });

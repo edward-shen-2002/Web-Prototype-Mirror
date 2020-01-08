@@ -4,8 +4,8 @@ const defaultAccount = { username: "", email: "", firstName: "", lastName: "", a
 
 const updateAccount = (state, { account }) => ({ ...state, ...account });
 
-const clearAccount = () => ({ ...defaultAccount });
+const resetAccount = () => ({ ...defaultAccount });
 
-const accountReducer = createReducer(defaultAccount, { UPDATE_ACCOUNT: updateAccount, CLEAR_ACCOUNT: clearAccount });
+const accountReducer = createReducer(defaultAccount, { UPDATE_ACCOUNT: updateAccount, RESET_ACCOUNT: resetAccount });
 
 export default accountReducer;

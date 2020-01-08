@@ -2,7 +2,7 @@ import { deleteAxiosToken, setAxiosToken } from "tools/rest";
 import { deleteToken, saveToken } from "tools/storage";
 
 import { setOnline, setOffline } from "actions/app/isOnline";
-import { updateAccount, clearAccount } from "actions/domain/account";
+import { updateAccount, resetAccount } from "actions/domain/account";
 import { showAppNavigation, hideAppNavigation } from "actions/ui/isAppNavigationOpen";
 
 import { updateWorkbookName, resetWorkbookName } from "actions/ui/excel/name";
@@ -18,10 +18,10 @@ import { updateSheetNames, resetSheetNames } from "actions/ui/excel/sheetNames";
 import { updateStagnantSelectionAreas, resetStagnantSelectionAreas } from "actions/ui/excel/stagnantSelectionAreas";
 import { resetScrollData } from "actions/ui/excel/scrollData";
 
-import { setSelectionModeOff } from "actions/ui/excel/isSelectionMode";
-import { setEditModeOff } from "actions/ui/excel/isEditMode";
+import { disableSelectionMode } from "actions/ui/excel/isSelectionMode";
+import { disableEditMode } from "actions/ui/excel/isEditMode";
 
-import { setActiveCellInputAutoFocusOff } from "actions/ui/excel/activeCellInputAutoFocus";
+import { disableActiveCellInputAutoFocus } from "actions/ui/excel/activeCellInputAutoFocus";
 
 import { updateSheetCellData, resetSheetCellData } from "actions/ui/excel/sheetCellData";
 import { updateSheetColumnCount, resetSheetColumnCount } from "actions/ui/excel/sheetColumnCount";
@@ -56,7 +56,7 @@ export const resetUserState = (dispatch) => {
 
   dispatch(setOffline());
 
-  dispatch(clearAccount());
+  dispatch(resetAccount());
 
   dispatch(hideAppNavigation());
 };
@@ -117,7 +117,7 @@ export const loadSheet = (
   stagnantSelectionAreas ? dispatch(updateStagnantSelectionAreas(stagnantSelectionAreas)) : dispatch(resetStagnantSelectionAreas());
 
   dispatch(resetActiveSelectionArea());
-  dispatch(setEditModeOff());
+  dispatch(disableEditMode());
 };
 
 export const resetSheet = (dispatch) => {
@@ -137,14 +137,14 @@ export const resetSheet = (dispatch) => {
 
   dispatch(resetSheetNames());
 
-  dispatch(setEditModeOff());
+  dispatch(disableEditMode());
 
   dispatch(resetActiveSelectionArea());
 
   dispatch(resetActiveCellPosition());
   dispatch(resetActiveCellSelectionAreaIndex());
 
-  dispatch(setSelectionModeOff());
+  dispatch(disableSelectionMode());
 
   dispatch(resetStagnantSelectionAreas());
   dispatch(resetActiveSelectionArea());
@@ -152,7 +152,7 @@ export const resetSheet = (dispatch) => {
   dispatch(resetActiveCellInputData());
   dispatch(resetScrollData());
 
-  dispatch(setActiveCellInputAutoFocusOff());
+  dispatch(disableActiveCellInputAutoFocus());
 
   dispatch(unpublishTemplate());
   dispatch(resetSheetTemplateIdMapping());

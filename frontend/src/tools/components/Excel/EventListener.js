@@ -14,7 +14,7 @@ import pako from "pako";
 
 import { extractReactAndWorkbookState } from "tools/excel";
 
-import { setActiveCellInputAutoFocusOn, setActiveCellInputAutoFocusOff } from "actions/ui/excel/activeCellInputAutoFocus";
+import { enableActiveCellInputAutoFocus, disableActiveCellInputAutoFocus } from "actions/ui/excel/activeCellInputAutoFocus";
 import { updateActiveCellInputData, resetActiveCellInputData } from "actions/ui/excel/activeCellInputData";
 import { updateActiveCellPosition } from "actions/ui/excel/activeCellPosition";
 import { updateActiveSelectionArea, resetActiveSelectionArea } from "actions/ui/excel/activeSelectionArea";
@@ -22,18 +22,18 @@ import { updateActiveCellSelectionAreaIndex, resetActiveCellSelectionAreaIndex }
 
 import { updateCursorType, resetCursorType } from "actions/ui/excel/cursorType";
 
-import { setColumnResizeModeOn, setColumnResizeModeOff } from "actions/ui/excel/isColumnResizeMode";
-import { setRowResizeModeOn, setRowResizeModeOff } from "actions/ui/excel/isRowResizeMode";
-import { setFreezeRowResizeModeOn, setFreezeRowResizeModeOff } from "actions/ui/excel/isFreezeRowResizeMode";
-import { setFreezeColumnResizeModeOn, setFreezeColumnResizeModeOff } from "actions/ui/excel/isFreezeColumnResizeMode";
+import { enableColumnResizeMode, disableColumnResizeMode } from "actions/ui/excel/isColumnResizeMode";
+import { enableRowResizeMode, disableRowResizeMode } from "actions/ui/excel/isRowResizeMode";
+import { enableFreezeRowResizeMode, disableFreezeRowResizeMode } from "actions/ui/excel/isFreezeRowResizeMode";
+import { enableFreezeColumnResizeMode, disableFreezeColumnResizeMode } from "actions/ui/excel/isFreezeColumnResizeMode";
 
 import { updateRowResizeData, resetRowResizeData } from "actions/ui/excel/rowResizeData";
 import { updateColumnResizeData, resetColumnResizeData } from "actions/ui/excel/columnResizeData";
 import { updateFreezeRowResizeData, resetFreezeRowResizeData } from "actions/ui/excel/freezeRowResizeData";
 import { updateFreezeColumnResizeData, resetFreezeColumnResizeData } from "actions/ui/excel/freezeColumnResizeData";
 
-import { setSelectionModeOn, setSelectionModeOff } from "actions/ui/excel/isSelectionMode";
-import { setEditModeOn, setEditModeOff } from "actions/ui/excel/isEditMode";
+import { enableSelectionMode, disableSelectionMode } from "actions/ui/excel/isSelectionMode";
+import { enableEditMode, disableEditMode } from "actions/ui/excel/isEditMode";
 import { updateScrollData } from "actions/ui/excel/scrollData";
 
 import { updateStagnantSelectionAreas, resetStagnantSelectionAreas } from "actions/ui/excel/stagnantSelectionAreas";
@@ -102,11 +102,11 @@ const mapDispatchToProps = (dispatch) => ({
   handleUpdateStagnantSelectionAreas: (stagnantSelectionAreas) => dispatch(updateStagnantSelectionAreas(stagnantSelectionAreas)),
   handleResetStagnantSelectionAreas: () => dispatch(resetStagnantSelectionAreas()),
 
-  handleSetSelectionModeOn: () => dispatch(setSelectionModeOn()),
-  handleSetSelectionModeOff: () => dispatch(setSelectionModeOff()),
+  handleenableSelectionMode: () => dispatch(enableSelectionMode()),
+  handledisableSelectionMode: () => dispatch(disableSelectionMode()),
 
-  handleSetEditModeOn: () => dispatch(setEditModeOn()),
-  handleSetEditModeOff: () => dispatch(setEditModeOff()),
+  handleenableEditMode: () => dispatch(enableEditMode()),
+  handledisableEditMode: () => dispatch(disableEditMode()),
 
   handleUpdateScrollData: (scrollData) => dispatch(updateScrollData(scrollData)),
 
@@ -115,8 +115,8 @@ const mapDispatchToProps = (dispatch) => ({
   handleUpdateActiveCellInputData: (value) => dispatch(updateActiveCellInputData(value)),
   handleResetActiveCellInputData: () => dispatch(resetActiveCellInputData()),
 
-  handleSetActiveCellInputAutoFocusOn: () => dispatch(setActiveCellInputAutoFocusOn()),
-  handleSetActiveCellInputAutoFocusOff: () => dispatch(setActiveCellInputAutoFocusOff()),
+  handleenableActiveCellInputAutoFocus: () => dispatch(enableActiveCellInputAutoFocus()),
+  handledisableActiveCellInputAutoFocus: () => dispatch(disableActiveCellInputAutoFocus()),
 
   handleUpdateCursorType: (cursorType) => dispatch(updateCursorType(cursorType)),
   handleResetCursorType: () => dispatch(resetCursorType()),
@@ -133,17 +133,17 @@ const mapDispatchToProps = (dispatch) => ({
   handleUpdateFreezeColumnResizeData: (freezeColumnResizeData) => dispatch(updateFreezeColumnResizeData(freezeColumnResizeData)),
   handleResetFreezeColumnResizeData: () => dispatch(resetFreezeColumnResizeData()),
 
-  handleSetColumnResizeModeOn: () => dispatch(setColumnResizeModeOn()),
-  handleSetColumnResizeModeOff: () => dispatch(setColumnResizeModeOff()),
+  handleenableColumnResizeMode: () => dispatch(enableColumnResizeMode()),
+  handledisableColumnResizeMode: () => dispatch(disableColumnResizeMode()),
   
-  handleSetRowResizeModeOn: () => dispatch(setRowResizeModeOn()),
-  handleSetRowResizeModeOff: () => dispatch(setRowResizeModeOff()),
+  handleenableRowResizeMode: () => dispatch(enableRowResizeMode()),
+  handledisableRowResizeMode: () => dispatch(disableRowResizeMode()),
 
-  handleSetFreezeColumnResizeModeOn: () => dispatch(setFreezeColumnResizeModeOn()),
-  handleSetFreezeColumnResizeModeOff: () => dispatch(setFreezeColumnResizeModeOff()),
+  handleenableFreezeColumnResizeMode: () => dispatch(enableFreezeColumnResizeMode()),
+  handledisableFreezeColumnResizeMode: () => dispatch(disableFreezeColumnResizeMode()),
   
-  handleSetFreezeRowResizeModeOn: () => dispatch(setFreezeRowResizeModeOn()),
-  handleSetFreezeRowResizeModeOff: () => dispatch(setFreezeRowResizeModeOff()),
+  handleenableFreezeRowResizeMode: () => dispatch(enableFreezeRowResizeMode()),
+  handledisableFreezeRowResizeMode: () => dispatch(disableFreezeRowResizeMode()),
 
   handleUpdateSheetRowHeights: (sheetRowHeights) => dispatch(updateSheetRowHeights(sheetRowHeights)),
 
@@ -598,7 +598,7 @@ class EventRedux extends PureComponent {
 
       SheetContainerInstance.focus();
     } else if(!isEditMode && activeCellSelectionAreaIndex === -1) {
-      this.setEditModeOn();
+      this.enableEditMode();
 
       return;
     }
@@ -797,7 +797,7 @@ class EventRedux extends PureComponent {
 
   focusFormulaInput() {
     this.setInputAutoFocusOff();
-    this.setEditModeOn();
+    this.enableEditMode();
   }
 
   blurFormulaInput() {
@@ -888,7 +888,7 @@ class EventRedux extends PureComponent {
 
       this.changeValue(y, x, { value: editorState.getCurrentContent().getPlainText() });
 
-      this.setEditModeOff();
+      this.disableEditMode();
     }
   }
 
@@ -917,7 +917,7 @@ class EventRedux extends PureComponent {
     if(isEditMode) return;
 
     // !Change this?
-    this.setEditModeOn();
+    this.enableEditMode();
   }
 
   _offsetObjectAtIndex(data, start, offset) {
@@ -1054,7 +1054,7 @@ class EventRedux extends PureComponent {
     } = this.props;
 
     event.preventDefault();
-    this.setEditModeOff();
+    this.disableEditMode();
     
     const stagnantSelectionAreasCount = stagnantSelectionAreas.length;
 
@@ -1075,7 +1075,7 @@ class EventRedux extends PureComponent {
 
     if(isSelectionMode) return;
 
-    this.setEditModeOn();
+    this.enableEditMode();
   }
 
   escape(sheetContainerRef) {
@@ -1090,7 +1090,7 @@ class EventRedux extends PureComponent {
     if(isEditMode) {
       const { current: SheetContainerInstance } = sheetContainerRef;
       
-      this.setEditModeOff();
+      this.disableEditMode();
 
       const cellData = sheetCellData[y] && sheetCellData[y][x] ? sheetCellData[y][x] : undefined;
 
@@ -1134,15 +1134,15 @@ class EventRedux extends PureComponent {
       handleResetActiveCellSelectionAreaIndex,
       handleResetCursorType,
       handleResetColumnResizeData,
-      handleSetRowResizeModeOff,
+      handledisableRowResizeMode,
       handleResetRowResizeData,
-      handleSetColumnResizeModeOff,
+      handledisableColumnResizeMode,
       handleUpdateSheetRowHeights,
       handleUpdateSheetColumnWidths
     } = this.props;
 
     if(isSelectionMode) {
-      this.setSelectionModeOff();
+      this.disableSelectionMode();
   
       if(activeSelectionArea) {
         const { x1, y1, x2, y2 } = activeSelectionArea;
@@ -1181,7 +1181,7 @@ class EventRedux extends PureComponent {
           sheetGridRef.current.resetAfterRowIndex(row);
         } 
         
-        handleSetRowResizeModeOff();
+        handledisableRowResizeMode();
         handleResetRowResizeData();
       } else if(columnResizeData) {
         const { column, offset } = columnResizeData;
@@ -1202,7 +1202,7 @@ class EventRedux extends PureComponent {
           sheetGridRef.current.resetAfterColumnIndex(column);
         }
 
-        handleSetColumnResizeModeOff();
+        handledisableColumnResizeMode();
         handleResetColumnResizeData();
       } else if(freezeRowResizeData) {
 
@@ -1338,7 +1338,7 @@ class EventRedux extends PureComponent {
 
     this.saveActiveCellInputData();
 
-    this.setSelectionModeOn();
+    this.enableSelectionMode();
 
     if(ctrlKey || shiftKey) {
       let x2;
@@ -1398,29 +1398,29 @@ class EventRedux extends PureComponent {
     }
   }
 
-  setSelectionModeOn() {
-    const { isSelectionMode, handleSetSelectionModeOn } = this.props;
+  enableSelectionMode() {
+    const { isSelectionMode, handleenableSelectionMode } = this.props;
 
-    if(!isSelectionMode) handleSetSelectionModeOn();
+    if(!isSelectionMode) handleenableSelectionMode();
   }
 
-  setSelectionModeOff() {
-    const { isSelectionMode, handleSetSelectionModeOff } = this.props;
+  disableSelectionMode() {
+    const { isSelectionMode, handledisableSelectionMode } = this.props;
 
-    if(isSelectionMode) handleSetSelectionModeOff();
+    if(isSelectionMode) handledisableSelectionMode();
   }
 
-  setEditModeOn() {
-    const { isEditMode, isSelectionMode, handleSetEditModeOn, handleSetSelectionModeOff } = this.props;
-    if(!isEditMode) handleSetEditModeOn();
+  enableEditMode() {
+    const { isEditMode, isSelectionMode, handleenableEditMode, handledisableSelectionMode } = this.props;
+    if(!isEditMode) handleenableEditMode();
 
-    if(isSelectionMode) handleSetSelectionModeOff();
+    if(isSelectionMode) handledisableSelectionMode();
   }
 
-  setEditModeOff() {
-    const { isEditMode, handleSetEditModeOff } = this.props;
+  disableEditMode() {
+    const { isEditMode, handledisableEditMode } = this.props;
 
-    if(isEditMode) handleSetEditModeOff();
+    if(isEditMode) handledisableEditMode();
   }
 
   resetActiveCellSelectionAreaIndex() {
@@ -1537,13 +1537,13 @@ class EventRedux extends PureComponent {
   }
 
   setInputAutoFocusOn() {
-    const { activeCellInputAutoFocus, handleSetActiveCellInputAutoFocusOn } = this.props;
-    if(!activeCellInputAutoFocus) handleSetActiveCellInputAutoFocusOn();
+    const { activeCellInputAutoFocus, handleenableActiveCellInputAutoFocus } = this.props;
+    if(!activeCellInputAutoFocus) handleenableActiveCellInputAutoFocus();
   }
 
   setInputAutoFocusOff() {
-    const { activeCellInputAutoFocus, handleSetActiveCellInputAutoFocusOff } = this.props;
-    if(activeCellInputAutoFocus) handleSetActiveCellInputAutoFocusOff();
+    const { activeCellInputAutoFocus, handledisableActiveCellInputAutoFocus } = this.props;
+    if(activeCellInputAutoFocus) handledisableActiveCellInputAutoFocus();
   }
 
   startColumnDrag(column) {
@@ -1551,14 +1551,14 @@ class EventRedux extends PureComponent {
       leftOffsets,
       sheetColumnWidths, 
       handleUpdateColumnResizeData,
-      handleSetColumnResizeModeOn,
+      handleenableColumnResizeMode,
       handleUpdateCursorType
     } = this.props;
     const width = getNormalColumnWidth(sheetColumnWidths[column]);
     const columnOffset = leftOffsets[column];
     const offset = columnOffset + width;
 
-    handleSetColumnResizeModeOn();
+    handleenableColumnResizeMode();
     handleUpdateColumnResizeData({ column, offset });
     handleUpdateCursorType("ew-resize");
   }
@@ -1568,14 +1568,14 @@ class EventRedux extends PureComponent {
       topOffsets,
       sheetRowHeights, 
       handleUpdateRowResizeData, 
-      handleSetRowResizeModeOn,
+      handleenableRowResizeMode,
       handleUpdateCursorType 
     } = this.props;
     const height = getNormalRowHeight(sheetRowHeights[row]);
     const rowOffset = topOffsets[row];
     const offset = rowOffset + height;
 
-    handleSetRowResizeModeOn();
+    handleenableRowResizeMode();
     handleUpdateRowResizeData({ row, offset });
     handleUpdateCursorType("ns-resize");
   }

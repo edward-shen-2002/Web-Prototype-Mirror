@@ -1,5 +1,5 @@
-import { UPDATE_ACCOUNT, CLEAR_ACCOUNT } from "actionCreators";
+import { UPDATE_ACCOUNT, RESET_ACCOUNT } from "actionCreators";
 
 export const updateAccount = (account) => ({ type: UPDATE_ACCOUNT, account });
 
-export const clearAccount = () => ({ type: CLEAR_ACCOUNT });
+export const resetAccount = () => ({ type: RESET_ACCOUNT });

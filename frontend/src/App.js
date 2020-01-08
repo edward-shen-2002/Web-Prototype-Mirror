@@ -30,7 +30,7 @@ import Navigation from "./Navigation";
 
 import AppHeader from "./Header";
 
-import { setShouldReconnectOn, setShouldReconnectOff } from "actions/app/shouldReconnect";
+import { enableReconnection, disableReconnection } from "actions/app/shouldReconnect";
 
 import VerificationRouter from "./views/VerificationRouter";
 import PublicRouter from "./views/PublicRouter";
@@ -70,7 +70,7 @@ const mapStateToProps = ({ app: { shouldReconnect, isOnline }, domain: { account
 
 const mapDispatchToProps = (dispatch) => ({
   handleReconnect: (setIsDataFetched) => {
-    dispatch(setShouldReconnectOff());
+    dispatch(disableReconnection());
     authAxios.post(REST_AUTH_RECONNECT)
       .then(({ data: { data } }) => {
         loadUserState(dispatch, data);
@@ -83,7 +83,7 @@ const mapDispatchToProps = (dispatch) => ({
         setIsDataFetched(true);
       });
   },
-  handleSetReconnectOn: () => dispatch(setShouldReconnectOn()),
+  handleSetReconnectOn: () => dispatch(enableReconnection()),
   handleLogout: () => resetUserState(dispatch)
 });
 

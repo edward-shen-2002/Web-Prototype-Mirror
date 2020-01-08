@@ -6,12 +6,12 @@ import { isTokenSaved } from "tools/storage";
 // Token will persist if user did not log out
 const defaultShouldReconnect = isTokenSaved() && !isAxiosTokenSet();
 
-const SET_SHOULD_RECONNECT_ON = () => true;
-const SET_SHOULD_RECONNECT_OFF = () => false;
+const ENABLE_RECONNECTION = () => true;
+const DISABLE_RECONNECTION = () => false;
 
 const shouldReconnectReducer = createReducer(defaultShouldReconnect, { 
-  SET_SHOULD_RECONNECT_ON, 
-  SET_SHOULD_RECONNECT_OFF 
+  ENABLE_RECONNECTION, 
+  DISABLE_RECONNECTION 
 });
 
 export default shouldReconnectReducer;

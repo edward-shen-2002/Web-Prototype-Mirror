@@ -1,9 +1,9 @@
 import { createReducer } from "store/tools/setup";
 
-const SET_COLUMN_RESIZE_MODE_ON = () => true;
+const ENABLE_COLUMN_RESIZE_MODE = () => true;
 
-const SET_COLUMN_RESIZE_MODE_OFF = () => false;
+const DISABLE_COLUMN_RESIZE_MODE = () => false;
 
-const isColumnResizeModeReducer = createReducer(false, { SET_COLUMN_RESIZE_MODE_ON, SET_COLUMN_RESIZE_MODE_OFF });
+const isColumnResizeModeReducer = createReducer(false, { ENABLE_COLUMN_RESIZE_MODE, DISABLE_COLUMN_RESIZE_MODE });
 
 export default isColumnResizeModeReducer;
