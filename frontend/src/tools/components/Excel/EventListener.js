@@ -924,16 +924,20 @@ class EventRedux extends PureComponent {
     let newData = {};
     let startData = data[start];
 
+    const end = start + offset;
+
     for(let offsetParam in data) {
       const paramData = data[offsetParam];
       if(offsetParam >= start && paramData) {
         const newOffsetParam = Number(offsetParam) + offset;
         newData[newOffsetParam] = paramData;
-
-        newData[offsetParam] = startData;
       } else {
         newData[offsetParam] = data[offsetParam];
       }
+    }
+
+    if(startData !== undefined) {
+      for(let i = start; i < end; i++) newData[i] = startData;
     }
 
     return newData;
@@ -958,15 +962,13 @@ class EventRedux extends PureComponent {
       if(start <= offsetParam && paramData) {
         const newOffsetParam = Number(offsetParam) + offset;
         newData[newOffsetParam] = paramData;
-
       } else {
         newData[offsetParam] = sheetCellData[offsetParam];
       }
     }
 
-    // Fill the gaps with styles
-    for(let offsetParam in sheetCellData) {
-      if(start <= offsetParam && offsetParam < end) newData[offsetParam] = template;
+    if(startData !== undefined) {
+        for(let i = start; i < end; i++) newData[i] = template;
     }
 
     return newData;
