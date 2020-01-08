@@ -1,16 +1,24 @@
 import React, { useMemo, useCallback, useRef, useEffect, useState } from 'react';
 
+// https://reactjs.org/docs/hooks-reference.html
+
 const handleCleanUp = () => {};
 
 const fetchData = async (setState) => {
   setState({ newData: "new data" })
 };
 
-function App() {
+const hooksCheatSheet = () => {
   // const [ state, setState ] = useState(initialState);
   const [ appState, setAppState ] = useState({});
-  const [ appState2, setAppState2 ] = useState({});
+  const [ appState3, setAppState3 ] = useState(() => {
+    // Calculate initial state
+    let initialState = {};
+    // ...
+    return initialState; 
+  });
 
+  // ref = useRef(initialValue);
   const containerRef = useRef(null);
 
   // Called when application mounts
@@ -44,4 +52,4 @@ function App() {
   );
 }
 
-export default App;
+export default hooksCheatSheet;
