@@ -33,4 +33,8 @@ When the width/height of the frozen column/rows is greater than the dimension of
 
 ## Context Menu
 
-- Disable context menu on edit mode - probably need another state
+- Disable context menu on edit mode - probably need another state??
+
+## Edit Input
+
+- Currently, there are issues when input is dependent on sheet. We could put the input on the same level as sheet. Issue: Context menu sticks to edit input and produces bugs
