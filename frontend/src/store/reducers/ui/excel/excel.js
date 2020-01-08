@@ -46,6 +46,8 @@ import templateId from "./templateId";
 
 import bundleId from "./bundleId";
 
+import isContextMenuEnabled from "./isContextMenuEnabled";
+
 const excelReducer = combineReducers({ 
   name,
   type,
@@ -69,12 +71,13 @@ const excelReducer = combineReducers({
 
   isSelectionMode, 
   isEditMode,
+  isContextMenuEnabled,
   
   isColumnResizeMode,
   isFreezeColumnResizeMode,
   isRowResizeMode,
   isFreezeRowResizeMode,
-
+  
   sheetCellData,
   sheetColumnCount,
   sheetColumnWidths,
