@@ -692,8 +692,7 @@ const getMaxSheetRange = (sheetCellData) => {
   return { maxRowRange, maxColumnRange };
 };
 
-export const createBlankReactState = () => {
-  const name = uniqid();
+const createBlankSheet = () => {
   const activeCellPosition = { x: 1, y: 1 };
   const sheetTemplateIdMapping = DEFAULT_SHEET_TEMPLATE_ID_MAPPING;
   const sheetCellData = {};
@@ -706,9 +705,7 @@ export const createBlankReactState = () => {
   const sheetHiddenColumns = {};
   const sheetHiddenRows = {};
 
-  const sheetName = "Sheet1";
-
-  const sheetContent = {
+  return {
     activeCellPosition,
     sheetTemplateIdMapping,
     sheetCellData,
@@ -721,6 +718,14 @@ export const createBlankReactState = () => {
     sheetHiddenColumns,
     sheetHiddenRows
   };
+};
+
+export const createBlankReactState = () => {
+  const name = uniqid();
+
+  const sheetName = "Sheet1";
+
+  const sheetContent = createBlankSheet();
 
   const workbookData = { [ sheetName ]: pako.deflate(JSON.stringify(sheetContent), { to: "string" }) };
 

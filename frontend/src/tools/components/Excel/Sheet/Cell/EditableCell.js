@@ -57,7 +57,7 @@ const EditableCell = ({
 
   return (
     <div 
-      className="cell" 
+      className="cell cell__data" 
       style={style} 
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}

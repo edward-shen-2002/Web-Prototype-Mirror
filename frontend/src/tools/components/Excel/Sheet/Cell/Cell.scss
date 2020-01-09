@@ -1,7 +1,7 @@
 @import "~styles/mixins/shadows";
 
 .cell {
-  outline: 1px solid #CCCCCC;
+  outline: 1px solid #DDDDDD;
   
   white-space: pre;
   overflow: hidden;
@@ -35,6 +35,10 @@
 
     outline: 2px #1A73E8 solid;
     outline-offset: -2px;
+  }
+
+  &__data {
+    background-color: white;
   }
 }
 

@@ -36,7 +36,7 @@ const Header = ({ handleQueryChange, handleCreateTemplate }) => (
   </Paper>
 );
 
-const FileDropzone = ({ templates, handleUpdateTemplates }) => {
+const FileDropzone = ({ handleUpdateTemplates }) => {
   const handleDrop = useCallback(async (acceptedFiles) => {
     let newTemplates = [];
 
