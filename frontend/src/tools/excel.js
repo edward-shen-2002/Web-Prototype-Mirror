@@ -696,8 +696,8 @@ const createBlankSheet = () => {
   const activeCellPosition = { x: 1, y: 1 };
   const sheetTemplateIdMapping = DEFAULT_SHEET_TEMPLATE_ID_MAPPING;
   const sheetCellData = {};
-  const sheetColumnCount = DEFAULT_EXCEL_SHEET_COLUMN_COUNT;
-  const sheetRowCount = DEFAULT_EXCEL_SHEET_ROW_COUNT;
+  const sheetColumnCount = DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1;
+  const sheetRowCount = DEFAULT_EXCEL_SHEET_ROW_COUNT + 1;
   const sheetColumnWidths = {};
   const sheetRowHeights = {};
   const sheetFreezeColumnCount = 0;
