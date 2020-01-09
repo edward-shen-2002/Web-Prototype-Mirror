@@ -55,6 +55,7 @@ const Excel = ({
       <Divider/>
       <SheetNavigator
         sheetGridRef={sheetGridRef}
+        eventListenerRef={eventListenerRef}
       />
       <EventListener 
         sheetGridRef={sheetGridRef}

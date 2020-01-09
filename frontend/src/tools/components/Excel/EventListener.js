@@ -12,6 +12,8 @@ import { connect } from "react-redux";
 
 import pako from "pako";
 
+import { loadSheet } from "tools/redux";
+
 import { extractReactAndWorkbookState } from "tools/excel";
 
 import { enableActiveCellInputAutoFocus, disableActiveCellInputAutoFocus } from "actions/ui/excel/activeCellInputAutoFocus";
@@ -147,7 +149,10 @@ const mapDispatchToProps = (dispatch) => ({
 
   handleUpdateSheetRowHeights: (sheetRowHeights) => dispatch(updateSheetRowHeights(sheetRowHeights)),
 
-  handleUpdateSheetColumnWidths: (sheetColumnWidths) => dispatch(updateSheetColumnWidths(sheetColumnWidths))
+  handleUpdateSheetColumnWidths: (sheetColumnWidths) => dispatch(updateSheetColumnWidths(sheetColumnWidths)),
+
+  handleLoadSheet: (workbookData) => loadSheet(dispatch, workbookData),
+  handleUpdateSheetNames: (sheetNames) => dispatch(updateSheetNames(sheetNames))
 });
 
 let EventListener = (props) => {
@@ -793,6 +798,62 @@ class EventRedux extends PureComponent {
       newSheetCellData[row][column] = { type: "normal", value: newValue };
       handleUpdateSheetCellData(newSheetCellData);
     }
+  }
+
+  // ! TODO : Add parameters here for hyperlinks?
+  changeSheet(sheetName) {
+    const {
+      name,
+      activeCellPosition,
+      activeCellInputData,
+      activeSheetName,
+      sheetCellData,
+      sheetColumnCount,
+      sheetColumnWidths,
+      sheetFreezeColumnCount,
+      sheetRowCount,
+      sheetFreezeRowCount,
+      sheetRowHeights,
+      sheetHiddenColumns,
+      sheetHiddenRows,
+      stagnantSelectionAreas,
+      sheetTemplateIdMapping,
+
+      handleLoadSheet
+    } = this.props;
+
+    let currentSheetData = {
+      name,
+      activeCellPosition,
+      sheetCellData,
+      sheetColumnCount,
+      sheetColumnWidths,
+      sheetFreezeColumnCount,
+      sheetRowCount,
+      sheetFreezeRowCount,
+      sheetRowHeights,
+      sheetHiddenColumns,
+      sheetHiddenRows,
+      stagnantSelectionAreas,
+      sheetTemplateIdMapping
+    };
+    
+    let currentInactiveSheets = JSON.parse(sessionStorage.getItem("inactiveSheets"));
+    const newActiveSheetData = JSON.parse(pako.inflate(currentInactiveSheets[sheetName], { to: "string" }));
+
+    currentInactiveSheets[activeSheetName] = pako.deflate(JSON.stringify(currentSheetData), { to: "string" });
+    currentInactiveSheets[sheetName] = undefined;
+
+    sessionStorage.setItem("inactiveSheets", JSON.stringify(currentInactiveSheets));
+
+    // ! Need to updae active cell input data!
+    handleLoadSheet({
+      ...newActiveSheetData,
+      activeSheetName: sheetName,
+
+      // ! Update this for the new sheet!!
+      activeCellInputData
+    });
   }
 
   focusFormulaInput() {

@@ -13,10 +13,6 @@ import AddIcon from "@material-ui/icons/Add";
 // import { generateNewSheetName } from "tools/excel";
 import { DnDReorder } from "tools/misc";
 
-import { loadSheet } from "tools/redux";
-
-import pako from "pako";
-
 import "./SheetNavigator.scss";
 
 const AddButton = ({ handleClick }) => (
@@ -116,73 +112,28 @@ const SheetSelectionContext = ({
 const mapStateToProps = ({
   ui: {
     excel: {
-      name,
-      activeCellPosition,
-      activeCellInputData,
       sheetNames,
-      activeSheetName,
-      sheetCellData,
-      sheetColumnCount,
-      sheetColumnWidths,
-      sheetFreezeColumnCount,
-      sheetRowCount,
-      sheetFreezeRowCount,
-      sheetRowHeights,
-      sheetHiddenColumns,
-      sheetHiddenRows,
-      stagnantSelectionAreas,
-      sheetTemplateIdMapping
+      activeSheetName
     }
   }
 }) => ({
-  name,
-  activeCellPosition,
-  activeCellInputData,
   sheetNames,
   activeSheetName,
-  sheetCellData,
-  sheetColumnCount,
-  sheetColumnWidths,
-  sheetFreezeColumnCount,
-  sheetRowCount,
-  sheetFreezeRowCount,
-  sheetRowHeights,
-  sheetHiddenColumns,
-  sheetHiddenRows,
-  stagnantSelectionAreas,
-  sheetTemplateIdMapping
 });
 
 const mapDispatchToProps = (dispatch) => ({
   handleChangeActiveSheet: (activeSheetName) => dispatch(updateActiveSheetName(activeSheetName)),
   handleChangeSheetNames: (sheetNames) => dispatch(updateSheetNames(sheetNames)),
-  handleLoadSheet: (workbookData) => loadSheet(dispatch, workbookData)
 });
 
 // Move this state subscription and action to EventListener
 let SheetNavigator = ({ 
   sheetGridRef,
-  name,
-  activeCellPosition,
-  activeCellInputData,
+  eventListenerRef,
   activeSheetName, 
   sheetNames,
 
-  sheetCellData,
-  sheetColumnCount,
-  sheetColumnWidths,
-  sheetFreezeColumnCount,
-  sheetRowCount,
-  sheetFreezeRowCount,
-  sheetRowHeights,
-  sheetHiddenColumns,
-  sheetHiddenRows,
-  sheetTemplateIdMapping,
-  stagnantSelectionAreas,
-
-  handleChangeActiveSheet,
-  handleChangeSheetNames,
-  handleLoadSheet
+  handleChangeSheetNames
 }) => {
   // ! Think carefully about this one...
   const handleAddSheet = () => {
@@ -191,40 +142,7 @@ let SheetNavigator = ({
     // handleUpdateSheetNames([ ...sheetNames, newSheetName ]);
   };
 
-  const handleClickSheet = (sheetName) => {
-    let currentSheetData = {
-      name,
-      activeCellPosition,
-      sheetCellData,
-      sheetColumnCount,
-      sheetColumnWidths,
-      sheetFreezeColumnCount,
-      sheetRowCount,
-      sheetFreezeRowCount,
-      sheetRowHeights,
-      sheetHiddenColumns,
-      sheetHiddenRows,
-      stagnantSelectionAreas,
-      sheetTemplateIdMapping
-    };
-    
-    let currentInactiveSheets = JSON.parse(sessionStorage.getItem("inactiveSheets"));
-    const newActiveSheetData = JSON.parse(pako.inflate(currentInactiveSheets[sheetName], { to: "string" }));
-
-    currentInactiveSheets[activeSheetName] = pako.deflate(JSON.stringify(currentSheetData), { to: "string" });
-    currentInactiveSheets[sheetName] = undefined;
-
-    sessionStorage.setItem("inactiveSheets", JSON.stringify(currentInactiveSheets));
-
-    // ! Need to updae active cell input data!
-    handleLoadSheet({
-      ...newActiveSheetData,
-      activeSheetName: sheetName,
-      activeCellInputData
-    });
-
-    handleChangeActiveSheet(sheetName);
-  };
+  const handleClickSheet = (sheetName) => eventListenerRef.current.changeSheet(sheetName);
 
   const handleDragEnd = (result) => {
     if(!result.destination) return;
