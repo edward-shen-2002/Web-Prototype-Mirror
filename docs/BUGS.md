@@ -12,7 +12,3 @@
 ### Import ID
 
 2017-18 Hospital Q4 BLANK V1.xlsx
-
-## Invalid width
-
-2017-18 Hospital Q4 BLANK V1.xlsx - Sheet Main Menu

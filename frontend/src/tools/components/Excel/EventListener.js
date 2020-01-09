@@ -846,6 +846,8 @@ class EventRedux extends PureComponent {
 
     sessionStorage.setItem("inactiveSheets", JSON.stringify(currentInactiveSheets));
 
+    console.log(newActiveSheetData)
+
     // ! Need to updae active cell input data!
     handleLoadSheet({
       ...newActiveSheetData,

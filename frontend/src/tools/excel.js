@@ -782,8 +782,8 @@ export const convertExcelFileToState = async (excelFile) => {
         activeColumn = activeCell.columnNumber();
       }
 
-      if(activeColumn > sheetColumnCount) activeColumn = sheetColumnCount;
-      if(activeRow > sheetRowCount) activeRow = sheetRowCount;  
+      if(activeColumn > sheetColumnCount) activeColumn = sheetColumnCount - 1;
+      if(activeRow > sheetRowCount) activeRow = sheetRowCount - 1; 
     } catch(error) {
       activeRow = 1;
       activeColumn = 1;
