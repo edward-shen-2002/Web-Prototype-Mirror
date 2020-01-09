@@ -63,7 +63,7 @@ const FormulaBar = ({ eventListenerRef, sheetContainerRef }) => {
   return (
     <div className="formulaBar">
       <div className="formulaBar__icon">fx</div>
-      <Divider orientation="vertical"/>
+      <Divider orientation="vertical" light/>
       <InputField eventListenerRef={eventListenerRef} sheetContainerRef={sheetContainerRef}/>
     </div>
   );
