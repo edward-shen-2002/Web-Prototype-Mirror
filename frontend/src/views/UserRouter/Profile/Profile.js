@@ -16,7 +16,8 @@ import "./Profile.scss";
 
 const Field = ({ label, value, style }) => (
   <div style={style} className="profile__field">
-    <strong>{label}</strong>: {value}
+    <Chip className="profile__label" label={label} color="primary"/>
+    <div>{value}</div>
   </div>
 );
 
@@ -74,14 +75,14 @@ const RolesContainer = ({ roles }) => (
 );
 
 const AccountInformation = ({ creationDate, roles }) => {
-  const rolesStyle = { display: "flex", flexFlow: "row nowrap" };
+  // const rolesStyle = { display: "flex", flexFlow: "row nowrap" };
 
   return (
     <div>
       <Typography className="profile__subtitle" variant="button" gutterBottom>Account Information</Typography>
       <hr/>
       <Field label="Creation Date" value={<time>{new Date(creationDate).toLocaleString()}</time>}/>
-      <Field label="Roles" style={rolesStyle} value={<RolesContainer roles={roles}/>}/>
+      <Field label="Roles" value={<RolesContainer roles={roles}/>}/>
     </div>
   );
 };
