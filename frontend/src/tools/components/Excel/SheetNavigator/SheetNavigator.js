@@ -9,11 +9,14 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
+import InputBase from "@material-ui/core/InputBase";
 
 // import { generateNewSheetName } from "tools/excel";
 import { DnDReorder } from "tools/misc";
 
 import "./SheetNavigator.scss";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const AddButton = ({ handleClick }) => (
   <Button onClick={handleClick}>
@@ -21,12 +24,68 @@ const AddButton = ({ handleClick }) => (
   </Button>
 );
 
+const SheetNameEdit = ({ 
+  sheetName,
+  setIsEditMode,
+  handleChangeSheetName
+}) => {
+  const handleBlur = () => {
+    setIsEditMode(false);
+  }
+
+  const handleKeyDown = ({ key, target }) => {
+    
+    if(key === "Enter") {
+      // Save value
+      const { value } = target;
+      handleChangeSheetName(sheetName, value);
+      target.blur();
+    } else if(key === "Escape") {
+      // Don't save value
+      target.blur();
+    }
+  };
+
+  return (
+    <InputBase
+      style={{ minWidth: "fit-content" }}
+      defaultValue={sheetName}
+      onBlur={handleBlur}
+      onKeyDown={handleKeyDown}
+      autoFocus
+    />
+  );
+};
+
+const SheetNameNormal = ({ 
+  isActive,
+  sheetName, 
+  setIsEditMode 
+}) => {
+  const handleMouseDown = () => {
+    if(!isActive) setIsEditMode(false);
+  }
+  const handleDoubleClick = () => setIsEditMode(true);
+  
+  return (
+    <div
+      onDoubleClick={handleDoubleClick}
+      onMouseDown={handleMouseDown}
+    >
+      {sheetName}
+    </div>
+  );
+};
+
 const SheetNameDraggable = ({ 
   sheetGridRef,
+  isEditMode,
+  setIsEditMode,
   provided, 
   sheetName, 
   activeSheetName,
-  handleChangeActiveSheet
+  handleChangeActiveSheet,
+  handleChangeSheetName
 }) => {
   const isActive = activeSheetName === sheetName;
 
@@ -34,6 +93,7 @@ const SheetNameDraggable = ({
     if(!isActive) {
       handleChangeActiveSheet(sheetName);
       sheetGridRef.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
+      setIsEditMode(false);
     }
   };
 
@@ -46,26 +106,46 @@ const SheetNameDraggable = ({
       {...provided.draggableProps}
       {...provided.dragHandleProps}
     >
-      {sheetName}
+      {
+        isActive && isEditMode 
+          ? 
+            <SheetNameEdit
+              sheetName={sheetName}
+              setIsEditMode={setIsEditMode}
+              handleChangeSheetName={handleChangeSheetName}
+            />
+          : 
+            <SheetNameNormal
+              isActive={isActive}
+              sheetName={sheetName}
+              setIsEditMode={setIsEditMode}
+            />
+        }
     </div>
   );
 };
 
 const SheetNamesDraggables = ({ 
   sheetGridRef,
+  isEditMode,
+  setIsEditMode,
   sheetNames, 
   activeSheetName, 
-  handleChangeActiveSheet 
+  handleChangeActiveSheet,
+  handleChangeSheetName
 }) => sheetNames.map((sheetName, index) => (
   <Draggable key={`sheet-name-${sheetName}`} draggableId={sheetName} index={index}>
     {(provided) => (
       <SheetNameDraggable 
         sheetGridRef={sheetGridRef}
+        isEditMode={isEditMode}
+        setIsEditMode={setIsEditMode}
         provided={provided} 
         sheetName={sheetName} 
         activeSheetName={activeSheetName} 
         index={index}
         handleChangeActiveSheet={handleChangeActiveSheet}
+        handleChangeSheetName={handleChangeSheetName}
       />
     )}
   </Draggable>
@@ -73,18 +153,24 @@ const SheetNamesDraggables = ({
 
 const SheetNamesDroppable = ({ 
   sheetGridRef,
+  isEditMode,
+  setIsEditMode,
   sheetNames, 
   activeSheetName,
-  handleChangeActiveSheet
+  handleChangeActiveSheet,
+  handleChangeSheetName
 }) => (
   <Droppable droppableId="droppable" direction="horizontal">
     {(provided) => (
       <div ref={provided.innerRef} className="sheetNavigator__droppable" {...provided.droppableProps}>
         <SheetNamesDraggables 
           sheetGridRef={sheetGridRef}
+          isEditMode={isEditMode}
+          setIsEditMode={setIsEditMode}
           sheetNames={sheetNames} 
           activeSheetName={activeSheetName}
           handleChangeActiveSheet={handleChangeActiveSheet}
+          handleChangeSheetName={handleChangeSheetName}
         />
         {provided.placeholder}
       </div>
@@ -94,17 +180,23 @@ const SheetNamesDroppable = ({
 
 const SheetSelectionContext = ({ 
   sheetGridRef,
+  isEditMode,
+  setIsEditMode,
   activeSheetName, 
   sheetNames, 
   handleDragEnd,
-  handleChangeActiveSheet 
+  handleChangeActiveSheet,
+  handleChangeSheetName
 }) => (
   <DragDropContext onDragEnd={handleDragEnd}>
     <SheetNamesDroppable 
       sheetGridRef={sheetGridRef}
+      isEditMode={isEditMode}
+      setIsEditMode={setIsEditMode}
       sheetNames={sheetNames} 
       activeSheetName={activeSheetName} 
       handleChangeActiveSheet={handleChangeActiveSheet}
+      handleChangeSheetName={handleChangeSheetName}
     />
   </DragDropContext>
 );
@@ -132,9 +224,16 @@ let SheetNavigator = ({
   eventListenerRef,
   activeSheetName, 
   sheetNames,
-
   handleChangeSheetNames
 }) => {
+  const [ isEditMode, setIsEditMode ] = useState(false);
+
+  let EventListenerInstance;
+
+  useEffect(() => {
+    EventListenerInstance = eventListenerRef.current;
+  });
+
   // ! Think carefully about this one...
   const handleAddSheet = () => {
     // const newSheetName = generateNewSheetName(sheetNames);
@@ -142,7 +241,7 @@ let SheetNavigator = ({
     // handleUpdateSheetNames([ ...sheetNames, newSheetName ]);
   };
 
-  const handleClickSheet = (sheetName) => eventListenerRef.current.changeSheet(sheetName);
+  const handleClickSheet = (sheetName) => EventListenerInstance.changeSheet(sheetName);
 
   const handleDragEnd = (result) => {
     if(!result.destination) return;
@@ -152,15 +251,20 @@ let SheetNavigator = ({
     handleChangeSheetNames(newSheetNames);
   };
 
+  const handleChangeSheetName = (sheetName, newSheetName) => EventListenerInstance.changeSheetName(sheetName, newSheetName);
+
   return (
     <div className="sheetNavigator">
       <AddButton handleClick={handleAddSheet}/>
       <SheetSelectionContext 
+        isEditMode={isEditMode}
+        setIsEditMode={setIsEditMode}
         sheetGridRef={sheetGridRef}
         sheetNames={sheetNames} 
         activeSheetName={activeSheetName} 
         handleDragEnd={handleDragEnd} 
         handleChangeActiveSheet={handleClickSheet}
+        handleChangeSheetName={handleChangeSheetName}
       />
     </div>
   );

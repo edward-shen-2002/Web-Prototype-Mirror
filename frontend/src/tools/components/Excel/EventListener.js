@@ -50,6 +50,10 @@ import { updateSheetRowCount } from "actions/ui/excel/sheetRowCount";
 import { updateSheetHiddenRows } from "actions/ui/excel/sheetHiddenRows";
 import { updateSheetHiddenColumns } from "actions/ui/excel/sheetHiddenColumns";
 
+import { updateSheetNames } from "actions/ui/excel/sheetNames";
+
+import { updateActiveSheetName } from "actions/ui/excel/activeSheetName";
+
 import { 
   isPositionEqualArea, 
   getScrollbarSize, 
@@ -152,7 +156,8 @@ const mapDispatchToProps = (dispatch) => ({
   handleUpdateSheetColumnWidths: (sheetColumnWidths) => dispatch(updateSheetColumnWidths(sheetColumnWidths)),
 
   handleLoadSheet: (workbookData) => loadSheet(dispatch, workbookData),
-  handleUpdateSheetNames: (sheetNames) => dispatch(updateSheetNames(sheetNames))
+  handleUpdateSheetNames: (sheetNames) => dispatch(updateSheetNames(sheetNames)),
+  handleUpdateActiveSheetName: (activeSheetName) => dispatch(updateActiveSheetName(activeSheetName))
 });
 
 let EventListener = (props) => {
@@ -1516,6 +1521,7 @@ class EventRedux extends PureComponent {
     if(shouldScroll) this._scrollTo(newY, newX);
   }
 
+  // ! Too much calculation? Performance is choppy
   _scrollTo(newY, newX) {
     const {
       sheetGridRef,
@@ -1544,6 +1550,7 @@ class EventRedux extends PureComponent {
       newX = 1;
     }
 
+    
     let { scrollTop, scrollLeft } = scrollData;
 
     const topFreezeStart = topOffsets[sheetFreezeRowCount];
@@ -1810,6 +1817,22 @@ class EventRedux extends PureComponent {
     } else if(type === "bundle_approve") {
       this.saveApproveBundle(commonProps);
     }
+  }
+
+  changeSheetName(sheetName, newSheetName) {
+    const {
+      activeSheetName,
+      sheetNames,
+      handleUpdateSheetNames,
+      handleUpdateActiveSheetName
+    } = this.props;
+    if(activeSheetName === newSheetName) return console.error(`Sheet name with name ${newSheetName} already exists`);
+
+    const newSheetNames = sheetNames.map((name) => name === sheetName ? newSheetName : name);
+
+    handleUpdateActiveSheetName(newSheetName);
+
+    handleUpdateSheetNames(newSheetNames);
   }
 
   render() {

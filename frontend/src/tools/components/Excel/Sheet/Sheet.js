@@ -37,7 +37,6 @@ import "./Sheet.scss";
 const mapStateToProps = ({
   ui: {
     excel: {
-      isEditMode,
       cursorType,
       sheetCellData,
       sheetColumnCount,
@@ -49,7 +48,6 @@ const mapStateToProps = ({
     }
   }
 }) => ({
-  isEditMode,
   cursorType,
   sheetCellData,
   sheetColumnCount,
@@ -64,6 +62,7 @@ const mapDispatchToProps = (dispatch) => ({
   handleUpdateScrollData: (scrollData) => dispatch(updateScrollData(scrollData)),
 });
 
+// !Change this to spread instead of object?
 const createItemData = memoize((itemData) => (itemData));
 
 const SheetWindow = ({
@@ -71,7 +70,6 @@ const SheetWindow = ({
   eventListenerRef,
 
   sheetCellData,
-  isEditMode,
   sheetFreezeRowCount,
   sheetFreezeColumnCount,
   sheetColumnCount,
