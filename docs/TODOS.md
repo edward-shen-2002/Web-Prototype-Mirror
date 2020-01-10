@@ -8,8 +8,7 @@
 - [ ] Convert excel editor state to Xlsx-populate rich text
 - [ ] Excel formulas
 - [ ] Excel styles
-- [ ] Remove redux subscription in Excel app bar and move it into EventListener
-- [ ] Create new sheet
+- [ ] Menu for sheet navigations
 - [ ] Hyperlinks
 - [ ] Edit cell level change (on the same level as sheet instead of child of sheet)
 
@@ -38,3 +37,4 @@
 - [x] Package creation
 - [x] Workflow features (editor, reviewer, approver)
 - [x] Add Excel type (template, edit, review, approve, ...) state to Redux store
+- [x] Create new sheet
