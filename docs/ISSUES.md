@@ -38,3 +38,7 @@ When the width/height of the frozen column/rows is greater than the dimension of
 ## Edit Input
 
 - Currently, there are issues when input is dependent on sheet. We could put the input on the same level as sheet. Issue: Context menu sticks to edit input and produces bugs
+
+## Import ID
+
+- Value could be of type rich-text, which is an array of data instead of strictly string value (causes parsing error)
