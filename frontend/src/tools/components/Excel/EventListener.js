@@ -68,6 +68,8 @@ import {
   getNormalRowHeight,
   getExcelColumnWidth,
   getExcelRowHeight,
+  generateNewSheetName,
+  createBlankSheet,
   getResizeOffset,
   clearEditorStateText
 } from "tools/excel";
@@ -1833,6 +1835,26 @@ class EventRedux extends PureComponent {
     handleUpdateActiveSheetName(newSheetName);
 
     handleUpdateSheetNames(newSheetNames);
+  }
+
+  addSheet() {
+    const {
+      sheetNames,
+      handleUpdateSheetNames
+    } = this.props;
+    
+    const newSheetName = generateNewSheetName(sheetNames);
+    const newSheetData = createBlankSheet();
+
+    let currentInactiveSheets = JSON.parse(sessionStorage.getItem("inactiveSheets"));
+
+    currentInactiveSheets[newSheetName] = pako.deflate(JSON.stringify(newSheetData), { to: "string" });;
+
+    sessionStorage.setItem("inactiveSheets", JSON.stringify(currentInactiveSheets));
+
+    handleUpdateSheetNames([ ...sheetNames, newSheetName ]);
+
+    this.changeSheet(newSheetName);
   }
 
   render() {

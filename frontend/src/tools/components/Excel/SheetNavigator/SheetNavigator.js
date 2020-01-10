@@ -234,12 +234,7 @@ let SheetNavigator = ({
     EventListenerInstance = eventListenerRef.current;
   });
 
-  // ! Think carefully about this one...
-  const handleAddSheet = () => {
-    // const newSheetName = generateNewSheetName(sheetNames);
-
-    // handleUpdateSheetNames([ ...sheetNames, newSheetName ]);
-  };
+  const handleAddSheet = () => EventListenerInstance.addSheet();
 
   const handleClickSheet = (sheetName) => EventListenerInstance.changeSheet(sheetName);
 

@@ -692,7 +692,7 @@ const getMaxSheetRange = (sheetCellData) => {
   return { maxRowRange, maxColumnRange };
 };
 
-const createBlankSheet = () => {
+export const createBlankSheet = () => {
   const activeCellPosition = { x: 1, y: 1 };
   const sheetTemplateIdMapping = DEFAULT_SHEET_TEMPLATE_ID_MAPPING;
   const sheetCellData = {};
