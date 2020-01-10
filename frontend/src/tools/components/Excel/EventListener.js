@@ -1839,6 +1839,7 @@ class EventRedux extends PureComponent {
 
   addSheet() {
     const {
+      activeSheetName,
       sheetNames,
       handleUpdateSheetNames
     } = this.props;
@@ -1852,7 +1853,9 @@ class EventRedux extends PureComponent {
 
     sessionStorage.setItem("inactiveSheets", JSON.stringify(currentInactiveSheets));
 
-    handleUpdateSheetNames([ ...sheetNames, newSheetName ]);
+    const activeSheetNameIndex = sheetNames.indexOf(activeSheetName);
+
+    handleUpdateSheetNames([ ...sheetNames.slice(0, activeSheetNameIndex + 1), newSheetName, ...sheetNames.slice(activeSheetNameIndex + 1) ]);
 
     this.changeSheet(newSheetName);
   }
