@@ -31,7 +31,7 @@ let registerVerificationSchema = new Schema({
     required: true,
     default: { 
       TEMPLATE_MANAGER: { ...defaultRoleControlConfig }, 
-      PACKAGE_MANAGER: { ...defaultRoleControlConfig }, 
+      BUNDLE_MANAGER: { ...defaultRoleControlConfig }, 
       USER_MANAGER: { ...defaultRoleControlConfig }, 
       ORGANIZATION_MANAGER: { ...defaultRoleControlConfig }, 
       LHIN_MANAGER: { ...defaultRoleControlConfig }, 

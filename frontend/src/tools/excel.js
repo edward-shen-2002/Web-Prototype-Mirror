@@ -538,9 +538,23 @@ const extractCellData = (cellData) => {
   const cellFormula = cellData.formula();
   
   // !! TODO May be internal - ie in another sheet
-  // const cellHyperlinkData = cellData.hyperlink();
+  const cellHyperlinkData = cellData.hyperlink();
 
-  // if(cellHyperlinkData) console.log(cellHyperlinkData)
+  if(cellHyperlinkData) {
+    const { _sheet, _data } = cellHyperlinkData;
+
+    // Internal
+    if(_sheet) {
+      const [ y, x ] = _data;
+      // External -- Potentially unsafe
+      // ! unsure when this undefined value occurs... what is the value of the cell?
+      if(cellValue === undefined) {
+        // console.log(_sheet, _data)
+      }
+    } else {
+      // console.log(cellValue)
+    }
+  }
 
   let extractedCellData = {};
 
