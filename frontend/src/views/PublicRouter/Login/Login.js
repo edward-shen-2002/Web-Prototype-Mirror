@@ -47,7 +47,7 @@ const LoginButtons = () => (
 
 const LoginForm = ({ handleLogin, generalError }) => (
   <Formik
-    initialValues={{ username: "sampleuser", password: "password123" }}
+    initialValues={{ username: "sampleuser", password: "password123@" }}
     onSubmit={(values, { setSubmitting }) => handleLogin(values, setSubmitting)}
   >
     {({ handleSubmit, handleChange, values }) => (
