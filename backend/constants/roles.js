@@ -3,7 +3,6 @@ export const ROLE_TEMPLATE_MANAGER = "TEMPLATE_MANAGER";
 export const ROLE_BUNDLE_MANAGER = "BUNDLE_MANAGER"
 export const ROLE_ORGANIZATION_MANAGER = "ORGANIZATION_MANAGER";
 export const ROLE_SECTOR_MANAGER = "SECTOR_MANAGER";
-
 export const ROLE_EDIT_BUNDLE_MANAGER = "EDIT_BUNDLE_MANAGER";
 export const ROLE_REVIEW_BUNDLE_MANAGER = "REVIEW_BUNDLE_MANAGER";
 export const ROLE_APPROVE_BUNDLE_MANAGER = "APPROVE_BUNDLE_MANAGER";
@@ -14,3 +13,18 @@ export const ROLE_LEVEL_SECTOR = "SECTOR";
 export const ROLE_LEVEL_LHIN = "LHIN";
 export const ROLE_LEVEL_ORGANIZATION = "ORGANIZATION";
 export const ROLE_LEVEL_NOT_APPLICABLE = "N/A";
+
+const roleNames = [
+  ROLE_USER_MANAGER, 
+  ROLE_TEMPLATE_MANAGER, 
+  ROLE_BUNDLE_MANAGER, 
+  ROLE_ORGANIZATION_MANAGER, 
+  ROLE_SECTOR_MANAGER, 
+  ROLE_EDIT_BUNDLE_MANAGER,
+  ROLE_REVIEW_BUNDLE_MANAGER,
+  ROLE_APPROVE_BUNDLE_MANAGER
+];
+
+const defaultRoleControlConfig = { scope: ROLE_LEVEL_NOT_APPLICABLE, sectors: [], LHINs: [], organizations: [] };
+
+export const DEFAULT_ROLES = roleNames.reduce((prev, role) => ({ ...prev, [ role ]: defaultRoleControlConfig }), {});

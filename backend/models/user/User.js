@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 
 import passportLocalMongoose from "passport-local-mongoose";
 
-import { ROLE_LEVEL_NOT_APPLICABLE } from "../../constants/roles";
+import { DEFAULT_ROLES } from "../../constants/roles";
 
 // TODO : Replace with https://github.com/dropbox/zxcvbn
 const passwordValidator = (password, cb) => {
@@ -30,8 +30,6 @@ const passwordValidator = (password, cb) => {
 // Prevent inactive/banned accounts from logging in
 const findByUsername = (model, queryParameters) => model.findOne({ ...queryParameters, active: true });
 
-const defaultRoleControlConfig = { scope: ROLE_LEVEL_NOT_APPLICABLE, sectors: [], LHINs: [], organizations: [] };
-
 let userSchema = new Schema({
   username: { type: String, lowercase: true, unique: true, required: true },
   
@@ -42,22 +40,13 @@ let userSchema = new Schema({
   
   phoneNumber: { type: String, default: "" },
 
-  // { _id: { name, position, ... } }
   organizations: { type: Object, default: {} },
   LHINs: { type: Object, default: {} },
 
   roles: { 
     type: Object, 
     required: true,
-    default: { 
-      TEMPLATE_MANAGER: { ...defaultRoleControlConfig }, 
-      BUNDLE_MANAGER: { ...defaultRoleControlConfig }, 
-      USER_MANAGER: { ...defaultRoleControlConfig }, 
-      ORGANIZATION_MANAGER: { ...defaultRoleControlConfig }, 
-      LHIN_MANAGER: { ...defaultRoleControlConfig }, 
-      SECTOR_MANAGER: { ...defaultRoleControlConfig }, 
-      SYSTEM_MANAGER: { ...defaultRoleControlConfig }
-    }
+    default: DEFAULT_ROLES
   },
 
   creationDate: { type: Date, default: Date.now, required: true },

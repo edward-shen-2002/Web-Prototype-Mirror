@@ -1,8 +1,6 @@
 import { Schema, model } from "mongoose";
 
-import { ROLE_LEVEL_NOT_APPLICABLE } from "../../constants/roles";
-
-const defaultRoleControlConfig = { scope: ROLE_LEVEL_NOT_APPLICABLE, sectors: [], LHINs: [], organizations: [] };
+import { DEFAULT_ROLES } from "../../constants/roles";
 
 // TODO : Replace with https://github.com/dropbox/zxcvbn
 
@@ -29,15 +27,7 @@ let registerVerificationSchema = new Schema({
   roles: { 
     type: Object, 
     required: true,
-    default: { 
-      TEMPLATE_MANAGER: { ...defaultRoleControlConfig }, 
-      BUNDLE_MANAGER: { ...defaultRoleControlConfig }, 
-      USER_MANAGER: { ...defaultRoleControlConfig }, 
-      ORGANIZATION_MANAGER: { ...defaultRoleControlConfig }, 
-      LHIN_MANAGER: { ...defaultRoleControlConfig }, 
-      SECTOR_MANAGER: { ...defaultRoleControlConfig }, 
-      SYSTEM_MANAGER: { ...defaultRoleControlConfig }
-    }
+    default: DEFAULT_ROLES
   },
 
   creationDate: { type: Date, default: Date.now, required: true }
