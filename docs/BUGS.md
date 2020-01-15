@@ -11,7 +11,7 @@
 
 ### Import ID
 
-2017-18 Hospital Q4 BLANK V1.xlsx
+2017-18 Hospital Q4 BLANK V1.xlsx - does not consider rich text?
 
 ### React Object Children
 

@@ -61,12 +61,12 @@ export const getScrollbarSize = (recalculate = false) => {
 export const getEstimatedTotalHeight = (
   { rowCount },
   { rowMetadataMap, estimatedRowHeight, lastMeasuredRowIndex }
-  ) => {
-    let totalSizeOfMeasuredRows = 0;
-    
-    // Edge case check for when the number of items decreases while a scroll is in progress.
-    // https://github.com/bvaughn/react-window/pull/138
-    if (lastMeasuredRowIndex >= rowCount) {
+) => {
+  let totalSizeOfMeasuredRows = 0;
+  
+  // Edge case check for when the number of items decreases while a scroll is in progress.
+  // https://github.com/bvaughn/react-window/pull/138
+  if (lastMeasuredRowIndex >= rowCount) {
     lastMeasuredRowIndex = rowCount - 1;
   }
 
@@ -89,25 +89,25 @@ export const getEstimatedTotalWidth = (
     estimatedColumnWidth,
     lastMeasuredColumnIndex,
   }
-  ) => {
-    let totalSizeOfMeasuredRows = 0;
-    
-    // Edge case check for when the number of items decreases while a scroll is in progress.
-    // https://github.com/bvaughn/react-window/pull/138
-    if (lastMeasuredColumnIndex >= columnCount) {
-      lastMeasuredColumnIndex = columnCount - 1;
-    }
-    
-    if (lastMeasuredColumnIndex >= 0) {
-      const itemMetadata = columnMetadataMap[lastMeasuredColumnIndex];
-      totalSizeOfMeasuredRows = itemMetadata.offset + itemMetadata.size;
-    }
-    
-    const numUnmeasuredItems = columnCount - lastMeasuredColumnIndex - 1;
-    const totalSizeOfUnmeasuredItems = numUnmeasuredItems * estimatedColumnWidth;
-    
-    return totalSizeOfMeasuredRows + totalSizeOfUnmeasuredItems;
-  };
+) => {
+  let totalSizeOfMeasuredRows = 0;
+  
+  // Edge case check for when the number of items decreases while a scroll is in progress.
+  // https://github.com/bvaughn/react-window/pull/138
+  if (lastMeasuredColumnIndex >= columnCount) {
+    lastMeasuredColumnIndex = columnCount - 1;
+  }
+  
+  if (lastMeasuredColumnIndex >= 0) {
+    const itemMetadata = columnMetadataMap[lastMeasuredColumnIndex];
+    totalSizeOfMeasuredRows = itemMetadata.offset + itemMetadata.size;
+  }
+  
+  const numUnmeasuredItems = columnCount - lastMeasuredColumnIndex - 1;
+  const totalSizeOfUnmeasuredItems = numUnmeasuredItems * estimatedColumnWidth;
+  
+  return totalSizeOfMeasuredRows + totalSizeOfUnmeasuredItems;
+};
 
 export const generateNewSheetName = (sheetNames) => {
   let uniqueSheetNumber = sheetNames.length + 1;
@@ -290,7 +290,7 @@ const lightenBy = (color, ratio) => {
 
 const darkenBy = (color, ratio) => color.lightness(color.lightness() * (1 - ratio));
 
-const applyTintToColour = (color, tint, isShade = false) => {
+const applyTintToColour = (color, tint) => {
   color = Color(color);
 
   if(tint >= 0) {
@@ -566,12 +566,12 @@ const extractCellData = (cellData) => {
       const { _error } = cellValue;
       
       extractedCellData.value = _error ? _error : cellValue;
-
       extractedCellData.type = "formula";
       extractedCellData.formula = cellFormula;
     } else {
       extractedCellData.type = "normal";
-      extractedCellData.value = cellValue;
+      // ! Big assumption: object means error
+      extractedCellData.value = typeof cellValue === "object" ? cellValue._error : cellValue;
     }
   }
 

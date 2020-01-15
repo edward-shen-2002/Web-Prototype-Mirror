@@ -43,6 +43,8 @@ const EditableCell = ({
   if(cellData) {
     value = cellData.value;
     type = cellData.type;
+
+    if(typeof value === "object") console.log(type, columnIndex, rowIndex);
     
     if(type === "rich-text") {
       const firstFragmentStyle = getCellInlineStyle(cellData.styles);
