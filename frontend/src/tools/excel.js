@@ -1051,7 +1051,7 @@ export const getCellDataText = (cellData) => {
   if(type === "rich-text") {
     text = value.reduce((resultText, { text }) => resultText + text);
   } else {
-    text = value !== undefined ? value : "";
+    text = value === undefined ? "" : value;
   }
 
   return text;
