@@ -22,6 +22,7 @@
     "draft-js": "^0.11.3",
     "font-awesome": "^4.7.0",
     "formik": "^1.5.4",
+    "hot-formula-parser": "^3.0.2",
     "jquery": "^3.4.1",
     "material-table": "^1.54.2",
     "mdi-material-ui": "^6.8.0",

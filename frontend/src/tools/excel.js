@@ -1,4 +1,4 @@
-import XlsxPopulate, { RichText, Range } from "xlsx-populate";
+import XlsxPopulate, { RichText, Range, FormulaError } from "xlsx-populate";
 
 import { sheetNameRegex } from "./regex";
 
@@ -11,6 +11,8 @@ import pako from "pako";
 import Color from "color";
 
 import { themes } from "constants/styles";
+
+import { Parser } from "hot-formula-parser";
 
 import { 
   EXCEL_ROW_HEIGHT_SCALE,
@@ -35,6 +37,141 @@ import {
 import { DEFAULT_SHEET_TEMPLATE_ID_MAPPING } from "constants/template";
 
 import uniqid from "uniqid";
+
+var parser = new Parser();
+
+const groupRegex = /[a-z]+[1-9][0-9]*:[a-z]+[1-9][0-9]*/gi;
+const invidualRegex = /[a-z]+[1-9][0-9]*/gi;
+
+const convertColumnToNumber = (column) => {
+  column = column.toUpperCase();
+
+  let sum = 0;
+
+  const columnCharCount = column.length;
+
+  const initialColumnCode = "A".charCodeAt(0);
+
+  for(let i = 0; i < columnCharCount; i++) {
+    sum  *= 26;
+    sum += column.charCodeAt(i) - initialColumnCode + 1;
+  }
+
+  return sum;
+};
+
+const convertNumberToColumn = (number) => {
+  var temp, letter = "";
+  while (number > 0) {
+    temp = (number - 1) % 26;
+    letter = String.fromCharCode(temp + 65) + letter;
+    number = (number - temp - 1) / 26;
+  }
+
+  return letter;
+};
+
+const getCellLocationFromString = (string) => {
+  const rowIndex = string.search(/\d/);
+  
+  const row = string.substring(rowIndex, string.length);
+  const column = string.substring(0, rowIndex);
+
+  return [ column, row ];
+};
+
+const getColumnRange = (start, end) => {
+  let startNumber = convertColumnToNumber(start);
+  let endNumber = convertColumnToNumber(end);
+  if(startNumber > endNumber) throw "Start must be less than or equal to end";
+  
+  let range = (new Array(endNumber - startNumber + 1)).fill(null).map((_val, index) => startNumber + index);
+
+  return range;
+};
+
+const getRowRange = (start, end) => {
+  if(start > end) throw "Start must be less than or equal to end";
+  start = +start;
+  end = +end;
+
+  let range = [];
+  for(let i = start; i <= end; i++) range.push(i);
+
+  return range;
+};
+
+const getGroupFormula = (data, formula) => {
+  const matches = formula.match(groupRegex);
+  if(!matches) return formula;
+
+  matches.forEach((group) => {
+    const [ start, end ] = group.split(":");
+    const [ startColumn, startRow] = getCellLocationFromString(start);
+    const [ endColumn, endRow ] = getCellLocationFromString(end);
+
+    // Get all letters from start to end
+    const columnRange = getColumnRange(startColumn, endColumn);
+    const rowRange = getRowRange(startRow, endRow);
+
+    const columnCount = columnRange.length;
+    const rowCount = rowRange.length;
+    let wholeRange = [];
+
+    for(let j = 0; j < rowCount; j++) {
+      const row = rowRange[j];
+      const rowData = data[row];
+
+      for(let i = 0; i < columnCount; i++) {
+        const column = columnRange[i];
+
+        if(rowData === undefined || rowData[column] === undefined || rowData[column].value === undefined) {
+          wholeRange.push(undefined);
+        } else {          
+          const { value } = rowData[column];
+  
+          // ! Value/Formulas cannot be richtext
+          wholeRange.push(value);
+        }
+      }
+    }
+
+    const rangeStrings = wholeRange.join();
+    formula = formula.replace(group, rangeStrings);
+  });
+
+  return formula;
+};
+
+const getIndividualFormula = (data, formula) => {
+  const matches = formula.match(invidualRegex);
+  if(!matches) return formula;
+
+  matches.forEach((individual) => {
+    let [ column, row ] = getCellLocationFromString(individual);
+
+    const rowData = data[row];
+
+    column = convertColumnToNumber(column);
+
+    if(rowData === undefined || rowData[column] === undefined || rowData[column].value === undefined) {
+      formula = formula.replace(individual, "undefined");
+    } else {
+      const { value } = rowData[column];
+
+      formula = formula.replace(individual, value);
+    }
+  });
+
+  return formula;
+};
+
+const calculateFormula = (data, formula) => {  
+  formula = getGroupFormula(data, formula);
+  formula = getIndividualFormula(data, formula);
+
+  return parser.parse(formula);
+};
 
 let size = -1;
 
@@ -558,20 +695,21 @@ const extractCellData = (cellData) => {
 
   let extractedCellData = {};
 
+  // TODO : Add error field in cellData!!
   if(cellValue !== undefined) {
     if(cellValue instanceof RichText) {
       extractedCellData.type = "rich-text";
       extractedCellData.value = extractRichTextData(cellValue);
-    } else if(cellFormula) {
-      const { _error } = cellValue;
-      
-      extractedCellData.value = _error ? _error : cellValue;
-      extractedCellData.type = "formula";
-      extractedCellData.formula = cellFormula;
     } else {
-      extractedCellData.type = "normal";
-      // ! Big assumption: object means error
-      extractedCellData.value = typeof cellValue === "object" ? cellValue._error : cellValue;
+      if(cellFormula) {
+        extractedCellData.type = "formula";
+        extractedCellData.formula = cellFormula;
+      } else {
+        extractedCellData.type = "normal";
+      }
+
+      // ! possibly more conditions but not discovered yet
+      extractedCellData.value = cellValue instanceof FormulaError ? cellValue._error : cellValue;
     }
   }
 

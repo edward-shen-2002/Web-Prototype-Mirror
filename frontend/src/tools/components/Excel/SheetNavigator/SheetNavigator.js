@@ -11,7 +11,6 @@ import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import InputBase from "@material-ui/core/InputBase";
 
-// import { generateNewSheetName } from "tools/excel";
 import { DnDReorder } from "tools/misc";
 
 import "./SheetNavigator.scss";

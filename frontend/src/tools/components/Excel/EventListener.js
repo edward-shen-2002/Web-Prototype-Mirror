@@ -784,7 +784,10 @@ class EventRedux extends PureComponent {
       sheetCellData, 
       handleUpdateSheetCellData 
     } = this.props;
-    
+
+    // ! need to parse data and determine if it's a formula type
+    // Formula type needs to be recalculated if changed
+
     const { value: newValue } = newData;
 
     const currentCellData = getCellData(sheetCellData, row, column);
@@ -1511,12 +1514,15 @@ class EventRedux extends PureComponent {
       handleUpdateActiveCellPosition, 
       handleUpdateActiveCellInputData 
     } = this.props;
-    const cellData = sheetCellData[newY] && sheetCellData[newY][newX] ? sheetCellData[newY][newX] : undefined;
+    const cellData = sheetCellData[newY] && sheetCellData[newY][newX] ? sheetCellData[newY][newX] : {};
 
-    const type = cellData ? cellData.type : undefined;
-    const value = cellData ? cellData.value : undefined;
+    const { type, value, formula } = cellData;
 
-    handleUpdateActiveCellInputData({ editorState: type === "rich-text" ? convertRichTextToEditorState(value) : convertTextToEditorState(value) });
+    handleUpdateActiveCellInputData({ 
+      editorState: type === "rich-text" 
+        ? convertRichTextToEditorState(value) 
+        : convertTextToEditorState(formula ? `=${formula}` : value) 
+      });
 
     handleUpdateActiveCellPosition({ x: newX, y: newY });
 
