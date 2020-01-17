@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-import { publicAxios, adminBundleRoleAxios } from "tools/rest";
+import { publicAxios, adminBundleRoleAxios } from "@tools/rest";
 
 import Select from "react-select";
 
-import Loading from "tools/components/Loading";
-import TextDialog from "tools/components/TextDialog";
-import { EntitiesContent, deleteItemAndGetUpdatedList, addItemAndGetUpdatedList } from "tools/components/EntitiesDialog";
+import Loading from "@tools/components/Loading";
+import TextDialog from "@tools/components/TextDialog";
+import { EntitiesContent, deleteItemAndGetUpdatedList, addItemAndGetUpdatedList } from "@tools/components/EntitiesDialog";
 
 import Paper from "@material-ui/core/Paper";
 import Divider from "@material-ui/core/Divider";
@@ -16,8 +16,8 @@ import Button from "@material-ui/core/Button";
 
 import TextField from "@material-ui/core/TextField";
 
-import { REST_PUBLIC_DATA, REST_ADMIN_BUNDLES } from "constants/rest";
-import { ROUTE_ADMIN_BUNDLE_BUNDLES } from "constants/routes";
+import { REST_PUBLIC_DATA, REST_ADMIN_BUNDLES } from "@constants/rest";
+import { ROUTE_ADMIN_BUNDLE_BUNDLES } from "@constants/routes";
 
 import "./Bundle.scss";
 

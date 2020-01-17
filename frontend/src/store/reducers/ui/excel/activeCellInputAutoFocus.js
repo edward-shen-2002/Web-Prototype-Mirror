@@ -1,4 +1,4 @@
-import { createReducer } from "store/tools/setup";
+import { createReducer } from "@store/tools/setup";
 
 const ENABLE_ACTIVE_CELL_INPUT_AUTO_FOCUS = () => true;
 

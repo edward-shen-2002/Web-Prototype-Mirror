@@ -1,7 +1,7 @@
 import {
   UPDATE_BUNDLE_ID,
   RESET_BUNDLE_ID
-} from "actionCreators";
+} from "@actionCreators";
 
 export const updateBundleId = (_id) => ({ type: UPDATE_BUNDLE_ID, _id });
 

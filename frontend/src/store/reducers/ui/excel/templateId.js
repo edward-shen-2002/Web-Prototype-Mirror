@@ -1,4 +1,4 @@
-import { createReducer } from "store/tools/setup";
+import { createReducer } from "@store/tools/setup";
 
 const UPDATE_TEMPLATE_ID = (_state, { _id }) => _id;
 

@@ -14,12 +14,12 @@ import {
   adminReviewBundleRoleAxios, 
   adminApproveBundleRoleAxios,
   adminBundleRoleAxios
-} from "tools/rest";
+} from "@tools/rest";
 
-import TextDialog from "tools/components/TextDialog";
+import TextDialog from "@tools/components/TextDialog";
 
-import { REST_ADMIN_BUNDLES_WORKFLOW } from "constants/rest";
-import { ROUTE_USER_BUNDLES } from "constants/routes";
+import { REST_ADMIN_BUNDLES_WORKFLOW } from "@constants/rest";
+import { ROUTE_USER_BUNDLES } from "@constants/routes";
 
 import "./BundlePhase.scss";
 

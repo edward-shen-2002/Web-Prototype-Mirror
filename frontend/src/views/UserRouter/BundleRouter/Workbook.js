@@ -1,23 +1,23 @@
 import React, { useState, useEffect, useMemo } from "react";
 
 import { connect } from "react-redux";
-import { showAppNavigation, hideAppNavigation } from "actions/ui/isAppNavigationOpen"; 
+import { showAppNavigation, hideAppNavigation } from "@actions/ui/isAppNavigationOpen"; 
 
-import { loadSheet, resetSheet } from "tools/redux";
-import Excel from "tools/components/Excel";
+import { loadSheet, resetSheet } from "@tools/redux";
+import Excel from "@tools/components/Excel";
 
-import { convertStateToReactState } from "tools/excel";
+import { convertStateToReactState } from "@tools/excel";
 import { 
   adminEditBundleRoleAxios, 
   adminReviewBundleRoleAxios, 
   adminApproveBundleRoleAxios,
   adminBundleRoleAxios
-} from "tools/rest";
+} from "@tools/rest";
 
-import { REST_ADMIN_BUNDLES_WORKFLOW } from "constants/rest";
-import { ROUTE_USER_BUNDLES } from "constants/routes"
+import { REST_ADMIN_BUNDLES_WORKFLOW } from "@constants/rest";
+import { ROUTE_USER_BUNDLES } from "@constants/routes"
 
-import Loading from "tools/components/Loading";
+import Loading from "@tools/components/Loading";
 
 const mapStateToProps = ({
   ui: {
@@ -98,7 +98,6 @@ let Workbook = ({
   return (
     isDataFetched 
       ? <Excel 
-          name={name} 
           returnLink={returnLink}
           type={phase}
         />

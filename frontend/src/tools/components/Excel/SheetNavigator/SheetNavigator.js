@@ -2,8 +2,8 @@ import React from "react";
 
 import { connect } from "react-redux";
 
-import { updateSheetNames } from "actions/ui/excel/sheetNames";
-import { updateActiveSheetName } from "actions/ui/excel/activeSheetName";
+import { updateSheetNames } from "@actions/ui/excel/sheetNames";
+import { updateActiveSheetName } from "@actions/ui/excel/activeSheetName";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
@@ -11,7 +11,7 @@ import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import InputBase from "@material-ui/core/InputBase";
 
-import { DnDReorder } from "tools/misc";
+import { DnDReorder } from "@tools/misc";
 
 import "./SheetNavigator.scss";
 import { useState } from "react";

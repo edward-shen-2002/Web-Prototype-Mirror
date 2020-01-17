@@ -1,10 +1,10 @@
-import React, { lazy, useState, useMemo, Suspense } from "react";
+import React, { useEffect, useState, useMemo, lazy, Suspense } from "react";
 
 import { connect } from "react-redux";
 
 import { Switch, Route, Redirect } from "react-router-dom";
 
-import { loadUserState, resetUserState } from "tools/redux";
+import { loadUserState, resetUserState } from "@tools/redux";
 import { 
   authAxios, 
   adminUserRoleAxios, 
@@ -15,34 +15,33 @@ import {
   adminEditBundleRoleAxios,
   adminReviewBundleRoleAxios,
   adminApproveBundleRoleAxios
-} from "tools/rest";
-import { findAndSaveToken } from "tools/storage";
-import { ActivityRoute } from "tools/components/routes";
+} from "@tools/rest";
+import { findAndSaveToken } from "@tools/storage";
+import { ActivityRoute } from "@tools/components/routes";
 
-import { ONLINE, OFFLINE } from "constants/states";
+import { ONLINE, OFFLINE } from "@constants/states";
 
-import { REST_AUTH_RECONNECT, HTTP_ERROR_INVALID_TOKEN, HTTP_ERROR_UNAUTHORIZED } from "constants/rest";
-import { ROUTE_ROOT, ROUTE_USER_PROFILE, ROUTE_VERIFICATION, ROUTE_USER, ROUTE_PUBLIC, ROUTE_ADMIN_ROOT } from "constants/routes";
+import { REST_AUTH_RECONNECT, HTTP_ERROR_INVALID_TOKEN, HTTP_ERROR_UNAUTHORIZED } from "@constants/rest";
+import { ROUTE_ROOT, ROUTE_USER_PROFILE, ROUTE_VERIFICATION, ROUTE_USER, ROUTE_PUBLIC, ROUTE_ADMIN_ROOT } from "@constants/routes";
 
-import Loading from "tools/components/Loading";
+import Loading from "@tools/components/Loading";
 
 import Navigation from "./Navigation";
 
 import AppHeader from "./Header";
 
-import { enableReconnection, disableReconnection } from "actions/app/shouldReconnect";
+import { enableReconnection, disableReconnection } from "@actions/app/shouldReconnect";
 
 import VerificationRouter from "./views/VerificationRouter";
 import PublicRouter from "./views/PublicRouter";
 import UserRouter from "./views/UserRouter";
 import AdminRouter from "./views/AdminRouter";
 
-const Login = lazy(() => import("./views/PublicRouter/Login"));
-
-import NotFound from "tools/components/NotFound";
+import NotFound from "@tools/components/NotFound";
 
 import "./App.scss";
-import { useEffect } from "react";
+
+const Login = lazy(() => import("./views/PublicRouter/Login"));
 
 const AppPageContent = ({ isOnline }) => (
   <Suspense fallback={<Loading/>}>

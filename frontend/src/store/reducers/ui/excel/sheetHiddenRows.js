@@ -1,4 +1,4 @@
-import { createReducer } from "store/tools/setup";
+import { createReducer } from "@store/tools/setup";
 
 const UPDATE_SHEET_HIDDEN_ROWS = (_state, { sheetHiddenRows }) => sheetHiddenRows;
 

@@ -1,20 +1,20 @@
 import React, { lazy, useEffect, useState } from "react";
 
-import { isObjectEmpty } from "tools/misc";
-import { publicAxios, adminUserRoleAxios } from "tools/rest";
+import { isObjectEmpty } from "@tools/misc";
+import { publicAxios, adminUserRoleAxios } from "@tools/rest";
 
-import { REST_PUBLIC_DATA, REST_ADMIN_USERS } from "constants/rest";
+import { REST_PUBLIC_DATA, REST_ADMIN_USERS } from "@constants/rest";
 
 import GroupIcon from "@material-ui/icons/Group";
 import EnhancedEncryptionIcon from "@material-ui/icons/EnhancedEncryption";
 
-import RolesDialog from "tools/components/RolesDialog";
+import RolesDialog from "@tools/components/RolesDialog";
 
-import EntitiesDialog from "tools/components/EntitiesDialog";
-
-const MaterialTable = lazy(() => import("material-table"));
+import EntitiesDialog from "@tools/components/EntitiesDialog";
 
 import "./Users.scss";
+
+const MaterialTable = lazy(() => import("material-table"));
 
 const CreationDate = ({ creationDate }) => new Date(creationDate).toLocaleDateString();
 

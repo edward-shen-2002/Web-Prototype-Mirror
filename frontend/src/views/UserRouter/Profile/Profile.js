@@ -10,7 +10,7 @@ import Chip from "@material-ui/core/Chip";
 
 import uniqid from "uniqid";
 
-import { ROLE_LEVEL_ADMIN, ROLE_LEVEL_LHIN, ROLE_LEVEL_NOT_APPLICABLE } from "constants/roles";
+import { ROLE_LEVEL_ADMIN, ROLE_LEVEL_LHIN, ROLE_LEVEL_NOT_APPLICABLE } from "@constants/roles";
 
 import "./Profile.scss";
 

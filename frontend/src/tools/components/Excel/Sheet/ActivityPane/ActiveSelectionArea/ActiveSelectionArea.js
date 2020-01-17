@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 
 import { connect } from "react-redux";
 
-import { getTopOffsets, getLeftOffsets } from "tools/excel";
+import { getTopOffsets, getLeftOffsets } from "@tools/excel";
 
 import "./ActiveSelectionArea.scss";
 
@@ -48,10 +48,10 @@ let ActiveSelectionArea = ({
   sheetColumnCount,
   sheetRowCount
 }) => {
-  if(!isSelectionMode || !activeSelectionArea) return null;
-
   const topOffsets = useMemo(() => getTopOffsets(sheetRowHeights, sheetRowCount), [ sheetRowHeights, sheetRowCount ]);
   const leftOffsets = useMemo(() => getLeftOffsets(sheetColumnWidths, sheetColumnCount), [ sheetColumnWidths, sheetColumnCount ]);
+  
+  if(!isSelectionMode || !activeSelectionArea) return null;
 
   const { x1, y1, x2, y2 } = activeSelectionArea;
 

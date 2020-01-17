@@ -2,9 +2,9 @@ import React from "react";
 
 import { connect } from "react-redux";
 
-import { resetUserState } from "tools/redux";
+import { resetUserState } from "@tools/redux";
 
-import { authAxios } from "tools/rest";
+import { authAxios } from "@tools/rest";
 
 import { DropdownItem, DropdownMenu, DropdownToggle, Nav } from 'reactstrap';
 
@@ -12,10 +12,10 @@ import { AppHeaderDropdown, AppSidebarToggler, AppNavbarBrand } from "@coreui/re
 
 import { AppBar, Toolbar } from "@material-ui/core";
 
-import { ROUTE_PUBLIC_LOGIN } from "constants/routes";
-import { REST_AUTH_LOGOUT } from "constants/rest";
+import { ROUTE_PUBLIC_LOGIN } from "@constants/routes";
+import { REST_AUTH_LOGOUT } from "@constants/rest";
 
-import logo from "images/brand/ON_POS_LOGO_BLUE_RGB.svg";
+import logo from "@images/brand/ON_POS_LOGO_BLUE_RGB.svg";
 
 import "./Header.scss";
 
@@ -78,12 +78,12 @@ const mapDispatchToProps = (dispatch, { history }) => ({
   }
 });
 
-let AppHeader = ({ handleLogout }) => (
+let Header = ({ handleLogout }) => (
   <AppBar position="relative" className="appHeader" color="default">
     <AppNavigation handleLogout={handleLogout}/>
   </AppBar>
 );
 
-AppHeader = connect(null, mapDispatchToProps)(AppHeader);
+Header = connect(null, mapDispatchToProps)(Header);
 
-export default AppHeader;
+export default Header;

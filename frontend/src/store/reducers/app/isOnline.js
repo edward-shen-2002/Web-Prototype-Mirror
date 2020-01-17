@@ -1,5 +1,5 @@
-import { createReducer } from "store/tools/setup";
-import { isTokenSaved } from "tools/storage"; 
+import { createReducer } from "@store/tools/setup";
+import { isTokenSaved } from "@tools/storage"; 
 
 const defaultIsOnline = isTokenSaved();
 

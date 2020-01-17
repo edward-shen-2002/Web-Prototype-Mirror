@@ -1,4 +1,4 @@
-import { createReducer } from "store/tools/setup";
+import { createReducer } from "@store/tools/setup";
 
 const DEFAULT_CURSOR_TYPE = "default";
 

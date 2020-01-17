@@ -1,4 +1,4 @@
-import { SET_ONLINE, SET_OFFLINE } from "actionCreators";
+import { SET_ONLINE, SET_OFFLINE } from "@actionCreators";
 
 export const setOnline = () => ({ type: SET_ONLINE });
 

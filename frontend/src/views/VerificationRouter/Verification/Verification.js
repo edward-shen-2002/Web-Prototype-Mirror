@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 
-import { verificationAxios } from "tools/rest";
+import { verificationAxios } from "@tools/rest";
 
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-import { REST_VERIFICATION_VERIFICATION } from "constants/rest";
+import { REST_VERIFICATION_VERIFICATION } from "@constants/rest";
 
-import { ROUTE_PUBLIC_LOGIN, ROUTE_PUBLIC_REGISTER } from "constants/routes";
+import { ROUTE_PUBLIC_LOGIN, ROUTE_PUBLIC_REGISTER } from "@constants/routes";
 
 import "./Verification.scss";
 

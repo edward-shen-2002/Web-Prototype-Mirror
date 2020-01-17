@@ -4,13 +4,13 @@ import { sheetNameRegex } from "./regex";
 
 import { EditorState, ContentState, RichUtils } from "draft-js";
 
-import { isObjectEmpty } from "tools/misc";
+import { isObjectEmpty } from "@tools/misc";
 
 import pako from "pako";
 
 import Color from "color";
 
-import { themes } from "constants/styles";
+import { themes } from "@constants/styles";
 
 import { Parser } from "hot-formula-parser";
 
@@ -32,9 +32,9 @@ import {
 
   DEFAULT_EXCEL_SHEET_FREEZE_ROW_COUNT,
   DEFAULT_EXCEL_SHEET_FREEZE_COLUMN_COUNT
-} from "constants/excel";
+} from "@constants/excel";
 
-import { DEFAULT_SHEET_TEMPLATE_ID_MAPPING } from "constants/template";
+import { DEFAULT_SHEET_TEMPLATE_ID_MAPPING } from "@constants/template";
 
 import uniqid from "uniqid";
 

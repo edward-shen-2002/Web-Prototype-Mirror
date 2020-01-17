@@ -1,4 +1,4 @@
-import { createReducer } from "store/tools/setup";
+import { createReducer } from "@store/tools/setup";
 
 const OPEN_TEMPLATE_ID_MAPPING_DIALOG = () => true;
 

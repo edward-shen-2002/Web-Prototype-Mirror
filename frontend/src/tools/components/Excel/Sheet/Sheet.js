@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { connect } from "react-redux";
 
-import { updateScrollData } from "actions/ui/excel/scrollData";
+import { updateScrollData } from "@actions/ui/excel/scrollData";
 
 import { VariableSizeGrid } from "react-window";
 
@@ -12,9 +12,9 @@ import AutoSizer from "react-virtualized-auto-sizer";
 
 import memoize from "memoize-one";
 
-import { inputCharacterRegex } from "tools/regex";
+import { inputCharacterRegex } from "@tools/regex";
 
-import { getNormalRowHeight, getNormalColumnWidth } from "tools/excel";
+import { getNormalRowHeight, getNormalColumnWidth } from "@tools/excel";
 
 import ContextMenu from "./ContextMenu";
 
@@ -30,7 +30,7 @@ import BottomRightActivityPane from "./ActivityPane/BottomRightActivityPane";
 import { 
   DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER, 
   DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER
-} from "constants/excel";
+} from "@constants/excel";
 
 import "./Sheet.scss";
 
@@ -232,13 +232,13 @@ let Sheet = ({
   };
 
   // https://stackoverflow.com/questions/3169786/clear-text-selection-with-javascript
-  const handleDragStart = () => {
+  const handleDragStart = (event) => {
     let selection = window.getSelection ? window.getSelection() : document.selection;
 
     if (selection) {
       if (selection.removeAllRanges) {
         selection.removeAllRanges();
-      } else if (sel.empty) {
+      } else if (selection.empty) {
         selection.empty();
       }
       

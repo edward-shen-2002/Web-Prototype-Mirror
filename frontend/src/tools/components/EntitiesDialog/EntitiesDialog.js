@@ -14,7 +14,7 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
-import { DeleteButton } from "tools/components/buttons";
+import { DeleteButton } from "@tools/components/buttons";
 
 import "./EntitiesDialog.scss";
 

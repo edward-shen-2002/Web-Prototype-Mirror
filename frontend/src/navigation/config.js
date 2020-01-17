@@ -11,9 +11,9 @@ import {
   ROUTE_ADMIN_SECTOR_SECTORS,
   ROUTE_ADMIN_TEMPLATE_TEMPLATES,
   ROUTE_ADMIN_TEMPLATE_BUSINESS_CONCEPTS
-} from "constants/routes";
+} from "@constants/routes";
 
-import { ROLE_LEVEL_NOT_APPLICABLE } from "constants/roles";
+import { ROLE_LEVEL_NOT_APPLICABLE } from "@constants/roles";
 
 const roleNavMap = {
   USER_MANAGER: {

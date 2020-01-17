@@ -1,6 +1,6 @@
-import { createReducer } from "store/tools/setup";
+import { createReducer } from "@store/tools/setup";
 
-import { DEFAULT_EXCEL_ACTIVE_CELL_POSITION } from "constants/excel";
+import { DEFAULT_EXCEL_ACTIVE_CELL_POSITION } from "@constants/excel";
 
 const UPDATE_ACTIVE_CELL_POSITION = (state, { activeCellPosition }) => ({ ...state, ...activeCellPosition });
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect, lazy } from "react";
 
 import uniqid from "uniqid";
 
-import { adminSectorRoleAxios } from "tools/rest";
+import { adminSectorRoleAxios } from "@tools/rest";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -15,11 +15,11 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 
-import { REST_ADMIN_SECTORS } from "constants/rest";
-
-const MaterialTable = lazy(() => import("material-table"));
+import { REST_ADMIN_SECTORS } from "@constants/rest";
 
 import "./Sectors.scss";
+
+const MaterialTable = lazy(() => import("material-table"));
 
 const Sectors = () => {
   const [ sectors, setSectors ] = useState([]);

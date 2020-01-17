@@ -6,53 +6,53 @@ import {
   adminReviewBundleRoleAxios, 
   adminApproveBundleRoleAxios,
   adminBundleRoleAxios
-} from "tools/rest";
+} from "@tools/rest";
 
 import { connect } from "react-redux";
 
 import pako from "pako";
 
-import { loadSheet } from "tools/redux";
+import { loadSheet } from "@tools/redux";
 
-import { extractReactAndWorkbookState } from "tools/excel";
+import { extractReactAndWorkbookState } from "@tools/excel";
 
-import { enableActiveCellInputAutoFocus, disableActiveCellInputAutoFocus } from "actions/ui/excel/activeCellInputAutoFocus";
-import { updateActiveCellInputData, resetActiveCellInputData } from "actions/ui/excel/activeCellInputData";
-import { updateActiveCellPosition } from "actions/ui/excel/activeCellPosition";
-import { updateActiveSelectionArea, resetActiveSelectionArea } from "actions/ui/excel/activeSelectionArea";
-import { updateActiveCellSelectionAreaIndex, resetActiveCellSelectionAreaIndex } from "actions/ui/excel/activeCellSelectionAreaIndex";
+import { enableActiveCellInputAutoFocus, disableActiveCellInputAutoFocus } from "@actions/ui/excel/activeCellInputAutoFocus";
+import { updateActiveCellInputData, resetActiveCellInputData } from "@actions/ui/excel/activeCellInputData";
+import { updateActiveCellPosition } from "@actions/ui/excel/activeCellPosition";
+import { updateActiveSelectionArea, resetActiveSelectionArea } from "@actions/ui/excel/activeSelectionArea";
+import { updateActiveCellSelectionAreaIndex, resetActiveCellSelectionAreaIndex } from "@actions/ui/excel/activeCellSelectionAreaIndex";
 
-import { updateCursorType, resetCursorType } from "actions/ui/excel/cursorType";
+import { updateCursorType, resetCursorType } from "@actions/ui/excel/cursorType";
 
-import { enableColumnResizeMode, disableColumnResizeMode } from "actions/ui/excel/isColumnResizeMode";
-import { enableRowResizeMode, disableRowResizeMode } from "actions/ui/excel/isRowResizeMode";
-import { enableFreezeRowResizeMode, disableFreezeRowResizeMode } from "actions/ui/excel/isFreezeRowResizeMode";
-import { enableFreezeColumnResizeMode, disableFreezeColumnResizeMode } from "actions/ui/excel/isFreezeColumnResizeMode";
+import { enableColumnResizeMode, disableColumnResizeMode } from "@actions/ui/excel/isColumnResizeMode";
+import { enableRowResizeMode, disableRowResizeMode } from "@actions/ui/excel/isRowResizeMode";
+import { enableFreezeRowResizeMode, disableFreezeRowResizeMode } from "@actions/ui/excel/isFreezeRowResizeMode";
+import { enableFreezeColumnResizeMode, disableFreezeColumnResizeMode } from "@actions/ui/excel/isFreezeColumnResizeMode";
 
-import { updateRowResizeData, resetRowResizeData } from "actions/ui/excel/rowResizeData";
-import { updateColumnResizeData, resetColumnResizeData } from "actions/ui/excel/columnResizeData";
-import { updateFreezeRowResizeData, resetFreezeRowResizeData } from "actions/ui/excel/freezeRowResizeData";
-import { updateFreezeColumnResizeData, resetFreezeColumnResizeData } from "actions/ui/excel/freezeColumnResizeData";
+import { updateRowResizeData, resetRowResizeData } from "@actions/ui/excel/rowResizeData";
+import { updateColumnResizeData, resetColumnResizeData } from "@actions/ui/excel/columnResizeData";
+import { updateFreezeRowResizeData, resetFreezeRowResizeData } from "@actions/ui/excel/freezeRowResizeData";
+import { updateFreezeColumnResizeData, resetFreezeColumnResizeData } from "@actions/ui/excel/freezeColumnResizeData";
 
-import { enableSelectionMode, disableSelectionMode } from "actions/ui/excel/isSelectionMode";
-import { enableEditMode, disableEditMode } from "actions/ui/excel/isEditMode";
-import { updateScrollData } from "actions/ui/excel/scrollData";
+import { enableSelectionMode, disableSelectionMode } from "@actions/ui/excel/isSelectionMode";
+import { enableEditMode, disableEditMode } from "@actions/ui/excel/isEditMode";
+import { updateScrollData } from "@actions/ui/excel/scrollData";
 
-import { updateStagnantSelectionAreas, resetStagnantSelectionAreas } from "actions/ui/excel/stagnantSelectionAreas";
+import { updateStagnantSelectionAreas, resetStagnantSelectionAreas } from "@actions/ui/excel/stagnantSelectionAreas";
 
-import { updateSheetCellData } from "actions/ui/excel/sheetCellData";
-import { updateSheetColumnWidths } from "actions/ui/excel/sheetColumnWidths";
-import { updateSheetRowHeights } from "actions/ui/excel/sheetRowHeights";
+import { updateSheetCellData } from "@actions/ui/excel/sheetCellData";
+import { updateSheetColumnWidths } from "@actions/ui/excel/sheetColumnWidths";
+import { updateSheetRowHeights } from "@actions/ui/excel/sheetRowHeights";
 
-import { updateSheetColumnCount } from "actions/ui/excel/sheetColumnCount";
-import { updateSheetRowCount } from "actions/ui/excel/sheetRowCount";
+import { updateSheetColumnCount } from "@actions/ui/excel/sheetColumnCount";
+import { updateSheetRowCount } from "@actions/ui/excel/sheetRowCount";
 
-import { updateSheetHiddenRows } from "actions/ui/excel/sheetHiddenRows";
-import { updateSheetHiddenColumns } from "actions/ui/excel/sheetHiddenColumns";
+import { updateSheetHiddenRows } from "@actions/ui/excel/sheetHiddenRows";
+import { updateSheetHiddenColumns } from "@actions/ui/excel/sheetHiddenColumns";
 
-import { updateSheetNames } from "actions/ui/excel/sheetNames";
+import { updateSheetNames } from "@actions/ui/excel/sheetNames";
 
-import { updateActiveSheetName } from "actions/ui/excel/activeSheetName";
+import { updateActiveSheetName } from "@actions/ui/excel/activeSheetName";
 
 import { 
   isPositionEqualArea, 
@@ -72,19 +72,19 @@ import {
   createBlankSheet,
   getResizeOffset,
   clearEditorStateText
-} from "tools/excel";
+} from "@tools/excel";
 
 import {
   DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
   DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER
-} from "constants/excel";
+} from "@constants/excel";
 
 
 import { 
   REST_ADMIN_BUSINESS_CONCEPTS, 
   REST_ADMIN_TEMPLATES,
   REST_ADMIN_BUNDLES_WORKFLOW
-} from "constants/rest";
+} from "@constants/rest";
 
 const mapStateToProps = ({ 
   ui: { 
@@ -1116,7 +1116,7 @@ class EventRedux extends PureComponent {
     } else {
       const { y } = activeCellPosition;
 
-      insertStart = x;
+      insertStart = y;
     }
   }
 

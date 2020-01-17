@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 
 import { connect } from "react-redux";
-import { showAppNavigation, hideAppNavigation } from "actions/ui/isAppNavigationOpen"; 
+import { showAppNavigation, hideAppNavigation } from "@actions/ui/isAppNavigationOpen"; 
 
-import { adminTemplateRoleAxios } from "tools/rest";
-import { loadSheet, resetSheet } from "tools/redux";
-import Excel from "tools/components/Excel";
+import { adminTemplateRoleAxios } from "@tools/rest";
+import { loadSheet, resetSheet } from "@tools/redux";
+import Excel from "@tools/components/Excel";
 
-import { convertStateToReactState } from "tools/excel";
+import { convertStateToReactState } from "@tools/excel";
 
-import { REST_ADMIN_TEMPLATES } from "constants/rest";
-import { ROUTE_ADMIN_TEMPLATE_TEMPLATES } from "constants/routes";
+import { REST_ADMIN_TEMPLATES } from "@constants/rest";
+import { ROUTE_ADMIN_TEMPLATE_TEMPLATES } from "@constants/routes";
 
-import Loading from "tools/components/Loading";
+import Loading from "@tools/components/Loading";
 
 import "./Template.scss";
 
@@ -67,7 +67,6 @@ let Template = ({
   return (
     isDataFetched 
       ? <Excel 
-          name={name} 
           type="template"
           returnLink={ROUTE_ADMIN_TEMPLATE_TEMPLATES} 
         />

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { connect } from "react-redux";
 
-import { updateWorkbookName } from "actions/ui/excel/name";
+import { updateWorkbookName } from "@actions/ui/excel/name";
 
 import InputBase from "@material-ui/core/InputBase";
 

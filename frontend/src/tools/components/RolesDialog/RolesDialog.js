@@ -1,6 +1,6 @@
 import React, { useState, Fragment } from "react";
 
-import { publicAxios } from "tools/rest";
+import { publicAxios } from "@tools/rest";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -22,11 +22,11 @@ import SignalCellularAltIcon from "@material-ui/icons/SignalCellularAlt";
 
 import Select from "react-select";
 
-import EntitiesDialog from "tools/components/EntitiesDialog";
+import EntitiesDialog from "@tools/components/EntitiesDialog";
 
-import { ROLE_SCOPES } from "constants/roles";
+import { ROLE_SCOPES } from "@constants/roles";
 
-import { REST_PUBLIC_DATA } from "constants/rest";
+import { REST_PUBLIC_DATA } from "@constants/rest";
 
 import "./RolesDialog.scss";
 

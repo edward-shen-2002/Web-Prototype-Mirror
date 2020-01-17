@@ -2,7 +2,7 @@ import React, { useState, useEffect, lazy } from "react";
 
 import uniqid from "uniqid";
 
-import { publicAxios, adminOrganizationRoleAxios } from "tools/rest";
+import { publicAxios, adminOrganizationRoleAxios } from "@tools/rest";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -19,11 +19,11 @@ import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import PersonIcon from "@material-ui/icons/Person";
 
-import { REST_PUBLIC_DATA, REST_ADMIN_ORGANIZATIONS } from "constants/rest";
-
-const MaterialTable = lazy(() => import("material-table"));
+import { REST_PUBLIC_DATA, REST_ADMIN_ORGANIZATIONS } from "@constants/rest";
 
 import "./Organizations.scss";
+
+const MaterialTable = lazy(() => import("material-table"));
 
 // TODO : Highlight current sector - by sectorId
 

@@ -6,11 +6,11 @@ import { Link } from "react-router-dom";
 
 import { Formik } from "formik";
 
-import { publicAxios } from "tools/rest";
+import { publicAxios } from "@tools/rest";
 
-import { ROLE_LEVEL_NOT_APPLICABLE } from "constants/roles";
-import { REST_PUBLIC_REGISTER, REST_PUBLIC_DATA } from "constants/rest";
-import { ROUTE_PUBLIC_LOGIN, ROUTE_USER_PROFILE } from "constants/routes";
+import { ROLE_LEVEL_NOT_APPLICABLE } from "@constants/roles";
+import { REST_PUBLIC_REGISTER, REST_PUBLIC_DATA } from "@constants/rest";
+import { ROUTE_PUBLIC_LOGIN, ROUTE_USER_PROFILE } from "@constants/routes";
 
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
@@ -18,8 +18,8 @@ import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Button from "@material-ui/core/Button";
 import Slide from "@material-ui/core/Slide";
 
-import RolesDialog from "tools/components/RolesDialog";
-import EntitiesDialog from "tools/components/EntitiesDialog";
+import RolesDialog from "@tools/components/RolesDialog";
+import EntitiesDialog from "@tools/components/EntitiesDialog";
 
 import * as yup from "yup";
 

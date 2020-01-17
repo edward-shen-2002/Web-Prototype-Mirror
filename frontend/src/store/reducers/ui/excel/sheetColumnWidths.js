@@ -1,4 +1,4 @@
-import { createReducer } from "store/tools/setup";
+import { createReducer } from "@store/tools/setup";
 
 const UPDATE_SHEET_COLUMN_WIDTHS = (_state, { sheetColumnWidths }) => sheetColumnWidths;
 

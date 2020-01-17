@@ -4,22 +4,22 @@ import { connect } from "react-redux";
 
 import LaunchIcon from "@material-ui/icons/Launch";
 
-const MaterialTable = lazy(() => import("material-table"));
-
 import {
   adminEditBundleRoleAxios,
   adminReviewBundleRoleAxios,
   adminApproveBundleRoleAxios,
   adminBundleRoleAxios
-} from "tools/rest";
+} from "@tools/rest";
 
-import { REST_ADMIN_BUNDLES_WORKFLOW } from "constants/rest";
+import { REST_ADMIN_BUNDLES_WORKFLOW } from "@constants/rest";
 
-import { ROLE_LEVEL_NOT_APPLICABLE } from "constants/roles";
+import { ROLE_LEVEL_NOT_APPLICABLE } from "@constants/roles";
 
-import { ROUTE_USER_BUNDLES } from "constants/routes";
+import { ROUTE_USER_BUNDLES } from "@constants/routes";
 
 import "./Bundles.scss";
+
+const MaterialTable = lazy(() => import("material-table"));
 
 const mapStateToProps = ({
   domain: {

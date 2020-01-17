@@ -2,8 +2,8 @@ import React from "react";
 
 import { connect } from "react-redux";
 
-import { updateSheetTemplateIdMapping } from "actions/ui/excel/sheetTemplateIdMapping";
-import { closeTemplateIdMappingDialog } from "actions/ui/excel/isTemplateIdMappingDialogOpen";
+import { updateSheetTemplateIdMapping } from "@actions/ui/excel/sheetTemplateIdMapping";
+import { closeTemplateIdMappingDialog } from "@actions/ui/excel/isTemplateIdMappingDialogOpen";
 
 import Button from "@material-ui/core/Button";
 

@@ -6,7 +6,7 @@ import { HeaderSelection } from "./HeaderSelection";
 
 import { RowHeaderIndicator, ColumnHeaderIndicator } from "./HeaderResize";
 
-import { getNormalRowHeight, getNormalColumnWidth } from "tools/excel";
+import { getNormalRowHeight, getNormalColumnWidth } from "@tools/excel";
 
 import {
   STYLE_SELECTION_BORDER_COLOR,
@@ -14,7 +14,7 @@ import {
 
   STYLE_ACTIVE_SELECTION_BORDER_STYLE,
   STYLE_STAGNANT_SELECTION_BORDER_STYLE
-} from "constants/styles";
+} from "@constants/styles";
 
 const computeSelectionAreaStyle = (columnWidths, leftOffsets, rowHeights, topOffsets, selectionArea, freezeColumnCount, freezeRowCount, isActive) => {
   const { x1, y1, x2, y2 } = selectionArea;

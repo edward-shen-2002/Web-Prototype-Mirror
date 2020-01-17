@@ -2,17 +2,17 @@ import React from "react";
 
 import { Switch, Route } from "react-router-dom";
 
-import { AdminRoleRoute } from "tools/components/routes";
+import { AdminRoleRoute } from "@tools/components/routes";
 
-import { ROLE_USER_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_BUNDLE_MANAGER, ROLE_SECTOR_MANAGER, ROLE_TEMPLATE_MANAGER} from "constants/roles";
-import { ROUTE_ADMIN_USER, ROUTE_ADMIN_ORGANIZATION, ROUTE_ADMIN_TEMPLATE, ROUTE_ADMIN_BUNDLE, ROUTE_ADMIN_SECTOR } from "constants/routes";
+import { ROLE_USER_MANAGER, ROLE_ORGANIZATION_MANAGER, ROLE_BUNDLE_MANAGER, ROLE_SECTOR_MANAGER, ROLE_TEMPLATE_MANAGER} from "@constants/roles";
+import { ROUTE_ADMIN_USER, ROUTE_ADMIN_ORGANIZATION, ROUTE_ADMIN_TEMPLATE, ROUTE_ADMIN_BUNDLE, ROUTE_ADMIN_SECTOR } from "@constants/routes";
 
 import TemplateRouter from "./TemplateRouter";
 import OrganizationRouter from "./OrganizationRouter";
 import UserRouter from "./UserRouter";
 import SectorRouter from "./SectorRouter";
 import BundleRouter from "./BundleRouter";
-import NotFound from "tools/components/NotFound";
+import NotFound from "@tools/components/NotFound";
 
 const AdminRouter = () => (
   <Switch>

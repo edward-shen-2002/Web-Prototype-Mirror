@@ -2,7 +2,7 @@ import React from "react";
 
 import { connect } from "react-redux";
 
-import { openTemplateIdMappingDialog } from "actions/ui/excel/isTemplateIdMappingDialogOpen";
+import { openTemplateIdMappingDialog } from "@actions/ui/excel/isTemplateIdMappingDialogOpen";
 
 import Button from "@material-ui/core/Button";
 

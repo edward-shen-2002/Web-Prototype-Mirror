@@ -1,4 +1,4 @@
-import { createReducer } from "store/tools/setup";
+import { createReducer } from "@store/tools/setup";
 
 const UPDATE_WORKBOOK_NAME = (_state, { name }) => name;
 const RESET_WORKBOOK_NAME = () => "";

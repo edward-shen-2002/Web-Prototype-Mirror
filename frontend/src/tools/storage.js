@@ -1,4 +1,4 @@
-import { setAxiosToken } from "tools/rest";
+import { setAxiosToken } from "@tools/rest";
 
 export const saveToken = (token) => {
   if(Storage !== undefined) localStorage.token = token;

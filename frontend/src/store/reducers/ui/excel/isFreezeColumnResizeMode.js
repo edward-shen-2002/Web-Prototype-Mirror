@@ -1,4 +1,4 @@
-import { createReducer } from "store/tools/setup";
+import { createReducer } from "@store/tools/setup";
 
 const ENABLE_FREEZE_COLUMN_RESIZE_MODE = () => true;
 

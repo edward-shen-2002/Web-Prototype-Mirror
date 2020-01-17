@@ -4,9 +4,9 @@ import { connect } from "react-redux";
 
 import { Link } from "react-router-dom";
 
-import { adminTemplateRoleAxios } from "tools/rest";
+import { adminTemplateRoleAxios } from "@tools/rest";
 
-import { toggleTemplatePublish } from "actions/ui/excel/isTemplatePublished";
+import { toggleTemplatePublish } from "@actions/ui/excel/isTemplatePublished";
 
 import Button from "@material-ui/core/Button";
 
@@ -18,17 +18,9 @@ import Title from "./Title";
 
 import Menu from "./Menu";
 
-import { REST_ADMIN_TEMPLATES } from "constants/rest";
+import { REST_ADMIN_TEMPLATES } from "@constants/rest";
 
 import "./AppBar.scss";
-
-const handleUpdateTemplate = (newTemplate) => (
-  adminTemplateRoleAxios.put(`${REST_ADMIN_TEMPLATES}/${_id}`, { newTemplate })
-    .then(() => {
-      // Update 
-    })
-    .catch((error) => console.error(error))
-);
 
 const ExcelIconButton = ({ returnLink }) => (
   <Link to={returnLink} className="excelIconButton">

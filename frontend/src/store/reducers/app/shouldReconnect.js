@@ -1,6 +1,6 @@
-import { createReducer } from "store/tools/setup";
-import { isAxiosTokenSet } from "tools/rest";
-import { isTokenSaved } from "tools/storage";
+import { createReducer } from "@store/tools/setup";
+import { isAxiosTokenSet } from "@tools/rest";
+import { isTokenSaved } from "@tools/storage";
 
 // Check local storage if token is available
 // Token will persist if user did not log out

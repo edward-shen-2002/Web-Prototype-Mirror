@@ -1,4 +1,4 @@
-import { UPDATE_ACTIVE_SELECTION_AREA, RESET_ACTIVE_SELECTION_AREA } from "actionCreators";
+import { UPDATE_ACTIVE_SELECTION_AREA, RESET_ACTIVE_SELECTION_AREA } from "@actionCreators";
 
 export const updateActiveSelectionArea = (activeSelectionArea) => ({ type: UPDATE_ACTIVE_SELECTION_AREA, activeSelectionArea });
 

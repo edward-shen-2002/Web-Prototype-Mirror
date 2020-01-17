@@ -10,12 +10,12 @@ import TextField from "@material-ui/core/TextField";
 
 import { Formik } from "formik";
 
-import { loadUserState } from "tools/redux";
-import { publicAxios, setAxiosToken } from "tools/rest";
-import { saveToken } from "tools/storage";
+import { loadUserState } from "@tools/redux";
+import { publicAxios, setAxiosToken } from "@tools/rest";
+import { saveToken } from "@tools/storage";
 
-import { REST_PUBLIC_LOGIN } from "constants/rest";
-import { ROUTE_PUBLIC_REGISTER, ROUTE_PUBLIC_RECOVERY, ROUTE_USER_PROFILE } from "constants/routes";
+import { REST_PUBLIC_LOGIN } from "@constants/rest";
+import { ROUTE_PUBLIC_REGISTER, ROUTE_PUBLIC_RECOVERY, ROUTE_USER_PROFILE } from "@constants/routes";
 
 import "./Login.scss";
 

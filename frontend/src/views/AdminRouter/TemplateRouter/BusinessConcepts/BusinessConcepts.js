@@ -1,14 +1,14 @@
 import React, { useState, useEffect, lazy } from "react";
 
-import { adminTemplateRoleAxios } from "tools/rest";
+import { adminTemplateRoleAxios } from "@tools/rest";
 
-import { REST_ADMIN_BUSINESS_CONCEPTS } from "constants/rest";
-
-const MaterialTable = lazy(() => import("material-table"));
+import { REST_ADMIN_BUSINESS_CONCEPTS } from "@constants/rest";
 
 import "./BusinessConcepts.scss";
 
-const businessConcepts = () => {
+const MaterialTable = lazy(() => import("material-table"));
+
+const BusinessConcepts = () => {
   const [ businessConcepts, setBusinessConcepts ] = useState([]);
   const [ isDataFetched, setIsDataFetched ] = useState(false);
   
@@ -87,4 +87,4 @@ const businessConcepts = () => {
   );
 };
 
-export default businessConcepts;
+export default BusinessConcepts;

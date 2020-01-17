@@ -2,7 +2,7 @@ import React from "react";
 
 import uniqid from "uniqid";
 
-import { getCellInlineStyle, getBlockStyle } from "tools/excel";
+import { getCellInlineStyle, getBlockStyle } from "@tools/excel";
 
 const RichTextCellContent = (richText, firstFragmentStyle) => richText.map(({ styles, text }, index) => (
   <span key={uniqid()} style={index ? styles : firstFragmentStyle}>

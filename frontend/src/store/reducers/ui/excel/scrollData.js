@@ -1,6 +1,6 @@
-import { createReducer } from "store/tools/setup";
+import { createReducer } from "@store/tools/setup";
 
-import { DEFAULT_EXCEL_SCROLL_DATA } from "constants/excel";
+import { DEFAULT_EXCEL_SCROLL_DATA } from "@constants/excel";
 
 const UPDATE_SCROLL_DATA = (state, { scrollData }) => ({ ...state, ...scrollData });
 

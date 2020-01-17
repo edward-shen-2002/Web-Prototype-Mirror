@@ -26,7 +26,8 @@ let InputField = ({
   rawText
 }) => {
 
-  const handleKeyDown = ({ key }) => {
+  const handleKeyDown = (event) => {
+    const { key } = event;
     const { current: EventListenerInstance } = eventListenerRef;
   
     if(key === "Enter") {

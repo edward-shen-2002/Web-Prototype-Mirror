@@ -1,6 +1,6 @@
-import { createReducer } from "store/tools/setup";
+import { createReducer } from "@store/tools/setup";
 
-import { DEFAULT_EXCEL_ACTIVE_SHEET_NAME } from "constants/excel";
+import { DEFAULT_EXCEL_ACTIVE_SHEET_NAME } from "@constants/excel";
 
 const UPDATE_ACTIVE_SHEET_NAME = (_state, { activeSheetName }) => activeSheetName;
 

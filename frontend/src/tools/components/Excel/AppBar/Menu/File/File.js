@@ -1,6 +1,6 @@
 import React from "react";
 
-import MenuItems from "tools/components/Excel/commonComponents/MenuItems";
+import MenuItems from "@tools/components/Excel/commonComponents/MenuItems";
 
 import SaveIcon from "@material-ui/icons/Save";
 

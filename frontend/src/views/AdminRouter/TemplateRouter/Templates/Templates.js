@@ -6,17 +6,17 @@ import uniqid from "uniqid";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
-import { AddFabIconButton } from "tools/components/buttons";
+import { AddFabIconButton } from "@tools/components/buttons";
 
 import TextField from "@material-ui/core/TextField";
 
 import LaunchIcon from "@material-ui/icons/Launch";
 
-import { adminTemplateRoleAxios } from "tools/rest";
-import { REST_ADMIN_TEMPLATES } from "constants/rest";
-import { createBlankReactState, convertExcelFileToState } from "tools/excel";
+import { adminTemplateRoleAxios } from "@tools/rest";
+import { REST_ADMIN_TEMPLATES } from "@constants/rest";
+import { createBlankReactState, convertExcelFileToState } from "@tools/excel";
 
-import { ROUTE_ADMIN_TEMPLATE_TEMPLATES } from "constants/routes";
+import { ROUTE_ADMIN_TEMPLATE_TEMPLATES } from "@constants/routes";
 
 import "./Templates.scss";
 

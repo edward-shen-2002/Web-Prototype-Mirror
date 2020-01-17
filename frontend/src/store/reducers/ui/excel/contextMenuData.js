@@ -1,4 +1,4 @@
-import { createReducer } from "store/tools/setup";
+import { createReducer } from "@store/tools/setup";
 
 const UPDATE_CONTEXT_MENU_DATA = (state, { contextMenuData }) => ({ ...state, ...contextMenuData });
 

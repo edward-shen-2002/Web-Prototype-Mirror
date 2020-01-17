@@ -3,7 +3,7 @@ import {
   UNPUBLISH_TEMPLATE, 
   TOGGLE_TEMPLATE_PUBLISH,
   UPDATE_PUBLISH_TEMPLATE
-} from "actionCreators";
+} from "@actionCreators";
 
 export const publishTemplate = ()  => ({ type: PUBLISH_TEMPLATE });
 export const unpublishTemplate = () => ({ type: UNPUBLISH_TEMPLATE });

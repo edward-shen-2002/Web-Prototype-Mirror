@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 
 import { connect } from "react-redux";
 
-import { getTopOffsets, getLeftOffsets } from "tools/excel";
+import { getTopOffsets, getLeftOffsets } from "@tools/excel";
 
 import "./StagnantSelectionAreas.scss";
 

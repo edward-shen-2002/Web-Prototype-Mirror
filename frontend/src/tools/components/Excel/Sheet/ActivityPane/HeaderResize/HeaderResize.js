@@ -2,9 +2,9 @@ import React, { useMemo } from "react";
 
 import { connect } from "react-redux";
 
-import { getTopOffsets, getLeftOffsets, getNormalRowHeight, getNormalColumnWidth } from "tools/excel";
+import { getTopOffsets, getLeftOffsets, getNormalRowHeight, getNormalColumnWidth } from "@tools/excel";
 
-import { DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER, DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER } from "constants/excel";
+import { DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER, DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER } from "@constants/excel";
 
 import "./HeaderResize.scss";
 

@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import { Editor } from "draft-js";
 
-import { getTopOffsets, getLeftOffsets, getNormalRowHeight, getNormalColumnWidth } from "tools/excel";
+import { getTopOffsets, getLeftOffsets, getNormalRowHeight, getNormalColumnWidth } from "@tools/excel";
 
 import "./ActiveCell.scss";
 

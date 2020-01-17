@@ -1,4 +1,4 @@
-import { createReducer } from "store/tools/setup";
+import { createReducer } from "@store/tools/setup";
 
 const UPDATE_FREEZE_ROW_RESIZE_DATA = (state, { freezeRowResizeData }) => ({ ...state, ...freezeRowResizeData });
 const RESET_FREEZE_ROW_RESIZE_DATA = () => null;

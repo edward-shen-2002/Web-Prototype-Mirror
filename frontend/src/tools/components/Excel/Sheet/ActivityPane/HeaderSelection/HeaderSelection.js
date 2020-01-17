@@ -7,12 +7,12 @@ import {
   getLeftOffsets,
   getNormalColumnWidth,
   getNormalRowHeight
-} from "tools/excel";
+} from "@tools/excel";
 
 import { 
   DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER, 
   DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER
-} from "constants/excel";
+} from "@constants/excel";
 
 import "./HeaderSelection.scss";
 

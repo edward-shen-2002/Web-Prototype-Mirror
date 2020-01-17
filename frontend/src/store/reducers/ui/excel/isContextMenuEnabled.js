@@ -1,4 +1,4 @@
-import { createReducer } from "store/tools/setup";
+import { createReducer } from "@store/tools/setup";
 
 const SET_CONTEXT_MENU_ENALBED = () => true;
 

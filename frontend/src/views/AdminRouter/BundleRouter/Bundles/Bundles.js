@@ -3,20 +3,20 @@ import React, { useState, useEffect, lazy } from "react";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
-import { AddFabIconButton } from "tools/components/buttons";
+import { AddFabIconButton } from "@tools/components/buttons";
 
 import TextField from "@material-ui/core/TextField";
 
 import LaunchIcon from "@material-ui/icons/Launch";
 
-import { adminBundleRoleAxios } from "tools/rest";
-import { REST_ADMIN_BUNDLES } from "constants/rest";
+import { adminBundleRoleAxios } from "@tools/rest";
+import { REST_ADMIN_BUNDLES } from "@constants/rest";
 
-import { ROUTE_ADMIN_BUNDLE_BUNDLES } from "constants/routes";
-
-const MaterialTable = lazy(() => import("material-table"));
+import { ROUTE_ADMIN_BUNDLE_BUNDLES } from "@constants/routes";
 
 import "./Bundles.scss";
+
+const MaterialTable = lazy(() => import("material-table"));
 
 const HeaderActions = ({ handleQueryChange, handleCreateBundle }) => (
   <div className="headerActions">

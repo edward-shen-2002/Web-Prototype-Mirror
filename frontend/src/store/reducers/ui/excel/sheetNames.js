@@ -1,6 +1,6 @@
-import { createReducer } from "store/tools/setup";
+import { createReducer } from "@store/tools/setup";
 
-import { DEFAULT_EXCEL_SHEET_NAMES } from "constants/excel";
+import { DEFAULT_EXCEL_SHEET_NAMES } from "@constants/excel";
 
 const UPDATE_SHEET_NAMES = (_state, { sheetNames }) => [ ...sheetNames ];
 

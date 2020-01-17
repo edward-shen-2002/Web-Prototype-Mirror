@@ -6,13 +6,13 @@ module.exports = {
   entry: path.join(__dirname, "/src/index.js"),
   resolve: {
     alias: {
-      constants: path.join(__dirname, "/src/constants"),
-      styles: path.join(__dirname, "/src/styles"),
-      tools: path.join(__dirname, "/src/tools"),
-      images: path.join(__dirname, "/src/images"),
-      store: path.join(__dirname, "/src/store"),
-      actions: path.join(__dirname, "/src/store/actions"),
-      actionCreators: path.join(__dirname, "/src/store/actions/actionCreators")
+      "@constants": path.join(__dirname, "/src/constants"),
+      "@styles": path.join(__dirname, "/src/styles"),
+      "@tools": path.join(__dirname, "/src/tools"),
+      "@images": path.join(__dirname, "/src/images"),
+      "@store": path.join(__dirname, "/src/store"),
+      "@actions": path.join(__dirname, "/src/store/actions"),
+      "@actionCreators": path.join(__dirname, "/src/store/actions/actionCreators")
     },
     extensions: ["*", ".js", ".jsx"]
   },
@@ -50,7 +50,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "/src/index.html"),
+      template: path.join(__dirname, "/public/index.html"),
       filename: "index.html",
       inject: true,
       hash: true

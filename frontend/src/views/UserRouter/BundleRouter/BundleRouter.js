@@ -1,14 +1,11 @@
 import React, { lazy } from "react";
-
 import { Route, Switch } from "react-router-dom";
+import NotFound from "@tools/components/NotFound";
+import { ROUTE_USER_BUNDLES } from "@constants/routes";
 
 const Bundles = lazy(() => import("./Bundles"));
 const BundlePhase = lazy(() => import("./BundlePhase"));
 const Workbook = lazy(() => import("./Workbook"));
-
-import NotFound from "tools/components/NotFound";
-
-import { ROUTE_USER_BUNDLES } from "constants/routes";
 
 const BundleRouter = () => (
   <Switch>

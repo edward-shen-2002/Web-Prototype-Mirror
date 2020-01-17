@@ -8,7 +8,7 @@ import TextField from "@material-ui/core/TextField";
 
 import { Formik } from "formik";
 
-import { ROUTE_PUBLIC_LOGIN } from "constants/routes";
+import { ROUTE_PUBLIC_LOGIN } from "@constants/routes";
 
 import "./Recovery.scss";
 

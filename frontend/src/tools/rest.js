@@ -13,7 +13,7 @@ import {
   REST_GROUP_ADMIN_EDIT_BUNDLE,
   REST_GROUP_ADMIN_REVIEW_BUNDLE,
   REST_GROUP_ADMIN_APPROVE_BUNDLE
-} from "constants/rest";
+} from "@constants/rest";
 
 export const publicAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_PUBLIC}` });
 
