@@ -33,7 +33,7 @@ const _init = async () => {
 
   // Connects frontend build
   app.use("/", express.static(path.join(__dirname, "public")));
-  app.get('*', (_req, res) => res.sendFile(path.join(__dirname, 'public/index.html')));
+  if(process.env.NODE_ENV === "production") app.get('*', (_req, res) => res.sendFile(path.join(__dirname, 'public/index.html')));
   app.listen(app.get("port"), () => console.log(`App listening on port ${app.get("port")}`));
   return app;
 };

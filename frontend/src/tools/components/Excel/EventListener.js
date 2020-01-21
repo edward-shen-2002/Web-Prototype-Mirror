@@ -1045,7 +1045,27 @@ class EventRedux extends PureComponent {
     return newData;
   }
 
-  // TODO
+  _getInsertData(parameterString, stagnantSelectionAreas, activeCellPosition) {
+    let insertStart;
+    let insertCount;
+
+    const stagnantSelectionAreasCount = stagnantSelectionAreas.length;
+
+    if(stagnantSelectionAreasCount) {
+      const { [`${parameterString}1`]: pos1, [`${parameterString}2`]: pos2 } = stagnantSelectionAreas[stagnantSelectionAreasCount - 1];
+
+      insertStart = Math.min(pos1, pos2);
+      insertCount = Math.abs(pos2 - pos1) + 1;
+    } else {
+      const { [parameterString]: pos } = activeCellPosition;
+
+      insertStart = pos;
+      insertCount = 1;
+    }
+
+    return { insertStart, insertCount };
+  }
+
   insertRow() {
     const {
       sheetGridRef,
@@ -1060,28 +1080,13 @@ class EventRedux extends PureComponent {
       handleUpdateSheetRowCount,
       handleUpdateSheetHiddenRows
     } = this.props;
-    let insertStart;
-    let rowsToInsert;
+    const { insertCount, insertStart } = this._getInsertData("y", stagnantSelectionAreas, activeCellPosition);
 
-    const stagnantSelectionAreasCount = stagnantSelectionAreas.length;
+    const newRowCount = sheetRowCount + insertCount;
 
-    if(stagnantSelectionAreasCount) {
-      const { y1, y2 } = stagnantSelectionAreas[stagnantSelectionAreasCount - 1];
-
-      insertStart = Math.min(y1, y2);
-      rowsToInsert = Math.abs(y2 - y1) + 1;
-    } else {
-      const { y } = activeCellPosition;
-
-      insertStart = y;
-      rowsToInsert = 1;
-    }
-
-    const newRowCount = sheetRowCount + rowsToInsert;
-
-    let newSheetCellData = this._offsetSheetCellRowDataAtIndex(sheetCellData, insertStart, rowsToInsert);
-    let newRowHeights = this._offsetObjectAtIndex(sheetRowHeights, insertStart, rowsToInsert);
-    let newHiddenRows = this._offsetObjectAtIndex(sheetHiddenRows, insertStart, rowsToInsert);
+    let newSheetCellData = this._offsetSheetCellRowDataAtIndex(sheetCellData, insertStart, insertCount);
+    let newRowHeights = this._offsetObjectAtIndex(sheetRowHeights, insertStart, insertCount);
+    let newHiddenRows = this._offsetObjectAtIndex(sheetHiddenRows, insertStart, insertCount);
 
     sheetGridRef.current.resetAfterRowIndex(insertStart);
     handleUpdateSheetRowCount(newRowCount);
@@ -1106,18 +1111,7 @@ class EventRedux extends PureComponent {
       handleUpdateSheetHiddenColumns
     } = this.props;
 
-    let insertStart;
-    let columnsToInsert;
-
-    const stagnantSelectionAreasCount = stagnantSelectionAreas.length;
-
-    if(stagnantSelectionAreasCount) {
-
-    } else {
-      const { y } = activeCellPosition;
-
-      insertStart = y;
-    }
+    const { insertCount, insertStart } = this._getInsertData("x", stagnantSelectionAreas, activeCellPosition);
   }
 
   rightClickCell(event, row, column) {
