@@ -117,7 +117,6 @@ const BundleContent = ({
     };
 
     adminBundleRoleAxios.put(REST_ADMIN_BUNDLES, { newBundle })
-      .then(() => console.log("success"))
       .catch((error) => console.error(error));
   };
 

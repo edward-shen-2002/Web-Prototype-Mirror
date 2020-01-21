@@ -250,7 +250,7 @@ let Sheet = ({
   const handlePaste = ({ clipboardData }) => {
     let paste = (clipboardData || window.clipboardData).getData("text/html");
 
-    console.log(paste);
+    // console.log(paste);
   };
 
   const handleClick = () => EventListenerInstance.setInputAutoFocusOn();
