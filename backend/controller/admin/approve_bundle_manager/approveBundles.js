@@ -46,10 +46,13 @@ const approveBundles = ({ router, OrganizationBundleModel }) => {
     const { _id } = req.params;
     const { bundle: { approverNotes } } = req.body;
 
-    OrganizationBundleModel.findOneAndUpdate({ _id, phase: "approve" }, { approverNotes, phase: undefined, status: "APPROVED" })
+    OrganizationBundleModel.findOneAndUpdate({ _id, phase: "approve" }, { approverNotes, phase: "finished", status: "APPROVED" })
       .then((bundle) => {
         if(bundle) {
           // ! Populate master table !
+
+
+
           res.end();
         } else {
           res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_NOT_FOUND });

@@ -7,7 +7,8 @@ let bundleSchema = new Schema({
   organizations: [],
   year: { type: Number },
   quarter: { type: String },
-  published: { type: Boolean }
+  published: { type: Boolean },
+  publishedIds: []
 }, { minimize: false, timestamps: true });
 
 export default model("Bundle", bundleSchema);
