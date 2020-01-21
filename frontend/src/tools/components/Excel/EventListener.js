@@ -75,6 +75,10 @@ import {
 } from "@tools/excel";
 
 import {
+  isObjectEmpty
+} from "@tools/misc";
+
+import {
   DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
   DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER
 } from "@constants/excel";
@@ -1028,18 +1032,53 @@ class EventRedux extends PureComponent {
     }
 
     // Offset data downwards
-    for(let offsetParam in sheetCellData) {
-      const paramData = sheetCellData[offsetParam];
-      if(start <= offsetParam && paramData) {
-        const newOffsetParam = Number(offsetParam) + offset;
-        newData[newOffsetParam] = paramData;
+    for(let row in sheetCellData) {
+      const rowData = sheetCellData[row];
+      if(start <= row && rowData) {
+        const newRowOffset = Number(row) + offset;
+        newData[newRowOffset] = rowData;
       } else {
-        newData[offsetParam] = sheetCellData[offsetParam];
+        newData[row] = sheetCellData[row];
       }
     }
 
     if(startData !== undefined) {
         for(let i = start; i < end; i++) newData[i] = template;
+    }
+
+    return newData;
+  }
+
+  _offsetSheetCellColumnDataAtIndex(sheetCellData, start, offset) {
+    // Get the template column data to apply to inserted columns
+    let template = {};
+    let newData = {};
+
+    const end = start + offset;
+
+    // Offset data rightwards
+    for(let row in sheetCellData) {
+      const columns = sheetCellData[row];
+
+      if(newData[row] === undefined) newData[row] = {};
+
+      for(let column in columns) {
+        const columnData = columns[column];
+        if(start <= column && columnData) {
+          if(start == column && columnData.styles) template[row] = { styles: columnData.styles };
+
+          const newColumnOffset = Number(column) + offset;
+          newData[row][newColumnOffset] = sheetCellData[row][column];
+        } else {
+          newData[row][column] = sheetCellData[row][column];
+        }
+      }
+    }
+
+    if(!isObjectEmpty(template)) {
+      for(let row in newData) {
+        for(let i = start; i < end; i++) newData[row][i] = template[row];
+      }
     }
 
     return newData;
@@ -1084,9 +1123,9 @@ class EventRedux extends PureComponent {
 
     const newRowCount = sheetRowCount + insertCount;
 
-    let newSheetCellData = this._offsetSheetCellRowDataAtIndex(sheetCellData, insertStart, insertCount);
-    let newRowHeights = this._offsetObjectAtIndex(sheetRowHeights, insertStart, insertCount);
-    let newHiddenRows = this._offsetObjectAtIndex(sheetHiddenRows, insertStart, insertCount);
+    const newSheetCellData = this._offsetSheetCellRowDataAtIndex(sheetCellData, insertStart, insertCount);
+    const newRowHeights = this._offsetObjectAtIndex(sheetRowHeights, insertStart, insertCount);
+    const newHiddenRows = this._offsetObjectAtIndex(sheetHiddenRows, insertStart, insertCount);
 
     sheetGridRef.current.resetAfterRowIndex(insertStart);
     handleUpdateSheetRowCount(newRowCount);
@@ -1112,6 +1151,18 @@ class EventRedux extends PureComponent {
     } = this.props;
 
     const { insertCount, insertStart } = this._getInsertData("x", stagnantSelectionAreas, activeCellPosition);
+
+    const newColumnCount = sheetColumnCount + insertCount;
+
+    const newSheetCellData = this._offsetSheetCellColumnDataAtIndex(sheetCellData, insertStart, insertCount);
+    const newColumnWidths = this._offsetObjectAtIndex(sheetColumnWidths, insertStart, insertCount);
+    const newHiddenColumns = this._offsetObjectAtIndex(sheetHiddenColumns, insertStart, insertCount);
+
+    sheetGridRef.current.resetAfterColumnIndex(insertStart);
+    handleUpdateSheetColumnCount(newColumnCount);
+    handleUpdateSheetCellData(newSheetCellData);
+    handleUpdateSheetColumnWidths(newColumnWidths);
+    handleUpdateSheetHiddenColumns(newHiddenColumns);
   }
 
   rightClickCell(event, row, column) {
