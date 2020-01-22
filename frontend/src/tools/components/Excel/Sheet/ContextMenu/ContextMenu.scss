@@ -21,9 +21,7 @@
 .menuItem {
   display: flex;
   width: 100%;
-
-  padding: 5px;
-
+  
   &__icon {
     width: 30px;
     text-align: center;
@@ -84,13 +82,13 @@
   border: 0;
   color: #373a3c;
   cursor: pointer;
-  padding: 5px 20px;
+  padding: 2.5px 20px;
   white-space: nowrap;
 }
 
 .react-contextmenu-item.react-contextmenu-submenu {
   width: 100%;
-  padding-left: 25px;
+  padding: 0 0 0 25px;
 }
 
 .react-contextmenu-item.react-contextmenu-submenu > .react-contextmenu-item:after {
