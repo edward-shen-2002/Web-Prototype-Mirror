@@ -2,7 +2,11 @@ import { ROUTE_ADMIN_BUNDLES_WORKFLOW } from "../../../constants/rest";
 import { HTTP_ERROR_NOT_FOUND } from "../../../constants/rest";
 import { MESSAGE_ERROR_NOT_FOUND } from "../../../constants/messages";
 
-const approveBundles = ({ router, OrganizationBundleModel }) => {
+const approveBundles = ({ 
+  router, 
+  OrganizationBundleModel,
+  MasterValueModel 
+}) => {
   router.get(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/general`, (req, res, next) => {
     OrganizationBundleModel.find({ phase: "approve" })
       .select("_id name organization status phase")
@@ -50,7 +54,7 @@ const approveBundles = ({ router, OrganizationBundleModel }) => {
       .then((bundle) => {
         if(bundle) {
           // ! Populate master table !
-
+          
 
 
           res.end();

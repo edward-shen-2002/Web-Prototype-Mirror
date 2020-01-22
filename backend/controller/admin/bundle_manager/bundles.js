@@ -55,7 +55,7 @@ const bundles = ({
   });
 
   router.get(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/general`, (req, res, next) => {
-    OrganizationBundleModel.find({ phase: undefined })
+    OrganizationBundleModel.find({ phase: "finished" })
       .then((bundles) => {
         res.json({ message: MESSAGE_SUCCESS_BUNDLES_BUNDLE, data: { bundles } });
       })
@@ -65,7 +65,7 @@ const bundles = ({
   router.get(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/:_id`, (req, res, next) => {
     const { _id } = req.params;
     
-    OrganizationBundleModel.findOne({ _id, phase: undefined })
+    OrganizationBundleModel.findOne({ _id, phase: "finished" })
       .select("-workbooksData.workbooks")
       .then((bundle) => {
         if(bundle) {
@@ -80,7 +80,7 @@ const bundles = ({
   router.put(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/:_id/return`, (req, res, next) => {
     const { _id } = req.params;
 
-    OrganizationBundleModel.findOneAndUpdate({ _id, phase: null }, { phase: "edit", status: "RETURNED" })
+    OrganizationBundleModel.findOneAndUpdate({ _id, phase: "finished" }, { phase: "edit", status: "RETURNED" })
       .then((bundle) => {
         if(bundle) {
           res.end();

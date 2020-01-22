@@ -23,7 +23,8 @@ const setupMongoose = async (options, {
   RegisterVerificationModel, 
   BusinessConceptModel,
   BundleModel,
-  OrganizationBundleModel
+  OrganizationBundleModel,
+  MasterValueModel
 }) => {
   const handleCreateDatabase = async () => {
     console.log("MongoDB: Creating collections in database");
@@ -38,6 +39,7 @@ const setupMongoose = async (options, {
       await BusinessConceptModel.createCollection();
       await BundleModel.createCollection();
       await OrganizationBundleModel.createCollection();
+      await MasterValueModel.createCollection();
       
       console.log("MongoDB: Successfully created collections");
     } catch(error) {

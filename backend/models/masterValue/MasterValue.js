@@ -1,5 +1,7 @@
 import { Schema, model } from "mongoose";
 
+const ObjectId = Schema.Types.ObjectId;
+
 /**
  * Contains the values of successfully approved workbooks
  * 
@@ -32,15 +34,13 @@ import { Schema, model } from "mongoose";
  */
 
 let masterValueSchema = new Schema({
-  organizationCode: { type: String, required: true },
-
-  sectorName: { type: String, required: true },
+  organizationId: { type: ObjectId, required: true },
 
   year: { type: Number, required: true },
-
   quarter: { type: String },
-  attributeId: { type: String, required: true },
-  categoryId: { type: String, required: true },
+  
+  businessConceptId1: { type: ObjectId, required: true },
+  businessConceptId2: { type: ObjectId, required: true },
 
   value: { type: String, required: true }
 }, { minimize: false });

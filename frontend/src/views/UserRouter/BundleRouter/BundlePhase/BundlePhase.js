@@ -95,8 +95,8 @@ const BundlePhaseNotes = ({ notesPhase, phase, label, text, handleChange }) => (
 
 const BundlePhaseActions = ({ phase, handleSave, handleSubmit, handleCancel }) => (
   <ButtonGroup className="bundleActions" variant="contained" fullWidth>
-    {phase !== "null" && <Button color="primary" onClick={handleSave}>Save</Button>}
-    {phase !== "null" && <Button color="secondary" onClick={handleSubmit}>Submit</Button>}
+    {phase !== "finished" && <Button color="primary" onClick={handleSave}>Save</Button>}
+    {phase !== "finished" && <Button color="secondary" onClick={handleSubmit}>Submit</Button>}
     <Button onClick={handleCancel}>Cancel</Button>
   </ButtonGroup>
 );
