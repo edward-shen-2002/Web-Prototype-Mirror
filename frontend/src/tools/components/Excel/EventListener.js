@@ -1088,10 +1088,10 @@ class EventRedux extends PureComponent {
     let insertStart;
     let insertCount;
 
-    const stagnantSelectionAreasCount = stagnantSelectionAreas.length;
+    const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
 
-    if(stagnantSelectionAreasCount) {
-      const { [`${parameterString}1`]: pos1, [`${parameterString}2`]: pos2 } = stagnantSelectionAreas[stagnantSelectionAreasCount - 1];
+    if(stagnantSelectionAreasLength) {
+      const { [`${parameterString}1`]: pos1, [`${parameterString}2`]: pos2 } = stagnantSelectionAreas[stagnantSelectionAreasLength - 1];
 
       insertStart = Math.min(pos1, pos2);
       insertCount = Math.abs(pos2 - pos1) + 1;
@@ -1174,10 +1174,10 @@ class EventRedux extends PureComponent {
     event.preventDefault();
     this.disableEditMode();
     
-    const stagnantSelectionAreasCount = stagnantSelectionAreas.length;
+    const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
 
-    if(stagnantSelectionAreasCount) {
-      const { x1, x2, y1, y2 } = stagnantSelectionAreas[stagnantSelectionAreasCount - 1];
+    if(stagnantSelectionAreasLength) {
+      const { x1, x2, y1, y2 } = stagnantSelectionAreas[stagnantSelectionAreasLength - 1];
 
       if(((x1 <= column && column <= x2) || (x2 <= column && column <= x1)) && ((y1 <= row && row <= y2) || (y2 <= row && row <= y1))) return;
     } 
@@ -1572,6 +1572,60 @@ class EventRedux extends PureComponent {
     handleUpdateActiveCellPosition({ x: newX, y: newY });
 
     if(shouldScroll) this._scrollTo(newY, newX);
+  }
+
+  deleteCellsShiftUp() {
+    const { 
+      stagnantSelectionAreas,
+      activeCellPosition,
+      sheetCellData,
+      handleUpdateSheetCellData
+    } = this.props;
+    let area;
+    let newSheetCellData = {};
+
+    const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
+
+    if(stagnantSelectionAreasLength) {
+      area  = stagnantSelectionAreas[ stagnantSelectionAreasLength - 1 ];
+    } else {
+      const { y, x } = activeCellPosition;
+      area = { y1: y, y2: y, x1: x, x2: x };
+    }
+
+    const { y1, y2, x1, x2 } = area;
+
+    const shiftOffsetY = Math.abs(y1 - y2);
+    const shiftStartY = Math.min(y1, y2);
+    const shiftEndY = shiftStartY + shiftOffsetY + 1;
+
+    const columnStart = Math.min(x1, x2);
+    const columnEnd = Math.max(x1, x2);
+
+    for(let row in sheetCellData) {
+      const columns = sheetCellData[row];
+
+      if(row < shiftStartY) {
+        newSheetCellData[row] = columns;
+      } else {
+        for(let column in columns) {
+          if(row >= shiftEndY && column >= columnStart && column <= columnEnd) {
+            const newRowOffset = row - shiftOffsetY - 1;
+            if(!newSheetCellData[newRowOffset]) newSheetCellData[newRowOffset] = {};
+            newSheetCellData[newRowOffset][column] = sheetCellData[row][column];
+          } else if(column < columnStart || column > columnEnd) {
+            if(!newSheetCellData[row]) newSheetCellData[row] = {};
+            newSheetCellData[row][column] = sheetCellData[row][column];
+          }
+        }
+      } 
+    }
+
+    handleUpdateSheetCellData(newSheetCellData);
+  }
+
+  deleteCellsShiftLeft() {
+
   }
 
   // ! Too much calculation? Performance is choppy

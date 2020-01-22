@@ -72,6 +72,8 @@ const SheetContextMenu = ({
     if(!config.length) {
       const handleInsertRow = () => eventListenerRef.current.insertRow();
       const handleInsertColumn = () => eventListenerRef.current.insertColumn();
+      const handleDeleteCellsShiftUp = () => eventListenerRef.current.deleteCellsShiftUp();
+      const handleDeleteCellsShiftLeft = () => eventListenerRef.current.deleteCellsShiftLeft();
   
       setConfig([
         {
@@ -103,11 +105,11 @@ const SheetContextMenu = ({
           children: [
             {
               text: "Shift up",
-              handleClick: () => {}
+              handleClick: handleDeleteCellsShiftUp
             },
             {
               text: "Shift left",
-              handleClick: () => {}
+              handleClick: handleDeleteCellsShiftLeft
             }
           ]
         }
