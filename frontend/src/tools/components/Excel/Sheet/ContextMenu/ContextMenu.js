@@ -1,15 +1,10 @@
-import React from "react";
+import React, { useEffect, useState, Component } from "react";
 
 import { ContextMenu, MenuItem, SubMenu } from "react-contextmenu";
 
 import "./ContextMenu.scss";
-import { useEffect } from "react";
 
-const SheetContextSubMenu = ({ children }) => (
-  <SubMenu>
-    {children}
-  </SubMenu>
-);
+import uniqid from "uniqid";
 
 const MenuIcon = ({ icon, mdiIcon }) => (
   <div className={`menuItem__icon ${mdiIcon ? mdiIcon : ""}`}>
@@ -34,65 +29,93 @@ const SheetContextMenuItem = ({
   command,
   handleClick
 }) => (
-  <MenuItem
-    className="menuItem"
-    onClick={handleClick}
-  >
-    <MenuIcon 
-      icon={icon}
-      mdiIcon={mdiIcon}
-    />
-    <MenuTextContent
-      text={text}
-      command={command}
-    />
+  <MenuItem className="menuItem" onClick={handleClick}>
+    <MenuIcon icon={icon} mdiIcon={mdiIcon}/>
+    <MenuTextContent text={text} command={command}/>
   </MenuItem>
 );
 
-// ! HARD-CODED WIDTH!! 
+const SubMenuContent = ({ item }) => (
+  <SubMenu className="subMenu" title={item.text}>
+      {<GeneratedContextMenu config={item.children}/>}
+  </SubMenu>
+);
+
+const SubMenuContainer = ({ item }) => (
+  <div className="subMenuContainer">
+    <SubMenuContent item={item}/>
+  </div>
+);
+
+const GeneratedContextMenu = ({ config }) => config.map((item) => {
+  if(!item) return <hr key={uniqid()} className="menuDivider"/>;
+
+  return (
+    item.children
+      ? <SubMenuContainer key={uniqid()} item={item}/>
+      : <SheetContextMenuItem key={uniqid()} {...item}/>
+  );
+});
+
+const ContextMenuContent = ({ config }) => (
+  <ContextMenu id="sheetWindowContainer" className="contextMenu">
+    <GeneratedContextMenu config={config}/>
+  </ContextMenu>
+);
+
 const SheetContextMenu = ({
   eventListenerRef
 }) => {
-  let EventListenerInstance;
+  const [ config, setConfig ] = useState([]);
 
   useEffect(() => {
-    EventListenerInstance = eventListenerRef.current;
+    if(!config.length) {
+      const handleInsertRow = () => eventListenerRef.current.insertRow();
+      const handleInsertColumn = () => eventListenerRef.current.insertColumn();
+  
+      setConfig([
+        {
+          mdiIcon: "mdi mdi-content-cut",
+          text: "Cut",
+          command: "Ctrl+X"
+        },
+        {
+          mdiIcon: "mdi mdi-arrange-bring-forward",
+          text: "Copy",
+          command: "Ctrl+C"
+        },
+        {
+          mdiIcon: "mdi mdi-clipboard",
+          text: "Paste",
+          command: "Ctrl+V"
+        },
+        null,
+        {
+          text: "Insert row",
+          handleClick: handleInsertRow
+        },
+        {
+          text: "Insert column",
+          handleClick: handleInsertColumn
+        },
+        {
+          text: "Delete cells",
+          children: [
+            {
+              text: "Shift up",
+              handleClick: () => {}
+            },
+            {
+              text: "Shift left",
+              handleClick: () => {}
+            }
+          ]
+        }
+      ]);
+    } 
   });
 
-  const handleInsertRow = () => EventListenerInstance.insertRow();
-  const handleInsertColumn = () => EventListenerInstance.insertColumn();
-
-  return (
-    <ContextMenu
-      id="sheetWindowContainer"
-      className="contextMenu"
-    >
-      <SheetContextMenuItem
-        mdiIcon="mdi mdi-content-cut"
-        text="Cut"
-        command="Ctrl+X"
-      />
-      <SheetContextMenuItem
-        mdiIcon="mdi mdi-arrange-bring-forward"
-        text="Copy"
-        command="Ctrl+C"
-      />
-      <SheetContextMenuItem
-        mdiIcon="mdi mdi-clipboard"
-        text="Paste"
-        command="Ctrl+V"
-      />
-      <hr className="menuDivider"/>
-      <SheetContextMenuItem
-        text="Insert row"
-        handleClick={handleInsertRow}
-      />
-      <SheetContextMenuItem
-        text="Insert column"
-        handleClick={handleInsertColumn}
-      />
-    </ContextMenu>
-  );
+  return <ContextMenuContent config={config}/>;
 };
 
 export default SheetContextMenu;

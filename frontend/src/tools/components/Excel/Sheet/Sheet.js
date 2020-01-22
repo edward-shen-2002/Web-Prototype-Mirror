@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import { connect } from "react-redux";
 
@@ -130,6 +130,7 @@ const SheetWindow = ({
       {({ height, width }) => (
         <ContextMenuTrigger 
           id="sheetWindowContainer"
+          holdToDisplay={1000}
           // ! Issue here
           // disable={isEditMode}
         >
