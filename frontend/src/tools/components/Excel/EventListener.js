@@ -1574,18 +1574,9 @@ class EventRedux extends PureComponent {
     if(shouldScroll) this._scrollTo(newY, newX);
   }
 
-  deleteCellsShiftUp() {
-    const { 
-      stagnantSelectionAreas,
-      activeCellPosition,
-      sheetCellData,
-      handleUpdateSheetCellData
-    } = this.props;
+  _getLastArea(stagnantSelectionAreas, activeCellPosition) {
     let area;
-    let newSheetCellData = {};
-
     const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
-
     if(stagnantSelectionAreasLength) {
       area  = stagnantSelectionAreas[ stagnantSelectionAreasLength - 1 ];
     } else {
@@ -1593,7 +1584,19 @@ class EventRedux extends PureComponent {
       area = { y1: y, y2: y, x1: x, x2: x };
     }
 
-    const { y1, y2, x1, x2 } = area;
+    return area;
+  }
+
+  deleteCellsShiftUp() {
+    const { 
+      stagnantSelectionAreas,
+      activeCellPosition,
+      sheetCellData,
+      handleUpdateSheetCellData
+    } = this.props;
+    let newSheetCellData = {};
+
+    const { y1, y2, x1, x2 } = this._getLastArea(stagnantSelectionAreas, activeCellPosition);
 
     const shiftOffsetY = Math.abs(y1 - y2);
     const shiftStartY = Math.min(y1, y2);
@@ -1625,7 +1628,42 @@ class EventRedux extends PureComponent {
   }
 
   deleteCellsShiftLeft() {
+    const { 
+      stagnantSelectionAreas,
+      activeCellPosition,
+      sheetCellData,
+      handleUpdateSheetCellData
+    } = this.props;
 
+    let newSheetCellData = {};
+    const { y1, y2, x1, x2 } = this._getLastArea(stagnantSelectionAreas, activeCellPosition);
+
+    const shiftOffsetX = Math.abs(x1 - x2);
+    const shiftStartX = Math.min(x1, x2);
+    const shiftEndX = shiftStartX + shiftOffsetX + 1;
+
+    const rowStart = Math.min(y1, y2);
+    const rowEnd = Math.max(y1, y2);
+
+    for(let row in sheetCellData) {
+      const columns = sheetCellData[row];
+      if(row < rowStart || row > rowEnd) {
+        newSheetCellData[row] = columns;
+      } else {
+        for(let column in columns) {
+          if(column < shiftStartX) {
+            if(!newSheetCellData[row]) newSheetCellData[row] = {};
+            newSheetCellData[row][column] = sheetCellData[row][column];
+          } else if(column >= shiftEndX) {
+            if(!newSheetCellData[row]) newSheetCellData[row] = {};
+            const newColumnOffset = column - shiftOffsetX - 1;
+            newSheetCellData[row][newColumnOffset] = sheetCellData[row][column];
+          }
+        }
+      }
+    }
+
+    handleUpdateSheetCellData(newSheetCellData);
   }
 
   // ! Too much calculation? Performance is choppy
