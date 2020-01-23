@@ -31,7 +31,7 @@ const _init = async () => {
   // Initialize database, authentication, routes, etc ...
   await serverSetup(app, passport, { wipeDatabase: false, createDummyUser: true });
 
-  // Connects frontend build
+  // ! Connects frontend build -- not the desired behaviour but temporarily used to publish to pivotal one one route
   app.use("/", express.static(path.join(__dirname, "public")));
   if(process.env.NODE_ENV === "production") app.get('*', (_req, res) => res.sendFile(path.join(__dirname, 'public/index.html')));
   app.listen(app.get("port"), () => console.log(`App listening on port ${app.get("port")}`));
