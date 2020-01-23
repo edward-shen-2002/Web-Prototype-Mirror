@@ -33,11 +33,13 @@ const ObjectId = Schema.Types.ObjectId;
  * However, it is much more efficient than a flat list due to the fact that it acts as a multi-layer map and reduces the search results on every index layer.
  */
 
-let masterValueSchema = new Schema({
+const masterValueSchema = new Schema({
   organizationId: { type: ObjectId, required: true },
+  type: { type: String },
 
   year: { type: Number, required: true },
   quarter: { type: String },
+  form: { type: String },
   
   businessConceptId1: { type: ObjectId, required: true },
   businessConceptId2: { type: ObjectId, required: true },
