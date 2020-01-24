@@ -22,7 +22,15 @@ import { ActivityRoute } from "@tools/components/routes";
 import { ONLINE, OFFLINE } from "@constants/states";
 
 import { REST_AUTH_RECONNECT, HTTP_ERROR_INVALID_TOKEN, HTTP_ERROR_UNAUTHORIZED } from "@constants/rest";
-import { ROUTE_ROOT, ROUTE_USER_PROFILE, ROUTE_VERIFICATION, ROUTE_USER, ROUTE_PUBLIC, ROUTE_ADMIN_ROOT } from "@constants/routes";
+import { 
+  ROUTE_ROOT, 
+  ROUTE_USER_PROFILE, 
+  ROUTE_VERIFICATION, 
+  ROUTE_USER, 
+  ROUTE_PUBLIC, 
+  ROUTE_ADMIN_ROOT,
+  ROUTE_PUBLIC_LOGIN
+} from "@constants/routes";
 
 import Loading from "@tools/components/Loading";
 
@@ -83,7 +91,10 @@ const mapDispatchToProps = (dispatch) => ({
       });
   },
   handleSetReconnectOn: () => dispatch(enableReconnection()),
-  handleLogout: () => resetUserState(dispatch)
+  handleLogout: (history) => {
+    resetUserState(dispatch);
+    history.push(ROUTE_PUBLIC_LOGIN);
+  }
 });
 
 let AppContent = ({
@@ -118,7 +129,7 @@ let App = ({
   useMemo(() => {
     const authErrorMiddleware = (error) => {
       const { response: { status } } = error;
-      if(status === HTTP_ERROR_INVALID_TOKEN) handleLogout();
+      if(status === HTTP_ERROR_INVALID_TOKEN) handleLogout(history);
       return Promise.reject(error);
     };
 
@@ -131,7 +142,7 @@ let App = ({
 
       // TODO : Add values to error to notify the original caller that the component will unmount and async calls should be prevented only when certain conditions occur (unauthorized, invalid token, etc...)
       if(status === HTTP_ERROR_INVALID_TOKEN) {
-        handleLogout();
+        handleLogout(history);
       } else if(status === HTTP_ERROR_UNAUTHORIZED) {
         handleSetReconnectOn();
         history.push(ROUTE_USER_PROFILE);
