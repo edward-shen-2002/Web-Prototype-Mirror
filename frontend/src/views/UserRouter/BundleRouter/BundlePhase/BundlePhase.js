@@ -101,8 +101,16 @@ const BundlePhaseActions = ({ phase, handleSave, handleSubmit, handleCancel }) =
   </ButtonGroup>
 );
 
-const BundlePhaseMisc = ({ phase, status, createdAt, year, quarter }) => (
+const BundlePhaseMisc = ({ 
+  type,
+  phase, 
+  status, 
+  createdAt, 
+  year, 
+  quarter 
+}) => (
   <div className="bundleMisc">
+    <DisabledLabledTextField label="Type" text={type}/>
     <DisabledLabledTextField label="Phase" text={phase}/>
     <DisabledLabledTextField label="Status" text={status}/>
     <DisabledLabledTextField label="Created At" text={createdAt}/>
@@ -163,6 +171,7 @@ const BundlePhase = ({
 }) => {
   const [ isDataFetched, setIsDataFetched ] = useState(false);
   const [ name, setName ] = useState("");
+  const [ type, setType ] = useState("");
   const [ year, setYear ] = useState("");
   const [ quarter, setQuarter ] = useState("");
   const [ status, setStatus ] = useState("");
@@ -245,6 +254,7 @@ const BundlePhase = ({
         .then(({ data: { data: { bundle } } }) => {
           const { 
             name,
+            type,
             year,
             quarter,
             status,
@@ -256,6 +266,7 @@ const BundlePhase = ({
           } = bundle;
           
           setName(name);
+          setType(type);
           setYear(year);
           setQuarter(quarter);
           setStatus(status);
@@ -290,6 +301,7 @@ const BundlePhase = ({
         phase={phase}
       />
       <BundlePhaseMisc 
+        type={type}
         phase={phase}
         status={status}
         createdAt={createdAt}

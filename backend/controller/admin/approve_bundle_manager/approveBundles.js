@@ -1,3 +1,6 @@
+import pako from "pako";
+
+
 import { ROUTE_ADMIN_BUNDLES_WORKFLOW } from "../../../constants/rest";
 import { HTTP_ERROR_NOT_FOUND } from "../../../constants/rest";
 import { MESSAGE_ERROR_NOT_FOUND } from "../../../constants/messages";
@@ -5,6 +8,7 @@ import { MESSAGE_ERROR_NOT_FOUND } from "../../../constants/messages";
 const approveBundles = ({ 
   router, 
   OrganizationBundleModel,
+  BusinessConceptModel,
   MasterValueModel 
 }) => {
   router.get(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/general`, (req, res, next) => {
@@ -46,23 +50,84 @@ const approveBundles = ({
       .catch(next);
   });
 
-  router.put(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/:_id/submit`, (req, res, next) => {
+  router.put(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/:_id/submit`, async (req, res, next) => {
     const { _id } = req.params;
     const { bundle: { approverNotes } } = req.body;
 
-    OrganizationBundleModel.findOneAndUpdate({ _id, phase: "approve" }, { approverNotes, phase: "finished", status: "APPROVED" })
-      .then((bundle) => {
-        if(bundle) {
-          // ! Populate master table !
-          
+    try {
+      // const bundle = await OrganizationBundleModel.findOneAndUpdate({ _id, phase: "approve" }, { approverNotes, phase: "finished", status: "APPROVED" });
+      const bundle = await OrganizationBundleModel.findOne({ _id, phase: "approve" });
 
+      if(!bundle) return res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_NOT_FOUND });
 
-          res.end();
-        } else {
-          res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_NOT_FOUND });
-        }
-      })
-      .catch(next);
+      // ! Remove existing data with parameters?
+      const { 
+        organization: { _id: organizationId }, 
+        year, 
+        quarter, 
+        type, 
+        workbooksData: { names, ids: workbooksIds, workbooks }
+      } = bundle;
+      
+      await MasterValueModel.deleteMany({ organizationId, year, quarter, type });
+
+      let dataToInsert = [];
+
+      for(let workbookId of workbooksIds) {
+        const workbook = workbooks[workbookId];
+
+        const { sheetNames, workbookData } = workbook;
+
+        for(let sheetName of sheetNames) {
+          const sheetData = JSON.parse(pako.inflate(workbookData[sheetName], { to: "string" }));
+          const { 
+            sheetCellData
+          } = sheetData;
+
+          let attributes = {};
+          let categories = {};
+
+          // Get attributes
+          const firstRow = sheetCellData[1];
+          if(firstRow) {
+            for(let column in firstRow) {
+              if(column > 1) {
+                const { value } = firstRow[column];
+  
+                if(+value === +value) attributes[column] = value;
+              }
+            }
+          }
+
+          // Get categories
+          for(let row in sheetCellData) {
+            if(row > 1) {
+              const firstColumn = sheetCellData[row][1];
+              if(firstColumn) {
+                const { value } = firstColumn;
+
+                if(+value === +value) categories[row] = value;
+              }
+            }
+          }
+
+          // Check if attribute/category id exists
+          // ! inform users if it doesn't?
+          const definedAttributes = await BusinessConceptModel.find({ id: { $in: Object.values(attributes) }});
+          const definedCategories = await BusinessConceptModel.find({ id: { $in: Object.values(categories) }});
+
+          console.log(definedAttributes, definedCategories)
+          // ! Need to convert rich text to regular text
+
+        };
+      };
+
+      // res.json({ bIds })
+
+      res.end();
+    } catch(error) {
+      next(error);
+    }
   });
 
   router.put(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/:_id/return`, (req, res, next) => {

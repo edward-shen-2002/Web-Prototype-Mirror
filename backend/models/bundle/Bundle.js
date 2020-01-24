@@ -2,6 +2,7 @@ import { Schema, model } from "mongoose";
 
 let bundleSchema = new Schema({
   name: { type: String },
+  type: { type: String },
   templates: [],
   sectors: [],
   organizations: [],

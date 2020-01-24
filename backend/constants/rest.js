@@ -31,6 +31,8 @@ export const ROUTE_ADMIN_SECTORS = "/sectors";
 
 export const ROUTE_GROUP_ADMIN_TEMPLATE = `${ROUTE_GROUP_ADMIN}/template_manager`;
 export const ROUTE_ADMIN_TEMPLATES = "/templates";
+
+export const ROUTE_GROUP_ADMIN_BUSINESS_CONCEPT = `${ROUTE_GROUP_ADMIN}/business_concept_manager`;
 export const ROUTE_ADMIN_BUSINESS_CONCEPTS = "/business_concepts";
 
 export const ROUTE_GROUP_ADMIN_BUNDLE = `${ROUTE_GROUP_ADMIN}/bundle_manager`;

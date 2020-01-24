@@ -10,6 +10,7 @@ import {
   sectorRoleMiddleware,
   templateRoleMiddleware,
   bundleRoleMiddleware,
+  businessConceptRoleMiddleware,
 
   editBundleRoleMiddleware,
   reviewBundleRoleMiddleware,
@@ -55,7 +56,8 @@ import {
   ROUTE_GROUP_ADMIN_BUNDLE,
   ROUTE_GROUP_ADMIN_EDIT_BUNDLE,
   ROUTE_GROUP_ADMIN_REVIEW_BUNDLE,
-  ROUTE_GROUP_ADMIN_APPROVE_BUNDLE
+  ROUTE_GROUP_ADMIN_APPROVE_BUNDLE,
+  ROUTE_GROUP_ADMIN_BUSINESS_CONCEPT
 } from "../constants/rest";
 
 /**
@@ -148,7 +150,6 @@ const templateRoleRoutes = (helpers) => {
   router.use(templateRoleMiddleware());
 
   templateController({ ...helpers, router }); 
-  businessConceptController({ ...helpers, router }); 
 
   return router;
 };
@@ -193,6 +194,17 @@ const approveBundleRoleRoutes = (helpers) => {
   return router;
 };
 
+const businessConceptRoleRoutes = (helpers) => {
+  let router = new Router();
+
+  router.use(businessConceptRoleMiddleware());
+
+  businessConceptController({ ...helpers, router }); 
+  
+  return router;
+};
+
+
 // Routes are grouped to fully utilize shared middleware
 const setupRouteGroups = (helpers) => {
   console.log("REST: Setting up routes");
@@ -204,16 +216,17 @@ const setupRouteGroups = (helpers) => {
     app.use(ROUTE_GROUP_AUTH, authRoutes(helpers));
   
     app.use(ROUTE_GROUP_VERIFICATION, verificationRoutes(helpers));
-  
+    
     // Admin routes
+    // Worflow routes - edit/review/approve bundles
     app.use(ROUTE_GROUP_ADMIN, adminRoutes(helpers), generalErrorHandler());
     app.use(ROUTE_GROUP_ADMIN_USER, userRoleRoutes(helpers), generalErrorHandler());
     app.use(ROUTE_GROUP_ADMIN_ORGANIZATION, organizationRoleRoutes(helpers), generalErrorHandler());
     app.use(ROUTE_GROUP_ADMIN_SECTOR, sectorRoleRoutes(helpers), generalErrorHandler());
     app.use(ROUTE_GROUP_ADMIN_TEMPLATE, templateRoleRoutes(helpers), generalErrorHandler());
     app.use(ROUTE_GROUP_ADMIN_BUNDLE, bundleRoleRoutes(helpers), generalErrorHandler());
+    app.use(ROUTE_GROUP_ADMIN_BUSINESS_CONCEPT, businessConceptRoleRoutes(helpers), generalErrorHandler());
 
-    // Worflow routes - edit/review/approve bundles
     app.use(ROUTE_GROUP_ADMIN_EDIT_BUNDLE, editBundleRoleRoutes(helpers), generalErrorHandler());
     app.use(ROUTE_GROUP_ADMIN_REVIEW_BUNDLE, reviewBundleRoleRoutes(helpers), generalErrorHandler());
     app.use(ROUTE_GROUP_ADMIN_APPROVE_BUNDLE, approveBundleRoleRoutes(helpers), generalErrorHandler());

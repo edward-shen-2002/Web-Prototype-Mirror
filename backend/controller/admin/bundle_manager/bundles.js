@@ -33,6 +33,7 @@ const bundles = ({
 
     if(!newBundle) newBundle = { 
       name: uniqid(),
+      type: "",
       quarter: "Q1",
       year: new Date().getFullYear()
     };
@@ -94,7 +95,7 @@ const bundles = ({
   router.put(`${ROUTE_ADMIN_BUNDLES}/publish`, async (req, res, next) => {
     const { newBundle } = req.body;
 
-    const { name, templates, sectors, organizations, year, quarter } = newBundle;
+    const { name, type, templates, sectors, organizations, year, quarter } = newBundle;
 
     const { _id: bundleId } = newBundle;
 
@@ -135,21 +136,25 @@ const bundles = ({
         const possibleDuplication = await OrganizationBundleModel.find({ "organization._id": organizationId, bundleId });
 
         if(possibleDuplication.length) {
-          await OrganizationBundleModel.findOneAndUpdate({ 
+          await OrganizationBundleModel.findOneAndUpdate(
+            { 
               bundleId
             }, 
             {
               name, 
+              type,
               // ! Removed for now since user data may be lost!
               workbooksData: possibleDuplication.workbooksData ? undefined : workbooksData, 
               organization,
               year,
               quarter
-            });
+            }
+          );
         } else {
           await OrganizationBundleModel.create({ 
             bundleId,
             name, 
+            type,
             workbooksData, 
             organization,
             year,

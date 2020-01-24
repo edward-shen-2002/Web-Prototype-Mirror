@@ -2,7 +2,9 @@ import mongoose from "mongoose";
 
 import { DATABASE_KEY } from "../config/database";
 
-import { ROLE_LEVEL_ADMIN } from "../constants/roles";
+import { 
+  ADMIN_ROLES
+} from "../constants/roles";
 
 /**
  * MongoDB set up.
@@ -81,20 +83,6 @@ const setupMongoose = async (options, {
 
       let sampleOrganization = await OrganizationModel.findOneAndUpdate({ code: sampleOrganizationData.code }, sampleOrganizationData, { new: true, upsert: true });
 
-      const adminRoleControlConfig = { scope: ROLE_LEVEL_ADMIN, sectors: [], organizations: [] };
-
-      const fullAdminControlRoles = {
-        TEMPLATE_MANAGER: { ...adminRoleControlConfig }, 
-        BUNDLE_MANAGER: { ...adminRoleControlConfig }, 
-        USER_MANAGER: { ...adminRoleControlConfig }, 
-        ORGANIZATION_MANAGER: { ...adminRoleControlConfig }, 
-        SECTOR_MANAGER: { ...adminRoleControlConfig }, 
-        SYSTEM_MANAGER: { ...adminRoleControlConfig },
-        EDIT_BUNDLE_MANAGER: { ...adminRoleControlConfig },
-        REVIEW_BUNDLE_MANAGER: { ...adminRoleControlConfig },
-        APPROVE_BUNDLE_MANAGER: { ...adminRoleControlConfig }
-      };
-
       let userOrganizations = {};
 
       userOrganizations[sampleOrganization._id] = {
@@ -110,7 +98,7 @@ const setupMongoose = async (options, {
         email: "sampleuser@hotmail.com", 
         password: "password123@", 
         organizations: userOrganizations,
-        roles: fullAdminControlRoles 
+        roles: ADMIN_ROLES 
       };
 
       let sampleUser = await UserModel.findOne({ username: "sampleuser" });

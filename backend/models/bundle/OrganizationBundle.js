@@ -3,6 +3,7 @@ import { Schema, model } from "mongoose";
 let organizationBundleSchema = new Schema({
   bundleId: { type: Schema.Types.ObjectId, ref: "Bundle" },
   name: { type: String },
+  type: { type: String },
   workbooksData: {},
   organization: {},
   year: { type: Number },
