@@ -1,9 +1,9 @@
 import pako from "pako";
 
-
 import { ROUTE_ADMIN_BUNDLES_WORKFLOW } from "../../../constants/rest";
 import { HTTP_ERROR_NOT_FOUND } from "../../../constants/rest";
 import { MESSAGE_ERROR_NOT_FOUND } from "../../../constants/messages";
+import { getListDifference, isNumber } from "../../../tools/misc";
 
 const approveBundles = ({ 
   router, 
@@ -73,19 +73,24 @@ const approveBundles = ({
 
       let dataToInsert = [];
 
-      for(let workbookId of workbooksIds) {
+      const workbookCount = workbooksIds.length;
+
+      for(let i = 0; i < workbookCount; i++) {
+        const workbookId = workbooksIds[i];
+        const workbookName = names[i];
+
         const workbook = workbooks[workbookId];
 
         const { sheetNames, workbookData } = workbook;
 
-        for(let sheetName of sheetNames) {
-          const sheetData = JSON.parse(pako.inflate(workbookData[sheetName], { to: "string" }));
+        for(let form of sheetNames) {
+          const sheetData = JSON.parse(pako.inflate(workbookData[form], { to: "string" }));
           const { 
             sheetCellData
           } = sheetData;
 
-          let attributes = {};
-          let categories = {};
+          let attributesMap = {};
+          let categoriesMap = {};
 
           // Get attributes
           const firstRow = sheetCellData[1];
@@ -94,7 +99,7 @@ const approveBundles = ({
               if(column > 1) {
                 const { value } = firstRow[column];
   
-                if(+value === +value) attributes[column] = value;
+                if(isNumber(value)) attributesMap[column] = value;
               }
             }
           }
@@ -106,23 +111,74 @@ const approveBundles = ({
               if(firstColumn) {
                 const { value } = firstColumn;
 
-                if(+value === +value) categories[row] = value;
+                if(isNumber(value)) categoriesMap[row] = value;
               }
             }
           }
 
-          // Check if attribute/category id exists
-          // ! inform users if it doesn't?
-          const definedAttributes = await BusinessConceptModel.find({ id: { $in: Object.values(attributes) }});
-          const definedCategories = await BusinessConceptModel.find({ id: { $in: Object.values(categories) }});
+          const attributes = Object.values(attributesMap);
+          const categories = Object.values(categoriesMap);
 
-          console.log(definedAttributes, definedCategories)
-          // ! Need to convert rich text to regular text
+          // ! Check if attribute/category id exists and inform users if it doesn't
+          const definedAttributes = (
+            await BusinessConceptModel.find({ id: { $in: attributes }})
+              .select("id")
+          ).map(({ id }) => id);
 
+          const definedCategories = (
+            await BusinessConceptModel.find({ id: { $in: categories }})
+              .select("id")
+          ).map(({ id }) => id);
+
+          const invalidAttributes = getListDifference(definedAttributes, attributes);
+          const invalidCategories = getListDifference(definedCategories, categories);
+
+          // ! Quadratic run time - optimize later
+          // Exclude rows without defined attributes/categories
+          for(let row in attributesMap) {
+            if(invalidAttributes.includes(attributesMap[row])) delete attributesMap[row];
+          }
+
+          for(let column in categoriesMap) {
+            if(invalidCategories.includes(categoriesMap[column])) delete categoriesMap[column];
+          }
+
+          // The remaining attributes/categories are the potential valid pairing
+          // Is it possible to have a pair of similar concepts? ie (budget, budget)?
+          // Column might not exist. Looping through rows ensures that undefined rows with column concept are not visited
+          for(let row in categoriesMap) {
+            const rowData = sheetCellData[row];
+            const businessConceptId1 = categoriesMap[row];
+            for(let column in attributesMap) {
+              // Cell value might be rich text!
+              const cellData = rowData[column];
+              
+              if(cellData) {
+                const { value } = cellData;
+                
+                // Cell value might not exist even though concept pairs are defined
+                // TODO : Convert rich text to plaintext
+                // Value could be prepopulate
+                if(value) {
+                  const businessConceptId2 = attributesMap[column];
+                  dataToInsert.push({
+                    organizationId,
+                    type: workbookName,
+                    year,
+                    quarter,
+                    form,
+                    businessConceptId1,
+                    businessConceptId2,
+                    value
+                  });
+                }
+              }
+            }
+          }
         };
       };
 
-      // res.json({ bIds })
+      await MasterValueModel.create(dataToInsert);
 
       res.end();
     } catch(error) {
