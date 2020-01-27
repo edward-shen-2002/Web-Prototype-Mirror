@@ -50,7 +50,6 @@ const ToolBar = ({
   return (
     <div className="toolBar">
 
-      {type === "template" && <TemplateToolBarSection/>}
     </div>
   );
 };

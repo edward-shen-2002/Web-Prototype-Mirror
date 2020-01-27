@@ -5,7 +5,6 @@ import ToolBar from "./ToolBar";
 import FormulaBar from "./FormulaBar";
 import Sheet from "./Sheet";
 import SheetNavigator from "./SheetNavigator";
-import TemplateDialogue from "./dialogues/TemplateDialogue";
 
 import EventListener from "./EventListener";
 
@@ -62,9 +61,6 @@ const Excel = ({
         sheetContainerRef={sheetContainerRef}
         eventListenerRef={eventListenerRef}
       />
-
-      {/* Dialogues */}
-      {type === "template" && <TemplateDialogue excelRef={excelRef}/>}
     </div>
   );
 };
