@@ -37,7 +37,7 @@ import registrationController from "../controller/admin/user_manager/registratio
 import organizationController from "../controller/admin/organization_manager/organizations";
 import sectorController from "../controller/admin/sector_manager/sectors";
 import templateController from "../controller/admin/template_manager/templates";
-import businessConceptController from "../controller/admin/template_manager/businessConcepts";
+import businessConceptController from "../controller/admin/business_concept_manager/businessConcepts";
 import bundleController from "../controller/admin/bundle_manager/bundles";
 
 import editBundleController from "../controller/admin/edit_bundle_manager/editBundles";

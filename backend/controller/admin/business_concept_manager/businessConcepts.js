@@ -8,7 +8,7 @@ import {
 } from "../../../constants/messages";
 
 const businessConcepts = ({ router, BusinessConceptModel }) => {
-  router.get(ROUTE_ADMIN_BUSINESS_CONCEPTS, (req, res, next) => {
+  router.get(ROUTE_ADMIN_BUSINESS_CONCEPTS, (_req, res, next) => {
     BusinessConceptModel.find({})
       .then((businessConcepts) => {
         res.json({ message: MESSAGE_SUCCESS_BUSINESS_CONCEPTS, data: { businessConcepts } });

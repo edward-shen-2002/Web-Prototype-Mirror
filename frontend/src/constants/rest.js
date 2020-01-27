@@ -31,10 +31,12 @@ export const REST_ADMIN_SECTORS = "/sectors";
 
 export const REST_GROUP_ADMIN_TEMPLATE = `${REST_GROUP_ADMIN}/template_manager`;
 export const REST_ADMIN_TEMPLATES = "/templates";
-export const REST_ADMIN_BUSINESS_CONCEPTS = "/business_concepts";
 
 export const REST_GROUP_ADMIN_BUNDLE = `${REST_GROUP_ADMIN}/bundle_manager`;
 export const REST_ADMIN_BUNDLES = "/bundles";
+
+export const REST_GROUP_ADMIN_BUSINESS_CONCEPT = `${REST_GROUP_ADMIN}/business_concept_manager`;
+export const REST_ADMIN_BUSINESS_CONCEPTS = "/business_concepts";
 
 export const REST_GROUP_ADMIN_EDIT_BUNDLE = `${REST_GROUP_ADMIN}/edit_bundle_manager`;
 export const REST_ADMIN_EDIT_BUNDLES = "/edit_bundles";
