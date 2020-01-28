@@ -27,14 +27,3 @@
 ## Important but Unprioritized (may be too time-consuming at the moment - work on it gradually)
 
 - [ ] Scope Checking
-
-## Finished
-
-- [x] Resize excel headers
-- [x] Compress inactive sheets
-- [x] Excel multiple selection
-- [x] Prevent application from mounting until user data is fetched
-- [x] Package creation
-- [x] Workflow features (editor, reviewer, approver)
-- [x] Add Excel type (template, edit, review, approve, ...) state to Redux store
-- [x] Create new sheet
