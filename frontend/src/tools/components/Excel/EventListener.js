@@ -1221,7 +1221,6 @@ class EventRedux extends PureComponent {
     }
   }
 
-  // ! TODO - Break squares, and deselect stagnant areas with the same area as the active selection
   mouseUp(ctrlKey) {
     const { 
       sheetGridRef,
@@ -1256,7 +1255,8 @@ class EventRedux extends PureComponent {
       handleResetRowResizeData,
       handledisableColumnResizeMode,
       handleUpdateSheetRowHeights,
-      handleUpdateSheetColumnWidths
+      handleUpdateSheetColumnWidths,
+      handleUpdateActiveCellPosition
     } = this.props;
 
     if(isSelectionMode) {
@@ -1266,9 +1266,84 @@ class EventRedux extends PureComponent {
         const { x1, y1, x2, y2 } = activeSelectionArea;
     
         if((x1 !== x2 || y1 !== y2) || ctrlKey) {
-          const newStagnantSelectionAreas = [ ...stagnantSelectionAreas, activeSelectionArea ];
+          const minX = Math.min(x1, x2);
+          const maxX = Math.max(x1, x2);
+
+          const minY = Math.min(y1, y2);
+          const maxY = Math.max(y1, y2);
+
+          // Cut the first superset stagnant selection area
+          const supersetIndex = stagnantSelectionAreas.findIndex(({ x1: sX1, x2: sX2, y1: sY1, y2: sY2 }) => {
+            const minSX = Math.min(sX1, sX2);
+            const maxSX = Math.max(sX1, sX2);
+
+            const minSY = Math.min(sY1, sY2);
+            const maxSY = Math.max(sY1, sY2);
+
+            const isXContained = minSX <= minX && maxX <= maxSX;
+            const isYContained = minSY <= minY && maxY <= maxSY;
+
+            return isXContained && isYContained; 
+          });
+
+          let newStagnantSelectionAreas;
+
+          if(supersetIndex >= 0) {
+            const { x1: sX1, x2: sX2, y1: sY1, y2: sY2 } = stagnantSelectionAreas[supersetIndex];
+            const minSX = Math.min(sX1, sX2);
+            const midLeftSX = minX;
+            const midRightSX = maxX;
+            const maxSX = Math.max(sX1, sX2);
+
+            const minSY = Math.min(sY1, sY2);
+            const midTopSY = minY;
+            const midBottomSY = maxY;
+            const maxSY = Math.max(sY1, sY2);
+
+            let newAreas = [];
+
+            if(minSY !== midTopSY) newAreas.push({ x1: minSX, x2: maxSX, y1: minSY, y2: midTopSY - 1 });
+            if(minSX !== midLeftSX) newAreas.push({ x1: minSX, x2: midLeftSX - 1, y1: midTopSY, y2: midBottomSY });
+            if(maxSX !== midRightSX) newAreas.push({ x1: midRightSX + 1, x2: maxSX, y1: midTopSY, y2: midBottomSY });
+            if(maxSY !== midBottomSY) newAreas.push({ x1: minSX, x2: maxSX, y1: midBottomSY + 1, y2: maxSY });
+
+            newStagnantSelectionAreas = [ 
+              ...stagnantSelectionAreas.slice(0, supersetIndex), 
+              ...newAreas, 
+              ...stagnantSelectionAreas.slice(supersetIndex + 1) 
+            ];
+
+            const isNewAreasPresent = newAreas.length;
+            const isNewStagnantAreasPresent = newStagnantSelectionAreas.length;
+
+            if(isNewAreasPresent || isNewStagnantAreasPresent) {
+              let focusedArea;
+              let activeCellSelectionareaIndex;
+
+              if(isNewAreasPresent) {
+                activeCellSelectionareaIndex = supersetIndex;
+                focusedArea = newAreas;
+              } else {
+                activeCellSelectionareaIndex = 0;
+                focusedArea = newStagnantSelectionAreas;
+              }
+
+              const { x1, x2, y1, y2 } = focusedArea[0];
+
+              const newX = Math.min(x1, x2);
+              const newY = Math.min(y1, y2);
+
+              handleUpdateActiveCellPosition({ x: newX, y: newY });
+              handleUpdateActiveCellSelectionAreaIndex(activeCellSelectionareaIndex);
+            }
+          } else {
+            newStagnantSelectionAreas = [ ...stagnantSelectionAreas, activeSelectionArea ];
+            handleUpdateActiveCellSelectionAreaIndex(newStagnantSelectionAreas.length - 1);
+          }
+
+          // ! Update also
           handleUpdateStagnantSelectionAreas(newStagnantSelectionAreas);
-          handleUpdateActiveCellSelectionAreaIndex(newStagnantSelectionAreas.length - 1);
+          
         } else {
           handleResetActiveCellSelectionAreaIndex();
         }
@@ -1935,6 +2010,15 @@ class EventRedux extends PureComponent {
     handleUpdateSheetNames([ ...sheetNames.slice(0, activeSheetNameIndex + 1), newSheetName, ...sheetNames.slice(activeSheetNameIndex + 1) ]);
 
     this.changeSheet(newSheetName);
+  }
+
+  setReadOnly() {
+
+  }
+
+  // ! TODO : selected headers
+  addComment() {
+
   }
 
   render() {
