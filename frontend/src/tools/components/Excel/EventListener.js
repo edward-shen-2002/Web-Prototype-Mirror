@@ -2077,6 +2077,73 @@ class EventRedux extends PureComponent {
     handleUpdateSheetCellData(newSheetCellData);
   }
 
+  unsetReadOnly() {
+    const {
+      sheetCellData,
+      stagnantSelectionAreas,
+      activeCellPosition,
+      handleUpdateSheetCellData
+    } = this.props;
+
+    const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
+
+    let newSheetCellData = cloneDeep(sheetCellData);
+
+    if(stagnantSelectionAreasLength) {
+      let areaPositionSet = {};
+      
+      stagnantSelectionAreas.forEach(({ x1, x2, y1, y2 }) => {
+        const minX = Math.min(x1, x2);
+        const maxX = Math.max(x1, x2);
+
+        const minY = Math.min(y1, y2);
+        const maxY = Math.max(y1, y2);
+
+        for(let row = minY; row <= maxY; row++) {
+          if(!areaPositionSet[row]) areaPositionSet[row] = {};
+
+          for(let column = minX; column <= maxX; column++) areaPositionSet[row][column] = true;
+        }
+      });
+    
+      for(let row in areaPositionSet) {
+        const columns = areaPositionSet[row];
+        
+        if(!newSheetCellData[row]) continue;
+
+        for(let column in columns) {
+          const cellData = newSheetCellData[row][column];
+
+          if(!cellData) continue;
+
+          delete newSheetCellData[row][column].isReadOnly;
+
+          if(isObjectEmpty(newSheetCellData[row][column])) {
+            delete newSheetCellData[row][column];
+
+            if(isObjectEmpty(newSheetCellData[row])) delete newSheetCellData[row];
+          }
+        }
+      }
+    } else {
+      const { x, y } = activeCellPosition;
+
+      if(newSheetCellData[y]) {
+        if(newSheetCellData[y][x]) {
+          delete newSheetCellData[y][x].isReadOnly;
+
+          if(isObjectEmpty(newSheetCellData[y][x])) {
+            delete newSheetCellData[y][x];
+
+            if(isObjectEmpty(newSheetCellData[y])) delete newSheetCellData[y];
+          }
+        }
+      }
+    }
+
+    handleUpdateSheetCellData(newSheetCellData);
+  }
+
   // ! TODO : selected headers
   addComment() {
 

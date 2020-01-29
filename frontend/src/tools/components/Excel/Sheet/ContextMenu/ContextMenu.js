@@ -76,6 +76,7 @@ const SheetContextMenu = ({
       const handleDeleteCellsShiftLeft = () => eventListenerRef.current.deleteCellsShiftLeft();
       const handleAddComment = () => eventListenerRef.current.addComment();
       const handleSetReadOnly = () => eventListenerRef.current.setReadOnly();
+      const handleUnsetReadOnly = () => eventListenerRef.current.unsetReadOnly();
   
       setConfig([
         // {
@@ -125,6 +126,10 @@ const SheetContextMenu = ({
         {
           text: "Set Read-Only",
           handleClick: handleSetReadOnly
+        },
+        {
+          text: "Unset Read-Only",
+          handleClick: handleUnsetReadOnly
         }
       ]);
     } 
