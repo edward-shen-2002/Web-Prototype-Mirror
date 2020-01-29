@@ -10,21 +10,13 @@ const ColumnDragger = ({
 }) => {
   const [ isIndicatorActive, setIsIndicatorActive ] = useState(false);
 
-  const handleMouseEnter = () => {
-    setIsIndicatorActive(true);
-  };
+  const handleMouseEnter = () => setIsIndicatorActive(true);
 
-  const handleMouseLeave = () => {
-    setIsIndicatorActive(false);
-  };
+  const handleMouseLeave = () => setIsIndicatorActive(false);
 
-  const handleClick = (event) => {
-    event.stopPropagation();
-  };
+  const handleClick = (event) => event.stopPropagation();
 
-  const handleMouseDown = () => {
-    handleColumnDragStart(column);
-  };
+  const handleMouseDown = () => handleColumnDragStart(column);
 
   return (
     <div 
@@ -49,7 +41,6 @@ const mapStateToProps = ({
   cursorType,
   isSelectionMode
 });
-
 
 let ColumnHeaderCell = ({ 
   style, 

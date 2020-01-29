@@ -12,6 +12,8 @@ import { connect } from "react-redux";
 
 import pako from "pako";
 
+import cloneDeep from "clone-deep";
+
 import { loadSheet } from "@tools/redux";
 
 import { extractReactAndWorkbookState } from "@tools/excel";
@@ -49,6 +51,9 @@ import { updateSheetRowCount } from "@actions/ui/excel/sheetRowCount";
 
 import { updateSheetHiddenRows } from "@actions/ui/excel/sheetHiddenRows";
 import { updateSheetHiddenColumns } from "@actions/ui/excel/sheetHiddenColumns";
+
+import { updateSelectedRows, resetSelectedRows } from "@actions/ui/excel/selectedRows";
+import { updateSelectedColumns, resetSelectedColumns } from "@actions/ui/excel/selectedColumns"; 
 
 import { updateSheetNames } from "@actions/ui/excel/sheetNames";
 
@@ -163,7 +168,13 @@ const mapDispatchToProps = (dispatch) => ({
 
   handleLoadSheet: (workbookData) => loadSheet(dispatch, workbookData),
   handleUpdateSheetNames: (sheetNames) => dispatch(updateSheetNames(sheetNames)),
-  handleUpdateActiveSheetName: (activeSheetName) => dispatch(updateActiveSheetName(activeSheetName))
+  handleUpdateActiveSheetName: (activeSheetName) => dispatch(updateActiveSheetName(activeSheetName)),
+
+  handleUpdateSelectedRows: (selectedRows) => dispatch(updateSelectedRows(selectedRows)),
+  handleResetSelectedRows: () => dispatch(resetSelectedRows()),
+  
+  handleUpdateSelectedColumns: (selectedColumns) => dispatch(updateSelectedColumns(selectedColumns)),
+  handleResetSelectedColumns: () => dispatch(resetSelectedColumns())
 });
 
 let EventListener = (props) => {
@@ -1600,7 +1611,19 @@ class EventRedux extends PureComponent {
   }
 
   enableEditMode() {
-    const { isEditMode, isSelectionMode, handleenableEditMode, handledisableSelectionMode } = this.props;
+    const { 
+      isEditMode, 
+      isSelectionMode, 
+      activeCellPosition,
+      sheetCellData,
+      handleenableEditMode, 
+      handledisableSelectionMode 
+    } = this.props;
+
+    const { x, y } = activeCellPosition;
+
+    if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].isReadOnly) return;
+
     if(!isEditMode) handleenableEditMode();
 
     if(isSelectionMode) handledisableSelectionMode();
@@ -2006,8 +2029,52 @@ class EventRedux extends PureComponent {
     this.changeSheet(newSheetName);
   }
 
+  // TODO
   setReadOnly() {
+    const {
+      sheetCellData,
+      stagnantSelectionAreas,
+      activeCellPosition,
+      handleUpdateSheetCellData
+    } = this.props;
 
+    const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
+
+    let newSheetCellData = cloneDeep(sheetCellData);
+
+    if(stagnantSelectionAreasLength) {
+      let areaPositionSet = {};
+      
+      stagnantSelectionAreas.forEach(({ x1, x2, y1, y2 }) => {
+        const minX = Math.min(x1, x2);
+        const maxX = Math.max(x1, x2);
+
+        const minY = Math.min(y1, y2);
+        const maxY = Math.max(y1, y2);
+
+        for(let row = minY; row <= maxY; row++) {
+          if(!areaPositionSet[row]) areaPositionSet[row] = {};
+
+          for(let column = minX; column <= maxX; column++) areaPositionSet[row][column] = true;
+        }
+      });
+    
+      for(let row in areaPositionSet) {
+        const columns = areaPositionSet[row];
+        
+        if(!newSheetCellData[row]) newSheetCellData[row] = {};
+
+        for(let column in columns) newSheetCellData[row][column] = { ...newSheetCellData[row][column], isReadOnly: true }; 
+      }
+    } else {
+      const { x, y } = activeCellPosition;
+
+      if(!newSheetCellData[y]) newSheetCellData[y] = {};
+      
+      newSheetCellData[y][x] = { ...newSheetCellData[y][x], isReadOnly: true }; 
+    }
+
+    handleUpdateSheetCellData(newSheetCellData);
   }
 
   // ! TODO : selected headers

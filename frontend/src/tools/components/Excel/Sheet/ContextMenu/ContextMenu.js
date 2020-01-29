@@ -74,24 +74,26 @@ const SheetContextMenu = ({
       const handleInsertColumn = () => eventListenerRef.current.insertColumn();
       const handleDeleteCellsShiftUp = () => eventListenerRef.current.deleteCellsShiftUp();
       const handleDeleteCellsShiftLeft = () => eventListenerRef.current.deleteCellsShiftLeft();
+      const handleAddComment = () => eventListenerRef.current.addComment();
+      const handleSetReadOnly = () => eventListenerRef.current.setReadOnly();
   
       setConfig([
-        {
-          mdiIcon: "mdi mdi-content-cut",
-          text: "Cut",
-          command: "Ctrl+X"
-        },
-        {
-          mdiIcon: "mdi mdi-arrange-bring-forward",
-          text: "Copy",
-          command: "Ctrl+C"
-        },
-        {
-          mdiIcon: "mdi mdi-clipboard",
-          text: "Paste",
-          command: "Ctrl+V"
-        },
-        null,
+        // {
+        //   mdiIcon: "mdi mdi-content-cut",
+        //   text: "Cut",
+        //   command: "Ctrl+X"
+        // },
+        // {
+        //   mdiIcon: "mdi mdi-arrange-bring-forward",
+        //   text: "Copy",
+        //   command: "Ctrl+C"
+        // },
+        // {
+        //   mdiIcon: "mdi mdi-clipboard",
+        //   text: "Paste",
+        //   command: "Ctrl+V"
+        // },
+        // null,
         {
           text: "Insert row",
           handleClick: handleInsertRow
@@ -112,6 +114,17 @@ const SheetContextMenu = ({
               handleClick: handleDeleteCellsShiftLeft
             }
           ]
+        },
+        null,
+        {
+          mdiIcon: "mdi mdi-comment",
+          text: "Comment",
+          command: "Ctrl+Alt+M",
+          handleClick: handleAddComment
+        },
+        {
+          text: "Set Read-Only",
+          handleClick: handleSetReadOnly
         }
       ]);
     } 

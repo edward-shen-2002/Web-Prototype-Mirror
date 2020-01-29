@@ -11,6 +11,8 @@ import activeSelectionArea from "./activeSelectionArea";
 import activeCellInputAutoFocus from "./activeCellInputAutoFocus";
 
 import stagnantSelectionAreas from "./stagnantSelectionAreas";
+import selectedRows from "./selectedRows";
+import selectedColumns from "./selectedColumns";
 import sheetNames from "./sheetNames";
 import scrollData from "./scrollData";
 import cursorType from "./cursorType";
@@ -63,6 +65,8 @@ const excelReducer = combineReducers({
   freezeColumnResizeData,
   
   stagnantSelectionAreas,
+  selectedRows,
+  selectedColumns,
   sheetNames,
   scrollData,
   cursorType,
