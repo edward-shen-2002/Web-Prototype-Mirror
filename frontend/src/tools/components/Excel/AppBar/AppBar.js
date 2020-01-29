@@ -60,14 +60,10 @@ let TemplateOptions = ({
   isTemplatePublished, 
   handleTogglePublish 
 }) => {
-  const handleImportId = () => eventListenerRef.current.importId();
-
-  const importIDStyle = { marginRight: 8, minWidth: 140 };
   const publishStyle = { minWidth: 140 };
 
   return (
     <div>
-      <PlaylistAddIconButton buttonStyle={importIDStyle} text="Import IDs" handleClick={handleImportId}/>
       <DoubleArrowIconButton buttonStyle={publishStyle} text={isTemplatePublished ? "Unpublish" : "Publish"} handleClick={handleTogglePublish}/>
     </div>
   );
