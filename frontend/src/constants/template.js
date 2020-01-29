@@ -2,13 +2,3 @@ export const DEFAULT_TEMPLATE_ID_ROW = 1;
 export const DEFAULT_TEMPLATE_VALUE_ROW = 14;
 export const DEFAULT_TEMPLATE_ID_COLUMN = 1;
 export const DEFAULT_TEMPLATE_VALUE_COLUMN = 6;
-
-
-export const DEFAULT_SHEET_TEMPLATE_ID_MAPPING = {
-  idRow: DEFAULT_TEMPLATE_ID_ROW,
-  valueRow: DEFAULT_TEMPLATE_VALUE_ROW,
-  isRowEnabled: true,
-  idColumn: DEFAULT_TEMPLATE_ID_COLUMN,
-  valueColumn: DEFAULT_TEMPLATE_VALUE_COLUMN,
-  isColumnEnabled: true
-};

@@ -33,7 +33,6 @@ import { updateSheetFreezeRowCount, resetSheetFreezeRowCount } from "@actions/ui
 import { updateSheetHiddenColumns, resetSheetHiddenColumns } from "@actions/ui/excel/sheetHiddenColumns";
 import { updateSheetHiddenRows, resetSheetHiddenRows } from "@actions/ui/excel/sheetHiddenRows";
 
-import { updateSheetTemplateIdMapping, resetSheetTemplateIdMapping } from "@actions/ui/excel/sheetTemplateIdMapping";
 import { updatePublishTemplate, unpublishTemplate } from "@actions/ui/excel/isTemplatePublished";
 import { updateTemplateId, resetTemplateId } from "@actions/ui/excel/templateId";
 
@@ -85,7 +84,6 @@ export const loadSheet = (
     sheetHiddenRows,
     stagnantSelectionAreas,
 
-    sheetTemplateIdMapping,
     isTemplatePublished,
     
     bundleId
@@ -109,7 +107,6 @@ export const loadSheet = (
   dispatch(updateSheetHiddenColumns(sheetHiddenColumns));
   dispatch(updateSheetHiddenRows(sheetHiddenRows));
 
-  if(sheetTemplateIdMapping) dispatch(updateSheetTemplateIdMapping(sheetTemplateIdMapping));
   if(isTemplatePublished !== undefined) dispatch(updatePublishTemplate(isTemplatePublished));
   if(templateId !== undefined) dispatch(updateTemplateId(templateId));
   if(bundleId !== undefined) dispatch(updateBundleId(bundleId));
@@ -155,7 +152,6 @@ export const resetSheet = (dispatch) => {
   dispatch(disableActiveCellInputAutoFocus());
 
   dispatch(unpublishTemplate());
-  dispatch(resetSheetTemplateIdMapping());
 
   dispatch(resetTemplateId());
   dispatch(resetBundleId());

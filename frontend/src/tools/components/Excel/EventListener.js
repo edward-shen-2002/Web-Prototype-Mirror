@@ -831,8 +831,6 @@ class EventRedux extends PureComponent {
       sheetHiddenColumns,
       sheetHiddenRows,
       stagnantSelectionAreas,
-      sheetTemplateIdMapping,
-
       handleLoadSheet
     } = this.props;
 
@@ -848,8 +846,7 @@ class EventRedux extends PureComponent {
       sheetRowHeights,
       sheetHiddenColumns,
       sheetHiddenRows,
-      stagnantSelectionAreas,
-      sheetTemplateIdMapping
+      stagnantSelectionAreas
     };
     
     let currentInactiveSheets = JSON.parse(sessionStorage.getItem("inactiveSheets"));
@@ -1341,7 +1338,6 @@ class EventRedux extends PureComponent {
             handleUpdateActiveCellSelectionAreaIndex(newStagnantSelectionAreas.length - 1);
           }
 
-          // ! Update also
           handleUpdateStagnantSelectionAreas(newStagnantSelectionAreas);
           
         } else {
@@ -1872,12 +1868,10 @@ class EventRedux extends PureComponent {
 
   saveTemplate(commonProps) {
     const {
-      sheetTemplateIdMapping,
       isTemplatePublished,
       templateId
     } = this.props;
 
-    commonProps.sheetTemplateIdMapping = sheetTemplateIdMapping;
     commonProps.isTemplatePublished = isTemplatePublished;
 
     const fileStates = extractReactAndWorkbookState(commonProps);

@@ -34,8 +34,6 @@ import {
   DEFAULT_EXCEL_SHEET_FREEZE_COLUMN_COUNT
 } from "@constants/excel";
 
-import { DEFAULT_SHEET_TEMPLATE_ID_MAPPING } from "@constants/template";
-
 import uniqid from "uniqid";
 
 var parser = new Parser();
@@ -846,7 +844,6 @@ const getMaxSheetRange = (sheetCellData) => {
 
 export const createBlankSheet = () => {
   const activeCellPosition = { x: 1, y: 1 };
-  const sheetTemplateIdMapping = DEFAULT_SHEET_TEMPLATE_ID_MAPPING;
   const sheetCellData = {};
   const sheetColumnCount = DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1;
   const sheetRowCount = DEFAULT_EXCEL_SHEET_ROW_COUNT + 1;
@@ -859,7 +856,6 @@ export const createBlankSheet = () => {
 
   return {
     activeCellPosition,
-    sheetTemplateIdMapping,
     sheetCellData,
     sheetColumnCount,
     sheetColumnWidths,
@@ -942,11 +938,9 @@ export const convertExcelFileToState = async (excelFile) => {
     }
 
     let activeCellPosition = { x: activeColumn, y: activeRow };
-    const sheetTemplateIdMapping = DEFAULT_SHEET_TEMPLATE_ID_MAPPING;
 
     const sheetContent = {
       activeCellPosition,
-      sheetTemplateIdMapping,
       sheetCellData,
       sheetColumnCount,
       sheetColumnWidths,
@@ -1015,7 +1009,6 @@ export const extractReactAndWorkbookState = (state) => {
     sheetHiddenColumns,
     sheetHiddenRows,
     stagnantSelectionAreas,
-    sheetTemplateIdMapping,
   } = state;
 
   const workbookData = getWorkbookData(activeSheetName, {
@@ -1030,7 +1023,6 @@ export const extractReactAndWorkbookState = (state) => {
     sheetHiddenColumns,
     sheetHiddenRows,
     stagnantSelectionAreas,
-    sheetTemplateIdMapping
   });
 
   return {
