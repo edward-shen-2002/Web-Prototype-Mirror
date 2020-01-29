@@ -4,10 +4,10 @@ import { isTokenSaved } from "@tools/storage";
 
 const defaultIsAppNavigationOpen = isTokenSaved();
 
-const showAppNavigation = () =>  true;
+const SHOW_APP_NAVIGATION = () =>  true;
 
-const hideAppNavigation = () => false;
+const HIDE_APP_NAVIGATION = () => false;
 
-const isAppNavigationOpenReducer = createReducer(defaultIsAppNavigationOpen, { SHOW_APP_NAVIGATION: showAppNavigation, HIDE_APP_NAVIGATION: hideAppNavigation });
+const isAppNavigationOpenReducer = createReducer(defaultIsAppNavigationOpen, { SHOW_APP_NAVIGATION, HIDE_APP_NAVIGATION });
 
 export default isAppNavigationOpenReducer;
