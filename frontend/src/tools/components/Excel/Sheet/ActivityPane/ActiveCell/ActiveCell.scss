@@ -17,3 +17,22 @@
     pointer-events: none;
   }
 }
+
+.comment {
+  display: flex;
+  flex-flow: column nowrap;
+
+  padding: 20px;
+  border: 1px solid green;
+  border-radius: 3px;
+
+  background-color: white;
+
+  &__label {
+    margin-bottom: 10px;
+  }
+
+  &__field {
+    margin-bottom: 10px;
+  }
+}

@@ -37,7 +37,7 @@ const SheetContextMenuItem = ({
 
 const SubMenuContent = ({ item }) => (
   <SubMenu className="subMenu" title={item.text}>
-      {<GeneratedContextMenu config={item.children}/>}
+    <GeneratedContextMenu config={item.children}/>
   </SubMenu>
 );
 
@@ -74,7 +74,7 @@ const SheetContextMenu = ({
       const handleInsertColumn = () => eventListenerRef.current.insertColumn();
       const handleDeleteCellsShiftUp = () => eventListenerRef.current.deleteCellsShiftUp();
       const handleDeleteCellsShiftLeft = () => eventListenerRef.current.deleteCellsShiftLeft();
-      const handleAddComment = () => eventListenerRef.current.addComment();
+      const handleOpenCommentDialog = () => eventListenerRef.current.openCommentDialog();
       const handleSetReadOnly = () => eventListenerRef.current.setReadOnly();
       const handleUnsetReadOnly = () => eventListenerRef.current.unsetReadOnly();
   
@@ -121,14 +121,14 @@ const SheetContextMenu = ({
           mdiIcon: "mdi mdi-comment",
           text: "Comment",
           command: "Ctrl+Alt+M",
-          handleClick: handleAddComment
+          handleClick: handleOpenCommentDialog
         },
         {
-          text: "Set Read-Only",
+          text: "Set read-only",
           handleClick: handleSetReadOnly
         },
         {
-          text: "Unset Read-Only",
+          text: "Unset read-only",
           handleClick: handleUnsetReadOnly
         }
       ]);

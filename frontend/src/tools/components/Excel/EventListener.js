@@ -59,6 +59,8 @@ import { updateSheetNames } from "@actions/ui/excel/sheetNames";
 
 import { updateActiveSheetName } from "@actions/ui/excel/activeSheetName";
 
+import { openCommentDialog, closeCommentDialog } from "@actions/ui/excel/isCommentDialogOpen";
+
 import { 
   isPositionEqualArea, 
   getScrollbarSize, 
@@ -96,10 +98,16 @@ import {
 } from "@constants/rest";
 
 const mapStateToProps = ({ 
+  domain: {
+    account
+  },
   ui: { 
     excel
   } 
-}) => excel;
+}) => ({
+  ...excel,
+  account
+});
 
 const mapDispatchToProps = (dispatch) => ({
   handleUpdateSheetRowCount: (sheetRowCount) => dispatch(updateSheetRowCount(sheetRowCount)),
@@ -174,7 +182,10 @@ const mapDispatchToProps = (dispatch) => ({
   handleResetSelectedRows: () => dispatch(resetSelectedRows()),
   
   handleUpdateSelectedColumns: (selectedColumns) => dispatch(updateSelectedColumns(selectedColumns)),
-  handleResetSelectedColumns: () => dispatch(resetSelectedColumns())
+  handleResetSelectedColumns: () => dispatch(resetSelectedColumns()),
+
+  handleOpenCommentDialog: () => dispatch(openCommentDialog()),
+  handleCloseCommentDialog: () => dispatch(closeCommentDialog())
 });
 
 let EventListener = (props) => {
@@ -1614,6 +1625,7 @@ class EventRedux extends PureComponent {
     const { 
       isEditMode, 
       isSelectionMode, 
+      isCommentDialogOpen,
       activeCellPosition,
       sheetCellData,
       handleenableEditMode, 
@@ -1622,7 +1634,7 @@ class EventRedux extends PureComponent {
 
     const { x, y } = activeCellPosition;
 
-    if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].isReadOnly) return;
+    if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].isReadOnly || isCommentDialogOpen) return;
 
     if(!isEditMode) handleenableEditMode();
 
@@ -1653,6 +1665,7 @@ class EventRedux extends PureComponent {
       handleUpdateActiveCellPosition, 
       handleUpdateActiveCellInputData 
     } = this.props;
+    
     const cellData = sheetCellData[newY] && sheetCellData[newY][newX] ? sheetCellData[newY][newX] : {};
 
     const { type, value, formula } = cellData;
@@ -2112,16 +2125,14 @@ class EventRedux extends PureComponent {
         if(!newSheetCellData[row]) continue;
 
         for(let column in columns) {
-          const cellData = newSheetCellData[row][column];
-
-          if(!cellData) continue;
-
-          delete newSheetCellData[row][column].isReadOnly;
-
-          if(isObjectEmpty(newSheetCellData[row][column])) {
-            delete newSheetCellData[row][column];
-
-            if(isObjectEmpty(newSheetCellData[row])) delete newSheetCellData[row];
+          if(newSheetCellData[row][column]) {
+            delete newSheetCellData[row][column].isReadOnly;
+  
+            if(isObjectEmpty(newSheetCellData[row][column])) {
+              delete newSheetCellData[row][column];
+  
+              if(isObjectEmpty(newSheetCellData[row])) delete newSheetCellData[row];
+            }
           }
         }
       }
@@ -2144,9 +2155,52 @@ class EventRedux extends PureComponent {
     handleUpdateSheetCellData(newSheetCellData);
   }
 
-  // ! TODO : selected headers
-  addComment() {
+  addComment(comment) {
+    const {
+      sheetCellData,
+      activeCellPosition,
+      account: {
+        _id: accountId,
+        firstName,
+        lastName
+      }
+    } = this.props;
 
+    const newSheetCellData = cloneDeep(sheetCellData);
+
+    const { x, y } = activeCellPosition;
+
+    if(!newSheetCellData[y]) newSheetCellData[y] = {};
+
+    if(!newSheetCellData[y][x]) newSheetCellData[y][x] = {};
+
+    if(!newSheetCellData[y][x].comments) newSheetCellData[y][x].comments = [];
+
+    const commentData = {
+      by: `${firstName} ${lastName}`,
+      accountId,
+      comment
+    };
+    
+    newSheetCellData[y][x].comments.push(commentData);
+  }
+
+  openCommentDialog() {
+    const {
+      isCommentDialogOpen,
+      handleOpenCommentDialog
+    } = this.props;
+
+    if(!isCommentDialogOpen) handleOpenCommentDialog();
+  }
+
+  closeCommentDialog() {
+    const { 
+      isCommentDialogOpen,
+      handleCloseCommentDialog
+    } = this.props;
+    
+    if(isCommentDialogOpen) handleCloseCommentDialog();
   }
 
   render() {

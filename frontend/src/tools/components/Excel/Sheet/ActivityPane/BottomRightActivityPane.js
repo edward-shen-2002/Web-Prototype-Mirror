@@ -98,12 +98,15 @@ const computeSelectionAreaStyle = (columnWidths, leftOffsets, rowHeights, topOff
   return customSelectionStyle;
 };
 
-const BottomRightActivityPane = ({ handleChangeActiveInputData }) => {
+const BottomRightActivityPane = ({ 
+  handleChangeActiveInputData,
+  handleCloseCommentDialog
+}) => {
   const isActiveCellInCorrectPane = (x, y, sheetFreezeColumnCount, sheetFreezeRowCount) => (x > sheetFreezeColumnCount && y > sheetFreezeRowCount);
   const isRelevantArea = (x1, y1, x2, y2, sheetFreezeColumnCount, sheetFreezeRowCount) => ((x1 > sheetFreezeColumnCount || x2 > sheetFreezeColumnCount) && (y1 > sheetFreezeRowCount || y2 > sheetFreezeRowCount));
   const isRelevantRowOffset = (rowOffset, freezeRowOffset) => rowOffset > freezeRowOffset;
   const isRelevantColumnOffset = (columnOffset, freezeColumnOffset) => columnOffset > freezeColumnOffset;
-
+  
   return (
     <Fragment>
       <CommonActivityPane
@@ -111,6 +114,7 @@ const BottomRightActivityPane = ({ handleChangeActiveInputData }) => {
         isRelevantArea={isRelevantArea}
         computeSelectionAreaStyle={computeSelectionAreaStyle}
         handleChangeActiveInputData={handleChangeActiveInputData}
+        handleCloseCommentDialog={handleCloseCommentDialog}
       />
     </Fragment>
   );
