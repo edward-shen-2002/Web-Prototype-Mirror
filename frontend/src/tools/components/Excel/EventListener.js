@@ -2196,11 +2196,15 @@ class EventRedux extends PureComponent {
 
   closeCommentDialog() {
     const { 
+      sheetContainerRef,
       isCommentDialogOpen,
       handleCloseCommentDialog
     } = this.props;
     
-    if(isCommentDialogOpen) handleCloseCommentDialog();
+    if(isCommentDialogOpen) {
+      handleCloseCommentDialog();
+      sheetContainerRef.current.focus();
+    }
   }
 
   render() {
