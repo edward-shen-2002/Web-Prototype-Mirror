@@ -40,7 +40,7 @@ import sheetFreezeRowCount from "./sheetFreezeRowCount";
 import sheetHiddenColumns from "./sheetHiddenColumns";
 import sheetHiddenRows from "./sheetHiddenRows";
 
-import isCommentDialogOpen from "./isCommentDialogOpen";
+import activeCellDialog from "./activeCellDialog";
 
 import contextMenuData from "./contextMenuData";
 import isTemplatePublished from "./isTemplatePublished";
@@ -71,7 +71,7 @@ const excelReducer = combineReducers({
   scrollData,
   cursorType,
 
-  isCommentDialogOpen,
+  activeCellDialog,
   isSelectionMode, 
   isEditMode,
   

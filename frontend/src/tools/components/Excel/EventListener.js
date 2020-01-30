@@ -59,7 +59,7 @@ import { updateSheetNames } from "@actions/ui/excel/sheetNames";
 
 import { updateActiveSheetName } from "@actions/ui/excel/activeSheetName";
 
-import { openCommentDialog, closeCommentDialog } from "@actions/ui/excel/isCommentDialogOpen";
+import { updateActiveCellDialog, resetActiveCellDialog } from "@actions/ui/excel/activeCellDialog";
 
 import { 
   isPositionEqualArea, 
@@ -184,8 +184,8 @@ const mapDispatchToProps = (dispatch) => ({
   handleUpdateSelectedColumns: (selectedColumns) => dispatch(updateSelectedColumns(selectedColumns)),
   handleResetSelectedColumns: () => dispatch(resetSelectedColumns()),
 
-  handleOpenCommentDialog: () => dispatch(openCommentDialog()),
-  handleCloseCommentDialog: () => dispatch(closeCommentDialog())
+  handleUpdateActiveCellDialog: (dialogType) => dispatch(updateActiveCellDialog(dialogType)),
+  handleResetActiveCellDialog: () => dispatch(resetActiveCellDialog())
 });
 
 let EventListener = (props) => {
@@ -2185,27 +2185,46 @@ class EventRedux extends PureComponent {
     newSheetCellData[y][x].comments.push(commentData);
   }
 
-  openCommentDialog() {
+  updateActiveCellDialog(type) {
     const {
-      isCommentDialogOpen,
-      handleOpenCommentDialog
+      activeCellDialog,
+      handleUpdateActiveCellDialog
     } = this.props;
 
-    if(!isCommentDialogOpen) handleOpenCommentDialog();
+    if(activeCellDialog !== type) handleUpdateActiveCellDialog(type);
   }
 
-  closeCommentDialog() {
-    const { 
-      sheetContainerRef,
-      isCommentDialogOpen,
-      handleCloseCommentDialog
+  resetActiveCellDialog() {
+    const {
+      activeCellDialog,
+      handleResetActiveCellDialog
     } = this.props;
-    
-    if(isCommentDialogOpen) {
-      handleCloseCommentDialog();
+
+    if(activeCellDialog) handleResetActiveCellDialog(null);
+  }
+
+  changeBusinessConcept(type, concept) {
+    const {
+      activeCellPosition,
+      sheetCellData,
+      handleUpdateSheetCellData
+    } = this.props;
+    const { x, y } = activeCellPosition;
+
+    let newSheetCellData = cloneDeep(sheetCellData);
+
+    if(type === "attribute") {
+      if(!newSheetCellData[1]) newSheetCellData[1] = {};
+
+      newSheetCellData[1][x] = { value: concept };
+    } else {
+      if(!newSheetCellData[y]) newSheetCellData[y] = {};
+
+      // ! Should we remove everything?
+      newSheetCellData[y][1] = { ...newSheetCellData[y][1], value: concept };
     }
 
-    sheetContainerRef.current.focus();
+    handleUpdateSheetCellData(newSheetCellData);
   }
 
   render() {

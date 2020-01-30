@@ -77,9 +77,11 @@ const SheetContextMenu = ({
       const handleInsertColumn = () => eventListenerRef.current.insertColumn();
       const handleDeleteCellsShiftUp = () => eventListenerRef.current.deleteCellsShiftUp();
       const handleDeleteCellsShiftLeft = () => eventListenerRef.current.deleteCellsShiftLeft();
-      const handleOpenCommentDialog = () => eventListenerRef.current.openCommentDialog();
+      const handleOpenCommentDialog = () => eventListenerRef.current.updateActiveCellDialog("comment");
       const handleSetReadOnly = () => eventListenerRef.current.setReadOnly();
       const handleUnsetReadOnly = () => eventListenerRef.current.unsetReadOnly();
+      const handleOpenAttributeDialog = () => eventListenerRef.current.updateActiveCellDialog("attribute");
+      const handleOpenCategoryDialog = () => eventListenerRef.current.updateActiveCellDialog("category");
   
       setConfig([
         // {
@@ -133,6 +135,14 @@ const SheetContextMenu = ({
         {
           text: "Unset read-only",
           handleClick: handleUnsetReadOnly
+        },
+        {
+          text: "Set attribute",
+          handleClick: handleOpenAttributeDialog
+        },
+        {
+          text: "Set category",
+          handleClick: handleOpenCategoryDialog
         }
       ]);
     } 

@@ -18,7 +18,7 @@
   }
 }
 
-.comment {
+.dialog {
   display: flex;
   flex-flow: column nowrap;
 
@@ -28,11 +28,28 @@
 
   background-color: white;
 
+  max-height: 300px;
+
   &__label {
     margin-bottom: 10px;
   }
 
   &__field {
     margin-bottom: 10px;
+  }
+}
+
+.businessConcepts {
+  max-width: 500px;
+  &__item {
+    display: flex;
+  }
+
+  &__id {
+    width: 100px;
+  }
+
+  &__value {
+
   }
 }

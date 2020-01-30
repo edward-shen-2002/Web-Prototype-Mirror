@@ -102,7 +102,9 @@ const SheetWindow = ({
   const handleColumnDragStart = (column) => EventListenerInstance.startColumnDrag(column);
   const handleScroll = (scrollData) => handleUpdateScrollData(scrollData); 
   const handleRightClickCell = (event, row, column) => EventListenerInstance.rightClickCell(event, row, column);
-  const handleCloseCommentDialog = () => EventListenerInstance.closeCommentDialog();
+  const handleCloseActiveCellDialog = () => EventListenerInstance.resetActiveCellDialog();
+
+  const handleChangeBusinessConcept = (type, concept) => EventListenerInstance.changeBusinessConcept(type, concept);
 
   const itemData = createItemData({
     sheetCellData, 
@@ -127,7 +129,8 @@ const SheetWindow = ({
   const commonSelectionPaneProps = { 
     sheetGridRef, 
     handleChangeActiveInputData,
-    handleCloseCommentDialog
+    handleCloseActiveCellDialog,
+    handleChangeBusinessConcept
   };
 
   return (

@@ -2,34 +2,37 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 
 import { connect } from "react-redux";
 
+import { publicAxios } from "@tools/rest";
+
+import { getTopOffsets, getLeftOffsets, getNormalRowHeight, getNormalColumnWidth } from "@tools/excel";
+
 import { Editor } from "draft-js";
 
 import Popover, { ArrowContainer } from "react-tiny-popover";
 
-import { getTopOffsets, getLeftOffsets, getNormalRowHeight, getNormalColumnWidth } from "@tools/excel";
-
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 
+import { REST_PUBLIC_DATA } from "@constants/rest";
+
 import "./ActiveCell.scss";
 
 const CommentDialogActions = ({
   handleSaveComment,
-  handleCloseCommentDialog
+  handleCloseActiveCellDialog
 }) => (
   <ButtonGroup fullWidth>
     <Button onClick={handleSaveComment}>Save</Button>
-    <Button onClick={handleCloseCommentDialog}>Cancel</Button>
+    <Button onClick={handleCloseActiveCellDialog}>Cancel</Button>
   </ButtonGroup>
 );
 
 const CommentDialog = ({
-  position,
-  targetRect,
-  popoverRect,
-  handleCloseCommentDialog
+  handleCloseActiveCellDialog
 }) => {
   const textFieldRef = useRef();
 
@@ -39,9 +42,144 @@ const CommentDialog = ({
 
   const handleClick = () => textFieldRef.current.focus();
 
-  const handleKeyDownCapture = (event) => event.stopPropagation();
+  return (
+    <div 
+      className="dialog" 
+      onClick={handleClick}
+    >
+      <Typography variant="h6" className="dialog__label">Comment</Typography>
+      <TextField 
+        inputRef={textFieldRef}
+        className="dialog__field" 
+        variant="outlined"
+        multiline={true}
+      />
+      <CommentDialogActions
+        handleCloseActiveCellDialog={handleCloseActiveCellDialog}
+      />
+    </div>
+  );
+};
 
+const BusinessConceptsItems = ({ 
+  businessConcepts, 
+  type,
+  handleChangeBusinessConcept 
+}) => businessConcepts.map(({ _id, id, value }) => {
+  const handleClick = () => handleChangeBusinessConcept(type, id);
+
+  return (
+    <ListItem
+      key={_id}
+      className="businessConcepts__item"
+      alignItems="flex-start"
+      button
+      onClick={handleClick}
+    >
+      <div className="businessConcepts__id">{id}</div>
+      <div className="businessConcepts__value">{value}</div>
+    </ListItem>
+  );
+});
+
+const BusinessConceptsList = ({ 
+  businessConcepts, 
+  type,
+  handleChangeBusinessConcept 
+}) => (
+  <List className="businessConcepts">
+    <BusinessConceptsItems 
+      type={type}
+      businessConcepts={businessConcepts}
+      handleChangeBusinessConcept={handleChangeBusinessConcept}
+    />
+  </List>
+);
+
+const filterString = (query, value) =>  value.toString().toLowerCase().includes(query.toLowerCase());
+
+const BusinessConceptDialog = ({
+  type,
+  handleChangeBusinessConcept
+}) => {
+  const [ businessConcepts, setBusinessConcepts ] = useState([]);
+  const [ filter, setFilter ] = useState("");
+
+  const [ isDataFetched, setIsDataFetched ] = useState(false);
+
+  useEffect(() => {
+    if(!isDataFetched) {
+      publicAxios.get(`${REST_PUBLIC_DATA}/business_concepts`)
+        .then(({ data: { data: { businessConcepts } } }) => {
+          setBusinessConcepts(businessConcepts);
+          setIsDataFetched(true);
+        })
+        .catch((error) => console.error(error));
+    }
+  }, [ isDataFetched ]);
+
+  const textFieldRef = useRef();
+
+  useEffect(() => {
+    textFieldRef.current.focus();
+  }, [ textFieldRef ]);
+
+  const filteredBusinessConcepts = businessConcepts.filter(({ id, value }) => filterString(filter, value) || filterString(filter, id));
+
+  const handleChangeFilter = ({ target: { value } }) => setFilter(value);
+  const handleClick = () => textFieldRef.current.focus();
+
+  return (
+    <div 
+      className="dialog"
+      onClick={handleClick}
+    >
+      <Typography variant="h6">Set {type}</Typography>
+      <TextField 
+        inputRef={textFieldRef}
+        onChange={handleChangeFilter}
+      />
+      <BusinessConceptsList 
+        type={type}
+        businessConcepts={filteredBusinessConcepts}
+        handleChangeBusinessConcept={handleChangeBusinessConcept}
+      />
+    </div>
+  );
+};
+
+const ActiveCellDialog = ({
+  activeCellDialog,
+  position,
+  targetRect,
+  popoverRect,
+  handleCloseActiveCellDialog,
+  handleChangeBusinessConcept
+}) => {
+  const handleKeyDownCapture = (event) => event.stopPropagation();
   const handleContextMenuCapture = (event) => event.stopPropagation();
+
+  const commonChildrenProps = { 
+    handleCloseActiveCellDialog 
+  };
+
+  let Children;
+
+  if(activeCellDialog === "comment") {
+    Children = (
+      <CommentDialog 
+        {...commonChildrenProps}
+      />
+    );
+  } else if(activeCellDialog === "attribute" || activeCellDialog === "category") {
+    Children = (
+      <BusinessConceptDialog 
+        {...commonChildrenProps} 
+        type={activeCellDialog} 
+        handleChangeBusinessConcept={handleChangeBusinessConcept}
+      />
+    );
+  } 
 
   return (
     <ArrowContainer
@@ -52,22 +190,11 @@ const CommentDialog = ({
       arrowSize={10}
       arrowStyle={{ opacity: 0.7 }}
     >
-      <div 
-        className="comment" 
-        onClick={handleClick}
+      <div
         onKeyDownCapture={handleKeyDownCapture}
         onContextMenuCapture={handleContextMenuCapture}
       >
-        <Typography variant="h6" className="comment__label">Comment</Typography>
-        <TextField 
-          inputRef={textFieldRef}
-          className="comment__field" 
-          variant="outlined"
-          multiline={true}
-        />
-        <CommentDialogActions
-          handleCloseCommentDialog={handleCloseCommentDialog}
-        />
+        {Children}
       </div>
     </ArrowContainer>
   );
@@ -123,20 +250,23 @@ const ActiveInputCell = ({
 
 const ActiveNormalCell = ({ 
   activeCellStyle,
-  isCommentDialogOpen,
-  handleCloseCommentDialog
+  activeCellDialog,
+  handleCloseActiveCellDialog,
+  handleChangeBusinessConcept
 }) => {
 
   return (
-    isCommentDialogOpen 
+    activeCellDialog 
       ? <Popover
-          isOpen={isCommentDialogOpen}
+          isOpen={activeCellDialog}
           position="right"
           transitionDuration={0}
           content={(props) => (
-            <CommentDialog 
+            <ActiveCellDialog 
               {...props}
-              handleCloseCommentDialog={handleCloseCommentDialog}
+              activeCellDialog={activeCellDialog}
+              handleCloseActiveCellDialog={handleCloseActiveCellDialog}
+              handleChangeBusinessConcept={handleChangeBusinessConcept}
             />  
           )}
         >
@@ -163,7 +293,7 @@ const mapStateToProps = ({
       activeCellPosition,
 
       isEditMode,
-      isCommentDialogOpen,
+      activeCellDialog,
 
       sheetFreezeColumnCount,
       sheetFreezeRowCount,
@@ -181,7 +311,7 @@ const mapStateToProps = ({
   activeCellPosition,
 
   isEditMode,
-  isCommentDialogOpen,
+  activeCellDialog,
 
   sheetFreezeColumnCount,
   sheetFreezeRowCount,
@@ -207,15 +337,15 @@ let ActiveCell = ({
 
   sheetColumnWidths,
   sheetRowHeights,
-  sheetCellData,
 
   isActiveCellInCorrectPane,
-  isCommentDialogOpen,
+  activeCellDialog,
 
   computeActiveCellStyle,
 
   handleChangeActiveInputData,
-  handleCloseCommentDialog
+  handleCloseActiveCellDialog,
+  handleChangeBusinessConcept
 }) => {
   const topOffsets = useMemo(() => getTopOffsets(sheetRowHeights, sheetRowCount), [ sheetRowHeights, sheetRowCount ]);
   const leftOffsets = useMemo(() => getLeftOffsets(sheetColumnWidths, sheetColumnCount), [ sheetColumnWidths, sheetColumnCount ]);
@@ -245,8 +375,9 @@ let ActiveCell = ({
   }
 
   useEffect(() => {
-    if(isCommentDialogOpen) handleCloseCommentDialog();
+    if(activeCellDialog) handleCloseActiveCellDialog();
   }, [ x, y ]);
+
 
   return (
     isEditMode 
@@ -258,8 +389,9 @@ let ActiveCell = ({
         />
       : <ActiveNormalCell 
           activeCellStyle={activeCellStyle}
-          isCommentDialogOpen={isCommentDialogOpen}
-          handleCloseCommentDialog={handleCloseCommentDialog}
+          activeCellDialog={activeCellDialog}
+          handleCloseActiveCellDialog={handleCloseActiveCellDialog}
+          handleChangeBusinessConcept={handleChangeBusinessConcept}
         />
   );
 };
