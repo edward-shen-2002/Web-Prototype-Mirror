@@ -140,8 +140,8 @@ const mapDispatchToProps = (dispatch) => ({
   handleUpdateActiveCellInputData: (value) => dispatch(updateActiveCellInputData(value)),
   handleResetActiveCellInputData: () => dispatch(resetActiveCellInputData()),
 
-  handleenableActiveCellInputAutoFocus: () => dispatch(enableActiveCellInputAutoFocus()),
-  handledisableActiveCellInputAutoFocus: () => dispatch(disableActiveCellInputAutoFocus()),
+  handleEnableActiveCellInputAutoFocus: () => dispatch(enableActiveCellInputAutoFocus()),
+  handleDisableActiveCellInputAutoFocus: () => dispatch(disableActiveCellInputAutoFocus()),
 
   handleUpdateCursorType: (cursorType) => dispatch(updateCursorType(cursorType)),
   handleResetCursorType: () => dispatch(resetCursorType()),
@@ -1859,13 +1859,13 @@ class EventRedux extends PureComponent {
   }
 
   setInputAutoFocusOn() {
-    const { activeCellInputAutoFocus, handleenableActiveCellInputAutoFocus } = this.props;
-    if(!activeCellInputAutoFocus) handleenableActiveCellInputAutoFocus();
+    const { activeCellInputAutoFocus, handleEnableActiveCellInputAutoFocus } = this.props;
+    if(!activeCellInputAutoFocus) handleEnableActiveCellInputAutoFocus();
   }
 
   setInputAutoFocusOff() {
-    const { activeCellInputAutoFocus, handledisableActiveCellInputAutoFocus } = this.props;
-    if(activeCellInputAutoFocus) handledisableActiveCellInputAutoFocus();
+    const { activeCellInputAutoFocus, handleDisableActiveCellInputAutoFocus } = this.props;
+    if(activeCellInputAutoFocus) handleDisableActiveCellInputAutoFocus();
   }
 
   startColumnDrag(column) {
@@ -2203,8 +2203,9 @@ class EventRedux extends PureComponent {
     
     if(isCommentDialogOpen) {
       handleCloseCommentDialog();
-      sheetContainerRef.current.focus();
     }
+
+    sheetContainerRef.current.focus();
   }
 
   render() {

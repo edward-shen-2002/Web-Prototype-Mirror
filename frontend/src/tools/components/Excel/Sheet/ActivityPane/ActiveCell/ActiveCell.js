@@ -128,23 +128,30 @@ const ActiveNormalCell = ({
 }) => {
 
   return (
-    <Popover
-      isOpen={isCommentDialogOpen}
-      position="right"
-      transitionDuration={0}
-      content={(props) => (
-        <CommentDialog 
-          {...props}
-          handleCloseCommentDialog={handleCloseCommentDialog}
-        />  
-      )}
-    >
-      <div 
-        key="inactive-cell-input" 
-        className="activeCell activeCell--normalMode" 
-        style={activeCellStyle}
-      />
-    </Popover>
+    isCommentDialogOpen 
+      ? <Popover
+          isOpen={isCommentDialogOpen}
+          position="right"
+          transitionDuration={0}
+          content={(props) => (
+            <CommentDialog 
+              {...props}
+              handleCloseCommentDialog={handleCloseCommentDialog}
+            />  
+          )}
+        >
+          <div 
+            key="inactive-cell-input" 
+            className="activeCell activeCell--normalMode" 
+            style={activeCellStyle}
+          />
+        </Popover>
+      : <div 
+          key="inactive-cell-input" 
+          className="activeCell activeCell--normalMode" 
+          style={activeCellStyle}
+        />
+
   );
 };
 

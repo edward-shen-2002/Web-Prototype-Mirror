@@ -58,7 +58,10 @@ const GeneratedContextMenu = ({ config }) => config.map((item) => {
 });
 
 const ContextMenuContent = ({ config }) => (
-  <ContextMenu id="sheetWindowContainer" className="contextMenu">
+  <ContextMenu 
+    id="sheetWindowContainer" 
+    className="contextMenu"
+  >
     <GeneratedContextMenu config={config}/>
   </ContextMenu>
 );
