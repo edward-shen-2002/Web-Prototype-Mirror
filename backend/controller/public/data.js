@@ -2,7 +2,8 @@ import { ROUTE_DATA } from "../../constants/rest";
 import { 
   MESSAGE_SUCCESS_ORGANIZATIONS, 
   MESSAGE_SUCCESS_SECTORS, 
-  MESSAGE_SUCCESS_TEMPLATES 
+  MESSAGE_SUCCESS_TEMPLATES, 
+  MESSAGE_SUCCESS_BUSINESS_CONCEPTS
 } from "../../constants/messages";
 
 // Public data available for all registered users/
@@ -10,6 +11,7 @@ import {
 const data = ({ 
   router, 
   OrganizationModel, 
+  BusinessConceptModel,
   SectorModel,
   TemplateModel
 }) => {
@@ -36,6 +38,15 @@ const data = ({
       .select("_id name")
       .then((templates) => {
         res.json({ message: MESSAGE_SUCCESS_TEMPLATES, data: { templates } });
+      })
+      .catch(next);
+  });
+
+  router.get(`${ROUTE_DATA}/business_concepts`, (_req, res, next) => {
+    BusinessConceptModel.find({})
+      .select("id value")
+      .then((businessConcepts) => {
+        res.json({ message: MESSAGE_SUCCESS_BUSINESS_CONCEPTS, data: { businessConcepts } });
       })
       .catch(next);
   });
