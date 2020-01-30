@@ -839,6 +839,7 @@ class EventRedux extends PureComponent {
   // ! TODO : Add parameters here for hyperlinks?
   changeSheet(sheetName) {
     const {
+      sheetGridRef,
       name,
       activeCellPosition,
       activeCellInputData,
@@ -887,6 +888,8 @@ class EventRedux extends PureComponent {
       // ! Update this for the new sheet!!
       activeCellInputData
     });
+
+    sheetGridRef.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
   }
 
   focusFormulaInput() {
@@ -1150,8 +1153,7 @@ class EventRedux extends PureComponent {
     handleUpdateSheetRowHeights(newRowHeights);
     handleUpdateSheetHiddenRows(newHiddenRows);
   }
-
-  // TODO
+  
   insertColumn() {
     const {
       sheetGridRef,
