@@ -1045,9 +1045,7 @@ class EventRedux extends PureComponent {
     const end = start + offset;
 
     for(let column in startData) {
-      const { styles } = startData[column];
-
-      if(styles) template[column] = { type: "normal", styles };
+      if(startData[column] && startData[column].styles) template[column] = { type: "normal", styles: startData[column].styles };
     }
 
     // Offset data downwards
