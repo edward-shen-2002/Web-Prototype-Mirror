@@ -30,7 +30,7 @@
 
   background-color: white;
 
-  max-height: 300px;
+  max-height: 500px;
 
   &__label {
     margin-bottom: 10px;
@@ -38,6 +38,16 @@
 
   &__field {
     margin-bottom: 10px;
+  }
+
+  &__list {
+    overflow: auto;
+  }
+
+  &__actions {
+    position: sticky;
+    bottom: 0;
+    background-color: white;
   }
 }
 
@@ -49,5 +59,12 @@
 
   &__id {
     width: 100px;
+  }
+}
+
+.comment {
+  &__icon {
+    // width: 30px;
+    // text-align: center;
   }
 }

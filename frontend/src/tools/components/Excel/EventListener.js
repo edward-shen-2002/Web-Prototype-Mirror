@@ -14,6 +14,8 @@ import pako from "pako";
 
 import cloneDeep from "clone-deep";
 
+import uniqid from "uniqid";
+
 import { loadSheet } from "@tools/redux";
 
 import { extractReactAndWorkbookState } from "@tools/excel";
@@ -2178,6 +2180,7 @@ class EventRedux extends PureComponent {
     if(!newSheetCellData[y][x].comments) newSheetCellData[y][x].comments = [];
 
     const commentData = {
+      id: uniqid(),
       by: `${firstName} ${lastName}`,
       accountId,
       comment

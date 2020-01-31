@@ -13,9 +13,14 @@ import Popover, { ArrowContainer } from "react-tiny-popover";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import TextField from "@material-ui/core/TextField";
+import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+
+import Avatar from "@material-ui/core/Avatar";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 import { REST_PUBLIC_DATA } from "@constants/rest";
 
@@ -25,10 +30,60 @@ const DialogActions = ({
   handleSaveComment,
   handleCloseActiveCellDialog
 }) => (
-  <ButtonGroup fullWidth>
-    <Button onClick={handleSaveComment}>Save</Button>
+  <ButtonGroup className="dialog__actions" fullWidth>
+    <Button onClick={handleSaveComment}>Add</Button>
     <Button onClick={handleCloseActiveCellDialog}>Cancel</Button>
   </ButtonGroup>
+);
+
+const PersonAvatar = () => (
+  <Avatar>
+    <AccountCircleIcon />
+  </Avatar>
+);
+
+const CommentListItemAvatar = () => (
+  <ListItemAvatar>
+    <PersonAvatar/>
+  </ListItemAvatar>
+);
+
+const CommentsListItems = ({ comments }) => comments.map(({ id, by, accountId, comment }) => {
+  return (
+    <ListItem key={id}>
+      <CommentListItemAvatar/>
+      <ListItemText primary={comment} secondary={by}/>
+    </ListItem>
+  );
+});
+
+const CommentsList = ({ comments }) => (
+  <List className="dialog__list">
+    <CommentsListItems comments={comments}/>
+  </List>
+);
+
+const CommentInputSection = ({
+  textFieldRef,
+  handleChange,
+  handleSaveComment,
+  handleCloseActiveCellDialog
+}) => (
+  <div className="dialog__actions">
+    <hr/>
+    <TextField 
+      inputRef={textFieldRef}
+      className="dialog__field" 
+      variant="outlined"
+      multiline={true}
+      onChange={handleChange}
+      fullWidth
+    />
+    <DialogActions
+      handleSaveComment={handleSaveComment}
+      handleCloseActiveCellDialog={handleCloseActiveCellDialog}
+    />
+  </div>
 );
 
 const CommentDialog = ({
@@ -55,15 +110,10 @@ const CommentDialog = ({
       onClick={handleClick}
     >
       <Typography variant="h6" className="dialog__label">Comment</Typography>
-      {JSON.stringify(comments, null, 1)}
-      <TextField 
-        inputRef={textFieldRef}
-        className="dialog__field" 
-        variant="outlined"
-        multiline={true}
-        onChange={handleChange}
-      />
-      <DialogActions
+      <CommentsList comments={comments}/>
+      <CommentInputSection 
+        textFieldRef={textFieldRef}
+        handleChange={handleChange}
         handleSaveComment={handleSaveComment}
         handleCloseActiveCellDialog={handleCloseActiveCellDialog}
       />

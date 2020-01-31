@@ -39,10 +39,12 @@ const EditableCell = ({
 
   let value;
   let type;
+  let comments;
 
   if(cellData) {
     value = cellData.value;
     type = cellData.type;
+    comments = cellData.comments
 
     if(type === "rich-text") {
       const firstFragmentStyle = getCellInlineStyle(cellData.styles);
@@ -65,6 +67,7 @@ const EditableCell = ({
       onContextMenu={handleRightClick}
     >
       {value}
+      {comments && comments.length && <div className="cell__comment"></div>}
     </div>
   );
 };
