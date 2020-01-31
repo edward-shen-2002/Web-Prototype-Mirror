@@ -11,7 +11,8 @@ const CommonActivityPane = ({
   computeSelectionAreaStyle,
   handleChangeActiveInputData,
   handleCloseActiveCellDialog,
-  handleChangeBusinessConcept
+  handleChangeBusinessConcept,
+  handleAddComment
 }) => (
   <Fragment>
     <ActiveCell
@@ -20,6 +21,7 @@ const CommonActivityPane = ({
       handleChangeActiveInputData={handleChangeActiveInputData}
       handleCloseActiveCellDialog={handleCloseActiveCellDialog}
       handleChangeBusinessConcept={handleChangeBusinessConcept}
+      handleAddComment={handleAddComment}
     />
     <ActiveSelectionArea
       isRelevantArea={isRelevantArea}

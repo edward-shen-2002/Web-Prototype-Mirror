@@ -32,15 +32,22 @@ const DialogActions = ({
 );
 
 const CommentDialog = ({
-  handleCloseActiveCellDialog
+  comments,
+  handleCloseActiveCellDialog,
+  handleAddComment
 }) => {
   const textFieldRef = useRef();
+  const [ comment, setComment ] = useState("");
 
   useEffect(() => {
     textFieldRef.current.focus();
   }, [ textFieldRef ]);
 
   const handleClick = () => textFieldRef.current.focus();
+  const handleSaveComment = () => {
+    handleAddComment(comment);
+  };
+  const handleChange = ({ target: { value } }) => setComment(value);
 
   return (
     <div 
@@ -48,13 +55,16 @@ const CommentDialog = ({
       onClick={handleClick}
     >
       <Typography variant="h6" className="dialog__label">Comment</Typography>
+      {JSON.stringify(comments, null, 1)}
       <TextField 
         inputRef={textFieldRef}
         className="dialog__field" 
         variant="outlined"
         multiline={true}
+        onChange={handleChange}
       />
       <DialogActions
+        handleSaveComment={handleSaveComment}
         handleCloseActiveCellDialog={handleCloseActiveCellDialog}
       />
     </div>
@@ -154,8 +164,10 @@ const ActiveCellDialog = ({
   position,
   targetRect,
   popoverRect,
+  comments,
   handleCloseActiveCellDialog,
-  handleChangeBusinessConcept
+  handleChangeBusinessConcept,
+  handleAddComment
 }) => {
   const handleKeyDownCapture = (event) => event.stopPropagation();
   const handleContextMenuCapture = (event) => event.stopPropagation();
@@ -170,6 +182,8 @@ const ActiveCellDialog = ({
     Children = (
       <CommentDialog 
         {...commonChildrenProps}
+        comments={comments}
+        handleAddComment={handleAddComment}
       />
     );
   } else if(activeCellDialog === "attribute" || activeCellDialog === "category") {
@@ -237,13 +251,13 @@ const ActiveInputCell = ({
       className="activeCell activeCell--editMode" 
       style={activeCellStyle}
       onContextMenuCapture={handleContextMenuCapture}
-      onKeyDownCapture={handleKeyDownCapture}
     >
       <Editor
         key="active-cell-input"
         ref={editorRef}
         editorState={editorState}
         onChange={handleChangeInputValue}
+        onKeyDownCapture={handleKeyDownCapture}
         readOnly={!activeCellInputAutoFocus}
         handleReturn={handleReturn}
       />
@@ -254,8 +268,10 @@ const ActiveInputCell = ({
 const ActiveNormalCell = ({ 
   activeCellStyle,
   activeCellDialog,
+  comments,
   handleCloseActiveCellDialog,
-  handleChangeBusinessConcept
+  handleChangeBusinessConcept,
+  handleAddComment
 }) => {
 
   return (
@@ -268,8 +284,10 @@ const ActiveNormalCell = ({
             <ActiveCellDialog 
               {...props}
               activeCellDialog={activeCellDialog}
+              comments={comments}
               handleCloseActiveCellDialog={handleCloseActiveCellDialog}
               handleChangeBusinessConcept={handleChangeBusinessConcept}
+              handleAddComment={handleAddComment}
             />  
           )}
         >
@@ -341,6 +359,8 @@ let ActiveCell = ({
   sheetColumnWidths,
   sheetRowHeights,
 
+  sheetCellData,
+
   isActiveCellInCorrectPane,
   activeCellDialog,
 
@@ -348,7 +368,8 @@ let ActiveCell = ({
 
   handleChangeActiveInputData,
   handleCloseActiveCellDialog,
-  handleChangeBusinessConcept
+  handleChangeBusinessConcept,
+  handleAddComment
 }) => {
   const topOffsets = useMemo(() => getTopOffsets(sheetRowHeights, sheetRowCount), [ sheetRowHeights, sheetRowCount ]);
   const leftOffsets = useMemo(() => getLeftOffsets(sheetColumnWidths, sheetColumnCount), [ sheetColumnWidths, sheetColumnCount ]);
@@ -380,6 +401,8 @@ let ActiveCell = ({
   activeCellStyle.maxWidth = (leftOffsets[sheetColumnCount - 1] + getNormalColumnWidth(sheetColumnWidths[sheetColumnCount])) - leftOffsets[x];
   activeCellStyle.maxHeight = (topOffsets[sheetRowCount - 1] + getNormalRowHeight(sheetRowHeights[sheetRowCount])) - topOffsets[y];
 
+  const comments = sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].comments ? sheetCellData[y][x].comments : [];
+
   useEffect(() => {
     if(activeCellDialog) handleCloseActiveCellDialog();
   }, [ x, y ]);
@@ -396,8 +419,10 @@ let ActiveCell = ({
       : <ActiveNormalCell 
           activeCellStyle={activeCellStyle}
           activeCellDialog={activeCellDialog}
+          comments={comments}
           handleCloseActiveCellDialog={handleCloseActiveCellDialog}
           handleChangeBusinessConcept={handleChangeBusinessConcept}
+          handleAddComment={handleAddComment}
         />
   );
 };

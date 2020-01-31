@@ -2163,7 +2163,8 @@ class EventRedux extends PureComponent {
         _id: accountId,
         firstName,
         lastName
-      }
+      },
+      handleUpdateSheetCellData
     } = this.props;
 
     const newSheetCellData = cloneDeep(sheetCellData);
@@ -2183,6 +2184,8 @@ class EventRedux extends PureComponent {
     };
     
     newSheetCellData[y][x].comments.push(commentData);
+    
+    handleUpdateSheetCellData(newSheetCellData);
   }
 
   updateActiveCellDialog(type) {
