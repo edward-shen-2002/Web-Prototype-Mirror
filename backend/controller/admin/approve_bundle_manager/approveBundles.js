@@ -69,8 +69,6 @@ const approveBundles = ({
         workbooksData: { names, ids: workbooksIds, workbooks }
       } = bundle;
       
-      await MasterValueModel.deleteMany({ organizationId, year, quarter, type });
-
       let dataToInsert = [];
 
       const workbookCount = workbooksIds.length;
@@ -78,6 +76,8 @@ const approveBundles = ({
       for(let i = 0; i < workbookCount; i++) {
         const workbookId = workbooksIds[i];
         const workbookName = names[i];
+
+        await MasterValueModel.deleteMany({ organizationId, year, quarter, type: workbookName });
 
         const workbook = workbooks[workbookId];
 
