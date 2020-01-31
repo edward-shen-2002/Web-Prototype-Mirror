@@ -120,7 +120,8 @@ const BottomLeftActivityPane = ({
   handleChangeActiveInputData,
   handleCloseActiveCellDialog,
   handleChangeBusinessConcept,
-  handleAddComment
+  handleAddComment,
+  handleDeleteComment
 }) => {
   const isActiveCellInCorrectPane = (x, y, sheetFreezeColumnCount, sheetFreezeRowCount) => (x <= sheetFreezeColumnCount && y > sheetFreezeRowCount);
   const isRelevantArea = (x1, y1, x2, y2, sheetFreezeColumnCount, sheetFreezeRowCount) => ((x1 <= sheetFreezeColumnCount || x2 <= sheetFreezeColumnCount) && (y1 > sheetFreezeRowCount || y2 > sheetFreezeRowCount));
@@ -138,6 +139,7 @@ const BottomLeftActivityPane = ({
         handleCloseActiveCellDialog={handleCloseActiveCellDialog}
         handleChangeBusinessConcept={handleChangeBusinessConcept}
         handleAddComment={handleAddComment}
+        handleDeleteComment={handleDeleteComment}
       />
       <RowHeaderSelection/>
       <RowHeaderIndicator 

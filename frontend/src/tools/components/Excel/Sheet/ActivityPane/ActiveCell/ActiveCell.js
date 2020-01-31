@@ -18,9 +18,13 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 
+import IconButton from "@material-ui/core/IconButton";
 import Avatar from "@material-ui/core/Avatar";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 import { REST_PUBLIC_DATA } from "@constants/rest";
 
@@ -42,24 +46,48 @@ const PersonAvatar = () => (
   </Avatar>
 );
 
+const DeleteIconButton = ({ handleClick }) => (
+  <IconButton onClick={handleClick}>
+    <DeleteForeverIcon/>
+  </IconButton>
+);
+
 const CommentListItemAvatar = () => (
   <ListItemAvatar>
     <PersonAvatar/>
   </ListItemAvatar>
 );
 
-const CommentsListItems = ({ comments }) => comments.map(({ id, by, accountId, comment }) => {
+const CommentActions = ({ handleRemove }) => (
+  <ListItemSecondaryAction>
+    <DeleteIconButton handleClick={handleRemove}/>
+  </ListItemSecondaryAction>
+);
+
+const CommentsListItems = ({ 
+  comments,
+  handleRemoveComment
+}) => comments.map(({ id, by, accountId, comment }) => {
+  const handleRemove = () => handleRemoveComment(id, accountId);
+
   return (
     <ListItem key={id}>
       <CommentListItemAvatar/>
       <ListItemText primary={comment} secondary={by}/>
+      <CommentActions handleRemove={handleRemove}/>
     </ListItem>
   );
 });
 
-const CommentsList = ({ comments }) => (
+const CommentsList = ({ 
+  comments,
+  handleRemoveComment 
+}) => (
   <List className="dialog__list">
-    <CommentsListItems comments={comments}/>
+    <CommentsListItems 
+      comments={comments}
+      handleRemoveComment={handleRemoveComment}
+    />
   </List>
 );
 
@@ -89,7 +117,8 @@ const CommentInputSection = ({
 const CommentDialog = ({
   comments,
   handleCloseActiveCellDialog,
-  handleAddComment
+  handleAddComment,
+  handleDeleteComment
 }) => {
   const textFieldRef = useRef();
   const [ comment, setComment ] = useState("");
@@ -99,9 +128,8 @@ const CommentDialog = ({
   }, [ textFieldRef ]);
 
   const handleClick = () => textFieldRef.current.focus();
-  const handleSaveComment = () => {
-    handleAddComment(comment);
-  };
+  const handleSaveComment = () => handleAddComment(comment);
+  const handleRemoveComment = (commentId) => handleDeleteComment(commentId);
   const handleChange = ({ target: { value } }) => setComment(value);
 
   return (
@@ -110,7 +138,10 @@ const CommentDialog = ({
       onClick={handleClick}
     >
       <Typography variant="h6" className="dialog__label">Comment</Typography>
-      <CommentsList comments={comments}/>
+      <CommentsList 
+        comments={comments}
+        handleRemoveComment={handleRemoveComment}
+      />
       <CommentInputSection 
         textFieldRef={textFieldRef}
         handleChange={handleChange}
@@ -217,7 +248,8 @@ const ActiveCellDialog = ({
   comments,
   handleCloseActiveCellDialog,
   handleChangeBusinessConcept,
-  handleAddComment
+  handleAddComment,
+  handleDeleteComment
 }) => {
   const handleKeyDownCapture = (event) => event.stopPropagation();
   const handleContextMenuCapture = (event) => event.stopPropagation();
@@ -234,6 +266,7 @@ const ActiveCellDialog = ({
         {...commonChildrenProps}
         comments={comments}
         handleAddComment={handleAddComment}
+        handleDeleteComment={handleDeleteComment}
       />
     );
   } else if(activeCellDialog === "attribute" || activeCellDialog === "category") {
@@ -321,7 +354,8 @@ const ActiveNormalCell = ({
   comments,
   handleCloseActiveCellDialog,
   handleChangeBusinessConcept,
-  handleAddComment
+  handleAddComment,
+  handleDeleteComment
 }) => {
 
   return (
@@ -338,6 +372,7 @@ const ActiveNormalCell = ({
               handleCloseActiveCellDialog={handleCloseActiveCellDialog}
               handleChangeBusinessConcept={handleChangeBusinessConcept}
               handleAddComment={handleAddComment}
+              handleDeleteComment={handleDeleteComment}
             />  
           )}
         >
@@ -419,7 +454,8 @@ let ActiveCell = ({
   handleChangeActiveInputData,
   handleCloseActiveCellDialog,
   handleChangeBusinessConcept,
-  handleAddComment
+  handleAddComment,
+  handleDeleteComment
 }) => {
   const topOffsets = useMemo(() => getTopOffsets(sheetRowHeights, sheetRowCount), [ sheetRowHeights, sheetRowCount ]);
   const leftOffsets = useMemo(() => getLeftOffsets(sheetColumnWidths, sheetColumnCount), [ sheetColumnWidths, sheetColumnCount ]);
@@ -473,6 +509,7 @@ let ActiveCell = ({
           handleCloseActiveCellDialog={handleCloseActiveCellDialog}
           handleChangeBusinessConcept={handleChangeBusinessConcept}
           handleAddComment={handleAddComment}
+          handleDeleteComment={handleDeleteComment}
         />
   );
 };

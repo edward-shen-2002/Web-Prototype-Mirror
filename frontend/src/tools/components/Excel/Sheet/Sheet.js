@@ -106,6 +106,7 @@ const SheetWindow = ({
 
   const handleChangeBusinessConcept = (type, concept) => EventListenerInstance.changeBusinessConcept(type, concept);
   const handleAddComment = (comment) => EventListenerInstance.addComment(comment);
+  const handleDeleteComment = (commentId) => EventListenerInstance.deleteComment(commentId);
 
   const itemData = createItemData({
     sheetCellData, 
@@ -132,7 +133,8 @@ const SheetWindow = ({
     handleChangeActiveInputData,
     handleCloseActiveCellDialog,
     handleChangeBusinessConcept,
-    handleAddComment
+    handleAddComment,
+    handleDeleteComment
   };
 
   return (

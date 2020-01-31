@@ -2191,6 +2191,38 @@ class EventRedux extends PureComponent {
     handleUpdateSheetCellData(newSheetCellData);
   }
 
+  // ! Do not check for edge cases for now - no time (deleting comments of other users...)
+  deleteComment(commentId, _accountId) {
+    const {
+      sheetCellData,
+      activeCellPosition,
+      handleUpdateSheetCellData
+    } = this.props;
+
+    const newSheetCellData = cloneDeep(sheetCellData);
+
+    const { x, y } = activeCellPosition;
+
+    if(newSheetCellData[y] && newSheetCellData[y][x]) {
+      let { comments } = newSheetCellData[y][x];
+
+      if(comments) {
+        const commentIndex = comments.findIndex(({ id }) => id === commentId);
+
+        if(commentIndex >= 0) {
+          newSheetCellData[y][x].comments = [ ...comments.slice(0, commentIndex), ...comments.slice(commentIndex + 1) ];
+          // ! Need to make a function for this... tedious 
+          if(!newSheetCellData[y][x].comments.length) delete newSheetCellData[y][x].comments;
+          if(isObjectEmpty(newSheetCellData[y][x])) delete newSheetCellData[y][x];
+          if(isObjectEmpty(newSheetCellData[y])) delete newSheetCellData[y];
+          return handleUpdateSheetCellData(newSheetCellData);
+        }
+      } 
+    }
+
+    console.error("Comment not found");
+  }
+
   updateActiveCellDialog(type) {
     const {
       activeCellDialog,
