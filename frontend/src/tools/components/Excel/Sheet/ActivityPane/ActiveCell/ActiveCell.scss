@@ -11,6 +11,8 @@
     width: fit-content !important;
     background-color: white;
     z-index: 1;
+
+    overflow: auto;
   }
 
   &--normalMode {
@@ -47,9 +49,5 @@
 
   &__id {
     width: 100px;
-  }
-
-  &__value {
-
   }
 }

@@ -21,7 +21,7 @@ import { REST_PUBLIC_DATA } from "@constants/rest";
 
 import "./ActiveCell.scss";
 
-const CommentDialogActions = ({
+const DialogActions = ({
   handleSaveComment,
   handleCloseActiveCellDialog
 }) => (
@@ -54,7 +54,7 @@ const CommentDialog = ({
         variant="outlined"
         multiline={true}
       />
-      <CommentDialogActions
+      <DialogActions
         handleCloseActiveCellDialog={handleCloseActiveCellDialog}
       />
     </div>
@@ -144,6 +144,7 @@ const BusinessConceptDialog = ({
         businessConcepts={filteredBusinessConcepts}
         handleChangeBusinessConcept={handleChangeBusinessConcept}
       />
+      {/* <DialogActions/> */}
     </div>
   );
 };
@@ -229,12 +230,14 @@ const ActiveInputCell = ({
   };
 
   const handleContextMenuCapture = (event) => event.stopPropagation();
+  const handleKeyDownCapture = (event) => event.stopPropagation();
 
   return (
     <div 
       className="activeCell activeCell--editMode" 
       style={activeCellStyle}
       onContextMenuCapture={handleContextMenuCapture}
+      onKeyDownCapture={handleKeyDownCapture}
     >
       <Editor
         key="active-cell-input"
@@ -373,6 +376,9 @@ let ActiveCell = ({
       minWidth: width
     }
   }
+
+  activeCellStyle.maxWidth = (leftOffsets[sheetColumnCount - 1] + getNormalColumnWidth(sheetColumnWidths[sheetColumnCount])) - leftOffsets[x];
+  activeCellStyle.maxHeight = (topOffsets[sheetRowCount - 1] + getNormalRowHeight(sheetRowHeights[sheetRowCount])) - topOffsets[y];
 
   useEffect(() => {
     if(activeCellDialog) handleCloseActiveCellDialog();
