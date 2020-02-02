@@ -27,14 +27,6 @@ When the width/height of the frozen column/rows is greater than the dimension of
 
 - Default theme colours are hard-coded from excel (not really an issue if this never changes). It's possible that we could get the colours from Xlsx-populate and store it as a state: { ...appState, themes: { ... } }
 
-## Context Menu
-
-- Disable context menu on edit mode - probably need another state??
-
-## Edit Input
-
-- Currently, there are issues when input is dependent on sheet. We could put the input on the same level as sheet. Issue: Context menu sticks to edit input and produces bugs
-
 ## Import ID
 
 - Value could be of type rich-text, which is an array of data instead of strictly string value (causes parsing error)
