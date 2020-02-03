@@ -327,20 +327,25 @@ const ActiveInputCell = ({
   };
 
   const handleContextMenuCapture = (event) => event.stopPropagation();
-  const handleKeyDownCapture = (event) => event.stopPropagation();
+  const handleKeyDownCapture = (event) => {
+    const { key } = event;
+
+    if(key !== "Enter" && key !== "Tab") event.stopPropagation();
+  };
 
   return (
     <div 
       className="activeCell activeCell--editMode" 
       style={activeCellStyle}
       onContextMenuCapture={handleContextMenuCapture}
+      onKeyDownCapture={handleKeyDownCapture}
     >
       <Editor
         key="active-cell-input"
         ref={editorRef}
         editorState={editorState}
         onChange={handleChangeInputValue}
-        onKeyDownCapture={handleKeyDownCapture}
+        // onKeyDownCapture={handleKeyDownCapture}
         readOnly={!activeCellInputAutoFocus}
         handleReturn={handleReturn}
       />
