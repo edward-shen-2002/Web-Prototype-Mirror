@@ -101,7 +101,7 @@ const bundles = ({
   router.put(`${ROUTE_ADMIN_BUNDLES}/publish`, async (req, res, next) => {
     const { newBundle } = req.body;
 
-    const { name, type, templates, sectors, organizations, year, quarter } = newBundle;
+    const { name, templates, sectors, organizations, year, quarter } = newBundle;
 
     const { _id: bundleId } = newBundle;
 
@@ -246,7 +246,6 @@ const bundles = ({
             }, 
             {
               name, 
-              type,
               // ! Removed for now since user data may be lost!
               workbooksData: possibleDuplication.workbooksData ? undefined : organizationWorkbooksData, 
               organization,
@@ -258,7 +257,6 @@ const bundles = ({
           await OrganizationBundleModel.create({ 
             bundleId,
             name, 
-            type,
             workbooksData: organizationWorkbooksData, 
             organization,
             year,
