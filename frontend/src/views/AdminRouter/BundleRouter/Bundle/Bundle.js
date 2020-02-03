@@ -57,7 +57,6 @@ const BundleHeader = ({ handleOpenDeleteWarningDialog }) => (
 const BundleContent = ({
   _id,
   name,
-  type,
   year,
   quarter,
   templates,
@@ -67,7 +66,6 @@ const BundleContent = ({
   publicOrganizations,
   publicSectors,
   setName,
-  setType,
   setTemplates,
   setOrganizations,
   setSectors,
@@ -78,8 +76,6 @@ const BundleContent = ({
   const [ isDeleteDialogOpen, setIsDeleteDialogOpen ] = useState(false);
 
   const handleChangeName = ({ target: { value } }) => setName(value);
-
-  const handleChangeType = ({ target: { value } }) => setType(value);
 
   const handleChangeYear = ({ target: { value } }) => setYear(value);
 
@@ -113,7 +109,6 @@ const BundleContent = ({
     const newBundle = {
       _id,
       name,
-      type,
       year,
       quarter,
       templates,
@@ -129,7 +124,6 @@ const BundleContent = ({
     const newBundle = {
       _id,
       name,
-      type,
       year,
       quarter,
       templates,
@@ -175,7 +169,6 @@ const BundleContent = ({
       <BundleHeader handleOpenDeleteWarningDialog={handleOpenDeleteWarningDialog}/>
       <Divider/>
       <BundleTextField label="Name" text={name} handleChange={handleChangeName}/>
-      <BundleTextField label="Type" text={type} handleChange={handleChangeType}/>
       <BundleTextField label="Year" text={year} handleChange={handleChangeYear}/>
       <BundleSelectField label="Quarter" value={currentQuarter} options={quarters} handleChange={handleChangeQuarter}/>
       <BundleTextField label="Description" textFieldProps={descriptionTextFieldProps}/>
@@ -233,7 +226,6 @@ const Bundle = ({
   history
 }) => {
   const [ name, setName ] = useState("");
-  const [ type, setType ] = useState("");
   const [ year, setYear ] = useState("");
   const [ quarter, setQuarter ] = useState("");
   const [ templates, setTemplates ] = useState([]); 
@@ -260,10 +252,9 @@ const Bundle = ({
           const { data: { data: { sectors: publicSectors } } } = sectorsData; 
 
           const { data: { data: { bundle } } } = bundleData;
-          const { name, type, templates, organizations, sectors, quarter, year } = bundle;
+          const { name, templates, organizations, sectors, quarter, year } = bundle;
 
           setName(name);
-          setType(type);
           setYear(year);
           setQuarter(quarter);
           setTemplates(templates);
@@ -289,7 +280,6 @@ const Bundle = ({
       ? <BundleContent
           _id={_id}
           name={name}
-          type={type}
           year={year}
           quarter={quarter}
           templates={templates}
@@ -299,7 +289,6 @@ const Bundle = ({
           organizations={organizations}
           sectors={sectors}
           setName={setName}
-          setType={setType}
           setTemplates={setTemplates}
           setOrganizations={setOrganizations}
           setSectors={setSectors}

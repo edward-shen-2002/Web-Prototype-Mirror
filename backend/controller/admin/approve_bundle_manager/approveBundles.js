@@ -65,7 +65,6 @@ const approveBundles = ({
         organization: { _id: organizationId }, 
         year, 
         quarter, 
-        type, 
         workbooksData: { names, ids: workbooksIds, workbooks }
       } = bundle;
       
