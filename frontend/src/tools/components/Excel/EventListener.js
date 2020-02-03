@@ -80,7 +80,8 @@ import {
   generateNewSheetName,
   createBlankSheet,
   getResizeOffset,
-  clearEditorStateText
+  clearEditorStateText,
+  isPrepopulateString
 } from "@tools/excel";
 
 import {
@@ -820,20 +821,26 @@ class EventRedux extends PureComponent {
 
     const currentCellData = getCellData(sheetCellData, row, column);
 
-    // ! Need a deep clone here!
-    let newSheetCellData = { ...sheetCellData };
+    let newSheetCellData = cloneDeep(sheetCellData);
+
+    // ! Consider other types!
+    if(isPrepopulateString(newValue)) {
+      newData.type = "prepopulate";
+    } else {
+      newData.type = "normal";
+    }
 
     // ! Need to consider other parameters other than value!!
     // ! Only update if data changed!
     if(currentCellData) {
-      if(currentCellData !== newValue) {
-        newSheetCellData[row][column] = { ...currentCellData, value: newValue };
+      if(currentCellData !== newValue || currentCellData.type !== newData.type) {
+        newSheetCellData[row][column] = { ...currentCellData, ...newData };
         handleUpdateSheetCellData(newSheetCellData);
       }
-    } else {
+    } else if(!isObjectEmpty(newData)) {
       // ! Change type?
       if(!newSheetCellData[row]) newSheetCellData[row] = {};
-      newSheetCellData[row][column] = { type: "normal", value: newValue };
+      newSheetCellData[row][column] = newData;
       handleUpdateSheetCellData(newSheetCellData);
     }
   }
@@ -2254,12 +2261,12 @@ class EventRedux extends PureComponent {
     if(type === "attribute") {
       if(!newSheetCellData[1]) newSheetCellData[1] = {};
 
-      newSheetCellData[1][x] = { value: concept };
+      newSheetCellData[1][x] = { value: concept, type: "normal" };
     } else {
       if(!newSheetCellData[y]) newSheetCellData[y] = {};
 
       // ! Should we remove everything?
-      newSheetCellData[y][1] = { ...newSheetCellData[y][1], value: concept };
+      newSheetCellData[y][1] = { ...newSheetCellData[y][1], value: concept, type: "normal" };
     }
 
     handleUpdateSheetCellData(newSheetCellData);

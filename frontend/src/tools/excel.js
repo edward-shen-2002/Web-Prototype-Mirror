@@ -650,6 +650,8 @@ export const getBlockStyle = (cellStyles) => {
   };
 };
 
+export const isPrepopulateString = (string) => string && string.charAt(0) === "|";
+
 const extractRichTextData = (richText) => {
   let plainRichTextObject = [];
 
@@ -702,6 +704,8 @@ const extractCellData = (cellData) => {
       if(cellFormula) {
         extractedCellData.type = "formula";
         extractedCellData.formula = cellFormula;
+      } else if(isPrepopulateString(cellValue)) {
+        extractedCellData.type = "prepopulate";
       } else {
         extractedCellData.type = "normal";
       }

@@ -1,5 +1,9 @@
 import uniqid from "uniqid";
 
+import pako from "pako";
+
+import cloneDeep from "clone-deep";
+
 import { ROUTE_ADMIN_BUNDLES, ROUTE_ADMIN_BUNDLES_WORKFLOW } from "../../../constants/rest";
 
 import { 
@@ -12,13 +16,15 @@ import {
 
 import { HTTP_ERROR_NOT_FOUND } from "../../../constants/rest";
 import { MESSAGE_ERROR_NOT_FOUND } from "../../../constants/messages";
+import { isObjectEmpty } from "../../../tools/misc";
 
 const bundles = ({ 
   router, 
   BundleModel, 
   OrganizationBundleModel, 
   TemplateModel,
-  OrganizationModel
+  OrganizationModel,
+  MasterValueModel
 }) => {
   router.get(ROUTE_ADMIN_BUNDLES, (req, res, next) => {
     BundleModel.find({})
@@ -113,12 +119,11 @@ const bundles = ({
         const templateData = templates[i];
         const { _id: templateId, name } = templateData;
         // ! TODO ~ do prepopulation...
-        // ! Specific emplate data is still present here - not desired in bundle - will have to decompress and remove if needed
+
         workbooksData.workbooks[templateId] = (
-          (await TemplateModel.findById(templateId)
-            .select("fileStates")
-          ).fileStates
-        );
+          await TemplateModel.findById(templateId)
+          .select("fileStates")
+        ).fileStates;
         workbooksData.names.push(name);
         workbooksData.ids.push(templateId);
       }
@@ -135,16 +140,130 @@ const bundles = ({
         const { _id: organizationId } = organization;
         const possibleDuplication = await OrganizationBundleModel.find({ "organization._id": organizationId, bundleId });
 
+        const organizationWorkbooksData = cloneDeep(workbooksData);
+
+        const { workbooks } = organizationWorkbooksData;
+        for(let workbookId in workbooks) {
+          const { workbookData } = workbooks[workbookId];
+          
+          for(let form in workbookData) {
+            // ! Specific emplate data is still present here - not desired in bundle - will have to decompress and remove if needed
+            const inflatedWorkbookData = JSON.parse(pako.inflate(workbookData[form], { to: "string" }));
+            let { sheetCellData } = inflatedWorkbookData;
+
+            for(let row in sheetCellData) {
+              const columns = sheetCellData[row];
+  
+              for(let column in columns) {
+                const { type, value } = columns[column];
+
+                // console.log(value, columns[column]);
+  
+                if(type === "prepopulate" && value) {
+                  const groups = value.substring(1).split("&");
+  
+                  // ! Validation?
+                  let {
+                    type,
+                    year,
+                    quarter
+                  } = groups.reduce((acc, cur) => {
+                    const [ group, value ] = cur.split("=");
+  
+                    if(group && value !== undefined) acc[group] = value;
+  
+                    return acc;
+                  }, {});
+  
+                  let attribute;
+                  let category;
+  
+                  if(sheetCellData[1] && sheetCellData[1][column]) {
+                    const { type, value } = sheetCellData[1][column];
+  
+                    if(type === "normal") attribute = value;
+                  }
+  
+                  if(sheetCellData[row] && sheetCellData[row][1]) {
+                    const { type, value } = sheetCellData[row][1];
+  
+                    if(type === "normal") category = value;
+                  }
+
+                  // console.log(
+                  //   organizationId,
+                  //   type, 
+                  //   year, 
+                  //   quarter, 
+                  //   form, 
+                  //   attribute, 
+                  //   category,
+                  //   sheetCellData
+                  // )
+  
+                  if(
+                    organizationId 
+                    && type 
+                    && year 
+                    && quarter 
+                    && form 
+                    && attribute 
+                    && category
+                  ) {
+                    // Search database
+  
+                    // successful search => continue and skip fallback
+                    const masterValue = await MasterValueModel.findOne({ organizationId, type, year, quarter, form })
+                      .or([
+                        { 
+                          businessConceptId1: attribute, 
+                          businessConceptId2: category
+                        },
+                        {
+                          businessConceptId1: category, 
+                          businessConceptId2: attribute
+                        }
+                      ]);
+                    
+                    // console.log(organizationId, masterValue);
+  
+                    if(masterValue) {
+                      sheetCellData[row][column] = { 
+                        ...sheetCellData[row][column], 
+                        value: masterValue.value, 
+                        type: "normal" 
+                      };
+  
+                      continue;
+                    }
+                  } 
+  
+                  // Fallback area in case something is not right
+                  delete sheetCellData[row][column].value;
+                  delete sheetCellData[row][column].type;
+      
+                  if(isObjectEmpty(sheetCellData[row][column])) delete sheetCellData[row][column];
+                  if(isObjectEmpty(sheetCellData[row])) delete sheetCellData[row];
+                }
+              }
+            }
+
+            inflatedWorkbookData.sheetCellData = sheetCellData;
+  
+            workbookData[form] = pako.deflate(JSON.stringify(inflatedWorkbookData), { to: "string" });
+          }
+        }
         if(possibleDuplication.length) {
           await OrganizationBundleModel.findOneAndUpdate(
             { 
-              bundleId
+              bundleId,
+              "organization._id": organizationId
             }, 
             {
               name, 
               type,
               // ! Removed for now since user data may be lost!
-              workbooksData: possibleDuplication.workbooksData ? undefined : workbooksData, 
+              workbooksData: possibleDuplication.workbooksData ? undefined : organizationWorkbooksData, 
               organization,
               year,
               quarter
@@ -155,7 +274,7 @@ const bundles = ({
             bundleId,
             name, 
             type,
-            workbooksData, 
+            workbooksData: organizationWorkbooksData, 
             organization,
             year,
             quarter

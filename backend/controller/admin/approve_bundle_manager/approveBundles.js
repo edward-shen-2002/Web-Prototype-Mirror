@@ -55,9 +55,9 @@ const approveBundles = ({
     const { bundle: { approverNotes } } = req.body;
 
     try {
-      // const bundle = await OrganizationBundleModel.findOneAndUpdate({ _id, phase: "approve" }, { approverNotes, phase: "finished", status: "APPROVED" });
-      const bundle = await OrganizationBundleModel.findOne({ _id, phase: "approve" });
-
+      // ! normal
+      const bundle = await OrganizationBundleModel.findOneAndUpdate({ _id, phase: "approve" }, { approverNotes, phase: "finished", status: "APPROVED" });
+      
       if(!bundle) return res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_NOT_FOUND });
 
       // ! Remove existing data with parameters?
