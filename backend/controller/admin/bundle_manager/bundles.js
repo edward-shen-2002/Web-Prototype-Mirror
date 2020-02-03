@@ -157,8 +157,6 @@ const bundles = ({
               for(let column in columns) {
                 const { type, value } = columns[column];
 
-                // console.log(value, columns[column]);
-  
                 if(type === "prepopulate" && value) {
                   const groups = value.substring(1).split("&");
   
@@ -189,17 +187,6 @@ const bundles = ({
   
                     if(type === "normal") category = value;
                   }
-
-                  // console.log(
-                  //   organizationId,
-                  //   type, 
-                  //   year, 
-                  //   quarter, 
-                  //   form, 
-                  //   attribute, 
-                  //   category,
-                  //   sheetCellData
-                  // )
   
                   if(
                     organizationId 
@@ -224,8 +211,6 @@ const bundles = ({
                           businessConceptId2: attribute
                         }
                       ]);
-                    
-                    // console.log(organizationId, masterValue);
   
                     if(masterValue) {
                       sheetCellData[row][column] = { 

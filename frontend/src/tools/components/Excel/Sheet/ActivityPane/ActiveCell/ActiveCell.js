@@ -490,6 +490,10 @@ let ActiveCell = ({
   const comments = sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].comments ? sheetCellData[y][x].comments : [];
 
   useEffect(() => {
+    if(isEditMode) handleCloseActiveCellDialog();
+  }, [ isEditMode ]);
+
+  useEffect(() => {
     if(activeCellDialog) handleCloseActiveCellDialog();
   }, [ x, y ]);
 
