@@ -2272,6 +2272,37 @@ class EventRedux extends PureComponent {
     handleUpdateSheetCellData(newSheetCellData);
   }
 
+  setPrepopulate({ type, quarter, year }) {
+    const {
+      activeCellPosition,
+      sheetCellData,
+      handleUpdateSheetCellData
+    } = this.props;
+
+    let prepopulateArray = [];
+
+    if(type) prepopulateArray.push(`type=${type}`);
+    if(quarter) prepopulateArray.push(`quarter=${quarter}`);
+    if(year) prepopulateArray.push(`year=${year}`);
+
+    if(prepopulateArray.length) {
+      const prepopulateString = `|${prepopulateArray.join("&")}`;
+
+      const { x, y } = activeCellPosition;
+
+      let newSheetCellData = cloneDeep(sheetCellData);
+
+      if(!newSheetCellData[y]) newSheetCellData[y] = {};
+
+      newSheetCellData[y][x] = { ...newSheetCellData[x], value: prepopulateString, type: "prepopulate" };
+
+      handleUpdateSheetCellData(newSheetCellData);
+      this.resetActiveCellDialog();
+    } else {
+      console.error("No prepopulate parameters specified");
+    }
+  }
+
   render() {
     return null;
   }

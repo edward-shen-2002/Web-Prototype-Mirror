@@ -107,6 +107,7 @@ const SheetWindow = ({
   const handleChangeBusinessConcept = (type, concept) => EventListenerInstance.changeBusinessConcept(type, concept);
   const handleAddComment = (comment) => EventListenerInstance.addComment(comment);
   const handleDeleteComment = (commentId) => EventListenerInstance.deleteComment(commentId);
+  const handleSetPrepopulate = (prepopulateData) => EventListenerInstance.setPrepopulate(prepopulateData)
 
   const itemData = createItemData({
     sheetCellData, 
@@ -134,7 +135,8 @@ const SheetWindow = ({
     handleCloseActiveCellDialog,
     handleChangeBusinessConcept,
     handleAddComment,
-    handleDeleteComment
+    handleDeleteComment,
+    handleSetPrepopulate
   };
 
   return (

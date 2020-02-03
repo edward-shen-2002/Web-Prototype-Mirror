@@ -82,6 +82,7 @@ const SheetContextMenu = ({
       const handleUnsetReadOnly = () => eventListenerRef.current.unsetReadOnly();
       const handleOpenAttributeDialog = () => eventListenerRef.current.updateActiveCellDialog("attribute");
       const handleOpenCategoryDialog = () => eventListenerRef.current.updateActiveCellDialog("category");
+      const handleOpenPrepopulateDialog = () => eventListenerRef.current.updateActiveCellDialog("prepopulate");
   
       setConfig([
         // {
@@ -143,6 +144,10 @@ const SheetContextMenu = ({
         {
           text: "Set category",
           handleClick: handleOpenCategoryDialog
+        },
+        {
+          text: "Set prepopulate",
+          handleClick: handleOpenPrepopulateDialog
         }
       ]);
     } 

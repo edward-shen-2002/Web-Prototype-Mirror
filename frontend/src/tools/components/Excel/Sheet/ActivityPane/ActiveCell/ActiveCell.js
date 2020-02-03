@@ -4,7 +4,14 @@ import { connect } from "react-redux";
 
 import { publicAxios } from "@tools/rest";
 
-import { getTopOffsets, getLeftOffsets, getNormalRowHeight, getNormalColumnWidth } from "@tools/excel";
+import { 
+  getTopOffsets, 
+  getLeftOffsets, 
+  getNormalRowHeight, 
+  getNormalColumnWidth,
+  isPrepopulateString,
+  parsePrepopulateString
+} from "@tools/excel";
 
 import { Editor } from "draft-js";
 
@@ -31,12 +38,12 @@ import { REST_PUBLIC_DATA } from "@constants/rest";
 import "./ActiveCell.scss";
 
 const DialogActions = ({
-  handleSaveComment,
-  handleCloseActiveCellDialog
+  handleAdd,
+  handleCancel
 }) => (
   <ButtonGroup className="dialog__actions" fullWidth>
-    <Button onClick={handleSaveComment}>Add</Button>
-    <Button onClick={handleCloseActiveCellDialog}>Cancel</Button>
+    <Button onClick={handleAdd}>Add</Button>
+    <Button onClick={handleCancel}>Cancel</Button>
   </ButtonGroup>
 );
 
@@ -108,8 +115,8 @@ const CommentInputSection = ({
       fullWidth
     />
     <DialogActions
-      handleSaveComment={handleSaveComment}
-      handleCloseActiveCellDialog={handleCloseActiveCellDialog}
+      handleAdd={handleSaveComment}
+      handleCancel={handleCloseActiveCellDialog}
     />
   </div>
 );
@@ -147,6 +154,61 @@ const CommentDialog = ({
         handleChange={handleChange}
         handleSaveComment={handleSaveComment}
         handleCloseActiveCellDialog={handleCloseActiveCellDialog}
+      />
+    </div>
+  );
+};
+
+const LabeledTextField = ({ 
+  label, 
+  text, 
+  textFieldProps, 
+  handleChange 
+}) => (
+  <div className="field">
+    <Typography className="field__label">{label}</Typography>
+    <TextField className="field__input" value={text} onChange={handleChange} {...textFieldProps} fullWidth/>
+  </div>
+);
+
+const PrepopulateDialog = ({
+  type,
+  quarter,
+  year,
+  handleSetPrepopulate,
+  handleCloseActiveCellDialog
+}) => {
+  const [ newType, setNewType ] = useState(type ? type : "");
+  const [ newQuarter, setNewQuarter ] = useState(quarter ? quarter : "");
+  const [ newYear, setNewYear ] = useState(year ? year : "");
+
+  const handleChangeType = ({ target: { value } }) => setNewType(value);
+  const handleChangeQuarter = ({ target: { value } }) => setNewQuarter(value);
+  const handleChangeYear = ({ target: { value } }) => setNewYear(value);
+
+  const handleChangePrepopulate = () => handleSetPrepopulate({ type: newType, quarter: newQuarter, year: newYear });
+
+  return (
+    <div className="dialog">
+      <Typography variant="h6">Prepopulate</Typography>
+      <LabeledTextField 
+        label="Type" 
+        text={newType} 
+        handleChange={handleChangeType}
+      />
+      <LabeledTextField 
+        label="Quarter" 
+        text={newQuarter} 
+        handleChange={handleChangeQuarter}
+      />
+      <LabeledTextField 
+        label="Year" 
+        text={newYear} 
+        handleChange={handleChangeYear}
+      />
+      <DialogActions
+        handleAdd={handleChangePrepopulate}
+        handleCancel={handleCloseActiveCellDialog}
       />
     </div>
   );
@@ -246,10 +308,12 @@ const ActiveCellDialog = ({
   targetRect,
   popoverRect,
   comments,
+  value,
   handleCloseActiveCellDialog,
   handleChangeBusinessConcept,
   handleAddComment,
-  handleDeleteComment
+  handleDeleteComment,
+  handleSetPrepopulate
 }) => {
   const handleKeyDownCapture = (event) => event.stopPropagation();
   const handleContextMenuCapture = (event) => event.stopPropagation();
@@ -277,7 +341,23 @@ const ActiveCellDialog = ({
         handleChangeBusinessConcept={handleChangeBusinessConcept}
       />
     );
-  } 
+  } else if(activeCellDialog === "prepopulate") {
+    let groupValues;
+    
+    if(typeof value === "string" && isPrepopulateString(value)) {
+      groupValues = parsePrepopulateString(value);
+    } else {
+      groupValues = {};
+    }
+
+    Children = (
+      <PrepopulateDialog
+        {...commonChildrenProps}
+        {...groupValues}
+        handleSetPrepopulate={handleSetPrepopulate}
+      />
+    );
+  }
 
   return (
     <ArrowContainer
@@ -314,10 +394,7 @@ const ActiveInputCell = ({
   };
 
   useEffect(() => {
-    if(!isMounted) {
-      // if(activeCellInputAutoFocus) editorRef.current.focus();
-      setIsMounted(true);
-    }
+    if(!isMounted) setIsMounted(true);
   });
 
   const handleReturn = (event) => {
@@ -345,7 +422,6 @@ const ActiveInputCell = ({
         ref={editorRef}
         editorState={editorState}
         onChange={handleChangeInputValue}
-        // onKeyDownCapture={handleKeyDownCapture}
         readOnly={!activeCellInputAutoFocus}
         handleReturn={handleReturn}
       />
@@ -357,10 +433,12 @@ const ActiveNormalCell = ({
   activeCellStyle,
   activeCellDialog,
   comments,
+  value,
   handleCloseActiveCellDialog,
   handleChangeBusinessConcept,
   handleAddComment,
-  handleDeleteComment
+  handleDeleteComment,
+  handleSetPrepopulate
 }) => {
 
   return (
@@ -374,10 +452,12 @@ const ActiveNormalCell = ({
               {...props}
               activeCellDialog={activeCellDialog}
               comments={comments}
+              value={value}
               handleCloseActiveCellDialog={handleCloseActiveCellDialog}
               handleChangeBusinessConcept={handleChangeBusinessConcept}
               handleAddComment={handleAddComment}
               handleDeleteComment={handleDeleteComment}
+              handleSetPrepopulate={handleSetPrepopulate}
             />  
           )}
         >
@@ -460,7 +540,8 @@ let ActiveCell = ({
   handleCloseActiveCellDialog,
   handleChangeBusinessConcept,
   handleAddComment,
-  handleDeleteComment
+  handleDeleteComment,
+  handleSetPrepopulate
 }) => {
   const topOffsets = useMemo(() => getTopOffsets(sheetRowHeights, sheetRowCount), [ sheetRowHeights, sheetRowCount ]);
   const leftOffsets = useMemo(() => getLeftOffsets(sheetColumnWidths, sheetColumnCount), [ sheetColumnWidths, sheetColumnCount ]);
@@ -492,7 +573,16 @@ let ActiveCell = ({
   activeCellStyle.maxWidth = (leftOffsets[sheetColumnCount - 1] + getNormalColumnWidth(sheetColumnWidths[sheetColumnCount])) - leftOffsets[x];
   activeCellStyle.maxHeight = (topOffsets[sheetRowCount - 1] + getNormalRowHeight(sheetRowHeights[sheetRowCount])) - topOffsets[y];
 
-  const comments = sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].comments ? sheetCellData[y][x].comments : [];
+  let displayedComments = [];
+  let displayedValue = "";
+
+  if(sheetCellData[y] && sheetCellData[y][x]) {
+    const { comments, value } = sheetCellData[y][x];
+
+    if(comments) displayedComments = comments;
+
+    if(value) displayedValue = value;
+  }
 
   useEffect(() => {
     if(isEditMode) handleCloseActiveCellDialog();
@@ -514,11 +604,13 @@ let ActiveCell = ({
       : <ActiveNormalCell 
           activeCellStyle={activeCellStyle}
           activeCellDialog={activeCellDialog}
-          comments={comments}
+          comments={displayedComments}
+          value={displayedValue}
           handleCloseActiveCellDialog={handleCloseActiveCellDialog}
           handleChangeBusinessConcept={handleChangeBusinessConcept}
           handleAddComment={handleAddComment}
           handleDeleteComment={handleDeleteComment}
+          handleSetPrepopulate={handleSetPrepopulate}
         />
   );
 };

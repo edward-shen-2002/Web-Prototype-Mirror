@@ -652,6 +652,18 @@ export const getBlockStyle = (cellStyles) => {
 
 export const isPrepopulateString = (string) => string && string.charAt(0) === "|";
 
+export const parsePrepopulateString = (string) => (
+  string.substring(1)
+    .split("&")
+    .reduce((acc, parameter) => {
+      const [ group, value ] = parameter.split("=");
+
+      if(group && value) acc[group] = value;
+
+      return acc;
+    }, {})
+);
+
 const extractRichTextData = (richText) => {
   let plainRichTextObject = [];
 
