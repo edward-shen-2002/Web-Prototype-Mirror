@@ -9,10 +9,6 @@
 (18, 3) -- Rich text
 (15, 3) -- Related to rich text
 
-### Import ID
-
-2017-18 Hospital Q4 BLANK V1.xlsx - does not consider rich text?
-
 ### React Object Children
 
 2017-18 Hospital Q4 BLANK V1.xlsx - Medical Staff Renumeration
