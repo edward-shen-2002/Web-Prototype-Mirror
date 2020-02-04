@@ -6,7 +6,8 @@
     "dev": "webpack-dev-server --config webpack.dev.js",
     "dev:cra": "react-app-rewired start",
     "build": "webpack --config webpack.prod.js",
-    "build:cra": "react-app-rewired build"
+    "build:cra": "react-app-rewired build",
+    "deploy:aws": "aws s3 sync build s3://webproto"
   },
   "author": "",
   "license": "ISC",
