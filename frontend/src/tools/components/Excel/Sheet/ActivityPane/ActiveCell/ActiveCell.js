@@ -548,6 +548,15 @@ let ActiveCell = ({
 
   const { x, y } = activeCellPosition;
 
+  
+  useEffect(() => {
+    if(isEditMode) handleCloseActiveCellDialog();
+  }, [ isEditMode ]);
+
+  useEffect(() => {
+    if(activeCellDialog) handleCloseActiveCellDialog();
+  }, [ x, y ]);
+
   if(!isActiveCellInCorrectPane(x, y, sheetFreezeColumnCount, sheetFreezeRowCount)) return null;
 
   let activeCellStyle;
@@ -583,15 +592,6 @@ let ActiveCell = ({
 
     if(value) displayedValue = value;
   }
-
-  useEffect(() => {
-    if(isEditMode) handleCloseActiveCellDialog();
-  }, [ isEditMode ]);
-
-  useEffect(() => {
-    if(activeCellDialog) handleCloseActiveCellDialog();
-  }, [ x, y ]);
-
 
   return (
     isEditMode 
