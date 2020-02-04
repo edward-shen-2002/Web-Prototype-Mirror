@@ -716,7 +716,7 @@ const extractCellData = (cellData) => {
       if(cellFormula) {
         extractedCellData.type = "formula";
         extractedCellData.formula = cellFormula;
-      } else if(isPrepopulateString(cellValue)) {
+      } else if(typeof cellValue === "string" && isPrepopulateString(cellValue)) {
         extractedCellData.type = "prepopulate";
       } else {
         extractedCellData.type = "normal";
