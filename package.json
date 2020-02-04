@@ -13,6 +13,7 @@
     "build:dev-run": "concurrently \"yarn --cwd backend dev\" \"serve -s frontend/build\"",
     "build:dev-full": "yarn build:frontend && yarn build:dev-run",
     "build:dev-full:cra": "yarn build:frontend:cra && yarn build:dev-run",
+    "deploy:aws": "yarn --cwd frontend deploy:aws",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
