@@ -751,7 +751,6 @@ class EventRedux extends PureComponent {
     const { x, y } = activeCellPosition;
 
     if(activeCellSelectionAreaIndex >= 0) {
-      // { row: column }
       let selectionAreaCoveredCells = {};
 
       let combinedSelectionArea = activeSelectionArea ? [ ...stagnantSelectionAreas, activeSelectionArea ] : [ ...stagnantSelectionAreas ];
