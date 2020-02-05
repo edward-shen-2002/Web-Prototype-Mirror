@@ -405,9 +405,11 @@ const ActiveInputCell = ({
 
   const handleContextMenuCapture = (event) => event.stopPropagation();
   const handleKeyDownCapture = (event) => {
-    const { key } = event;
+    const { key, ctrlKey } = event;
 
-    if(key !== "Enter" && key !== "Tab") event.stopPropagation();
+    if(
+      ctrlKey && key === "a"
+    ) event.stopPropagation();
   };
 
   return (
