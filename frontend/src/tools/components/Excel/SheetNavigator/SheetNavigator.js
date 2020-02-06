@@ -33,7 +33,6 @@ const SheetNameEdit = ({
   }
 
   const handleKeyDown = ({ key, target }) => {
-    
     if(key === "Enter") {
       // Save value
       const { value } = target;
@@ -227,15 +226,9 @@ let SheetNavigator = ({
 }) => {
   const [ isEditMode, setIsEditMode ] = useState(false);
 
-  let EventListenerInstance;
+  const handleAddSheet = () => eventListenerRef.current.addSheet();
 
-  useEffect(() => {
-    EventListenerInstance = eventListenerRef.current;
-  });
-
-  const handleAddSheet = () => EventListenerInstance.addSheet();
-
-  const handleClickSheet = (sheetName) => EventListenerInstance.changeSheet(sheetName);
+  const handleClickSheet = (sheetName) => eventListenerRef.current.changeSheet(sheetName);
 
   const handleDragEnd = (result) => {
     if(!result.destination) return;
@@ -245,7 +238,7 @@ let SheetNavigator = ({
     handleChangeSheetNames(newSheetNames);
   };
 
-  const handleChangeSheetName = (sheetName, newSheetName) => EventListenerInstance.changeSheetName(sheetName, newSheetName);
+  const handleChangeSheetName = (sheetName, newSheetName) => eventListenerRef.current.changeSheetName(sheetName, newSheetName);
 
   return (
     <div className="sheetNavigator">

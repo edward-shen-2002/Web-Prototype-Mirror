@@ -6,8 +6,6 @@ import Divider from "@material-ui/core/Divider";
 
 import InputBase from "@material-ui/core/InputBase";
 
-import { Editor } from "draft-js";
-
 import "./FormulaBar.scss";
 
 const mapStateToProps = ({
@@ -28,14 +26,13 @@ let InputField = ({
 
   const handleKeyDown = (event) => {
     const { key } = event;
-    const { current: EventListenerInstance } = eventListenerRef;
-  
+
     if(key === "Enter") {
-      EventListenerInstance.enter(event, false, sheetContainerRef);
+      eventListenerRef.current.enter(event, false, sheetContainerRef);
     } else if(key === "Tab") {
-      EventListenerInstance.tab(event, false, sheetContainerRef);
+      eventListenerRef.current.tab(event, false, sheetContainerRef);
     } else if(key === "Escape") {
-      EventListenerInstance.escape(sheetContainerRef);
+      eventListenerRef.current.escape(sheetContainerRef);
     }
   };
 
