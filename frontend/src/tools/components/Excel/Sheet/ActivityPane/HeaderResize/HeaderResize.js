@@ -1,15 +1,15 @@
-import React, { useMemo } from "react";
+import React from "react";
 
 import { connect } from "react-redux";
 
-import { getTopOffsets, getLeftOffsets, getNormalRowHeight, getNormalColumnWidth } from "@tools/excel";
+import { getNormalRowHeight, getNormalColumnWidth } from "@tools/excel";
 
 import { DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER, DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER } from "@constants/excel";
 
-import "./HeaderResize.scss";
+import topOffsetsSelector from "@selectors/ui/excel/topOffsets";
+import leftOffsetsSelector from "@selectors/ui/excel/leftOffsets";
 
-// const topOffsets = useMemo(() => getTopOffsets(sheetRowHeights, sheetRowCount), [ sheetRowHeights, sheetRowCount ]);
-// const leftOffsets = useMemo(() => getLeftOffsets(sheetColumnWidths, sheetColumnCount), [ sheetColumnWidths, sheetColumnCount ]);
+import "./HeaderResize.scss";
 
 const mapRowHeaderStateToProps = ({
   ui: {
@@ -28,7 +28,9 @@ const mapRowHeaderStateToProps = ({
   sheetRowHeights, 
   sheetFreezeRowCount,
   sheetFreezeColumnCount,
-  sheetRowCount
+  sheetRowCount,
+
+  topOffsets: topOffsetsSelector({ sheetRowCount, sheetRowHeights })
 });
 
 export let RowHeaderIndicator = ({
@@ -37,12 +39,10 @@ export let RowHeaderIndicator = ({
   rowResizeData,
   sheetFreezeRowCount,
   sheetRowHeights, 
-  sheetRowCount,
+  topOffsets,
 
   computeTopOffset
 }) => {
-  const topOffsets = useMemo(() => getTopOffsets(sheetRowHeights, sheetRowCount), [ sheetRowHeights, sheetRowCount ]);
-  
   if(!isRowResizeMode) return null;
 
   const freezeRowOffset = topOffsets[sheetFreezeRowCount] + getNormalRowHeight(sheetRowHeights[sheetFreezeRowCount]);
@@ -77,7 +77,9 @@ const mapColumnHeaderStateToProps = ({
   columnResizeData,
   sheetFreezeColumnCount,
   sheetColumnWidths,
-  sheetColumnCount
+  sheetColumnCount,
+
+  leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths })
 });
 
 export let ColumnHeaderIndicator = ({
@@ -86,10 +88,8 @@ export let ColumnHeaderIndicator = ({
   columnResizeData,
   sheetFreezeColumnCount,
   sheetColumnWidths,
-  sheetColumnCount
+  leftOffsets
 }) => {
-  const leftOffsets = useMemo(() => getLeftOffsets(sheetColumnWidths, sheetColumnCount), [ sheetColumnWidths, sheetColumnCount ]);
-
   if(!isColumnResizeMode) return null;
 
   const freezeColumnOffset = leftOffsets[sheetFreezeColumnCount] + getNormalColumnWidth(sheetColumnWidths[sheetFreezeColumnCount]);

@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { connect } from "react-redux";
 
 import { publicAxios } from "@tools/rest";
 
 import { 
-  getTopOffsets, 
-  getLeftOffsets, 
   getNormalRowHeight, 
   getNormalColumnWidth,
   isPrepopulateString,
@@ -34,6 +32,9 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 import { REST_PUBLIC_DATA } from "@constants/rest";
+
+import topOffsetsSelector from "@selectors/ui/excel/topOffsets";
+import leftOffsetsSelector from "@selectors/ui/excel/leftOffsets";
 
 import "./ActiveCell.scss";
 
@@ -507,7 +508,10 @@ const mapStateToProps = ({
   sheetRowCount,
   sheetColumnWidths,
   sheetRowHeights,
-  sheetCellData
+  sheetCellData,
+
+  topOffsets: topOffsetsSelector({ sheetRowHeights, sheetRowCount }),
+  leftOffsets: leftOffsetsSelector({ sheetColumnWidths, sheetColumnCount })
 });
 
 let ActiveCell = ({ 
@@ -533,6 +537,9 @@ let ActiveCell = ({
 
   computeActiveCellStyle,
 
+  topOffsets,
+  leftOffsets,
+
   handleChangeActiveInputData,
   handleCloseActiveCellDialog,
   handleChangeBusinessConcept,
@@ -540,12 +547,8 @@ let ActiveCell = ({
   handleDeleteComment,
   handleSetPrepopulate
 }) => {
-  const topOffsets = useMemo(() => getTopOffsets(sheetRowHeights, sheetRowCount), [ sheetRowHeights, sheetRowCount ]);
-  const leftOffsets = useMemo(() => getLeftOffsets(sheetColumnWidths, sheetColumnCount), [ sheetColumnWidths, sheetColumnCount ]);
-
   const { x, y } = activeCellPosition;
 
-  
   useEffect(() => {
     if(isEditMode) handleCloseActiveCellDialog();
   }, [ isEditMode ]);

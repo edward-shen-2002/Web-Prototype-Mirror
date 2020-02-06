@@ -1,8 +1,9 @@
-import React, { useMemo } from "react";
+import React from "react";
 
 import { connect } from "react-redux";
 
-import { getTopOffsets, getLeftOffsets } from "@tools/excel";
+import topOffsetsSelector from "@selectors/ui/excel/topOffsets";
+import leftOffsetsSelector from "@selectors/ui/excel/leftOffsets";
 
 import "./ActiveSelectionArea.scss";
 
@@ -17,7 +18,7 @@ const mapStateToProps = ({
       sheetColumnWidths,
       sheetRowHeights,
       sheetColumnCount,
-      sheetRowCount
+      sheetRowCount,
     }
   }
 }) => ({
@@ -29,7 +30,9 @@ const mapStateToProps = ({
   sheetColumnWidths,
   sheetRowHeights,
   sheetColumnCount,
-  sheetRowCount
+  sheetRowCount,
+  topOffsets: topOffsetsSelector({ sheetRowCount, sheetRowHeights }),
+  leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths })
 });
 
 let ActiveSelectionArea = ({ 
@@ -45,12 +48,9 @@ let ActiveSelectionArea = ({
   sheetColumnWidths,
   sheetRowHeights,
 
-  sheetColumnCount,
-  sheetRowCount
+  topOffsets,
+  leftOffsets
 }) => {
-  const topOffsets = useMemo(() => getTopOffsets(sheetRowHeights, sheetRowCount), [ sheetRowHeights, sheetRowCount ]);
-  const leftOffsets = useMemo(() => getLeftOffsets(sheetColumnWidths, sheetColumnCount), [ sheetColumnWidths, sheetColumnCount ]);
-  
   if(!isSelectionMode || !activeSelectionArea) return null;
 
   const { x1, y1, x2, y2 } = activeSelectionArea;
