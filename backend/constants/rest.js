@@ -1,6 +1,6 @@
-const PORT = 3003;
+const FRONTEND_PORT = 3003;
 
-const FRONTEND_LOCAL = `http://localhost:${PORT}`;
+const FRONTEND_LOCAL = `http://localhost:${FRONTEND_PORT}`;
 
 export const FRONTEND_SERVER = process.env.NODE_ENV === "production" ? process.env.PUBLIC_URL : FRONTEND_LOCAL;
 
