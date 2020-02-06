@@ -384,7 +384,6 @@ const ActiveInputCell = ({
   editorState,
   handleChangeActiveInputData
 }) => {
-  const [ isMounted, setIsMounted ] = useState(false);
   const editorRef = useRef(null);
   const handleChangeInputValue = (newEditorState) => {
     const currentContentState = editorState.getCurrentContent();
@@ -392,10 +391,6 @@ const ActiveInputCell = ({
 
     if(currentContentState !== newContentState) handleChangeActiveInputData({ editorState: newEditorState });
   };
-
-  useEffect(() => {
-    if(!isMounted) setIsMounted(true);
-  });
 
   const handleReturn = (event) => {
     const { key, ctrlKey, altKey } = event;

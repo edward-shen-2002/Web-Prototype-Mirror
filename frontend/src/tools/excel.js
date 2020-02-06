@@ -175,7 +175,6 @@ export const getScrollbarSize = (() => {
   let size = -1;
 
   return (recalculate = false) => {
-    console.log(size)
     if (size === -1 || recalculate) {
       const div = document.createElement('div');
       const style = div.style;
