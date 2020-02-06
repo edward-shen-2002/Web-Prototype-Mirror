@@ -63,6 +63,9 @@ import { updateActiveSheetName } from "@actions/ui/excel/activeSheetName";
 
 import { updateActiveCellDialog, resetActiveCellDialog } from "@actions/ui/excel/activeCellDialog";
 
+import topOffsetsSelector from "@selectors/ui/excel/topOffsets";
+import leftOffsetsSelector from "@selectors/ui/excel/leftOffsets";
+
 import { 
   isPositionEqualArea, 
   getScrollbarSize, 
@@ -106,9 +109,11 @@ const mapStateToProps = ({
   },
   ui: { 
     excel
-  } 
+  }
 }) => ({
   ...excel,
+  topOffsets: topOffsetsSelector(excel),
+  leftOffsets: leftOffsetsSelector(excel),
   account
 });
 
@@ -191,27 +196,7 @@ const mapDispatchToProps = (dispatch) => ({
   handleResetActiveCellDialog: () => dispatch(resetActiveCellDialog())
 });
 
-let EventListener = (props) => {
-  const { sheetRowHeights, sheetRowCount, sheetColumnWidths, sheetColumnCount } = props;
-
-  const topOffsets = useMemo(() => getTopOffsets(sheetRowHeights, sheetRowCount), [ sheetRowHeights, sheetRowCount ]);
-  const leftOffsets = useMemo(() => getLeftOffsets(sheetColumnWidths, sheetColumnCount), [ sheetColumnWidths, sheetColumnCount ]);
-
-  return (
-    <EventRedux 
-      ref={props.eventListenerRef} 
-      topOffsets={topOffsets}
-      leftOffsets={leftOffsets}
-      {...props}
-    />  
-  );
-};
-
-EventListener = connect(mapStateToProps, mapDispatchToProps)(EventListener);
-
-export default EventListener;
-
-class EventRedux extends PureComponent {
+class EventListener extends PureComponent {
   constructor(props) {
     super(props);
   }
@@ -2305,3 +2290,7 @@ class EventRedux extends PureComponent {
     return null;
   }
 };
+
+EventListener = connect(mapStateToProps, mapDispatchToProps, null, { forwardRef: true })(EventListener);
+
+export default EventListener;

@@ -59,7 +59,7 @@ const Excel = ({
       <EventListener 
         sheetGridRef={sheetGridRef}
         sheetContainerRef={sheetContainerRef}
-        eventListenerRef={eventListenerRef}
+        ref={eventListenerRef}
       />
     </div>
   );

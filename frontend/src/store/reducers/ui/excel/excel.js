@@ -48,6 +48,8 @@ import templateId from "./templateId";
 
 import bundleId from "./bundleId";
 
+import topoffsets from "../../../selectors/ui/excel/topOffsets";
+
 const excelReducer = combineReducers({ 
   name,
   type,
