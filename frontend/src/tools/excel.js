@@ -171,26 +171,28 @@ const calculateFormula = (data, formula) => {
   return parser.parse(formula);
 };
 
-let size = -1;
+export const getScrollbarSize = (() => {
+  let size = -1;
 
-// This utility copied from "dom-helpers" package. -- from react-window
-export const getScrollbarSize = (recalculate = false) => {
-  if (size === -1 || recalculate) {
-    const div = document.createElement('div');
-    const style = div.style;
-    style.width = '50px';
-    style.height = '50px';
-    style.overflow = 'scroll';
-
-    ((document.body)).appendChild(div);
-
-    size = div.offsetWidth - div.clientWidth;
-
-    ((document.body)).removeChild(div);
-  }
-
-  return size;
-};
+  return (recalculate = false) => {
+    console.log(size)
+    if (size === -1 || recalculate) {
+      const div = document.createElement('div');
+      const style = div.style;
+      style.width = '50px';
+      style.height = '50px';
+      style.overflow = 'scroll';
+  
+      ((document.body)).appendChild(div);
+  
+      size = div.offsetWidth - div.clientWidth;
+  
+      ((document.body)).removeChild(div);
+    }
+  
+    return size;
+  };
+})();
 
 // Copied from react-window
 export const getEstimatedTotalHeight = (
