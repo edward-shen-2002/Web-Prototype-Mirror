@@ -32,4 +32,4 @@ const DEFAULT_ROLE_CONTROL_CONFIG = { scope: ROLE_LEVEL_NOT_APPLICABLE, ...DEFAU
 const ADMIN_ROLE_CONTROL_CONFIG = { scope: ROLE_LEVEL_ADMIN, ...DEFAULT_GROUPS };
 
 export const DEFAULT_ROLES = ROLE_NAMES.reduce((prev, role) => ({ ...prev, [ role ]: DEFAULT_ROLE_CONTROL_CONFIG }), {});
-export const ADMIN_ROLES = ROLE_NAMES.reduce((prev, role) => ({ ...prev, [role]: ADMIN_ROLE_CONTROL_CONFIG }), {});
+export const ADMIN_ROLES = ROLE_NAMES.reduce((prev, role) => ({ ...prev, [ role ]: ADMIN_ROLE_CONTROL_CONFIG }), {});

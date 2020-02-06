@@ -8,7 +8,6 @@ import { Formik } from "formik";
 
 import { publicAxios } from "@tools/rest";
 
-import { ROLE_LEVEL_NOT_APPLICABLE } from "@constants/roles";
 import { REST_PUBLIC_REGISTER, REST_PUBLIC_DATA } from "@constants/rest";
 import { ROUTE_PUBLIC_LOGIN, ROUTE_USER_PROFILE } from "@constants/routes";
 
@@ -21,11 +20,11 @@ import Slide from "@material-ui/core/Slide";
 import RolesDialog from "@tools/components/RolesDialog";
 import EntitiesDialog from "@tools/components/EntitiesDialog";
 
+import { ADMIN_ROLES } from "@constants/roles";
+
 import * as yup from "yup";
 
 import "./Register.scss";
-
-const defaultRoleControlConfig = { scope: ROLE_LEVEL_NOT_APPLICABLE, sectors: [], LHINs: [], organizations: [] };
 
 const registerSchema = yup.object().shape({
   username: yup.string()
@@ -305,15 +304,7 @@ let Register = ({ isOnline, history }) => {
     phoneNumber: "", 
     password: "password123@", 
     passwordConfirm: "password123@",
-    roles: {
-      TEMPLATE_MANAGER: { ...defaultRoleControlConfig }, 
-      BUNDLE_MANAGER: { ...defaultRoleControlConfig }, 
-      USER_MANAGER: { ...defaultRoleControlConfig }, 
-      ORGANIZATION_MANAGER: { ...defaultRoleControlConfig }, 
-      LHIN_MANAGER: { ...defaultRoleControlConfig }, 
-      SECTOR_MANAGER: { ...defaultRoleControlConfig }, 
-      SYSTEM_MANAGER: { ...defaultRoleControlConfig }
-    },
+    roles: ADMIN_ROLES,
     organizations: {}
   });
 

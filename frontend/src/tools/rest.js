@@ -35,8 +35,7 @@ export const adminApproveBundleRoleAxios = axios.create({ baseURL: `${SERVER_APP
 
 const _setAxiosToken = (routeAxios, token) => routeAxios.defaults.headers.common = { ...routeAxios.defaults.headers.common, Authorization: `Bearer ${token}` };
 
-const tokenAxiosList = [ 
-  authAxios, 
+export const adminAxiosRouters = [
   adminUserRoleAxios, 
   adminOrganizationRoleAxios, 
   adminSectorRoleAxios, 
@@ -46,6 +45,11 @@ const tokenAxiosList = [
   adminReviewBundleRoleAxios,
   adminApproveBundleRoleAxios,
   adminBusinessConceptRoleAxios
+];
+
+const tokenAxiosList = [ 
+  authAxios, 
+  ...adminAxiosRouters
 ];
 
 // Token is the same for all requests - representation of an authenticated registered user

@@ -7,14 +7,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { loadUserState, resetUserState } from "@tools/redux";
 import { 
   authAxios, 
-  adminUserRoleAxios, 
-  adminOrganizationRoleAxios, 
-  adminSectorRoleAxios, 
-  adminTemplateRoleAxios, 
-  adminBundleRoleAxios,
-  adminEditBundleRoleAxios,
-  adminReviewBundleRoleAxios,
-  adminApproveBundleRoleAxios
+  adminAxiosRouters
 } from "@tools/rest";
 import { findAndSaveToken } from "@tools/storage";
 import { ActivityRoute } from "@tools/components/routes";
@@ -155,15 +148,8 @@ let App = ({
 
     if(isOnline) {
       setMiddleware(authAxios, authErrorMiddleware);
-      setMiddleware(adminUserRoleAxios, adminErrorMiddleware);
-      setMiddleware(adminOrganizationRoleAxios, adminErrorMiddleware);
-      setMiddleware(adminSectorRoleAxios, adminErrorMiddleware);
-      setMiddleware(adminTemplateRoleAxios, adminErrorMiddleware);
-      setMiddleware(adminBundleRoleAxios, adminErrorMiddleware);
       
-      setMiddleware(adminEditBundleRoleAxios, adminErrorMiddleware);
-      setMiddleware(adminReviewBundleRoleAxios, adminErrorMiddleware);
-      setMiddleware(adminApproveBundleRoleAxios, adminErrorMiddleware);
+      adminAxiosRouters.forEach((adminAxios) => setMiddleware(adminAxios, adminErrorMiddleware));
     }
   }, [ isOnline ]);
 
