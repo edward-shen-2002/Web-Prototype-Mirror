@@ -6,7 +6,7 @@ import { columnNumberToName } from "xlsx-populate/lib/addressConverter";
 
 const ColumnDragger = ({
   column,
-  handleColumnDragStart
+  eventListenerRef
 }) => {
   const [ isIndicatorActive, setIsIndicatorActive ] = useState(false);
 
@@ -16,7 +16,7 @@ const ColumnDragger = ({
 
   const handleClick = (event) => event.stopPropagation();
 
-  const handleMouseDown = () => handleColumnDragStart(column);
+  const handleMouseDown = () => eventListenerRef.current.startColumnDrag(column);
 
   return (
     <div 
@@ -47,17 +47,16 @@ let ColumnHeaderCell = ({
   column, 
   cursorType,
   isSelectionMode,
-  handleColumnDragStart,
-  handleClickColumnHeader 
+  eventListenerRef
 }) => {
-  const handleClick = ({ ctrlKey }) => handleClickColumnHeader(column, ctrlKey);
+  const handleClick = ({ ctrlKey }) => eventListenerRef.current.clickColumnHeader(column, ctrlKey);
 
   const value = columnNumberToName(column);
 
   return (
     <div className="cell cell--positionIndicator" style={style} onClick={handleClick}>
       <div>{value}</div>
-      {!isSelectionMode && cursorType === "default" && <ColumnDragger column={column} handleColumnDragStart={handleColumnDragStart}/>}
+      {!isSelectionMode && cursorType === "default" && <ColumnDragger column={column} eventListenerRef={eventListenerRef}/>}
     </div>
   );
 };

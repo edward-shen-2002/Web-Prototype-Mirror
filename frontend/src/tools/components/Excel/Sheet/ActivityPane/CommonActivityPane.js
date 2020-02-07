@@ -9,23 +9,13 @@ const CommonActivityPane = ({
   isRelevantArea,
   computeActiveCellStyle,
   computeSelectionAreaStyle,
-  handleChangeActiveInputData,
-  handleCloseActiveCellDialog,
-  handleChangeBusinessConcept,
-  handleAddComment,
-  handleDeleteComment,
-  handleSetPrepopulate
+  eventListenerRef
 }) => (
   <Fragment>
     <ActiveCell
       computeActiveCellStyle={computeActiveCellStyle}
       isActiveCellInCorrectPane={isActiveCellInCorrectPane}
-      handleChangeActiveInputData={handleChangeActiveInputData}
-      handleCloseActiveCellDialog={handleCloseActiveCellDialog}
-      handleChangeBusinessConcept={handleChangeBusinessConcept}
-      handleAddComment={handleAddComment}
-      handleDeleteComment={handleDeleteComment}
-      handleSetPrepopulate={handleSetPrepopulate}
+      eventListenerRef={eventListenerRef}
     />
     <ActiveSelectionArea
       isRelevantArea={isRelevantArea}

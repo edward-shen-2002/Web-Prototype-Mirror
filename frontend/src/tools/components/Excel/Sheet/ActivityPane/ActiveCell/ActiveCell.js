@@ -124,9 +124,7 @@ const CommentInputSection = ({
 
 const CommentDialog = ({
   comments,
-  handleCloseActiveCellDialog,
-  handleAddComment,
-  handleDeleteComment
+  eventListenerRef
 }) => {
   const textFieldRef = useRef();
   const [ comment, setComment ] = useState("");
@@ -136,9 +134,10 @@ const CommentDialog = ({
   }, [ textFieldRef ]);
 
   const handleClick = () => textFieldRef.current.focus();
-  const handleSaveComment = () => handleAddComment(comment);
-  const handleRemoveComment = (commentId) => handleDeleteComment(commentId);
+  const handleSaveComment = () => eventListenerRef.current.addComment(comment);
+  const handleRemoveComment = (commentId) => eventListenerRef.current.deleteComment(commentId);
   const handleChange = ({ target: { value } }) => setComment(value);
+  const handleCloseActiveCellDialog = () => eventListenerRef.current.resetActiveCellDialog();
 
   return (
     <div 
@@ -176,8 +175,7 @@ const PrepopulateDialog = ({
   type,
   quarter,
   year,
-  handleSetPrepopulate,
-  handleCloseActiveCellDialog
+  eventListenerRef
 }) => {
   const [ newType, setNewType ] = useState(type ? type : "");
   const [ newQuarter, setNewQuarter ] = useState(quarter ? quarter : "");
@@ -187,7 +185,8 @@ const PrepopulateDialog = ({
   const handleChangeQuarter = ({ target: { value } }) => setNewQuarter(value);
   const handleChangeYear = ({ target: { value } }) => setNewYear(value);
 
-  const handleChangePrepopulate = () => handleSetPrepopulate({ type: newType, quarter: newQuarter, year: newYear });
+  const handleChangePrepopulate = () => eventListenerRef.current.setPrepopulate({ type: newType, quarter: newQuarter, year: newYear });
+  const handleCloseActiveCellDialog = () => eventListenerRef.current.resetActiveCellDialog();
 
   return (
     <div className="dialog">
@@ -218,9 +217,9 @@ const PrepopulateDialog = ({
 const BusinessConceptsItems = ({ 
   businessConcepts, 
   type,
-  handleChangeBusinessConcept 
+  eventListenerRef 
 }) => businessConcepts.map(({ _id, id, value }) => {
-  const handleClick = () => handleChangeBusinessConcept(type, id);
+  const handleClick = () => eventListenerRef.current.changeBusinessConcept(type, id);
 
   return (
     <ListItem
@@ -239,13 +238,13 @@ const BusinessConceptsItems = ({
 const BusinessConceptsList = ({ 
   businessConcepts, 
   type,
-  handleChangeBusinessConcept 
+  eventListenerRef 
 }) => (
   <List className="businessConcepts">
     <BusinessConceptsItems 
       type={type}
       businessConcepts={businessConcepts}
-      handleChangeBusinessConcept={handleChangeBusinessConcept}
+      eventListenerRef={eventListenerRef}
     />
   </List>
 );
@@ -254,7 +253,7 @@ const filterString = (query, value) =>  value.toString().toLowerCase().includes(
 
 const BusinessConceptDialog = ({
   type,
-  handleChangeBusinessConcept
+  eventListenerRef
 }) => {
   const [ businessConcepts, setBusinessConcepts ] = useState([]);
   const [ filter, setFilter ] = useState("");
@@ -296,7 +295,7 @@ const BusinessConceptDialog = ({
       <BusinessConceptsList 
         type={type}
         businessConcepts={filteredBusinessConcepts}
-        handleChangeBusinessConcept={handleChangeBusinessConcept}
+        eventListenerRef={eventListenerRef}
       />
       {/* <DialogActions/> */}
     </div>
@@ -310,17 +309,13 @@ const ActiveCellDialog = ({
   popoverRect,
   comments,
   value,
-  handleCloseActiveCellDialog,
-  handleChangeBusinessConcept,
-  handleAddComment,
-  handleDeleteComment,
-  handleSetPrepopulate
+  eventListenerRef
 }) => {
   const handleKeyDownCapture = (event) => event.stopPropagation();
   const handleContextMenuCapture = (event) => event.stopPropagation();
 
   const commonChildrenProps = { 
-    handleCloseActiveCellDialog 
+    eventListenerRef 
   };
 
   let Children;
@@ -330,8 +325,6 @@ const ActiveCellDialog = ({
       <CommentDialog 
         {...commonChildrenProps}
         comments={comments}
-        handleAddComment={handleAddComment}
-        handleDeleteComment={handleDeleteComment}
       />
     );
   } else if(activeCellDialog === "attribute" || activeCellDialog === "category") {
@@ -339,7 +332,6 @@ const ActiveCellDialog = ({
       <BusinessConceptDialog 
         {...commonChildrenProps} 
         type={activeCellDialog} 
-        handleChangeBusinessConcept={handleChangeBusinessConcept}
       />
     );
   } else if(activeCellDialog === "prepopulate") {
@@ -355,7 +347,6 @@ const ActiveCellDialog = ({
       <PrepopulateDialog
         {...commonChildrenProps}
         {...groupValues}
-        handleSetPrepopulate={handleSetPrepopulate}
       />
     );
   }
@@ -383,14 +374,14 @@ const ActiveInputCell = ({
   activeCellStyle,
   activeCellInputAutoFocus,
   editorState,
-  handleChangeActiveInputData
+  eventListenerRef
 }) => {
   const editorRef = useRef(null);
   const handleChangeInputValue = (newEditorState) => {
     const currentContentState = editorState.getCurrentContent();
     const newContentState = newEditorState.getCurrentContent();
 
-    if(currentContentState !== newContentState) handleChangeActiveInputData({ editorState: newEditorState });
+    if(currentContentState !== newContentState) eventListenerRef.current.changeActiveInputData({ editorState: newEditorState });
   };
 
   const handleReturn = (event) => {
@@ -432,11 +423,7 @@ const ActiveNormalCell = ({
   activeCellDialog,
   comments,
   value,
-  handleCloseActiveCellDialog,
-  handleChangeBusinessConcept,
-  handleAddComment,
-  handleDeleteComment,
-  handleSetPrepopulate
+  eventListenerRef
 }) => {
 
   return (
@@ -451,11 +438,7 @@ const ActiveNormalCell = ({
               activeCellDialog={activeCellDialog}
               comments={comments}
               value={value}
-              handleCloseActiveCellDialog={handleCloseActiveCellDialog}
-              handleChangeBusinessConcept={handleChangeBusinessConcept}
-              handleAddComment={handleAddComment}
-              handleDeleteComment={handleDeleteComment}
-              handleSetPrepopulate={handleSetPrepopulate}
+              eventListenerRef={eventListenerRef}
             />  
           )}
         >
@@ -540,21 +523,16 @@ let ActiveCell = ({
   topOffsets,
   leftOffsets,
 
-  handleChangeActiveInputData,
-  handleCloseActiveCellDialog,
-  handleChangeBusinessConcept,
-  handleAddComment,
-  handleDeleteComment,
-  handleSetPrepopulate
+  eventListenerRef
 }) => {
   const { x, y } = activeCellPosition;
 
   useEffect(() => {
-    if(isEditMode) handleCloseActiveCellDialog();
+    if(isEditMode) eventListenerRef.current.resetActiveCellDialog();
   }, [ isEditMode ]);
 
   useEffect(() => {
-    if(activeCellDialog) handleCloseActiveCellDialog();
+    if(activeCellDialog) eventListenerRef.current.resetActiveCellDialog();
   }, [ x, y ]);
 
   if(!isActiveCellInCorrectPane(x, y, sheetFreezeColumnCount, sheetFreezeRowCount)) return null;
@@ -599,18 +577,14 @@ let ActiveCell = ({
           activeCellStyle={activeCellStyle} 
           editorState={editorState}
           activeCellInputAutoFocus={activeCellInputAutoFocus}
-          handleChangeActiveInputData={handleChangeActiveInputData}
+          eventListenerRef={eventListenerRef}
         />
       : <ActiveNormalCell 
           activeCellStyle={activeCellStyle}
           activeCellDialog={activeCellDialog}
           comments={displayedComments}
           value={displayedValue}
-          handleCloseActiveCellDialog={handleCloseActiveCellDialog}
-          handleChangeBusinessConcept={handleChangeBusinessConcept}
-          handleAddComment={handleAddComment}
-          handleDeleteComment={handleDeleteComment}
-          handleSetPrepopulate={handleSetPrepopulate}
+          eventListenerRef={eventListenerRef}
         />
   );
 };

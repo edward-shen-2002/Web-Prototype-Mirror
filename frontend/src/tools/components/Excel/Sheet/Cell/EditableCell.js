@@ -17,25 +17,18 @@ const EditableCell = ({
   columnIndex, 
   rowIndex, 
 
-  handleSelectionStart,
-  handleSelectionOver,
-  handleRightClickCell,
-
-  handleDoubleClickEditableCell
+  eventListenerRef
 }) => {
   const handleMouseDown = ({ buttons, ctrlKey, shiftKey }) => {
-    if(buttons === 1) handleSelectionStart(columnIndex, rowIndex, ctrlKey, shiftKey);
+    if(buttons === 1) eventListenerRef.current.startSelection(columnIndex, rowIndex, ctrlKey, shiftKey);
   };
 
   const handleMouseEnter = ({ buttons, ctrlKey }) => {
-    if(buttons === 1) handleSelectionOver(columnIndex, rowIndex, ctrlKey);
+    if(buttons === 1) eventListenerRef.current.selectOver(columnIndex, rowIndex, ctrlKey);
   };
 
-  const handleDoubleClick = () => {
-    handleDoubleClickEditableCell();
-  };
-
-  const handleRightClick = (event) => handleRightClickCell(event, rowIndex, columnIndex);
+  const handleDoubleClick = () => eventListenerRef.current.doubleClickEditableCell();
+  const handleRightClick = (event) => eventListenerRef.current.rightClickCell(event, rowIndex, columnIndex);
 
   let value;
   let type;

@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 const RowDragger = ({
   row,
-  handleRowDragStart
+  eventListenerRef
 }) => {
   const [ isIndicatorActive, setIsIndicatorActive ] = useState(false);
 
@@ -20,9 +20,7 @@ const RowDragger = ({
     event.stopPropagation();
   };
 
-  const handleMouseDown = () => {
-    handleRowDragStart(row);
-  };
+  const handleMouseDown = () => eventListenerRef.current.startRowDrag(row);
 
   return (
     <div 
@@ -54,17 +52,14 @@ let RowHeaderCell = ({
   row, 
   cursorType,
   isSelectionMode,
-  handleRowDragStart,
-  handleClickRowHeader 
+  eventListenerRef
 }) => {
-  const handleClick = ({ ctrlKey }) => handleClickRowHeader(row, ctrlKey);
-
-  const value = row;
+  const handleClick = ({ ctrlKey }) => eventListenerRef.current.clickRowHeader(row, ctrlKey);
 
   return (
     <div className="cell cell--positionIndicator cell--header" style={style} onClick={handleClick}>
-      <div>{value}</div>
-      {!isSelectionMode && cursorType === "default" && <RowDragger row={row} handleRowDragStart={handleRowDragStart}/>}
+      <div>{row}</div>
+      {!isSelectionMode && cursorType === "default" && <RowDragger row={row} eventListenerRef={eventListenerRef}/>}
     </div>
   );
 };

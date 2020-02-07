@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { connect } from "react-redux";
 
@@ -58,10 +58,6 @@ const mapStateToProps = ({
   sheetFreezeColumnCount
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  handleUpdateScrollData: (scrollData) => dispatch(updateScrollData(scrollData)),
-});
-
 // !Change this to spread instead of object?
 const createItemData = memoize((itemData) => (itemData));
 
@@ -75,9 +71,7 @@ const SheetWindow = ({
   sheetColumnCount,
   sheetRowCount,
   sheetColumnWidths,
-  sheetRowHeights,
-
-  handleUpdateScrollData
+  sheetRowHeights
 }) => {
   const tableFreezeRowCount = sheetFreezeRowCount + 1;
   const tableFreezeColumnCount = sheetFreezeColumnCount + 1;
@@ -85,23 +79,7 @@ const SheetWindow = ({
   const rowHeight = (index) => index ? getNormalRowHeight(sheetRowHeights[index]) : DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER
   const columnWidth = (index) => index ? getNormalColumnWidth(sheetColumnWidths[index]) : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER;
 
-  const handleSelectionStart = (x1, y1, ctrlKey, shiftKey) => eventListenerRef.current.startSelection(x1, y1, ctrlKey, shiftKey);
-  const handleSelectionOver = (x2, y2, ctrlKey) => eventListenerRef.current.selectOver(x2, y2, ctrlKey);
-  const handleDoubleClickEditableCell = () => eventListenerRef.current.doubleClickEditableCell();
-  const handleClickColumnHeader = (column, ctrlKey) => eventListenerRef.current.clickColumnHeader(column, ctrlKey);
-  const handleClickRowHeader = (row, ctrlKey) => eventListenerRef.current.clickRowHeader(row, ctrlKey);
-  const handleClickRootHeader = () => eventListenerRef.current.selectAll();
-  const handleChangeActiveInputData = (value) => eventListenerRef.current.changeActiveInputData(value);
-  const handleRowDragStart = (row) => eventListenerRef.current.startRowDrag(row);
-  const handleColumnDragStart = (column) => eventListenerRef.current.startColumnDrag(column);
-  const handleScroll = (scrollData) => handleUpdateScrollData(scrollData); 
-  const handleRightClickCell = (event, row, column) => eventListenerRef.current.rightClickCell(event, row, column);
-  const handleCloseActiveCellDialog = () => eventListenerRef.current.resetActiveCellDialog();
-
-  const handleChangeBusinessConcept = (type, concept) => eventListenerRef.current.changeBusinessConcept(type, concept);
-  const handleAddComment = (comment) => eventListenerRef.current.addComment(comment);
-  const handleDeleteComment = (commentId) => eventListenerRef.current.deleteComment(commentId);
-  const handleSetPrepopulate = (prepopulateData) => eventListenerRef.current.setPrepopulate(prepopulateData)
+  const handleScroll = (scrollData) => eventListenerRef.current.scroll(scrollData); 
 
   const itemData = createItemData({
     sheetCellData, 
@@ -109,28 +87,12 @@ const SheetWindow = ({
     sheetColumnCount,
     sheetRowCount,
 
-    handleDoubleClickEditableCell,
-
-    handleSelectionStart,
-    handleSelectionOver,
-
-    handleRowDragStart,
-    handleColumnDragStart,
-
-    handleClickColumnHeader,
-    handleClickRowHeader,
-    handleClickRootHeader,
-    handleRightClickCell
+    eventListenerRef
   });
 
   const commonSelectionPaneProps = { 
     sheetGridRef, 
-    handleChangeActiveInputData,
-    handleCloseActiveCellDialog,
-    handleChangeBusinessConcept,
-    handleAddComment,
-    handleDeleteComment,
-    handleSetPrepopulate
+    eventListenerRef
   };
 
   return (
@@ -198,9 +160,7 @@ let Sheet = ({
   sheetColumnCount,
   sheetRowCount,
   sheetColumnWidths,
-  sheetRowHeights,
-
-  handleUpdateScrollData
+  sheetRowHeights
 }) => {
   const handleKeyDown = async (event) => {
     const { key, shiftKey, ctrlKey, altKey } = event;
@@ -284,8 +244,6 @@ let Sheet = ({
         sheetRowCount={sheetRowCount}
         sheetColumnWidths={sheetColumnWidths}
         sheetRowHeights={sheetRowHeights}
-      
-        handleUpdateScrollData={handleUpdateScrollData}
       />
       <ContextMenu 
         eventListenerRef={eventListenerRef}
@@ -298,6 +256,6 @@ let Sheet = ({
   );
 };
 
-Sheet = connect(mapStateToProps, mapDispatchToProps)(Sheet);
+Sheet = connect(mapStateToProps)(Sheet);
 
 export default Sheet;

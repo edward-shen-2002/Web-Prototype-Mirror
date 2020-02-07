@@ -893,7 +893,6 @@ class EventListener extends PureComponent {
     this.setInputAutoFocusOn();
   }
 
-  // TODO : Consider no stagnant selection area
   clickRowHeader(row, ctrlKey) {
     const {
       activeCellPosition,
@@ -1181,6 +1180,10 @@ class EventListener extends PureComponent {
       stagnantSelectionAreas,
       handleResetStagnantSelectionAreas
     } = this.props;
+
+    // console.log(row, column)
+    // const { shiftKey } = event;
+    // startSelection(x1, y1, ctrlKey, shiftKey)
 
     event.preventDefault();
     this.disableEditMode();
@@ -1765,7 +1768,6 @@ class EventListener extends PureComponent {
     handleUpdateSheetCellData(newSheetCellData);
   }
 
-  // ! Too much calculation? Performance is choppy
   _scrollTo(newY, newX) {
     const {
       sheetGridRef,
@@ -1845,7 +1847,7 @@ class EventListener extends PureComponent {
   }
 
   scroll(scrollData) {
-    const { handleUpdateScrollData } = this.props;
+    const { handleUpdateScrollData } = this.props
 
     handleUpdateScrollData(scrollData);
   }
@@ -2034,7 +2036,6 @@ class EventListener extends PureComponent {
     this.changeSheet(newSheetName);
   }
 
-  // TODO
   setReadOnly() {
     const {
       sheetCellData,

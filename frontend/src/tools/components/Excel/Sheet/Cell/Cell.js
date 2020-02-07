@@ -7,26 +7,18 @@ import RootHeaderCell from "./RootHeaderCell";
 
 import "./Cell.scss";
 
-const Cell = ({ style, data, columnIndex, rowIndex }) => {
+const Cell = ({ 
+  style, 
+  data, 
+  columnIndex, 
+  rowIndex 
+}) => {
   const {
     eventListenerRef,
     sheetCellData,
 
     columnCount,
-    rowCount,
-
-    handleSelectionStart,
-    handleSelectionOver,
-
-    handleDoubleClickEditableCell,
-
-    handleRowDragStart,
-    handleColumnDragStart,
-
-    handleClickColumnHeader,
-    handleClickRowHeader,
-    handleClickRootHeader,
-    handleRightClickCell
+    rowCount
   } = data;
   
   let cellData;
@@ -41,11 +33,7 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         cellData={cellData} 
         columnIndex={columnIndex} 
         rowIndex={rowIndex} 
-
-        handleRightClickCell={handleRightClickCell}
-        handleSelectionStart={handleSelectionStart}
-        handleSelectionOver={handleSelectionOver}
-        handleDoubleClickEditableCell={handleDoubleClickEditableCell}
+        eventListenerRef={eventListenerRef}
       />
     );
   } else if(columnIndex) {
@@ -54,9 +42,7 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         style={style} 
         column={columnIndex}
         rowCount={rowCount}
-        handleRightClickCell={handleRightClickCell}
-        handleColumnDragStart={handleColumnDragStart}
-        handleClickColumnHeader={handleClickColumnHeader}
+        eventListenerRef={eventListenerRef}
       />
     );
   } else if(rowIndex) {
@@ -65,9 +51,7 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         style={style} 
         row={rowIndex}
         columnCount={columnCount}
-        handleRightClickCell={handleRightClickCell}
-        handleRowDragStart={handleRowDragStart}
-        handleClickRowHeader={handleClickRowHeader}
+        eventListenerRef={eventListenerRef}
       />
     );
   } else {
@@ -76,8 +60,7 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         style={style} 
         columnCount={columnCount}
         rowCount={rowCount}
-        handleRightClickCell={handleRightClickCell}
-        handleClickRootHeader={handleClickRootHeader}
+        eventListenerRef={eventListenerRef}
       />
     );
   }

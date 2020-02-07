@@ -1,8 +1,11 @@
 import React from "react";
 
 // Contains draggable borders for freeze row/columns
-const RootHeaderCell = ({ style, handleClickRootHeader }) => {
-  const handleClick = () => handleClickRootHeader();
+const RootHeaderCell = ({ 
+  style, 
+  eventListenerRef
+}) => {
+  const handleClick = () => eventListenerRef.current.selectAll();
 
   const className = "cell cell--positionIndicator";
 
