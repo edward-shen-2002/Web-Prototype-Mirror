@@ -4,6 +4,7 @@ const WindowListener = ({ eventListenerRef, sheetContainerRef }) => {
   useEffect(() => {
     window.onmouseup = (event) => {
       const { ctrlKey } = event;
+
       eventListenerRef.current.mouseUp(ctrlKey);
     };
 
@@ -14,6 +15,7 @@ const WindowListener = ({ eventListenerRef, sheetContainerRef }) => {
 
     return () => {
       window.onmouseup = null;
+      window.onmousemove = null;
     };
   })
 
