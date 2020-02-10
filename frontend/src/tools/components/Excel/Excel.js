@@ -13,29 +13,20 @@ import "./Excel.scss";
 const Divider = () => <hr className="divider"/>;
 
 const Excel = ({ 
-  name, 
   type,
-  returnLink, 
-  templateData,
-  handleUpdateTemplate,
-  handleToggleTemplatePublish
+  returnLink
 }) => {
   const eventListenerRef = useRef(null);
   const sheetContainerRef = useRef(null);
   const sheetGridRef = useRef(null);
-  const excelRef = useRef(null);
 
   return (
-    <div ref={excelRef} className="excel">
+    <div className="excel">
       <AppBar 
         eventListenerRef={eventListenerRef}
-        name={name} 
         type={type}
         returnLink={returnLink} 
-        templateData={templateData}
-        handleUpdateTemplate={handleUpdateTemplate}
-        handleToggleTemplatePublish={handleToggleTemplatePublish}
-        />
+      />
       <Divider/>
       <ToolBar
         type={type}
@@ -57,9 +48,9 @@ const Excel = ({
         eventListenerRef={eventListenerRef}
       />
       <EventListener 
+        ref={eventListenerRef}
         sheetGridRef={sheetGridRef}
         sheetContainerRef={sheetContainerRef}
-        ref={eventListenerRef}
       />
     </div>
   );

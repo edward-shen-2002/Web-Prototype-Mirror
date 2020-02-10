@@ -4,21 +4,16 @@ import { connect } from "react-redux";
 
 import { Link } from "react-router-dom";
 
-import { adminTemplateRoleAxios } from "@tools/rest";
-
 import { toggleTemplatePublish } from "@actions/ui/excel/isTemplatePublished";
 
 import Button from "@material-ui/core/Button";
 
 import FileTableOutline from "mdi-material-ui/FileTableOutline"; 
 import DoubleArrowIcon from "@material-ui/icons/DoubleArrow";
-import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 
 import Title from "./Title";
 
 import Menu from "./Menu";
-
-import { REST_ADMIN_TEMPLATES } from "@constants/rest";
 
 import "./AppBar.scss";
 
@@ -48,15 +43,7 @@ const DoubleArrowIconButton = ({ buttonStyle, text, handleClick }) => (
   </Button>
 );
 
-const PlaylistAddIconButton = ({ buttonStyle, text, handleClick }) => (
-  <Button style={buttonStyle} variant="contained" color="primary" onClick={handleClick}>
-    <PlaylistAddIcon/>
-    {text}
-  </Button>
-);
-
-let TemplateOptions = ({ 
-  eventListenerRef, 
+let TemplateOptions = ({  
   isTemplatePublished, 
   handleTogglePublish 
 }) => {
@@ -99,14 +86,12 @@ let SideOptions = ({
 SideOptions = connect(mapTemplateStateToProps, mapTemplateDispatchToProps)(SideOptions);
 
 const MainAppBarOptions = ({
-  name,
   returnLink,
-  eventListenerRef,
+  eventListenerRef
 }) => (
   <div className="appBarMain">
     <ExcelIconButton returnLink={returnLink}/>
     <Header 
-      name={name} 
       eventListenerRef={eventListenerRef}
     />
   </div>
@@ -114,21 +99,17 @@ const MainAppBarOptions = ({
 
 const AppBar = ({ 
   eventListenerRef,
-  name, 
   type,
-  returnLink, 
-  templateData,
+  returnLink,
 }) => (
   <div className="appBarContainer">
-    <MainAppBarOptions 
-      name={name} 
+    <MainAppBarOptions  
       returnLink={returnLink} 
       eventListenerRef={eventListenerRef}
     />
     <SideOptions 
       eventListenerRef={eventListenerRef}
-      type={type} 
-      templateData={templateData} 
+      type={type}
     />
   </div>
 );

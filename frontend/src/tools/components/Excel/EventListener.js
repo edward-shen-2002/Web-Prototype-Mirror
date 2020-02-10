@@ -72,8 +72,6 @@ import {
   getEstimatedTotalHeight, 
   getEstimatedTotalWidth, 
   getCellData, 
-  getTopOffsets,
-  getLeftOffsets,
   convertTextToEditorState, 
   convertRichTextToEditorState,
   getNormalColumnWidth,
@@ -98,7 +96,6 @@ import {
 
 
 import { 
-  REST_ADMIN_BUSINESS_CONCEPTS, 
   REST_ADMIN_TEMPLATES,
   REST_ADMIN_BUNDLES_WORKFLOW
 } from "@constants/rest";
@@ -199,6 +196,8 @@ const mapDispatchToProps = (dispatch) => ({
 class EventListener extends PureComponent {
   constructor(props) {
     super(props);
+
+    // Get data from session storage, then delete session storage
   }
 
   arrowUp(event, shiftKey) {
