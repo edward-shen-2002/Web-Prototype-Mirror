@@ -198,6 +198,21 @@ class EventListener extends PureComponent {
     super(props);
 
     // Get data from session storage, then delete session storage
+    const { 
+      sheetNames,
+      activeSheetName
+    } = props;
+
+    this.inactiveSheets = {};
+
+    const compressedInactiveSheets = JSON.parse(sessionStorage.getItem("inactiveSheets"));
+
+    sheetNames.filter((sheetName) => sheetName !== activeSheetName)
+      .forEach((sheetName) => {
+        this.inactiveSheets[sheetName] = JSON.parse(pako.inflate(compressedInactiveSheets[sheetName], { to: "string" }));
+      });
+
+    sessionStorage.removeItem("inactiveSheets");
   }
 
   arrowUp(event, shiftKey) {
@@ -863,13 +878,10 @@ class EventListener extends PureComponent {
       stagnantSelectionAreas
     };
     
-    let currentInactiveSheets = JSON.parse(sessionStorage.getItem("inactiveSheets"));
-    const newActiveSheetData = JSON.parse(pako.inflate(currentInactiveSheets[sheetName], { to: "string" }));
+    let newActiveSheetData = this.inactiveSheets[sheetName];
 
-    currentInactiveSheets[activeSheetName] = pako.deflate(JSON.stringify(currentSheetData), { to: "string" });
-    currentInactiveSheets[sheetName] = undefined;
-
-    sessionStorage.setItem("inactiveSheets", JSON.stringify(currentInactiveSheets));
+    this.inactiveSheets[activeSheetName] = currentSheetData;
+    this.inactiveSheets[sheetName] = undefined;
     
     // ! Need to updae active cell input data!
     handleLoadSheet({
@@ -1903,7 +1915,7 @@ class EventListener extends PureComponent {
 
     commonProps.isTemplatePublished = isTemplatePublished;
 
-    const fileStates = extractReactAndWorkbookState(commonProps);
+    const fileStates = extractReactAndWorkbookState(commonProps, this.inactiveSheets);
 
     const newTemplate = {
       published: isTemplatePublished,
@@ -1922,7 +1934,7 @@ class EventListener extends PureComponent {
       templateId
     } = this.props;
 
-    const fileStates = extractReactAndWorkbookState(commonProps);
+    const fileStates = extractReactAndWorkbookState(commonProps, this.inactiveSheets);
 
     bundleAxiosRouter.put(
       `${REST_ADMIN_BUNDLES_WORKFLOW}/${bundleId}/workbook/${templateId}`,
@@ -2022,11 +2034,7 @@ class EventListener extends PureComponent {
     const newSheetName = generateNewSheetName(sheetNames);
     const newSheetData = createBlankSheet();
 
-    let currentInactiveSheets = JSON.parse(sessionStorage.getItem("inactiveSheets"));
-
-    currentInactiveSheets[newSheetName] = pako.deflate(JSON.stringify(newSheetData), { to: "string" });;
-
-    sessionStorage.setItem("inactiveSheets", JSON.stringify(currentInactiveSheets));
+    this.inactiveSheets[newSheetName] = newSheetData;
 
     const activeSheetNameIndex = sheetNames.indexOf(activeSheetName);
 

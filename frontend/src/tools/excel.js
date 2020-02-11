@@ -981,7 +981,6 @@ export const convertExcelFileToState = async (excelFile) => {
 };
 
 export const convertStateToReactState = (state) => {
-  
   const workbookData = state.workbookData;
   const activeSheetName = state.activeSheetName;
   const activeSheetData = JSON.parse(pako.inflate(workbookData[activeSheetName], { to: "string" }));
@@ -1001,15 +1000,21 @@ export const convertStateToReactState = (state) => {
   };
 };
 
-export const getWorkbookData = (activeSheetName, activeSheetData) => {
-  const inactiveSheetsData = sessionStorage.getItem("inactiveSheets");
-  
-  const rawInactiveSheetsData = JSON.parse(inactiveSheetsData);
+export const getWorkbookData = (activeSheetName, activeSheetData, inactiveSheets) => {
+  const workbookData = {};
 
-  return { ...rawInactiveSheetsData, [activeSheetName]: pako.deflate(JSON.stringify(activeSheetData), { to: "string" }) };
+  Object.keys(inactiveSheets)
+    .filter((sheetName) => sheetName !== activeSheetName)
+    .forEach((sheetName) => {
+      workbookData[sheetName] =  pako.deflate(JSON.stringify(inactiveSheets[sheetName]), { to: "string" });
+    });
+  
+  workbookData[activeSheetName] = pako.deflate(JSON.stringify(activeSheetData), { to: "string" });
+
+  return workbookData;
 };
 
-export const extractReactAndWorkbookState = (state) => {
+export const extractReactAndWorkbookState = (state, inactiveSheets) => {
   const {
     name,
     activeSheetName,
@@ -1040,7 +1045,7 @@ export const extractReactAndWorkbookState = (state) => {
     sheetHiddenColumns,
     sheetHiddenRows,
     stagnantSelectionAreas,
-  });
+  }, inactiveSheets);
 
   return {
     name,

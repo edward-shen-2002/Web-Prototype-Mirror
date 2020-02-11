@@ -1,8 +1,6 @@
-import React from "react";
+import React, { useCallback } from "react";
 
 import { connect } from "react-redux";
-
-import { updateScrollData } from "@actions/ui/excel/scrollData";
 
 import { VariableSizeGrid } from "react-window";
 
@@ -76,8 +74,15 @@ const SheetWindow = ({
   const tableFreezeRowCount = sheetFreezeRowCount + 1;
   const tableFreezeColumnCount = sheetFreezeColumnCount + 1;
 
-  const rowHeight = (index) => index ? getNormalRowHeight(sheetRowHeights[index]) : DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER
-  const columnWidth = (index) => index ? getNormalColumnWidth(sheetColumnWidths[index]) : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER;
+  const rowHeight = useCallback(
+    (index) => index ? getNormalRowHeight(sheetRowHeights[index]) : DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
+    [ sheetRowHeights ]
+  );
+
+  const columnWidth = useCallback(
+    (index) => index ? getNormalColumnWidth(sheetColumnWidths[index]) : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER,
+    [ sheetColumnWidths ]
+  );
 
   const handleScroll = (scrollData) => eventListenerRef.current.scroll(scrollData); 
 
