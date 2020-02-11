@@ -24,6 +24,8 @@ Storage: Changed values in storage, history indices, action history, and action 
 
 - Hard implementation, especially if state is dynamic - need to understand the structure of each state
 
+- Would all data be stored even if it doesn't have a value intially?
+
 ### Structure
 
 #### Redo/undo Action
@@ -102,8 +104,6 @@ Storage: History index, action history and action values
 - [Already implemented](https://github.com/JannicBeck/undox)
 
 #### Cons
-
-- Bad run-time
 
 - Have to retrace history from initial state to desired state - takes up to n actions and at least n re-renders (if values are different)
 
