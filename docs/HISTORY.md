@@ -107,8 +107,6 @@ Storage: History index, action history and action values
 
 - Have to retrace history from initial state to desired state - takes up to n actions and at least n re-renders (if values are different)
 
-#### Cons
-
 ### Structure
 
 #### Redo/undo Action
