@@ -2,7 +2,7 @@
 
 ## Solutions
 
-## Implementation 1
+## Implementation 1 (Impractical)
 
 Add a history to state values
 
