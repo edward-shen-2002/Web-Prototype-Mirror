@@ -283,11 +283,15 @@ class EventListener extends PureComponent {
       }
     } else {
       // Check if current cell is a merge cell. Move to the next cell down (which is not merged with current)
-      // if(sheetCellData[y] && sheetCellData[y][x]) {
+      if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
+        const { merged } = sheetCellData[y][x];
 
-      // }
-      
-      y--;
+        const { y1 } = merged;
+
+        y = y1 - 1;
+      } else {
+        y--;
+      }
   
       if(y > 0) this.updateActiveCellPosition(y, x);
       if(stagnantSelectionAreasLength) handleResetStagnantSelectionAreas();
@@ -297,6 +301,7 @@ class EventListener extends PureComponent {
 
   arrowDown(event, shiftKey) {
     let { 
+      sheetCellData,
       activeCellPosition,
       isEditMode,
       activeCellSelectionAreaIndex,
@@ -361,7 +366,15 @@ class EventListener extends PureComponent {
         if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
       }
     } else {
-      y++;
+      if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
+        const { merged } = sheetCellData[y][x];
+
+        const { y2 } = merged;
+
+        y = y2 + 1;
+      } else {
+        y++;
+      }
       
       if(y < sheetRowCount) this.updateActiveCellPosition(y, x);
       if(stagnantSelectionAreasLength) handleResetStagnantSelectionAreas();
@@ -371,6 +384,7 @@ class EventListener extends PureComponent {
 
   arrowLeft(event, shiftKey) {
     let { 
+      sheetCellData,
       activeCellPosition,
       activeCellSelectionAreaIndex,
       isEditMode,
@@ -433,8 +447,16 @@ class EventListener extends PureComponent {
         if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
       }
     } else {
-      x--;
-  
+      if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
+        const { merged } = sheetCellData[y][x];
+
+        const { x1 } = merged;
+
+        x = x1 - 1;
+      } else {
+        x--;
+      }
+
       if(x > 0) this.updateActiveCellPosition(y, x);
       if(stagnantSelectionAreasLength) handleResetStagnantSelectionAreas();
       if(activeCellSelectionAreaIndex >= 0) handleResetActiveCellSelectionAreaIndex();
@@ -443,6 +465,7 @@ class EventListener extends PureComponent {
 
   arrowRight(event, shiftKey) {
     let { 
+      sheetCellData,
       activeCellPosition,
       activeCellSelectionAreaIndex,
       isEditMode,
@@ -506,7 +529,15 @@ class EventListener extends PureComponent {
         if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
       }
     } else {
-      x++;
+      if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
+        const { merged } = sheetCellData[y][x];
+
+        const { x2 } = merged;
+
+        x = x2 + 1;
+      } else {
+        x++;
+      }
   
       if(x < sheetColumnCount) this.updateActiveCellPosition(y, x);
       if(stagnantSelectionAreasLength) handleResetStagnantSelectionAreas();
