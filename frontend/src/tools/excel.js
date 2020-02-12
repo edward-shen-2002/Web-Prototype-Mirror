@@ -682,50 +682,62 @@ const extractRichTextData = (richText) => {
   return plainRichTextObject;
 };
 
-const extractCellData = (cellData) => {
-  const cellValue = cellData.value();
+const extractCellData = (cellData, row, column) => {
+  let extractedCellData = {};
+  
+  const value = cellData.value();
 
-  const cellFormula = cellData.formula();
+  const formula = cellData.formula();
   
   // !! TODO May be internal - ie in another sheet
-  const cellHyperlinkData = cellData.hyperlink();
+  const hyperlinkData = cellData.hyperlink();
 
-  if(cellHyperlinkData) {
-    console.log(cellHyperlinkData)
-    const { _sheet, _data } = cellHyperlinkData;
+  const merged = cellData.merged();
+
+  if(merged) {
+    const { _data: [ y1, x1, y2, x2 ] } = merged;
+
+    extractedCellData.merged = { x1, y1, x2, y2 };
+  }
+
+  if(hyperlinkData) {
+    // console.log(hyperlinkData)
+    const { 
+      hyperlink,
+      _sheet, 
+      _data 
+    } = hyperlinkData;
 
     // Internal
     if(_sheet) {
       const [ y, x ] = _data;
       // ! unsure when this undefined value occurs... what is the value of the cell?
-      if(cellValue === undefined) {
+      if(value === undefined) {
         // console.log(_sheet, _data)
       }
     // External -- Potentially unsafe
-    } else {
-      // console.log(cellValue)
+    } else if(hyperlink) {
+      
     }
   }
 
-  let extractedCellData = {};
-
   // TODO : Add error field in cellData!!
-  if(cellValue !== undefined) {
-    if(cellValue instanceof RichText) {
+  if(value !== undefined) {
+    if(value instanceof RichText) {
       extractedCellData.type = "rich-text";
-      extractedCellData.value = extractRichTextData(cellValue);
+      extractedCellData.value = extractRichTextData(value);
     } else {
-      if(cellFormula) {
+      if(formula) {
         extractedCellData.type = "formula";
-        extractedCellData.formula = cellFormula;
-      } else if(typeof cellValue === "string" && isPrepopulateString(cellValue)) {
+        extractedCellData.formula = formula;
+      } else if(typeof value === "string" && isPrepopulateString(value)) {
         extractedCellData.type = "prepopulate";
       } else {
         extractedCellData.type = "normal";
       }
 
       // ! possibly more conditions but not discovered yet
-      extractedCellData.value = cellValue instanceof FormulaError ? cellValue._error : cellValue;
+      extractedCellData.value = value instanceof FormulaError ? value._error : value;
     }
   }
 
@@ -741,7 +753,7 @@ export const getSheetCellData = (sheet, columnCount, rowCount) => {
   for(let row = 1; row < rowCount; row++) {
     const rowData = sheet.row(row);
     for(let column = 1; column < columnCount; column++) {
-      const cellData = extractCellData(rowData.cell(column));
+      const cellData = extractCellData(rowData.cell(column), row, column);
 
       if(cellData) {
         if(!sheetCellData[row]) sheetCellData[row] = {};
@@ -1072,3 +1084,16 @@ export const getCellDataText = (cellData) => {
 };
 
 export const clearEditorStateText = (richText) => convertRichTextToEditorState(richText.length ? richText[0] : []);
+
+export const getAreaDimensions = ({
+  x1, y1, x2, y2,
+  topOffsets,
+  leftOffsets,
+  sheetColumnWidths,
+  sheetRowHeights
+}) => {
+  const height = topOffsets[y2] + getNormalRowHeight(sheetRowHeights[y2]) - topOffsets[y1];
+  const width = leftOffsets[x2] + getNormalColumnWidth(sheetColumnWidths[x2]) - leftOffsets[x1];
+
+  return { height, width };
+}

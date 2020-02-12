@@ -12,7 +12,10 @@ import memoize from "memoize-one";
 
 import { inputCharacterRegex } from "@tools/regex";
 
-import { getNormalRowHeight, getNormalColumnWidth } from "@tools/excel";
+import { 
+  getNormalRowHeight, 
+  getNormalColumnWidth
+} from "@tools/excel";
 
 import ContextMenu from "./ContextMenu";
 
@@ -27,7 +30,9 @@ import BottomRightActivityPane from "./ActivityPane/BottomRightActivityPane";
 
 import { 
   DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER, 
-  DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER
+  DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
+  EXCEL_WINDOW_OVERSCAN_COLUMN_COUNT,
+  EXCEL_WINDOW_OVERSCAN_ROW_COUNT
 } from "@constants/excel";
 
 import "./Sheet.scss";
@@ -118,6 +123,8 @@ const SheetWindow = ({
             height={height}
             itemData={itemData}
             width={width}
+            overscanColumnCount={EXCEL_WINDOW_OVERSCAN_COLUMN_COUNT}
+            overscanRowCount={EXCEL_WINDOW_OVERSCAN_ROW_COUNT}
             onScroll={handleScroll}
             extraTopLeftElement={
               <TopLeftActivityPane 

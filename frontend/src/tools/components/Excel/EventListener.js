@@ -217,6 +217,7 @@ class EventListener extends PureComponent {
 
   arrowUp(event, shiftKey) {
     let { 
+      sheetCellData,
       activeCellPosition,
       activeCellSelectionAreaIndex,
       isEditMode,
@@ -281,6 +282,11 @@ class EventListener extends PureComponent {
         }
       }
     } else {
+      // Check if current cell is a merge cell. Move to the next cell down (which is not merged with current)
+      // if(sheetCellData[y] && sheetCellData[y][x]) {
+
+      // }
+      
       y--;
   
       if(y > 0) this.updateActiveCellPosition(y, x);
@@ -1539,6 +1545,7 @@ class EventListener extends PureComponent {
 
   startSelection(x1, y1, ctrlKey, shiftKey) {
     const { 
+      sheetCellData,
       activeCellPosition, 
       stagnantSelectionAreas, 
       handleResetStagnantSelectionAreas, 

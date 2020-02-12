@@ -8,7 +8,8 @@ import {
   getNormalRowHeight, 
   getNormalColumnWidth,
   isPrepopulateString,
-  parsePrepopulateString
+  parsePrepopulateString,
+  getAreaDimensions
 } from "@tools/excel";
 
 import { Editor } from "draft-js";
@@ -539,6 +540,10 @@ let ActiveCell = ({
 
   let activeCellStyle;
 
+  let top = topOffsets[y];
+  let left = leftOffsets[x];
+
+  // ! bottom left - do later for merged cells!!!
   if(computeActiveCellStyle) {
     activeCellStyle = computeActiveCellStyle(x, y, sheetColumnWidths, leftOffsets, sheetRowHeights, topOffsets, sheetFreezeColumnCount, sheetFreezeRowCount);
     activeCellStyle.minHeight = activeCellStyle.height;
@@ -547,9 +552,30 @@ let ActiveCell = ({
     let height = getNormalRowHeight(sheetRowHeights[y]);
     let width = getNormalColumnWidth(sheetColumnWidths[x]);
 
+    if(sheetCellData[y] && sheetCellData[y][x]) {
+      const { merged } = sheetCellData[y][x];
+
+      if(merged) {
+        const { x1, y1, x2, y2 } = merged;
+        const mergeDimensions = getAreaDimensions({ 
+          x1, y1, x2, y2,
+          topOffsets,
+          leftOffsets,
+          sheetColumnWidths,
+          sheetRowHeights
+         });
+
+         height = mergeDimensions.height;
+         width = mergeDimensions.width;
+
+         top = topOffsets[y1];
+         left = leftOffsets[x1];
+      }
+    };
+
     activeCellStyle = {
-      top: topOffsets[y], 
-      left: leftOffsets[x], 
+      top, 
+      left,
       height,
       width,
       minHeight: height,

@@ -1,6 +1,6 @@
 import React from "react";
 
-import EditableCell from "./EditableCell";
+import EditableCellContainer from "./EditableCell";
 import RowHeaderCell from "./RowHeaderCell";
 import ColumnHeaderCell from "./ColumnHeaderCell";
 import RootHeaderCell from "./RootHeaderCell";
@@ -28,7 +28,7 @@ const Cell = ({
     cellData = sheetCellData[rowIndex] && sheetCellData[rowIndex][columnIndex] ? sheetCellData[rowIndex][columnIndex] : undefined;
 
     Component = (
-      <EditableCell 
+      <EditableCellContainer 
         style={style} 
         cellData={cellData} 
         columnIndex={columnIndex} 
