@@ -691,16 +691,17 @@ const extractCellData = (cellData) => {
   const cellHyperlinkData = cellData.hyperlink();
 
   if(cellHyperlinkData) {
+    console.log(cellHyperlinkData)
     const { _sheet, _data } = cellHyperlinkData;
 
     // Internal
     if(_sheet) {
       const [ y, x ] = _data;
-      // External -- Potentially unsafe
       // ! unsure when this undefined value occurs... what is the value of the cell?
       if(cellValue === undefined) {
         // console.log(_sheet, _data)
       }
+    // External -- Potentially unsafe
     } else {
       // console.log(cellValue)
     }
@@ -737,17 +738,16 @@ const extractCellData = (cellData) => {
 export const getSheetCellData = (sheet, columnCount, rowCount) => {
   let sheetCellData = {};
 
-  for(let row = 0; row < rowCount; row++) {
-    for(let column = 0; column < columnCount; column++) {
-      if(row && column) {
-        const cellData = extractCellData(sheet.row(row).cell(column));
+  for(let row = 1; row < rowCount; row++) {
+    const rowData = sheet.row(row);
+    for(let column = 1; column < columnCount; column++) {
+      const cellData = extractCellData(rowData.cell(column));
 
-        if(cellData) {
-          if(!sheetCellData[row]) sheetCellData[row] = {};
+      if(cellData) {
+        if(!sheetCellData[row]) sheetCellData[row] = {};
 
-          sheetCellData[row][column] = cellData;
-        }
-      } 
+        sheetCellData[row][column] = cellData;
+      }
     }
   }
 

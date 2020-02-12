@@ -109,14 +109,14 @@ const SheetWindow = ({
         >
           <VariableSizeGrid
             ref={sheetGridRef}
-            freezeRowCount={tableFreezeRowCount}
             freezeColumnCount={tableFreezeColumnCount}
+            freezeRowCount={tableFreezeRowCount}
             columnCount={sheetColumnCount}
+            rowCount={sheetRowCount}
             columnWidth={columnWidth}
+            rowHeight={rowHeight}
             height={height}
             itemData={itemData}
-            rowCount={sheetRowCount}
-            rowHeight={rowHeight}
             width={width}
             onScroll={handleScroll}
             extraTopLeftElement={
