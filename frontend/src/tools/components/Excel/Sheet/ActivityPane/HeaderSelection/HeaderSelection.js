@@ -17,34 +17,6 @@ import leftOffsetsSelector from "@selectors/ui/excel/leftOffsets";
 
 import "./HeaderSelection.scss";
 
-const mapHeaderStateToProps = ({
-  ui: {
-    excel: {
-      activeCellPosition,
-      activeSelectionArea,
-      stagnantSelectionAreas,
-      sheetColumnWidths,
-      sheetRowHeights,
-      sheetRowCount,
-      sheetColumnCount,
-      sheetFreezeColumnCount,
-      sheetFreezeRowCount
-    }
-  }
-}) => ({
-  activeCellPosition,
-  activeSelectionArea,
-  stagnantSelectionAreas,
-  sheetColumnWidths,
-  sheetRowHeights,
-  sheetRowCount,
-  sheetColumnCount,
-  sheetFreezeColumnCount,
-  sheetFreezeRowCount,
-  topOffsets: topOffsetsSelector({ sheetRowCount, sheetRowHeights }),
-  leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths })
-});
-
 const mergeSegments = (segments) => {
   if(!segments.length) return [];
 
@@ -75,6 +47,36 @@ const mergeSegments = (segments) => {
   return merged;
 };
 
+const mapHeaderStateToProps = ({
+  ui: {
+    excel: {
+      activeCellPosition,
+      activeSelectionArea,
+      stagnantSelectionAreas,
+      sheetCellData,
+      sheetColumnWidths,
+      sheetRowHeights,
+      sheetRowCount,
+      sheetColumnCount,
+      sheetFreezeColumnCount,
+      sheetFreezeRowCount
+    }
+  }
+}) => ({
+  activeCellPosition,
+  activeSelectionArea,
+  stagnantSelectionAreas,
+  sheetCellData,
+  sheetColumnWidths,
+  sheetRowHeights,
+  sheetRowCount,
+  sheetColumnCount,
+  sheetFreezeColumnCount,
+  sheetFreezeRowCount,
+  topOffsets: topOffsetsSelector({ sheetRowCount, sheetRowHeights }),
+  leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths })
+});
+
 const HeaderSelectionComponents = ({ headerStyles }) => headerStyles.map((headerStyle, index) => (
   <div key={`header-selection-${index}`} className="headerStyles" style={headerStyle}/>
 )); 
@@ -83,6 +85,7 @@ export let HeaderSelection = ({
   activeCellPosition, 
   activeSelectionArea, 
   stagnantSelectionAreas,
+  sheetCellData,
   sheetColumnWidths,
   sheetRowHeights,
   sheetFreezeColumnCount,
@@ -91,9 +94,15 @@ export let HeaderSelection = ({
   leftOffsets
 }) => {
   const { x, y } = activeCellPosition;
-  // Combine/merge x and y segments
+
+  let activeCellPositionArea;
+  
   // Format active cell position
-  const activeCellPositionArea = { x1: x, y1: y, x2: x, y2: y };
+  if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
+    activeCellPositionArea = sheetCellData[y][x].merged;
+  } else {
+    activeCellPositionArea = { x1: x, y1: y, x2: x, y2: y };
+  }
 
   let combinedAreas = [ activeCellPositionArea, ...stagnantSelectionAreas ];
 
@@ -171,6 +180,7 @@ const mapColumnHeaderStateToProps = ({
       activeCellPosition,
       activeSelectionArea,
       stagnantSelectionAreas,
+      sheetCellData,
       sheetColumnWidths,
       sheetColumnCount,
       sheetFreezeColumnCount
@@ -180,6 +190,7 @@ const mapColumnHeaderStateToProps = ({
   activeCellPosition,
   activeSelectionArea,
   stagnantSelectionAreas,
+  sheetCellData,
   sheetColumnWidths,
   sheetColumnCount,
   sheetFreezeColumnCount,
@@ -190,14 +201,22 @@ export let ColumnHeaderSelection = ({
   activeCellPosition, 
   activeSelectionArea, 
   stagnantSelectionAreas,
+  sheetCellData,
   sheetColumnWidths,
   sheetFreezeColumnCount,
   leftOffsets
 }) => {
-  const { x } = activeCellPosition;
-  // Combine/merge x and y segments
+  const { y, x } = activeCellPosition;
+
+  let activeCellPositionArea;
+  
   // Format active cell position
-  const activeCellPositionArea = { x1: x, x2: x };
+  if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
+    const { merged: { x1, x2 } } = sheetCellData[y][x];
+    activeCellPositionArea = { x1, x2 };
+  } else {
+    activeCellPositionArea = { x1: x, x2: x };
+  }
 
   let combinedAreas = [ activeCellPositionArea, ...stagnantSelectionAreas ];
 
@@ -247,7 +266,7 @@ const mapRowHeaderStateToProps = ({
       activeCellPosition,
       activeSelectionArea,
       stagnantSelectionAreas,
-
+      sheetCellData,
       sheetRowHeights,
       sheetRowCount,
       sheetFreezeRowCount
@@ -257,6 +276,7 @@ const mapRowHeaderStateToProps = ({
   activeCellPosition,
   activeSelectionArea,
   stagnantSelectionAreas,
+  sheetCellData,
   sheetRowHeights,
   sheetRowCount,
   sheetFreezeRowCount,
@@ -268,14 +288,22 @@ export let RowHeaderSelection = ({
   activeCellPosition, 
   activeSelectionArea, 
   stagnantSelectionAreas,
+  sheetCellData,
   sheetRowHeights,
   sheetFreezeRowCount,
   topOffsets
 }) => {
-  const { y } = activeCellPosition;
-  // Combine/merge x and y segments
+  const { y, x } = activeCellPosition;
+
+  let activeCellPositionArea;
+  
   // Format active cell position
-  const activeCellPositionArea = { y1: y, y2: y };
+  if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
+    const { merged: { y1, y2 } } = sheetCellData[y][x];
+    activeCellPositionArea = { y1, y2 };
+  } else {
+    activeCellPositionArea = { y1: y, y2: y };
+  }
 
   let combinedAreas = [ activeCellPositionArea, ...stagnantSelectionAreas ];
 
