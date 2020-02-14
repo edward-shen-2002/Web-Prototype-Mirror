@@ -545,6 +545,10 @@ class EventListener extends PureComponent {
     }
   }
 
+  _getMergedData(sheetCellData, y, x) {
+    return sheetCellData[y] && sheetCellData[y][x] ? sheetCellData[y][x].merged : null;
+  }
+
   tab(event, shiftKey, sheetContainerRef) {
     let { 
       isEditMode,
@@ -554,6 +558,7 @@ class EventListener extends PureComponent {
       stagnantSelectionAreas, 
       activeCellSelectionAreaIndex,
 
+      sheetCellData,
       sheetRowCount,
       sheetColumnCount,
 
@@ -606,14 +611,65 @@ class EventListener extends PureComponent {
 
     let { x1, y1, x2, y2 } = selectionArea;
 
-    shiftKey ? x-- : x++;
+    const startX = Math.min(x1, x2);
+    const startY = Math.min(y1, y2);
+
+    const endX = Math.max(x1, x2);
+    const endY = Math.max(y1, y2);
+
+    let merged = this._getMergedData(sheetCellData, y, x);
+
+    // const activeCellPosition
+    if(shiftKey) {
+      if(merged) {
+        const { x1 } = merged;
+        x = x1 - 1;
+      } else {
+        x--;
+      }
+    } else {
+      if(merged) {
+        const { x2 } = merged;
+        x = x2 + 1;
+      } else {
+        x++;
+      }
+    }
     
     // Check for bounds -- do not update when isbounded and tab goes out bounds
     if((x < x1 && x < x2) || (x > x1 && x > x2)) {
       if(!isBounded) {
-        shiftKey ? y-- : y++;
+        if(shiftKey) {
+          y--;
+
+          // Find max of the top free spaces (regular cell or top left of merge cell)
+          if(y >= y1 || y >= y2) {
+            const rowData = sheetCellData[y];
+
+            if(rowData) {
+              const { maxX, maxY } = this._getShiftFreeSpot({ y, startX, endX, rowData });
+
+              x = maxX;
+              y = maxY;
+            } else {
+              if(x < x1 && x > x2) {
+                x = Math.min(x1, x2);
+              } else {
+                x = Math.max(x1, x2);
+              }
+            }
+          }
+        } else {
+          y++;
+
+          if(y <= y1 || y <= y2) {
+            
+          }
+          // Find max of the bottom free spaces (regular cell or top left of merge cell)
+        }
 
         // Check for bounds in y
+        // Change selection areas
         if((y < y1 && y < y2) || (y > y1 && y > y2)) {
           // Need to switch selection areas. 
           (y < y1 && y < y2) ? activeCellSelectionAreaIndex-- : activeCellSelectionAreaIndex++;
@@ -638,16 +694,79 @@ class EventListener extends PureComponent {
           }
 
           handleUpdateActiveCellSelectionAreaIndex(activeCellSelectionAreaIndex);
-        } else {
-          // Make x go to its resepective end point (start or end) as a result of going out of bound
-          x = (x < x1 && x < x2) ? Math.max(x1, x2) : Math.min(x1, x2);
-        }
+        } 
 
         this.updateActiveCellPosition(y, x);
-      }
+      } 
     } else {
+      if(shiftKey) {
+        // Check if there's free space at y (before x since shift)
+        const currentRowData = sheetCellData[y];
+
+        if(currentRowData) {
+          const { 
+            maxX: currentMaxX, 
+            maxY: currentMaxY 
+          } = this._getShiftFreeSpot({ endX: x, startX, y, rowData: currentRowData });
+
+          // Found a merged cell - not supposed to go here
+          if(currentMaxY !== y) {
+            y--;
+
+            const rowData = sheetCellData[y];
+
+            const { 
+              maxX, 
+              maxY 
+            } = this._getShiftFreeSpot({ endX, startX, y, rowData });
+            // console.log(endX, startX, y)
+
+            x = maxX;
+            y = maxY;
+
+          } else {
+            x = currentMaxX;
+            y = currentMaxY;
+          }
+        } 
+      }
+
       this.updateActiveCellPosition(y, x);
     }
+  }
+
+  _getShiftFreeSpot({
+    y, 
+    startX,
+    endX,
+    rowData
+  }) {
+    let maxX = -1;
+    let maxY = -1;
+    for(let column = endX; column >= startX; column--) {
+      const columnData = rowData[column];
+
+      if(columnData && columnData.merged) {
+        const { x1: mergedX1, y1: mergedY1 } = columnData.merged;
+
+        if(mergedY1 >= maxY) {
+          // ! fix this....
+          if(mergedY1 > maxY || (mergedY1 === maxY && mergedX1 > maxX)) {
+            maxX = mergedX1;
+          }
+
+          maxY = mergedY1;
+        }
+      } else {
+        // Found regular cell -- y doesn't change
+        if(y > maxY || (y === maxY && column > maxX)) maxX = column;
+        
+        maxY = y;
+        break;
+      }
+    }
+
+    return { maxX, maxY };
   }
 
   enter(event, shiftKey, sheetContainerRef) {
