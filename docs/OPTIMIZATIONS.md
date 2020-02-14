@@ -37,3 +37,7 @@ On click is blocked while scrolling. This might be possible to change if we adju
 ### React Window
 
 [Scrolling Optimizaions](https://github.com/bvaughn/react-window/issues/43)
+
+### Merged Cells
+
+Remove inner squares since it's never accessed?
