@@ -612,10 +612,7 @@ class EventListener extends PureComponent {
     let { x1, y1, x2, y2 } = selectionArea;
 
     const startX = Math.min(x1, x2);
-    const startY = Math.min(y1, y2);
-
     const endX = Math.max(x1, x2);
-    const endY = Math.max(y1, y2);
 
     let merged = this._getMergedData(sheetCellData, y, x);
 
@@ -647,23 +644,28 @@ class EventListener extends PureComponent {
             const rowData = sheetCellData[y];
 
             if(rowData) {
-              const { maxX, maxY } = this._getShiftFreeSpot({ y, startX, endX, rowData });
+              const { maxX, maxY } = this._getShiftTabFreeSpot({ y, startX, endX, rowData });
 
               x = maxX;
               y = maxY;
             } else {
-              if(x < x1 && x > x2) {
-                x = Math.min(x1, x2);
-              } else {
-                x = Math.max(x1, x2);
-              }
+              x = Math.max(x1, x2);
             }
           }
         } else {
           y++;
 
           if(y <= y1 || y <= y2) {
-            
+            const rowData = sheetCellData[y];
+
+            if(rowData) {
+              const { minX, minY } = this._getTabFreeSpot({ y, startX, endX, rowData });
+
+              x = minX;
+              y = minY;
+            } else {
+              x = Math.min(x1, x2);
+            }
           }
           // Find max of the bottom free spaces (regular cell or top left of merge cell)
         }
@@ -699,15 +701,15 @@ class EventListener extends PureComponent {
         this.updateActiveCellPosition(y, x);
       } 
     } else {
+      const currentRowData = sheetCellData[y];
+
       if(shiftKey) {
         // Check if there's free space at y (before x since shift)
-        const currentRowData = sheetCellData[y];
-
         if(currentRowData) {
           const { 
             maxX: currentMaxX, 
             maxY: currentMaxY 
-          } = this._getShiftFreeSpot({ endX: x, startX, y, rowData: currentRowData });
+          } = this._getShiftTabFreeSpot({ endX: x, startX, y, rowData: currentRowData });
 
           // Found a merged cell - not supposed to go here
           if(currentMaxY !== y) {
@@ -715,11 +717,12 @@ class EventListener extends PureComponent {
 
             const rowData = sheetCellData[y];
 
+            // ! Check if row data is null.. what then?
+
             const { 
               maxX, 
               maxY 
-            } = this._getShiftFreeSpot({ endX, startX, y, rowData });
-            // console.log(endX, startX, y)
+            } = this._getShiftTabFreeSpot({ endX, startX, y, rowData });
 
             x = maxX;
             y = maxY;
@@ -729,13 +732,84 @@ class EventListener extends PureComponent {
             y = currentMaxY;
           }
         } 
+      } else {
+        // ! FIX THIS OFFSET INCORRECT?
+        if(currentRowData) {
+          const { 
+            minX: currentMinX,
+            minY: currentMinY
+          } = this._getTabFreeSpot({ startX: x, endX, y, rowData: currentRowData });
+
+          if(currentMinY !== y) {
+            y++;
+
+            const rowData = sheetCellData[y];
+
+            if(rowData) {
+              const {
+                minX,
+                minY
+              } = this._getTabFreeSpot({ endX, startX, y, rowData });
+  
+              x = minX;
+              y = minY;
+            } else {
+              x = startX;
+            }
+          } else {
+            x = currentMinX;
+            y = currentMinY;
+          }
+        }
       }
 
       this.updateActiveCellPosition(y, x);
     }
   }
 
-  _getShiftFreeSpot({
+  // Get min height of merged cell or free spot
+  _getTabFreeSpot({
+    y, 
+    startX,
+    endX,
+    rowData
+  }) {
+    let minX = Infinity;
+    let minY = Infinity;
+    for(let column = startX; column <= endX; column++) {
+      const columnData = rowData[column];
+
+      if(columnData && columnData.merged) {
+        const { 
+          x1: mergedX1, 
+          y1: mergedY1,
+          y2: mergedY2
+        } = columnData.merged;
+        
+        // top left of merge is at the same level as y
+        if(mergedY1 === y) {
+          if(mergedX1 < minX) minX = mergedX1;
+          
+          minY = y;
+        // Get free space after merge
+        } else if(mergedY2 + 1 <= minY) {
+          if(mergedX1 < minX) minX = mergedX1;
+
+          minY = mergedY2 + 1;
+        }
+      } else {
+        // Found regular cell -- y doesn't change
+        if(y < minY || (y === minY && column < minX)) minX = column;
+        
+        minY = y;
+        break;
+      }
+    }
+
+    return { minX, minY };
+  }
+
+  _getShiftTabFreeSpot({
     y, 
     startX,
     endX,
@@ -750,10 +824,7 @@ class EventListener extends PureComponent {
         const { x1: mergedX1, y1: mergedY1 } = columnData.merged;
 
         if(mergedY1 >= maxY) {
-          // ! fix this....
-          if(mergedY1 > maxY || (mergedY1 === maxY && mergedX1 > maxX)) {
-            maxX = mergedX1;
-          }
+          if(mergedY1 > maxY || (mergedY1 === maxY && mergedX1 > maxX)) maxX = mergedX1;
 
           maxY = mergedY1;
         }
