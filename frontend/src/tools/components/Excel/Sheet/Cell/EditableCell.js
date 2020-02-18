@@ -106,7 +106,7 @@ const EditableCell = ({
   eventListenerRef
 }) => {
   const handleMouseDown = ({ buttons, ctrlKey, shiftKey }) => {
-    if(buttons === 1) eventListenerRef.current.startSelection(columnIndex, rowIndex, ctrlKey, shiftKey);
+    if(buttons === 1) eventListenerRef.current.mouseDown(columnIndex, rowIndex, ctrlKey, shiftKey);
   };
 
   const handleMouseEnter = ({ buttons, ctrlKey }) => {

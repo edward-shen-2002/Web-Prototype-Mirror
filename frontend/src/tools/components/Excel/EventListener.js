@@ -1421,7 +1421,7 @@ class EventListener extends PureComponent {
 
     // console.log(row, column)
     // const { shiftKey } = event;
-    // startSelection(x1, y1, ctrlKey, shiftKey)
+    // mouseDown(x1, y1, ctrlKey, shiftKey)
 
     event.preventDefault();
     this.disableEditMode();
@@ -1764,7 +1764,7 @@ class EventListener extends PureComponent {
     } 
   }
 
-  startSelection(x1, y1, ctrlKey, shiftKey) {
+  mouseDown(x1, y1, ctrlKey, shiftKey) {
     const { 
       sheetCellData,
       activeCellPosition, 
