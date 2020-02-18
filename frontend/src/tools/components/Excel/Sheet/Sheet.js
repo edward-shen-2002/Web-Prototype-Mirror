@@ -199,6 +199,8 @@ let Sheet = ({
       eventListenerRef.current.save();
     } else if(key === "a" && ctrlKey) {
       eventListenerRef.current.selectAll(event);
+    } else if(ctrlKey) {
+      
     } else if(inputCharacterRegex.test(key)) {
       eventListenerRef.current.startEditMode();
     }
