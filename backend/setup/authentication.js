@@ -220,7 +220,7 @@ const setupAuthentication = (helpers) => {
     
     console.log("Auth: Successfully set up authentication");
   } catch(error) {
-    console.error("Auth: Failed to set up authentication");
+    throw `Auth: Failed to set up authentication\n${error}`;
   }
 };
 

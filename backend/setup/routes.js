@@ -233,7 +233,7 @@ const setupRouteGroups = (helpers) => {
     
     console.log("REST: Successfully set up routes");
   } catch(error) {
-    console.error("REST: Failed to set up routes", error);
+    throw `REST: Failed to set up routes\n${error}`;
   }
 };
 

@@ -45,7 +45,7 @@ const setupMongoose = async (options, {
       
       console.log("MongoDB: Successfully created collections");
     } catch(error) {
-      console.error("MongoDB: Failed to create collections", error);
+      throw `MongoDB: Failed to create collections\n${error}`;
     }
   };
 
@@ -58,7 +58,7 @@ const setupMongoose = async (options, {
       
       console.warn("MongoDB: Successfully dropped all collections");
     } catch(error) {
-      console.error("MongoDB: Failed to drop all collections", error);
+      throw `MongoDB: Failed to drop all collections\n${error}`;
     }
   };
 
@@ -111,7 +111,7 @@ const setupMongoose = async (options, {
 
       console.log("MongoDB: Successfully created dummy data");
     } catch(error) {
-      console.error("MongoDB: Failed to create dummy data", error);
+      throw `MongoDB: Failed to create dummy data\n${error}`;
     }
   };
 
@@ -129,7 +129,7 @@ const setupMongoose = async (options, {
 
       console.log("MongoDB: Successfully set up database");
     } catch(error) {
-      console.error("MongoDB: Failed to set up database", error);
+      throw `MongoDB: Failed to set up databases`;
     }
   };
 
@@ -145,7 +145,7 @@ const setupDatabases = async (options, helpers) => {
 
     console.log("Databases: Successfully set up databases");
   } catch(error) {
-    console.error("Databases: Failed to set up databases");
+    throw `Databases: Failed to set up databases`;
   }
 };
 
