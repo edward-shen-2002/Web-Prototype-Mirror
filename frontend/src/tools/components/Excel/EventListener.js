@@ -234,6 +234,8 @@ class EventListener extends PureComponent {
     
     event.preventDefault();
 
+    this.resetActiveSelectionArea();
+
     const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
     
     if(shiftKey) { 
@@ -319,6 +321,8 @@ class EventListener extends PureComponent {
 
     event.preventDefault();
 
+    this.resetActiveSelectionArea();
+
     const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
 
     if(shiftKey) { 
@@ -400,6 +404,8 @@ class EventListener extends PureComponent {
     let { x, y } = activeCellPosition;
     
     event.preventDefault();
+
+    this.resetActiveSelectionArea();
     
     const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
 
@@ -482,6 +488,8 @@ class EventListener extends PureComponent {
     let { x, y } = activeCellPosition;
 
     event.preventDefault();
+
+    this.resetActiveSelectionArea();
     
     const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
     
@@ -1497,7 +1505,6 @@ class EventListener extends PureComponent {
 
       activeSelectionArea, 
       stagnantSelectionAreas, 
-      handleResetActiveSelectionArea, 
       handleUpdateStagnantSelectionAreas, 
       handleUpdateActiveCellSelectionAreaIndex, 
       handleResetActiveCellSelectionAreaIndex,
@@ -1599,7 +1606,7 @@ class EventListener extends PureComponent {
           handleResetActiveCellSelectionAreaIndex();
         }
 
-        handleResetActiveSelectionArea();
+        this.resetActiveSelectionArea();
       } else if(!ctrlKey) {
         handleResetActiveCellSelectionAreaIndex();
       } 
@@ -1815,12 +1822,13 @@ class EventListener extends PureComponent {
 
   selectOver(x2, y2, ctrlKey) {
     const { 
+      sheetCellData,
+      activeSelectionArea,
       isSelectionMode, 
       activeCellPosition, 
       stagnantSelectionAreas, 
       activeCellSelectionAreaIndex, 
       handleResetStagnantSelectionAreas, 
-      handleResetActiveSelectionArea, 
       handleUpdateActiveSelectionArea, 
       handleUpdateActiveCellSelectionAreaIndex,
       handleResetActiveCellSelectionAreaIndex
@@ -1835,7 +1843,7 @@ class EventListener extends PureComponent {
     const { x, y } = activeCellPosition;
 
     if(x === x2 && y === y2 && !ctrlKey) {
-      handleResetActiveSelectionArea();
+      this.resetActiveSelectionArea();
       handleResetActiveCellSelectionAreaIndex();
     } else {
       handleUpdateActiveSelectionArea({ x1: x, y1: y, x2, y2 });
@@ -2489,6 +2497,16 @@ class EventListener extends PureComponent {
     }
 
     handleUpdateSheetCellData(newSheetCellData);
+  }
+
+  resetActiveSelectionArea() {
+    const {
+      activeSelectionArea,
+      handleResetActiveSelectionArea
+    } = this.props;
+
+    // ! Adjust selection area index?
+    if(activeSelectionArea) handleResetActiveSelectionArea();
   }
 
   setPrepopulate({ type, quarter, year }) {
