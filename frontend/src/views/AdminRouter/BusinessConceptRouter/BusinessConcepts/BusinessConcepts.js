@@ -77,6 +77,7 @@ const BusinessConcepts = () => {
   return (
     <div className="businessConcepts">
       <MaterialTable
+        className="businessConcepts__table"
         title="Business Concepts"
         columns={columns}
         data={businessConcepts}
