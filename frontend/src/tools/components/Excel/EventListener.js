@@ -1834,13 +1834,15 @@ class EventListener extends PureComponent {
   
           handleUpdateStagnantSelectionAreas([ { x1: x, y1: y, x2: oldX2, y2: oldY2 } ]);
         }
+
+        this.updateActiveCellPosition(y1, x1, false);
       } 
 
       handleUpdateActiveSelectionArea({ x1, y1, x2, y2 });
       handleUpdateActiveCellSelectionAreaIndex(newActiveCellSelectionAreaIndex);
+    } else {
+      this.updateActiveCellPosition(y1, x1, false);
     }
-
-    this.updateActiveCellPosition(y1, x1, false);
   }
 
   _getSelectionAreaColumn({
