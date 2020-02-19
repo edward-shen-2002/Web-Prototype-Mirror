@@ -1427,10 +1427,6 @@ class EventListener extends PureComponent {
       handleResetStagnantSelectionAreas
     } = this.props;
 
-    // console.log(row, column)
-    // const { shiftKey } = event;
-    // mouseDown(x1, y1, ctrlKey, shiftKey)
-
     event.preventDefault();
     this.disableEditMode();
     
@@ -1946,6 +1942,35 @@ class EventListener extends PureComponent {
     return newArea;
   }
 
+  _getWholeArea({
+    minX,
+    minY,
+    maxX,
+    maxY,
+    sheetCellData
+  }) {
+    let currentArea = {
+      y1: minY,
+      x1: minX,
+      y2: maxY,
+      x2: maxX
+    };
+
+    let newArea = this._getNewArea({ currentArea, sheetCellData });
+
+    while(
+      newArea.x1 !== currentArea.x1
+      || newArea.x2 !== currentArea.x2
+      || newArea.y1 !== currentArea.y1
+      || newArea.y2 !== currentArea.y2
+    ) {
+      currentArea = newArea;
+      newArea = this._getNewArea({ currentArea: newArea, sheetCellData });
+    }
+
+    return newArea;
+  }
+
   selectOver(newX2, newY2, ctrlKey) {
     const { 
       sheetCellData,
@@ -1976,24 +2001,7 @@ class EventListener extends PureComponent {
       let maxY = Math.max(y, newY2);
       let maxX = Math.max(x, newX2);
       
-      let currentArea = {
-        y1: minY,
-        x1: minX,
-        y2: maxY,
-        x2: maxX
-      };
-
-      let newArea = this._getNewArea({ currentArea, sheetCellData });
-
-      while(
-        newArea.x1 !== currentArea.x1
-        || newArea.x2 !== currentArea.x2
-        || newArea.y1 !== currentArea.y1
-        || newArea.y2 !== currentArea.y2
-      ) {
-        currentArea = newArea;
-        newArea = this._getNewArea({ currentArea: newArea, sheetCellData });
-      }
+      const newArea = this._getWholeArea({ minX, minY, maxX, maxY, sheetCellData });
 
       handleUpdateActiveSelectionArea(newArea);
       if(stagnantSelectionAreasLength !== activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(stagnantSelectionAreasLength);
