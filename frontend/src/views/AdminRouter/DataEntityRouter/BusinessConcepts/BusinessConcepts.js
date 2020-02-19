@@ -1,6 +1,6 @@
 import React, { useState, useEffect, lazy } from "react";
 
-import { adminBusinessConceptRoleAxios } from "@tools/rest";
+import { adminDataEntityRoleAxios } from "@tools/rest";
 
 import { REST_ADMIN_BUSINESS_CONCEPTS } from "@constants/rest";
 
@@ -14,7 +14,7 @@ const BusinessConcepts = () => {
   
   useEffect(() => {
     if(!isDataFetched) {
-      adminBusinessConceptRoleAxios.get(REST_ADMIN_BUSINESS_CONCEPTS)
+      adminDataEntityRoleAxios.get(REST_ADMIN_BUSINESS_CONCEPTS)
         .then(({ data: { data: { businessConcepts } } }) => setBusinessConcepts(businessConcepts))
         .catch((error) => console.error(error));
       setIsDataFetched(true);
@@ -28,7 +28,7 @@ const BusinessConcepts = () => {
 
   const handleRowAdd = (newBusinessConcept) => new Promise((resolve, reject) => {
     setTimeout(() => {
-      adminBusinessConceptRoleAxios.post(REST_ADMIN_BUSINESS_CONCEPTS, { newBusinessConcept })
+      adminDataEntityRoleAxios.post(REST_ADMIN_BUSINESS_CONCEPTS, { newBusinessConcept })
         .then(({ data: { data: { businessConcept } } }) => {
           setBusinessConcepts([ ...businessConcepts, businessConcept ]);
           resolve();
@@ -42,7 +42,7 @@ const BusinessConcepts = () => {
 
   const handleRowUpdate = (newBusinessConcept, oldBusinessConcept) => new Promise((resolve, reject) => {
     setTimeout(() => {
-      adminBusinessConceptRoleAxios.put(REST_ADMIN_BUSINESS_CONCEPTS, { newBusinessConcept })
+      adminDataEntityRoleAxios.put(REST_ADMIN_BUSINESS_CONCEPTS, { newBusinessConcept })
         .then(() => {
           const oldBusinessConceptIndex = businessConcepts.indexOf(oldBusinessConcept);
           setBusinessConcepts([ ...businessConcepts.slice(0, oldBusinessConceptIndex), newBusinessConcept, ...businessConcepts.slice(oldBusinessConceptIndex + 1) ]);
@@ -57,7 +57,7 @@ const BusinessConcepts = () => {
 
   const handleRowDelete = (oldBusinessConcept) => new Promise((resolve, reject) => {
     setTimeout(() => {
-      adminBusinessConceptRoleAxios.delete(`${REST_ADMIN_BUSINESS_CONCEPTS}/${oldBusinessConcept._id}`)
+      adminDataEntityRoleAxios.delete(`${REST_ADMIN_BUSINESS_CONCEPTS}/${oldBusinessConcept._id}`)
         .then(() => {
           const oldBusinessConceptIndex = businessConcepts.indexOf(oldBusinessConcept);
           setBusinessConcepts([ ...businessConcepts.slice(0, oldBusinessConceptIndex), ...businessConcepts.slice(oldBusinessConceptIndex + 1) ]);

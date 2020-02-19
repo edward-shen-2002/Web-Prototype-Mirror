@@ -17,6 +17,7 @@ import BusinessConceptModel from "../models/template/BusinessConcept";
 import BundleModel from "../models/bundle/Bundle";
 import OrganizationBundleModel from "../models/bundle/OrganizationBundle";
 import MasterValueModel from "../models/masterValue/MasterValue";
+import GroupModel from "../models/template/Group";
 
 const serverSetup = async (app, passport, options = {}) => {
   const helpers = { 
@@ -31,7 +32,8 @@ const serverSetup = async (app, passport, options = {}) => {
     BusinessConceptModel,
     BundleModel,
     OrganizationBundleModel,
-    MasterValueModel
+    MasterValueModel,
+    GroupModel
   };
   
   passport.use(new LocalStrategy(UserModel.authenticate()));

@@ -10,7 +10,8 @@ import {
 
   ROUTE_ADMIN_SECTOR_SECTORS,
   ROUTE_ADMIN_TEMPLATE_TEMPLATES,
-  ROUTE_ADMIN_BUSINESS_CONCEPT_BUSINESS_CONCEPTS
+  ROUTE_ADMIN_DATA_ENTITY_BUSINESS_CONCEPTS,
+  ROUTE_ADMIN_DATA_ENTITY_GROUPS
 } from "@constants/routes";
 
 import { ROLE_LEVEL_NOT_APPLICABLE } from "@constants/roles";
@@ -39,10 +40,13 @@ const roleNavMap = {
     icon: "mdi mdi-account-group",
     url: ROUTE_ADMIN_ORGANIZATION_ORGANIZATIONS
   },
-  BUSINESS_CONCEPT_MANAGER: {
-    name: "Business Concepts",
+  DATA_ENTITY_MANAGER: {
+    name: "Data Entities",
     icon: "mdi mdi-buffer",
-    url: ROUTE_ADMIN_BUSINESS_CONCEPT_BUSINESS_CONCEPTS
+    children: [
+      { name: "Concepts", url: ROUTE_ADMIN_DATA_ENTITY_BUSINESS_CONCEPTS, icon: "mdi mdi-shape" },
+      { name: "Groups", url: ROUTE_ADMIN_DATA_ENTITY_GROUPS, icon: "mdi mdi-group" } 
+    ]
   },
   SECTOR_MANAGER: {
     name: "Sector",

@@ -26,8 +26,9 @@ export const ROUTE_ADMIN_TEMPLATE = `${ROUTE_ADMIN_ROOT}/template_manager`;
 export const ROUTE_ADMIN_TEMPLATE_TEMPLATES = `${ROUTE_ADMIN_TEMPLATE}/templates`;
 export const ROUTE_ADMIN_TEMPLATE_TEMPLATE = `${ROUTE_ADMIN_TEMPLATE_TEMPLATES}/:_id`;
 
-export const ROUTE_ADMIN_BUSINESS_CONCEPT = `${ROUTE_ADMIN_ROOT}/business_concept_manager`;
-export const ROUTE_ADMIN_BUSINESS_CONCEPT_BUSINESS_CONCEPTS = `${ROUTE_ADMIN_BUSINESS_CONCEPT}/business_concepts`;
+export const ROUTE_ADMIN_DATA_ENTITY = `${ROUTE_ADMIN_ROOT}/data_entity_manager`;
+export const ROUTE_ADMIN_DATA_ENTITY_BUSINESS_CONCEPTS = `${ROUTE_ADMIN_DATA_ENTITY}/business_concepts`;
+export const ROUTE_ADMIN_DATA_ENTITY_GROUPS = `${ROUTE_ADMIN_DATA_ENTITY}/groups`;
 
 export const ROUTE_ADMIN_BUNDLE = `${ROUTE_ADMIN_ROOT}/bundle_manager`;
 export const ROUTE_ADMIN_BUNDLE_BUNDLES = `${ROUTE_ADMIN_BUNDLE}/bundles`;

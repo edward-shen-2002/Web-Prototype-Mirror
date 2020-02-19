@@ -10,7 +10,7 @@ import {
   ROLE_BUNDLE_MANAGER, 
   ROLE_SECTOR_MANAGER, 
   ROLE_TEMPLATE_MANAGER,
-  ROLE_BUSINESS_CONCEPT_MANAGER
+  ROLE_DATA_ENTITY_MANAGER
 } from "@constants/roles";
 
 import { 
@@ -19,7 +19,7 @@ import {
   ROUTE_ADMIN_TEMPLATE, 
   ROUTE_ADMIN_BUNDLE, 
   ROUTE_ADMIN_SECTOR,
-  ROUTE_ADMIN_BUSINESS_CONCEPT
+  ROUTE_ADMIN_DATA_ENTITY
 } from "@constants/routes";
 
 import TemplateRouter from "./TemplateRouter";
@@ -27,7 +27,7 @@ import OrganizationRouter from "./OrganizationRouter";
 import UserRouter from "./UserRouter";
 import SectorRouter from "./SectorRouter";
 import BundleRouter from "./BundleRouter";
-import BusinessConceptRouter from "./BusinessConceptRouter";
+import DataEntityRouter from "./DataEntityRouter";
 
 import NotFound from "@tools/components/NotFound";
 
@@ -38,7 +38,7 @@ const AdminRouter = () => (
     <AdminRoleRoute path={ROUTE_ADMIN_BUNDLE} requiredRole={ROLE_BUNDLE_MANAGER} Component={BundleRouter}/>
     <AdminRoleRoute path={ROUTE_ADMIN_ORGANIZATION} requiredRole={ROLE_ORGANIZATION_MANAGER} Component={OrganizationRouter}/>
     <AdminRoleRoute path={ROUTE_ADMIN_TEMPLATE} requiredRole={ROLE_TEMPLATE_MANAGER} Component={TemplateRouter}/>
-    <AdminRoleRoute path={ROUTE_ADMIN_BUSINESS_CONCEPT} requiredRole={ROLE_BUSINESS_CONCEPT_MANAGER} Component={BusinessConceptRouter}/>
+    <AdminRoleRoute path={ROUTE_ADMIN_DATA_ENTITY} requiredRole={ROLE_DATA_ENTITY_MANAGER} Component={DataEntityRouter}/>
 
     <Route component={NotFound}/>
   </Switch>
