@@ -334,7 +334,7 @@ class EventListener extends PureComponent {
         if(y1 < y || y2 < y) {
           if(y1 < y) {
             focusedStagnantSelectionArea.y1 += 1;
-            this._scrollTo(focusedStagnantSelectionArea.y2, x1)
+            this._scrollTo(focusedStagnantSelectionArea.y1, x1)
           } else {
             focusedStagnantSelectionArea.y2 += 1;
             this._scrollTo(focusedStagnantSelectionArea.y2, x2);
@@ -361,7 +361,6 @@ class EventListener extends PureComponent {
             if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
           }
         }
-      
       } else {
         const y2 = y + 1;
 
@@ -1941,7 +1940,8 @@ class EventListener extends PureComponent {
       });
     }
 
-    if(bottom) {
+    // Bottom might be the same as top (1 row)
+    if(bottom && y1 !== y2) {
       newArea = this._getSelectionAreaColumn({ 
         startX: newArea.x1, 
         endX: newArea.x2,
@@ -1951,7 +1951,6 @@ class EventListener extends PureComponent {
     }
 
     // Do not need to check edges because top and bottom covers those already
-    // Between left
     newArea = this._getSelectionAreaRow({
       startY: newArea.y1 + 1,
       endY: newArea.y2 - 1,
@@ -1960,13 +1959,16 @@ class EventListener extends PureComponent {
       ...newArea
     })
 
-    newArea = this._getSelectionAreaRow({
-      startY: newArea.y1 + 1,
-      endY: newArea.y2 - 1,
-      sheetCellData,
-      column: x2,
-      ...newArea
-    });
+    // left might be the same as right (1 column)
+    if(x1 !== x2) {
+      newArea = this._getSelectionAreaRow({
+        startY: newArea.y1 + 1,
+        endY: newArea.y2 - 1,
+        sheetCellData,
+        column: x2,
+        ...newArea
+      });
+    }
 
     return newArea;
   }
@@ -2229,7 +2231,6 @@ class EventListener extends PureComponent {
       newX = 1;
     }
 
-    
     let { scrollTop, scrollLeft } = scrollData;
 
     const topFreezeStart = topOffsets[sheetFreezeRowCount];
