@@ -1793,14 +1793,22 @@ class EventListener extends PureComponent {
       let y2;
 
       let newActiveCellSelectionAreaIndex;
+
       if(shiftKey) {
-        x2 = x1;
-        y2 = y1;
-        x1 = x;
-        y1 = y;
+        let minY = Math.min(y1, y);
+        let minX = Math.min(x1, x);
+        let maxY = Math.max(y1, y);
+        let maxX = Math.max(x1, x);
+
+        const newArea = this._getWholeArea({ minX, minY, maxX, maxY, sheetCellData });
+
+        x1 = newArea.x1;
+        y1 = newArea.y1;
+        x2 = newArea.x2;
+        y2 = newArea.y2;
   
         newActiveCellSelectionAreaIndex = 0;
-      } else if(ctrlKey) {
+      } else {
         if(sheetCellData[y1] && sheetCellData[y1][x1] && sheetCellData[y1][x1].merged) {
           const { x2: mergedX2, y2: mergedY2 } = sheetCellData[y1][x1].merged;
           x2 = mergedX2;
