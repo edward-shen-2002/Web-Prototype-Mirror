@@ -1801,12 +1801,31 @@ class EventListener extends PureComponent {
   
         newActiveCellSelectionAreaIndex = 0;
       } else if(ctrlKey) {
-        x2 = x1;
-        y2 = y1;
+        if(sheetCellData[y1] && sheetCellData[y1][x1] && sheetCellData[y1][x1].merged) {
+          const { x2: mergedX2, y2: mergedY2 } = sheetCellData[y1][x1].merged;
+          x2 = mergedX2;
+          y2 = mergedY2;
+        } else {
+          y2 = y1;
+          x2 = x1;
+        }
 
         newActiveCellSelectionAreaIndex = stagnantSelectionAreasLength + 1;
         
-        if(!stagnantSelectionAreasLength && (x1 !== x || y1 !== y)) handleUpdateStagnantSelectionAreas([ { x1: x, y1: y, x2: x, y2: y } ]);
+        if(!stagnantSelectionAreasLength && (x1 !== x || y1 !== y)) {
+          let oldX2;
+          let oldY2;
+          if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
+            const { x2: mergedX2, y2: mergedY2 } = sheetCellData[y][x].merged;
+            oldX2 = mergedX2;
+            oldY2 = mergedY2;
+          } else {
+            oldY2 = y1;
+            oldX2 = x1;
+          }
+  
+          handleUpdateStagnantSelectionAreas([ { x1: x, y1: y, x2: oldX2, y2: oldY2 } ]);
+        }
       } 
 
       handleUpdateActiveSelectionArea({ x1, y1, x2, y2 });
