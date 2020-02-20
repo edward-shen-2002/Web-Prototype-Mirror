@@ -275,12 +275,39 @@ class EventListener extends PureComponent {
           }
         }
       } else {
-        const y2 = y - 1;
+        let x1;
+        let x2;
+        let y1;
+        let y2;
 
-        this._scrollTo(y2, x);
-        if(y2 > 0) {
-          handleUpdateStagnantSelectionAreas([ { x1: x, x2: x, y1: y, y2 } ]);
-          if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
+        // Check if current cell is merged
+        if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
+          const { 
+            x1: mergedX1,
+            x2: mergedX2,
+            y1: mergedY1,
+            y2: mergedY2,
+          } = sheetCellData[y][x].merged;
+          x1 = mergedX1;
+          x2 = mergedX2;
+          y1 = mergedY1 - 1;
+          y2 = mergedY2;
+        } else {
+          x1 = x;
+          x2 = x;
+          y1 = y - 1;
+          y2 = y;
+        }
+
+        // Check for max area after movement
+        const minArea = this._getWholeArea({ minX: x1, minY: y1, maxX: x2, maxY: y2, sheetCellData });
+
+        if(y1 > 0) {
+          handleUpdateStagnantSelectionAreas([ minArea ]);
+          handleUpdateActiveCellSelectionAreaIndex(0);
+          this._scrollTo(minArea.y1, x);
+        } else {
+          this._scrollTo(y, x);
         }
       }
     } else {
@@ -331,7 +358,11 @@ class EventListener extends PureComponent {
 
         const { x1, y1, x2, y2 } = focusedStagnantSelectionArea;
 
-        if(y1 < y || y2 < y) {
+        // Consider min horizontal area of active cell
+        const minArea = this._getWholeArea({ minX: x, maxX: x, minY: Math.min(y1, y2), maxY: Math.min(y1, y2), sheetCellData });
+
+        // Shrink top
+        if((y1 < y && minArea.y1 !== y1) || (y2 < y && minArea.y1 !== y2)) {
           if(y1 < y) {
             focusedStagnantSelectionArea.y1 += 1;
             this._scrollTo(focusedStagnantSelectionArea.y1, x1)
@@ -347,6 +378,7 @@ class EventListener extends PureComponent {
             handleUpdateStagnantSelectionAreas([ focusedStagnantSelectionArea ]);
             if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
           }
+        // Expand bottom
         } else {
           if(y1 > y) {
             focusedStagnantSelectionArea.y1 += 1;
@@ -362,11 +394,40 @@ class EventListener extends PureComponent {
           }
         }
       } else {
-        const y2 = y + 1;
+        let x1;
+        let x2;
+        let y1;
+        let y2;
 
-        this._scrollTo(y2, x);
-        if(y2 < sheetRowCount) handleUpdateStagnantSelectionAreas([ { x1: x, x2: x, y1: y, y2 } ]);
-        if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
+        // Check if current cell is merged
+        if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
+          const { 
+            x1: mergedX1,
+            x2: mergedX2,
+            y1: mergedY1,
+            y2: mergedY2,
+          } = sheetCellData[y][x].merged;
+          x1 = mergedX1;
+          x2 = mergedX2;
+          y1 = mergedY1;
+          y2 = mergedY2 + 1;
+        } else {
+          x1 = x;
+          x2 = x;
+          y1 = y;
+          y2 = y + 1;
+        }
+
+        // Check for max area after movement
+        const minArea = this._getWholeArea({ minX: x1, minY: y1, maxX: x2, maxY: y2, sheetCellData });
+
+        if(y2 < sheetRowCount) {
+          handleUpdateStagnantSelectionAreas([ minArea ]);
+          handleUpdateActiveCellSelectionAreaIndex(0);
+          this._scrollTo(minArea.y2, x);
+        } else {
+          this._scrollTo(y, x);
+        }
       }
     } else {
       if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
@@ -2724,6 +2785,20 @@ class EventListener extends PureComponent {
       this.resetActiveCellDialog();
     } else {
       console.error("No prepopulate parameters specified");
+    }
+  }
+
+  changeGroup(type, id, layer) {
+    const { 
+      activeCellPosition: { x, y }
+    } = this.props;
+
+    const value = `[${layer}] ${id}`;
+
+    if(type === "attribute") {
+
+    } else {
+      this.changeValue(y, 1, { value });
     }
   }
 

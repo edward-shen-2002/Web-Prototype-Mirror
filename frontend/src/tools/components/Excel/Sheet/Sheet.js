@@ -174,7 +174,7 @@ let Sheet = ({
   sheetColumnWidths,
   sheetRowHeights
 }) => {
-  const handleKeyDown = async (event) => {
+  const handleKeyDown = (event) => {
     const { key, shiftKey, ctrlKey, altKey } = event;
     
     if(key === "ArrowUp") {
@@ -203,6 +203,17 @@ let Sheet = ({
       
     } else if(inputCharacterRegex.test(key)) {
       eventListenerRef.current.startEditMode();
+    } else {
+
+    }
+  };
+
+  const handleKeyDownCapture = (event) => {
+    const { key, shiftKey, ctrlKey, altKey } = event;
+
+    if(key === "s" && ctrlKey) {
+      event.stopPropagation();
+      event.preventDefault();
     }
   };
 
@@ -241,6 +252,7 @@ let Sheet = ({
       style={style}
       tabIndex="0" 
       onKeyDown={handleKeyDown}
+      onKeyDownCapture={handleKeyDownCapture}
       onDragStart={handleDragStart}
       onClick={handleClick}
       onPaste={handlePaste}

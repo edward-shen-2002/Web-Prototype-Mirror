@@ -77,12 +77,14 @@ const SheetContextMenu = ({
       const handleInsertColumn = () => eventListenerRef.current.insertColumn();
       const handleDeleteCellsShiftUp = () => eventListenerRef.current.deleteCellsShiftUp();
       const handleDeleteCellsShiftLeft = () => eventListenerRef.current.deleteCellsShiftLeft();
-      const handleOpenCommentDialog = () => eventListenerRef.current.updateActiveCellDialog("comment");
+      const handleOpenCommentDialog = () => eventListenerRef.current.updateActiveCellDialog({ dialog: "comment" });
       const handleSetReadOnly = () => eventListenerRef.current.setReadOnly();
       const handleUnsetReadOnly = () => eventListenerRef.current.unsetReadOnly();
-      const handleOpenAttributeDialog = () => eventListenerRef.current.updateActiveCellDialog("attribute");
-      const handleOpenCategoryDialog = () => eventListenerRef.current.updateActiveCellDialog("category");
-      const handleOpenPrepopulateDialog = () => eventListenerRef.current.updateActiveCellDialog("prepopulate");
+      const handleOpenAttributeDialog = () => eventListenerRef.current.updateActiveCellDialog({ dialog: "concept", type: "attribute" });
+      const handleOpenCategoryDialog = () => eventListenerRef.current.updateActiveCellDialog({ dialog: "concept", type: "category" });
+      const handleOpenPrepopulateDialog = () => eventListenerRef.current.updateActiveCellDialog({ dialog: "prepopulate" });
+      const handleOpenCategoryGroupDialog = () => eventListenerRef.current.updateActiveCellDialog({ dialog: "group", type: "category" });
+      // const handleOpenAttributeGroupDialog = () => eventListenerRef.updateActiveCellDialog({ dialog: "group", type: "attribute" });
   
       setConfig([
         // {
@@ -129,6 +131,7 @@ const SheetContextMenu = ({
           command: "Ctrl+Alt+M",
           handleClick: handleOpenCommentDialog
         },
+        null,
         {
           text: "Set read-only",
           handleClick: handleSetReadOnly
@@ -137,6 +140,7 @@ const SheetContextMenu = ({
           text: "Unset read-only",
           handleClick: handleUnsetReadOnly
         },
+        null,
         {
           text: "Set attribute",
           handleClick: handleOpenAttributeDialog
@@ -145,6 +149,11 @@ const SheetContextMenu = ({
           text: "Set category",
           handleClick: handleOpenCategoryDialog
         },
+        {
+          text: "Set category group",
+          handleClick: handleOpenCategoryGroupDialog
+        },
+        null,
         {
           text: "Set prepopulate",
           handleClick: handleOpenPrepopulateDialog

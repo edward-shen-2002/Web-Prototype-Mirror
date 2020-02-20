@@ -12,9 +12,19 @@ const data = ({
   router, 
   OrganizationModel, 
   BusinessConceptModel,
+  GroupModel,
   SectorModel,
   TemplateModel
 }) => {
+  router.get(`${ROUTE_DATA}/groups`, (_req, res, next) => {
+    GroupModel.find({})
+      .select("_id id value")
+      .then((groups) => {
+        res.json({ data: { groups } });
+      })
+      .catch(next);
+  }); 
+
   router.get(`${ROUTE_DATA}/organizations`, (_req, res, next) => {
     OrganizationModel.find({})
       .select("_id code name address")
@@ -44,7 +54,7 @@ const data = ({
 
   router.get(`${ROUTE_DATA}/business_concepts`, (_req, res, next) => {
     BusinessConceptModel.find({})
-      .select("id value")
+      .select("_id id value")
       .then((businessConcepts) => {
         res.json({ message: MESSAGE_SUCCESS_BUSINESS_CONCEPTS, data: { businessConcepts } });
       })

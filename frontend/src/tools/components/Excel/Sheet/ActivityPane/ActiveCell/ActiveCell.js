@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 
 import { connect } from "react-redux";
 
-import { publicAxios } from "@tools/rest";
-
 import { 
   getNormalRowHeight, 
   getNormalColumnWidth,
@@ -16,292 +14,15 @@ import { Editor } from "draft-js";
 
 import Popover, { ArrowContainer } from "react-tiny-popover";
 
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import TextField from "@material-ui/core/TextField";
-import ListItemText from "@material-ui/core/ListItemText";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
-
-import IconButton from "@material-ui/core/IconButton";
-import Avatar from "@material-ui/core/Avatar";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-
-import { REST_PUBLIC_DATA } from "@constants/rest";
-
 import topOffsetsSelector from "@selectors/ui/excel/topOffsets";
 import leftOffsetsSelector from "@selectors/ui/excel/leftOffsets";
 
+import BusinessConceptPopup from "./BusinessConceptPopup";
+import PrepopulatePopup from "./PrepopulatePopup";
+import CommentPopup from "./CommentPopup";
+import GroupPopup from "./GroupPopup";
+
 import "./ActiveCell.scss";
-
-const DialogActions = ({
-  handleAdd,
-  handleCancel
-}) => (
-  <ButtonGroup className="dialog__actions" fullWidth>
-    <Button onClick={handleAdd}>Add</Button>
-    <Button onClick={handleCancel}>Cancel</Button>
-  </ButtonGroup>
-);
-
-const PersonAvatar = () => (
-  <Avatar>
-    <AccountCircleIcon />
-  </Avatar>
-);
-
-const DeleteIconButton = ({ handleClick }) => (
-  <IconButton onClick={handleClick}>
-    <DeleteForeverIcon/>
-  </IconButton>
-);
-
-const CommentListItemAvatar = () => (
-  <ListItemAvatar>
-    <PersonAvatar/>
-  </ListItemAvatar>
-);
-
-const CommentActions = ({ handleRemove }) => (
-  <ListItemSecondaryAction>
-    <DeleteIconButton handleClick={handleRemove}/>
-  </ListItemSecondaryAction>
-);
-
-const CommentsListItems = ({ 
-  comments,
-  handleRemoveComment
-}) => comments.map(({ id, by, accountId, comment }) => {
-  const handleRemove = () => handleRemoveComment(id, accountId);
-
-  return (
-    <ListItem key={id}>
-      <CommentListItemAvatar/>
-      <ListItemText primary={comment} secondary={by}/>
-      <CommentActions handleRemove={handleRemove}/>
-    </ListItem>
-  );
-});
-
-const CommentsList = ({ 
-  comments,
-  handleRemoveComment 
-}) => (
-  <List className="dialog__list">
-    <CommentsListItems 
-      comments={comments}
-      handleRemoveComment={handleRemoveComment}
-    />
-  </List>
-);
-
-const CommentInputSection = ({
-  textFieldRef,
-  handleChange,
-  handleSaveComment,
-  handleCloseActiveCellDialog
-}) => (
-  <div className="dialog__actions">
-    <hr/>
-    <TextField 
-      inputRef={textFieldRef}
-      className="dialog__field" 
-      variant="outlined"
-      multiline={true}
-      onChange={handleChange}
-      fullWidth
-    />
-    <DialogActions
-      handleAdd={handleSaveComment}
-      handleCancel={handleCloseActiveCellDialog}
-    />
-  </div>
-);
-
-const CommentDialog = ({
-  comments,
-  eventListenerRef
-}) => {
-  const textFieldRef = useRef();
-  const [ comment, setComment ] = useState("");
-
-  useEffect(() => {
-    textFieldRef.current.focus();
-  }, [ textFieldRef ]);
-
-  const handleClick = () => textFieldRef.current.focus();
-  const handleSaveComment = () => eventListenerRef.current.addComment(comment);
-  const handleRemoveComment = (commentId) => eventListenerRef.current.deleteComment(commentId);
-  const handleChange = ({ target: { value } }) => setComment(value);
-  const handleCloseActiveCellDialog = () => eventListenerRef.current.resetActiveCellDialog();
-
-  return (
-    <div 
-      className="dialog" 
-      onClick={handleClick}
-    >
-      <Typography variant="h6" className="dialog__label">Comment</Typography>
-      <CommentsList 
-        comments={comments}
-        handleRemoveComment={handleRemoveComment}
-      />
-      <CommentInputSection 
-        textFieldRef={textFieldRef}
-        handleChange={handleChange}
-        handleSaveComment={handleSaveComment}
-        handleCloseActiveCellDialog={handleCloseActiveCellDialog}
-      />
-    </div>
-  );
-};
-
-const LabeledTextField = ({ 
-  label, 
-  text, 
-  textFieldProps, 
-  handleChange 
-}) => (
-  <div className="field">
-    <Typography className="field__label">{label}</Typography>
-    <TextField className="field__input" value={text} onChange={handleChange} {...textFieldProps} fullWidth/>
-  </div>
-);
-
-const PrepopulateDialog = ({
-  type,
-  quarter,
-  year,
-  eventListenerRef
-}) => {
-  const [ newType, setNewType ] = useState(type ? type : "");
-  const [ newQuarter, setNewQuarter ] = useState(quarter ? quarter : "");
-  const [ newYear, setNewYear ] = useState(year ? year : "");
-
-  const handleChangeType = ({ target: { value } }) => setNewType(value);
-  const handleChangeQuarter = ({ target: { value } }) => setNewQuarter(value);
-  const handleChangeYear = ({ target: { value } }) => setNewYear(value);
-
-  const handleChangePrepopulate = () => eventListenerRef.current.setPrepopulate({ type: newType, quarter: newQuarter, year: newYear });
-  const handleCloseActiveCellDialog = () => eventListenerRef.current.resetActiveCellDialog();
-
-  return (
-    <div className="dialog">
-      <Typography variant="h6">Prepopulate</Typography>
-      <LabeledTextField 
-        label="Type" 
-        text={newType} 
-        handleChange={handleChangeType}
-      />
-      <LabeledTextField 
-        label="Quarter" 
-        text={newQuarter} 
-        handleChange={handleChangeQuarter}
-      />
-      <LabeledTextField 
-        label="Year" 
-        text={newYear} 
-        handleChange={handleChangeYear}
-      />
-      <DialogActions
-        handleAdd={handleChangePrepopulate}
-        handleCancel={handleCloseActiveCellDialog}
-      />
-    </div>
-  );
-};
-
-const BusinessConceptsItems = ({ 
-  businessConcepts, 
-  type,
-  eventListenerRef 
-}) => businessConcepts.map(({ _id, id, value }) => {
-  const handleClick = () => eventListenerRef.current.changeBusinessConcept(type, id);
-
-  return (
-    <ListItem
-      key={_id}
-      className="businessConcepts__item"
-      alignItems="flex-start"
-      button
-      onClick={handleClick}
-    >
-      <div className="businessConcepts__id">{id}</div>
-      <div className="businessConcepts__value">{value}</div>
-    </ListItem>
-  );
-});
-
-const BusinessConceptsList = ({ 
-  businessConcepts, 
-  type,
-  eventListenerRef 
-}) => (
-  <List className="businessConcepts">
-    <BusinessConceptsItems 
-      type={type}
-      businessConcepts={businessConcepts}
-      eventListenerRef={eventListenerRef}
-    />
-  </List>
-);
-
-const filterString = (query, value) =>  value.toString().toLowerCase().includes(query.toLowerCase());
-
-const BusinessConceptDialog = ({
-  type,
-  eventListenerRef
-}) => {
-  const [ businessConcepts, setBusinessConcepts ] = useState([]);
-  const [ filter, setFilter ] = useState("");
-
-  const [ isDataFetched, setIsDataFetched ] = useState(false);
-
-  useEffect(() => {
-    if(!isDataFetched) {
-      publicAxios.get(`${REST_PUBLIC_DATA}/business_concepts`)
-        .then(({ data: { data: { businessConcepts } } }) => {
-          setBusinessConcepts(businessConcepts);
-          setIsDataFetched(true);
-        })
-        .catch((error) => console.error(error));
-    }
-  }, [ isDataFetched ]);
-
-  const textFieldRef = useRef();
-
-  useEffect(() => {
-    textFieldRef.current.focus();
-  }, [ textFieldRef ]);
-
-  const filteredBusinessConcepts = businessConcepts.filter(({ id, value }) => filterString(filter, value) || filterString(filter, id));
-
-  const handleChangeFilter = ({ target: { value } }) => setFilter(value);
-  const handleClick = () => textFieldRef.current.focus();
-
-  return (
-    <div 
-      className="dialog"
-      onClick={handleClick}
-    >
-      <Typography variant="h6">Set {type}</Typography>
-      <TextField 
-        inputRef={textFieldRef}
-        onChange={handleChangeFilter}
-      />
-      <BusinessConceptsList 
-        type={type}
-        businessConcepts={filteredBusinessConcepts}
-        eventListenerRef={eventListenerRef}
-      />
-      {/* <DialogActions/> */}
-    </div>
-  );
-};
 
 const ActiveCellDialog = ({
   activeCellDialog,
@@ -312,7 +33,11 @@ const ActiveCellDialog = ({
   value,
   eventListenerRef
 }) => {
-  const handleKeyDownCapture = (event) => event.stopPropagation();
+  const handleKeyDownCapture = (event) => {
+    // const { key, ctrlKey } = event;
+    // if(key === "s" && ctrlKey) event.preventDefault();
+    // event.stopPropagation();
+  };
   const handleContextMenuCapture = (event) => event.stopPropagation();
 
   const commonChildrenProps = { 
@@ -321,35 +46,45 @@ const ActiveCellDialog = ({
 
   let Children;
 
-  if(activeCellDialog === "comment") {
-    Children = (
-      <CommentDialog 
-        {...commonChildrenProps}
-        comments={comments}
-      />
-    );
-  } else if(activeCellDialog === "attribute" || activeCellDialog === "category") {
-    Children = (
-      <BusinessConceptDialog 
-        {...commonChildrenProps} 
-        type={activeCellDialog} 
-      />
-    );
-  } else if(activeCellDialog === "prepopulate") {
-    let groupValues;
-    
-    if(typeof value === "string" && isPrepopulateString(value)) {
-      groupValues = parsePrepopulateString(value);
-    } else {
-      groupValues = {};
+  if(activeCellDialog) {
+    const { dialog, type } = activeCellDialog;
+    if(dialog === "comment") {
+      Children = (
+        <CommentPopup 
+          {...commonChildrenProps}
+          comments={comments}
+        />
+      );
+    } else if(dialog === "concept") {
+      Children = (
+        <BusinessConceptPopup 
+          {...commonChildrenProps} 
+          type={type} 
+        />
+      );
+    } else if(dialog === "prepopulate") {
+      let conceptParameters;
+      
+      if(typeof value === "string" && isPrepopulateString(value)) {
+        conceptParameters = parsePrepopulateString(value);
+      } else {
+        conceptParameters = {};
+      }
+  
+      Children = (
+        <PrepopulatePopup
+          {...commonChildrenProps}
+          {...conceptParameters}
+        />
+      );
+    } else if(dialog === "group") {
+      Children = (
+        <GroupPopup
+          {...commonChildrenProps}
+          type={type}
+        />
+      );
     }
-
-    Children = (
-      <PrepopulateDialog
-        {...commonChildrenProps}
-        {...groupValues}
-      />
-    );
   }
 
   return (
