@@ -34,10 +34,18 @@ const ActiveCellDialog = ({
   eventListenerRef
 }) => {
   const handleKeyDownCapture = (event) => {
-    // const { key, ctrlKey } = event;
-    // if(key === "s" && ctrlKey) event.preventDefault();
-    // event.stopPropagation();
+    const { key, ctrlKey } = event;
+
+    if(
+      key === "ArrowUp" 
+      || key === "ArrowDown" 
+      || key === "ArrowRight" 
+      || key === "ArrowLeft"
+    ) {
+      event.stopPropagation();
+    }
   };
+
   const handleContextMenuCapture = (event) => event.stopPropagation();
 
   const commonChildrenProps = { 

@@ -176,7 +176,7 @@ let Sheet = ({
 }) => {
   const handleKeyDown = (event) => {
     const { key, shiftKey, ctrlKey, altKey } = event;
-    
+
     if(key === "ArrowUp") {
       eventListenerRef.current.arrowUp(event, shiftKey);
     } else if(key === "ArrowDown") {
@@ -212,7 +212,6 @@ let Sheet = ({
     const { key, shiftKey, ctrlKey, altKey } = event;
 
     if(key === "s" && ctrlKey) {
-      event.stopPropagation();
       event.preventDefault();
     }
   };
