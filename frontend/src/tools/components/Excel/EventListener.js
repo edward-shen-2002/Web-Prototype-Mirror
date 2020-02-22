@@ -2757,7 +2757,7 @@ class EventListener extends PureComponent {
     if(activeSelectionArea) handleResetActiveSelectionArea();
   }
 
-  setPrepopulate({ type, quarter, year }) {
+  setPrepopulate({ type, quarter, year, categoryGroups }) {
     const {
       activeCellPosition,
       sheetCellData,
@@ -2769,6 +2769,7 @@ class EventListener extends PureComponent {
     if(type) prepopulateArray.push(`type=${type}`);
     if(quarter) prepopulateArray.push(`quarter=${quarter}`);
     if(year) prepopulateArray.push(`year=${year}`);
+    if(categoryGroups) prepopulateArray.push(`categoryGroups=${JSON.stringify(categoryGroups.map(({ id }) => id))}`);
 
     if(prepopulateArray.length) {
       const prepopulateString = `|${prepopulateArray.join("&")}`;

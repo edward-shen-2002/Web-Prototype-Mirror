@@ -36,14 +36,14 @@ const ActiveCellDialog = ({
   const handleKeyDownCapture = (event) => {
     const { key, ctrlKey } = event;
 
-    if(
-      key === "ArrowUp" 
-      || key === "ArrowDown" 
-      || key === "ArrowRight" 
-      || key === "ArrowLeft"
-    ) {
+    // if(
+    //   key === "ArrowUp" 
+    //   || key === "ArrowDown" 
+    //   || key === "ArrowRight" 
+    //   || key === "ArrowLeft"
+    // ) {
       event.stopPropagation();
-    }
+    // }
   };
 
   const handleContextMenuCapture = (event) => event.stopPropagation();

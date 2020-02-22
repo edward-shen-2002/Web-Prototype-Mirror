@@ -4,12 +4,14 @@ import { ROUTE_ADMIN_BUNDLES_WORKFLOW } from "../../../constants/rest";
 import { HTTP_ERROR_NOT_FOUND } from "../../../constants/rest";
 import { MESSAGE_ERROR_NOT_FOUND } from "../../../constants/messages";
 import { getListDifference, isNumber } from "../../../tools/misc";
+import { isGroupString, getGroupData } from "../../../tools/workbook";
 
 const approveBundles = ({ 
   router, 
   OrganizationBundleModel,
   BusinessConceptModel,
-  MasterValueModel 
+  MasterValueModel,
+  GroupModel
 }) => {
   router.get(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/general`, (req, res, next) => {
     OrganizationBundleModel.find({ phase: "approve" })
@@ -55,8 +57,8 @@ const approveBundles = ({
     const { bundle: { approverNotes } } = req.body;
 
     try {
-      const bundle = await OrganizationBundleModel.findOneAndUpdate({ _id, phase: "approve" }, { approverNotes, phase: "finished", status: "APPROVED" });
-      // const bundle = await OrganizationBundleModel.findOneAndUpdate({ _id, phase: "approve" }, {});
+      // const bundle = await OrganizationBundleModel.findOneAndUpdate({ _id, phase: "approve" }, { approverNotes, phase: "finished", status: "APPROVED" });
+      const bundle = await OrganizationBundleModel.findOneAndUpdate({ _id, phase: "approve" }, {});
       
       if(!bundle) return res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_NOT_FOUND });
 
@@ -82,6 +84,14 @@ const approveBundles = ({
 
         const { sheetNames, workbookData } = workbook;
 
+        let currentGroup = [];
+
+        let attributes = new Set();
+        let categories = new Set();
+
+        let groups = new Set();
+
+        // Todo: attribute groups
         for(let form of sheetNames) {
           const sheetData = JSON.parse(pako.inflate(workbookData[form], { to: "string" }));
           const { 
@@ -98,10 +108,16 @@ const approveBundles = ({
               if(column > 1) {
                 const { value } = firstRow[column];
   
-                if(value !== "" && isNumber(value)) attributesMap[column] = +value;
+                if(value !== "" && isNumber(value)) {
+                  attributesMap[column] = { id: +value };
+                  if(currentGroup.length) attributesMap[column].groups = [ ...currentGroup ];
+                }
               }
             }
           }
+
+          // Reset groups for category
+          currentGroup = [];
 
           // Get categories
           for(let row in sheetCellData) {
@@ -110,14 +126,38 @@ const approveBundles = ({
               if(firstColumn) {
                 const { value } = firstColumn;
 
-                if(value !== "" && isNumber(value)) categoriesMap[row] = +value;
+                if(value) {
+                  if(isNumber(value)) {
+                    categoriesMap[row] = { id: +value, groups: [ ...currentGroup ] };
+
+                    if(currentGroup.length) categoriesMap[row].groups = [ ...currentGroup ];
+                    attributes.add(+value);
+                  } else if(isGroupString(value)) {
+                    const { layer, groupId } = getGroupData(value);
+                    
+                    if(layer > currentGroup.length + 1) {
+                      // ! error
+                    } else {
+                      currentGroup = [ ...currentGroup.slice(0, layer - 1), groupId ];
+                      groups.add(groupId);
+                    }
+                  } else {
+                    // ! Error?
+                  }
+                }
               }
             }
           }
 
-          // ! Consider rich text attributes/category? Illegal?
-          const attributes = Object.values(attributesMap);
-          const categories = Object.values(categoriesMap);
+          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          // ! TODO : Shouldn't this also be verified in the template (when published check)? 
+          // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+          // Convert set to array
+          attributes = Array.from(attributes);
+          categories = Array.from(categories);
+
+          groups = Array.from(groups);
 
           // ! Check if attribute/category id exists and inform users if it doesn't
           const definedAttributes = (
@@ -129,18 +169,23 @@ const approveBundles = ({
             await BusinessConceptModel.find({ id: { $in: categories }})
               .select("id")
           ).map(({ id }) => id);
+          
+          const definedGroups = (
+            await GroupModel.find({ id: { $in: groups } })
+              .select("id")
+          ).map(({ id }) => id);
 
           const invalidAttributes = getListDifference(definedAttributes, attributes);
           const invalidCategories = getListDifference(definedCategories, categories);
+          const invalidGroups = getListDifference(definedGroups, groups);
 
-          // ! Quadratic run time - optimize later
-          // Exclude rows without defined attributes/categories
-          for(let row in attributesMap) {
-            if(invalidAttributes.includes(attributesMap[row])) delete attributesMap[row];
-          }
-
-          for(let column in categoriesMap) {
-            if(invalidCategories.includes(categoriesMap[column])) delete categoriesMap[column];
+          if(invalidAttributes.length || invalidCategories.length || invalidGroups.length) {
+            return res.status(HTTP_ERROR_NOT_FOUND).json({ 
+              message: MESSAGE_ERROR_NOT_FOUND, 
+              invalidAttributes, 
+              invalidCategories,
+              invalidGroups
+            });
           }
 
           // The remaining attributes/categories are the potential valid pairing

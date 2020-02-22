@@ -659,7 +659,13 @@ export const parsePrepopulateString = (string) => (
     .reduce((acc, parameter) => {
       const [ group, value ] = parameter.split("=");
 
-      if(group && value) acc[group] = value;
+      if(group && value) {
+        try {
+          acc[group] = JSON.parse(value);
+        } catch(error) {
+          acc[group] = value;
+        }
+      }
 
       return acc;
     }, {})

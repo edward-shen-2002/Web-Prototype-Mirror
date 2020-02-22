@@ -158,17 +158,24 @@ const bundles = ({
                 const { type, value } = columns[column];
 
                 if(type === "prepopulate" && value) {
-                  const groups = value.substring(1).split("&");
+                  const masterKeys = value.substring(1).split("&");
   
                   // ! Validation?
                   let {
                     type,
                     year,
-                    quarter
-                  } = groups.reduce((acc, cur) => {
+                    quarter,
+                    categoryGroups
+                  } = masterKeys.reduce((acc, cur) => {
                     const [ group, value ] = cur.split("=");
   
-                    if(group && value !== undefined) acc[group] = value;
+                    if(group && value !== undefined) {
+                      try {
+                        acc[group] = JSON.parse(value);
+                      } catch(error) {
+                        acc[group] = value;
+                      }
+                    }
   
                     return acc;
                   }, {});
@@ -200,17 +207,29 @@ const bundles = ({
                     // Search database
   
                     // successful search => continue and skip fallback
-                    const masterValue = await MasterValueModel.findOne({ organizationId, type, year, quarter, form })
-                      .or([
+                    const masterValue = await MasterValueModel.findOne({ 
+                      organizationId, 
+                      type, 
+                      year, 
+                      quarter, 
+                      form,
+                      $or: [
                         { 
                           businessConceptId1: attribute, 
-                          businessConceptId2: category
+                          $and: [
+                            { "businessConceptId2.id": category },
+                            { "businessConceptId2.groups": { $eq: categoryGroups } }
+                          ]
                         },
                         {
-                          businessConceptId1: category, 
+                          $and: [
+                            { "businessConceptId1.id": category },
+                            { "businessConceptId1.groups": { $eq: categoryGroups } }
+                          ],
                           businessConceptId2: attribute
                         }
-                      ]);
+                      ]
+                    });
   
                     if(masterValue) {
                       sheetCellData[row][column] = { 
