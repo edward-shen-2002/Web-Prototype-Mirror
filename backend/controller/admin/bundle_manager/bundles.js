@@ -154,18 +154,23 @@ const bundles = ({
             for(let row in sheetCellData) {
               const columns = sheetCellData[row];
   
+              let categoryIds;
+
+              if(columns[2] && columns[2].value) {
+                const { value } = columns[2];
+
+                categoryIds = value.split(" - ").map((id) => +id);
+              }
+
               for(let column in columns) {
                 const { type, value } = columns[column];
-
                 if(type === "prepopulate" && value) {
                   const masterKeys = value.substring(1).split("&");
   
                   // ! Validation?
                   let {
-                    type,
                     year,
-                    quarter,
-                    categoryGroups
+                    quarter
                   } = masterKeys.reduce((acc, cur) => {
                     const [ group, value ] = cur.split("=");
   
@@ -197,7 +202,6 @@ const bundles = ({
   
                   if(
                     organizationId 
-                    && type 
                     && year 
                     && quarter 
                     && form 
@@ -205,28 +209,26 @@ const bundles = ({
                     && category
                   ) {
                     // Search database
-  
                     // successful search => continue and skip fallback
                     const masterValue = await MasterValueModel.findOne({ 
                       organizationId, 
-                      type, 
                       year, 
                       quarter, 
                       form,
                       $or: [
                         { 
-                          businessConceptId1: attribute, 
+                          "businessConceptId1.id": attribute, 
                           $and: [
                             { "businessConceptId2.id": category },
-                            { "businessConceptId2.groups": { $eq: categoryGroups } }
+                            { "businessConceptId2.groups.id": { $in: categoryIds } }
                           ]
                         },
                         {
                           $and: [
                             { "businessConceptId1.id": category },
-                            { "businessConceptId1.groups": { $eq: categoryGroups } }
+                            { "businessConceptId1.groups.id": { $in: categoryIds } }
                           ],
-                          businessConceptId2: attribute
+                          "businessConceptId2.id": attribute
                         }
                       ]
                     });
