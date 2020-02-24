@@ -2757,7 +2757,11 @@ class EventListener extends PureComponent {
     if(activeSelectionArea) handleResetActiveSelectionArea();
   }
 
-  setPrepopulate({ type, quarter, year, categoryGroups }) {
+  setPrepopulate({ 
+    type, 
+    quarter, 
+    year 
+  }) {
     const {
       activeCellPosition,
       sheetCellData,
@@ -2769,7 +2773,6 @@ class EventListener extends PureComponent {
     if(type) prepopulateArray.push(`type=${type}`);
     if(quarter) prepopulateArray.push(`quarter=${quarter}`);
     if(year) prepopulateArray.push(`year=${year}`);
-    if(categoryGroups) prepopulateArray.push(`categoryGroups=${JSON.stringify(categoryGroups.map(({ id }) => id))}`);
 
     if(prepopulateArray.length) {
       const prepopulateString = `|${prepopulateArray.join("&")}`;
@@ -2789,17 +2792,31 @@ class EventListener extends PureComponent {
     }
   }
 
-  changeGroup(type, id, layer) {
-    const { 
-      activeCellPosition: { x, y }
+  // ! TODO : selection instead of just active cell
+  changeGroup({
+    type, 
+    newGroups
+  }) {
+    let { 
+      sheetCellData,
+      stagnantSelectionAreas,
+      activeCellPosition: { x, y },
+      handleUpdateSheetCellData
     } = this.props;
-
-    const value = `[${layer}] ${id}`;
 
     if(type === "attribute") {
 
     } else {
-      this.changeValue(y, 1, { value });
+      let groupIds = newGroups.map(({ id }) => id).join(" - ");
+      let groupValues = newGroups.map(({ value }) => value).join(" - ");
+
+      if(!sheetCellData[y]) sheetCellData[y] = {};
+
+      sheetCellData[y][2] = { value: groupIds };
+      sheetCellData[y][3] = { value: groupValues };
+
+      handleUpdateSheetCellData(sheetCellData);
+      this.resetActiveCellDialog();
     }
   }
 

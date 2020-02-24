@@ -1,0 +1,44 @@
+.groups {
+  width: 700px;
+
+  &__groupSection {
+    display: flex;
+    flex-flow: column;
+  }
+
+  &__groupSectionContent {
+    display: flex;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+  &__groupLinks {
+    overflow: auto;
+    width: 50%;
+
+    height: 190px;
+    padding: 2px;
+  }
+
+  &__groupLinksItem {
+    display: flex;
+    width: 100%;
+  }
+
+  &__groupList {
+    overflow: auto;
+    width: 50%;
+
+    height: 190px;
+    padding: 2px;
+  }
+
+  &__groupItem {
+    width: 100%;
+    background-color: #DDDDDD;
+  }
+
+  &__button {
+    margin-top: 10px;
+  }
+}

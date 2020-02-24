@@ -84,12 +84,11 @@ const approveBundles = ({
 
         const { sheetNames, workbookData } = workbook;
 
-        let currentGroup = [];
-
         let attributes = new Set();
         let categories = new Set();
 
-        let groups = new Set();
+        let groupIds = new Set();
+        let groupValues = new Set();
 
         // Todo: attribute groups
         for(let form of sheetNames) {
@@ -110,39 +109,34 @@ const approveBundles = ({
   
                 if(value !== "" && isNumber(value)) {
                   attributesMap[column] = { id: +value };
-                  if(currentGroup.length) attributesMap[column].groups = [ ...currentGroup ];
                 }
               }
             }
           }
 
-          // Reset groups for category
-          currentGroup = [];
-
           // Get categories
           for(let row in sheetCellData) {
             if(row > 1) {
               const firstColumn = sheetCellData[row][1];
+              const secondColumn = sheetCellData[row][2];
+              const thirdColumn = sheetCellData[row][3];
               if(firstColumn) {
                 const { value } = firstColumn;
 
                 if(value) {
                   if(isNumber(value)) {
-                    categoriesMap[row] = { id: +value, groups: [ ...currentGroup ] };
-
-                    if(currentGroup.length) categoriesMap[row].groups = [ ...currentGroup ];
-                    attributes.add(+value);
-                  } else if(isGroupString(value)) {
-                    const { layer, groupId } = getGroupData(value);
-                    
-                    if(layer > currentGroup.length + 1) {
-                      // ! error
-                    } else {
-                      currentGroup = [ ...currentGroup.slice(0, layer - 1), groupId ];
-                      groups.add(groupId);
+                    let currentGroups;
+                    if(secondColumn && secondColumn.value) {
+                      currentGroups = secondColumn.value.split(" - ").map((id) => ({ id }));
+                      currentGroups.forEach(({ id }) => id);
+                       
+                    } else if(thirdColumn && thirdColumn.value) {
+                      currentGroups = thirdColumn.value.split(" - ").map((value) => ({ value }));
+                      currentGroups.forEach(({ value }) => groupValues.add(value));
                     }
-                  } else {
-                    // ! Error?
+
+                    categoriesMap[row] = { id: +value, groups: currentGroups };
+                    attributes.add(+value);
                   }
                 }
               }
@@ -157,7 +151,8 @@ const approveBundles = ({
           attributes = Array.from(attributes);
           categories = Array.from(categories);
 
-          groups = Array.from(groups);
+          groupIds = Array.from(groupIds);
+          groupValues = Array.from(groupValues);
 
           // ! Check if attribute/category id exists and inform users if it doesn't
           const definedAttributes = (
@@ -171,20 +166,36 @@ const approveBundles = ({
           ).map(({ id }) => id);
           
           const definedGroups = (
-            await GroupModel.find({ id: { $in: groups } })
-              .select("id")
-          ).map(({ id }) => id);
+            await GroupModel.find({ $or: [ { id: { $in: groupIds } }, { value: { $in: groupValues } } ]})
+              .select("id value")
+          );
+
+          const definedGroupsIdsMap = definedGroups.reduce((acc, { id, value }) => {
+            acc[ id ] = value;
+            return acc;
+          }, {});
+          const definedGroupsValuesMap = definedGroups.reduce((acc, { value, id }) => {
+            acc[ value ] = id;
+            return acc;
+          }, {});
 
           const invalidAttributes = getListDifference(definedAttributes, attributes);
           const invalidCategories = getListDifference(definedCategories, categories);
-          const invalidGroups = getListDifference(definedGroups, groups);
+          const invalidGroupIds = getListDifference(Object.keys(definedGroupsIdsMap), groupIds);
+          const invalidGroupValues = getListDifference(Object.keys(definedGroupsValuesMap), groupValues);
 
-          if(invalidAttributes.length || invalidCategories.length || invalidGroups.length) {
+          if(
+            invalidAttributes.length 
+            || invalidCategories.length 
+            || invalidGroupIds.length
+            || invalidGroupValues.length
+          ) {
             return res.status(HTTP_ERROR_NOT_FOUND).json({ 
               message: MESSAGE_ERROR_NOT_FOUND, 
               invalidAttributes, 
               invalidCategories,
-              invalidGroups
+              invalidGroupIds,
+              invalidGroupValues
             });
           }
 
@@ -193,7 +204,23 @@ const approveBundles = ({
           // Column might not exist. Looping through rows ensures that undefined rows with column concept are not visited
           for(let row in categoriesMap) {
             const rowData = sheetCellData[row];
-            const businessConceptId1 = categoriesMap[row];
+            let businessConceptId1 = categoriesMap[row];
+
+            if(businessConceptId1.groups) {
+              let newGroups = [];
+              businessConceptId1.groups.forEach((group) => {
+                if(!group.id) {
+                  group.id = definedGroupsValuesMap[group.value];
+                } else if(!group.value) {
+                  group.value = definedGroupsIdsMap[group.id];
+                } 
+
+                newGroups.push(group);
+              });
+
+              businessConceptId1.groups = newGroups;
+            }
+            
             for(let column in attributesMap) {
               // Cell value might be rich text!
               const cellData = rowData[column];
@@ -205,7 +232,23 @@ const approveBundles = ({
                 // TODO : Convert rich text to plaintext
                 // Value could be prepopulate
                 if(value) {
-                  const businessConceptId2 = attributesMap[column];
+                  let businessConceptId2 = attributesMap[column];
+
+                  if(businessConceptId2.groups) {
+                    let newGroups = [];
+                    businessConceptId2.groups.forEach((group) => {
+                      if(!group.id) {
+                        group.id = definedGroupsValuesMap[group.value];
+                      } else if(!group.value) {
+                        group.value = definedGroupsIdsMap[group.id];
+                      } 
+
+                      newGroups.push(group);
+                    });
+      
+                    businessConceptId2.groups = newGroups;
+                  }
+                  
                   dataToInsert.push({
                     organizationId,
                     type: workbookName,
