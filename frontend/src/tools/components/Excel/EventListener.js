@@ -953,6 +953,7 @@ class EventListener extends PureComponent {
           
           const { x1: newX1, y1: newY1, x2: newX2, y2: newY2 } = newSelectionArea;
 
+          // !! Fix this... there may be merged cells taking up spots
           if(y < y1 && y < y2) {
             x = Math.max(newX1, newX2);
             y = Math.max(newY1, newY2);  
