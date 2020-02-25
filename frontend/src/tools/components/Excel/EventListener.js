@@ -269,13 +269,12 @@ class EventListener extends PureComponent {
             sheetCellData
           });
 
-          focusedStagnantSelectionArea = this._getWholeArea({
-            minX,
-            minY,
-            maxX,
-            maxY: newMaxY - 1,
-            sheetCellData
-          });
+          focusedStagnantSelectionArea = {
+            x1: minX,
+            y1: minY,
+            x2: maxX,
+            y2: newMaxY - 1
+          };
 
           this._scrollTo(focusedStagnantSelectionArea.y2, y1 > y ? x1 : x2);
           
@@ -411,13 +410,12 @@ class EventListener extends PureComponent {
             sheetCellData
           });
 
-          focusedStagnantSelectionArea = this._getWholeArea({ 
-            minX,
-            minY: newMinY + 1,
-            maxX,
-            maxY,
-            sheetCellData
-          });
+          focusedStagnantSelectionArea = {
+            x1: minX,
+            y1: newMinY + 1,
+            x2: maxX,
+            y2: maxY
+          };
 
           this._scrollTo(focusedStagnantSelectionArea.y1, y1 < y ? x1 : x2);
 
@@ -529,7 +527,30 @@ class EventListener extends PureComponent {
 
         const { x1, y1, x2, y2 } = focusedStagnantSelectionArea;
 
-        if(x1 > x || x2 > x) {
+        const minY = Math.min(y1, y2);
+        const minX = Math.min(x1, x2);
+        const maxY = Math.max(y1, y2);
+        const maxX = Math.max(x1, x2);
+
+        // Consider min vertical area of active cell
+        const minArea = this._getWholeArea({ 
+          minX: x, 
+          maxX: x,
+          minY, 
+          maxY, 
+          sheetCellData 
+        });
+
+        // Shrink right
+        if(maxX > x && maxX !== minArea.x2) {
+          // const { x1: newMaxX } = this._getWholeArea({
+          //   minX: maxX,
+          //   minY,
+          //   maxX,
+          //   maxY,
+          //   sheetCellData
+          // });
+
           if(x1 > x) {
             focusedStagnantSelectionArea.x1 -= 1;
             this._scrollTo(y1, focusedStagnantSelectionArea.x1)
