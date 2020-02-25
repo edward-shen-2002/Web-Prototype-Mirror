@@ -860,7 +860,6 @@ class EventListener extends PureComponent {
 
     let merged = this._getMergedData(sheetCellData, y, x);
 
-    // const activeCellPosition
     if(shiftKey) {
       if(merged) {
         const { x1 } = merged;
@@ -869,13 +868,36 @@ class EventListener extends PureComponent {
         x--;
       }
     } else {
-      if(merged) {
-        const { x2 } = merged;
-        x = x2 + 1;
-      } else {
-        x++;
+      const rowData = sheetCellData[y];
+
+      if(rowData) {
+        // Find a spot in the current row
+        for(let column = x + 1; column <= endX; column++) {
+           const cellData = rowData[column];
+
+           if(cellData && cellData.merged) {
+            const {
+              x1: mergedX1,
+              x2: mergedX2,
+              y1: mergedY1,
+              y2: mergedY2
+            } = cellData.merged;
+
+            if(mergedY1 === y && mergedX1 === column) {
+              x = column - 1;
+              break;
+            } else {
+              x = mergedX2;
+            }
+           } else {
+             x = column - 1;
+             break;
+           }
+        }
       }
-    }
+
+      x++;
+    } 
     
     // Check for bounds -- do not update when isbounded and tab goes out bounds
     if((x < x1 && x < x2) || (x > x1 && x > x2)) {
@@ -977,7 +999,6 @@ class EventListener extends PureComponent {
           }
         } 
       } else {
-        // ! FIX THIS OFFSET INCORRECT?
         if(currentRowData) {
           const { 
             minX: currentMinX,
