@@ -356,20 +356,44 @@ class EventListener extends PureComponent {
       if(stagnantSelectionAreasLength) {
         let focusedStagnantSelectionArea = { ...stagnantSelectionAreas[activeCellSelectionAreaIndex] };
 
-        const { x1, y1, x2, y2 } = focusedStagnantSelectionArea;
+        let { x1, y1, x2, y2 } = focusedStagnantSelectionArea;
+
+        const minY = Math.min(y1, y2);
+        const minX = Math.min(x1, x2);
+        const maxY = Math.max(y1, y2);
+        const maxX = Math.max(x1, x2);
 
         // Consider min horizontal area of active cell
-        const minArea = this._getWholeArea({ minX: x, maxX: x, minY: Math.min(y1, y2), maxY: Math.min(y1, y2), sheetCellData });
+        const minArea = this._getWholeArea({ 
+          minX, 
+          maxX,
+          minY: y, 
+          maxY: y, 
+          sheetCellData 
+        });
 
         // Shrink top
-        if((y1 < y && minArea.y1 !== y1) || (y2 < y && minArea.y1 !== y2)) {
-          if(y1 < y) {
-            focusedStagnantSelectionArea.y1 += 1;
-            this._scrollTo(focusedStagnantSelectionArea.y1, x1)
-          } else {
-            focusedStagnantSelectionArea.y2 += 1;
-            this._scrollTo(focusedStagnantSelectionArea.y2, x2);
-          }
+        if(minY < y && minArea.y1 !== minY) {
+          // Get horizontal min area of above to check for merged cells
+          const { y2: newMinY } = this._getWholeArea({
+            minX,
+            minY,
+            maxX,
+            maxY: minY,
+            sheetCellData
+          });
+
+          focusedStagnantSelectionArea = this._getWholeArea({ 
+            minX,
+            minY: newMinY + 1,
+            maxX,
+            maxY,
+            sheetCellData
+          });
+
+          this._scrollTo(focusedStagnantSelectionArea.y1, y1 < y ? x1 : x2);
+
+          // Remove scroll above.. then get min area to get combined merged and normal cell
 
           if(isPositionEqualArea(activeCellPosition, focusedStagnantSelectionArea)) {
             handleResetStagnantSelectionAreas();
@@ -380,13 +404,15 @@ class EventListener extends PureComponent {
           }
         // Expand bottom
         } else {
-          if(y1 > y) {
-            focusedStagnantSelectionArea.y1 += 1;
-            this._scrollTo(focusedStagnantSelectionArea.y1, x1)
-          } else {
-            focusedStagnantSelectionArea.y2 += 1;
-            this._scrollTo(focusedStagnantSelectionArea.y2, x2);
-          }
+          focusedStagnantSelectionArea = this._getWholeArea({
+            minY,
+            minX,
+            maxX,
+            maxY: maxY + 1,
+            sheetCellData
+          });
+
+          this._scrollTo(focusedStagnantSelectionArea.y2, y1 < y ? x2 : x1);
 
           if(focusedStagnantSelectionArea.y1 < sheetRowCount && focusedStagnantSelectionArea.y2 < sheetRowCount) {
             handleUpdateStagnantSelectionAreas([ focusedStagnantSelectionArea ]);
