@@ -357,6 +357,7 @@ class EventListener extends PureComponent {
 
   arrowDown(event, shiftKey) {
     let { 
+      sheetRowCount,
       sheetCellData,
       activeCellPosition,
       isEditMode,
@@ -365,8 +366,7 @@ class EventListener extends PureComponent {
       handleUpdateStagnantSelectionAreas,
       handleUpdateActiveCellSelectionAreaIndex,
       handleResetStagnantSelectionAreas,
-      handleResetActiveCellSelectionAreaIndex,
-      sheetRowCount
+      handleResetActiveCellSelectionAreaIndex
     } = this.props;
 
     if(isEditMode) return;
@@ -501,6 +501,7 @@ class EventListener extends PureComponent {
   arrowLeft(event, shiftKey) {
     let { 
       sheetCellData,
+      sheetRowCount,
       activeCellPosition,
       activeCellSelectionAreaIndex,
       isEditMode,
@@ -543,21 +544,22 @@ class EventListener extends PureComponent {
 
         // Shrink right
         if(maxX > x && maxX !== minArea.x2) {
-          // const { x1: newMaxX } = this._getWholeArea({
-          //   minX: maxX,
-          //   minY,
-          //   maxX,
-          //   maxY,
-          //   sheetCellData
-          // });
+          const { x1: newMaxX } = this._getWholeArea({
+            minX: maxX,
+            minY,
+            maxX,
+            maxY,
+            sheetCellData
+          });
 
-          if(x1 > x) {
-            focusedStagnantSelectionArea.x1 -= 1;
-            this._scrollTo(y1, focusedStagnantSelectionArea.x1)
-          } else {
-            focusedStagnantSelectionArea.x2 -= 1;
-            this._scrollTo(y2, focusedStagnantSelectionArea.x2);
-          }
+          focusedStagnantSelectionArea = {
+            x1: minX,
+            y1: minY,
+            y2: maxY,
+            x2: newMaxX - 1
+          };
+
+          this._scrollTo(x1 > x ? y1 : y2, focusedStagnantSelectionArea.x2)
           
           if(isPositionEqualArea(activeCellPosition, focusedStagnantSelectionArea)) {
             handleResetStagnantSelectionAreas();
@@ -567,13 +569,15 @@ class EventListener extends PureComponent {
             if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
           }
         } else {
-          if(x1 < x) {
-            focusedStagnantSelectionArea.x1 -= 1 ;
-            this._scrollTo(y1, focusedStagnantSelectionArea.x1) 
-          } else {
-            focusedStagnantSelectionArea.x2 -= 1;
-            this._scrollTo(y2, focusedStagnantSelectionArea.x2);
-          }
+          focusedStagnantSelectionArea = this._getWholeArea({
+            minX: minX - 1,
+            minY,
+            maxX,
+            maxY,
+            sheetCellData
+          });
+
+          this._scrollTo(x1 < x ? y1 : y2, focusedStagnantSelectionArea.x1);
 
           if(focusedStagnantSelectionArea.x1 > 0 && focusedStagnantSelectionArea.x2 > 0) {
             handleUpdateStagnantSelectionAreas([ focusedStagnantSelectionArea ]);
@@ -581,11 +585,46 @@ class EventListener extends PureComponent {
           }
         }
       } else {
-        const x2 = x - 1;
+        let x1;
+        let x2;
+        let y1;
+        let y2;
 
-        this._scrollTo(y, x2);
-        if(x2 > 0) handleUpdateStagnantSelectionAreas([ { x1: x, x2, y1: y, y2: y } ]);
-        if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
+        // Check if current cell is merged
+        if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
+          const { 
+            x1: mergedX1,
+            x2: mergedX2,
+            y1: mergedY1,
+            y2: mergedY2,
+          } = sheetCellData[y][x].merged;
+          x1 = mergedX1 - 1;
+          x2 = mergedX2;
+          y1 = mergedY1;
+          y2 = mergedY2;
+        } else {
+          x1 = x - 1;
+          x2 = x;
+          y1 = y;
+          y2 = y;
+        }
+
+        // Check for max area after movement
+        const minArea = this._getWholeArea({ 
+          minX: x1, 
+          minY: y1, 
+          maxX: x2, 
+          maxY: y2, 
+          sheetCellData 
+        });
+
+        if(y2 < sheetRowCount) {
+          handleUpdateStagnantSelectionAreas([ minArea ]);
+          handleUpdateActiveCellSelectionAreaIndex(0);
+          this._scrollTo(y, minArea.x1);
+        } else {
+          this._scrollTo(y, x);
+        }
       }
     } else {
       if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
@@ -607,6 +646,7 @@ class EventListener extends PureComponent {
   arrowRight(event, shiftKey) {
     let { 
       sheetCellData,
+      sheetRowCount,
       activeCellPosition,
       activeCellSelectionAreaIndex,
       isEditMode,
@@ -634,14 +674,38 @@ class EventListener extends PureComponent {
 
         const { x1, y1, x2, y2 } = focusedStagnantSelectionArea;
 
-        if(x1 < x || x2 < x) {
-          if(x1 < x) {
-            focusedStagnantSelectionArea.x1 += 1 
-            this._scrollTo(y1, focusedStagnantSelectionArea.x1);
-          } else {
-            focusedStagnantSelectionArea.x2 += 1;
-            this._scrollTo(y2, focusedStagnantSelectionArea.x2);
-          }
+        const minY = Math.min(y1, y2);
+        const minX = Math.min(x1, x2);
+        const maxY = Math.max(y1, y2);
+        const maxX = Math.max(x1, x2);
+
+        // Consider min vertical area of active cell
+        const minArea = this._getWholeArea({ 
+          minX: x, 
+          maxX: x,
+          minY, 
+          maxY, 
+          sheetCellData 
+        });
+
+        // Shrink left
+        if(minX < x && minArea.x1 !== minX) {
+          const { x2: newMinX } = this._getWholeArea({
+            minX,
+            minY,
+            maxX: minX,
+            maxY,
+            sheetCellData
+          });
+
+          focusedStagnantSelectionArea = {
+            x1: newMinX + 1,
+            y1: minY,
+            y2: maxY,
+            x2: maxX
+          };
+
+          this._scrollTo(x1 < x ? y1 : y2, focusedStagnantSelectionArea.x1);
           
           if(isPositionEqualArea(activeCellPosition, focusedStagnantSelectionArea)) {
             handleResetStagnantSelectionAreas();
@@ -651,13 +715,15 @@ class EventListener extends PureComponent {
             if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
           }
         } else {
-          if(x1 > x) {
-            focusedStagnantSelectionArea.x1 += 1;
-            this._scrollTo(y1, focusedStagnantSelectionArea.x1);
-          } else {
-            focusedStagnantSelectionArea.x2 += 1;
-            this._scrollTo(y2, focusedStagnantSelectionArea.x2);
-          }
+          focusedStagnantSelectionArea = this._getWholeArea({
+            minX,
+            minY,
+            maxX: maxX + 1,
+            maxY,
+            sheetCellData
+          });
+
+          this._scrollTo(x1 > x ? y1 : y2, focusedStagnantSelectionArea.x2);
 
           if(focusedStagnantSelectionArea.x1 < sheetColumnCount && focusedStagnantSelectionArea.x2 < sheetColumnCount) {
             handleUpdateStagnantSelectionAreas([ focusedStagnantSelectionArea ]);
@@ -665,11 +731,46 @@ class EventListener extends PureComponent {
           }
         }
       } else {
-        const x2 = x + 1;
+        let x1;
+        let x2;
+        let y1;
+        let y2;
 
-        this._scrollTo(y, x2);
-        if(x2 < sheetColumnCount) handleUpdateStagnantSelectionAreas([ { x1: x, x2, y1: y, y2: y } ]);
-        if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
+        // Check if current cell is merged
+        if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
+          const { 
+            x1: mergedX1,
+            x2: mergedX2,
+            y1: mergedY1,
+            y2: mergedY2,
+          } = sheetCellData[y][x].merged;
+          x1 = mergedX1;
+          x2 = mergedX2 + 1;
+          y1 = mergedY1;
+          y2 = mergedY2;
+        } else {
+          x1 = x;
+          x2 = x + 1;
+          y1 = y;
+          y2 = y;
+        }
+
+        // Check for max area after movement
+        const minArea = this._getWholeArea({ 
+          minX: x1, 
+          minY: y1, 
+          maxX: x2, 
+          maxY: y2, 
+          sheetCellData 
+        });
+
+        if(y2 < sheetRowCount) {
+          handleUpdateStagnantSelectionAreas([ minArea ]);
+          handleUpdateActiveCellSelectionAreaIndex(0);
+          this._scrollTo(y, minArea.x2);
+        } else {
+          this._scrollTo(y, x);
+        }
       }
     } else {
       if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
