@@ -45,6 +45,7 @@
     "react-redux": "^7.0.3",
     "react-router-dom": "^5.0.0",
     "react-select": "^3.0.8",
+    "react-sortable-tree": "^2.7.1",
     "react-tiny-popover": "^4.0.0",
     "react-virtualized-auto-sizer": "^1.0.2",
     "react-window": "https://github.com/greylemon/react-window",
