@@ -870,11 +870,11 @@ class EventListener extends PureComponent {
     } else {
       const rowData = sheetCellData[y];
 
-      if(rowData) {
-        // Find a spot in the current row
+      // ! Fix - consider no stagnant selection area... should operate the same as arrow keys 
+      if(stagnantSelectionAreas.length && rowData) {
         for(let column = x + 1; column <= endX; column++) {
            const cellData = rowData[column];
-
+  
            if(cellData && cellData.merged) {
             const {
               x1: mergedX1,
@@ -882,7 +882,7 @@ class EventListener extends PureComponent {
               y1: mergedY1,
               y2: mergedY2
             } = cellData.merged;
-
+  
             if(mergedY1 === y && mergedX1 === column) {
               x = column - 1;
               break;
@@ -894,11 +894,18 @@ class EventListener extends PureComponent {
              break;
            }
         }
-      }
 
-      x++;
-    } 
-    
+        x++;
+      } else {
+        if(merged) {
+          const { x2 } = merged;
+          x = x2 + 1;
+        } else {
+          x++;
+        }
+      }
+    }
+
     // Check for bounds -- do not update when isbounded and tab goes out bounds
     if((x < x1 && x < x2) || (x > x1 && x > x2)) {
       if(!isBounded) {
@@ -984,61 +991,64 @@ class EventListener extends PureComponent {
     } else {
       const currentRowData = sheetCellData[y];
 
-      if(shiftKey) {
-        // Check if there's free space at y (before x since shift)
-        if(currentRowData) {
-          const { 
-            maxX: currentMaxX, 
-            maxY: currentMaxY 
-          } = this._getShiftTabFreeSpot({ endX: x, startX, y, rowData: currentRowData });
-
-          // Found a merged cell - not supposed to go here
-          if(currentMaxY !== y) {
-            y--;
-
-            const rowData = sheetCellData[y];
-
-            // ! Check if row data is null.. what then?
-
+      if(stagnantSelectionAreas.length) {
+        if(shiftKey) {
+          // Check if there's free space at y (before x since shift)
+          if(currentRowData) {
             const { 
-              maxX, 
-              maxY 
-            } = this._getShiftTabFreeSpot({ endX, startX, y, rowData });
-
-            x = maxX;
-            y = maxY;
-
-          } else {
-            x = currentMaxX;
-            y = currentMaxY;
-          }
-        } 
-      } else {
-        if(currentRowData) {
-          const { 
-            minX: currentMinX,
-            minY: currentMinY
-          } = this._getTabFreeSpot({ startX: x, endX, y, rowData: currentRowData });
-
-          if(currentMinY !== y) {
-            y++;
-
-            const rowData = sheetCellData[y];
-
-            if(rowData) {
-              const {
-                minX,
-                minY
-              } = this._getTabFreeSpot({ endX, startX, y, rowData });
+              maxX: currentMaxX, 
+              maxY: currentMaxY 
+            } = this._getShiftTabFreeSpot({ endX: x, startX, y, rowData: currentRowData });
   
-              x = minX;
-              y = minY;
+            // Found a merged cell - not supposed to go here
+            if(currentMaxY !== y) {
+              y--;
+              
+              // ! Verify
+              // ? Row data cannot be null since merge cell occupies it
+              // ? The free spot will either be the top left spot of the merge cell or a free cell from the range of the merge cell
+              const rowData = sheetCellData[y];
+  
+              const { 
+                maxX, 
+                maxY 
+              } = this._getShiftTabFreeSpot({ endX, startX, y, rowData });
+  
+              x = maxX;
+              y = maxY;
+  
             } else {
-              x = startX;
+              x = currentMaxX;
+              y = currentMaxY;
             }
-          } else {
-            x = currentMinX;
-            y = currentMinY;
+          } 
+        } else {
+          if(currentRowData) {
+            const { 
+              minX: currentMinX,
+              minY: currentMinY
+            } = this._getTabFreeSpot({ startX: x, endX, y, rowData: currentRowData });
+  
+            if(currentMinY !== y) {
+              y++;
+  
+              const rowData = sheetCellData[y];
+  
+              if(rowData) {
+                const {
+                  minX,
+                  minY
+                } = this._getTabFreeSpot({ endX, startX, y, rowData });
+    
+                x = minX;
+                y = minY;
+              } else {
+                x = startX;
+              }
+            } else {
+              x = currentMinX;
+              y = currentMinY;
+            }
           }
         }
       }
@@ -1068,9 +1078,10 @@ class EventListener extends PureComponent {
         
         // top left of merge is at the same level as y
         if(mergedY1 === y) {
-          if(mergedX1 < minX) minX = mergedX1;
+          minX = mergedX1;
           
           minY = y;
+          break;
         // Get free space after merge
         } else if(mergedY2 + 1 <= minY) {
           if(mergedX1 < minX) minX = mergedX1;
@@ -1134,6 +1145,7 @@ class EventListener extends PureComponent {
 
       handleUpdateActiveCellSelectionAreaIndex
     } = this.props;
+    
     event.preventDefault();
 
     let { x, y } = activeCellPosition;
@@ -1236,6 +1248,39 @@ class EventListener extends PureComponent {
     } else {
       this.updateActiveCellPosition(y, x);
     }
+  }
+
+  _getEnterFreeSpot({
+    x,
+    startY,
+    endY,
+    sheetCellData
+  }) {
+    let minX = Infinity;
+    let minY = Infinity;
+
+    for(let row = startY; row <= endY; row++) {
+      const rowData = sheetCellData[row];
+
+      if(rowData && rowData[x] && rowData[x].merged) {
+        const {
+          x1: mergedX1,
+          x2: mergedX2,
+          y1: mergedY1,
+          y2: mergedY2
+        } = rowData[x].merged;
+
+
+      } else {
+
+      }
+    }
+  }
+
+  _getShiftEnterFreeSpot({
+
+  }) {
+
   }
 
   delete() {
