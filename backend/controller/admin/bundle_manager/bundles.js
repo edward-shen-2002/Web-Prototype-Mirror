@@ -159,7 +159,7 @@ const bundles = ({
               if(columns[2] && columns[2].value) {
                 const { value } = columns[2];
 
-                categoryIds = value.split(" - ").map((id) => +id);
+                categoryIds = value.split(" - ").map((id) => id);
               }
 
               for(let column in columns) {
@@ -232,6 +232,8 @@ const bundles = ({
                         }
                       ]
                     });
+
+                    console.log(JSON.stringify(masterValue, null, 1));
   
                     if(masterValue) {
                       sheetCellData[row][column] = { 
@@ -259,6 +261,7 @@ const bundles = ({
             workbookData[form] = pako.deflate(JSON.stringify(inflatedWorkbookData), { to: "string" });
           }
         }
+
         if(possibleDuplication.length) {
           await OrganizationBundleModel.findOneAndUpdate(
             { 
