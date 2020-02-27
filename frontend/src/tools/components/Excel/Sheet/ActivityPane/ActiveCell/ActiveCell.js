@@ -288,7 +288,8 @@ let ActiveCell = ({
 
   // ! bottom left - do later for merged cells!!!
   if(computeActiveCellStyle) {
-    activeCellStyle = computeActiveCellStyle(x, y, sheetColumnWidths, leftOffsets, sheetRowHeights, topOffsets, sheetFreezeColumnCount, sheetFreezeRowCount);
+    console.log("compute")
+    activeCellStyle = computeActiveCellStyle(x, y, sheetColumnWidths, leftOffsets, sheetRowHeights, topOffsets, sheetFreezeColumnCount, sheetFreezeRowCount, sheetCellData);
     activeCellStyle.minHeight = activeCellStyle.height;
     activeCellStyle.minWidth = activeCellStyle.width;
   } else {
