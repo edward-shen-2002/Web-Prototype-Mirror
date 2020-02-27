@@ -991,7 +991,7 @@ class EventListener extends PureComponent {
     } else {
       // ! This is not supposed to be here... move at the top
       const currentRowData = sheetCellData[y];
-      
+
       if(stagnantSelectionAreas.length) {
         if(shiftKey) {
           // Check if there's free space at y (before x since shift)
@@ -1247,8 +1247,6 @@ class EventListener extends PureComponent {
 
             x = maxX;
             y = maxY;
-
-            console.log(x, y)
           }
         } else {
           x++;

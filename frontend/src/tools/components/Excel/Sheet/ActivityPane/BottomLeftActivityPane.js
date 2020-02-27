@@ -101,6 +101,8 @@ const computeSelectionAreaStyle = (columnWidths, leftOffsets, rowHeights, topOff
 const computeActiveCellStyle = (x, y, columnWidths, leftOffsets, rowHeights, topOffsets, _sheetFreezeColumnCount, sheetFreezeRowCount, sheetCellData) => {
   let height;
   let width;
+  let top;
+  let left;
 
   const mergeData = sheetCellData[y] && sheetCellData[y][x] ? sheetCellData[y][x].merged : null;
 
@@ -109,14 +111,18 @@ const computeActiveCellStyle = (x, y, columnWidths, leftOffsets, rowHeights, top
 
     height = topOffsets[y2] + getNormalRowHeight(rowHeights[y2]) - topOffsets[y1];
     width = leftOffsets[x2] + getNormalColumnWidth(columnWidths[x2]) - leftOffsets[x1];
+    top = topOffsets[y1];
+    left = leftOffsets[x1];
   } else {
     height = getNormalRowHeight(rowHeights[y]);
     width = getNormalColumnWidth(columnWidths[x]); 
+    top = topOffsets[y];
+    left = leftOffsets[x];
   }
 
   let activeCellStyle = { 
-    top: topOffsets[y], 
-    left: leftOffsets[x], 
+    top,
+    left,
     height, 
     width
   };
