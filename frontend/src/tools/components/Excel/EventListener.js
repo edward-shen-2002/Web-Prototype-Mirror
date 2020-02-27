@@ -857,6 +857,8 @@ class EventListener extends PureComponent {
 
     const startX = Math.min(x1, x2);
     const endX = Math.max(x1, x2);
+    const startY = Math.min(y1, y2);
+    const endY = Math.max(y1, y2);
 
     let merged = this._getMergedData(sheetCellData, y, x);
 
@@ -870,7 +872,6 @@ class EventListener extends PureComponent {
     } else {
       const rowData = sheetCellData[y];
 
-      // ! Fix - consider no stagnant selection area... should operate the same as arrow keys 
       if(stagnantSelectionAreas.length && rowData) {
         for(let column = x + 1; column <= endX; column++) {
            const cellData = rowData[column];
@@ -879,8 +880,7 @@ class EventListener extends PureComponent {
             const {
               x1: mergedX1,
               x2: mergedX2,
-              y1: mergedY1,
-              y2: mergedY2
+              y1: mergedY1
             } = cellData.merged;
   
             if(mergedY1 === y && mergedX1 === column) {
@@ -907,13 +907,13 @@ class EventListener extends PureComponent {
     }
 
     // Check for bounds -- do not update when isbounded and tab goes out bounds
-    if((x < x1 && x < x2) || (x > x1 && x > x2)) {
+    if(x < startX || x > endX) {
       if(!isBounded) {
         if(shiftKey) {
           y--;
 
           // Find max of the top free spaces (regular cell or top left of merge cell)
-          if(y >= y1 || y >= y2) {
+          if(y >= startY) {
             const rowData = sheetCellData[y];
 
             if(rowData) {
@@ -928,7 +928,7 @@ class EventListener extends PureComponent {
         } else {
           y++;
 
-          if(y <= y1 || y <= y2) {
+          if(y <= endY) {
             const rowData = sheetCellData[y];
 
             if(rowData) {
@@ -945,9 +945,9 @@ class EventListener extends PureComponent {
 
         // Check for bounds in y
         // Change selection areas
-        if((y < y1 && y < y2) || (y > y1 && y > y2)) {
+        if((y < startY) || (y > endY)) {
           // Need to switch selection areas. 
-          (y < y1 && y < y2) ? activeCellSelectionAreaIndex-- : activeCellSelectionAreaIndex++;
+          (y < startY) ? activeCellSelectionAreaIndex-- : activeCellSelectionAreaIndex++;
 
           // Fix out of bounds result
           if((activeSelectionArea && activeCellSelectionAreaIndex === stagnantSelectionAreasLength + 1) || (!activeSelectionArea && activeCellSelectionAreaIndex === stagnantSelectionAreasLength)) {
@@ -961,7 +961,7 @@ class EventListener extends PureComponent {
           const { x1: newX1, y1: newY1, x2: newX2, y2: newY2 } = newSelectionArea;
 
           
-          if(y < y1 && y < y2) {
+          if(y < startY) {
             x = Math.max(newX1, newX2);
             y = Math.max(newY1, newY2);  
 
@@ -1083,7 +1083,7 @@ class EventListener extends PureComponent {
           minY = y;
           break;
         // Get free space after merge
-        } else if(mergedY2 + 1 <= minY) {
+        } else if(mergedY2 < minY) {
           if(mergedX1 < minX) minX = mergedX1;
 
           minY = mergedY2 + 1;
@@ -1119,10 +1119,11 @@ class EventListener extends PureComponent {
 
           maxY = mergedY1;
         }
+
+        if(mergedY1 === y) break;
       } else {
         // Found regular cell -- y doesn't change
-        if(y > maxY || (y === maxY && column > maxX)) maxX = column;
-        
+        maxX = column;
         maxY = y;
         break;
       }
@@ -1138,8 +1139,9 @@ class EventListener extends PureComponent {
       activeCellSelectionAreaIndex,
       activeCellPosition, 
       activeSelectionArea, 
-      stagnantSelectionAreas, 
-
+      stagnantSelectionAreas,
+      
+      sheetCellData,
       sheetRowCount,
       sheetColumnCount,
 
@@ -1206,8 +1208,52 @@ class EventListener extends PureComponent {
       x2 = sheetColumnCount - 1;
       y2 = sheetRowCount - 1;
     }
-    
-    shiftKey ? y-- : y++;
+
+    const startY = Math.min(y1, y2);
+    const endY = Math.max(y1, y2);
+
+    let merged = this._getMergedData(sheetCellData, y, x);
+
+    if(shiftKey) {
+      if(merged) {
+        const { y1 } = merged;
+        y = y1 - 1;
+      } else {
+        y--;
+      }
+    } else {
+      if(stagnantSelectionAreas.length) {
+        for(let row = startY; row <= endY; row++) {
+          const rowData = sheetCellData[row];
+
+          if(rowData && rowData[x] && rowData[x].merged) {
+            const {
+              x1: mergedX1,
+              x2: mergedX2,
+              y1: mergedY1,
+              y2: mergedY2
+            } = rowData[x].merged;
+
+            if(mergedY1 === row && mergedX1 === column) {
+              y = column - 1;
+              break;
+            }
+          } else {
+            y = row - 1;
+            break
+          }
+        }
+
+        y++;
+      } else {
+        if(merged) {
+          const { y2 } = merged;
+          y = y2 + 1;
+        } else {
+          y++;
+        }
+      }
+    }
     
     // Check for bounds -- do not update when isbounded and tab goes out bounds
     if((y < y1 && y < y2) || (y > y1 && y > y2)) {
@@ -1231,7 +1277,19 @@ class EventListener extends PureComponent {
 
           if(x < x1 && x < x2) {
             x = Math.max(newX1, newX2);
-            y = Math.max(newY1, newY2);  
+            y = Math.max(newY1, newY2); 
+
+            const { maxX, maxY } = this._getShiftEnterFreeSpot({
+              x,
+              startY: Math.min(newY1, newY2),
+              endY: Math.max(newY1, newY2),
+              sheetCellData
+            });
+
+            if(maxX > 0 && maxY > 0) {
+              x = maxX;
+              y = maxY;
+            }
           } else {
             x = Math.min(newX1, newX2);
             y = Math.min(newY1, newY2);
@@ -1266,21 +1324,65 @@ class EventListener extends PureComponent {
         const {
           x1: mergedX1,
           x2: mergedX2,
-          y1: mergedY1,
-          y2: mergedY2
+          y1: mergedY1
         } = rowData[x].merged;
 
+        if(x === mergedX1) {
+          minX = x;
+          minY = mergedY1;
+          break;
+        } else if(mergedX2 < minX) {
+          if(mergedY1 < minY) minY = mergedY1;
 
+          minX = mergedX2 + 1;
+        }
       } else {
-
+        // Found regular cell -- y doesn't change
+        if(x < minX || (x === minX && row < minY)) minY = row;
+        
+        minX = x;
+        break;
       }
     }
+
+    return { minX, minY };
   }
 
   _getShiftEnterFreeSpot({
-
+    x,
+    startY,
+    endY,
+    sheetCellData
   }) {
+    let maxX = -1;
+    let maxY = - 1;
 
+    for(let row = endY; row >= startY; row--) {
+      const rowData = sheetCellData[row];
+
+      if(rowData && rowData[x] && rowData[x].merged) {
+        const { 
+          x1: mergedX1, 
+          y1: mergedY1 
+        } = rowData[x].merged;
+
+        if(mergedX1 >= maxX) {
+          if(mergedX1 > maxX || (mergedX1 === maxX && mergedY1 > maxY)) maxY = mergedY1;
+
+          maxX = mergedX1;
+        }
+
+        if(mergedX1 === x) break;
+      } else {
+        // Found regular cell -- y doesn't change
+        if(x > maxX || (x === maxX && row > maxY)) maxY = row;
+        
+        maxX = x;
+        break;
+      }
+    }
+
+    return { maxY, maxX };
   }
 
   delete() {
