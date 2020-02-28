@@ -707,23 +707,25 @@ const extractCellData = (cellData, row, column) => {
   }
 
   if(hyperlinkData) {
-    // console.log(hyperlinkData)
     const { 
       hyperlink,
       _sheet, 
       _data 
     } = hyperlinkData;
 
-    // Internal
+    extractedCellData.hyperlink = {};
+
+    // Internal - Could it be from another workbook?
     if(_sheet) {
       const [ y, x ] = _data;
-      // ! unsure when this undefined value occurs... what is the value of the cell?
-      if(value === undefined) {
-        // console.log(_sheet, _data)
-      }
+
+      extractedCellData.hyperlink.type = "internal";
+      extractedCellData.hyperlink.sheet = _sheet;
+      extractedCellData.hyperlink.cell = { x, y };
     // External -- Potentially unsafe
-    } else if(hyperlink) {
-      
+    } else {
+      extractedCellData.hyperlink.type = "external";
+      extractedCellData.hyperlink.link = hyperlink;
     }
   }
 

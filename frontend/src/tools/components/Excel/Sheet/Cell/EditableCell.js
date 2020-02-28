@@ -19,14 +19,26 @@ const RichTextCellContent = (richText, firstFragmentStyle) => richText.map(({ st
   </span>
 ));
 
+const CellContent = ({
+  value,
+  hyperlink,
+  handleClickContent
+}) => (
+  <div>
+    {value}
+  </div>
+);
+
 const CellContents = ({
   style,
   value,
   comments,
+  hyperlink,
   handleMouseDown,
   handleMouseEnter,
   handleDoubleClick,
-  handleRightClick
+  handleRightClick,
+  handleClickContent
 }) => (
   <div 
     className="cell cell__data" 
@@ -36,8 +48,16 @@ const CellContents = ({
     onDoubleClick={handleDoubleClick}
     onContextMenu={handleRightClick}
   >
-    {value}
-    {comments && comments.length && <div className="cell__comment"></div>}
+    {
+      value 
+      && 
+      <CellContent 
+        value={value} 
+        hyperlink={hyperlink} 
+        handleClickContent={handleClickContent}
+      />
+    }
+    {comments && comments.length && <div className="cell__comment"/>}
   </div>
 );
 
@@ -46,6 +66,7 @@ const MergedCell = ({
   value,
   merged,
   comments,
+  hyperlink,
   handleMouseDown,
   handleMouseEnter,
   handleDoubleClick,
@@ -87,6 +108,7 @@ const MergedCell = ({
     <CellContents
       style={style}
       value={value}
+      hyperlink={hyperlink}
       comments={comments}
       handleMouseDown={handleMouseDown}
       handleMouseEnter={handleMouseEnter}
@@ -120,12 +142,14 @@ const EditableCell = ({
   let value;
   let type;
   let comments;
+  let hyperlink;
 
   if(cellData) {
     value = cellData.value;
     type = cellData.type;
     comments = cellData.comments;
     merged = cellData.merged;
+    hyperlink = cellData.hyperlink;
 
     if(type === "rich-text") {
       const firstFragmentStyle = getCellInlineStyle(cellData.styles);
@@ -145,6 +169,7 @@ const EditableCell = ({
           value={value}
           merged={merged}
           comments={comments}
+          hyperlink={hyperlink}
           handleMouseDown={handleMouseDown}
           handleMouseEnter={handleMouseEnter}
           handleDoubleClick={handleDoubleClick}
@@ -154,6 +179,7 @@ const EditableCell = ({
           style={style}
           value={value}
           comments={comments}
+          hyperlink={hyperlink}
           handleMouseDown={handleMouseDown}
           handleMouseEnter={handleMouseEnter}
           handleDoubleClick={handleDoubleClick}
