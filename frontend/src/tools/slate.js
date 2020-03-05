@@ -6,8 +6,7 @@ import { Editor, Transforms, createEditor } from 'slate'
 export const HOTKEYS = {
   'mod+b': 'bold',
   'mod+i': 'italic',
-  'mod+u': 'underline',
-  'mod+`': 'code',
+  'mod+u': 'underline'
 };
 
 export const CustomEditor = {
@@ -34,7 +33,7 @@ export const convertEditorValueToText = (elements) => {
   let text = "";
   let blockFound = false;
   elements.forEach(({ type, children }) => {
-    if(type in TYPE_TEXT_ELEMENTS) {
+    if(TYPE_TEXT_ELEMENTS.includes(type)) {
       children.forEach(({ text: childText }, index) => {
         if(!index && blockFound) text += "\n";
 
@@ -94,8 +93,10 @@ export const convertEditorValueToRichText = (elements) => {
   let richText = [];
 
   let blockFound = false;
+
   elements.forEach(({ type, children }) => {
-    if(type in TYPE_TEXT_ELEMENTS) {
+    // console.log(type in TYPE_TEXT_ELEMENTS, type, TYPE_TEXT_ELEMENTS)
+    if(TYPE_TEXT_ELEMENTS.includes(type)) {
       children.forEach((data, childIndex) => {
         let styles = {};
         let { text } = data;
@@ -111,7 +112,16 @@ export const convertEditorValueToRichText = (elements) => {
             let { property, style } = editorToRichTextMap[valueStyle];
 
             // data[valueStyle] is the dynamic value (colour, font family) when the rich text style doesn't have a style key
-            styles[property] = style ? style : data[valueStyle];
+            if(style) {
+              // Concatenate existing styles
+              if(styles[property]) {
+                styles[property] += ` ${style}`;
+              } else {
+                styles[property] = style;
+              }
+            } else {
+              styles[property] = data[valueStyle];
+            }
           }
         }
 
@@ -121,6 +131,8 @@ export const convertEditorValueToRichText = (elements) => {
       });
     }
   });
+
+  console.log(richText)
 
   return richText;
 };
@@ -136,7 +148,7 @@ export const convertRichTextToEditorValue = (richText) => [
 
         const propertyContents = richTextToEditorMap[property];
 
-        const styleSegments = style.split(" ");
+        const styleSegments = typeof style === "string" ? style.split(" ") : [ style ];
 
         // It's possible that the inline style has more than one segment (ie textDecoration: "underline line-through")
         styleSegments.forEach((segment) => {
@@ -157,3 +169,5 @@ export const convertRichTextToEditorValue = (richText) => [
     })
   }
 ];
+
+export const createEmptyEditor = () => withReact(createEditor());

@@ -10,7 +10,7 @@ import {
   getAreaDimensions
 } from "@tools/excel";
 
-import { Editor } from "draft-js";
+import CellEditor from "./CellEditor";
 
 import Popover, { ArrowContainer } from "react-tiny-popover";
 
@@ -117,17 +117,8 @@ const ActiveCellDialog = ({
 const ActiveInputCell = ({ 
   activeCellStyle,
   activeCellInputAutoFocus,
-  editorState,
   eventListenerRef
 }) => {
-  const editorRef = useRef(null);
-  const handleChangeInputValue = (newEditorState) => {
-    const currentContentState = editorState.getCurrentContent();
-    const newContentState = newEditorState.getCurrentContent();
-
-    if(currentContentState !== newContentState) eventListenerRef.current.changeActiveInputData({ editorState: newEditorState });
-  };
-
   const handleReturn = (event) => {
     const { key, ctrlKey, altKey } = event;
     if(key === "Escape") event.preventDefault();
@@ -150,11 +141,9 @@ const ActiveInputCell = ({
       onContextMenuCapture={handleContextMenuCapture}
       onKeyDownCapture={handleKeyDownCapture}
     >
-      <Editor
+      <CellEditor
         key="active-cell-input"
-        ref={editorRef}
-        editorState={editorState}
-        onChange={handleChangeInputValue}
+        eventListenerRef={eventListenerRef}
         readOnly={!activeCellInputAutoFocus}
         handleReturn={handleReturn}
       />

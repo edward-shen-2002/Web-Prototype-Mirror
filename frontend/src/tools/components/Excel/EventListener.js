@@ -20,6 +20,14 @@ import { loadSheet } from "@tools/redux";
 
 import { extractReactAndWorkbookState } from "@tools/excel";
 
+import { 
+  createEmptyEditor,
+  convertRichTextToEditorValue,
+  convertTextToEditorValue,
+  convertEditorValueToText,
+  convertEditorValueToRichText
+} from "@tools/slate";
+
 import { enableActiveCellInputAutoFocus, disableActiveCellInputAutoFocus } from "@actions/ui/excel/activeCellInputAutoFocus";
 import { updateActiveCellInputData, resetActiveCellInputData } from "@actions/ui/excel/activeCellInputData";
 import { updateActiveCellPosition } from "@actions/ui/excel/activeCellPosition";
@@ -72,8 +80,6 @@ import {
   getEstimatedTotalHeight, 
   getEstimatedTotalWidth, 
   getCellData, 
-  convertTextToEditorState, 
-  convertRichTextToEditorState,
   getNormalColumnWidth,
   getNormalRowHeight,
   getExcelColumnWidth,
@@ -81,7 +87,6 @@ import {
   generateNewSheetName,
   createBlankSheet,
   getResizeOffset,
-  clearEditorStateText,
   isPrepopulateString
 } from "@tools/excel";
 
@@ -1479,7 +1484,7 @@ class EventListener extends PureComponent {
       if(sheetCellData[y] && sheetCellData[y][x]) this.changeValue(y, x, { ...sheetCellData[y][x], value: undefined, type: "normal" });
     }
 
-    handleUpdateActiveCellInputData({ editorState: convertTextToEditorState("") });
+    handleUpdateActiveCellInputData({ editor: createEmptyEditor() });
   }
 
   changeActiveInputData(data) {
@@ -1503,12 +1508,12 @@ class EventListener extends PureComponent {
 
     let newSheetCellData = cloneDeep(sheetCellData);
 
-    // ! Consider other types!
-    if(isPrepopulateString(newValue)) {
-      newData.type = "prepopulate";
-    } else {
-      newData.type = "normal";
-    }
+    // // ! Consider other types!
+    // if(isPrepopulateString(newValue)) {
+    //   newData.type = "prepopulate";
+    // } else {
+    //   newData.type = "normal";
+    // }
 
     // ! Need to consider other parameters other than value!!
     // ! Only update if data changed!
@@ -1663,12 +1668,45 @@ class EventListener extends PureComponent {
   }
 
   saveActiveCellInputData() {
-    const { isEditMode, activeCellInputData: { editorState }, activeCellPosition } = this.props;
+    const { 
+      isEditMode, 
+      activeCellInputData: { value }, 
+      activeCellPosition,
+      sheetCellData
+    } = this.props;
 
     if(isEditMode) {
       const { x, y } = activeCellPosition;
 
-      this.changeValue(y, x, { value: editorState.getCurrentContent().getPlainText() });
+      let styles;
+
+      // Get block styles?
+      if(sheetCellData[y] && sheetCellData[y][x]) styles = sheetCellData[y][x].styles;
+
+      const children = value[0].children;
+
+      if(children.length > 1) {
+        // console.log(convertEditorValueToRichText(value))
+        this.changeValue(y, x, { 
+          value: convertEditorValueToRichText(value), 
+          type: "rich-text" 
+        });
+      } else {
+        const text = convertEditorValueToText(value);
+
+        // console.log(text)
+        // this.changeValue(y, x, {
+        //   value: convertEditorValueToText(value),
+        //   type: 
+        // });
+      // ! Value might not be rich text anymore!!
+
+      // this.changeValue(y, x, { 
+      //   value: cellData && cellData.type === "rich-text"
+      //     ? convertEditorValueToRichText()
+      //     : convertEditorValueToText(cellData.value)
+      // });
+      }
 
       this.disableEditMode();
     }
@@ -1918,8 +1956,8 @@ class EventListener extends PureComponent {
 
       const type = cellData ? cellData.type : undefined;
       const value = cellData ? cellData.value : undefined;
-      
-      handleUpdateActiveCellInputData({ editorState: type === "rich-text" ? convertRichTextToEditorState(value) : convertTextToEditorState(value) });
+
+      handleUpdateActiveCellInputData({ editorState: type === "rich-text" ? convertRichTextToEditorValue(value) : convertTextToEditorValue(value) });
 
       SheetContainerInstance.focus();
     }
@@ -2547,13 +2585,23 @@ class EventListener extends PureComponent {
     
     const cellData = sheetCellData[newY] && sheetCellData[newY][newX] ? sheetCellData[newY][newX] : {};
 
-    const { type, value, formula } = cellData;
+    let { type, value, formula } = cellData;
 
-    handleUpdateActiveCellInputData({ 
-      editorState: type === "rich-text" 
-        ? convertRichTextToEditorState(value) 
-        : convertTextToEditorState(formula ? `=${formula}` : value) 
-      });
+    if(type === "rich-text") {
+      value = convertRichTextToEditorValue(value);
+    } else {
+      if(value) {
+        value = convertTextToEditorValue(formula ? `=${formula}` : value);
+      } else {
+        value = [
+          {
+            type: "paragraph",
+            children: [ { text: "" } ]
+          }
+        ];
+      }
+    }
+    handleUpdateActiveCellInputData({ value });
 
     handleUpdateActiveCellPosition({ x: newX, y: newY });
 

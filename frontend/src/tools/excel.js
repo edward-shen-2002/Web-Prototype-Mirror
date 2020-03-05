@@ -2,7 +2,10 @@ import XlsxPopulate, { RichText, Range, FormulaError } from "xlsx-populate";
 
 import { sheetNameRegex } from "./regex";
 
-import { EditorState, ContentState, RichUtils } from "draft-js";
+import { 
+  convertTextToEditorValue,
+  convertRichTextToEditorValue
+} from "@tools/slate";
 
 import { isObjectEmpty } from "@tools/misc";
 
@@ -11,6 +14,9 @@ import pako from "pako";
 import Color from "color";
 
 import { themes } from "@constants/styles";
+
+import { createEditor } from "slate";
+import { withReact } from "slate-react";
 
 import { Parser } from "hot-formula-parser";
 
@@ -651,7 +657,7 @@ export const getBlockStyle = (cellStyles) => {
   };
 };
 
-export const isPrepopulateString = (string) => string && string.charAt(0) === "|";
+export const isPrepopulateString = (string) => string && typeof string === "string" && string.charAt(0) === "|";
 
 export const parsePrepopulateString = (string) => (
   string.substring(1)
@@ -790,31 +796,17 @@ export const getSheetFreezeHeader = (sheet) => {
   return freezeHeader;
 };
 
-export const convertRichTextToEditorState = (richText, editorState = EditorState.createEmpty()) => {
-  richText.forEach(({ styles, text }) => {
-    if(styles) editorState = RichUtils.toggleInlineStyle(editorState, styles);
-    
-    editorState = EditorState.push(
-      editorState,
-      ContentState.createFromText(text ? text.toString() : ""),
-      "change-inline-style"
-    );
-  })
-  
-  return EditorState.moveFocusToEnd(editorState);
-};
+// export const convertTextToEditorState = (text) => {
+//   if(text !== undefined && typeof text !== "string") text = text.toString();
 
-export const convertTextToEditorState = (text) => {
-  if(text !== undefined && typeof text !== "string") text = text.toString();
-
-  return (
-    EditorState.moveFocusToEnd((
-      text 
-        ? EditorState.createWithContent(ContentState.createFromText(text)) 
-        : EditorState.createWithContent(ContentState.createFromText(""))
-    ))
-  );
-};
+//   return (
+//     EditorState.moveFocusToEnd((
+//       text 
+//         ? EditorState.createWithContent(ContentState.createFromText(text)) 
+//         : EditorState.createWithContent(ContentState.createFromText(""))
+//     ))
+//   );
+// };
 
 export const getTopOffsets = (rowHeights, rowCount) => {
   let topOffsetsTotal = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER;
@@ -851,11 +843,14 @@ export const getActiveCellInputData = (sheetCellData, activeRow, activeColumn) =
       : undefined
   );
   
-  return (
-    activeCellInputValueData && activeCellInputValueData.type === "rich-text"
-      ? { editorState: convertRichTextToEditorState(activeCellInputValueData.value) }
-      : { editorState: convertTextToEditorState(activeCellInputValueData ? activeCellInputValueData.value : undefined) }
-  );
+  return {
+    value: (
+      activeCellInputValueData && activeCellInputValueData.type === "rich-text"
+        ? convertRichTextToEditorValue(activeCellInputValueData.value)
+        : convertTextToEditorValue(activeCellInputValueData ? activeCellInputValueData.value : "")
+    ),
+    editor: withReact(createEditor())
+  }
 };
 
 const getMaxSheetRange = (sheetCellData) => {
@@ -1091,8 +1086,6 @@ export const getCellDataText = (cellData) => {
   return text;
 };
 
-export const clearEditorStateText = (richText) => convertRichTextToEditorState(richText.length ? richText[0] : []);
-
 export const getAreaDimensions = ({
   x1, y1, x2, y2,
   topOffsets,
@@ -1104,4 +1097,4 @@ export const getAreaDimensions = ({
   const width = leftOffsets[x2] + getNormalColumnWidth(sheetColumnWidths[x2]) - leftOffsets[x1];
 
   return { height, width };
-}
+};

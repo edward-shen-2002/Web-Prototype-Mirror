@@ -1,62 +1,65 @@
-import React from "react";
-
-import { connect } from "react-redux";
+import React, { useCallback } from "react";
 
 import Divider from "@material-ui/core/Divider";
 
-import InputBase from "@material-ui/core/InputBase";
+import { Editable, Slate } from "slate-react";
 
 import "./FormulaBar.scss";
 
-const mapStateToProps = ({
-  ui: {
-    excel: {
-      activeCellInputData: { rawText }
-    }
-  }
-}) => ({
-  rawText
-});
+const Leaf = ({ attributes, children, leaf }) => {
+  if(leaf.bold) children = <strong>{children}</strong>;
+  if(leaf.italic) children = <em>{children}</em>;
+  if(leaf.underline) children = <u>{children}</u>;
 
-let InputField = ({ 
+  return <span {...attributes}>{children}</span>;
+};
+
+// ! Only one element for now
+const Element = ({ attributes, children, element }) => (
+  <p {...attributes}>{children}</p>
+);
+
+const InputField = ({ 
   eventListenerRef, 
-  sheetContainerRef,
-  rawText
+  sheetContainerRef
 }) => {
+  const renderElement = useCallback((props) => <Element {...props}/>, []);
+  const renderLeaf = useCallback((props) => <Leaf {...props}/>, []);
 
   const handleKeyDown = (event) => {
     const { key } = event;
 
     if(key === "Enter") {
+      event.preventDefault();
       eventListenerRef.current.enter(event, false, sheetContainerRef);
     } else if(key === "Tab") {
       eventListenerRef.current.tab(event, false, sheetContainerRef);
     } else if(key === "Escape") {
       eventListenerRef.current.escape(sheetContainerRef);
+    } else {
+
     }
   };
 
-  const handleChange = ({ target: { value } }) => eventListenerRef.current.changeActiveInputData({ rawText: value });
   const handleFocus = () => eventListenerRef.current.focusFormulaInput();
   const handleBlur = () => eventListenerRef.current.blurFormulaInput();
 
   return (
-    <InputBase
+    <Editable
       className="formulaBar__input"
-      type="text"
-      value={rawText}
+      renderElement={renderElement}
+      renderLeaf={renderLeaf}
+      onKeyDown={handleKeyDown}
       onFocus={handleFocus}
       onBlur={handleBlur}
-      onChange={handleChange}
-      onKeyDown={handleKeyDown}
-      fullWidth
     />
-  )
+  );
 };
 
-InputField = connect(mapStateToProps)(InputField);
-
-const FormulaBar = ({ eventListenerRef, sheetContainerRef }) => {
+const FormulaBar = ({ 
+  eventListenerRef, 
+  sheetContainerRef 
+}) => {
 
   return (
     <div className="formulaBar">
