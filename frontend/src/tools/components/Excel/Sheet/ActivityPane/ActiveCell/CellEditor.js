@@ -13,7 +13,7 @@ const Leaf = ({ attributes, children, leaf }) => {
 
 // ! Only one element for now
 const Element = ({ attributes, children, element }) => (
-  <p {...attributes}>{children}</p>
+  <span {...attributes}>{children}</span>
 );
 
 const CellEditor = () => {
