@@ -1690,6 +1690,10 @@ class EventListener extends PureComponent {
 
       const children = value[0].children;
 
+      // ! Determine type
+      // With a given type, even if the inputted value is rich-text, it will be converted to regular text
+      // For example: Formulas, prepopulate strings, etc... 
+      // We need to always convert text to plain text to determine the type of string...
       if(children.length > 1) {
         // console.log(convertEditorValueToRichText(value))
         this.changeValue(y, x, { 
@@ -1697,20 +1701,9 @@ class EventListener extends PureComponent {
           type: "rich-text" 
         });
       } else {
-        const text = convertEditorValueToText(value);
-
-        // console.log(text)
-        // this.changeValue(y, x, {
-        //   value: convertEditorValueToText(value),
-        //   type: 
-        // });
-      // ! Value might not be rich text anymore!!
-
-      // this.changeValue(y, x, { 
-      //   value: cellData && cellData.type === "rich-text"
-      //     ? convertEditorValueToRichText()
-      //     : convertEditorValueToText(cellData.value)
-      // });
+        this.changeValue(y, x, { 
+          value: convertEditorValueToText(value)
+        });
       }
 
       this.disableEditMode();

@@ -1,7 +1,7 @@
-import React, { useCallback } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 
-import { Editable, Slate } from "slate-react";
+import { Editable, Slate, ReactEditor } from "slate-react";
 
 const Leaf = ({ attributes, children, leaf }) => {
   if(leaf.bold) children = <strong>{children}</strong>;
@@ -40,6 +40,17 @@ const CellEditor = ({
     activeCellInputData
   }));
 
+  // useEffect(() => {
+  //   if(activeCellInputAutoFocus) ReactEditor.focus(cellEditor);
+  // }, [  ]);
+
+  // const editorSelection = useRef(cellEditor.selection);
+  // useEffect(() => {
+  //     if (activeCellInputAutoFocus) {
+  //         editorSelection.current = cellEditor.selection;
+  //     }
+  // }, [activeCellInputAutoFocus]);
+
   const handleInputChange = useCallback((value) => eventListenerRef.current.changeActiveInputData({ value }), [ value ]);
 
   return (
@@ -51,7 +62,8 @@ const CellEditor = ({
       <Editable
         renderElement={renderElement}
         renderLeaf={renderLeaf}
-        autoFocus={activeCellInputAutoFocus}
+        // readOnly={!activeCellInputAutoFocus}
+        autoFocus={true}
       />
     </Slate>
   )
