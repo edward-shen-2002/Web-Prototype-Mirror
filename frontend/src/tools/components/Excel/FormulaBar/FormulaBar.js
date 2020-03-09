@@ -1,15 +1,17 @@
 import React, { useCallback } from "react";
 
+import { useSelector } from "react-redux";
+
 import Divider from "@material-ui/core/Divider";
 
 import { Editable, Slate } from "slate-react";
 
 import "./FormulaBar.scss";
 
-const Leaf = ({ attributes, children, leaf }) =>  <span {...attributes}>{children}</span>;
+const Leaf = ({ attributes, children }) =>  <span {...attributes}>{children}</span>;
 
 // ! Only one element for now
-const Element = ({ attributes, children, element }) => (
+const Element = ({ attributes, children }) => (
   <p {...attributes}>{children}</p>
 );
 
@@ -35,18 +37,37 @@ const InputField = ({
     }
   };
 
+  const {
+    formulaEditor,
+    value
+  } = useSelector(({
+    ui: {
+      excel: {
+        activeCellInputData
+      }
+    }
+  }) => activeCellInputData);
+
   const handleFocus = () => eventListenerRef.current.focusFormulaInput();
   const handleBlur = () => eventListenerRef.current.blurFormulaInput();
 
+  const handleInputChange = useCallback((value) => eventListenerRef.current.changeActiveInputData({ value }), [ value ]);
+
   return (
-    <Editable
-      className="formulaBar__input"
-      renderElement={renderElement}
-      renderLeaf={renderLeaf}
-      onKeyDown={handleKeyDown}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-    />
+    <Slate
+      editor={formulaEditor}
+      value={value}
+      onChange={handleInputChange}
+    >
+      <Editable
+        className="formulaBar__input"
+        renderElement={renderElement}
+        renderLeaf={renderLeaf}
+        onKeyDown={handleKeyDown}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+      />
+    </Slate>
   );
 };
 

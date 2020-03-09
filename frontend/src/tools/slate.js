@@ -1,13 +1,23 @@
 import isHotkey from 'is-hotkey'
 import { Editable, withReact, useSlate, Slate } from 'slate-react'
 import { Editor, Transforms, createEditor } from 'slate'
-// import { withHistory } from 'slate-history'
+import { withHistory } from 'slate-history'
 
 export const HOTKEYS = {
   'mod+b': 'bold',
   'mod+i': 'italic',
   'mod+u': 'underline'
 };
+
+
+export const convertTextToEditorValue = (text) => [ 
+  { 
+    type: "paragraph", 
+    children: [ { text } ] 
+  } 
+];
+
+export const createEmptyEditorValue = () => convertTextToEditorValue("");
 
 export const CustomEditor = {
   isMarkActive: (editor, format) => {
@@ -47,12 +57,6 @@ export const convertEditorValueToText = (elements) => {
   return text;
 };
 
-export const convertTextToEditorValue = (text) => [ 
-  { 
-    type: "paragraph", 
-    children: [ { text } ] 
-  } 
-];
 
 const richTextToEditorMap = {
   fontWeight: {
@@ -132,8 +136,6 @@ export const convertEditorValueToRichText = (elements) => {
     }
   });
 
-  console.log(richText)
-
   return richText;
 };
 
@@ -170,4 +172,4 @@ export const convertRichTextToEditorValue = (richText) => [
   }
 ];
 
-export const createEmptyEditor = () => withReact(createEditor());
+export const createEmptyEditor = () => withHistory(withReact(createEditor()));

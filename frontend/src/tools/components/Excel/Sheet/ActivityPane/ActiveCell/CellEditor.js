@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { useSelector } from "react-redux";
 
-import { Editable } from "slate-react";
+import { Editable, Slate } from "slate-react";
 
 const Leaf = ({ attributes, children, leaf }) => {
   if(leaf.bold) children = <strong>{children}</strong>;
@@ -16,25 +16,44 @@ const Element = ({ attributes, children, element }) => (
   <span {...attributes}>{children}</span>
 );
 
-const CellEditor = () => {
+const CellEditor = ({
+  eventListenerRef
+}) => {
   const renderElement = useCallback((props) => <Element {...props}/>, []);
   const renderLeaf = useCallback((props) => <Leaf {...props}/>, []);
 
-  const activeCellInputAutoFocus = useSelector(({ 
+  const {
+    activeCellInputAutoFocus,
+    activeCellInputData: {
+      value,
+      cellEditor
+    }
+   } = useSelector(({ 
     ui: { 
       excel: { 
-        activeCellInputAutoFocus
+        activeCellInputAutoFocus,
+        activeCellInputData
       } 
     } 
-  }) => activeCellInputAutoFocus);
+  }) => ({
+    activeCellInputAutoFocus,
+    activeCellInputData
+  }));
+
+  const handleInputChange = useCallback((value) => eventListenerRef.current.changeActiveInputData({ value }), [ value ]);
 
   return (
-    <Editable
-      renderElement={renderElement}
-      renderLeaf={renderLeaf}
-      autoFocus={activeCellInputAutoFocus}
-      readOnly={true}
-    />
+    <Slate
+      editor={cellEditor}
+      value={value}
+      onChange={handleInputChange}
+    >
+      <Editable
+        renderElement={renderElement}
+        renderLeaf={renderLeaf}
+        autoFocus={activeCellInputAutoFocus}
+      />
+    </Slate>
   )
 };
 

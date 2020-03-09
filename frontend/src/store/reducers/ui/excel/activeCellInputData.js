@@ -1,30 +1,23 @@
 import { createReducer } from "@store/tools/setup";
 
-import { createEditor } from "slate";
-import { withReact } from "slate-react";
-import { withHistory } from "slate-history";
+import {
+  createEmptyEditor,
+  createEmptyEditorValue
+} from "@tools/slate";
 
 const UPDATE_ACTIVE_CELL_INPUT_DATA = (state, { activeCellInputData }) => ({ ...state, ...activeCellInputData });
 
 const RESET_ACTIVE_CELL_INPUT_DATA = () => ({
-  editor: withHistory(withReact(createEditor())),
-  value: [ 
-    { 
-      type: "paragraph", 
-      children: [ { text: "" } ] 
-    } 
-  ] 
+  cellEditor: createEmptyEditor(),
+  formulaEditor: createEmptyEditor(),
+  value: createEmptyEditorValue()
 });
 
 const activeCellInputDataReducer = createReducer(
   { 
-    editor: withHistory(withReact(createEditor())),
-    value: [ 
-      { 
-        type: "paragraph", 
-        children: [ { text: "" } ] 
-      } 
-    ] 
+    cellEditor: createEmptyEditor(),
+    formulaEditor: createEmptyEditor(),
+    value: createEmptyEditorValue()
   }, 
   { 
     UPDATE_ACTIVE_CELL_INPUT_DATA, 

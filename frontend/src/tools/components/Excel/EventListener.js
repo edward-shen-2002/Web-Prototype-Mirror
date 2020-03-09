@@ -21,11 +21,12 @@ import { loadSheet } from "@tools/redux";
 import { extractReactAndWorkbookState } from "@tools/excel";
 
 import { 
-  createEmptyEditor,
   convertRichTextToEditorValue,
   convertTextToEditorValue,
   convertEditorValueToText,
-  convertEditorValueToRichText
+  convertEditorValueToRichText,
+  createEmptyEditor,
+  createEmptyEditorValue
 } from "@tools/slate";
 
 import { enableActiveCellInputAutoFocus, disableActiveCellInputAutoFocus } from "@actions/ui/excel/activeCellInputAutoFocus";
@@ -1484,7 +1485,11 @@ class EventListener extends PureComponent {
       if(sheetCellData[y] && sheetCellData[y][x]) this.changeValue(y, x, { ...sheetCellData[y][x], value: undefined, type: "normal" });
     }
 
-    handleUpdateActiveCellInputData({ editor: createEmptyEditor() });
+    handleUpdateActiveCellInputData({ 
+      formulaEditor: createEmptyEditor(),
+      cellEditor: createEmptyEditor(),
+      value: createEmptyEditorValue()
+    });
   }
 
   changeActiveInputData(data) {
@@ -1957,7 +1962,7 @@ class EventListener extends PureComponent {
       const type = cellData ? cellData.type : undefined;
       const value = cellData ? cellData.value : undefined;
 
-      handleUpdateActiveCellInputData({ editorState: type === "rich-text" ? convertRichTextToEditorValue(value) : convertTextToEditorValue(value) });
+      handleUpdateActiveCellInputData({ value: type === "rich-text" ? convertRichTextToEditorValue(value) : convertTextToEditorValue(value) });
 
       SheetContainerInstance.focus();
     }
@@ -2593,12 +2598,7 @@ class EventListener extends PureComponent {
       if(value) {
         value = convertTextToEditorValue(formula ? `=${formula}` : value);
       } else {
-        value = [
-          {
-            type: "paragraph",
-            children: [ { text: "" } ]
-          }
-        ];
+        value = createEmptyEditorValue();
       }
     }
     handleUpdateActiveCellInputData({ value });
