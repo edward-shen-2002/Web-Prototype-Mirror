@@ -107,7 +107,7 @@ export const convertEditorValueToRichText = (elements) => {
 
         if(!childIndex && blockFound) text = `\n${text}`;
 
-        delete data.text;
+        data = { ...data, text: undefined };
 
         for(let valueStyle in data) {
           const styleData = data[valueStyle];
