@@ -63,7 +63,7 @@ const CellEditor = ({
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         // readOnly={!activeCellInputAutoFocus}
-        autoFocus={true}
+        // autoFocus={true}
       />
     </Slate>
   )

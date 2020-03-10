@@ -1695,14 +1695,14 @@ class EventListener extends PureComponent {
       // For example: Formulas, prepopulate strings, etc... 
       // We need to always convert text to plain text to determine the type of string...
       if(children.length > 1) {
-        // console.log(convertEditorValueToRichText(value))
         this.changeValue(y, x, { 
-          value: convertEditorValueToRichText(value), 
-          type: "rich-text" 
+          value: convertEditorValueToRichText(value),
+          type: "rich-text"
         });
       } else {
         this.changeValue(y, x, { 
-          value: convertEditorValueToText(value)
+          value: convertEditorValueToText(value),
+          type: "normal"
         });
       }
 
@@ -2594,7 +2594,12 @@ class EventListener extends PureComponent {
         value = createEmptyEditorValue();
       }
     }
-    handleUpdateActiveCellInputData({ value });
+
+    handleUpdateActiveCellInputData({ 
+      cellEditor: createEmptyEditor(),
+      formulaEditor: createEmptyEditor(),
+      value 
+    });
 
     handleUpdateActiveCellPosition({ x: newX, y: newY });
 
