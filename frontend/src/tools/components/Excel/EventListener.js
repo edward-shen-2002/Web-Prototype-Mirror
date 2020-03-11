@@ -16,6 +16,8 @@ import cloneDeep from "clone-deep";
 
 import uniqid from "uniqid";
 
+// import { ReactEditor } from "slate-react";
+
 import { loadSheet } from "@tools/redux";
 
 import { extractReactAndWorkbookState } from "@tools/excel";
@@ -139,9 +141,9 @@ const mapDispatchToProps = (dispatch) => ({
   handleResetStagnantSelectionAreas: () => dispatch(resetStagnantSelectionAreas()),
 
   handleenableSelectionMode: () => dispatch(enableSelectionMode()),
-  handledisableSelectionMode: () => dispatch(disableSelectionMode()),
+  handleDisableSelectionMode: () => dispatch(disableSelectionMode()),
 
-  handleenableEditMode: () => dispatch(enableEditMode()),
+  handleEnableEditMode: () => dispatch(enableEditMode()),
   handledisableEditMode: () => dispatch(disableEditMode()),
 
   handleUpdateScrollData: (scrollData) => dispatch(updateScrollData(scrollData)),
@@ -1428,6 +1430,11 @@ class EventListener extends PureComponent {
       activeCellPosition,
       stagnantSelectionAreas,
 
+      activeCellInputData: {
+        cellEditor,
+        formulaEditor
+      },
+
       sheetCellData,
 
       handleUpdateSheetCellData,
@@ -1485,16 +1492,23 @@ class EventListener extends PureComponent {
       if(sheetCellData[y] && sheetCellData[y][x]) this.changeValue(y, x, { ...sheetCellData[y][x], value: undefined, type: "normal" });
     }
 
+    formulaEditor.children = createEmptyEditorValue();
+    cellEditor.children = createEmptyEditorValue();
+
     handleUpdateActiveCellInputData({ 
-      formulaEditor: createEmptyEditor(),
-      cellEditor: createEmptyEditor(),
-      value: createEmptyEditorValue()
+      cellValue: createEmptyEditorValue(),
+      formulaValue: createEmptyEditorValue()
     });
   }
 
   changeActiveInputData(data) {
     const { handleUpdateActiveCellInputData } = this.props;
 
+    if(data.cellValue || data.formulaValue) {
+      if(!data.cellValue) data.cellValue = cloneDeep(data.formulaValue);
+      if(!data.formulaValue) data.formulaValue = cloneDeep(data.cellValue);
+    }
+    
     handleUpdateActiveCellInputData(data);
   }
 
@@ -1513,15 +1527,6 @@ class EventListener extends PureComponent {
 
     let newSheetCellData = cloneDeep(sheetCellData);
 
-    // // ! Consider other types!
-    // if(isPrepopulateString(newValue)) {
-    //   newData.type = "prepopulate";
-    // } else {
-    //   newData.type = "normal";
-    // }
-
-    // ! Need to consider other parameters other than value!!
-    // ! Only update if data changed!
     if(currentCellData) {
       if(currentCellData !== newValue || currentCellData.type !== newData.type) {
         newSheetCellData[row][column] = { ...currentCellData, ...newData };
@@ -1675,7 +1680,7 @@ class EventListener extends PureComponent {
   saveActiveCellInputData() {
     const { 
       isEditMode, 
-      activeCellInputData: { value }, 
+      activeCellInputData: { cellValue }, 
       activeCellPosition,
       sheetCellData
     } = this.props;
@@ -1684,11 +1689,11 @@ class EventListener extends PureComponent {
       const { x, y } = activeCellPosition;
 
       let styles;
-
-      // Get block styles?
       if(sheetCellData[y] && sheetCellData[y][x]) styles = sheetCellData[y][x].styles;
 
-      const children = value[0].children;
+      const children = cellValue[0].children;
+
+      let plaintext = convertEditorValueToText(cellValue)
 
       // ! Determine type
       // With a given type, even if the inputted value is rich-text, it will be converted to regular text
@@ -1696,12 +1701,12 @@ class EventListener extends PureComponent {
       // We need to always convert text to plain text to determine the type of string...
       if(children.length > 1) {
         this.changeValue(y, x, { 
-          value: convertEditorValueToRichText(value),
+          value: convertEditorValueToRichText(cellValue),
           type: "rich-text"
         });
       } else {
         this.changeValue(y, x, { 
-          value: convertEditorValueToText(value),
+          value: convertEditorValueToText(cellValue),
           type: "normal"
         });
       }
@@ -1940,6 +1945,10 @@ class EventListener extends PureComponent {
     const { 
       isEditMode,
       // activeCellInputAutoFocus,
+      activeCellInputData: {
+        cellEditor,
+        formulaEditor
+      },
       sheetCellData,
       activeCellPosition: { x, y },
       handleUpdateActiveCellInputData
@@ -1955,7 +1964,24 @@ class EventListener extends PureComponent {
       const type = cellData ? cellData.type : undefined;
       const value = cellData ? cellData.value : undefined;
 
-      handleUpdateActiveCellInputData({ value: type === "rich-text" ? convertRichTextToEditorValue(value) : convertTextToEditorValue(value) });
+      let cellValue;
+      let formulaValue;
+
+      if(type === "rich-text") {
+        cellValue = convertRichTextToEditorValue(value);
+        formulaValue = convertRichTextToEditorValue(value);
+      } else {
+        cellValue = convertTextToEditorValue(value);
+        formulaValue = convertTextToEditorValue(value);
+      }
+
+      formulaEditor.children = createEmptyEditorValue();
+      cellEditor.children = createEmptyEditorValue();
+
+      handleUpdateActiveCellInputData({ 
+        cellValue,
+        formulaValue
+      });
 
       SheetContainerInstance.focus();
     }
@@ -2531,29 +2557,29 @@ class EventListener extends PureComponent {
   }
 
   disableSelectionMode() {
-    const { isSelectionMode, handledisableSelectionMode } = this.props;
+    const { isSelectionMode, handleDisableSelectionMode } = this.props;
 
-    if(isSelectionMode) handledisableSelectionMode();
+    if(isSelectionMode) handleDisableSelectionMode();
   }
 
   enableEditMode() {
     const { 
       isEditMode, 
       isSelectionMode, 
-      isCommentDialogOpen,
       activeCellPosition,
+      activeCellDialog,
       sheetCellData,
-      handleenableEditMode, 
-      handledisableSelectionMode 
+      handleEnableEditMode, 
+      handleDisableSelectionMode 
     } = this.props;
 
     const { x, y } = activeCellPosition;
 
-    if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].isReadOnly || isCommentDialogOpen) return;
+    if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].isReadOnly || activeCellDialog) return;
 
-    if(!isEditMode) handleenableEditMode();
+    if(!isEditMode) handleEnableEditMode();
 
-    if(isSelectionMode) handledisableSelectionMode();
+    if(isSelectionMode) handleDisableSelectionMode();
   }
 
   disableEditMode() {
@@ -2572,9 +2598,13 @@ class EventListener extends PureComponent {
     const { handleResetActiveCellInputData } = this.props;
     handleResetActiveCellInputData();
   }
-
+  handleUpdateActiveCellInputData
   updateActiveCellPosition(newY, newX, shouldScroll = true) {
     const { 
+      activeCellInputData: {
+        cellEditor,
+        formulaEditor
+      },
       sheetCellData, 
 
       handleUpdateActiveCellPosition, 
@@ -2585,20 +2615,29 @@ class EventListener extends PureComponent {
 
     let { type, value, formula } = cellData;
 
+    let cellValue;
+    let formulaValue;
+
     if(type === "rich-text") {
-      value = convertRichTextToEditorValue(value);
+      cellValue = convertRichTextToEditorValue(value);
+      formulaValue = convertRichTextToEditorValue(value);
     } else {
       if(value) {
-        value = convertTextToEditorValue(formula ? `=${formula}` : value);
+        cellValue = convertTextToEditorValue(formula ? `=${formula}` : value);
+        formulaValue = convertTextToEditorValue(formula ? `=${formula}` : value);
       } else {
-        value = createEmptyEditorValue();
+        cellValue = createEmptyEditorValue();
+        formulaValue = createEmptyEditorValue();
       }
     }
 
+    cellEditor.children = createEmptyEditorValue();
+    formulaEditor.children = createEmptyEditorValue();
+    
+
     handleUpdateActiveCellInputData({ 
-      cellEditor: createEmptyEditor(),
-      formulaEditor: createEmptyEditor(),
-      value 
+      formulaValue,
+      cellValue
     });
 
     handleUpdateActiveCellPosition({ x: newX, y: newY });

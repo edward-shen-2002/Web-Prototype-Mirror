@@ -39,7 +39,7 @@ const InputField = ({
 
   const {
     formulaEditor,
-    value
+    formulaValue
   } = useSelector(({
     ui: {
       excel: {
@@ -51,12 +51,14 @@ const InputField = ({
   const handleFocus = () => eventListenerRef.current.focusFormulaInput();
   const handleBlur = () => eventListenerRef.current.blurFormulaInput();
 
-  const handleInputChange = useCallback((value) => eventListenerRef.current.changeActiveInputData({ value }), [ value ]);
+  const handleInputChange = useCallback((formulaValue) => {
+    eventListenerRef.current.changeActiveInputData({ formulaValue });
+  });
 
   return (
     <Slate
       editor={formulaEditor}
-      value={value}
+      value={formulaValue}
       onChange={handleInputChange}
     >
       <Editable

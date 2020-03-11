@@ -4,7 +4,9 @@ import { sheetNameRegex } from "./regex";
 
 import { 
   convertTextToEditorValue,
-  convertRichTextToEditorValue
+  convertRichTextToEditorValue,
+  createEmptyEditor,
+  createEmptyEditorValue
 } from "@tools/slate";
 
 import { isObjectEmpty } from "@tools/misc";
@@ -14,9 +16,6 @@ import pako from "pako";
 import Color from "color";
 
 import { themes } from "@constants/styles";
-
-import { createEditor } from "slate";
-import { withReact } from "slate-react";
 
 import { Parser } from "hot-formula-parser";
 
@@ -494,19 +493,18 @@ export const convertXlsxStyleToInlineStyle = (xlsxStyle) => {
   // if(bottomBorder) console.log("bb", bottomBorder);
   // if(borderStyle) console.log("bs", borderStyle);
 
+  // ! Font styles
   if(bold) inlineStyle.fontWeight = "bold";
   if(italic) inlineStyle.fontStyle = "italic";
   if(underline) inlineStyle.textDecoration = "underline";
   if(strikethrough) inlineStyle.textDecoration = underline ? inlineStyle.textDecoration + " line-through" : "line-through";
   if(subscript) inlineStyle.verticalAlign = "sub";
   if(superscript) inlineStyle.verticalAlign = "super";
-
   if(fontSize) inlineStyle.fontSize = fontSize;
-
   if(fontFamily) inlineStyle.fontFamily = fontFamily;
-
   if(fontColor) inlineStyle.color = convertXlsxColorToCss(fontColor);
 
+  // ! Block styles
   if(fill) {
     let { 
       type, 
@@ -647,13 +645,11 @@ export const getBlockStyle = (cellStyles) => {
   if(cellStyles === undefined) return undefined;
   
   const {
-    fill,
-    horizontalAlignment
+    backgroundColor
   } = cellStyles;
 
   return {
-    fill,
-    horizontalAlignment
+    backgroundColor
   };
 };
 
@@ -755,8 +751,11 @@ const extractCellData = (cellData, row, column) => {
     }
   }
 
+  
   const cellStyles = extractCellStyle(cellData);
- if(cellStyles) extractedCellData.styles = cellStyles;
+  if(cellStyles) {
+    extractedCellData.styles = cellStyles;
+  }
 
   return isObjectEmpty(extractedCellData) ? undefined : extractedCellData;
 };
@@ -842,14 +841,24 @@ export const getActiveCellInputData = (sheetCellData, activeRow, activeColumn) =
       ? sheetCellData[activeRow][activeColumn]
       : undefined
   );
+
+  let cellValue;
+  let formulaValue;
+
+  if(activeCellInputValueData && activeCellInputValueData.type === "rich-text") {
+    cellValue = convertRichTextToEditorValue(activeCellInputValueData.value);
+    formulaValue = convertRichTextToEditorValue(activeCellInputValueData.value);
+  } else {
+    let value = activeCellInputValueData ? activeCellInputValueData.value : "";
+    cellValue = convertTextToEditorValue(value);
+    formulaValue = convertTextToEditorValue(value);
+  }
   
   return {
-    value: (
-      activeCellInputValueData && activeCellInputValueData.type === "rich-text"
-        ? convertRichTextToEditorValue(activeCellInputValueData.value)
-        : convertTextToEditorValue(activeCellInputValueData ? activeCellInputValueData.value : "")
-    ),
-    editor: withReact(createEditor())
+    formulaEditor: createEmptyEditor(),
+    cellEditor: createEmptyEditor(),
+    cellValue,
+    formulaValue
   }
 };
 

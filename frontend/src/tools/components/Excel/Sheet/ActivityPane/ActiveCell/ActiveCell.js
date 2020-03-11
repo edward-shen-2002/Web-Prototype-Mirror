@@ -23,6 +23,7 @@ import CommentPopup from "./CommentPopup";
 import GroupPopup from "./GroupPopup";
 
 import "./ActiveCell.scss";
+import { getBlockStyle } from "@tools/excel";
 
 const ActiveCellDialog = ({
   activeCellDialog,
@@ -116,6 +117,7 @@ const ActiveCellDialog = ({
 
 const ActiveInputCell = ({ 
   activeCellStyle,
+  blockStyle,
   activeCellInputAutoFocus,
   eventListenerRef
 }) => {
@@ -143,6 +145,7 @@ const ActiveInputCell = ({
     >
       <CellEditor
         key="active-cell-input"
+        blockStyle={blockStyle}
         eventListenerRef={eventListenerRef}
         readOnly={!activeCellInputAutoFocus}
         handleReturn={handleReturn}
@@ -319,12 +322,18 @@ let ActiveCell = ({
 
   let displayedComments = [];
   let displayedValue = "";
+  let blockStyle = {};
+
 
   if(sheetCellData[y] && sheetCellData[y][x]) {
-    const { comments, value } = sheetCellData[y][x];
+    const { 
+      comments,
+      styles, 
+      value 
+    } = sheetCellData[y][x];
 
+    if(styles) blockStyle = getBlockStyle(styles);
     if(comments) displayedComments = comments;
-
     if(value) displayedValue = value;
   }
 
@@ -332,6 +341,7 @@ let ActiveCell = ({
     isEditMode 
       ? <ActiveInputCell 
           activeCellStyle={activeCellStyle} 
+          blockStyle={blockStyle}
           editorState={editorState}
           activeCellInputAutoFocus={activeCellInputAutoFocus}
           eventListenerRef={eventListenerRef}

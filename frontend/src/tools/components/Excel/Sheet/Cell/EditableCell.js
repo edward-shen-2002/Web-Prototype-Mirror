@@ -13,8 +13,8 @@ import {
 import topOffsetsSelector from "@selectors/ui/excel/topOffsets";
 import leftOffsetsSelector from "@selectors/ui/excel/leftOffsets";
 
-const RichTextCellContent = (richText, firstFragmentStyle) => richText.map(({ styles, text }, index) => (
-  <span key={uniqid()} style={index ? styles : firstFragmentStyle}>
+const RichTextCellContent = (richText) => richText.map(({ styles, text }) => (
+  <span key={uniqid()} style={styles}>
     {text}
   </span>
 ));
@@ -152,9 +152,8 @@ const EditableCell = ({
     hyperlink = cellData.hyperlink;
 
     if(type === "rich-text") {
-      const firstFragmentStyle = getCellInlineStyle(cellData.styles);
       const containerStyle = getBlockStyle(cellData.styles);
-      value = RichTextCellContent(value, firstFragmentStyle);
+      value = RichTextCellContent(value);
 
       style = { ...style, ...containerStyle };
     } else {

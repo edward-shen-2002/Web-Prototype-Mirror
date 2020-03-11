@@ -23,5 +23,7 @@
   &__input {
     padding: 0 5px;
     width: 100%;
+    max-width: 100%;
+    overflow: auto;
   }
 }
