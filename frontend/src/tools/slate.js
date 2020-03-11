@@ -143,7 +143,7 @@ export const convertRichTextToEditorValue = (richText) => [
   {
     type: "paragraph",
     children: richText.map(({ text, styles }) => {
-      let childContent = { text };
+      let childContent = { text: text === undefined ? "" : text };
 
       for(let property in styles) {
         let style = styles[property];
