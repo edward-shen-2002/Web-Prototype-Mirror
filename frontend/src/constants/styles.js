@@ -26,15 +26,15 @@ export const borderFragmentMap = {
 const supportedBorderStyleMap = {
   thin: {
     Style: "solid",
-    Width: 2
+    Width: 1
   }, 
   medium: {
     Style: "solid",
-    Width: 3
+    Width: 2
   },
   thick: {
     Style: "solid",
-    Width: 5
+    Width: 4
   },
   dashed: {
     Style: "dashed"
