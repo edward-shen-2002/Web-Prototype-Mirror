@@ -15,3 +15,46 @@ export const themes = [
   "#4472C4",
   "#70AD47"
 ];
+
+export const borderFragmentMap = {
+  left: "borderLeft",
+  right: "borderRight",
+  bottom: "borderBottom",
+  top: "borderTop"
+};
+
+const supportedBorderStyleMap = {
+  thin: {
+    Style: "solid",
+    Width: 1
+  }, 
+  medium: {
+    Style: "solid",
+    Width: 3
+  },
+  thick: {
+    Style: "solid",
+    Width: 5
+  },
+  dashed: {
+    Style: "dashed"
+  },
+  dotted: {
+    Style: "dotted"
+  },
+  double: {
+    Style: "double"
+  }
+};
+
+export const completeBorderStyleMap = {
+  ...supportedBorderStyleMap,
+  // ! Exclusive to Excel -- convert to supported style
+  hair: supportedBorderStyleMap.dotted,
+  dashDot: supportedBorderStyleMap.dashed,
+  dashDotDot: supportedBorderStyleMap.dashed,
+  mediumDashed: supportedBorderStyleMap.dashed,
+  mediumDashDot: supportedBorderStyleMap.dashed,
+  mediumDashDotDot: supportedBorderStyleMap.dashed,
+  slantDashDot: supportedBorderStyleMap.dashed
+};

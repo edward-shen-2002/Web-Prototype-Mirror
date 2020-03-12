@@ -15,7 +15,11 @@ import pako from "pako";
 
 import Color from "color";
 
-import { themes } from "@constants/styles";
+import { 
+  themes,
+  borderFragmentMap,
+  completeBorderStyleMap
+} from "@constants/styles";
 
 import { Parser } from "hot-formula-parser";
 
@@ -413,7 +417,15 @@ const convertXlsxColorToCss = ({ rgb, theme, tint }) => {
   let convertedStyle;
 
   if(rgb) {
-    convertedStyle = `#${rgb.length === 6 ? rgb : rgb.substring(2)}`;
+    if(rgb === "System Foreground") {
+      convertedStyle = "#000000";
+    } else if(rgb === "System Background") {
+      convertedStyle = "#FFFFFF";
+    } else if(rgb.length === 6) { 
+      convertedStyle = rgb;
+    } else {
+      convertedStyle = rgb.substring(2);
+    }
   } else if (theme !== undefined) {
     convertedStyle = themes[theme];
 
@@ -476,23 +488,33 @@ export const convertXlsxStyleToInlineStyle = (xlsxStyle) => {
     border,
     borderColor,
     borderStyle,
-    leftBorder, 
-    rightBorder, 
-    topBorder, 
-    bottomBorder, 
+    // leftBorder, 
+    // rightBorder, 
+    // topBorder, 
+    // bottomBorder, 
     diagonalBorder,
     diagonalBorderDirection, 
     numberFormat
   } = xlsxStyle;
 
-  // ! TODO
-  // if(borderColor) console.log("b", borderColor);
-  // if(leftBorder) console.log("lb", leftBorder);
-  // if(rightBorder) console.log("rb", rightBorder);
-  // if(topBorder) console.log("tb", topBorder);
-  // if(bottomBorder) console.log("bb", bottomBorder);
-  // if(borderStyle) console.log("bs", borderStyle);
+  if(borderColor) inlineStyle.borderColor = convertXlsxColorToCss(borderColor);
+  if(borderStyle) {}
+  if(border) {
+    for(let borderFragment in border) {
+      let { style, color } = border[borderFragment];
+      const borderProperty = borderFragmentMap[borderFragment];
 
+      const fragmentStyles = completeBorderStyleMap[style];
+
+      for(let fragmentProperty in fragmentStyles) {
+        let fragmentStyle = fragmentStyles[fragmentProperty];
+        let fullProperty = `${borderProperty}${fragmentProperty}`;
+        inlineStyle[fullProperty] = fragmentStyle;
+      }
+
+      inlineStyle[`${borderProperty}Color`] = convertXlsxColorToCss(color);
+    }
+  } 
   // ! Font styles
   if(bold) inlineStyle.fontWeight = "bold";
   if(italic) inlineStyle.fontStyle = "italic";
