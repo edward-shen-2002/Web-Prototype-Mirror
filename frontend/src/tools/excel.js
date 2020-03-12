@@ -412,7 +412,6 @@ export const getSheetRowsData = (sheet, rowCount) => {
   return { sheetRowHeights, sheetHiddenRows };
 };
 
-// TODO
 const convertXlsxColorToCss = ({ rgb, theme, tint }) => {
   let convertedStyle;
 
@@ -422,9 +421,9 @@ const convertXlsxColorToCss = ({ rgb, theme, tint }) => {
     } else if(rgb === "System Background") {
       convertedStyle = "#FFFFFF";
     } else if(rgb.length === 6) { 
-      convertedStyle = rgb;
+      convertedStyle = `#${rgb}`;
     } else {
-      convertedStyle = rgb.substring(2);
+      convertedStyle = `#${rgb.substring(2)}`;
     }
   } else if (theme !== undefined) {
     convertedStyle = themes[theme];
@@ -506,10 +505,12 @@ export const convertXlsxStyleToInlineStyle = (xlsxStyle) => {
 
       const fragmentStyles = completeBorderStyleMap[style];
 
+      // ! TODO: Need to keep non-supported styles as meta deta!
       for(let fragmentProperty in fragmentStyles) {
         let fragmentStyle = fragmentStyles[fragmentProperty];
         let fullProperty = `${borderProperty}${fragmentProperty}`;
         inlineStyle[fullProperty] = fragmentStyle;
+
       }
 
       inlineStyle[`${borderProperty}Color`] = convertXlsxColorToCss(color);
