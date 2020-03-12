@@ -509,7 +509,6 @@ class EventListener extends PureComponent {
   arrowLeft(event, shiftKey) {
     let { 
       sheetCellData,
-      sheetRowCount,
       activeCellPosition,
       activeCellSelectionAreaIndex,
       isEditMode,
@@ -573,6 +572,7 @@ class EventListener extends PureComponent {
             handleResetStagnantSelectionAreas();
             handleResetActiveCellSelectionAreaIndex();
           } else {
+            console.log("here")
             handleUpdateStagnantSelectionAreas([ focusedStagnantSelectionArea ]);
             if(activeCellSelectionAreaIndex) handleUpdateActiveCellSelectionAreaIndex(0);
           }
@@ -584,6 +584,8 @@ class EventListener extends PureComponent {
             maxY,
             sheetCellData
           });
+
+          console.log("2")
 
           this._scrollTo(x1 < x ? y1 : y2, focusedStagnantSelectionArea.x1);
 
@@ -626,7 +628,7 @@ class EventListener extends PureComponent {
           sheetCellData 
         });
 
-        if(y2 < sheetRowCount) {
+        if(x1 > 0) {
           handleUpdateStagnantSelectionAreas([ minArea ]);
           handleUpdateActiveCellSelectionAreaIndex(0);
           this._scrollTo(y, minArea.x1);
@@ -645,6 +647,8 @@ class EventListener extends PureComponent {
         x--;
       }
 
+      
+
       if(x > 0) this.updateActiveCellPosition(y, x);
       if(stagnantSelectionAreasLength) handleResetStagnantSelectionAreas();
       if(activeCellSelectionAreaIndex >= 0) handleResetActiveCellSelectionAreaIndex();
@@ -654,11 +658,10 @@ class EventListener extends PureComponent {
   arrowRight(event, shiftKey) {
     let { 
       sheetCellData,
-      sheetRowCount,
+      sheetColumnCount,
       activeCellPosition,
       activeCellSelectionAreaIndex,
       isEditMode,
-      sheetColumnCount,
       stagnantSelectionAreas,
       handleUpdateStagnantSelectionAreas,
       handleUpdateActiveCellSelectionAreaIndex,
@@ -772,7 +775,7 @@ class EventListener extends PureComponent {
           sheetCellData 
         });
 
-        if(y2 < sheetRowCount) {
+        if(x2 < sheetColumnCount) {
           handleUpdateStagnantSelectionAreas([ minArea ]);
           handleUpdateActiveCellSelectionAreaIndex(0);
           this._scrollTo(y, minArea.x2);
@@ -1422,7 +1425,7 @@ class EventListener extends PureComponent {
     return { maxY, maxX };
   }
 
-  _getContainedArea() {
+  _getAllAreas() {
     const {
       activeSelectionArea,
       stagnantSelectionAreas,
@@ -1438,7 +1441,9 @@ class EventListener extends PureComponent {
       }
     };
 
-    let combinedSelectionArea = activeSelectionArea ? [ ...stagnantSelectionAreas, activeSelectionArea ] : [ ...stagnantSelectionAreas ];
+    let combinedSelectionArea = [ ...stagnantSelectionAreas ];
+
+    if(activeSelectionArea) combinedSelectionArea.push(activeSelectionArea);
 
     combinedSelectionArea.forEach(({ x1, x2, y1, y2 }) => {
       let startRow = Math.min(y1, y2);
@@ -1477,7 +1482,7 @@ class EventListener extends PureComponent {
 
     if(isEditMode) return;
 
-    let selectionAreaCoveredCells = this._getContainedArea();
+    let selectionAreaCoveredCells = this._getAllAreas();
 
     for(let row in selectionAreaCoveredCells) {
       let columns = Object.keys(selectionAreaCoveredCells[row]);
@@ -3302,10 +3307,10 @@ class EventListener extends PureComponent {
   // ! Which is the union of all cells in ranges
   // ! This is somewhat used in delete, but the functionality is combined...
   applyBlockStyle(property, propertyValue) {
-    const {
-      stagnantSelectionAreas
+    let {
+      sheetCellData,
+      handleUpdateSheetCellData
     } = this.props;
-
     switch(property) {
       case "text-bold":
         break;
@@ -3326,7 +3331,24 @@ class EventListener extends PureComponent {
     }
 
     // Get the rows/columns 
+    // ! Consider border enclosure -- is it by cell or by range?
+    let containedArea = this._getAllAreas();
 
+    for(row in containedArea) {
+      const rowArea = containedArea[row];
+
+      if(!sheetCellData[row]) sheetCellData[row] = {};
+
+      for(let column in rowArea) {
+        if(!sheetCellData[row][column]) sheetCellData[row][column] = {};
+
+        sheetCellData[row][column] = { ...sheetCellData[row][column], styles: "@@@@@@" };
+      }
+    }
+
+    handleUpdateSheetCellData(sheetCellData);
+
+    this.saveActiveCellInputData();
     this.disableEditMode();
   }
 
