@@ -1422,14 +1422,48 @@ class EventListener extends PureComponent {
     return { maxY, maxX };
   }
 
-  delete() {
-    const { 
-      isEditMode,
-      activeCellSelectionAreaIndex,
+  _getContainedArea() {
+    const {
       activeSelectionArea,
-      activeCellPosition,
       stagnantSelectionAreas,
+      activeCellPosition: {
+        x,
+        y
+      }
+    } = this.props;
+    
+    let selectionAreaCoveredCells = {
+      [y]: {
+        [x]: true
+      }
+    };
 
+    let combinedSelectionArea = activeSelectionArea ? [ ...stagnantSelectionAreas, activeSelectionArea ] : [ ...stagnantSelectionAreas ];
+
+    combinedSelectionArea.forEach(({ x1, x2, y1, y2 }) => {
+      let startRow = Math.min(y1, y2);
+      let endRow = Math.max(y1, y2);
+
+      let startColumn = Math.min(x1, x2);
+      let endColumn = Math.max(x1, x2);
+
+      for(let row = startRow; row <= endRow; row++) {
+        for(let column = startColumn; column <= endColumn; column++) {
+          if(selectionAreaCoveredCells[row]) {
+            selectionAreaCoveredCells[row][column] = true;
+          } else {
+            selectionAreaCoveredCells[row] = { [column]: true };
+          }
+        }
+      }
+    });
+
+    return selectionAreaCoveredCells;
+  }
+
+  delete() {
+    let { 
+      isEditMode,
       activeCellInputData: {
         cellEditor,
         formulaEditor
@@ -1443,54 +1477,25 @@ class EventListener extends PureComponent {
 
     if(isEditMode) return;
 
-    const { x, y } = activeCellPosition;
+    let selectionAreaCoveredCells = this._getContainedArea();
 
-    if(activeCellSelectionAreaIndex >= 0) {
-      let selectionAreaCoveredCells = {};
+    for(let row in selectionAreaCoveredCells) {
+      let columns = Object.keys(selectionAreaCoveredCells[row]);
 
-      let combinedSelectionArea = activeSelectionArea ? [ ...stagnantSelectionAreas, activeSelectionArea ] : [ ...stagnantSelectionAreas ];
-
-      combinedSelectionArea.forEach(({ x1, x2, y1, y2 }) => {
-        let startRow = Math.min(y1, y2);
-        let endRow = Math.max(y1, y2);
-  
-        let startColumn = Math.min(x1, x2);
-        let endColumn = Math.max(x1, x2);
-
-        for(let row = startRow; row <= endRow; row++) {
-          for(let column = startColumn; column <= endColumn; column++) {
-            if(selectionAreaCoveredCells[row]) {
-              selectionAreaCoveredCells[row][column] = true;
-            } else {
-              selectionAreaCoveredCells[row] = { [column]: true };
-            }
-          }
+      columns.forEach((column) => {
+        // ! Consider when everything is undefined -- do you remove it from sheet data?
+        // ! Consider normal/rich text
+        if(sheetCellData[row] && sheetCellData[row][column]) {
+          sheetCellData[row][column] = { 
+            ...sheetCellData[row][column], 
+            value: undefined,
+            type: "normal"
+          };
         }
       });
-
-      let newSheetCellData = { ...sheetCellData };
-
-      for(let row in selectionAreaCoveredCells) {
-        let columns = Object.keys(selectionAreaCoveredCells[row]);
-
-        columns.forEach((column) => {
-          // ! Consider when everything is undefined -- do you remove it from sheet data?
-          // ! Consider normal/rich text
-          if(newSheetCellData[row] && newSheetCellData[row][column]) {
-            newSheetCellData[row][column] = { 
-              ...newSheetCellData[row][column], 
-              value: undefined,
-              type: "normal"
-            };
-          }
-        });
-      }
-
-      handleUpdateSheetCellData(newSheetCellData);
-    } else {
-      
-      if(sheetCellData[y] && sheetCellData[y][x]) this.changeValue(y, x, { ...sheetCellData[y][x], value: undefined, type: "normal" });
     }
+
+    handleUpdateSheetCellData(sheetCellData);
 
     formulaEditor.children = createEmptyEditorValue();
     cellEditor.children = createEmptyEditorValue();
@@ -3290,6 +3295,61 @@ class EventListener extends PureComponent {
 
       handleUpdateSheetCellData(sheetCellData);
       this.resetActiveCellDialog();
+    }
+  }
+
+  // ! TODO: create a method for getting elementary cells
+  // ! Which is the union of all cells in ranges
+  // ! This is somewhat used in delete, but the functionality is combined...
+  applyBlockStyle(property, propertyValue) {
+    const {
+      stagnantSelectionAreas
+    } = this.props;
+
+    switch(property) {
+      case "text-bold":
+        break;
+      case "text-italic":
+        break
+      case "text-underline":
+        break;
+
+      case "align-left":
+        break;
+      case "align-center":
+        break;
+      case "align-right":
+        break;
+      
+      default:
+        break;
+    }
+
+    // Get the rows/columns 
+
+    this.disableEditMode();
+  }
+
+  applyTextStyle(property, propertyValue) {
+    const {
+      isEditMode,
+      activeCellInputAutoFocus,
+      formulaEdit,
+      cellEdit
+    } = this.props;
+
+    if(isEditMode) {
+      // Apply styles to editors
+      if(activeCellInputAutoFocus) {
+        // Cell input
+        
+      } else {
+        // Formula input
+
+      }
+    } else {
+      // Apply block style
+      this.applyBlockStyle(property, propertyValue);
     }
   }
 
