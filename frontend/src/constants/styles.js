@@ -26,7 +26,7 @@ export const borderFragmentMap = {
 const supportedBorderStyleMap = {
   thin: {
     Style: "solid",
-    Width: 1
+    Width: 2
   }, 
   medium: {
     Style: "solid",
