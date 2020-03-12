@@ -332,7 +332,7 @@ let ActiveCell = ({
       value 
     } = sheetCellData[y][x];
 
-    if(styles) blockStyle = getBlockStyle(styles);
+    if(styles) blockStyle = styles;
     if(comments) displayedComments = comments;
     if(value) displayedValue = value;
   }

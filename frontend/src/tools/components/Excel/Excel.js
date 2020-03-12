@@ -30,6 +30,7 @@ const Excel = ({
       <Divider/>
       <ToolBar
         type={type}
+        eventListenerRef={eventListenerRef}
       />
       <Divider/>
       <FormulaBar

@@ -152,7 +152,7 @@ const EditableCell = ({
     hyperlink = cellData.hyperlink;
 
     if(type === "rich-text") {
-      const containerStyle = getBlockStyle(cellData.styles);
+      const containerStyle = cellData.styles;
       value = RichTextCellContent(value);
 
       style = { ...style, ...containerStyle };

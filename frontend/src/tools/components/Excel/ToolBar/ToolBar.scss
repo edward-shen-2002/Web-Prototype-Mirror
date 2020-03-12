@@ -1,3 +1,11 @@
 .toolBar {
-  height: 40px;
+  display: flex;
+
+  height: fit-content;
+
+  &__button {
+    &--active, &:hover {
+      background-color: rgba(20, 20, 20, 0.1);
+    }
+  }
 }

@@ -67,7 +67,12 @@ const CellEditor = ({
       onChange={handleInputChange}
     >
       <Editable
-        style={{ padding: 2, ...blockStyle }}
+        style={{ 
+          padding: 2, 
+          minHeight: "fit-content",
+          height: "100%",
+          ...blockStyle 
+        }}
         renderElement={renderElement}
         renderLeaf={renderLeaf}
       />
