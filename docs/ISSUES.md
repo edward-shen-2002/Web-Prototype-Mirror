@@ -30,3 +30,7 @@ When the width/height of the frozen column/rows is greater than the dimension of
 ## Import ID
 
 - Value could be of type rich-text, which is an array of data instead of strictly string value (causes parsing error)
+
+## Slate-js
+
+- [Multiple instance bug](https://github.com/ianstormtaylor/slate/pull/3506)
