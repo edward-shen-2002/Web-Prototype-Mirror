@@ -10,19 +10,40 @@ import {
 // ! These data do not contain sensitive information. Content is filtered.
 const data = ({ 
   router, 
-  OrganizationModel, 
+  OrganizationModel,
+  OrganizationGroupModel,
+  SubmissionModel,
+  ProgramModel,
   BusinessConceptModel,
   SectorModel,
   TemplateModel
 }) => {
   router.get(`${ROUTE_DATA}/organizations`, (_req, res, next) => {
     OrganizationModel.find({})
-      .select("_id code name address")
+      .select("_id code name address programs contact")
       .then((organizations) => {
         res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { organizations } });
       })
       .catch(next);
-  }); 
+  });
+
+  router.get(`${ROUTE_DATA}/organizationGroups`, (_req, res, next) => {
+    OrganizationGroupModel.find({})
+      .select("name organization")
+      .then((organizationGroups) => {
+        res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { organizationGroups } });
+      })
+      .catch(next);
+  });
+
+  router.get(`${ROUTE_DATA}/programs`, (_req, res, next) => {
+    OrganizationGroupModel.find({})
+      .select("name organization")
+      .then((organizationGroups) => {
+        res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { organizationGroups } });
+      })
+      .catch(next);
+  });
 
   router.get(`${ROUTE_DATA}/sectors`, (_req, res, next) => {
     SectorModel.find({})

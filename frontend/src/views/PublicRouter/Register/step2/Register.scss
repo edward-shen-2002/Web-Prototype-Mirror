@@ -4,7 +4,7 @@
   @include center;
 
   &__container {
-    width: 500px !important;
+    width: 1200px !important;
     height: fit-content;
   }
 
@@ -16,8 +16,14 @@
   }
 
   &__field {
+    margin-top: 10px !important;
+    flex-flow: column nowrap;
+    width: 400px;
+    height: auto;
     margin-bottom: 10px !important;
+    padding: 5px;
   }
+
   
   &__button {
     margin-top: 5px !important;

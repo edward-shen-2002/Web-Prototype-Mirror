@@ -15,12 +15,12 @@ import { publicAxios, setAxiosToken } from "@tools/rest";
 import { saveToken } from "@tools/storage";
 
 import { REST_PUBLIC_LOGIN } from "@constants/rest";
-import { ROUTE_PUBLIC_REGISTER, ROUTE_PUBLIC_RECOVERY, ROUTE_USER_PROFILE } from "@constants/routes";
+import { ROUTE_PUBLIC_PREREGISTER, ROUTE_PUBLIC_RECOVERY, ROUTE_USER_PROFILE } from "@constants/routes";
 
 import "./Login.scss";
 
 const RegisterButton = () => (
-  <Link to={ROUTE_PUBLIC_REGISTER}>
+  <Link to={ROUTE_PUBLIC_PREREGISTER}>
     <Button className="loginButtonsMain__button loginButtonsMain__register" variant="contained" color="primary">Register</Button>
   </Link>
 );

@@ -14,12 +14,24 @@ let registrationSchema = new Schema({
   phoneNumber: { type: String, default: "" },
 
   organizations: { type: Object, default: {} },
+  programs: [{ type: Object, default: {}}],
+  submission:[{id: { type: Object}, permission: [{
+      Approve: {type: Boolean},
+      Review: {type: Boolean},
+      Submit: {type: Boolean},
+      Input: {type: Boolean},
+      View: {type: Boolean},
+      ViewCognos: {type: Boolean},
+    }]}],
   LHINs: { type: Object, default: {} },
 
-  roles: { 
-    type: Object, 
-    required: true,
-    default: DEFAULT_ROLES
+  roles: {
+    Approve: {submission: [{ type: Object}]},
+    Review: {submission: [{ type: Object}]},
+    Submit: {submission: [{ type: Object}]},
+    Input: {submission: [{ type: Object}]},
+    View: {submission: [{ type: Object}]},
+    ViewCognos: {submission: [{ type: Object}]},
   },
 
   creationDate: { type: Date, default: Date.now, required: true }

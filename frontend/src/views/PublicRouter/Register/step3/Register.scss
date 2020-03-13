@@ -4,8 +4,9 @@
   @include center;
 
   &__container {
-    width: 500px !important;
+    width: 1200px !important;
     height: fit-content;
+    padding: 20px;
   }
 
   &__form {

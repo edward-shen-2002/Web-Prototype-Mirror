@@ -8,46 +8,63 @@ import { Formik } from "formik";
 
 import { publicAxios } from "@tools/rest";
 
+import { withRouter } from 'react-router';
+
 import { ROLE_LEVEL_NOT_APPLICABLE } from "@constants/roles";
 import { REST_PUBLIC_REGISTER, REST_PUBLIC_DATA } from "@constants/rest";
-import { ROUTE_PUBLIC_LOGIN, ROUTE_USER_PROFILE } from "@constants/routes";
+import { ROUTE_PUBLIC_REGISTER_STEP1, ROUTE_PUBLIC_REGISTER_STEP3, ROUTE_PUBLIC_LOGIN, ROUTE_USER_PROFILE } from "@constants/routes";
 
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Button from "@material-ui/core/Button";
 import Slide from "@material-ui/core/Slide";
-
-import RolesDialog from "@tools/components/RolesDialog";
-import EntitiesDialog from "@tools/components/EntitiesDialog";
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 import * as yup from "yup";
 
 import "./Register.scss";
+import FormLabel from "@material-ui/core/FormLabel";
+import Snackbar from "@material-ui/core/Snackbar";
+import CustomSnackbarContent from "../../../../tools/components/CustomSnackbarContent/CustomSnackbarContent";
 
 const defaultRoleControlConfig = { scope: ROLE_LEVEL_NOT_APPLICABLE, sectors: [], LHINs: [], organizations: [] };
 
+
 const registerSchema = yup.object().shape({
+  title: yup.string()
+    .required("Please select one title"),
   username: yup.string()
-    .min(4, "Username must be 4 to 20 characters long")
-    .max(20, "Username must be 4 to 20 characters long")
+    .min(6, "Username must be 6 to 20 characters long")
+    .max(20, "Username must be 6 to 20 characters long")
     .required("Please enter a username"),
   password: yup.string()
     .min(8, "Password must be between 8 and 25 characters long")
     .max(25, "Password must be between 8 and 25 characters long")
-    // .matches(/[^{a-z}{A-Z}{1-9}{ }]+/, "Please enter at least one symbol")
+    .matches(/[^{a-z}{A-Z}{0-9}{ }]+/, "Please enter at least one symbol")
     .required("Please enter a password"),
   passwordConfirm: yup.string()
     .oneOf([yup.ref("password"), null], "Passwords must match")
     .required("Please confirm your password"),
   firstName: yup.string()
+    .required("Please enter first name")
     .max(100, "Name is too long, please enter an alias or nickname instead"),
   lastName: yup.string()
+    .required("Please enter last name")
     .max(100, "Name is too long, please enter an alias or nickname instead"),
+  phoneNumber: yup.string()
+    .length(10,"Please enter valid phone number")
+    .matches(/^[0-9]+$/, "Please enter valid phone number")
+    .required("Please enter phone number"),
   email: yup.string()
     .email("Please enter a valid email")
     .max(254, "Email is too long")
-    .required("Please enter your email")
+    .required("Please enter your email"),
+  ext: yup.string()
+    .max(100, "Ext is too long"),
 });
 
 const LoginLinkButton = () => (
@@ -56,221 +73,227 @@ const LoginLinkButton = () => (
   </Link>
 );
 
-const RegisterForm = ({ open, values, errors, touched, handleSubmit, handleChange, handleBlur, handleOpenRolesDialog, handleOpenOrganizationsDialog }) => (
-  <form open = {open} className="register__form" onSubmit={handleSubmit}>
-    <h1>Step 1</h1>
-    <TextField 
-      className="register__field" 
-      label="*Username" 
-      id="username" 
-      name="username" 
-      type="username" 
-      autoFocus={true} 
-      value={values.username} 
-      onChange={handleChange} 
-      error={touched.username && !!errors.username} 
+const BackLinkButton = () => (
+    <Link to={ROUTE_PUBLIC_REGISTER_STEP1}>
+      <Button className="register__button" fullWidth>Back</Button>
+    </Link>
+);
+
+const RegisterForm = ({values, errors, touched, handleSubmit, handleChange, handleBlur, checkValidation, isSnackbarOpen, handleSnackbarClose}) => (
+  <form  className="register__form" onSubmit={handleSubmit}>
+    <h1>Registration Step 2</h1>
+    <FormLabel component="legend">Enter User Information</FormLabel>
+    <FormControl variant="outlined" className="register__field">
+      <InputLabel id="demo-simple-select-required-label">*Title</InputLabel>
+      <Select
+          labelId="title"
+          id="title"
+          name="title"
+          value={values.title}
+          onChange={handleChange}
+      >
+        <MenuItem value="Mr.">Mr.</MenuItem>
+        <MenuItem value="Mrs.">Mrs.</MenuItem>
+        <MenuItem value="Ms.">Ms.</MenuItem>
+        <MenuItem value="Dr.">Dr.</MenuItem>
+      </Select>
+    </FormControl>
+
+    <TextField
+      variant="outlined"
+      className="register__field"
+      label="*User Id"
+      id="username"
+      name="username"
+      type="username"
+      value={values.username}
+      onChange={handleChange}
+      error={touched.username && !!errors.username}
       helperText={touched.username && errors.username}
       onBlur={handleBlur}
+      InputProps={{
+        style:{
+          height: 45
+        }
+      }}
+
     />
-    <TextField 
-      className="register__field" 
-      label="*Email" 
-      id="email" 
-      name="email" 
-      type="email" 
-      value={values.email} 
-      onChange={handleChange} 
-      error={touched.email && !!errors.email} 
+    <TextField
+      variant="outlined"
+      className="register__field"
+      label="*Email"
+      id="email"
+      name="email"
+      type="email"
+      value={values.email}
+      onChange={handleChange}
+      error={touched.email && !!errors.email}
       helperText={touched.email && errors.email}
       onBlur={handleBlur}
+      InputProps={{
+        style:{
+          height: 45
+        }
+      }}
     />
-    <TextField 
-      className="register__field" 
-      label="First Name" 
-      id="firstName" 
-      name="firstName" 
-      type="text" 
-      value={values.firstName} 
-      onChange={handleChange} 
-      error={touched.firstName && !!errors.firstName} 
+    <TextField
+      variant="outlined"
+      className="register__field"
+      label="*First Name"
+      id="firstName"
+      name="firstName"
+      type="text"
+      value={values.firstName}
+      onChange={handleChange}
+      error={touched.firstName && !!errors.firstName}
       helperText={touched.firstName && errors.firstName}
       onBlur={handleBlur}
+      InputProps={{
+        style:{
+          height: 45
+        }
+      }}
     />
-    <TextField 
-      className="register__field" 
-      label="Last Name" 
-      id="lastName" 
-      name="lastName" 
-      type="text" 
-      value={values.lastName} 
-      onChange={handleChange} 
-      error={touched.lastName && !!errors.lastName} 
+    <TextField
+      variant="outlined"
+      className="register__field"
+      label="*Last Name"
+      id="lastName"
+      name="lastName"
+      type="text"
+      value={values.lastName}
+      onChange={handleChange}
+      error={touched.lastName && !!errors.lastName}
       helperText={touched.lastName && errors.lastName}
       onBlur={handleBlur}
+      InputProps={{
+        style:{
+          height: 45
+        }
+      }}
     />
-    <TextField 
-      className="register__field" 
-      label="Phone Number" 
-      id="phoneNumber" 
-      name="phoneNumber" 
-      type="tel" 
-      value={values.phoneNumber} 
-      onChange={handleChange} 
-      error={touched.phoneNumber && !!errors.phoneNumber} 
+    <TextField
+      variant="outlined"
+      className="register__field"
+      label="*Phone Number"
+      id="phoneNumber"
+      name="phoneNumber"
+      type="tel"
+      value={values.phoneNumber}
+      onChange={handleChange}
+      error={touched.phoneNumber && !!errors.phoneNumber}
       helperText={touched.phoneNumber && errors.phoneNumber}
       onBlur={handleBlur}
-      />
-    <TextField 
-      className="register__field" 
-      label="*Password" 
-      id="password" 
-      name="password" 
-      type="password" 
-      value={values.password} 
-      onChange={handleChange} 
-      error={touched.password && !!errors.password} 
+      InputProps={{
+        style:{
+          height: 45
+        }
+      }}
+    />
+    <TextField
+      variant="outlined"
+      className="register__field"
+      label="*Password"
+      id="password"
+      name="password"
+      type="password"
+      value={values.password}
+      onChange={handleChange}
+      error={touched.password && !!errors.password}
       helperText={touched.password && errors.password}
       onBlur={handleBlur}
-      />
-    <TextField 
-      className="register__field" 
-      label="*Confirm Password" 
-      id="passwordConfirm" 
-      name="passwordConfirm" 
-      type="password" 
-      value={values.passwordConfirm} 
-      onChange={handleChange} 
-      error={touched.passwordConfirm && !!errors.passwordConfirm} 
+      InputProps={{
+        style:{
+          height: 45
+        }
+      }}
+    />
+    <TextField
+      variant="outlined"
+      className="register__field"
+      label="*Confirm Password"
+      id="passwordConfirm"
+      name="passwordConfirm"
+      type="password"
+      value={values.passwordConfirm}
+      onChange={handleChange}
+      error={touched.passwordConfirm && !!errors.passwordConfirm}
       helperText={touched.passwordConfirm && errors.passwordConfirm}
       onBlur={handleBlur}
+      InputProps={{
+        style:{
+          height: 45
+        }
+      }}
     />
-    <Button className="register__button" color="secondary" variant="contained" onClick={handleOpenOrganizationsDialog} fullWidth>Set Organizations</Button>
-    <Button className="register__button" color="secondary" variant="contained" onClick={handleOpenRolesDialog} fullWidth>Set Roles</Button>
-    <Button className="register__button" variant="contained" color="primary" type="submit">Register</Button>
+
+    <TextField
+      variant="outlined"
+      className="register__field"
+      label="Ext."
+      id="Ext."
+      name="Ext."
+      type="Ext."
+      value={values.Ext}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      InputProps={{
+        style:{
+          height: 45
+        }
+      }}
+    />
+
+    {/*<Button className="register__button" variant="contained" color="primary" type="submit">Complete Registration</Button>*/}
+    <BackLinkButton/>
+    <Button className="register__button" value={registerSchema} onClick={checkValidation} fullWidth>Next Step</Button>
     <LoginLinkButton/>
+    <Snackbar
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'left',
+      }}
+      open={isSnackbarOpen}
+      autoHideDuration={6000}
+      color="primary"
+      onClose={handleSnackbarClose}
+    >
+      <CustomSnackbarContent
+        onClose={handleSnackbarClose}
+        variant="error"
+        message="Information Required"
+      />
+    </Snackbar>
   </form>
 );
 
-const RegisterFormContainer = (props) => {
-  const [ isRolesDialogOpen, setIsRolesDialogOpen ] = useState(false);
-  const [ isOrganizationsDialogOpen, setIsOrganizationsDialogOpen ] = useState(false);
-  const [ isInRegisterStep1, setRegisterStep1 ] = useState(false);
-  const [ isInRegisterStep2, setRegisterStep2 ] = useState(false);
-  const [ isInRegisterStep3, setRegisterStep3 ] = useState(false);
-
-  const [ organizations, setOrganizations ] = useState([]);
-  const [ userOrganizations, setUserOrganizations ] = useState([]);
-
-  const { values: { organizations: userOrganizationsMap, roles }, setFieldValue } = props;
-
-  const handleOpenRolesDialog = () => setIsRolesDialogOpen(true);
-
-  const handleCloseRolesDialog = () => {
-    if(isRolesDialogOpen) setIsRolesDialogOpen(false);
+let RegisterFormContainer = (props) => {
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const handleTitleChange = () => {};
+  const checkValidation = () => {
+    registerSchema
+      .isValid(props.values)
+      .then(function(valid) {
+        if(!valid){
+          setIsSnackbarOpen(true);
+        }
+        else props.history.push(ROUTE_PUBLIC_REGISTER_STEP3);
+      });
   };
-
-  const handleChangeRoleScope = (role, scope) => {
-    let updatedUserRoles = { ...roles };
-    updatedUserRoles[role] = { ...updatedUserRoles[role], scope };
-
-    setFieldValue("roles", updatedUserRoles);
-  };
-
-  const handleDeleteRoleEntity = (role, entityType, entity) => {
-    let updatedUserRoles = { ...roles };
-
-    let newEntities = updatedUserRoles[role][entityType];
-    
-    const entityIndex = newEntities.indexOf(entity);
-
-    if(entityIndex < 0) {
-      console.error("User entity doesn't exist");
-    } else {
-      newEntities = [ ...newEntities.slice(0, entityIndex), ...newEntities.slice(entityIndex + 1) ];
-
-      updatedUserRoles[role][entityType] = newEntities;
-
-      setFieldValue("roles", updatedUserRoles);
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
     }
+    setIsSnackbarOpen(false);
   };
-
-  const handleAddRoleEntity = (role, entityType, entity) => {
-    let updatedUserRoles = { ...roles };
-
-    const entities = updatedUserRoles[role][entityType];
-
-    if(entities.find(({ _id }) => _id === entity._id)) {
-      console.error("Role entity already exists");
-    } else {
-      updatedUserRoles[role][entityType] = [ ...updatedUserRoles[role][entityType], entity ];
-      
-      setFieldValue("roles", updatedUserRoles);
-    }
-  };
-
-  const handleOpenOrganizationsDialog = () => {
-    setIsOrganizationsDialogOpen(true);
-
-    publicAxios.get(`${REST_PUBLIC_DATA}/organizations`)
-      .then(({ data: { data: { organizations } } }) => {
-        setOrganizations(organizations);
-        setUserOrganizations(Object.keys(userOrganizationsMap).map((_id) => ({ ...userOrganizationsMap[_id], _id })));
-      })
-      .catch((error) => console.error(error));
-  };
-
-  const handleCloseOrganizationsDialog = () => {
-    if(isOrganizationsDialogOpen) setIsOrganizationsDialogOpen(false);
-    if(organizations) setOrganizations([]);
-    if(userOrganizations) setUserOrganizations([]);
-  };
-
-  const handleAddOrganization = (newUserOrganization) => {
-    const { _id } = newUserOrganization;
-
-    if(userOrganizationsMap[_id]) {
-      console.error("User is already a part of the selected organization");
-    } else {
-      let newUserOrganizationsMap = { ...userOrganizationsMap };
-      newUserOrganizationsMap[_id] = { ...newUserOrganization, _id: undefined };
-
-      setUserOrganizations([ ...userOrganizations, newUserOrganization ]);
-      setFieldValue("organizations", newUserOrganizationsMap);
-    }
-  };
-
-  const handleDeleteUserOrganization = (userOrganization) => {
-    const userOrganizationIndex = userOrganizations.indexOf(userOrganization);
-
-    const newUserOrganizations = [ ...userOrganizations.slice(0, userOrganizationIndex), ...userOrganizations.slice(userOrganizationIndex + 1) ];
-
-    let newUserOrganizationsMap = { ...userOrganizationsMap };
-    delete newUserOrganizationsMap[userOrganization._id];
-
-    setFieldValue("organizations", newUserOrganizationsMap);
-    setUserOrganizations(newUserOrganizations);
-  };
-
   return (
     <div>
-      <RegisterForm open={isRolesDialogOpen} handleOpenRolesDialog={handleOpenRolesDialog} handleOpenOrganizationsDialog={handleOpenOrganizationsDialog} {...props}/>
-      <RolesDialog open={isRolesDialogOpen} userRoles={roles} handleClose={handleCloseRolesDialog} handleChangeRoleScope={handleChangeRoleScope} handleAddRoleEntity={handleAddRoleEntity} handleDeleteRoleEntity={handleDeleteRoleEntity}/>
-      <EntitiesDialog
-         open={isOrganizationsDialogOpen}
-         userEntities={userOrganizations} 
-         entities={organizations} 
-         title="Organizations"
-         userTitle="Current Organizations"
-         allTitle="Add User Organization"
-         userSearchPlaceholder="Search User Organizations..."
-         allSearchPlaceHolder="Search organizations..."
-         handleClose={handleCloseOrganizationsDialog} 
-         handleAddEntity={handleAddOrganization} 
-         handleDeleteUserEntity={handleDeleteUserOrganization}
-      />
+      <RegisterForm handleTitleChange={handleTitleChange} checkValidation={checkValidation} isSnackbarOpen={isSnackbarOpen} handleSnackbarClose={handleSnackbarClose} {...props}/>
     </div>
   );
 };
+
+RegisterFormContainer = withRouter(RegisterFormContainer);
 
 const RegisterView = ({ visisble, initialValues, handleRegister }) => (
   <Slide direction="right" in={visisble} appear={false} mountOnEnter unmountOnExit>
@@ -300,14 +323,15 @@ const mapStateToProps = ({ app: { isOnline } }) => ({ isOnline });
 
 let Register = ({ isOnline, history }) => {
   const [ registerView, setRegisterView ] = useState(true);
-  const [ registrationData, setRegistrationData ] = useState({ 
-    username: "sampleuser", 
-    email: "e@ontario.ca", 
+  const [ registrationData, setRegistrationData ] = useState({
+    title: "",
+    username: "",
+    email: "",
     firstName: "", 
     lastName: "", 
     phoneNumber: "", 
-    password: "password123@", 
-    passwordConfirm: "password123@",
+    password: "",
+    passwordConfirm: "",
     roles: {
       TEMPLATE_MANAGER: { ...defaultRoleControlConfig }, 
       BUNDLE_MANAGER: { ...defaultRoleControlConfig }, 

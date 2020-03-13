@@ -9,14 +9,18 @@ import { Formik } from "formik";
 import { publicAxios } from "@tools/rest";
 
 import { ROLE_LEVEL_NOT_APPLICABLE } from "@constants/roles";
-import { REST_PUBLIC_REGISTER, REST_PUBLIC_DATA } from "@constants/rest";
-import { ROUTE_PUBLIC_LOGIN, ROUTE_USER_PROFILE } from "@constants/routes";
+import { REST_PUBLIC_REGISTER} from "@constants/rest";
+import { ROUTE_PUBLIC_REGISTER, ROUTE_PUBLIC_REGISTER_STEP2, ROUTE_PUBLIC_LOGIN, ROUTE_USER_PROFILE } from "@constants/routes";
 
 import Paper from "@material-ui/core/Paper";
-import TextField from "@material-ui/core/TextField";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Button from "@material-ui/core/Button";
 import Slide from "@material-ui/core/Slide";
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
 
 import RolesDialog from "@tools/components/RolesDialog";
 import EntitiesDialog from "@tools/components/EntitiesDialog";
@@ -56,114 +60,50 @@ const LoginLinkButton = () => (
   </Link>
 );
 
-const RegisterForm = ({ open, values, errors, touched, handleSubmit, handleChange, handleBlur, handleOpenRolesDialog, handleOpenOrganizationsDialog }) => (
-  <form open = {open} className="register__form" onSubmit={handleSubmit}>
-    <h1>Step 1</h1>
-    <TextField 
-      className="register__field" 
-      label="*Username" 
-      id="username" 
-      name="username" 
-      type="username" 
-      autoFocus={true} 
-      value={values.username} 
-      onChange={handleChange} 
-      error={touched.username && !!errors.username} 
-      helperText={touched.username && errors.username}
-      onBlur={handleBlur}
-    />
-    <TextField 
-      className="register__field" 
-      label="*Email" 
-      id="email" 
-      name="email" 
-      type="email" 
-      value={values.email} 
-      onChange={handleChange} 
-      error={touched.email && !!errors.email} 
-      helperText={touched.email && errors.email}
-      onBlur={handleBlur}
-    />
-    <TextField 
-      className="register__field" 
-      label="First Name" 
-      id="firstName" 
-      name="firstName" 
-      type="text" 
-      value={values.firstName} 
-      onChange={handleChange} 
-      error={touched.firstName && !!errors.firstName} 
-      helperText={touched.firstName && errors.firstName}
-      onBlur={handleBlur}
-    />
-    <TextField 
-      className="register__field" 
-      label="Last Name" 
-      id="lastName" 
-      name="lastName" 
-      type="text" 
-      value={values.lastName} 
-      onChange={handleChange} 
-      error={touched.lastName && !!errors.lastName} 
-      helperText={touched.lastName && errors.lastName}
-      onBlur={handleBlur}
-    />
-    <TextField 
-      className="register__field" 
-      label="Phone Number" 
-      id="phoneNumber" 
-      name="phoneNumber" 
-      type="tel" 
-      value={values.phoneNumber} 
-      onChange={handleChange} 
-      error={touched.phoneNumber && !!errors.phoneNumber} 
-      helperText={touched.phoneNumber && errors.phoneNumber}
-      onBlur={handleBlur}
-      />
-    <TextField 
-      className="register__field" 
-      label="*Password" 
-      id="password" 
-      name="password" 
-      type="password" 
-      value={values.password} 
-      onChange={handleChange} 
-      error={touched.password && !!errors.password} 
-      helperText={touched.password && errors.password}
-      onBlur={handleBlur}
-      />
-    <TextField 
-      className="register__field" 
-      label="*Confirm Password" 
-      id="passwordConfirm" 
-      name="passwordConfirm" 
-      type="password" 
-      value={values.passwordConfirm} 
-      onChange={handleChange} 
-      error={touched.passwordConfirm && !!errors.passwordConfirm} 
-      helperText={touched.passwordConfirm && errors.passwordConfirm}
-      onBlur={handleBlur}
-    />
-    <Button className="register__button" color="secondary" variant="contained" onClick={handleOpenOrganizationsDialog} fullWidth>Set Organizations</Button>
-    <Button className="register__button" color="secondary" variant="contained" onClick={handleOpenRolesDialog} fullWidth>Set Roles</Button>
-    <Button className="register__button" variant="contained" color="primary" type="submit">Register</Button>
+const NextLinkButton = () => (
+    <Link to={ROUTE_PUBLIC_REGISTER_STEP2}>
+        <Button className="register__button" fullWidth>Next Step</Button>
+    </Link>
+);
+
+const BackLinkButton = () => (
+    <Link to={ROUTE_PUBLIC_REGISTER}>
+      <Button className="register__button" fullWidth>Back</Button>
+    </Link>
+);
+
+const RegisterForm = ({handleSubmit, organizationGroup, handleOrgGroupChange}) => (
+  <form className="register__form" onSubmit={handleSubmit}>
+    <h1>Registration Step1</h1>
+    <FormControl component="fieldset">
+      <FormLabel component="legend">Select your organization group</FormLabel>
+      <RadioGroup aria-label="OrgGroup" name="OrgGroup1" defaultValue={organizationGroup} onChange={handleOrgGroupChange}>
+        <FormControlLabel value="Health Service Providers" control={<Radio />} label="Health Service Providers" />
+        <FormControlLabel value="Local Health Integration Network" control={<Radio />} label="Local Health Integration Network" />
+        <FormControlLabel value="Ontario Government" control={<Radio />} label="Ontario Government" />
+        <FormControlLabel value="Other User Groups" control={<Radio />} label="Other User Groups" />
+      </RadioGroup>
+    </FormControl>
+
+    {/*<Button className="register__button" variant="contained" color="primary" type="submit">Complete Registration</Button>*/}
+    <BackLinkButton/>
+    <NextLinkButton/>
     <LoginLinkButton/>
   </form>
 );
 
 const RegisterFormContainer = (props) => {
+  const [ organizationGroup, setOrganizationGroup] = useState("Health Service Providers");
   const [ isRolesDialogOpen, setIsRolesDialogOpen ] = useState(false);
   const [ isOrganizationsDialogOpen, setIsOrganizationsDialogOpen ] = useState(false);
-  const [ isInRegisterStep1, setRegisterStep1 ] = useState(false);
-  const [ isInRegisterStep2, setRegisterStep2 ] = useState(false);
-  const [ isInRegisterStep3, setRegisterStep3 ] = useState(false);
+
 
   const [ organizations, setOrganizations ] = useState([]);
   const [ userOrganizations, setUserOrganizations ] = useState([]);
 
   const { values: { organizations: userOrganizationsMap, roles }, setFieldValue } = props;
 
-  const handleOpenRolesDialog = () => setIsRolesDialogOpen(true);
+  const handleOrgGroupChange = event => setOrganizationGroup(event.target.value)
 
   const handleCloseRolesDialog = () => {
     if(isRolesDialogOpen) setIsRolesDialogOpen(false);
@@ -180,7 +120,7 @@ const RegisterFormContainer = (props) => {
     let updatedUserRoles = { ...roles };
 
     let newEntities = updatedUserRoles[role][entityType];
-    
+
     const entityIndex = newEntities.indexOf(entity);
 
     if(entityIndex < 0) {
@@ -203,20 +143,9 @@ const RegisterFormContainer = (props) => {
       console.error("Role entity already exists");
     } else {
       updatedUserRoles[role][entityType] = [ ...updatedUserRoles[role][entityType], entity ];
-      
+
       setFieldValue("roles", updatedUserRoles);
     }
-  };
-
-  const handleOpenOrganizationsDialog = () => {
-    setIsOrganizationsDialogOpen(true);
-
-    publicAxios.get(`${REST_PUBLIC_DATA}/organizations`)
-      .then(({ data: { data: { organizations } } }) => {
-        setOrganizations(organizations);
-        setUserOrganizations(Object.keys(userOrganizationsMap).map((_id) => ({ ...userOrganizationsMap[_id], _id })));
-      })
-      .catch((error) => console.error(error));
   };
 
   const handleCloseOrganizationsDialog = () => {
@@ -253,19 +182,19 @@ const RegisterFormContainer = (props) => {
 
   return (
     <div>
-      <RegisterForm open={isRolesDialogOpen} handleOpenRolesDialog={handleOpenRolesDialog} handleOpenOrganizationsDialog={handleOpenOrganizationsDialog} {...props}/>
+      <RegisterForm organizationGroup={organizationGroup} handleOrgGroupChange = {handleOrgGroupChange} {...props}/>
       <RolesDialog open={isRolesDialogOpen} userRoles={roles} handleClose={handleCloseRolesDialog} handleChangeRoleScope={handleChangeRoleScope} handleAddRoleEntity={handleAddRoleEntity} handleDeleteRoleEntity={handleDeleteRoleEntity}/>
       <EntitiesDialog
          open={isOrganizationsDialogOpen}
-         userEntities={userOrganizations} 
-         entities={organizations} 
+         userEntities={userOrganizations}
+         entities={organizations}
          title="Organizations"
          userTitle="Current Organizations"
          allTitle="Add User Organization"
          userSearchPlaceholder="Search User Organizations..."
          allSearchPlaceHolder="Search organizations..."
-         handleClose={handleCloseOrganizationsDialog} 
-         handleAddEntity={handleAddOrganization} 
+         handleClose={handleCloseOrganizationsDialog}
+         handleAddEntity={handleAddOrganization}
          handleDeleteUserEntity={handleDeleteUserOrganization}
       />
     </div>
@@ -298,16 +227,16 @@ const EmailVerification = ({ registrationData: { email }, visisble, handleReturn
 
 const mapStateToProps = ({ app: { isOnline } }) => ({ isOnline });
 
-let Register = ({ isOnline, history }) => {
+let RegisterStep1 = ({ isOnline, history }) => {
   const [ registerView, setRegisterView ] = useState(true);
   const [ registrationData, setRegistrationData ] = useState({ 
-    username: "sampleuser", 
-    email: "e@ontario.ca", 
+    username: "",
+    email: "",
     firstName: "", 
     lastName: "", 
     phoneNumber: "", 
-    password: "password123@", 
-    passwordConfirm: "password123@",
+    password: "",
+    passwordConfirm: "",
     roles: {
       TEMPLATE_MANAGER: { ...defaultRoleControlConfig }, 
       BUNDLE_MANAGER: { ...defaultRoleControlConfig }, 
@@ -350,6 +279,6 @@ let Register = ({ isOnline, history }) => {
   ); 
 };
 
-Register = connect(mapStateToProps)(Register);
+RegisterStep1 = connect(mapStateToProps)(RegisterStep1);
 
-export default Register;
+export default RegisterStep1;

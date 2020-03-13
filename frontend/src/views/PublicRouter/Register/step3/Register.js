@@ -10,10 +10,9 @@ import { publicAxios } from "@tools/rest";
 
 import { ROLE_LEVEL_NOT_APPLICABLE } from "@constants/roles";
 import { REST_PUBLIC_REGISTER, REST_PUBLIC_DATA } from "@constants/rest";
-import { ROUTE_PUBLIC_LOGIN, ROUTE_USER_PROFILE } from "@constants/routes";
+import { ROUTE_PUBLIC_REGISTER_STEP2, ROUTE_PUBLIC_LOGIN, ROUTE_USER_PROFILE } from "@constants/routes";
 
 import Paper from "@material-ui/core/Paper";
-import TextField from "@material-ui/core/TextField";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Button from "@material-ui/core/Button";
 import Slide from "@material-ui/core/Slide";
@@ -24,31 +23,28 @@ import EntitiesDialog from "@tools/components/EntitiesDialog";
 import * as yup from "yup";
 
 import "./Register.scss";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import { makeStyles } from '@material-ui/core/styles';
 
 const defaultRoleControlConfig = { scope: ROLE_LEVEL_NOT_APPLICABLE, sectors: [], LHINs: [], organizations: [] };
 
 const registerSchema = yup.object().shape({
-  username: yup.string()
-    .min(4, "Username must be 4 to 20 characters long")
-    .max(20, "Username must be 4 to 20 characters long")
-    .required("Please enter a username"),
-  password: yup.string()
-    .min(8, "Password must be between 8 and 25 characters long")
-    .max(25, "Password must be between 8 and 25 characters long")
-    // .matches(/[^{a-z}{A-Z}{1-9}{ }]+/, "Please enter at least one symbol")
-    .required("Please enter a password"),
-  passwordConfirm: yup.string()
-    .oneOf([yup.ref("password"), null], "Passwords must match")
-    .required("Please confirm your password"),
-  firstName: yup.string()
-    .max(100, "Name is too long, please enter an alias or nickname instead"),
-  lastName: yup.string()
-    .max(100, "Name is too long, please enter an alias or nickname instead"),
-  email: yup.string()
-    .email("Please enter a valid email")
-    .max(254, "Email is too long")
-    .required("Please enter your email")
 });
+
+const useStyles = makeStyles(theme => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+}));
 
 const LoginLinkButton = () => (
   <Link to={ROUTE_PUBLIC_LOGIN}>
@@ -56,157 +52,53 @@ const LoginLinkButton = () => (
   </Link>
 );
 
-const RegisterForm = ({ open, values, errors, touched, handleSubmit, handleChange, handleBlur, handleOpenRolesDialog, handleOpenOrganizationsDialog }) => (
-  <form open = {open} className="register__form" onSubmit={handleSubmit}>
-    <h1>Step 1</h1>
-    <TextField 
-      className="register__field" 
-      label="*Username" 
-      id="username" 
-      name="username" 
-      type="username" 
-      autoFocus={true} 
-      value={values.username} 
-      onChange={handleChange} 
-      error={touched.username && !!errors.username} 
-      helperText={touched.username && errors.username}
-      onBlur={handleBlur}
-    />
-    <TextField 
-      className="register__field" 
-      label="*Email" 
-      id="email" 
-      name="email" 
-      type="email" 
-      value={values.email} 
-      onChange={handleChange} 
-      error={touched.email && !!errors.email} 
-      helperText={touched.email && errors.email}
-      onBlur={handleBlur}
-    />
-    <TextField 
-      className="register__field" 
-      label="First Name" 
-      id="firstName" 
-      name="firstName" 
-      type="text" 
-      value={values.firstName} 
-      onChange={handleChange} 
-      error={touched.firstName && !!errors.firstName} 
-      helperText={touched.firstName && errors.firstName}
-      onBlur={handleBlur}
-    />
-    <TextField 
-      className="register__field" 
-      label="Last Name" 
-      id="lastName" 
-      name="lastName" 
-      type="text" 
-      value={values.lastName} 
-      onChange={handleChange} 
-      error={touched.lastName && !!errors.lastName} 
-      helperText={touched.lastName && errors.lastName}
-      onBlur={handleBlur}
-    />
-    <TextField 
-      className="register__field" 
-      label="Phone Number" 
-      id="phoneNumber" 
-      name="phoneNumber" 
-      type="tel" 
-      value={values.phoneNumber} 
-      onChange={handleChange} 
-      error={touched.phoneNumber && !!errors.phoneNumber} 
-      helperText={touched.phoneNumber && errors.phoneNumber}
-      onBlur={handleBlur}
-      />
-    <TextField 
-      className="register__field" 
-      label="*Password" 
-      id="password" 
-      name="password" 
-      type="password" 
-      value={values.password} 
-      onChange={handleChange} 
-      error={touched.password && !!errors.password} 
-      helperText={touched.password && errors.password}
-      onBlur={handleBlur}
-      />
-    <TextField 
-      className="register__field" 
-      label="*Confirm Password" 
-      id="passwordConfirm" 
-      name="passwordConfirm" 
-      type="password" 
-      value={values.passwordConfirm} 
-      onChange={handleChange} 
-      error={touched.passwordConfirm && !!errors.passwordConfirm} 
-      helperText={touched.passwordConfirm && errors.passwordConfirm}
-      onBlur={handleBlur}
-    />
+const BackLinkButton = () => (
+    <Link to={ROUTE_PUBLIC_REGISTER_STEP2}>
+      <Button className="register__button" fullWidth>Back</Button>
+    </Link>
+);
+
+const RegisterForm = ({ handleSubmit, searchType, handleChangeSearchType, userOrganization, handleOrganizationChange, userProgram, handleProgramChange, handleOpenOrganizationsDialog, handleOpenProgramsDialog }) => (
+  <form className="register__form" onSubmit={handleSubmit}>
+    <h1>Registration Step 3</h1>
+    <FormLabel component="legend">Enter User Permission</FormLabel>
+
+    <Select
+      labelId="searchType"
+      id="searchType"
+      name="searchType"
+      value={searchType}
+      onChange={handleChangeSearchType}
+      labelWidth={1}
+    >
+      <MenuItem value="Organization Code">Organization Code</MenuItem>
+      <MenuItem value="Organization Name">Organization Name</MenuItem>
+      <MenuItem value="Location Name">Location Name</MenuItem>
+    </Select>
+
     <Button className="register__button" color="secondary" variant="contained" onClick={handleOpenOrganizationsDialog} fullWidth>Set Organizations</Button>
-    <Button className="register__button" color="secondary" variant="contained" onClick={handleOpenRolesDialog} fullWidth>Set Roles</Button>
-    <Button className="register__button" variant="contained" color="primary" type="submit">Register</Button>
+    <Button className="register__button" color="secondary" variant="contained" onClick={  handleOpenProgramsDialog} fullWidth>Set Programs</Button>
+    <Button className="register__button" variant="contained" color="primary" type="submit">Complete Registration</Button>
+    <BackLinkButton/>
     <LoginLinkButton/>
   </form>
 );
 
 const RegisterFormContainer = (props) => {
   const [ isRolesDialogOpen, setIsRolesDialogOpen ] = useState(false);
+  const [ searchType, setSearchType] = useState("")
   const [ isOrganizationsDialogOpen, setIsOrganizationsDialogOpen ] = useState(false);
-  const [ isInRegisterStep1, setRegisterStep1 ] = useState(false);
-  const [ isInRegisterStep2, setRegisterStep2 ] = useState(false);
-  const [ isInRegisterStep3, setRegisterStep3 ] = useState(false);
+  const [ isProgramsDialogOpen, setIsProgramsDialogOpen ] = useState(false);
 
   const [ organizations, setOrganizations ] = useState([]);
+  const [ programs, setPrograms ] = useState([]);
   const [ userOrganizations, setUserOrganizations ] = useState([]);
+  const [ userPrograms, setUserPrograms ] = useState([]);
+  const inputLabel = React.useRef(null);
+  const [labelWidth, setLabelWidth] = React.useState(0);
+  const classes = useStyles();
 
   const { values: { organizations: userOrganizationsMap, roles }, setFieldValue } = props;
-
-  const handleOpenRolesDialog = () => setIsRolesDialogOpen(true);
-
-  const handleCloseRolesDialog = () => {
-    if(isRolesDialogOpen) setIsRolesDialogOpen(false);
-  };
-
-  const handleChangeRoleScope = (role, scope) => {
-    let updatedUserRoles = { ...roles };
-    updatedUserRoles[role] = { ...updatedUserRoles[role], scope };
-
-    setFieldValue("roles", updatedUserRoles);
-  };
-
-  const handleDeleteRoleEntity = (role, entityType, entity) => {
-    let updatedUserRoles = { ...roles };
-
-    let newEntities = updatedUserRoles[role][entityType];
-    
-    const entityIndex = newEntities.indexOf(entity);
-
-    if(entityIndex < 0) {
-      console.error("User entity doesn't exist");
-    } else {
-      newEntities = [ ...newEntities.slice(0, entityIndex), ...newEntities.slice(entityIndex + 1) ];
-
-      updatedUserRoles[role][entityType] = newEntities;
-
-      setFieldValue("roles", updatedUserRoles);
-    }
-  };
-
-  const handleAddRoleEntity = (role, entityType, entity) => {
-    let updatedUserRoles = { ...roles };
-
-    const entities = updatedUserRoles[role][entityType];
-
-    if(entities.find(({ _id }) => _id === entity._id)) {
-      console.error("Role entity already exists");
-    } else {
-      updatedUserRoles[role][entityType] = [ ...updatedUserRoles[role][entityType], entity ];
-      
-      setFieldValue("roles", updatedUserRoles);
-    }
-  };
 
   const handleOpenOrganizationsDialog = () => {
     setIsOrganizationsDialogOpen(true);
@@ -251,10 +143,76 @@ const RegisterFormContainer = (props) => {
     setUserOrganizations(newUserOrganizations);
   };
 
+  const handleOpenProgramsDialog = () => {
+    setIsProgramsDialogOpen(true);
+
+    publicAxios.get(`${REST_PUBLIC_DATA}/organizations`)
+      .then(({ data: { data: { organizations } } }) => {
+        let programs= organizations;
+        setPrograms(programs);
+        setUserPrograms(Object.keys(userOrganizationsMap).map((_id) => ({ ...userOrganizationsMap[_id], _id })));
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const handleCloseProgramsDialog = () => {
+    if(isProgramsDialogOpen) setIsProgramsDialogOpen(false);
+    if(programs) setPrograms([]);
+    if(userPrograms) setUserPrograms([]);
+  };
+
+  const handleAddProgram = (newUserProgram) => {
+    const { _id } = newUserProgram;
+
+    if(userOrganizationsMap[_id]) {
+      console.error("User is already a part of the selected organization");
+    } else {
+      let newUserProgramsMap = { ...userOrganizationsMap };
+      newUserProgramsMap[_id] = { ...newUserProgram, _id: undefined };
+
+      setUserPrograms([ ...userPrograms, newUserProgram ]);
+      setFieldValue("organizations", newUserProgramsMap);
+    }
+  };
+
+  const handleDeleteUserProgram = (userProgram) => {
+    const userProgramIndex = userPrograms.indexOf(userProgram);
+
+    const newUserPrograms = [ ...userPrograms.slice(0, userProgramIndex), ...userOrganizations.slice(userProgramIndex + 1) ];
+
+    let newUserProgramsMap = { ...userOrganizationsMap };
+    delete newUserProgramsMap[userProgram._id];
+
+    setFieldValue("organizations", newUserProgramsMap);
+    setUserPrograms(newUserPrograms);
+  };
+
+  const handleChangeSearchType = (event) => {
+    setSearchType(event.target.value);
+  }
+
   return (
     <div>
-      <RegisterForm open={isRolesDialogOpen} handleOpenRolesDialog={handleOpenRolesDialog} handleOpenOrganizationsDialog={handleOpenOrganizationsDialog} {...props}/>
-      <RolesDialog open={isRolesDialogOpen} userRoles={roles} handleClose={handleCloseRolesDialog} handleChangeRoleScope={handleChangeRoleScope} handleAddRoleEntity={handleAddRoleEntity} handleDeleteRoleEntity={handleDeleteRoleEntity}/>
+      <h1>Registration Step 3</h1>
+      <FormLabel component="legend">Enter User Permission</FormLabel>
+      <FormControl variant="outlined" className={classes.formControl}>
+        <Select
+          labelId="demo-simple-select-outlined-label"
+          id="demo-simple-select-outlined"
+          name="searchType"
+          value={searchType}
+          onChange={handleChangeSearchType}
+          labelWidth={labelWidth}
+        >
+          <MenuItem value="Organization Code">Organization Code</MenuItem>
+          <MenuItem value="Organization Name">Organization Name</MenuItem>
+          <MenuItem value="Location Name">Location Name</MenuItem>
+        </Select>
+      </FormControl>
+
+      <Button className="register__button" variant="contained" color="primary" type="submit">Complete Registration</Button>
+      <BackLinkButton/>
+      <LoginLinkButton/>
       <EntitiesDialog
          open={isOrganizationsDialogOpen}
          userEntities={userOrganizations} 
@@ -267,6 +225,19 @@ const RegisterFormContainer = (props) => {
          handleClose={handleCloseOrganizationsDialog} 
          handleAddEntity={handleAddOrganization} 
          handleDeleteUserEntity={handleDeleteUserOrganization}
+      />
+      <EntitiesDialog
+        open={isProgramsDialogOpen}
+        userEntities={userPrograms}
+        entities={programs}
+        title="Programs"
+        userTitle="Current Programs"
+        allTitle="Add User Programs"
+        userSearchPlaceholder="Search User Programs..."
+        allSearchPlaceHolder="Search Programs..."
+        handleClose={handleCloseProgramsDialog}
+        handleAddEntity={handleAddProgram}
+        handleDeleteUserEntity={handleDeleteUserProgram}
       />
     </div>
   );
