@@ -16,7 +16,9 @@ import cloneDeep from "clone-deep";
 
 import uniqid from "uniqid";
 
-// import { ReactEditor } from "slate-react";
+import { ReactEditor } from "slate-react";
+
+import { Transforms, Editor } from "slate";
 
 import { loadSheet } from "@tools/redux";
 
@@ -27,8 +29,9 @@ import {
   convertTextToEditorValue,
   convertEditorValueToText,
   convertEditorValueToRichText,
-  createEmptyEditor,
-  createEmptyEditorValue
+  clearEditor,
+  createEmptyEditorValue,
+  CustomEditor
 } from "@tools/slate";
 
 import { enableActiveCellInputAutoFocus, disableActiveCellInputAutoFocus } from "@actions/ui/excel/activeCellInputAutoFocus";
@@ -102,6 +105,10 @@ import {
   DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER
 } from "@constants/excel";
 
+import {
+  editorToRichTextMap,
+  richTextToEditorMap
+} from "@constants/styles";
 
 import { 
   REST_ADMIN_TEMPLATES,
@@ -1710,6 +1717,7 @@ class EventListener extends PureComponent {
       // For example: Formulas, prepopulate strings, etc... 
       // We need to always convert text to plain text to determine the type of string...
       if(children.length > 1) {
+        console.log("richtext", cellValue);
         this.changeValue(y, x, { 
           value: convertEditorValueToRichText(cellValue),
           type: "rich-text"
@@ -1985,8 +1993,8 @@ class EventListener extends PureComponent {
         formulaValue = convertTextToEditorValue(value);
       }
 
-      formulaEditor.children = createEmptyEditorValue();
-      cellEditor.children = createEmptyEditorValue();
+      CustomEditor.clearEditor(formulaEditor);
+      CustomEditor.clearEditor(cellEditor);
 
       handleUpdateActiveCellInputData({ 
         cellValue,
@@ -2641,9 +2649,8 @@ class EventListener extends PureComponent {
       }
     }
 
-    cellEditor.children = createEmptyEditorValue();
-    formulaEditor.children = createEmptyEditorValue();
-    
+    CustomEditor.clearEditor(formulaEditor);
+    CustomEditor.clearEditor(cellEditor);
 
     handleUpdateActiveCellInputData({ 
       formulaValue,
@@ -3303,38 +3310,17 @@ class EventListener extends PureComponent {
     }
   }
 
-  // ! TODO: create a method for getting elementary cells
-  // ! Which is the union of all cells in ranges
-  // ! This is somewhat used in delete, but the functionality is combined...
+  // ! Make the active style be the focus of styles
   applyBlockStyle(property, propertyValue) {
     let {
       sheetCellData,
       handleUpdateSheetCellData
     } = this.props;
-    switch(property) {
-      case "text-bold":
-        break;
-      case "text-italic":
-        break
-      case "text-underline":
-        break;
-
-      case "align-left":
-        break;
-      case "align-center":
-        break;
-      case "align-right":
-        break;
-      
-      default:
-        break;
-    }
-
     // Get the rows/columns 
     // ! Consider border enclosure -- is it by cell or by range?
     let containedArea = this._getAllAreas();
 
-    for(row in containedArea) {
+    for(let row in containedArea) {
       const rowArea = containedArea[row];
 
       if(!sheetCellData[row]) sheetCellData[row] = {};
@@ -3342,7 +3328,44 @@ class EventListener extends PureComponent {
       for(let column in rowArea) {
         if(!sheetCellData[row][column]) sheetCellData[row][column] = {};
 
-        sheetCellData[row][column] = { ...sheetCellData[row][column], styles: "@@@@@@" };
+        const {
+          property: blockProperty,
+          style: blockPropertyStyle
+        } = editorToRichTextMap[property];
+
+        if(blockProperty) {
+          if(blockPropertyStyle) {
+            if(!sheetCellData[row][column].styles) sheetCellData[row][column].styles = {};
+
+            let cellStyles = sheetCellData[row][column].styles;
+
+            if(cellStyles[blockProperty]) {
+              const potentialStyles = Object.values(richTextToEditorMap[blockProperty]).length;
+
+              if(potentialStyles > 1) {
+                let presentStyles = cellStyles[blockProperty].split(" ");
+
+                const potentialIndex = presentStyles.findIndex((style) => style === blockPropertyStyle);
+
+                if(potentialIndex > -1) {
+                  cellStyles[blockProperty] = presentStyles.splice(blockPropertyStyle, potentialIndex).join(" ");
+                } else {
+                  cellStyles[blockProperty] = `${cellStyles[blockProperty]} ${blockPropertyStyle}`; 
+                }
+              } else {
+                // Replace style
+                delete cellStyles[blockProperty];
+              }
+            } else {
+              cellStyles[blockProperty] = blockPropertyStyle;
+            }
+          } else {
+            // ! Custom style - Make use of property value
+
+          }
+        } else {
+          console.error("Style not supported");
+        }
       }
     }
 
@@ -3355,19 +3378,21 @@ class EventListener extends PureComponent {
   applyTextStyle(property, propertyValue) {
     const {
       isEditMode,
-      activeCellInputAutoFocus,
-      formulaEdit,
-      cellEdit
+      activeCellInputData: {
+        formulaEditor,
+        cellEditor
+      }
     } = this.props;
 
     if(isEditMode) {
-      // Apply styles to editors
-      if(activeCellInputAutoFocus) {
-        // Cell input
+      ReactEditor.focus(cellEditor);
+      Transforms.select(cellEditor, Editor.end(cellEditor, []));
+
+      if(propertyValue) {
         
       } else {
-        // Formula input
-
+        CustomEditor.toggleMark(formulaEditor, property);
+        CustomEditor.toggleMark(cellEditor, property);
       }
     } else {
       // Apply block style

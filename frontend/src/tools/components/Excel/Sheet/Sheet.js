@@ -10,6 +10,8 @@ import AutoSizer from "react-virtualized-auto-sizer";
 
 import memoize from "memoize-one";
 
+import isHotkey from 'is-hotkey'
+
 import { inputCharacterRegex } from "@tools/regex";
 
 import { 
@@ -34,6 +36,10 @@ import {
   EXCEL_WINDOW_OVERSCAN_COLUMN_COUNT,
   EXCEL_WINDOW_OVERSCAN_ROW_COUNT
 } from "@constants/excel";
+
+import {
+  HOTKEYS
+} from "@constants/input";
 
 import "./Sheet.scss";
 
@@ -175,7 +181,13 @@ let Sheet = ({
   sheetRowHeights
 }) => {
   const handleKeyDown = (event) => {
-    const { key, shiftKey, ctrlKey, altKey } = event;
+    const { 
+      key, 
+      shiftKey, 
+      ctrlKey, 
+      altKey,
+      metaKey
+    } = event;
 
     if(key === "ArrowUp") {
       eventListenerRef.current.arrowUp(event, shiftKey);
@@ -187,31 +199,39 @@ let Sheet = ({
       eventListenerRef.current.arrowRight(event, shiftKey);
     } else if(key === "Tab") {
       eventListenerRef.current.tab(event, shiftKey, sheetContainerRef);
-    } else if(key === "Enter" && !ctrlKey && !altKey) {
+    } else if(key === "Enter" && !(ctrlKey || metaKey) && !altKey) {
       eventListenerRef.current.enter(event, shiftKey, sheetContainerRef);
     } else if(key === "Delete" || key === "Backspace") {
       eventListenerRef.current.delete();
     } else if(key === "Escape") {
       eventListenerRef.current.escape(sheetContainerRef);
-    } else if(key === "s" && ctrlKey) {
+    } else if(key === "s" && (ctrlKey || metaKey)) {
       // ! Put this save higher up the component? In Excel container?
       event.preventDefault();
       eventListenerRef.current.save();
-    } else if(key === "a" && ctrlKey) {
+    } else if(key === "a" && (ctrlKey || metaKey)) {
       eventListenerRef.current.selectAll(event);
-    } else if(ctrlKey) {
+    } else if((ctrlKey || metaKey)) {
       
     } else if(inputCharacterRegex.test(key)) {
       eventListenerRef.current.startEditMode();
     } else {
 
     }
+
+    for(let hotkey in HOTKEYS) {
+      if(isHotkey(hotkey, event)) {
+        event.preventDefault();
+        eventListenerRef.current.applyTextStyle(HOTKEYS[hotkey])
+        break;
+      }
+    }
   };
 
   const handleKeyDownCapture = (event) => {
-    const { key, shiftKey, ctrlKey, altKey } = event;
+    const { key, shiftKey, ctrlKey, metaKey, altKey } = event;
 
-    if(key === "s" && ctrlKey) {
+    if(key === "s" && (ctrlKey || metaKey)) {
       event.preventDefault();
     }
   };

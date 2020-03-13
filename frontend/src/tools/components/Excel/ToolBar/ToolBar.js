@@ -16,6 +16,9 @@ import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import FormatAlignCenterIcon from "@material-ui/icons/FormatAlignLeft";
 import FormatAlignRightIcon from "@material-ui/icons/FormatAlignRight";
 
+import { getMainFontStylesStates } from "@tools/styles";
+import { getMainFontStyleEditorStates } from "@tools/slate";
+
 import "./ToolBar.scss";
 
 const ToolBarButton = ({ id, children, state, handleClick }) => (
@@ -72,7 +75,7 @@ const ItalicButton = (props) => (
 );
 
 const UnderlineButton = (props) => (
-  <ToolBarButton id="text-underline" {...props}>
+  <ToolBarButton id="underline" {...props}>
     <FormatUnderlinedIcon/>
   </ToolBarButton>
 );
@@ -83,20 +86,17 @@ const StrikethroughButton = (props) => (
   </ToolBarButton>
 );
 
-
-const getMainFontStylesStates = ({ 
-  fontWeight,
-  fontStyle,
-  textDecoration
-}) => ({
-  bold: fontWeight === "bold",
-  italic: fontStyle === "italic",
-  underline: textDecoration && textDecoration.includes("underline"),
-  strikethrough: textDecoration && textDecoration.includes("line-through")
-});
-
-const MainFontStyles = ({ cellStyles, handleTextStyle }) => {
-  const { bold, italic, underline, strikethrough } =  getMainFontStylesStates(cellStyles);
+const MainFontStyles = ({ 
+  cellStyles, 
+  cellEditor, 
+  isEditMode,
+  handleTextStyle 
+}) => {
+  let { bold, italic, underline, strikethrough } = (
+    isEditMode 
+      ? getMainFontStyleEditorStates(cellEditor)
+      : getMainFontStylesStates(cellStyles)
+  );
 
   return (
     <div>
@@ -105,28 +105,48 @@ const MainFontStyles = ({ cellStyles, handleTextStyle }) => {
       <UnderlineButton state={underline} handleClick={handleTextStyle}/>
       <StrikethroughButton state={strikethrough} handleClick={handleTextStyle}/>
     </div>
-  )
+  );
 };
 
 const ToolBar = ({
   type,
   eventListenerRef
 }) => {
-  const cellStyles = useSelector(({
+  const { 
+    cellStyles, 
+    cellEditor, 
+    activeCellInputAutoFocus,
+    isEditMode 
+  } = useSelector(({
     ui: {
       excel: {
         sheetCellData,
-        activeCellPosition: { x, y }
+        activeCellInputAutoFocus,
+        activeCellPosition: { x, y },
+        activeCellInputData: {
+          cellEditor
+        },
+        isEditMode
       }
     }
-  }) => sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].styles ? sheetCellData[y][x].styles : {});
+  }) => ({
+    isEditMode,
+    activeCellInputAutoFocus,
+    cellEditor,
+    cellStyles: sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].styles ? sheetCellData[y][x].styles : {}
+  }));
 
   const handleApplyBlockStyle = ({ currentTarget: { id } }) => eventListenerRef.current.applyBlockStyle(id);
-  const handleTextStyle = ({ currentTarget: { id } }) => eventListenerRef.current.applyTextStyle(id);
+  const handleTextStyle = ({ currentTarget: { id } }) => eventListenerRef.current.applyTextStyle(id, null, activeCellInputAutoFocus);
 
   return (
     <div className="toolBar">
-      <MainFontStyles  handleTextStyle={handleTextStyle} cellStyles={cellStyles}/>
+      <MainFontStyles 
+        cellStyles={cellStyles}
+        cellEditor={cellEditor}
+        isEditMode={isEditMode}
+        handleTextStyle={handleTextStyle} 
+      />
       <Divider orientation="vertical"/>
       <AlignStyles handleApplyBlockStyle={handleApplyBlockStyle} cellStyles={cellStyles}/>
     </div>

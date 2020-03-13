@@ -1,19 +1,17 @@
-import isHotkey from 'is-hotkey'
 import { Editable, withReact, useSlate, Slate } from 'slate-react'
 import { Editor, Transforms, createEditor } from 'slate'
 import { withHistory } from 'slate-history'
 
-export const HOTKEYS = {
-  'mod+b': 'bold',
-  'mod+i': 'italic',
-  'mod+u': 'underline'
-};
+import {
+  richTextToEditorMap,
+  editorToRichTextMap
+} from "@constants/styles";
 
 
 export const convertTextToEditorValue = (text) => [ 
   { 
     type: "paragraph", 
-    children: [ { text } ] 
+    children: [ { text: text ? text.toString() : "" } ] 
   } 
 ];
 
@@ -32,6 +30,13 @@ export const CustomEditor = {
     } else {
       Editor.addMark(editor, format, true);
     }
+  },
+  clearEditor: (editor) => {  
+    editor.children = createEmptyEditorValue();
+    editor.operations = [];
+    editor.selection = null;
+    editor.marks = null;
+    editor.history = { undos: [], redos: [] };
   }
 };
 
@@ -55,42 +60,6 @@ export const convertEditorValueToText = (elements) => {
   });
 
   return text;
-};
-
-
-const richTextToEditorMap = {
-  fontWeight: {
-    bold: "bold"
-  },
-  fontStyle: {
-    italic: "italic"
-  },
-  textDecoration: {
-    underline: "underline",
-    "line-through": "strikethrough"
-  },
-  verticalAlign: {
-    sub: "subscript",
-    super: "superscript"
-  },
-  color: {},
-  fontSize: {},
-  fontFamily: {}
-};
-
-const editorToRichTextMap = {
-  // Boolean behaviours
-  bold: { property: "fontWeight", style: "bold" },
-  italic: { property: "fontStyle", style: "italic" },
-  underline: { property: "textDecoration", style: "underline" },
-  strikethrough: { property: "textDecoration", style: "line-through" },
-  subscript: { property: "verticalAlign", style: "sub" },
-  superscript: { property: "vericalAlign", style: "super" },
-
-  // Dynamic/non-boolean properties
-  color: { property: "color" },
-  fontSize: { property: "fontSize" },
-  fontFamily: { property: "fontFamily" }
 };
 
 export const convertEditorValueToRichText = (elements) => {
@@ -173,3 +142,9 @@ export const convertRichTextToEditorValue = (richText) => [
 ];
 
 export const createEmptyEditor = () => withHistory(withReact(createEditor()));
+
+export const getMainFontStyleEditorStates = (editor) => ({
+  bold: CustomEditor.isMarkActive(editor, "bold"),
+  italic: CustomEditor.isMarkActive(editor, "italic"),
+  underline: CustomEditor.isMarkActive(editor, "underline")
+});

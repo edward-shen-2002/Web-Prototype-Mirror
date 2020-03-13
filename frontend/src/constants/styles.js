@@ -26,15 +26,15 @@ export const borderFragmentMap = {
 const supportedBorderStyleMap = {
   thin: {
     Style: "solid",
-    Width: 1
+    Width: "1px"
   }, 
   medium: {
     Style: "solid",
-    Width: 2
+    Width: "2px"
   },
   thick: {
     Style: "solid",
-    Width: 4
+    Width: "4px"
   },
   dashed: {
     Style: "dashed"
@@ -57,4 +57,39 @@ export const completeBorderStyleMap = {
   mediumDashDot: supportedBorderStyleMap.dashed,
   mediumDashDotDot: supportedBorderStyleMap.dashed,
   slantDashDot: supportedBorderStyleMap.dashed
+};
+
+export const richTextToEditorMap = {
+  fontWeight: {
+    bold: "bold"
+  },
+  fontStyle: {
+    italic: "italic"
+  },
+  textDecoration: {
+    underline: "underline",
+    "line-through": "strikethrough"
+  },
+  verticalAlign: {
+    sub: "subscript",
+    super: "superscript"
+  },
+  color: {},
+  fontSize: {},
+  fontFamily: {}
+};
+
+export const editorToRichTextMap = {
+  // Boolean behaviours
+  bold: { property: "fontWeight", style: "bold" },
+  italic: { property: "fontStyle", style: "italic" },
+  underline: { property: "textDecoration", style: "underline" },
+  strikethrough: { property: "textDecoration", style: "line-through" },
+  subscript: { property: "verticalAlign", style: "sub" },
+  superscript: { property: "vericalAlign", style: "super" },
+
+  // Dynamic/non-boolean properties
+  color: { property: "color" },
+  fontSize: { property: "fontSize" },
+  fontFamily: { property: "fontFamily" }
 };
