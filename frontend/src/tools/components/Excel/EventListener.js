@@ -92,6 +92,7 @@ import {
   getExcelRowHeight,
   generateNewSheetName,
   createBlankSheet,
+  downloadWorkbook,
   getResizeOffset,
   isPrepopulateString
 } from "@tools/excel";
@@ -3398,6 +3399,17 @@ class EventListener extends PureComponent {
       // Apply block style
       this.applyBlockStyle(property, propertyValue);
     }
+  }
+
+  download() {
+    const { name, activeSheetName } = this.props;
+
+    const sheets = {
+      [ activeSheetName ]: this.props,
+      ...this.inactiveSheets
+    };
+
+    downloadWorkbook(name, activeSheetName, sheets);
   }
 
   render() {

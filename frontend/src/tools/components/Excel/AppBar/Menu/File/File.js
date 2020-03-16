@@ -4,6 +4,8 @@ import MenuItems from "@tools/components/Excel/commonComponents/MenuItems";
 
 import SaveIcon from "@material-ui/icons/Save";
 
+import GetAppIcon from "@material-ui/icons/GetApp";
+
 const File = ({ 
   openedMenuName, 
 
@@ -18,7 +20,13 @@ const File = ({
     handleClick: () => eventListenerRef.current.save()
   };
 
-  const options = [ saveMenu ];
+  const downloadMenu = {
+    icon: <GetAppIcon/>,
+    label: "Download",
+    handleClick: () => eventListenerRef.current.download()
+  }
+
+  const options = [ saveMenu, downloadMenu ];
 
   return (
     <MenuItems 

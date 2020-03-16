@@ -273,77 +273,90 @@ export const getNormalColumnWidth = (columnWidth) => columnWidth ? columnWidth *
 export const getExcelColumnWidth = (columnWidth) => columnWidth ? columnWidth/EXCEL_COLUMN_WIDTH_SCALE : columnWidth;
 export const getExcelRowHeight = (rowHeight) => rowHeight ? rowHeight/EXCEL_ROW_HEIGHT_SCALE : rowHeight;
   
-export const getWorkbookInstance = async ({
-  activeSheetName,
-  sheetNames,
-  activeCellPosition,
-  sheetsCellData,
-  sheetsColumnCount,
-  sheetsColumnWidths,
-  sheetsFreezeColumnCount,
-  sheetsRowCount,
-  sheetsRowHeights,
-  sheetsFreezeRowCount
-}) => {
+export const getWorkbookInstance = async (activeSheetName, sheets) => {
   let Workbook = await XlsxPopulate.fromBlankAsync();
-  const { x, y } = activeCellPosition;
 
-  const sheetNamesLength = sheetNames.length;
+  for(let sheetName in sheets) {
+    const {
+      sheetCellData,
 
-  for(let sheetNameIndex = 0; sheetNameIndex < sheetNamesLength; sheetNameIndex++) {
-    const sheetName = sheetNames[sheetNameIndex];
+      sheetColumnWidths,
+      sheetFreezeColumnCount,
+      sheetHiddenColumns,
 
-    const sheetCellData = sheetsCellData[sheetName];
-    const sheetColumnCount = sheetsColumnCount[sheetName];
-    const sheetColumnWidths = sheetsColumnWidths[sheetName];
-    const sheetFreezeColumnCount = sheetsFreezeColumnCount[sheetName];
-    const sheetRowCount = sheetsRowCount[sheetName];
-    const sheetRowHeights = sheetsRowHeights[sheetName];
-    const sheetFreezeRowCount = sheetsFreezeRowCount[sheetName];
+      sheetRowHeights,
+      sheetFreezeRowCount,
+      sheetHiddenRows,
+
+      activeCellPosition: { x, y },
+    } = sheets[sheetName];
 
     // May be a default sheet
     let sheet =  sheetName === "Sheet1" ? await Workbook.sheet(sheetName) : await Workbook.addSheet(sheetName);
 
-    sheet.freezePanes(sheetFreezeColumnCount, sheetFreezeRowCount);
-
     for(let row in sheetCellData) {
+      const rowData = sheetCellData[row];
+
       row = parseInt(row);
       
-      let columns = Object.keys(sheetCellData[row]);
+      for(let column in rowData) {
+        const { 
+          value,
+          formula,
+          hyperlink,
+          styles
+        } = sheetCellData[row][column];
 
-      columns.forEach((column) => {
         column = parseInt(column);
 
-        const { value } = sheetCellData[row][column];
-  
-        if(value !== undefined) {
-          const sheetCell = sheet.row(row).cell(column);
-          sheetCell.setValue(value);
-        }
-      })
+        const sheetCell = sheet.row(row).cell(column);
+        if(value !== undefined) sheetCell.setValue(value);
+
+        if(formula) sheetCell.formula(formula);
+
+        if(hyperlink) sheetCell.hyperlink(hyperlink);
+      }
     }
+
+    sheet.freezePanes(sheetFreezeColumnCount, sheetFreezeRowCount);
+
+    for(let row in sheetHiddenRows) sheet.row(row).hidden(true);
+
+    for(let column in sheetHiddenColumns) sheet.column(column).hidden(true);
 
     // Set row heights
-    for(let row = 1; row < sheetRowCount; row++) {
-      const sheetRowHeight = sheetRowHeights[row];
-
-      if(sheetRowHeight) sheet.row(row).height(sheetRowHeight);
-    }
+    for(let row in sheetRowHeights) sheet.row(row).height(sheetRowHeights[row]);
 
     // Set column widths
-    for(let column = 1; column < sheetColumnCount; column++) {
-      const sheetColumnWidth = sheetColumnWidths[column];
+    for(let column in sheetColumnWidths) sheet.column(column).width(sheetColumnWidths[column]);
 
-      if(sheetColumnWidth) sheet.column(column).width(sheetColumnWidth);
-    }
+    sheet.activeCell(x, y);
   };
 
-  // Set active sheet and cell
-  const activeSheet = Workbook.sheet(activeSheetName);
-  activeSheet.active(true);
-  activeSheet.row(y).cell(x).active(true);
+  // Set active sheet
+  Workbook.activeSheet(activeSheetName);
 
   return Workbook;
+};
+
+export const downloadWorkbook = async (fileName, activeSheetName, sheets) => {
+  let xlsxInstance = await getWorkbookInstance(activeSheetName, sheets);
+
+  const blob = await xlsxInstance.outputAsync()
+
+  if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+    // If IE, you must uses a different method.
+    window.navigator.msSaveOrOpenBlob(blob, fileName);
+  } else {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    document.body.appendChild(a);
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }
 };
 
 export const getCellData = (sheetCellData, row, column) => (
