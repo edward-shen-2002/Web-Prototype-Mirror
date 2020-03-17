@@ -1,11 +1,12 @@
 import { getWholeArea } from "./tools/merge";
+import { scrollTo } from "./tools/scroll";
 
 const ARROW_DOWN = (
   state,
   {
+    sheetGridRef,
     event,
-    shiftKey,
-    sheetGridRef
+    shiftKey
   }
 ) => {
   let {
@@ -68,7 +69,12 @@ const ARROW_DOWN = (
           y2: maxY
         };
 
-        scrollTo(focusedStagnantSelectionArea.y1, y1 < y ? x1 : x2);
+        scrollTo({
+          state,
+          sheetGridRef,
+          newY: focusedStagnantSelectionArea.y1, 
+          newX: y1 < y ? x1 : x2
+        });
 
         // Remove scroll above.. then get min area to get combined merged and normal cell
 
@@ -89,7 +95,12 @@ const ARROW_DOWN = (
           sheetCellData
         });
 
-        scrollTo(focusedStagnantSelectionArea.y2, y1 < y ? x2 : x1);
+        scrollTo({
+          state,
+          sheetGridRef,
+          newY: focusedStagnantSelectionArea.y2, 
+          newX: y1 < y ? x2 : x1
+        });
 
         if(focusedStagnantSelectionArea.y1 < sheetRowCount && focusedStagnantSelectionArea.y2 < sheetRowCount) {
           newState.stagnantSelectionAreas = [ focusedStagnantSelectionArea ]; 
@@ -127,9 +138,19 @@ const ARROW_DOWN = (
       if(y2 < sheetRowCount) {
         newState.stagnantSelectionAreas = [ minArea ];
         newState.activeCellSelectionAreaIndex = 0;
-        scrollTo(minArea.y2, x);
+        scrollTo({
+          state,
+          sheetGridRef,
+          newY: minArea.y2, 
+          newX: x
+        });
       } else {
-        scrollTo(y, x);
+        scrollTo({
+          state,
+          sheetGridRef,
+          newY: y, 
+          newX: x
+        });
       }
     }
   } else {
@@ -144,8 +165,8 @@ const ARROW_DOWN = (
     }
     
     if(y < sheetRowCount) newState.activeCellPosition = { y, x };
-    if(stagnantSelectionAreasLength) newState.stagnantSelectionAreas = [];
-    if(activeCellSelectionAreaIndex >= 0) newState.activeCellSelectionAreaIndex = -1;
+    newState.stagnantSelectionAreas = [];
+    newState.activeCellSelectionAreaIndex = -1;
   }
 
   return newState;

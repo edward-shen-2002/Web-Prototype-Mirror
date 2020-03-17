@@ -1,6 +1,10 @@
+import { getWholeArea } from "./tools/merge";
+import { scrollTo } from "./tools/scroll";
+
 const ARROW_LEFT = (
   state, 
   {
+    sheetGridRef,
     event, 
     shiftKey
    }
@@ -62,7 +66,12 @@ const ARROW_LEFT = (
           x2: newMaxX - 1
         };
 
-        scrollTo(x1 > x ? y1 : y2, focusedStagnantSelectionArea.x2)
+        scrollTo({
+          state,
+          sheetGridRef,
+          newY: x1 > x ? y1 : y2, 
+          newX: focusedStagnantSelectionArea.x2
+        });
         
         if(isPositionEqualArea(activeCellPosition, focusedStagnantSelectionArea)) {
           newState.stagnantSelectionAreas = [];
@@ -80,9 +89,12 @@ const ARROW_LEFT = (
           sheetCellData
         });
 
-        console.log("2")
-
-        scrollTo(x1 < x ? y1 : y2, focusedStagnantSelectionArea.x1);
+        scrollTo({
+          state,
+          sheetGridRef,
+          newY: x1 < x ? y1 : y2, 
+          newX: focusedStagnantSelectionArea.x1
+        });
 
         if(focusedStagnantSelectionArea.x1 > 0 && focusedStagnantSelectionArea.x2 > 0) {
           newState.stagnantSelectionAreas = [ focusedStagnantSelectionArea ]; 
@@ -126,9 +138,19 @@ const ARROW_LEFT = (
       if(x1 > 0) {
         newState.stagnantSelectionAreas = [ minArea ];
         newState.activeCellSelectionAreaIndex = 0;
-        scrollTo(y, minArea.x1);
+        scrollTo({
+          state,
+          sheetGridRef,
+          newY: y, 
+          newX: minArea.x1
+        });
       } else {
-        scrollTo(y, x);
+        scrollTo({
+          state,
+          sheetGridRef,
+          newY: y, 
+          newX: x
+        });
       }
     }
   } else {
