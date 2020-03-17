@@ -7,22 +7,25 @@ import {
 } from "@tools/excel";
 
 export const scrollTo = ({
+  state,
   sheetGridRef,
-  sheetColumnCount,
-  sheetRowCount,
-  sheetFreezeColumnCount,
-  sheetFreezeRowCount,
-
-  topOffsets,
-  leftOffsets,
-  sheetColumnWidths,
-  sheetRowHeights,
-
-  scrollData,
 
   newY, 
   newX
 }) => {
+  const {
+    sheetColumnCount,
+    sheetRowCount,
+    sheetFreezeColumnCount,
+    sheetFreezeRowCount,
+  
+    topOffsets,
+    leftOffsets,
+    sheetColumnWidths,
+    sheetRowHeights,
+  
+    scrollData
+  } = state;
   if(newY >= sheetRowCount) {
     newY = sheetRowCount - 1;
   } else if(newY <= 0) {
