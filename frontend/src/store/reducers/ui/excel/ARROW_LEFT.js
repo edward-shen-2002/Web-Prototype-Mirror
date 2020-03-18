@@ -67,7 +67,7 @@ const ARROW_LEFT = (
         };
 
         scrollTo({
-          state,
+          newState,
           sheetGridRef,
           newY: x1 > x ? y1 : y2, 
           newX: focusedStagnantSelectionArea.x2
@@ -90,7 +90,7 @@ const ARROW_LEFT = (
         });
 
         scrollTo({
-          state,
+          newState,
           sheetGridRef,
           newY: x1 < x ? y1 : y2, 
           newX: focusedStagnantSelectionArea.x1
@@ -139,14 +139,14 @@ const ARROW_LEFT = (
         newState.stagnantSelectionAreas = [ minArea ];
         newState.activeCellSelectionAreaIndex = 0;
         scrollTo({
-          state,
+          newState,
           sheetGridRef,
           newY: y, 
           newX: minArea.x1
         });
       } else {
         scrollTo({
-          state,
+          newState,
           sheetGridRef,
           newY: y, 
           newX: x

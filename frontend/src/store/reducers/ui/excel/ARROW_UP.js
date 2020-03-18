@@ -1,5 +1,6 @@
 import { getWholeArea } from "./tools/merge";
 import { scrollTo } from "./tools/scroll";
+import { isPositionEqualArea } from "@tools/excel";
 
 const ARROW_UP = (
   state, 
@@ -68,7 +69,7 @@ const ARROW_UP = (
         };
 
         scrollTo({
-          state,
+          newState,
           sheetGridRef,
           newY: focusedStagnantSelectionArea.y2, 
           newX: y1 > y ? x1 : x2
@@ -91,7 +92,7 @@ const ARROW_UP = (
         });
 
         scrollTo({
-          state,
+          newState,
           sheetGridRef,
           newY: focusedStagnantSelectionArea.y1, 
           newX: y1 < y ? x1 : x2
@@ -134,14 +135,14 @@ const ARROW_UP = (
         newState.stagnantSelectionAreas = [ minArea ];
         newState.activeCellSelectionAreaIndex = 0;
         scrollTo({
-          state,
+          newState,
           sheetGridRef,
           newY: minArea.y1, 
           newX: x
         });
       } else {
         scrollTo({
-          state,
+          newState,
           sheetGridRef,
           newY: y, 
           newX: x
@@ -164,6 +165,8 @@ const ARROW_UP = (
     newState.stagnantSelectionAreas = [];
     newState.activeCellSelectionAreaIndex = -1;
   }
+
+  return newState;
 };
 
 export default ARROW_UP;
