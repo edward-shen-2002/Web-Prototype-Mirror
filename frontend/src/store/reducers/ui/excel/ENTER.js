@@ -1,4 +1,7 @@
-import { saveActiveCellInputData } from "./tools/cell";
+import { 
+  saveActiveCellInputData,
+  updateActiveCellPosition
+} from "./tools/cell";
 import { 
   getEnterFreeSpot,
   getShiftEnterFreeSpot,
@@ -8,6 +11,7 @@ import {
 const ENTER = (
   state,
   {
+    sheetGridRef,
     event, 
     shiftKey, 
     sheetContainerRef
@@ -23,9 +27,7 @@ const ENTER = (
     
     sheetCellData,
     sheetRowCount,
-    sheetColumnCount,
-
-    handleUpdateActiveCellSelectionAreaIndex
+    sheetColumnCount
   } = state;
 
   let newState = { ...state };
@@ -207,10 +209,15 @@ const ENTER = (
           y = Math.min(newY1, newY2);
         }
 
-        handleUpdateActiveCellSelectionAreaIndex(activeCellSelectionAreaIndex);
+        newState.activeCellSelectionAreaIndex = activeCellSelectionAreaIndex;
       }
-      
-      this.updateActiveCellPosition(y, x);
+
+      newState = updateActiveCellPosition({
+        sheetGridRef,
+        newState,
+        newY: y, 
+        newX: x
+      });
     }
   } else {
     if(stagnantSelectionAreas.length) {
@@ -240,8 +247,15 @@ const ENTER = (
       }
     }
 
-    this.updateActiveCellPosition(y, x);
+    newState = updateActiveCellPosition({
+      sheetGridRef,
+      newState,
+      newY: y, 
+      newX: x
+    });
   }
+
+  return newState;
 };
 
 export default ENTER;
