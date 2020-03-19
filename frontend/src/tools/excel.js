@@ -1042,20 +1042,23 @@ export const convertExcelFileToState = async (excelFile) => {
 
 export const convertStateToReactState = (state) => {
   const workbookData = state.workbookData;
+
+
+  let data = {};
+
+  for(let sheetName in workbookData) data[sheetName] = JSON.parse(pako.inflate(workbookData[sheetName], { to: "string" }));
+  
   const activeSheetName = state.activeSheetName;
-  const activeSheetData = JSON.parse(pako.inflate(workbookData[activeSheetName], { to: "string" }));
+  const activeSheetData = data[activeSheetName];
   const { activeCellPosition: { x, y } } = activeSheetData;
 
   const activeCellInputData = getActiveCellInputData(activeSheetData.sheetCellData, y, x);
-
-  let inactiveSheetsData = JSON.stringify({ ...workbookData, [activeSheetName]: undefined });
-
-  sessionStorage.setItem("inactiveSheets", inactiveSheetsData);
 
   return {
     ...state,
     ...activeSheetData,
     activeCellInputData,
+    inactiveSheets: { ...data, [ activeSheetName ]: undefined },
     workbookData: undefined
   };
 };
