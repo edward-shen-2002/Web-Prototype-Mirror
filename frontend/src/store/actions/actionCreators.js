@@ -29,6 +29,7 @@ export const EXCEL_ARROW_DOWN = "EXCEL_ARROW_DOWN";
 export const EXCEL_ARROW_LEFT = "EXCEL_ARROW_LEFT";
 export const EXCEL_ARROW_RIGHT = "EXCEL_ARROW_RIGHT";
 export const EXCEL_ARROW_UP = "EXCEL_ARROW_UP";
+
 export const EXCEL_DELETE = "EXCEL_DELETE";
 export const EXCEL_ENTER = "EXCEL_ENTER";
 

@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from "react";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
 import { VariableSizeGrid } from "react-window";
 
@@ -46,18 +46,23 @@ import {
   keyArrowDown,
   keyArrowUp,
   keyArrowLeft,
-  keyArrowRight
-} from "@actions/ui/excel/keyboard"
+  keyArrowRight,
+
+  keyEscape,
+  keyTab,
+  keyEnter
+} from "@actions/ui/excel/keyboard";
+
+import {
+  selectAll
+} from "@actions/ui/excel/commands";
 
 import "./Sheet.scss";
 
 // !Change this to spread instead of object?
 const createItemData = memoize((itemData) => (itemData));
 
-const SheetWindow = ({
-  sheetGridRef,
-  eventListenerRef
-}) => {
+const SheetWindow = ({ sheetGridRef }) => {
   const dispatch = useDispatch();
 
   const {
@@ -68,23 +73,30 @@ const SheetWindow = ({
     sheetRowCount,
     sheetColumnWidths,
     sheetRowHeights
-  } = useSelector(({
-    sheetCellData,
-    sheetFreezeRowCount,
-    sheetFreezeColumnCount,
-    sheetColumnCount,
-    sheetRowCount,
-    sheetColumnWidths,
-    sheetRowHeights
-  }) => ({
-    sheetCellData,
-    sheetFreezeRowCount,
-    sheetFreezeColumnCount,
-    sheetColumnCount,
-    sheetRowCount,
-    sheetColumnWidths,
-    sheetRowHeights
-  }));
+  } = useSelector(
+    ({
+      ui: {
+        excel: {
+          sheetCellData,
+          sheetFreezeRowCount,
+          sheetFreezeColumnCount,
+          sheetColumnCount,
+          sheetRowCount,
+          sheetColumnWidths,
+          sheetRowHeights
+        }
+      }
+    }) => ({
+      sheetCellData,
+      sheetFreezeRowCount,
+      sheetFreezeColumnCount,
+      sheetColumnCount,
+      sheetRowCount,
+      sheetColumnWidths,
+      sheetRowHeights
+    }),
+    shallowEqual
+  );
 
   const tableFreezeRowCount = useMemo(() => sheetFreezeRowCount + 1, [ sheetFreezeRowCount ]);
   const tableFreezeColumnCount = useMemo(() => sheetFreezeColumnCount + 1, [ sheetFreezeColumnCount ]);
@@ -108,12 +120,10 @@ const SheetWindow = ({
     sheetCellData, 
     
     sheetColumnCount,
-    sheetRowCount,
-
-    eventListenerRef
+    sheetRowCount
   });
 
-  const commonSelectionPaneProps = { sheetGridRef, eventListenerRef };
+  const commonSelectionPaneProps = { sheetGridRef };
 
   return (
     <AutoSizer>
@@ -169,11 +179,7 @@ const SheetWindow = ({
   );
 };
 
-let Sheet = ({ 
-  eventListenerRef, 
-  sheetContainerRef, 
-  sheetGridRef
-}) => {
+let Sheet = ({ sheetContainerRef, sheetGridRef }) => {
   const dispatch = useDispatch();
 
   const {
@@ -186,30 +192,36 @@ let Sheet = ({
     sheetRowCount,
     sheetColumnWidths,
     sheetRowHeights
-  } = useSelector(({
-    cursorType,
-    isEditMode,
-    sheetCellData,
-    sheetFreezeRowCount,
-    sheetFreezeColumnCount,
-    sheetColumnCount,
-    sheetRowCount,
-    sheetColumnWidths,
-    sheetRowHeights
-  }) => ({
-    cursorType,
-    isEditMode,
-    sheetCellData,
-    sheetFreezeRowCount,
-    sheetFreezeColumnCount,
-    sheetColumnCount,
-    sheetRowCount,
-    sheetColumnWidths,
-    sheetRowHeights
-  }));
+  } = useSelector(
+    ({
+      ui: {
+        excel: {
+          cursorType,
+          isEditMode,
+          sheetCellData,
+          sheetFreezeRowCount,
+          sheetFreezeColumnCount,
+          sheetColumnCount,
+          sheetRowCount,
+          sheetColumnWidths,
+          sheetRowHeights
+        }
+      }
+    }) => ({
+      cursorType,
+      isEditMode,
+      sheetCellData,
+      sheetFreezeRowCount,
+      sheetFreezeColumnCount,
+      sheetColumnCount,
+      sheetRowCount,
+      sheetColumnWidths,
+      sheetRowHeights
+    }),
+    shallowEqual
+  );
 
-  const handleKeyDown = useCallback(
-    (event) => {
+  const handleKeyDown = (event) => {
       const { 
         key, 
         shiftKey, 
@@ -221,13 +233,13 @@ let Sheet = ({
       let action;
   
       if(key === "ArrowUp") {
-        action = keyArrowUp({ event, shiftKey });
+        action = keyArrowUp({ sheetGridRef, shiftKey });
       } else if(key === "ArrowDown") {
-        action = keyArrowDown({ event, shiftKey });
+        action = keyArrowDown({ sheetGridRef, shiftKey });
       } else if(key === "ArrowLeft") {
-        action = keyArrowLeft({ event, shiftKey });
+        action = keyArrowLeft({ sheetGridRef, shiftKey });
       } else if(key === "ArrowRight") {
-        action = keyArrowRight({ event, shiftKey });
+        action = keyArrowRight({ sheetGridRef, shiftKey });
       } else if(key === "Tab") {
         action = keyTab({ event, shiftKey, sheetContainerRef });
       } else if(key === "Enter" && !(ctrlKey || metaKey) && !altKey) {
@@ -243,21 +255,19 @@ let Sheet = ({
       } else if((ctrlKey || metaKey)) {
         
       } else if(inputCharacterRegex.test(key)) {
-        eventListenerRef.current.startEditMode();
+        // eventListenerRef.current.startEditMode();
         action = enableEditMode();
       } 
   
-      for(let hotkey in HOTKEYS) {
-        if(isHotkey(hotkey, event)) {
-          action = applyTextStyle(HOTKEYS[hotkey]);
-          break;
-        }
-      }
+      // for(let hotkey in HOTKEYS) {
+      //   if(isHotkey(hotkey, event)) {
+      //     action = applyTextStyle(HOTKEYS[hotkey]);
+      //     break;
+      //   }
+      // }
 
       if(action) dispatch(action);
-    },
-    [ dispatch ]
-  );
+    }
 
 
   const handleKeyDownCapture = (event) => {
@@ -290,7 +300,8 @@ let Sheet = ({
     // console.log(paste);
   };
 
-  const handleClick = () => eventListenerRef.current.setInputAutoFocusOn();
+  // const handleClick = () => eventListenerRef.current.setInputAutoFocusOn();
+  const handleClick = () => {};
 
   let style = {};
 
@@ -309,7 +320,6 @@ let Sheet = ({
       onPaste={handlePaste}
     >
       <SheetWindow
-        eventListenerRef={eventListenerRef}
         sheetGridRef={sheetGridRef}
 
         isEditMode={isEditMode}
@@ -322,13 +332,8 @@ let Sheet = ({
         sheetColumnWidths={sheetColumnWidths}
         sheetRowHeights={sheetRowHeights}
       />
-      <ContextMenu 
-        eventListenerRef={eventListenerRef}
-      />
-      <WindowListener 
-        eventListenerRef={eventListenerRef}
-        sheetContainerRef={sheetContainerRef}
-      />
+      <ContextMenu/>
+      <WindowListener sheetContainerRef={sheetContainerRef}/>
     </div>
   );
 };

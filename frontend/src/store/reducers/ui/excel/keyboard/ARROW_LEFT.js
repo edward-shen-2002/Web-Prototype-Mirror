@@ -5,25 +5,23 @@ const ARROW_LEFT = (
   state, 
   {
     sheetGridRef,
-    event, 
     shiftKey
    }
  ) => {
-  let { 
-    sheetCellData,
-    activeCellPosition,
-    activeCellSelectionAreaIndex,
-    isEditMode,
-    stagnantSelectionAreas
-  } = state;
+  let { isEditMode } = state;
 
   if(isEditMode) return state;
 
   let newState = { ...state };
 
+  const {
+    sheetCellData,
+    activeCellPosition,
+    activeCellSelectionAreaIndex,
+    stagnantSelectionAreas
+  } = newState;
+
   let { x, y } = activeCellPosition;
-  
-  event.preventDefault();
 
   newState.activeSelectionArea = null;
 

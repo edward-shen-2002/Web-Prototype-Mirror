@@ -6,6 +6,9 @@ import {
   getNormalRowHeight
 } from "@tools/excel";
 
+import topOffsetsSelector from "@selectors/ui/excel/topOffsets";
+import leftOffsetsSelector from "@selectors/ui/excel/leftOffsets";
+
 export const scrollTo = ({
   newState,
   sheetGridRef,
@@ -13,19 +16,23 @@ export const scrollTo = ({
   newY, 
   newX
 }) => {
+  console.log("scroll", sheetGridRef)
   const {
     sheetColumnCount,
     sheetRowCount,
     sheetFreezeColumnCount,
     sheetFreezeRowCount,
   
-    topOffsets,
-    leftOffsets,
+
     sheetColumnWidths,
     sheetRowHeights,
   
     scrollData
   } = newState;
+
+  const topOffsets = topOffsetsSelector(newState);
+  const leftOffsets = leftOffsetsSelector(newState);
+
   if(newY >= sheetRowCount) {
     newY = sheetRowCount - 1;
   } else if(newY <= 0) {

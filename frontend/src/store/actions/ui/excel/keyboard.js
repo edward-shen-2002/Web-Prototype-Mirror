@@ -8,16 +8,11 @@ import {
   EXCEL_ESCAPE
 } from "@actionCreators";
 
-export const arrowDown = (props) => ({ type: EXCEL_ARROW_DOWN, ...props });
+export const keyArrowDown = (props) => ({ type: EXCEL_ARROW_DOWN, ...props });
+export const keyArrowUp = (props) => ({ type: EXCEL_ARROW_UP, ...props });
+export const keyArrowLeft = (props) => ({ type: EXCEL_ARROW_LEFT, ...props });
+export const keyArrowRight = (props) => ({ type: EXCEL_ARROW_RIGHT, ...props });
 
-export const arrowUp = (props) => ({ type: EXCEL_ARROW_UP, ...props });
-
-export const arrowLeft = (props) => ({ type: EXCEL_ARROW_LEFT, ...props });
-
-export const arrowRight = (props) => ({ type: EXCEL_ARROW_RIGHT, ...props });
-
-export const tab = (props) => ({ type: EXCEL_TAB, ...props });
-
-export const enter = (props) => ({ type: EXCEL_ENTER, ...props });
-
-export const escape = (props) => ({ type: EXCEL_ESCAPE, ...props });
+export const keyTab = (props) => ({ type: EXCEL_TAB, ...props });
+export const keyEnter = (props) => ({ type: EXCEL_ENTER, ...props });
+export const keyEscape = (props) => ({ type: EXCEL_ESCAPE, ...props });

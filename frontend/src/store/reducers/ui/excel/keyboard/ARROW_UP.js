@@ -6,25 +6,23 @@ const ARROW_UP = (
   state, 
   {
     sheetGridRef,
-    event, 
     shiftKey
   }
 ) => {
-  let { 
-    sheetCellData,
-    activeCellPosition,
-    activeCellSelectionAreaIndex,
-    isEditMode,
-    stagnantSelectionAreas
-  } = state;
+  let { isEditMode, } = state;
 
   if(isEditMode) return state;
 
-  let { x, y } = activeCellPosition;
-  
-  event.preventDefault();
-
   let newState = { ...state };
+
+  const {
+    sheetCellData,
+    activeCellPosition,
+    activeCellSelectionAreaIndex,
+    stagnantSelectionAreas
+  } = newState;
+
+  let { x, y } = activeCellPosition;
 
   newState.activeSelectionArea = null;
 

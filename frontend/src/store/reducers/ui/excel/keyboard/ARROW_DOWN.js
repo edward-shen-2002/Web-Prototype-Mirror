@@ -1,31 +1,29 @@
 import { getWholeArea } from "../tools/merge";
 import { scrollTo } from "../tools/scroll";
+import { updateActiveCellPosition } from "../tools/cell";
 
 const ARROW_DOWN = (
   state,
   {
     sheetGridRef,
-    event,
     shiftKey
   }
 ) => {
-  let {
-    sheetRowCount,
-    sheetCellData,
-    activeCellPosition,
-    isEditMode,
-    activeCellSelectionAreaIndex,
-    stagnantSelectionAreas
-  } = state;
-
+  let { isEditMode } = state;
   
   if(isEditMode) return state;
   
   let newState = { ...state };
 
-  let { x, y } = activeCellPosition;
+  const {
+    sheetRowCount,
+    sheetCellData,
+    activeCellPosition,
+    activeCellSelectionAreaIndex,
+    stagnantSelectionAreas
+  } = newState;
 
-  event.preventDefault();
+  let { x, y } = activeCellPosition;
 
   newState.activeSelectionArea = null;
 

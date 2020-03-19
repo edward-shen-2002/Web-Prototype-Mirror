@@ -5,12 +5,12 @@ const WindowListener = ({ eventListenerRef, sheetContainerRef }) => {
     window.onmouseup = (event) => {
       const { ctrlKey } = event;
 
-      eventListenerRef.current.mouseUp(ctrlKey);
+      // eventListenerRef.current.mouseUp(ctrlKey);
     };
 
     // ! Handle scroll when outside sheet grid
     window.onmousemove = ({ clientX, clientY }) => {
-      eventListenerRef.current.mouseMove(sheetContainerRef, clientX, clientY);
+      // eventListenerRef.current.mouseMove(sheetContainerRef, clientX, clientY);
     };
 
     return () => {

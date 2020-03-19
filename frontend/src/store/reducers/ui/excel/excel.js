@@ -32,10 +32,12 @@ import EXCEL_TOGGLE_TEMPLATE_PUBLISH from "./commands/TOGGLE_TEMPLATE_PUBLISH";
 // import EXCEL_MOUSE_UP from "/MOUSE_UP";
 // import EXCEL_MOUSE_MOVE from "/MOUSE_MOVE";
 // import EXCEL_MOUSE_DOWN from "/MOUSE_DOWN"
-// import EXCEL_ARROW_DOWN from "/ARROW_DOWN";
-// import EXCEL_ARROW_UP from "/ARROW_UP";
-// import EXCEL_ARROW_LEFT from "/ARROW_LEFT";
-// import EXCEL_ARROW_RIGHT from "/ARROW_RIGHT";
+
+import EXCEL_ARROW_DOWN from "./keyboard/ARROW_DOWN";
+import EXCEL_ARROW_UP from "./keyboard/ARROW_UP";
+import EXCEL_ARROW_LEFT from "./keyboard/ARROW_LEFT";
+import EXCEL_ARROW_RIGHT from "./keyboard/ARROW_RIGHT";
+
 // import EXCEL_TAB from "/TAB";
 // import EXCEL_ENTER from "/ENTER";
 // import EXCEL_DELETE from "/DELETE";
@@ -106,7 +108,12 @@ const excelReducer = createReducer(
 
     EXCEL_SET_NAME,
 
-    EXCEL_TOGGLE_TEMPLATE_PUBLISH
+    EXCEL_TOGGLE_TEMPLATE_PUBLISH,
+
+    EXCEL_ARROW_DOWN,
+    EXCEL_ARROW_UP,
+    EXCEL_ARROW_LEFT,
+    EXCEL_ARROW_RIGHT
   }
 );
 

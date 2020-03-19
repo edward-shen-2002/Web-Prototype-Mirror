@@ -1,10 +1,10 @@
 import React, { useRef } from "react";
 
 import AppBar from "./AppBar";
-// import ToolBar from "./ToolBar";
-// import FormulaBar from "./FormulaBar";
-// import Sheet from "./Sheet";
-// import SheetNavigator from "./SheetNavigator";
+import ToolBar from "./ToolBar";
+import FormulaBar from "./FormulaBar";
+import Sheet from "./Sheet";
+import SheetNavigator from "./SheetNavigator";
 
 import "./Excel.scss";
 
@@ -18,13 +18,13 @@ const Excel = ({ type, returnLink }) => {
     <div className="excel">
       <AppBar type={type} returnLink={returnLink} />
       <Divider/>
-      {/* <ToolBar type={type}/> */}
+      <ToolBar type={type}/>
       <Divider/>
-      {/* <FormulaBar sheetContainerRef={sheetContainerRef}/> */}
+      <FormulaBar sheetContainerRef={sheetContainerRef}/>
       <Divider/>
-      {/* <Sheet sheetContainerRef={sheetContainerRef} sheetGridRef={sheetGridRef}/> */}
+      <Sheet sheetContainerRef={sheetContainerRef} sheetGridRef={sheetGridRef}/>
       <Divider/>
-      {/* <SheetNavigator sheetGridRef={sheetGridRef}/> */}
+      <SheetNavigator sheetGridRef={sheetGridRef}/>
     </div>
   );
 };

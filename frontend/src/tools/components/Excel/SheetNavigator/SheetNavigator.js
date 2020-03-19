@@ -8,6 +8,14 @@ import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import InputBase from "@material-ui/core/InputBase";
 
+import {
+
+} from "@actions/ui/excel/commands";
+
+import {
+  enableEditMode
+} from "@actions/ui/excel/events";
+
 import { DnDReorder } from "@tools/misc";
 import { 
   generateNewSheetName, 
@@ -27,9 +35,12 @@ const SheetNameEdit = ({
   setIsEditMode,
   handleChangeSheetName
 }) => {
-  const handleBlur = () => {
-    setIsEditMode(false);
-  }
+  const dispatch = useDispatch();
+
+  const handleBlur = () => useCallback(
+    dispatch(setIsEditMode(false)),
+    [ dispatch ]
+  );
 
   const handleKeyDown = ({ key, target }) => {
     if(key === "Enter") {
@@ -82,6 +93,8 @@ const SheetNameDraggable = ({
   sheetName, 
   activeSheetName
 }) => {
+  const dispatch = useDispatch();
+  
   const isActive = activeSheetName === sheetName;
 
   const handleClick = useCallback(
@@ -132,9 +145,7 @@ const SheetNamesDraggables = ({
   isEditMode,
   setIsEditMode,
   sheetNames, 
-  activeSheetName, 
-  handleChangeActiveSheet,
-  handleChangeSheetName
+  activeSheetName
 }) => sheetNames.map((sheetName, index) => (
   <Draggable key={`sheet-name-${sheetName}`} draggableId={sheetName} index={index}>
     {(provided) => (
@@ -146,8 +157,6 @@ const SheetNamesDraggables = ({
         sheetName={sheetName} 
         activeSheetName={activeSheetName} 
         index={index}
-        handleChangeActiveSheet={handleChangeActiveSheet}
-        handleChangeSheetName={handleChangeSheetName}
       />
     )}
   </Draggable>
@@ -182,9 +191,7 @@ const SheetSelectionContext = ({
   setIsEditMode,
   activeSheetName, 
   sheetNames, 
-  handleDragEnd,
-  handleChangeActiveSheet,
-  handleChangeSheetName
+  handleDragEnd
 }) => (
   <DragDropContext onDragEnd={handleDragEnd}>
     <SheetNamesDroppable 
@@ -193,8 +200,6 @@ const SheetSelectionContext = ({
       setIsEditMode={setIsEditMode}
       sheetNames={sheetNames} 
       activeSheetName={activeSheetName} 
-      handleChangeActiveSheet={handleChangeActiveSheet}
-      handleChangeSheetName={handleChangeSheetName}
     />
   </DragDropContext>
 );
@@ -259,8 +264,6 @@ const SheetNavigator = ({ sheetGridRef }) => {
         sheetNames={sheetNames} 
         activeSheetName={activeSheetName} 
         handleDragEnd={handleDragEnd} 
-        handleChangeActiveSheet={handleClickSheet}
-        handleChangeSheetName={handleChangeSheetName}
       />
     </div>
   );
