@@ -6,7 +6,10 @@ import {
   EXCEL_INSERT_ROW,
   EXCEL_SET_GROUP,
   EXCEL_SET_PREPOPULATE,
-  EXCEL_ENABLE_EDIT_MODE
+  EXCEL_ENABLE_EDIT_MODE,
+  EXCEL_SET_EXCEL_DATA,
+  EXCEL_RESET_EXCEL_DATA,
+  EXCEL_SET_NAME
 } from "@actionCreators";
 
 export const selectAll = (props) => ({ type: EXCEL_SELECT_ALL, ...props });
@@ -21,3 +24,8 @@ export const setGroup = (props) => ({ type: EXCEL_SET_GROUP, ...props });
 export const setPrepopulate = (props) => ({ type: EXCEL_SET_PREPOPULATE, ...props });
 
 export const enableEditMode = () => ({ type: EXCEL_ENABLE_EDIT_MODE });
+
+export const setExcelData = (excelData) => ({ type: EXCEL_SET_EXCEL_DATA, excelData });
+export const resetExcelData = () => ({ type: EXCEL_RESET_EXCEL_DATA });
+
+export const setName = (name) => ({ type: EXCEL_SET_NAME, name });

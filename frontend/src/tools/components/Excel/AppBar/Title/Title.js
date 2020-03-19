@@ -1,29 +1,30 @@
-import React, { useState } from "react";
+import React, { useCallback } from "react";
 
-import { connect } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 
-import { updateWorkbookName } from "@actions/ui/excel/name";
+import { setName } from "@actions/ui/excel/commands";
 
 import InputBase from "@material-ui/core/InputBase";
 
-const mapStateToProps = ({
-  ui: {
-    excel: {
-      name
-    }
-  }
-}) => ({
-  name
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  handleChangeName: (name) => dispatch(updateWorkbookName(name))
-});
-
 // TODO : Make input width contain text - react virtualized
 // TODO : Events handler: blur, key down (escape), ...
-let Title = ({ name, handleChangeName }) => {
-  const handleChange = ({ target: { value } }) => handleChangeName(value);
+let Title = () => {
+  const dispatch = useDispatch();
+
+  const name = useSelector(
+    ({
+      ui: {
+        excel: {
+          name
+        }
+      }
+    }) => name
+  );
+
+  const handleChange = useCallback(
+    ({ target: { value } }) => dispatch(setName(value)),
+    [ dispatch ]
+  );
 
   const handleKeyDown = ({ key, target }) => {
     if(key === "Enter") target.blur();
@@ -40,7 +41,5 @@ let Title = ({ name, handleChangeName }) => {
     />
   );
 };
-
-Title = connect(mapStateToProps, mapDispatchToProps)(Title);
 
 export default Title;

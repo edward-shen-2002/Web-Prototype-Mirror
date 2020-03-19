@@ -1,58 +1,30 @@
-import React, { useRef, useCallback, useMemo } from "react";
+import React, { useRef } from "react";
 
 import AppBar from "./AppBar";
-import ToolBar from "./ToolBar";
-import FormulaBar from "./FormulaBar";
-import Sheet from "./Sheet";
-import SheetNavigator from "./SheetNavigator";
-
-import EventListener from "./EventListener";
+// import ToolBar from "./ToolBar";
+// import FormulaBar from "./FormulaBar";
+// import Sheet from "./Sheet";
+// import SheetNavigator from "./SheetNavigator";
 
 import "./Excel.scss";
 
 const Divider = () => <hr className="divider"/>;
 
-const Excel = ({ 
-  type,
-  returnLink
-}) => {
-  const eventListenerRef = useRef(null);
+const Excel = ({ type, returnLink }) => {
   const sheetContainerRef = useRef(null);
   const sheetGridRef = useRef(null);
 
   return (
     <div className="excel">
-      <AppBar 
-        eventListenerRef={eventListenerRef}
-        type={type}
-        returnLink={returnLink} 
-      />
+      <AppBar type={type} returnLink={returnLink} />
       <Divider/>
-      <ToolBar
-        type={type}
-        eventListenerRef={eventListenerRef}
-      />
+      {/* <ToolBar type={type}/> */}
       <Divider/>
-      <FormulaBar
-        eventListenerRef={eventListenerRef}
-        sheetContainerRef={sheetContainerRef}
-      />
+      {/* <FormulaBar sheetContainerRef={sheetContainerRef}/> */}
       <Divider/>
-      <Sheet
-        sheetContainerRef={sheetContainerRef}
-        eventListenerRef={eventListenerRef}
-        sheetGridRef={sheetGridRef}
-      />
+      {/* <Sheet sheetContainerRef={sheetContainerRef} sheetGridRef={sheetGridRef}/> */}
       <Divider/>
-      <SheetNavigator
-        sheetGridRef={sheetGridRef}
-        eventListenerRef={eventListenerRef}
-      />
-      <EventListener 
-        ref={eventListenerRef}
-        sheetGridRef={sheetGridRef}
-        sheetContainerRef={sheetContainerRef}
-      />
+      {/* <SheetNavigator sheetGridRef={sheetGridRef}/> */}
     </div>
   );
 };

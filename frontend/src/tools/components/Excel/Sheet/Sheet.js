@@ -1,6 +1,6 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { VariableSizeGrid } from "react-window";
 
@@ -41,49 +41,53 @@ import {
   HOTKEYS
 } from "@constants/input";
 
-import "./Sheet.scss";
+import { setScrollData } from "@actions/ui/excel/events";
+import {
+  keyArrowDown,
+  keyArrowUp,
+  keyArrowLeft,
+  keyArrowRight
+} from "@actions/ui/excel/keyboard"
 
-const mapStateToProps = ({
-  ui: {
-    excel: {
-      cursorType,
-      sheetCellData,
-      sheetColumnCount,
-      sheetRowCount,
-      sheetColumnWidths,
-      sheetRowHeights,
-      sheetFreezeRowCount,
-      sheetFreezeColumnCount
-    }
-  }
-}) => ({
-  cursorType,
-  sheetCellData,
-  sheetColumnCount,
-  sheetRowCount,
-  sheetColumnWidths,
-  sheetRowHeights,
-  sheetFreezeRowCount,
-  sheetFreezeColumnCount
-});
+import "./Sheet.scss";
 
 // !Change this to spread instead of object?
 const createItemData = memoize((itemData) => (itemData));
 
 const SheetWindow = ({
   sheetGridRef,
-  eventListenerRef,
-
-  sheetCellData,
-  sheetFreezeRowCount,
-  sheetFreezeColumnCount,
-  sheetColumnCount,
-  sheetRowCount,
-  sheetColumnWidths,
-  sheetRowHeights
+  eventListenerRef
 }) => {
-  const tableFreezeRowCount = sheetFreezeRowCount + 1;
-  const tableFreezeColumnCount = sheetFreezeColumnCount + 1;
+  const dispatch = useDispatch();
+
+  const {
+    sheetCellData,
+    sheetFreezeRowCount,
+    sheetFreezeColumnCount,
+    sheetColumnCount,
+    sheetRowCount,
+    sheetColumnWidths,
+    sheetRowHeights
+  } = useSelector(({
+    sheetCellData,
+    sheetFreezeRowCount,
+    sheetFreezeColumnCount,
+    sheetColumnCount,
+    sheetRowCount,
+    sheetColumnWidths,
+    sheetRowHeights
+  }) => ({
+    sheetCellData,
+    sheetFreezeRowCount,
+    sheetFreezeColumnCount,
+    sheetColumnCount,
+    sheetRowCount,
+    sheetColumnWidths,
+    sheetRowHeights
+  }));
+
+  const tableFreezeRowCount = useMemo(() => sheetFreezeRowCount + 1, [ sheetFreezeRowCount ]);
+  const tableFreezeColumnCount = useMemo(() => sheetFreezeColumnCount + 1, [ sheetFreezeColumnCount ]);
 
   const rowHeight = useCallback(
     (index) => index ? getNormalRowHeight(sheetRowHeights[index]) : DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
@@ -95,7 +99,10 @@ const SheetWindow = ({
     [ sheetColumnWidths ]
   );
 
-  const handleScroll = (scrollData) => eventListenerRef.current.scroll(scrollData); 
+  const handleScroll = useCallback(
+    (scrollData) => dispatch(setScrollData(scrollData)), 
+    [ dispatch ]
+  );
 
   const itemData = createItemData({
     sheetCellData, 
@@ -106,10 +113,7 @@ const SheetWindow = ({
     eventListenerRef
   });
 
-  const commonSelectionPaneProps = { 
-    sheetGridRef, 
-    eventListenerRef
-  };
+  const commonSelectionPaneProps = { sheetGridRef, eventListenerRef };
 
   return (
     <AutoSizer>
@@ -168,65 +172,93 @@ const SheetWindow = ({
 let Sheet = ({ 
   eventListenerRef, 
   sheetContainerRef, 
-  sheetGridRef,
-
-  cursorType,
-  isEditMode,
-  sheetCellData,
-  sheetFreezeRowCount,
-  sheetFreezeColumnCount,
-  sheetColumnCount,
-  sheetRowCount,
-  sheetColumnWidths,
-  sheetRowHeights
+  sheetGridRef
 }) => {
-  const handleKeyDown = (event) => {
-    const { 
-      key, 
-      shiftKey, 
-      ctrlKey, 
-      altKey,
-      metaKey
-    } = event;
+  const dispatch = useDispatch();
 
-    if(key === "ArrowUp") {
-      eventListenerRef.current.arrowUp(event, shiftKey);
-    } else if(key === "ArrowDown") {
-      eventListenerRef.current.arrowDown(event, shiftKey);
-    } else if(key === "ArrowLeft") {
-      eventListenerRef.current.arrowLeft(event, shiftKey);
-    } else if(key === "ArrowRight") {
-      eventListenerRef.current.arrowRight(event, shiftKey);
-    } else if(key === "Tab") {
-      eventListenerRef.current.tab(event, shiftKey, sheetContainerRef);
-    } else if(key === "Enter" && !(ctrlKey || metaKey) && !altKey) {
-      eventListenerRef.current.enter(event, shiftKey, sheetContainerRef);
-    } else if(key === "Delete" || key === "Backspace") {
-      eventListenerRef.current.delete();
-    } else if(key === "Escape") {
-      eventListenerRef.current.escape(sheetContainerRef);
-    } else if(key === "s" && (ctrlKey || metaKey)) {
-      // ! Put this save higher up the component? In Excel container?
-      event.preventDefault();
-      eventListenerRef.current.save();
-    } else if(key === "a" && (ctrlKey || metaKey)) {
-      eventListenerRef.current.selectAll(event);
-    } else if((ctrlKey || metaKey)) {
-      
-    } else if(inputCharacterRegex.test(key)) {
-      eventListenerRef.current.startEditMode();
-    } else {
+  const {
+    cursorType,
+    isEditMode,
+    sheetCellData,
+    sheetFreezeRowCount,
+    sheetFreezeColumnCount,
+    sheetColumnCount,
+    sheetRowCount,
+    sheetColumnWidths,
+    sheetRowHeights
+  } = useSelector(({
+    cursorType,
+    isEditMode,
+    sheetCellData,
+    sheetFreezeRowCount,
+    sheetFreezeColumnCount,
+    sheetColumnCount,
+    sheetRowCount,
+    sheetColumnWidths,
+    sheetRowHeights
+  }) => ({
+    cursorType,
+    isEditMode,
+    sheetCellData,
+    sheetFreezeRowCount,
+    sheetFreezeColumnCount,
+    sheetColumnCount,
+    sheetRowCount,
+    sheetColumnWidths,
+    sheetRowHeights
+  }));
 
-    }
+  const handleKeyDown = useCallback(
+    (event) => {
+      const { 
+        key, 
+        shiftKey, 
+        ctrlKey, 
+        altKey,
+        metaKey
+      } = event;
 
-    for(let hotkey in HOTKEYS) {
-      if(isHotkey(hotkey, event)) {
-        event.preventDefault();
-        eventListenerRef.current.applyTextStyle(HOTKEYS[hotkey])
-        break;
+      let action;
+  
+      if(key === "ArrowUp") {
+        action = keyArrowUp({ event, shiftKey });
+      } else if(key === "ArrowDown") {
+        action = keyArrowDown({ event, shiftKey });
+      } else if(key === "ArrowLeft") {
+        action = keyArrowLeft({ event, shiftKey });
+      } else if(key === "ArrowRight") {
+        action = keyArrowRight({ event, shiftKey });
+      } else if(key === "Tab") {
+        action = keyTab({ event, shiftKey, sheetContainerRef });
+      } else if(key === "Enter" && !(ctrlKey || metaKey) && !altKey) {
+        action = keyEnter({ event, shiftKey, sheetContainerRef });
+      } else if(key === "Delete" || key === "Backspace") {
+        action = keyDelete();
+      } else if(key === "Escape") {
+        action = keyEscape({ sheetContainerRef });
+      } else if(key === "s" && (ctrlKey || metaKey)) {
+        action = save();
+      } else if(key === "a" && (ctrlKey || metaKey)) {
+        action = selectAll({ event });
+      } else if((ctrlKey || metaKey)) {
+        
+      } else if(inputCharacterRegex.test(key)) {
+        eventListenerRef.current.startEditMode();
+        action = enableEditMode();
+      } 
+  
+      for(let hotkey in HOTKEYS) {
+        if(isHotkey(hotkey, event)) {
+          action = applyTextStyle(HOTKEYS[hotkey]);
+          break;
+        }
       }
-    }
-  };
+
+      if(action) dispatch(action);
+    },
+    [ dispatch ]
+  );
+
 
   const handleKeyDownCapture = (event) => {
     const { key, shiftKey, ctrlKey, metaKey, altKey } = event;
@@ -300,7 +332,5 @@ let Sheet = ({
     </div>
   );
 };
-
-Sheet = connect(mapStateToProps)(Sheet);
 
 export default Sheet;

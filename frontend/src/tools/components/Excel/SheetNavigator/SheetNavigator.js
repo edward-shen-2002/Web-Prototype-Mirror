@@ -1,9 +1,6 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 
-import { connect } from "react-redux";
-
-import { updateSheetNames } from "@actions/ui/excel/sheetNames";
-import { updateActiveSheetName } from "@actions/ui/excel/activeSheetName";
+import { batch, useSelector, useDispatch } from "react-redux";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
@@ -12,10 +9,12 @@ import AddIcon from "@material-ui/icons/Add";
 import InputBase from "@material-ui/core/InputBase";
 
 import { DnDReorder } from "@tools/misc";
+import { 
+  generateNewSheetName, 
+  createBlankSheet 
+} from "@tools/excel";
 
 import "./SheetNavigator.scss";
-import { useState } from "react";
-import { useEffect } from "react";
 
 const AddButton = ({ handleClick }) => (
   <Button onClick={handleClick}>
@@ -81,19 +80,25 @@ const SheetNameDraggable = ({
   setIsEditMode,
   provided, 
   sheetName, 
-  activeSheetName,
-  handleChangeActiveSheet,
-  handleChangeSheetName
+  activeSheetName
 }) => {
   const isActive = activeSheetName === sheetName;
 
-  const handleClick = () => {
-    if(!isActive) {
-      handleChangeActiveSheet(sheetName);
-      sheetGridRef.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
-      setIsEditMode(false);
-    }
-  };
+  const handleClick = useCallback(
+    () => {
+      if(!isActive) {
+        sheetGridRef.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
+        
+        batch(
+          () => {
+            dispatch(disableEditMode());
+            dispatch(changeSheet({ sheetName }));
+          }
+        )
+      }
+    },
+    [ dispatch ]
+  );
 
   return (
     <div
@@ -110,7 +115,6 @@ const SheetNameDraggable = ({
             <SheetNameEdit
               sheetName={sheetName}
               setIsEditMode={setIsEditMode}
-              handleChangeSheetName={handleChangeSheetName}
             />
           : 
             <SheetNameNormal
@@ -154,9 +158,7 @@ const SheetNamesDroppable = ({
   isEditMode,
   setIsEditMode,
   sheetNames, 
-  activeSheetName,
-  handleChangeActiveSheet,
-  handleChangeSheetName
+  activeSheetName
 }) => (
   <Droppable droppableId="droppable" direction="horizontal">
     {(provided) => (
@@ -167,8 +169,6 @@ const SheetNamesDroppable = ({
           setIsEditMode={setIsEditMode}
           sheetNames={sheetNames} 
           activeSheetName={activeSheetName}
-          handleChangeActiveSheet={handleChangeActiveSheet}
-          handleChangeSheetName={handleChangeSheetName}
         />
         {provided.placeholder}
       </div>
@@ -199,46 +199,55 @@ const SheetSelectionContext = ({
   </DragDropContext>
 );
 
-const mapStateToProps = ({
-  ui: {
-    excel: {
-      sheetNames,
-      activeSheetName
-    }
-  }
-}) => ({
-  sheetNames,
-  activeSheetName,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  handleChangeActiveSheet: (activeSheetName) => dispatch(updateActiveSheetName(activeSheetName)),
-  handleChangeSheetNames: (sheetNames) => dispatch(updateSheetNames(sheetNames)),
-});
-
 // Move this state subscription and action to EventListener
-let SheetNavigator = ({ 
-  sheetGridRef,
-  eventListenerRef,
-  activeSheetName, 
-  sheetNames,
-  handleChangeSheetNames
-}) => {
+const SheetNavigator = ({ sheetGridRef }) => {
   const [ isEditMode, setIsEditMode ] = useState(false);
+  
+  const dispatch = useDispatch();
 
-  const handleAddSheet = () => eventListenerRef.current.addSheet();
+  const {
+    sheetNames,
+    activeSheetName
+  } = useSelector(({
+    ui: {
+      excel: {
+        sheetNames,
+        activeSheetName
+      }
+    }
+  }) => ({
+    sheetNames,
+    activeSheetName
+  }));
 
-  const handleClickSheet = (sheetName) => eventListenerRef.current.changeSheet(sheetName);
+  const handleAddSheet = useCallback(
+    () => batch(
+      () => {
+        const sheetName = generateNewSheetName(sheetNames);
+        const sheetData = createBlankSheet();
 
-  const handleDragEnd = (result) => {
-    if(!result.destination) return;
+        dispatch(addSheet({ sheetName, sheetData }));
+        dispatch(changeSheet({ sheetName }));
+      }
+    ),
+    [ dispatch ]
+  );
 
-    const newSheetNames = DnDReorder(sheetNames, result.source.index, result.destination.index);
+  const handleDragEnd = useCallback(
+    (result) => {
+      if(!result.destination) return;
 
-    handleChangeSheetNames(newSheetNames);
-  };
+      const newSheetNames = DnDReorder(sheetNames, result.source.index, result.destination.index);
 
-  const handleChangeSheetName = (sheetName, newSheetName) => eventListenerRef.current.changeSheetName(sheetName, newSheetName);
+      dispatch(setSheetNames(newSheetNames));
+    }, 
+    [ dispatch ]
+  );
+
+  const handleChangeSheetName = useCallback(
+    (sheetName, newSheetName) => dispatch(setSheetName({ sheetName, newSheetName })),
+    [ dispatch ]
+  );
 
   return (
     <div className="sheetNavigator">
@@ -256,7 +265,5 @@ let SheetNavigator = ({
     </div>
   );
 };
-
-SheetNavigator = connect(mapStateToProps, mapDispatchToProps)(SheetNavigator);
 
 export default SheetNavigator;

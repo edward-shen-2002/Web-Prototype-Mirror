@@ -1,10 +1,8 @@
 import React from "react";
 
-import { connect } from "react-redux";
-
 import { Link } from "react-router-dom";
 
-import { toggleTemplatePublish } from "@actions/ui/excel/isTemplatePublished";
+// import { toggleTemplatePublish } from "@actions/ui/excel/isTemplatePublished";
 
 import Button from "@material-ui/core/Button";
 
@@ -17,9 +15,15 @@ import Menu from "./Menu";
 
 import "./AppBar.scss";
 
-const ExcelIconButton = ({ returnLink }) => (
+const ExcelIconButton = () => (
+  <Button>
+    <FileTableOutline className="excelIconButton__icon"/>
+  </Button>
+);
+
+const ExcelReturnButton = ({ returnLink }) => (
   <Link to={returnLink} className="excelIconButton">
-    <Button><FileTableOutline className="excelIconButton__icon"/></Button>
+   <ExcelIconButton/>
   </Link>
 );
 
@@ -27,12 +31,11 @@ const ExcelIconButton = ({ returnLink }) => (
  * The header of the workbook, which contains the title (?and related actions)
  */
 const Header = ({ 
-  name, 
-  eventListenerRef 
+  name
 }) => (
   <div>
     <Title name={name}/>
-    <Menu eventListenerRef={eventListenerRef}/>
+    <Menu/>
   </div>
 );
 
@@ -56,61 +59,27 @@ let TemplateOptions = ({
   );
 };
 
-const mapTemplateDispatchToProps = (dispatch) => ({
-  handleTogglePublish: () => dispatch(toggleTemplatePublish())
-});
+// const SideOptions = ({ 
+//   type,
+//   isTemplatePublished,
+//   handleTogglePublish
+// }) => (
+//   <div className="appBarSide">
+//     {type === "template" && <TemplateOptions isTemplatePublished={isTemplatePublished} handleTogglePublish={handleTogglePublish}/>}
+//   </div>
+// );
 
-const mapTemplateStateToProps = ({
-  ui: {
-    excel: {
-      type,
-      isTemplatePublished
-    }
-  }
-}) => ({
-  type,
-  isTemplatePublished
-});
-
-let SideOptions = ({ 
-  type,
-  isTemplatePublished,
-  handleTogglePublish,
-  eventListenerRef
-}) => (
-  <div className="appBarSide">
-    {type === "template" && <TemplateOptions eventListenerRef={eventListenerRef} isTemplatePublished={isTemplatePublished} handleTogglePublish={handleTogglePublish}/>}
-  </div>
-);
-
-SideOptions = connect(mapTemplateStateToProps, mapTemplateDispatchToProps)(SideOptions);
-
-const MainAppBarOptions = ({
-  returnLink,
-  eventListenerRef
-}) => (
+const MainAppBarOptions = ({ returnLink }) => (
   <div className="appBarMain">
-    <ExcelIconButton returnLink={returnLink}/>
-    <Header 
-      eventListenerRef={eventListenerRef}
-    />
+    <ExcelReturnButton returnLink={returnLink}/>
+    <Header/>
   </div>
 );
 
-const AppBar = ({ 
-  eventListenerRef,
-  type,
-  returnLink,
-}) => (
+const AppBar = ({ type, returnLink }) => (
   <div className="appBarContainer">
-    <MainAppBarOptions  
-      returnLink={returnLink} 
-      eventListenerRef={eventListenerRef}
-    />
-    <SideOptions 
-      eventListenerRef={eventListenerRef}
-      type={type}
-    />
+    <MainAppBarOptions returnLink={returnLink} />
+    {/* <SideOptions type={type}/> */}
   </div>
 );
 

@@ -1,5 +1,7 @@
 import React from "react";
 
+import { useSelector } from "react-redux";
+
 import MenuItems from "@tools/components/Excel/commonComponents/MenuItems";
 
 import SaveIcon from "@material-ui/icons/Save";
@@ -10,10 +12,16 @@ const File = ({
   openedMenuName, 
 
   handleClickMenu, 
-  handleHoverMenu,
-
-  eventListenerRef
+  handleHoverMenu
 }) => {
+  const {
+
+  } = useSelector(({
+    
+  }) => ({
+
+  }));
+
   const saveMenu = {
     icon: <SaveIcon/>,
     label: "Save",
