@@ -1043,7 +1043,6 @@ export const convertExcelFileToState = async (excelFile) => {
 export const convertStateToReactState = (state) => {
   const workbookData = state.workbookData;
 
-
   let data = {};
 
   for(let sheetName in workbookData) data[sheetName] = JSON.parse(pako.inflate(workbookData[sheetName], { to: "string" }));

@@ -25,6 +25,8 @@ import EXCEL_RESET_EXCEL_DATA from "./commands/RESET_EXCEL_DATA";
 
 import EXCEL_SET_NAME from "./commands/SET_NAME";
 
+import EXCEL_TOGGLE_TEMPLATE_PUBLISH from "./commands/TOGGLE_TEMPLATE_PUBLISH";
+
 // import EXCEL_RIGHT_CLICK from "/RIGHT_CLICK";
 // import EXCEL_DOUBLE_CLICK_EDITABLE_CELL from "/DOUBLE_CLICK_EDITABLE_CELL";
 // import EXCEL_MOUSE_UP from "/MOUSE_UP";
@@ -102,7 +104,9 @@ const excelReducer = createReducer(
     EXCEL_SET_EXCEL_DATA,
     EXCEL_RESET_EXCEL_DATA,
 
-    EXCEL_SET_NAME
+    EXCEL_SET_NAME,
+
+    EXCEL_TOGGLE_TEMPLATE_PUBLISH
   }
 );
 

@@ -1,4 +1,4 @@
-import { getAllAreas } from "./tools/area";
+import { getAllAreas } from "../tools/area";
 
 const DELETE = (
   state

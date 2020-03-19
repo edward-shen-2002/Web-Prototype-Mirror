@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useCallback } from "react";
+
+import { useDispatch, useSelector } from "react-redux";
 
 import { Link } from "react-router-dom";
 
-// import { toggleTemplatePublish } from "@actions/ui/excel/isTemplatePublished";
+import { toggleTemplatePublish } from "@actions/ui/excel/commands";
 
 import Button from "@material-ui/core/Button";
 
@@ -46,28 +48,36 @@ const DoubleArrowIconButton = ({ buttonStyle, text, handleClick }) => (
   </Button>
 );
 
-let TemplateOptions = ({  
-  isTemplatePublished, 
-  handleTogglePublish 
-}) => {
+let TemplateOptions = () => {
+  const dispatch = useDispatch();
+
+  const isTemplatePublished = useSelector(({
+    ui: {
+      excel: {
+        isTemplatePublished
+      }
+    }
+  }) => isTemplatePublished);
+
   const publishStyle = { minWidth: 140 };
+
+  const togglePublish = useCallback(
+    () => dispatch(toggleTemplatePublish()),
+    [ dispatch ]
+  );
 
   return (
     <div>
-      <DoubleArrowIconButton buttonStyle={publishStyle} text={isTemplatePublished ? "Unpublish" : "Publish"} handleClick={handleTogglePublish}/>
+      <DoubleArrowIconButton buttonStyle={publishStyle} text={isTemplatePublished ? "Unpublish" : "Publish"} handleClick={togglePublish}/>
     </div>
   );
 };
 
-// const SideOptions = ({ 
-//   type,
-//   isTemplatePublished,
-//   handleTogglePublish
-// }) => (
-//   <div className="appBarSide">
-//     {type === "template" && <TemplateOptions isTemplatePublished={isTemplatePublished} handleTogglePublish={handleTogglePublish}/>}
-//   </div>
-// );
+const SideOptions = ({ type }) => (
+  <div className="appBarSide">
+    {type === "template" && <TemplateOptions/>}
+  </div>
+);
 
 const MainAppBarOptions = ({ returnLink }) => (
   <div className="appBarMain">
@@ -79,7 +89,7 @@ const MainAppBarOptions = ({ returnLink }) => (
 const AppBar = ({ type, returnLink }) => (
   <div className="appBarContainer">
     <MainAppBarOptions returnLink={returnLink} />
-    {/* <SideOptions type={type}/> */}
+    <SideOptions type={type}/>
   </div>
 );
 
