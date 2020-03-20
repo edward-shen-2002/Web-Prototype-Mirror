@@ -1,6 +1,6 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
 import uniqid from "uniqid";
 
@@ -9,6 +9,12 @@ import {
   getBlockStyle, 
   getAreaDimensions
 } from "@tools/excel";
+
+import {
+  mouseDown,
+  doubleClickEditableCell,
+  selectOver
+} from "@actions/ui/excel/mouse";
 
 import topOffsetsSelector from "@selectors/ui/excel/topOffsets";
 import leftOffsetsSelector from "@selectors/ui/excel/leftOffsets";
@@ -77,21 +83,24 @@ const MergedCell = ({
     leftOffsets,
     sheetRowHeights,
     sheetColumnWidths
-  } = useSelector(({
-    ui: {
-      excel: {
-        sheetRowCount,
-        sheetColumnCount,
-        sheetRowHeights,
-        sheetColumnWidths
+  } = useSelector(
+    ({
+      ui: {
+        excel: {
+          sheetRowCount,
+          sheetColumnCount,
+          sheetRowHeights,
+          sheetColumnWidths
+        }
       }
-    }
-  }) => ({
-    topOffsets: topOffsetsSelector({ sheetRowCount, sheetRowHeights }),
-    leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths }),
-    sheetRowHeights,
-    sheetColumnWidths
-  }));
+    }) => ({
+      topOffsets: topOffsetsSelector({ sheetRowCount, sheetRowHeights }),
+      leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths }),
+      sheetRowHeights,
+      sheetColumnWidths
+    }),
+    shallowEqual
+  );
 
   // Compute merged height and width
   const dimensions = useMemo(() => getAreaDimensions({
@@ -120,22 +129,49 @@ const MergedCell = ({
 
 const EditableCell = ({ 
   style, 
+  
+  sheetGridRef,
   cellData, 
-
   columnIndex, 
   rowIndex, 
 
   eventListenerRef
 }) => {
-  const handleMouseDown = ({ buttons, ctrlKey, shiftKey }) => {
-    if(buttons === 1) eventListenerRef.current.mouseDown(columnIndex, rowIndex, ctrlKey, shiftKey);
-  };
+  const dispatch = useDispatch();
+  
+  const handleMouseDown = useCallback(
+    ({ buttons, ctrlKey, shiftKey }) => {
+      if(buttons === 1) dispatch(
+        mouseDown({ 
+          sheetGridRef,
+          x1: columnIndex, 
+          y1: rowIndex, 
+          ctrlKey, 
+          shiftKey 
+        })
+      );
+    },
+    [ dispatch ]
+  );
 
-  const handleMouseEnter = ({ buttons, ctrlKey }) => {
-    if(buttons === 1) eventListenerRef.current.selectOver(columnIndex, rowIndex, ctrlKey);
-  };
+  const handleMouseEnter = useCallback(
+    ({ buttons, ctrlKey }) => {
+      if(buttons === 1) dispatch(
+        selectOver({ 
+          newX2: columnIndex, 
+          newY2: rowIndex, 
+          ctrlKey 
+        })
+      );
+    },
+    [ dispatch ]
+  );
 
-  const handleDoubleClick = () => eventListenerRef.current.doubleClickEditableCell();
+  const handleDoubleClick = useCallback(
+    () => dispatch(doubleClickEditableCell()),
+    [ dispatch ]
+  );
+
   const handleRightClick = (event) => eventListenerRef.current.rightClickCell(event, rowIndex, columnIndex);
 
   let merged;

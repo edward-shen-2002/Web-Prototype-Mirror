@@ -16,7 +16,11 @@ import {
 
   EXCEL_SET_NAME,
 
-  EXCEL_TOGGLE_TEMPLATE_PUBLISH
+  EXCEL_TOGGLE_TEMPLATE_PUBLISH,
+
+  EXCEL_RESET_ACTIVE_CELL_DIALOG,
+
+  EXCEL_ACTIVE_CELL_INPUT_VALUE
 } from "@actionCreators";
 
 export const selectAll = (props) => ({ type: EXCEL_SELECT_ALL, ...props });
@@ -38,3 +42,7 @@ export const resetExcelData = () => ({ type: EXCEL_RESET_EXCEL_DATA });
 export const setName = (name) => ({ type: EXCEL_SET_NAME, name });
 
 export const toggleTemplatePublish = () => ({ type: EXCEL_TOGGLE_TEMPLATE_PUBLISH });
+
+export const resetActiveCellDialog = () => ({ type: EXCEL_RESET_ACTIVE_CELL_DIALOG });
+
+export const setActiveCellInputValue = (value) => ({ type: EXCEL_ACTIVE_CELL_INPUT_VALUE, value }); 

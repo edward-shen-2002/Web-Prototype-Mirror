@@ -1,4 +1,4 @@
-import { getWholeArea } from "./tools/merge";
+import { getWholeArea } from "../tools/merge";
 
 const SELECT_OVER = (
   state, 

@@ -9,6 +9,8 @@ import {
 // import EXCEL_MOVE_SELECTION from "/MOVE_SELECTION";
 // import EXCEL_END_SELECTION from "./mouse/END_SELECTION";
 
+import EXCEL_SELECT_OVER from "./mouse/SELECT_OVER";
+
 import EXCEL_DELETE_CELLS_SHIFT_UP from "./commands/DELETE_CELLS_SHIFT_UP";
 import EXCEL_DELETE_CELLS_SHIFT_LEFT from "./commands/DELETE_CELLS_SHIFT_LEFT";
 import EXCEL_ADD_SHEET from "./commands/ADD_SHEET";
@@ -27,16 +29,22 @@ import EXCEL_SET_NAME from "./commands/SET_NAME";
 
 import EXCEL_TOGGLE_TEMPLATE_PUBLISH from "./commands/TOGGLE_TEMPLATE_PUBLISH";
 
-// import EXCEL_RIGHT_CLICK from "/RIGHT_CLICK";
-// import EXCEL_DOUBLE_CLICK_EDITABLE_CELL from "/DOUBLE_CLICK_EDITABLE_CELL";
-// import EXCEL_MOUSE_UP from "/MOUSE_UP";
-// import EXCEL_MOUSE_MOVE from "/MOUSE_MOVE";
-// import EXCEL_MOUSE_DOWN from "/MOUSE_DOWN"
+import EXCEL_RIGHT_CLICK_CELL from "./mouse/RIGHT_CLICK_CELL";
+import EXCEL_DOUBLE_CLICK_EDITABLE_CELL from "./mouse/DOUBLE_CLICK_EDITABLE_CELL";
+import EXCEL_MOUSE_UP from "./mouse/MOUSE_UP";
+import EXCEL_MOUSE_MOVE from "./mouse/MOUSE_MOVE";
+import EXCEL_MOUSE_DOWN from "./mouse/MOUSE_DOWN"
 
 import EXCEL_ARROW_DOWN from "./keyboard/ARROW_DOWN";
 import EXCEL_ARROW_UP from "./keyboard/ARROW_UP";
 import EXCEL_ARROW_LEFT from "./keyboard/ARROW_LEFT";
 import EXCEL_ARROW_RIGHT from "./keyboard/ARROW_RIGHT";
+
+import EXCEL_SET_SCROLL_DATA from "./events/SET_SCROLL_DATA";
+
+import EXCEL_RESET_ACTIVE_CELL_DIALOG from "./commands/RESET_ACTIVE_CELL_DIALOG";
+
+import EXCEL_SET_ACTIVE_CELL_INPUT_VALUE from "./commands/SET_ACTIVE_CELL_INPUT_VALUE";
 
 // import EXCEL_TAB from "/TAB";
 // import EXCEL_ENTER from "/ENTER";
@@ -98,8 +106,6 @@ const defaultState = {
   bundleId: ""
 };
 
-
-
 const excelReducer = createReducer(
   defaultState, 
   {
@@ -113,7 +119,23 @@ const excelReducer = createReducer(
     EXCEL_ARROW_DOWN,
     EXCEL_ARROW_UP,
     EXCEL_ARROW_LEFT,
-    EXCEL_ARROW_RIGHT
+    EXCEL_ARROW_RIGHT,
+
+    EXCEL_SET_SCROLL_DATA,
+
+    EXCEL_RIGHT_CLICK_CELL,
+    EXCEL_DOUBLE_CLICK_EDITABLE_CELL,
+    EXCEL_MOUSE_UP,
+    EXCEL_MOUSE_MOVE,
+    EXCEL_MOUSE_DOWN,
+    EXCEL_SELECT_OVER,
+
+    EXCEL_ADD_SHEET,
+    EXCEL_SET_SHEET,
+
+    EXCEL_RESET_ACTIVE_CELL_DIALOG,
+
+    EXCEL_SET_ACTIVE_CELL_INPUT_VALUE
   }
 );
 

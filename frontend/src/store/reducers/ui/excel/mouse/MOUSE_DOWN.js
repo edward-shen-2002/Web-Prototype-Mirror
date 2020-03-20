@@ -1,8 +1,8 @@
-import { getWholeArea } from "./tools/merge";
+import { getWholeArea } from "../tools/merge";
 import { 
   updateActiveCellPosition,
   saveActiveCellInputData
-} from "./tools/cell";
+} from "../tools/cell";
 
 const MOUSE_DOWN = (
   state, 

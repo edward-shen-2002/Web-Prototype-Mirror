@@ -68,7 +68,7 @@ export const updateActiveCellPosition = ({
   newState.activeCellPosition = { x: newX, y: newY };
 
   if(shouldScroll) scrollTo({
-    state,
+    newState,
     sheetGridRef,
     newY, 
     newX

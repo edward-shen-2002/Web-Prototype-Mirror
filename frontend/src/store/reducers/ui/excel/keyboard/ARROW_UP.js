@@ -1,6 +1,7 @@
 import { getWholeArea } from "../tools/merge";
 import { scrollTo } from "../tools/scroll";
 import { isPositionEqualArea } from "@tools/excel";
+import { updateActiveCellPosition  } from "../tools/cell";
 
 const ARROW_UP = (
   state, 
@@ -159,7 +160,12 @@ const ARROW_UP = (
       y--;
     }
 
-    if(y > 0) newState.activeCellPosition = { x, y };
+    if(y > 0) newState = updateActiveCellPosition({
+      newState,
+      newY: y,
+      newX: x,
+      sheetGridRef
+    });
     newState.stagnantSelectionAreas = [];
     newState.activeCellSelectionAreaIndex = -1;
   }

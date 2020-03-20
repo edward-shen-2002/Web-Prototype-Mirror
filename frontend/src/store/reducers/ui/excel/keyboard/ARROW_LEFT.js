@@ -1,13 +1,15 @@
 import { getWholeArea } from "../tools/merge";
 import { scrollTo } from "../tools/scroll";
+import { isPositionEqualArea } from "@tools/excel";
+import { updateActiveCellPosition } from "../tools/cell";
 
 const ARROW_LEFT = (
   state, 
   {
     sheetGridRef,
     shiftKey
-   }
- ) => {
+  }
+) => {
   let { isEditMode } = state;
 
   if(isEditMode) return state;
@@ -162,7 +164,12 @@ const ARROW_LEFT = (
       x--;
     }
 
-    if(x > 0) newState.activeCellPosition = { y, x };
+    if(x > 0) newState = updateActiveCellPosition({
+      newState,
+      newY: y,
+      newX: x,
+      sheetGridRef
+    });
     newState.stagnantSelectionAreas = [];
     newState.activeCellSelectionAreaIndex = -1;
   }

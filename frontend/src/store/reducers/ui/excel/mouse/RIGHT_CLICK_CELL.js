@@ -1,6 +1,6 @@
 import {
   updateActiveCellPosition
-} from "./tools/cell";
+} from "../tools/cell";
 
 const RIGHT_CLICK_CELL = (
   state,

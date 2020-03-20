@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 
-import { connect, useDispatch, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector, shallowEqual } from "react-redux";
 
 import { setName } from "@actions/ui/excel/commands";
 
@@ -18,7 +18,8 @@ let Title = () => {
           name
         }
       }
-    }) => name
+    }) => name,
+    shallowEqual
   );
 
   const handleChange = useCallback(

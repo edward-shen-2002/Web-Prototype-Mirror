@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useCallback } from "react";
 
-import { connect } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
 import { 
   getNormalRowHeight, 
@@ -9,6 +9,8 @@ import {
   parsePrepopulateString,
   getAreaDimensions
 } from "@tools/excel";
+
+import { resetActiveCellDialog } from "@actions/ui/excel/commands";
 
 import CellEditor from "./CellEditor";
 
@@ -22,8 +24,9 @@ import PrepopulatePopup from "./PrepopulatePopup";
 import CommentPopup from "./CommentPopup";
 import GroupPopup from "./GroupPopup";
 
-import "./ActiveCell.scss";
 import { getBlockStyle } from "@tools/excel";
+
+import "./ActiveCell.scss";
 
 const ActiveCellDialog = ({
   activeCellDialog,
@@ -193,83 +196,89 @@ const ActiveNormalCell = ({
   );
 };
 
-const mapStateToProps = ({
-  ui: {
-    excel: {
-      activeCellInputData: { editorState },
+const ActiveCell = ({ computeActiveCellStyle, isActiveCellInCorrectPane }) => {
+  const dispatch = useDispatch();
+
+  const {
+    isEditMode, 
+    editorState,
+    activeCellInputAutoFocus,
+  
+    sheetFreezeColumnCount,
+    sheetFreezeRowCount,
+  
+    sheetColumnCount,
+    sheetRowCount,
+  
+    sheetColumnWidths,
+    sheetRowHeights,
+  
+    sheetCellData,
+
+    activeCellDialog,
+
+    x,
+    y,
+
+    topOffsets,
+    leftOffsets
+  } = useSelector(
+    ({
+      ui: {
+        excel: {
+          isEditMode, 
+          editorState,
+          activeCellInputAutoFocus,
+        
+          activeCellPosition,
+        
+          sheetFreezeColumnCount,
+          sheetFreezeRowCount,
+        
+          sheetColumnCount,
+          sheetRowCount,
+        
+          sheetColumnWidths,
+          sheetRowHeights,
+        
+          sheetCellData,
+        
+
+          activeCellDialog,
+        }
+      }
+    }) => ({
+      isEditMode, 
+      editorState,
       activeCellInputAutoFocus,
-      activeCellPosition,
-
-      isEditMode,
-      activeCellDialog,
-
+    
+      ...activeCellPosition,
+    
       sheetFreezeColumnCount,
       sheetFreezeRowCount,
+    
       sheetColumnCount,
       sheetRowCount,
+    
       sheetColumnWidths,
       sheetRowHeights,
-      sheetCellData
-    }
-  }
-}) => ({
-  editorState,
-  activeCellInputAutoFocus,
+    
+      sheetCellData,
+    
+      activeCellDialog,
 
-  activeCellPosition,
+      topOffsets: topOffsetsSelector({ sheetRowHeights, sheetRowCount }),
+      leftOffsets: leftOffsetsSelector({ sheetColumnWidths, sheetColumnCount })
+    }),
+    shallowEqual
+  );
 
-  isEditMode,
-  activeCellDialog,
+  const handleResetActiveCellDialog = useCallback(
+    () => dispatch(resetActiveCellDialog()),
+    [ dispatch ]
+  );
 
-  sheetFreezeColumnCount,
-  sheetFreezeRowCount,
-  sheetColumnCount,
-  sheetRowCount,
-  sheetColumnWidths,
-  sheetRowHeights,
-  sheetCellData,
-
-  topOffsets: topOffsetsSelector({ sheetRowHeights, sheetRowCount }),
-  leftOffsets: leftOffsetsSelector({ sheetColumnWidths, sheetColumnCount })
-});
-
-let ActiveCell = ({ 
-  isEditMode, 
-  editorState,
-  activeCellInputAutoFocus,
-
-  activeCellPosition,
-
-  sheetFreezeColumnCount,
-  sheetFreezeRowCount,
-
-  sheetColumnCount,
-  sheetRowCount,
-
-  sheetColumnWidths,
-  sheetRowHeights,
-
-  sheetCellData,
-
-  isActiveCellInCorrectPane,
-  activeCellDialog,
-
-  computeActiveCellStyle,
-
-  topOffsets,
-  leftOffsets,
-
-  eventListenerRef
-}) => {
-  const { x, y } = activeCellPosition;
-
-  useEffect(() => {
-    if(isEditMode) eventListenerRef.current.resetActiveCellDialog();
-  }, [ isEditMode ]);
-
-  useEffect(() => {
-    if(activeCellDialog) eventListenerRef.current.resetActiveCellDialog();
-  }, [ x, y ]);
+  // handleResetActiveCellDialog();
 
   if(!isActiveCellInCorrectPane(x, y, sheetFreezeColumnCount, sheetFreezeRowCount)) return null;
 
@@ -344,18 +353,14 @@ let ActiveCell = ({
           blockStyle={blockStyle}
           editorState={editorState}
           activeCellInputAutoFocus={activeCellInputAutoFocus}
-          eventListenerRef={eventListenerRef}
         />
       : <ActiveNormalCell 
           activeCellStyle={activeCellStyle}
-          activeCellDialog={activeCellDialog}
+          // activeCellDialog={activeCellDialog}
           comments={displayedComments}
           value={displayedValue}
-          eventListenerRef={eventListenerRef}
         />
   );
 };
-
-ActiveCell = connect(mapStateToProps)(ActiveCell);
 
 export default ActiveCell;

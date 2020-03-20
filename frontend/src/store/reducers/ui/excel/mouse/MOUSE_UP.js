@@ -5,6 +5,9 @@ import {
   getExcelRowHeight
 } from "@tools/excel";
 
+import leftOffsetsSelector from "@selectors/ui/excel/leftOffsets";
+import topOffsetsSelector from "@selectors/ui/excel/topOffsets";
+
 const MOUSE_UP = (
   state, 
   { 
@@ -27,17 +30,17 @@ const MOUSE_UP = (
     sheetRowHeights,
     sheetColumnWidths,
 
-    leftOffsets,
-    topOffsets,
-
     scrollData,
 
     activeSelectionArea, 
     stagnantSelectionAreas
   } = state;
 
-  let newState = { ...newState };
+  let newState = { ...state };
 
+  const leftOffsets = leftOffsetsSelector(newState);
+  const topOffsets = topOffsetsSelector(newState);
+  
   if(isSelectionMode) {
     newState.isSelectionMode = false;
 
@@ -65,8 +68,6 @@ const MOUSE_UP = (
           return isXContained && isYContained; 
         });
 
-        let newStagnantSelectionAreas;
-
         if(supersetIndex >= 0) {
           const { x1: sX1, x2: sX2, y1: sY1, y2: sY2 } = stagnantSelectionAreas[supersetIndex];
           const minSX = Math.min(sX1, sX2);
@@ -93,7 +94,7 @@ const MOUSE_UP = (
           ];
 
           const isNewAreasPresent = newAreas.length;
-          const isNewStagnantAreasPresent = newStagnantSelectionAreas.length;
+          const isNewStagnantAreasPresent = newState.stagnantSelectionAreas.length;
 
           if(isNewAreasPresent || isNewStagnantAreasPresent) {
             let focusedArea;
@@ -104,7 +105,7 @@ const MOUSE_UP = (
               focusedArea = newAreas;
             } else {
               activeCellSelectionareaIndex = 0;
-              focusedArea = newStagnantSelectionAreas;
+              focusedArea = newState.stagnantSelectionAreas;
             }
 
             const { x1, x2, y1, y2 } = focusedArea[0];
@@ -117,7 +118,7 @@ const MOUSE_UP = (
           }
         } else {
           newState.stagnantSelectionAreas = [ ...stagnantSelectionAreas, activeSelectionArea ];
-          newState.activeCellSelectionareaIndex = newStagnantSelectionAreas.length - 1;
+          newState.activeCellSelectionareaIndex = newState.stagnantSelectionAreas.length - 1;
         }
       } else {
         newState.activeCellSelectionareaIndex = -1;

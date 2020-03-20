@@ -1,9 +1,12 @@
-import React, { useRef, useEffect, useCallback } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect, useCallback } from "react";
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
 
 import { Editable, Slate, ReactEditor } from "slate-react";
 import { Transforms, Editor } from "slate";
-import { useState } from "react";
+
+import {
+  setActiveCellInputValue
+} from "@actions/ui/excel/commands";
 
 const Leaf = ({ attributes, children, leaf }) => {
   if(leaf.bold) children = <strong>{children}</strong>;
@@ -19,9 +22,10 @@ const Element = ({ attributes, children, element }) => (
 );
 
 const CellEditor = ({
-  eventListenerRef,
   blockStyle
 }) => {
+  const dispatch = useDispatch();
+
   const [ isMounted, setIsMounted ] = useState(false);
 
   const renderElement = useCallback((props) => <Element {...props}/>, []);
@@ -33,17 +37,20 @@ const CellEditor = ({
       cellValue,
       cellEditor
     }
-   } = useSelector(({ 
-    ui: { 
-      excel: { 
-        activeCellInputAutoFocus,
-        activeCellInputData
+   } = useSelector(
+    ({ 
+      ui: { 
+        excel: { 
+          activeCellInputAutoFocus,
+          activeCellInputData
+        } 
       } 
-    } 
-  }) => ({
-    activeCellInputAutoFocus,
-    activeCellInputData
-  }));
+    }) => ({
+      activeCellInputAutoFocus,
+      activeCellInputData
+    }),
+    shallowEqual
+  );
 
   useEffect(() => {
     if(!isMounted) {
@@ -56,9 +63,10 @@ const CellEditor = ({
     }
   }, []);
 
-  const handleInputChange = useCallback((cellValue) => {
-    eventListenerRef.current.changeActiveInputData({ cellValue })
-  });
+  const handleInputChange = useCallback(
+    (value) => dispatch(setActiveCellInputValue(value)),
+    [ dispatch ]
+  );
 
   return (
     <Slate

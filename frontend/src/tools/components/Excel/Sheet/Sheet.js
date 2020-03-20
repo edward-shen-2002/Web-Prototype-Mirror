@@ -41,7 +41,10 @@ import {
   HOTKEYS
 } from "@constants/input";
 
-import { setScrollData } from "@actions/ui/excel/events";
+import { 
+  setScrollData,
+  enableEditMode
+} from "@actions/ui/excel/events";
 import {
   keyArrowDown,
   keyArrowUp,
@@ -117,6 +120,8 @@ const SheetWindow = ({ sheetGridRef }) => {
   );
 
   const itemData = createItemData({
+    sheetGridRef,
+    
     sheetCellData, 
     
     sheetColumnCount,
@@ -221,7 +226,8 @@ let Sheet = ({ sheetContainerRef, sheetGridRef }) => {
     shallowEqual
   );
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = useCallback(
+    (event) => {
       const { 
         key, 
         shiftKey, 
@@ -233,13 +239,25 @@ let Sheet = ({ sheetContainerRef, sheetGridRef }) => {
       let action;
   
       if(key === "ArrowUp") {
-        action = keyArrowUp({ sheetGridRef, shiftKey });
+        action = keyArrowUp({
+          sheetGridRef, 
+          shiftKey 
+        });
       } else if(key === "ArrowDown") {
-        action = keyArrowDown({ sheetGridRef, shiftKey });
+        action = keyArrowDown({ 
+          sheetGridRef, 
+          shiftKey 
+        });
       } else if(key === "ArrowLeft") {
-        action = keyArrowLeft({ sheetGridRef, shiftKey });
+        action = keyArrowLeft({ 
+          sheetGridRef, 
+          shiftKey 
+        });
       } else if(key === "ArrowRight") {
-        action = keyArrowRight({ sheetGridRef, shiftKey });
+        action = keyArrowRight({ 
+          sheetGridRef, 
+          shiftKey 
+        });
       } else if(key === "Tab") {
         action = keyTab({ event, shiftKey, sheetContainerRef });
       } else if(key === "Enter" && !(ctrlKey || metaKey) && !altKey) {
@@ -267,7 +285,9 @@ let Sheet = ({ sheetContainerRef, sheetGridRef }) => {
       // }
 
       if(action) dispatch(action);
-    }
+    },
+    [ dispatch ]
+  );
 
 
   const handleKeyDownCapture = (event) => {
@@ -333,7 +353,10 @@ let Sheet = ({ sheetContainerRef, sheetGridRef }) => {
         sheetRowHeights={sheetRowHeights}
       />
       <ContextMenu/>
-      <WindowListener sheetContainerRef={sheetContainerRef}/>
+      <WindowListener 
+        sheetContainerRef={sheetContainerRef}
+        sheetGridRef={sheetGridRef}
+      />
     </div>
   );
 };

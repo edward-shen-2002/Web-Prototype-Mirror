@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useSelector } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 
 import MenuItems from "@tools/components/Excel/commonComponents/MenuItems";
 
@@ -16,11 +16,14 @@ const File = ({
 }) => {
   const {
 
-  } = useSelector(({
-    
-  }) => ({
+  } = useSelector(
+    ({
+      
+    }) => ({
 
-  }));
+    }),
+    shallowEqual
+  );
 
   const saveMenu = {
     icon: <SaveIcon/>,

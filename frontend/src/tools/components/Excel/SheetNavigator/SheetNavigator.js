@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 
-import { batch, useSelector, useDispatch } from "react-redux";
+import { batch, useSelector, useDispatch, shallowEqual } from "react-redux";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
@@ -213,17 +213,20 @@ const SheetNavigator = ({ sheetGridRef }) => {
   const {
     sheetNames,
     activeSheetName
-  } = useSelector(({
-    ui: {
-      excel: {
-        sheetNames,
-        activeSheetName
+  } = useSelector(
+    ({
+      ui: {
+        excel: {
+          sheetNames,
+          activeSheetName
+        }
       }
-    }
-  }) => ({
-    sheetNames,
-    activeSheetName
-  }));
+    }) => ({
+      sheetNames,
+      activeSheetName
+    }),
+    shallowEqual
+  );
 
   const handleAddSheet = useCallback(
     () => batch(

@@ -14,7 +14,7 @@ const Cell = ({
   rowIndex 
 }) => {
   const {
-    eventListenerRef,
+    sheetGridRef,
     sheetCellData,
 
     columnCount,
@@ -33,7 +33,7 @@ const Cell = ({
         cellData={cellData} 
         columnIndex={columnIndex} 
         rowIndex={rowIndex} 
-        eventListenerRef={eventListenerRef}
+        sheetGridRef={sheetGridRef}
       />
     );
   } else if(columnIndex) {
@@ -42,7 +42,6 @@ const Cell = ({
         style={style} 
         column={columnIndex}
         rowCount={rowCount}
-        eventListenerRef={eventListenerRef}
       />
     );
   } else if(rowIndex) {
@@ -51,7 +50,6 @@ const Cell = ({
         style={style} 
         row={rowIndex}
         columnCount={columnCount}
-        eventListenerRef={eventListenerRef}
       />
     );
   } else {
@@ -60,7 +58,6 @@ const Cell = ({
         style={style} 
         columnCount={columnCount}
         rowCount={rowCount}
-        eventListenerRef={eventListenerRef}
       />
     );
   }

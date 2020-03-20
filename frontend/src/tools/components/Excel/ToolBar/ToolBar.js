@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useSelector } from "react-redux";
+import { useSelector, shallowEqual} from "react-redux";
 
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
@@ -117,24 +117,27 @@ const ToolBar = ({
     cellEditor, 
     activeCellInputAutoFocus,
     isEditMode 
-  } = useSelector(({
-    ui: {
-      excel: {
-        sheetCellData,
-        activeCellInputAutoFocus,
-        activeCellPosition: { x, y },
-        activeCellInputData: {
-          cellEditor
-        },
-        isEditMode
+  } = useSelector(
+    ({
+      ui: {
+        excel: {
+          sheetCellData,
+          activeCellInputAutoFocus,
+          activeCellPosition: { x, y },
+          activeCellInputData: {
+            cellEditor
+          },
+          isEditMode
+        }
       }
-    }
-  }) => ({
-    isEditMode,
-    activeCellInputAutoFocus,
-    cellEditor,
-    cellStyles: sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].styles ? sheetCellData[y][x].styles : {}
-  }));
+    }) => ({
+      isEditMode,
+      activeCellInputAutoFocus,
+      cellEditor,
+      cellStyles: sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].styles ? sheetCellData[y][x].styles : {}
+    }),
+    shallowEqual
+  );
 
   const handleApplyBlockStyle = ({ currentTarget: { id } }) => eventListenerRef.current.applyBlockStyle(id);
   const handleTextStyle = ({ currentTarget: { id } }) => eventListenerRef.current.applyTextStyle(id, null, activeCellInputAutoFocus);

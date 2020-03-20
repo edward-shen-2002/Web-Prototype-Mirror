@@ -9,6 +9,11 @@ import {
 import topOffsetsSelector from "@selectors/ui/excel/topOffsets";
 import leftOffsetsSelector from "@selectors/ui/excel/leftOffsets";
 
+import {
+  DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
+  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER
+} from "@constants/excel";
+
 export const scrollTo = ({
   newState,
   sheetGridRef,
@@ -16,13 +21,11 @@ export const scrollTo = ({
   newY, 
   newX
 }) => {
-  console.log("scroll", sheetGridRef)
   const {
     sheetColumnCount,
     sheetRowCount,
     sheetFreezeColumnCount,
     sheetFreezeRowCount,
-  
 
     sheetColumnWidths,
     sheetRowHeights,

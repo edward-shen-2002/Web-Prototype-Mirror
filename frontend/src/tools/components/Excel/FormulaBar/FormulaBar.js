@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 
-import { useSelector } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 
 import Divider from "@material-ui/core/Divider";
 
@@ -40,13 +40,16 @@ const InputField = ({
   const {
     formulaEditor,
     formulaValue
-  } = useSelector(({
-    ui: {
-      excel: {
-        activeCellInputData
+  } = useSelector(
+    ({
+      ui: {
+        excel: {
+          activeCellInputData
+        }
       }
-    }
-  }) => activeCellInputData);
+    }) => activeCellInputData,
+    shallowEqual
+  );
 
   const handleFocus = () => eventListenerRef.current.focusFormulaInput();
   const handleBlur = () => eventListenerRef.current.blurFormulaInput();

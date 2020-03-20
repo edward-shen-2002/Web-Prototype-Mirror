@@ -1145,3 +1145,32 @@ export const getAreaDimensions = ({
 
   return { height, width };
 };
+
+// export const extractScrollToData = ({
+//   scrollTo,
+//   props: {
+//     width,
+//     height,
+//   },
+//   _instanceProps: {
+//     rowMetadataMap, 
+//     estimatedRowHeight, 
+//     lastMeasuredRowIndex,
+      
+//     columnMetadataMap,
+//     estimatedColumnWidth,
+//     lastMeasuredColumnIndex
+//   }
+// }) => ({
+//   sheetGridRefScrollTo: scrollTo,
+//   width,
+//   height,
+
+//   rowMetadataMap, 
+//   estimatedRowHeight, 
+//   lastMeasuredRowIndex,
+    
+//   columnMetadataMap,
+//   estimatedColumnWidth,
+//   lastMeasuredColumnIndex
+// });

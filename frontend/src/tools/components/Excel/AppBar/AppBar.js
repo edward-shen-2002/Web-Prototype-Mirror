@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
 import { Link } from "react-router-dom";
 
@@ -51,13 +51,16 @@ const DoubleArrowIconButton = ({ buttonStyle, text, handleClick }) => (
 let TemplateOptions = () => {
   const dispatch = useDispatch();
 
-  const isTemplatePublished = useSelector(({
-    ui: {
-      excel: {
-        isTemplatePublished
+  const isTemplatePublished = useSelector(
+    ({
+      ui: {
+        excel: {
+          isTemplatePublished
+        }
       }
-    }
-  }) => isTemplatePublished);
+    }) => isTemplatePublished,
+    shallowEqual
+  );
 
   const publishStyle = { minWidth: 140 };
 
