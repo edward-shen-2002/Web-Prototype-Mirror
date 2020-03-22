@@ -1014,8 +1014,11 @@ export const convertExcelFileToState = async (excelFile) => {
       activeColumn = 1;
     }
 
+    const stagnantSelectionAreas = [];
+
     let activeCellPosition = { x: activeColumn, y: activeRow };
 
+    // ! Fill other params
     const sheetContent = {
       activeCellPosition,
       sheetCellData,
@@ -1026,7 +1029,8 @@ export const convertExcelFileToState = async (excelFile) => {
       sheetFreezeRowCount,
       sheetRowHeights,
       sheetHiddenColumns,
-      sheetHiddenRows
+      sheetHiddenRows,
+      stagnantSelectionAreas
     };
 
     workbookData[name] = pako.deflate(JSON.stringify(sheetContent), { to: "string" });

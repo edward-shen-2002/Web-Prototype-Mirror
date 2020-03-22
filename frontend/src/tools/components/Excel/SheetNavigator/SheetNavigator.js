@@ -13,8 +13,13 @@ import {
 } from "@actions/ui/excel/commands";
 
 import {
-  enableEditMode
+  enableEditMode,
+  disableEditMode
 } from "@actions/ui/excel/events";
+
+import {
+  setSheet
+} from "@actions/ui/excel/commands";
 
 import { DnDReorder } from "@tools/misc";
 import { 
@@ -99,16 +104,7 @@ const SheetNameDraggable = ({
 
   const handleClick = useCallback(
     () => {
-      if(!isActive) {
-        sheetGridRef.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
-        
-        batch(
-          () => {
-            dispatch(disableEditMode());
-            dispatch(changeSheet({ sheetName }));
-          }
-        )
-      }
+      if(!isActive) dispatch(setSheet({ sheetName, sheetGridRef }));
     },
     [ dispatch ]
   );

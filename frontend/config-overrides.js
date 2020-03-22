@@ -4,7 +4,6 @@ const TerserPlugin = require("terser-webpack-plugin");
 const webpack = require("webpack");
 
 const rewireAliases = require('react-app-rewire-aliases');
-const { paths } = require('react-app-rewired');
 const path = require('path');
 
 module.exports = {

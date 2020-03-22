@@ -46,6 +46,8 @@ import EXCEL_RESET_ACTIVE_CELL_DIALOG from "./commands/RESET_ACTIVE_CELL_DIALOG"
 
 import EXCEL_SET_ACTIVE_CELL_INPUT_VALUE from "./commands/SET_ACTIVE_CELL_INPUT_VALUE";
 
+import EXCEL_DISABLE_EDIT_MODE from "./events/DISABLE_EDIT_MODE";
+
 // import EXCEL_TAB from "/TAB";
 // import EXCEL_ENTER from "/ENTER";
 // import EXCEL_DELETE from "/DELETE";
@@ -135,7 +137,9 @@ const excelReducer = createReducer(
 
     EXCEL_RESET_ACTIVE_CELL_DIALOG,
 
-    EXCEL_SET_ACTIVE_CELL_INPUT_VALUE
+    EXCEL_SET_ACTIVE_CELL_INPUT_VALUE,
+
+    EXCEL_DISABLE_EDIT_MODE
   }
 );
 
