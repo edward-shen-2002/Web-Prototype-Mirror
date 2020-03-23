@@ -275,6 +275,7 @@ export const getExcelRowHeight = (rowHeight) => rowHeight ? rowHeight/EXCEL_ROW_
   
 export const getWorkbookInstance = async (activeSheetName, sheets) => {
   let Workbook = await XlsxPopulate.fromBlankAsync();
+  let defaultSheetFound = false;
 
   for(let sheetName in sheets) {
     const {
@@ -292,7 +293,14 @@ export const getWorkbookInstance = async (activeSheetName, sheets) => {
     } = sheets[sheetName];
 
     // May be a default sheet
-    let sheet =  sheetName === "Sheet1" ? await Workbook.sheet(sheetName) : await Workbook.addSheet(sheetName);
+    let sheet;
+
+    if(sheetName === "Sheet1") {
+      sheet = await Workbook.sheet(sheetName); 
+      defaultSheetFound = true;
+    } else {
+      sheet = await Workbook.addSheet(sheetName);
+    }
 
     for(let row in sheetCellData) {
       const rowData = sheetCellData[row];
@@ -333,6 +341,8 @@ export const getWorkbookInstance = async (activeSheetName, sheets) => {
     sheet.activeCell(x, y);
   };
 
+  if(!defaultSheetFound) Workbook.deleteSheet("Sheet1");
+
   // Set active sheet
   Workbook.activeSheet(activeSheetName);
 
@@ -352,7 +362,7 @@ export const downloadWorkbook = async (fileName, activeSheetName, sheets) => {
     const a = document.createElement("a");
     document.body.appendChild(a);
     a.href = url;
-    a.download = fileName;
+    a.download = `${fileName}.xlsx`;
     a.click();
     window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
