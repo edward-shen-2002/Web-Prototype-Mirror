@@ -6,7 +6,6 @@ import {
 
 const INSERT_COLUMN = (state) => {
   const {
-    sheetGridRef,
     activeCellPosition,
     sheetCellData,
     sheetColumnWidths,
@@ -24,8 +23,6 @@ const INSERT_COLUMN = (state) => {
   newState.sheetCellData = offsetSheetCellColumnDataAtIndex(sheetCellData, insertStart, insertCount);
   newState.sheetColumnWidths = offsetObjectAtIndex(sheetColumnWidths, insertStart, insertCount);
   newState.sheetHiddenColumns = offsetObjectAtIndex(sheetHiddenColumns, insertStart, insertCount);
-
-  sheetGridRef.current.resetAfterColumnIndex(insertStart);
   
   return newState;
 };

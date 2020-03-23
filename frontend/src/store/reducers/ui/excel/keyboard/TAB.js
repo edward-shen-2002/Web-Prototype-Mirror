@@ -7,7 +7,6 @@ const TAB = (
   state,
   {
     sheetGridRef,
-    event, 
     shiftKey, 
     sheetContainerRef
   }
@@ -27,15 +26,11 @@ const TAB = (
 
   let newState = { ...state };
 
-  event.preventDefault();
-
   let { x, y } = activeCellPosition;
 
-  if(isEditMode) {
-    newState = saveActiveCellInputData({ newState });
+  if(isEditMode) newState = saveActiveCellInputData({ newState });
 
-    sheetContainerRef.current.focus();
-  }
+  sheetContainerRef.current.focus();
 
   let selectionArea;
   let isBounded;

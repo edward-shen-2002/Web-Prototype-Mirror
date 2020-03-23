@@ -98,9 +98,7 @@ const computeSelectionAreaStyle = (columnWidths, leftOffsets, rowHeights, topOff
   return customSelectionStyle;
 };
 
-const TopRightActivityPane = ({ 
-  eventListenerRef
-}) => {
+const TopRightActivityPane = () => {
   const isActiveCellInCorrectPane = (x, y, sheetFreezeColumnCount, sheetFreezeRowCount) => (x > sheetFreezeColumnCount && y <= sheetFreezeRowCount);
   const isRelevantArea = (x1, y1, x2, y2, sheetFreezeColumnCount, sheetFreezeRowCount) => ((x1 > sheetFreezeColumnCount || x2 > sheetFreezeColumnCount) && (y1 <= sheetFreezeRowCount || y2 <= sheetFreezeRowCount));
   const isRelevantRowOffset = (rowOffset, freezeRowOffset) => rowOffset <= freezeRowOffset;
@@ -112,7 +110,6 @@ const TopRightActivityPane = ({
         isActiveCellInCorrectPane={isActiveCellInCorrectPane}
         isRelevantArea={isRelevantArea}
         computeSelectionAreaStyle={computeSelectionAreaStyle}
-        eventListenerRef={eventListenerRef}
       />
       <ColumnHeaderSelection/>
       <ColumnHeaderIndicator

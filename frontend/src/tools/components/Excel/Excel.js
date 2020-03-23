@@ -20,7 +20,7 @@ const Excel = ({ type, returnLink }) => {
       <Divider/>
       <ToolBar type={type}/>
       <Divider/>
-      <FormulaBar sheetContainerRef={sheetContainerRef}/>
+      <FormulaBar sheetContainerRef={sheetContainerRef} sheetGridRef={sheetGridRef}/>
       <Divider/>
       <Sheet sheetContainerRef={sheetContainerRef} sheetGridRef={sheetGridRef}/>
       <Divider/>

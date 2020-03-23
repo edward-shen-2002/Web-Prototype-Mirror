@@ -4,9 +4,7 @@ import { useSelector, shallowEqual } from "react-redux";
 
 import SortableTree from "react-sor"
 
-const GroupHierarchy = ({
-  eventListenerRef
-}) => {
+const GroupHierarchy = () => {
   const { sheetCellData } = useSelector(
     ({ 
       ui: {

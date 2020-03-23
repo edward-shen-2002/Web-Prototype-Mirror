@@ -59,7 +59,7 @@ const ActiveCellDialog = ({
   let Children;
 
   if(activeCellDialog) {
-    const { dialog, type } = activeCellDialog;
+    const { dialog, category } = activeCellDialog;
     if(dialog === "comment") {
       Children = (
         <CommentPopup 
@@ -71,7 +71,7 @@ const ActiveCellDialog = ({
       Children = (
         <BusinessConceptPopup 
           {...commonChildrenProps} 
-          type={type} 
+          type={category} 
         />
       );
     } else if(dialog === "prepopulate") {
@@ -93,7 +93,7 @@ const ActiveCellDialog = ({
       Children = (
         <GroupPopup
           {...commonChildrenProps}
-          type={type}
+          type={category}
         />
       );
     }
@@ -197,8 +197,6 @@ const ActiveNormalCell = ({
 };
 
 const ActiveCell = ({ computeActiveCellStyle, isActiveCellInCorrectPane }) => {
-  const dispatch = useDispatch();
-
   const {
     isEditMode, 
     editorState,
@@ -272,13 +270,6 @@ const ActiveCell = ({ computeActiveCellStyle, isActiveCellInCorrectPane }) => {
     }),
     shallowEqual
   );
-
-  const handleResetActiveCellDialog = useCallback(
-    () => dispatch(resetActiveCellDialog()),
-    [ dispatch ]
-  );
-
-  // handleResetActiveCellDialog();
 
   if(!isActiveCellInCorrectPane(x, y, sheetFreezeColumnCount, sheetFreezeRowCount)) return null;
 
@@ -356,7 +347,7 @@ const ActiveCell = ({ computeActiveCellStyle, isActiveCellInCorrectPane }) => {
         />
       : <ActiveNormalCell 
           activeCellStyle={activeCellStyle}
-          // activeCellDialog={activeCellDialog}
+          activeCellDialog={activeCellDialog}
           comments={displayedComments}
           value={displayedValue}
         />

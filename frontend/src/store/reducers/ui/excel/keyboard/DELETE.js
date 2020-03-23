@@ -1,4 +1,5 @@
 import { getAllAreas } from "../tools/area";
+import { CustomEditor, createEmptyEditorValue } from "@tools/slate";
 
 const DELETE = (
   state

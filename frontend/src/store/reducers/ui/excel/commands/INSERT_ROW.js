@@ -6,7 +6,6 @@ import {
 
 const INSERT_ROW = (state) => {
   const {
-    sheetGridRef,
     activeCellPosition,
     sheetCellData,
     sheetRowHeights,
@@ -24,7 +23,7 @@ const INSERT_ROW = (state) => {
   newState.sheetRowHeights = offsetObjectAtIndex(sheetRowHeights, insertStart, insertCount);
   newState.sheetHiddenRows = offsetObjectAtIndex(sheetHiddenRows, insertStart, insertCount);
 
-  sheetGridRef.current.resetAfterRowIndex(insertStart);
+  return newState;
 };
 
 export default INSERT_ROW;

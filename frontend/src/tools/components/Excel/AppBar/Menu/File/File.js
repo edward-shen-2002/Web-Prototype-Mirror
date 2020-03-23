@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useMemo } from "react";
 
-import { useSelector, shallowEqual } from "react-redux";
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
 
 import MenuItems from "@tools/components/Excel/commonComponents/MenuItems";
 
@@ -8,36 +8,34 @@ import SaveIcon from "@material-ui/icons/Save";
 
 import GetAppIcon from "@material-ui/icons/GetApp";
 
+import {
+  save,
+  download
+} from "@actions/ui/excel/commands";
+
 const File = ({ 
   openedMenuName, 
 
   handleClickMenu, 
   handleHoverMenu
 }) => {
-  const {
+  const dispatch = useDispatch();
 
-  } = useSelector(
-    ({
-      
-    }) => ({
-
-    }),
-    shallowEqual
+  const options = useMemo(
+    () => [ 
+      {
+        icon: <SaveIcon/>,
+        label: "Save",
+        handleClick: () => dispatch(save())
+      },
+      {
+        icon: <GetAppIcon/>,
+        label: "Download",
+        handleClick: () => dispatch(download())
+      }
+    ],
+    [ dispatch ]
   );
-
-  const saveMenu = {
-    icon: <SaveIcon/>,
-    label: "Save",
-    handleClick: () => eventListenerRef.current.save()
-  };
-
-  const downloadMenu = {
-    icon: <GetAppIcon/>,
-    label: "Download",
-    handleClick: () => eventListenerRef.current.download()
-  }
-
-  const options = [ saveMenu, downloadMenu ];
 
   return (
     <MenuItems 

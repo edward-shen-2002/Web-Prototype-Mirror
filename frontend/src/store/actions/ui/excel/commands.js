@@ -18,11 +18,21 @@ import {
 
   EXCEL_TOGGLE_TEMPLATE_PUBLISH,
 
+  EXCEL_SET_ACTIVE_CELL_DIALOG,
   EXCEL_RESET_ACTIVE_CELL_DIALOG,
 
   EXCEL_SET_ACTIVE_CELL_INPUT_VALUE,
 
-  EXCEL_SET_SHEET
+  EXCEL_SET_SHEET,
+
+  EXCEL_SET_READ_ONLY,
+  EXCEL_UNSET_READ_ONLY,
+
+  EXCEL_DOWNLOAD,
+  EXCEL_SAVE,
+
+  EXCEL_ADD_COMMENT,
+  EXCEL_DELETE_COMMENT
 } from "@actionCreators";
 
 export const selectAll = (props) => ({ type: EXCEL_SELECT_ALL, ...props });
@@ -45,8 +55,18 @@ export const setName = (name) => ({ type: EXCEL_SET_NAME, name });
 
 export const toggleTemplatePublish = () => ({ type: EXCEL_TOGGLE_TEMPLATE_PUBLISH });
 
+export const setActiveCellDialog = (props) => ({ type: EXCEL_SET_ACTIVE_CELL_DIALOG, ...props });
 export const resetActiveCellDialog = () => ({ type: EXCEL_RESET_ACTIVE_CELL_DIALOG });
 
 export const setActiveCellInputValue = (props) => ({ type: EXCEL_SET_ACTIVE_CELL_INPUT_VALUE, ...props }); 
 
 export const setSheet = (props) => ({ type: EXCEL_SET_SHEET, ...props });
+
+export const setReadOnly = () => ({ type: EXCEL_SET_READ_ONLY });
+export const unsetReadOnly = () => ({ type: EXCEL_UNSET_READ_ONLY });
+
+export const download = () => ({ type: EXCEL_DOWNLOAD });
+export const save = () => ({ type: EXCEL_SAVE });
+
+export const deleteComment = (props) => ({ type: EXCEL_DELETE_COMMENT, ...props });
+export const addComment = (props) => ({ type: EXCEL_ADD_COMMENT, ...props });

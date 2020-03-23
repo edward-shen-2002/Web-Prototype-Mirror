@@ -13,7 +13,8 @@ import {
 import {
   mouseDown,
   doubleClickEditableCell,
-  selectOver
+  selectOver,
+  rightClickCell
 } from "@actions/ui/excel/mouse";
 
 import topOffsetsSelector from "@selectors/ui/excel/topOffsets";
@@ -133,9 +134,7 @@ const EditableCell = ({
   sheetGridRef,
   cellData, 
   columnIndex, 
-  rowIndex, 
-
-  eventListenerRef
+  rowIndex
 }) => {
   const dispatch = useDispatch();
   
@@ -172,7 +171,10 @@ const EditableCell = ({
     [ dispatch ]
   );
 
-  const handleRightClick = (event) => eventListenerRef.current.rightClickCell(event, rowIndex, columnIndex);
+  const handleRightClick = useCallback(
+    () => dispatch(rightClickCell({ sheetGridRef, row: rowIndex, column: columnIndex })),
+    [ dispatch ]
+  );
 
   let merged;
   let value;
@@ -196,7 +198,7 @@ const EditableCell = ({
       style = { ...style, ...cellData.styles };
     } 
   };
-
+  
   return (
     merged 
       ? <MergedCell

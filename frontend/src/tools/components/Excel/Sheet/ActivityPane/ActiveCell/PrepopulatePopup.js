@@ -1,16 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 
+import { useDispatch } from "react-redux";
 import Typography from "@material-ui/core/Typography";
 
 import { LabeledTextField } from "./components";
 import { DialogActions } from "./components";
 
+import { setPrepopulate, resetActiveCellDialog } from "@actions/ui/excel/commands";
+
 const PrepopulatePopup = ({
   type,
   quarter,
-  year,
-  eventListenerRef
+  year
 }) => {
+  const dispatch = useDispatch();
+
   const [ newType, setNewType ] = useState(type ? type : "");
   const [ newQuarter, setNewQuarter ] = useState(quarter ? quarter : "");
   const [ newYear, setNewYear ] = useState(year ? year : "");
@@ -19,15 +23,21 @@ const PrepopulatePopup = ({
   const handleChangeQuarter = ({ target: { value } }) => setNewQuarter(value);
   const handleChangeYear = ({ target: { value } }) => setNewYear(value);
 
-  const handleChangePrepopulate = () => {
-    eventListenerRef.current.setPrepopulate({ 
-      type: newType, 
-      quarter: newQuarter, 
-      year: newYear
-    });
-  };
+  const handleChangePrepopulate = useCallback(
+    () => setPrepopulate(
+      { 
+        type: newType, 
+        quarter: newQuarter, 
+        year: newYear
+      }
+    ),
+    [ dispatch ]
+  );
   
-  const handleCloseActiveCellDialog = () => eventListenerRef.current.resetActiveCellDialog();
+  const handleCloseActiveCellDialog = useCallback(
+    () => dispatch(resetActiveCellDialog()),
+    [ dispatch ]
+  );
 
   return (
     <div className="dialog prepopulate">

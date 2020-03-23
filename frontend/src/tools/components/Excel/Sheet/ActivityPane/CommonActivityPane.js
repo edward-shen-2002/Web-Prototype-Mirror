@@ -8,14 +8,12 @@ const CommonActivityPane = ({
   isActiveCellInCorrectPane,
   isRelevantArea,
   computeActiveCellStyle,
-  computeSelectionAreaStyle,
-  eventListenerRef
+  computeSelectionAreaStyle
 }) => (
   <Fragment>
     <ActiveCell
       computeActiveCellStyle={computeActiveCellStyle}
       isActiveCellInCorrectPane={isActiveCellInCorrectPane}
-      eventListenerRef={eventListenerRef}
     />
     <ActiveSelectionArea
       isRelevantArea={isRelevantArea}

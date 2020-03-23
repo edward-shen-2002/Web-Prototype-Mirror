@@ -1,10 +1,24 @@
-import React, { useEffect, useState, Component } from "react";
+import React, { useCallback, useMemo } from "react";
 
+import { useDispatch } from "react-redux";
 import { ContextMenu, MenuItem, SubMenu } from "react-contextmenu";
+import uniqid from "uniqid";
+
+import {
+  insertRow,
+  insertColumn,
+
+  setActiveCellDialog,
+
+  deleteCellsShiftUp,
+  deleteCellsShiftLeft,
+
+  setReadOnly,
+  unsetReadOnly
+} from "@actions/ui/excel/commands";
 
 import "./ContextMenu.scss";
 
-import uniqid from "uniqid";
 
 const MenuIcon = ({ icon, mdiIcon }) => (
   <div className={`menuItem__icon ${mdiIcon ? mdiIcon : ""}`}>
@@ -66,101 +80,86 @@ const ContextMenuContent = ({ config }) => (
   </ContextMenu>
 );
 
-const SheetContextMenu = ({
-  eventListenerRef
-}) => {
-  const [ config, setConfig ] = useState([]);
+const SheetContextMenu = () => {
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    if(!config.length) {
-      const handleInsertRow = () => eventListenerRef.current.insertRow();
-      const handleInsertColumn = () => eventListenerRef.current.insertColumn();
-      const handleDeleteCellsShiftUp = () => eventListenerRef.current.deleteCellsShiftUp();
-      const handleDeleteCellsShiftLeft = () => eventListenerRef.current.deleteCellsShiftLeft();
-      const handleOpenCommentDialog = () => eventListenerRef.current.updateActiveCellDialog({ dialog: "comment" });
-      const handleSetReadOnly = () => eventListenerRef.current.setReadOnly();
-      const handleUnsetReadOnly = () => eventListenerRef.current.unsetReadOnly();
-      const handleOpenAttributeDialog = () => eventListenerRef.current.updateActiveCellDialog({ dialog: "concept", type: "attribute" });
-      const handleOpenCategoryDialog = () => eventListenerRef.current.updateActiveCellDialog({ dialog: "concept", type: "category" });
-      const handleOpenPrepopulateDialog = () => eventListenerRef.current.updateActiveCellDialog({ dialog: "prepopulate" });
-      const handleOpenCategoryGroupDialog = () => eventListenerRef.current.updateActiveCellDialog({ dialog: "group", type: "category" });
-      // const handleOpenAttributeGroupDialog = () => eventListenerRef.updateActiveCellDialog({ dialog: "group", type: "attribute" });
-  
-      setConfig([
-        // {
-        //   mdiIcon: "mdi mdi-content-cut",
-        //   text: "Cut",
-        //   command: "Ctrl+X"
-        // },
-        // {
-        //   mdiIcon: "mdi mdi-arrange-bring-forward",
-        //   text: "Copy",
-        //   command: "Ctrl+C"
-        // },
-        // {
-        //   mdiIcon: "mdi mdi-clipboard",
-        //   text: "Paste",
-        //   command: "Ctrl+V"
-        // },
-        // null,
-        {
-          text: "Insert row",
-          handleClick: handleInsertRow
-        },
-        {
-          text: "Insert column",
-          handleClick: handleInsertColumn
-        },
-        {
-          text: "Delete cells",
-          children: [
-            {
-              text: "Shift up",
-              handleClick: handleDeleteCellsShiftUp
-            },
-            {
-              text: "Shift left",
-              handleClick: handleDeleteCellsShiftLeft
-            }
-          ]
-        },
-        null,
-        {
-          mdiIcon: "mdi mdi-comment",
-          text: "Comment",
-          command: "Ctrl+Alt+M",
-          handleClick: handleOpenCommentDialog
-        },
-        null,
-        {
-          text: "Set read-only",
-          handleClick: handleSetReadOnly
-        },
-        {
-          text: "Unset read-only",
-          handleClick: handleUnsetReadOnly
-        },
-        null,
-        {
-          text: "Set attribute",
-          handleClick: handleOpenAttributeDialog
-        },
-        {
-          text: "Set category",
-          handleClick: handleOpenCategoryDialog
-        },
-        {
-          text: "Set category group",
-          handleClick: handleOpenCategoryGroupDialog
-        },
-        null,
-        {
-          text: "Set prepopulate",
-          handleClick: handleOpenPrepopulateDialog
-        }
-      ]);
-    } 
-  });
+  const config = useMemo(
+    () =>  [
+      // {
+      //   mdiIcon: "mdi mdi-content-cut",
+      //   text: "Cut",
+      //   command: "Ctrl+X"
+      // },
+      // {
+      //   mdiIcon: "mdi mdi-arrange-bring-forward",
+      //   text: "Copy",
+      //   command: "Ctrl+C"
+      // },
+      // {
+      //   mdiIcon: "mdi mdi-clipboard",
+      //   text: "Paste",
+      //   command: "Ctrl+V"
+      // },
+      // null,
+      {
+        text: "Insert row",
+        handleClick: () => dispatch(insertRow())
+      },
+      {
+        text: "Insert column",
+        handleClick: () => dispatch(insertColumn())
+      },
+      {
+        text: "Delete cells",
+        children: [
+          {
+            text: "Shift up",
+            handleClick: () => dispatch(deleteCellsShiftUp())
+          },
+          {
+            text: "Shift left",
+            handleClick: () => dispatch(deleteCellsShiftLeft())
+          }
+        ]
+      },
+      null,
+      {
+        mdiIcon: "mdi mdi-comment",
+        text: "Comment",
+        command: "Ctrl+Alt+M",
+        handleClick: () => dispatch(setActiveCellDialog({ dialog: "comment" }))
+      },
+      null,
+      {
+        text: "Set read-only",
+        handleClick: () => dispatch(setReadOnly())
+      },
+      {
+        text: "Unset read-only",
+        handleClick: () => dispatch(unsetReadOnly())
+      },
+      null,
+      {
+        text: "Set attribute",
+        handleClick: () => dispatch(setActiveCellDialog({ dialog: "concept", category: "attribute" }))
+      },
+      {
+        text: "Set category",
+        handleClick: () => dispatch(setActiveCellDialog({ dialog: "concept", category: "category" }))
+      },
+      {
+        text: "Set category group",
+        handleClick: () => dispatch(setActiveCellDialog({ dialog: "group", category: "category" }))
+      },
+      null,
+      {
+        text: "Set prepopulate",
+        handleClick: () => dispatch(setActiveCellDialog({ dialog: "prepopulate" }))
+      }
+    ],
+    [ dispatch ]
+  );
+       
 
   return <ContextMenuContent config={config}/>;
 };

@@ -6,14 +6,11 @@ const RIGHT_CLICK_CELL = (
   state,
   {
     sheetGridRef,
-    event, 
     row, 
     column
   }
 ) => {
   const { stagnantSelectionAreas } = state;
-
-  event.preventDefault();
   
   let newState = { ...state };
 

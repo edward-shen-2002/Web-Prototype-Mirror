@@ -53,11 +53,13 @@ import {
 
   keyEscape,
   keyTab,
-  keyEnter
+  keyEnter,
+  keyDelete
 } from "@actions/ui/excel/keyboard";
 
 import {
-  selectAll
+  selectAll,
+  save
 } from "@actions/ui/excel/commands";
 
 import "./Sheet.scss";
@@ -259,21 +261,22 @@ let Sheet = ({ sheetContainerRef, sheetGridRef }) => {
           shiftKey 
         });
       } else if(key === "Tab") {
-        action = keyTab({ event, shiftKey, sheetContainerRef });
+        event.preventDefault();
+        action = keyTab({ sheetGridRef, shiftKey, sheetContainerRef });
       } else if(key === "Enter" && !(ctrlKey || metaKey) && !altKey) {
-        action = keyEnter({ event, shiftKey, sheetContainerRef });
+        action = keyEnter({ sheetGridRef, shiftKey, sheetContainerRef });
       } else if(key === "Delete" || key === "Backspace") {
         action = keyDelete();
       } else if(key === "Escape") {
         action = keyEscape({ sheetContainerRef });
       } else if(key === "s" && (ctrlKey || metaKey)) {
+        // ! save
         action = save();
       } else if(key === "a" && (ctrlKey || metaKey)) {
         action = selectAll({ event });
       } else if((ctrlKey || metaKey)) {
         
       } else if(inputCharacterRegex.test(key)) {
-        // eventListenerRef.current.startEditMode();
         action = enableEditMode();
       } 
   

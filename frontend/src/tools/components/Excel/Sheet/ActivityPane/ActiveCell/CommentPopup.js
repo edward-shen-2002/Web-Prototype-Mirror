@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -10,6 +12,12 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 
 import { DialogActions, PersonAvatar, DeleteIconButton } from "./components";
+
+import {
+  addComment,
+  deleteComment,
+  resetActiveCellDialog
+} from "@actions/ui/excel/commands";
 
 import "./ActiveCell.scss";
 
@@ -75,10 +83,30 @@ const CommentInputSection = ({
   </div>
 );
 
-const CommentDialog = ({
-  comments,
-  eventListenerRef
-}) => {
+const CommentDialog = ({ comments }) => {
+  const dispatch = useDispatch();
+
+  const {
+    _id: accountId,
+    firstName,
+    lastName
+  } = useSelector(
+    ({
+      domain: {
+        account: {
+          _id: accountId,
+          firstName,
+          lastName
+        }
+      }
+    }) => ({
+      _id: accountId,
+      firstName,
+      lastName
+    }),
+    shallowEqual
+  );
+
   const textFieldRef = useRef();
   const [ comment, setComment ] = useState("");
 
@@ -87,10 +115,29 @@ const CommentDialog = ({
   }, [ textFieldRef ]);
 
   const handleClick = () => textFieldRef.current.focus();
-  const handleSaveComment = () => eventListenerRef.current.addComment(comment);
-  const handleRemoveComment = (commentId) => eventListenerRef.current.deleteComment(commentId);
   const handleChange = ({ target: { value } }) => setComment(value);
-  const handleCloseActiveCellDialog = () => eventListenerRef.current.resetActiveCellDialog();
+
+  const handleSaveComment = useCallback(
+    () => dispatch(
+      addComment(
+        { 
+          comment,
+          _id: accountId,
+          firstName,
+          lastName
+        }
+      )
+    ),
+    [ dispatch ]
+  );
+  const handleRemoveComment = useCallback(
+    (commentId) => dispatch(deleteComment({ commentId })),
+    [ dispatch ]
+  );
+  const handleCloseActiveCellDialog = useCallback(
+    () => dispatch(resetActiveCellDialog()),
+    [ dispatch ]
+  );
 
   return (
     <div 

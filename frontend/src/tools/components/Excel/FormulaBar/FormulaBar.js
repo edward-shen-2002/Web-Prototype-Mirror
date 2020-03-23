@@ -8,6 +8,12 @@ import { Editable, Slate } from "slate-react";
 
 import { setActiveCellInputValue } from "@actions/ui/excel/commands";
 
+import {
+  keyEnter,
+  keyTab,
+  keyEscape
+} from "@actions/ui/excel/keyboard";
+
 import "./FormulaBar.scss";
 
 const Leaf = ({ attributes, children }) =>  <span {...attributes}>{children}</span>;
@@ -18,7 +24,7 @@ const Element = ({ attributes, children }) => (
 );
 
 const InputField = ({ 
-  eventListenerRef, 
+  sheetGridRef,
   sheetContainerRef
 }) => {
   const dispatch = useDispatch();
@@ -26,20 +32,36 @@ const InputField = ({
   const renderElement = useCallback((props) => <Element {...props}/>, []);
   const renderLeaf = useCallback((props) => <Leaf {...props}/>, []);
 
-  const handleKeyDown = (event) => {
-    const { key } = event;
+  const handleKeyDown = useCallback(
+    (event) => {
+      const { key } = event;
 
-    if(key === "Enter") {
-      event.preventDefault();
-      eventListenerRef.current.enter(event, false, sheetContainerRef);
-    } else if(key === "Tab") {
-      eventListenerRef.current.tab(event, false, sheetContainerRef);
-    } else if(key === "Escape") {
-      eventListenerRef.current.escape(sheetContainerRef);
-    } else {
+      if(key === "Enter") {
+        event.preventDefault();
+        dispatch(
+          keyEnter(
+            {
+              sheetGridRef,
+              sheetContainerRef
+            }
+          )
+        );
+      } else if(key === "Tab") {
+        event.preventDefault();
+        dispatch(
+          keyTab({
+            sheetGridRef,
+            sheetContainerRef
+          }
+        ));
+      } else if(key === "Escape") {
+        dispatch(keyEscape(sheetContainerRef));
+      } else {
 
-    }
-  };
+      }
+    },
+    [ dispatch ]
+  );
 
   const {
     formulaEditor,
@@ -76,18 +98,15 @@ const InputField = ({
   );
 };
 
-const FormulaBar = ({ 
-  eventListenerRef, 
-  sheetContainerRef 
-}) => {
-
-  return (
-    <div className="formulaBar">
-      <div className="formulaBar__icon">fx</div>
-      <Divider orientation="vertical" light/>
-      <InputField eventListenerRef={eventListenerRef} sheetContainerRef={sheetContainerRef}/>
-    </div>
-  );
-};
+const FormulaBar = ({ sheetGridRef, sheetContainerRef }) => (
+  <div className="formulaBar">
+    <div className="formulaBar__icon">fx</div>
+    <Divider orientation="vertical" light/>
+    <InputField 
+      sheetContainerRef={sheetContainerRef}
+      sheetGridRef={sheetGridRef}
+    />
+  </div>
+);
 
 export default FormulaBar;

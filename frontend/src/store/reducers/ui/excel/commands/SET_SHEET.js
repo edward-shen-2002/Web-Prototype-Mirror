@@ -2,7 +2,6 @@
   const SET_SHEET = (
     state,
     {
-      sheetGridRef,
       sheetName
     }
   ) => {
@@ -82,8 +81,6 @@
       isRowResizeMode: false,
       isFreezeRowResizeMode: false,
     };
-
-    sheetGridRef.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
 
     return newState;
   };

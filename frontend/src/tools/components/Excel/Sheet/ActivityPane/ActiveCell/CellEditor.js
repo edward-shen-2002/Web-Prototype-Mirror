@@ -21,9 +21,7 @@ const Element = ({ attributes, children, element }) => (
   <span {...attributes}>{children}</span>
 );
 
-const CellEditor = ({
-  blockStyle
-}) => {
+const CellEditor = ({ blockStyle }) => {
   const dispatch = useDispatch();
 
   const [ isMounted, setIsMounted ] = useState(false);

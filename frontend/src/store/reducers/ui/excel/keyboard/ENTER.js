@@ -12,7 +12,6 @@ const ENTER = (
   state,
   {
     sheetGridRef,
-    event, 
     shiftKey, 
     sheetContainerRef
   }
@@ -31,8 +30,6 @@ const ENTER = (
   } = state;
 
   let newState = { ...state };
-  
-  event.preventDefault();
 
   let { x, y } = activeCellPosition;
 

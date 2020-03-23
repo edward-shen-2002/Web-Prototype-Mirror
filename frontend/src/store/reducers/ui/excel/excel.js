@@ -9,6 +9,8 @@ import {
 // import EXCEL_MOVE_SELECTION from "/MOVE_SELECTION";
 // import EXCEL_END_SELECTION from "./mouse/END_SELECTION";
 
+import EXCEL_SELECT_ALL from "./commands/SELECT_ALL";
+
 import EXCEL_SELECT_OVER from "./mouse/SELECT_OVER";
 
 import EXCEL_DELETE_CELLS_SHIFT_UP from "./commands/DELETE_CELLS_SHIFT_UP";
@@ -16,9 +18,10 @@ import EXCEL_DELETE_CELLS_SHIFT_LEFT from "./commands/DELETE_CELLS_SHIFT_LEFT";
 import EXCEL_ADD_SHEET from "./commands/ADD_SHEET";
 import EXCEL_SET_SHEET from "./commands/SET_SHEET";
 
-// import EXCEL_ADD_COMMENT from "./commands/ADD_COMMENT";
-// import EXCEL_DELETE_COMMENT from "./commands/DELETE_COMMENT";
+import EXCEL_ADD_COMMENT from "./commands/ADD_COMMENT";
+import EXCEL_DELETE_COMMENT from "./commands/DELETE_COMMENT";
 import EXCEL_SET_PREPOPULATE from "./commands/SET_PREPOPULATE";
+
 import EXCEL_INSERT_ROW from "./commands/INSERT_ROW";
 import EXCEL_INSERT_COLUMN from "./commands/INSERT_COLUMN";
 
@@ -42,15 +45,21 @@ import EXCEL_ARROW_RIGHT from "./keyboard/ARROW_RIGHT";
 
 import EXCEL_SET_SCROLL_DATA from "./events/SET_SCROLL_DATA";
 
+import EXCEL_SET_ACTIVE_CELL_DIALOG from "./commands/SET_ACTIVE_CELL_DIALOG";
 import EXCEL_RESET_ACTIVE_CELL_DIALOG from "./commands/RESET_ACTIVE_CELL_DIALOG";
 
 import EXCEL_SET_ACTIVE_CELL_INPUT_VALUE from "./commands/SET_ACTIVE_CELL_INPUT_VALUE";
 
 import EXCEL_DISABLE_EDIT_MODE from "./events/DISABLE_EDIT_MODE";
 
-// import EXCEL_TAB from "/TAB";
-// import EXCEL_ENTER from "/ENTER";
-// import EXCEL_DELETE from "/DELETE";
+import EXCEL_TAB from "./keyboard/TAB";
+import EXCEL_ENTER from "./keyboard/ENTER";
+import EXCEL_DELETE from "./keyboard/DELETE";
+
+import EXCEL_DOWNLOAD from "./commands/DOWNLOAD";
+import EXCEL_SAVE from "./commands/SAVE";
+
+import EXCEL_SET_BUSINESS_CONCEPT from "./commands/SET_BUSINESS_CONCEPT";
 
 const defaultState = {
   name: "",
@@ -135,11 +144,33 @@ const excelReducer = createReducer(
     EXCEL_ADD_SHEET,
     EXCEL_SET_SHEET,
 
+    EXCEL_SET_ACTIVE_CELL_DIALOG,
     EXCEL_RESET_ACTIVE_CELL_DIALOG,
 
     EXCEL_SET_ACTIVE_CELL_INPUT_VALUE,
 
-    EXCEL_DISABLE_EDIT_MODE
+    EXCEL_DISABLE_EDIT_MODE,
+
+    EXCEL_INSERT_ROW,
+    EXCEL_INSERT_COLUMN,
+
+    EXCEL_SET_PREPOPULATE,
+    EXCEL_SET_BUSINESS_CONCEPT,
+
+    EXCEL_DELETE_CELLS_SHIFT_UP,
+    EXCEL_DELETE_CELLS_SHIFT_LEFT,
+
+    EXCEL_TAB,
+    EXCEL_ENTER,
+    EXCEL_DELETE,
+    
+    EXCEL_SAVE,
+    EXCEL_DOWNLOAD,
+
+    EXCEL_ADD_COMMENT,
+    EXCEL_DELETE_COMMENT,
+
+    EXCEL_SELECT_ALL
   }
 );
 

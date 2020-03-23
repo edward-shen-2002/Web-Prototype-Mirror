@@ -1,16 +1,24 @@
-import React from "react";
+import React, { useCallback } from "react";
+
+import { useDispatch } from "react-redux";
+
+import { selectAll } from "@actions/ui/excel/commands";
 
 // Contains draggable borders for freeze row/columns
-const RootHeaderCell = ({ 
-  style, 
-  eventListenerRef
-}) => {
-  const handleClick = () => eventListenerRef.current.selectAll();
+const RootHeaderCell = ({ style }) => {
+  const dispatch = useDispatch();
 
-  const className = "cell cell--positionIndicator";
+  const handleClick = useCallback(
+    () => dispatch(selectAll()),
+    [ dispatch ]
+  );
 
   return (
-    <div className={className} style={style} onClick={handleClick}></div>
+    <div 
+      className="cell cell--positionIndicator" 
+      style={style} 
+      onClick={handleClick}
+    />
   );
 };
 

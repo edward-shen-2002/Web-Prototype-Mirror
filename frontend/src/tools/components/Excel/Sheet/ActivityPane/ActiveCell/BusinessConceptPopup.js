@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useDispatch } from "react-redux";
 
 import { publicAxios } from "@tools/rest";
 
@@ -13,10 +14,14 @@ import { filterString } from "./utils";
 
 const BusinessConceptsItems = ({ 
   businessConcepts, 
-  type,
-  eventListenerRef 
+  type
 }) => businessConcepts.map(({ _id, id, value }) => {
-  const handleClick = () => eventListenerRef.current.changeBusinessConcept(type, id);
+  const dispatch = useDispatch();
+
+  const handleClick = useCallback(
+    () => dispatch(setBusinessConcept({ category: type, id })),
+    [ dispatch ]
+  );
 
   return (
     <ListItem
@@ -34,22 +39,17 @@ const BusinessConceptsItems = ({
 
 const BusinessConceptsList = ({ 
   businessConcepts, 
-  type,
-  eventListenerRef 
+  type 
 }) => (
   <List className="businessConcepts">
     <BusinessConceptsItems 
       type={type}
       businessConcepts={businessConcepts}
-      eventListenerRef={eventListenerRef}
     />
   </List>
 );
 
-const BusinessConceptDialog = ({
-  type,
-  eventListenerRef
-}) => {
+const BusinessConceptDialog = ({ type }) => {
   const [ businessConcepts, setBusinessConcepts ] = useState([]);
   const [ filter, setFilter ] = useState("");
 
@@ -91,7 +91,6 @@ const BusinessConceptDialog = ({
       <BusinessConceptsList 
         type={type}
         businessConcepts={filteredBusinessConcepts}
-        eventListenerRef={eventListenerRef}
       />
       {/* <DialogActions/> */}
     </div>

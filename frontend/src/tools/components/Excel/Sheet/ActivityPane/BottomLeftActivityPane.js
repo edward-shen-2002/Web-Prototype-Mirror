@@ -137,9 +137,7 @@ const computeActiveCellStyle = (x, y, columnWidths, leftOffsets, rowHeights, top
 
 const computeTopOffset = (offset, freezeEndOffset) => offset - freezeEndOffset;
 
-const BottomLeftActivityPane = ({ 
-  eventListenerRef
-}) => {
+const BottomLeftActivityPane = () => {
   const isActiveCellInCorrectPane = (x, y, sheetFreezeColumnCount, sheetFreezeRowCount) => (x <= sheetFreezeColumnCount && y > sheetFreezeRowCount);
   const isRelevantArea = (x1, y1, x2, y2, sheetFreezeColumnCount, sheetFreezeRowCount) => ((x1 <= sheetFreezeColumnCount || x2 <= sheetFreezeColumnCount) && (y1 > sheetFreezeRowCount || y2 > sheetFreezeRowCount));
   const isRelevantRowOffset = (rowOffset, freezeRowOffset) => rowOffset > freezeRowOffset;
@@ -152,7 +150,6 @@ const BottomLeftActivityPane = ({
         isRelevantArea={isRelevantArea}
         computeActiveCellStyle={computeActiveCellStyle}
         computeSelectionAreaStyle={computeSelectionAreaStyle}
-        eventListenerRef={eventListenerRef}
       />
       <RowHeaderSelection/>
       <RowHeaderIndicator 
