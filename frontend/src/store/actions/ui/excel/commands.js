@@ -20,7 +20,7 @@ import {
 
   EXCEL_RESET_ACTIVE_CELL_DIALOG,
 
-  EXCEL_ACTIVE_CELL_INPUT_VALUE,
+  EXCEL_SET_ACTIVE_CELL_INPUT_VALUE,
 
   EXCEL_SET_SHEET
 } from "@actionCreators";
@@ -41,12 +41,12 @@ export const enableEditMode = () => ({ type: EXCEL_ENABLE_EDIT_MODE });
 export const setExcelData = (excelData) => ({ type: EXCEL_SET_EXCEL_DATA, excelData });
 export const resetExcelData = () => ({ type: EXCEL_RESET_EXCEL_DATA });
 
-export const setName = (nsetSheetame) => ({ type: EXCEL_SET_NAME, name });
+export const setName = (name) => ({ type: EXCEL_SET_NAME, name });
 
 export const toggleTemplatePublish = () => ({ type: EXCEL_TOGGLE_TEMPLATE_PUBLISH });
 
 export const resetActiveCellDialog = () => ({ type: EXCEL_RESET_ACTIVE_CELL_DIALOG });
 
-export const setActiveCellInputValue = (value) => ({ type: EXCEL_ACTIVE_CELL_INPUT_VALUE, value }); 
+export const setActiveCellInputValue = (props) => ({ type: EXCEL_SET_ACTIVE_CELL_INPUT_VALUE, ...props }); 
 
 export const setSheet = (props) => ({ type: EXCEL_SET_SHEET, ...props });

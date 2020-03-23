@@ -1,10 +1,12 @@
 import React, { useCallback } from "react";
 
-import { useSelector, shallowEqual } from "react-redux";
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
 
 import Divider from "@material-ui/core/Divider";
 
 import { Editable, Slate } from "slate-react";
+
+import { setActiveCellInputValue } from "@actions/ui/excel/commands";
 
 import "./FormulaBar.scss";
 
@@ -19,6 +21,8 @@ const InputField = ({
   eventListenerRef, 
   sheetContainerRef
 }) => {
+  const dispatch = useDispatch();
+
   const renderElement = useCallback((props) => <Element {...props}/>, []);
   const renderLeaf = useCallback((props) => <Leaf {...props}/>, []);
 
@@ -51,12 +55,10 @@ const InputField = ({
     shallowEqual
   );
 
-  const handleFocus = () => eventListenerRef.current.focusFormulaInput();
-  const handleBlur = () => eventListenerRef.current.blurFormulaInput();
-
-  const handleInputChange = useCallback((formulaValue) => {
-    eventListenerRef.current.changeActiveInputData({ formulaValue });
-  });
+  const handleInputChange = useCallback(
+    (value) => dispatch(setActiveCellInputValue({ value, input: "formula" })),
+    [ dispatch ]
+  );
 
   return (
     <Slate
@@ -69,8 +71,6 @@ const InputField = ({
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         onKeyDown={handleKeyDown}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
       />
     </Slate>
   );

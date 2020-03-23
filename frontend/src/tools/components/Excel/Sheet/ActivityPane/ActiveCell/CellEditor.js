@@ -53,18 +53,18 @@ const CellEditor = ({
   );
 
   useEffect(() => {
-    if(!isMounted) {
-      if(activeCellInputAutoFocus) {
-        ReactEditor.focus(cellEditor);
-        Transforms.select(cellEditor, Editor.end(cellEditor, []));
-      }
+    // if(!isMounted) {
+    //   if(activeCellInputAutoFocus) {
+    //     ReactEditor.focus(cellEditor);
+    //     Transforms.select(cellEditor, Editor.end(cellEditor, []));
+    //   }
   
-      setIsMounted(true);
-    }
+    //   setIsMounted(true);
+    // }
   }, []);
 
   const handleInputChange = useCallback(
-    (value) => dispatch(setActiveCellInputValue(value)),
+    (value) => dispatch(setActiveCellInputValue({ value, input: "cell" })),
     [ dispatch ]
   );
 
