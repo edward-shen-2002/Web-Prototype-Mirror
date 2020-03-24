@@ -43,7 +43,8 @@ import {
 
 import { 
   setScrollData,
-  enableEditMode
+  enableEditMode,
+  enableSheetFocus
 } from "@actions/ui/excel/events";
 import {
   keyArrowDown,
@@ -323,8 +324,10 @@ let Sheet = ({ sheetContainerRef, sheetGridRef }) => {
     // console.log(paste);
   };
 
-  // const handleClick = () => eventListenerRef.current.setInputAutoFocusOn();
-  const handleClick = () => {};
+  const handleClick = useCallback(
+    () => dispatch(enableSheetFocus()),
+    [ dispatch ]
+  );
 
   let style = {};
 

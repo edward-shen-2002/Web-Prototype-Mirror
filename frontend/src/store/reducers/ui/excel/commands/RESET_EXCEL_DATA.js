@@ -17,7 +17,7 @@ const RESET_EXCEL_DATA = () => ({
   activeSelectionArea: null,
   activeCellPosition: { x: 1, y: 1 },
   activeCellSelectionAreaIndex: -1,
-  activeCellInputAutoFocus: true,
+  isSheetFocused: true,
   rowResizeData: null,
   columnResizeData: null,
   freezeRowResizeData: null,

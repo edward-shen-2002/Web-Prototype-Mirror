@@ -57,7 +57,7 @@
 
       activeCellDialog: null,
       activeSelectionArea: null,
-      activeCellInputAutoFocus: true,
+      isSheetFocused: true,
 
       rowResizeData: null,
       columnResizeData: null,

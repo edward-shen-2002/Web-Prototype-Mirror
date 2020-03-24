@@ -59,6 +59,7 @@
     "slate-history": "/home/lemon/apps/slate-fork-pr/packages/slate-history",
     "slate-react": "/home/lemon/apps/slate-fork-pr/packages/slate-react",
     "typescript": "^3.6.3",
+    "undox": "^1.3.1",
     "uniqid": "^5.0.3",
     "webpack-bundle-analyzer": "^3.6.0",
     "xlsx-populate": "https://github.com/greylemon/xlsx-populate",

@@ -121,7 +121,7 @@ const ActiveCellDialog = ({
 const ActiveInputCell = ({ 
   activeCellStyle,
   blockStyle,
-  activeCellInputAutoFocus,
+  isSheetFocused,
   eventListenerRef
 }) => {
   const handleReturn = (event) => {
@@ -150,7 +150,7 @@ const ActiveInputCell = ({
         key="active-cell-input"
         blockStyle={blockStyle}
         eventListenerRef={eventListenerRef}
-        readOnly={!activeCellInputAutoFocus}
+        readOnly={!isSheetFocused}
         handleReturn={handleReturn}
       />
     </div>
@@ -200,7 +200,7 @@ const ActiveCell = ({ computeActiveCellStyle, isActiveCellInCorrectPane }) => {
   const {
     isEditMode, 
     editorState,
-    activeCellInputAutoFocus,
+    isSheetFocused,
   
     sheetFreezeColumnCount,
     sheetFreezeRowCount,
@@ -226,7 +226,7 @@ const ActiveCell = ({ computeActiveCellStyle, isActiveCellInCorrectPane }) => {
         excel: {
           isEditMode, 
           editorState,
-          activeCellInputAutoFocus,
+          isSheetFocused,
         
           activeCellPosition,
         
@@ -248,7 +248,7 @@ const ActiveCell = ({ computeActiveCellStyle, isActiveCellInCorrectPane }) => {
     }) => ({
       isEditMode, 
       editorState,
-      activeCellInputAutoFocus,
+      isSheetFocused,
     
       ...activeCellPosition,
     
@@ -343,7 +343,7 @@ const ActiveCell = ({ computeActiveCellStyle, isActiveCellInCorrectPane }) => {
           activeCellStyle={activeCellStyle} 
           blockStyle={blockStyle}
           editorState={editorState}
-          activeCellInputAutoFocus={activeCellInputAutoFocus}
+          isSheetFocused={isSheetFocused}
         />
       : <ActiveNormalCell 
           activeCellStyle={activeCellStyle}

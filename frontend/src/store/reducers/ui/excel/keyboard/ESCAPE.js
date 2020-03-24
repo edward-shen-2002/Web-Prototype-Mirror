@@ -11,7 +11,7 @@ const ESCAPE = (
   }) => {
   const { 
     isEditMode,
-    // activeCellInputAutoFocus,
+    // isSheetFocused,
     activeCellInputData: {
       cellEditor,
       formulaEditor

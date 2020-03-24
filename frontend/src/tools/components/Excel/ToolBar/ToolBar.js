@@ -115,14 +115,14 @@ const ToolBar = ({
   const { 
     cellStyles, 
     cellEditor, 
-    activeCellInputAutoFocus,
+    isSheetFocused,
     isEditMode 
   } = useSelector(
     ({
       ui: {
         excel: {
           sheetCellData,
-          activeCellInputAutoFocus,
+          isSheetFocused,
           activeCellPosition: { x, y },
           activeCellInputData: {
             cellEditor
@@ -132,7 +132,7 @@ const ToolBar = ({
       }
     }) => ({
       isEditMode,
-      activeCellInputAutoFocus,
+      isSheetFocused,
       cellEditor,
       cellStyles: sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].styles ? sheetCellData[y][x].styles : {}
     }),
@@ -140,7 +140,7 @@ const ToolBar = ({
   );
 
   const handleApplyBlockStyle = ({ currentTarget: { id } }) => eventListenerRef.current.applyBlockStyle(id);
-  const handleTextStyle = ({ currentTarget: { id } }) => eventListenerRef.current.applyTextStyle(id, null, activeCellInputAutoFocus);
+  const handleTextStyle = ({ currentTarget: { id } }) => eventListenerRef.current.applyTextStyle(id, null, isSheetFocused);
 
   return (
     <div className="toolBar">

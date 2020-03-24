@@ -30,7 +30,7 @@ const CellEditor = ({ blockStyle }) => {
   const renderLeaf = useCallback((props) => <Leaf {...props}/>, []);
 
   const {
-    activeCellInputAutoFocus,
+    isSheetFocused,
     activeCellInputData: {
       cellValue,
       cellEditor
@@ -39,12 +39,12 @@ const CellEditor = ({ blockStyle }) => {
     ({ 
       ui: { 
         excel: { 
-          activeCellInputAutoFocus,
+          isSheetFocused,
           activeCellInputData
         } 
       } 
     }) => ({
-      activeCellInputAutoFocus,
+      isSheetFocused,
       activeCellInputData
     }),
     shallowEqual
@@ -52,7 +52,7 @@ const CellEditor = ({ blockStyle }) => {
 
   useEffect(() => {
     // if(!isMounted) {
-    //   if(activeCellInputAutoFocus) {
+    //   if(isSheetFocused) {
     //     ReactEditor.focus(cellEditor);
     //     Transforms.select(cellEditor, Editor.end(cellEditor, []));
     //   }
