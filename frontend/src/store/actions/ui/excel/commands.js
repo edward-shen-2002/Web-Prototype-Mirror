@@ -1,3 +1,5 @@
+import { UndoxTypes } from "undox";
+
 import {
   EXCEL_SELECT_ALL,
   
@@ -70,3 +72,6 @@ export const save = () => ({ type: EXCEL_SAVE });
 
 export const deleteComment = (props) => ({ type: EXCEL_DELETE_COMMENT, ...props });
 export const addComment = (props) => ({ type: EXCEL_ADD_COMMENT, ...props });
+
+export const undo = () => ({ type: UndoxTypes.UNDO });
+export const redo = () => ({ type: UndoxTypes.REDO });

@@ -1,10 +1,14 @@
-import React, { useRef } from "react";
+import React, { useRef, useCallback } from "react";
+
+import { useDispatch } from "react-redux";
 
 import AppBar from "./AppBar";
 import ToolBar from "./ToolBar";
 import FormulaBar from "./FormulaBar";
 import Sheet from "./Sheet";
 import SheetNavigator from "./SheetNavigator";
+
+import { undo, redo } from "@actions/ui/excel/commands";
 
 import "./Excel.scss";
 
@@ -14,11 +18,29 @@ const Excel = ({ type, returnLink }) => {
   const sheetContainerRef = useRef(null);
   const sheetGridRef = useRef(null);
 
+  const dispatch = useDispatch();
+
   window.sheetGridRef = sheetGridRef;
   window.sheetContainerRef = sheetContainerRef;
 
+  const handleKeyDown = useCallback(
+    ({ key, ctrlKey, metaKey }) => {
+      if(ctrlKey || metaKey) {
+        if(key === "y") {
+          dispatch(redo());
+        } else if(key === "z") {
+          dispatch(undo());
+        }
+      }
+    },
+    [ dispatch ]
+  );
+
   return (
-    <div className="excel">
+    <div 
+      className="excel"
+      onKeyDown={handleKeyDown}
+    >
       <AppBar type={type} returnLink={returnLink} />
       <Divider/>
       <ToolBar type={type}/>

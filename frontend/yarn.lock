@@ -12774,7 +12774,7 @@ slate-react@../../slate/packages/slate-react:
     is-plain-object "^3.0.0"
     scroll-into-view-if-needed "^2.2.20"
 
-"slate@file:../../slate/packages/slate":
+slate@../../slate/packages/slate:
   version "0.57.1"
   dependencies:
     "@types/esrever" "^0.2.0"
