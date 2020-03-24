@@ -17,6 +17,9 @@ Currently, the script commands are only set for [yarn](https://yarnpkg.com/lang/
 Before installing the dependencies, you need to put the following on the same folder as the application:
 
 - [Slate Fork](https://github.com/greylemon/slate)
+- [Undox Fork](https://github.com/greylemon/undox)
+
+Slate is a monorepo. You need to run the script ```yarn build``` to build the packages.
 
 Run the command `yarn deps`. This will install the root, frontend, and backend dependencies. If you're on windows, you could also install the dependencies by running the executable (shortcut) ```windows-run-deps```.
 
