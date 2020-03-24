@@ -7,7 +7,6 @@ import {
 const MOUSE_DOWN = (
   state, 
   { 
-    sheetGridRef,
     x1, 
     y1, 
     ctrlKey, 
@@ -78,7 +77,6 @@ const MOUSE_DOWN = (
       }
 
       newState = updateActiveCellPosition({
-        sheetGridRef,
         newState,
         newY: y1, 
         newX: x1, 
@@ -89,7 +87,6 @@ const MOUSE_DOWN = (
     newState.activeSelectionArea = { x1, y1, x2, y2 };
   } else {
     newState = updateActiveCellPosition({
-      sheetGridRef,
       newState,
       newX: x1,
       newY: y1,

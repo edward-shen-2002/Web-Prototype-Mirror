@@ -14,7 +14,6 @@ const Cell = ({
   rowIndex 
 }) => {
   const {
-    sheetGridRef,
     sheetCellData,
 
     columnCount,
@@ -33,7 +32,6 @@ const Cell = ({
         cellData={cellData} 
         columnIndex={columnIndex} 
         rowIndex={rowIndex} 
-        sheetGridRef={sheetGridRef}
       />
     );
   } else if(columnIndex) {

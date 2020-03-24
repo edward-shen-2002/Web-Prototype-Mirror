@@ -11,7 +11,6 @@ import topOffsetsSelector from "@selectors/ui/excel/topOffsets";
 const MOUSE_UP = (
   state, 
   { 
-    sheetGridRef,
     ctrlKey
   }
 ) => {
@@ -147,7 +146,7 @@ const MOUSE_UP = (
 
       if(offset !== currentOffset) {
         newState.sheetRowHeights = { ...sheetRowHeights, [row]: getExcelRowHeight(newRowHeight) };
-        sheetGridRef.current.resetAfterRowIndex(row);
+        window.sheetGridRef.current.resetAfterRowIndex(row);
       } 
       
       newState.rowResizeMode = false;
@@ -168,7 +167,7 @@ const MOUSE_UP = (
 
       if(offset !== currentOffset) {
         newState.columnWidths = { ...sheetColumnWidths, [column]: getExcelColumnWidth(newColumnWidth) };
-        sheetGridRef.current.resetAfterColumnIndex(column);
+        window.sheetGridRef.current.resetAfterColumnIndex(column);
       }
 
       newState.columnResizeMode = false;

@@ -7,7 +7,6 @@ import {
 const SELECT_COLUMN = (
   state,
   {
-    sheetGridRef,
     column, 
     ctrlKey
   }
@@ -45,7 +44,6 @@ const SELECT_COLUMN = (
   }
 
   newState = updateActiveCellPosition({
-    sheetGridRef,
     newState,
     newY: 1, 
     newX: column

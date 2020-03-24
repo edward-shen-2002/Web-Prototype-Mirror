@@ -18,7 +18,6 @@ import {
 import { scrollTo } from "./scroll";
 
 export const updateActiveCellPosition = ({
-  sheetGridRef,
   newState,
   newY, 
   newX, 
@@ -69,7 +68,6 @@ export const updateActiveCellPosition = ({
 
   if(shouldScroll) scrollTo({
     newState,
-    sheetGridRef,
     newY, 
     newX
   });

@@ -6,7 +6,6 @@ import { updateActiveCellPosition } from "../tools/cell";
 const TAB = (
   state,
   {
-    sheetGridRef,
     shiftKey, 
     sheetContainerRef
   }
@@ -198,7 +197,6 @@ const TAB = (
       } 
 
       newState = updateActiveCellPosition({
-        sheetGridRef,
         newState,
         newY: y, 
         newX: x, 
@@ -237,7 +235,6 @@ const TAB = (
     }
 
     newState = updateActiveCellPosition({
-      sheetGridRef,
       newState,
       newY: y, 
       newX: x, 

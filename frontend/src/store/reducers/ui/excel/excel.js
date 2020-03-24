@@ -63,6 +63,12 @@ import EXCEL_SAVE from "./commands/SAVE";
 
 import EXCEL_SET_BUSINESS_CONCEPT from "./commands/SET_BUSINESS_CONCEPT";
 
+const ignoredActionsMap = {
+  EXCEL_SELECT_OVER: true,
+  EXCEL_SET_SCROLL_DATA: true,
+  EXCEL_SET_ACTIVE_CELL_INPUT_VALUE: true
+};
+
 const defaultState = {
   name: "",
   type: "",
@@ -196,4 +202,4 @@ const excelReducer = (state = defaultState, action) => {
   };
 };
 
-export default undox(excelReducer);
+export default undox(excelReducer, undefined, undefined, ignoredActionsMap);

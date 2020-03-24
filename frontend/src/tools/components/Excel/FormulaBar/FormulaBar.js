@@ -23,10 +23,7 @@ const Element = ({ attributes, children }) => (
   <p {...attributes}>{children}</p>
 );
 
-const InputField = ({ 
-  sheetGridRef,
-  sheetContainerRef
-}) => {
+const InputField = () => {
   const dispatch = useDispatch();
 
   const renderElement = useCallback((props) => <Element {...props}/>, []);
@@ -39,23 +36,14 @@ const InputField = ({
       if(key === "Enter") {
         event.preventDefault();
         dispatch(
-          keyEnter(
-            {
-              sheetGridRef,
-              sheetContainerRef
-            }
-          )
+          keyEnter()
         );
       } else if(key === "Tab") {
         event.preventDefault();
         dispatch(
-          keyTab({
-            sheetGridRef,
-            sheetContainerRef
-          }
-        ));
+          keyTab());
       } else if(key === "Escape") {
-        dispatch(keyEscape(sheetContainerRef));
+        dispatch(keyEscape());
       } else {
 
       }
@@ -100,14 +88,11 @@ const InputField = ({
   );
 };
 
-const FormulaBar = ({ sheetGridRef, sheetContainerRef }) => (
+const FormulaBar = () => (
   <div className="formulaBar">
     <div className="formulaBar__icon">fx</div>
     <Divider orientation="vertical" light/>
-    <InputField 
-      sheetContainerRef={sheetContainerRef}
-      sheetGridRef={sheetGridRef}
-    />
+    <InputField/>
   </div>
 );
 

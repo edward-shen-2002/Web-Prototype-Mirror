@@ -6,7 +6,6 @@ import { updateActiveCellPosition  } from "../tools/cell";
 const ARROW_RIGHT = (
   state, 
   {
-    sheetGridRef,
     shiftKey
   }
 ) => {
@@ -69,7 +68,6 @@ const ARROW_RIGHT = (
 
         scrollTo({
           newState,
-          sheetGridRef,
           newY: x1 < x ? y1 : y2, 
           newX: focusedStagnantSelectionArea.x1
         });
@@ -92,7 +90,6 @@ const ARROW_RIGHT = (
 
         scrollTo({
           newState,
-          sheetGridRef,
           newY: x1 > x ? y1 : y2, 
           newX: focusedStagnantSelectionArea.x2
         });
@@ -141,14 +138,12 @@ const ARROW_RIGHT = (
         newState.activeCellSelectionAreaIndex = 0;
         scrollTo({
           newState,
-          sheetGridRef,
           newY: y, 
           newX: minArea.x2
         });
       } else {
         scrollTo({
           newState,
-          sheetGridRef,
           newY: y, 
           newX: x
         });
@@ -168,8 +163,7 @@ const ARROW_RIGHT = (
     if(x < sheetColumnCount) newState = updateActiveCellPosition({
       newState,
       newY: y,
-      newX: x,
-      sheetGridRef
+      newX: x
     });
     newState.stagnantSelectionAreas = [];
     newState.activeCellSelectionAreaIndex = -1;

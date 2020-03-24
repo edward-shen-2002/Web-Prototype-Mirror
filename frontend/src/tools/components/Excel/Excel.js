@@ -14,8 +14,8 @@ const Excel = ({ type, returnLink }) => {
   const sheetContainerRef = useRef(null);
   const sheetGridRef = useRef(null);
 
-  // window.sheetGridRef = sheetGridRef;
-  // console.log(window.sheetGridRef)
+  window.sheetGridRef = sheetGridRef;
+  window.sheetContainerRef = sheetContainerRef;
 
   return (
     <div className="excel">
@@ -23,11 +23,11 @@ const Excel = ({ type, returnLink }) => {
       <Divider/>
       <ToolBar type={type}/>
       <Divider/>
-      <FormulaBar sheetContainerRef={sheetContainerRef} sheetGridRef={sheetGridRef}/>
+      <FormulaBar/>
       <Divider/>
-      <Sheet sheetContainerRef={sheetContainerRef} sheetGridRef={sheetGridRef}/>
+      <Sheet sheetGridRef={sheetGridRef}/>
       <Divider/>
-      <SheetNavigator sheetGridRef={sheetGridRef}/>
+      <SheetNavigator/>
     </div>
   );
 };

@@ -19,7 +19,6 @@ const SELECT_ROW = (
   newState = saveActiveCellInputData({ newState });
 
   newState = updateActiveCellPosition({
-    sheetGridRef,
     newState,
     newY: row, 
     newX: 1, 

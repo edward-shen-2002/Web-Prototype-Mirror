@@ -125,15 +125,13 @@ const SheetWindow = ({ sheetGridRef }) => {
   );
 
   const itemData = createItemData({
-    sheetGridRef,
-    
     sheetCellData, 
     
     sheetColumnCount,
     sheetRowCount
   });
 
-  const commonSelectionPaneProps = { sheetGridRef };
+  const commonSelectionPaneProps = {};
 
   return (
     <AutoSizer>
@@ -189,7 +187,7 @@ const SheetWindow = ({ sheetGridRef }) => {
   );
 };
 
-let Sheet = ({ sheetContainerRef, sheetGridRef }) => {
+let Sheet = ({ sheetGridRef }) => {
   const dispatch = useDispatch();
 
   const {
@@ -247,29 +245,25 @@ let Sheet = ({ sheetContainerRef, sheetGridRef }) => {
   
       if(key === "ArrowUp") {
         action = keyArrowUp({
-          sheetGridRef, 
           shiftKey 
         });
       } else if(key === "ArrowDown") {
         action = keyArrowDown({ 
-          sheetGridRef, 
           shiftKey 
         });
       } else if(key === "ArrowLeft") {
         action = keyArrowLeft({ 
-          sheetGridRef, 
           shiftKey 
         });
       } else if(key === "ArrowRight") {
         action = keyArrowRight({ 
-          sheetGridRef, 
           shiftKey 
         });
       } else if(key === "Tab") {
         event.preventDefault();
-        action = keyTab({ sheetGridRef, shiftKey, sheetContainerRef });
+        action = keyTab({ shiftKey, sheetContainerRef });
       } else if(key === "Enter" && !(ctrlKey || metaKey) && !altKey) {
-        action = keyEnter({ sheetGridRef, shiftKey, sheetContainerRef });
+        action = keyEnter({ shiftKey, sheetContainerRef });
       } else if(key === "Delete" || key === "Backspace") {
         action = keyDelete();
       } else if(key === "Escape") {
@@ -353,7 +347,6 @@ let Sheet = ({ sheetContainerRef, sheetGridRef }) => {
     >
       <SheetWindow
         sheetGridRef={sheetGridRef}
-
         isEditMode={isEditMode}
 
         sheetCellData={sheetCellData}
@@ -365,10 +358,7 @@ let Sheet = ({ sheetContainerRef, sheetGridRef }) => {
         sheetRowHeights={sheetRowHeights}
       />
       <ContextMenu/>
-      <WindowListener 
-        sheetContainerRef={sheetContainerRef}
-        sheetGridRef={sheetGridRef}
-      />
+      <WindowListener/>
     </div>
   );
 };

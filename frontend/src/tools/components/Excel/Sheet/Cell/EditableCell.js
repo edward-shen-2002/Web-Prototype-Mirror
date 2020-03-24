@@ -133,7 +133,6 @@ const MergedCell = ({
 const EditableCell = ({ 
   style, 
   
-  sheetGridRef,
   cellData, 
   columnIndex, 
   rowIndex
@@ -144,7 +143,6 @@ const EditableCell = ({
     ({ buttons, ctrlKey, shiftKey }) => {
       if(buttons === 1) dispatch(
         mouseDown({ 
-          sheetGridRef,
           x1: columnIndex, 
           y1: rowIndex, 
           ctrlKey, 
@@ -174,7 +172,7 @@ const EditableCell = ({
   );
 
   const handleRightClick = useCallback(
-    () => dispatch(rightClickCell({ sheetGridRef, row: rowIndex, column: columnIndex })),
+    () => dispatch(rightClickCell({ row: rowIndex, column: columnIndex })),
     [ dispatch ]
   );
 

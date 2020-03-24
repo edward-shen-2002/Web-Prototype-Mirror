@@ -11,9 +11,7 @@ import {
 const ENTER = (
   state,
   {
-    sheetGridRef,
-    shiftKey, 
-    sheetContainerRef
+    shiftKey
   }
 ) => {
   let { 
@@ -36,7 +34,7 @@ const ENTER = (
   if(isEditMode) {
     newState = saveActiveCellInputData({ newState });
 
-    sheetContainerRef.current.focus();
+    window.sheetContainerRef.current.focus();
   } else if(!isEditMode && activeCellSelectionAreaIndex === -1) {
     newState.isEditMode = true;
 
@@ -210,7 +208,6 @@ const ENTER = (
       }
 
       newState = updateActiveCellPosition({
-        sheetGridRef,
         newState,
         newY: y, 
         newX: x
@@ -245,7 +242,6 @@ const ENTER = (
     }
 
     newState = updateActiveCellPosition({
-      sheetGridRef,
       newState,
       newY: y, 
       newX: x

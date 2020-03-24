@@ -91,7 +91,6 @@ const SheetNameNormal = ({
 };
 
 const SheetNameDraggable = ({ 
-  sheetGridRef,
   isEditMode,
   setIsEditMode,
   provided, 
@@ -106,7 +105,7 @@ const SheetNameDraggable = ({
     () => {
       if(!isActive) {
         dispatch(setSheet({ sheetName }));
-        sheetGridRef.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
+        window.sheetGridRef.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
       }
     },
     [ dispatch, isActive ]
@@ -140,7 +139,6 @@ const SheetNameDraggable = ({
 };
 
 const SheetNamesDraggables = ({ 
-  sheetGridRef,
   isEditMode,
   setIsEditMode,
   sheetNames, 
@@ -149,7 +147,6 @@ const SheetNamesDraggables = ({
   <Draggable key={`sheet-name-${sheetName}`} draggableId={sheetName} index={index}>
     {(provided) => (
       <SheetNameDraggable 
-        sheetGridRef={sheetGridRef}
         isEditMode={isEditMode}
         setIsEditMode={setIsEditMode}
         provided={provided} 
@@ -162,7 +159,6 @@ const SheetNamesDraggables = ({
 ));
 
 const SheetNamesDroppable = ({ 
-  sheetGridRef,
   isEditMode,
   setIsEditMode,
   sheetNames, 
@@ -172,7 +168,6 @@ const SheetNamesDroppable = ({
     {(provided) => (
       <div ref={provided.innerRef} className="sheetNavigator__droppable" {...provided.droppableProps}>
         <SheetNamesDraggables 
-          sheetGridRef={sheetGridRef}
           isEditMode={isEditMode}
           setIsEditMode={setIsEditMode}
           sheetNames={sheetNames} 
@@ -185,7 +180,6 @@ const SheetNamesDroppable = ({
 );
 
 const SheetSelectionContext = ({ 
-  sheetGridRef,
   isEditMode,
   setIsEditMode,
   activeSheetName, 
@@ -194,7 +188,6 @@ const SheetSelectionContext = ({
 }) => (
   <DragDropContext onDragEnd={handleDragEnd}>
     <SheetNamesDroppable 
-      sheetGridRef={sheetGridRef}
       isEditMode={isEditMode}
       setIsEditMode={setIsEditMode}
       sheetNames={sheetNames} 
@@ -204,7 +197,7 @@ const SheetSelectionContext = ({
 );
 
 // Move this state subscription and action to EventListener
-const SheetNavigator = ({ sheetGridRef }) => {
+const SheetNavigator = () => {
   const [ isEditMode, setIsEditMode ] = useState(false);
   
   const dispatch = useDispatch();
@@ -264,7 +257,6 @@ const SheetNavigator = ({ sheetGridRef }) => {
       <SheetSelectionContext 
         isEditMode={isEditMode}
         setIsEditMode={setIsEditMode}
-        sheetGridRef={sheetGridRef}
         sheetNames={sheetNames} 
         activeSheetName={activeSheetName} 
         handleDragEnd={handleDragEnd} 

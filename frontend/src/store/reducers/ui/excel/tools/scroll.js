@@ -16,7 +16,6 @@ import {
 
 export const scrollTo = ({
   newState,
-  sheetGridRef,
 
   newY, 
   newX
@@ -63,7 +62,7 @@ export const scrollTo = ({
   const freezeHeight = topFreezeStart + heightFreezeStart;
   const freezeWidth = leftFreezeStart + widthFreezeStart;
 
-  const { current: { props, props: { height, width }, _instanceProps } } = sheetGridRef;
+  const { current: { props, props: { height, width }, _instanceProps } } = window.sheetGridRef;
 
   const scrollbarSize = getScrollbarSize();
 
@@ -94,5 +93,5 @@ export const scrollTo = ({
     newScrollLeft = leftActiveStart + widthActiveStart - width + verticalScrollbarSize;
   }
 
-  if((newScrollTop !== undefined && newScrollTop !== scrollTop) || (newScrollLeft !== undefined && newScrollLeft !== scrollLeft)) sheetGridRef.current.scrollTo({ scrollTop: newScrollTop, scrollLeft: newScrollLeft });
+  if((newScrollTop !== undefined && newScrollTop !== scrollTop) || (newScrollLeft !== undefined && newScrollLeft !== scrollLeft)) window.sheetGridRef.current.scrollTo({ scrollTop: newScrollTop, scrollLeft: newScrollLeft });
 };

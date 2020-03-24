@@ -5,7 +5,6 @@ import {
 const RIGHT_CLICK_CELL = (
   state,
   {
-    sheetGridRef,
     row, 
     column
   }
@@ -26,7 +25,6 @@ const RIGHT_CLICK_CELL = (
 
   newState.stagnantSelectionAreas = [];
   newState = updateActiveCellPosition({
-    sheetGridRef,
     newState,
     newY: row, 
     newX: column, 

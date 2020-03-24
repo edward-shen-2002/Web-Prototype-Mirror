@@ -3,11 +3,11 @@ import { useDispatch } from "react-redux";
 
 import { mouseUp } from "@actions/ui/excel/mouse";
 
-const WindowListener = ({ sheetContainerRef, sheetGridRef }) => {
+const WindowListener = () => {
   const dispatch = useDispatch();
 
   const handleMouseUp = useCallback(
-    (ctrlKey) => dispatch(mouseUp({ ctrlKey, resetAfterRowIndex: sheetGridRef.current.resetAfterRowIndex })),
+    (ctrlKey) => dispatch(mouseUp({ ctrlKey })),
     [ dispatch ]
   );
 
