@@ -6,8 +6,7 @@ import { updateActiveCellPosition } from "../tools/cell";
 const TAB = (
   state,
   {
-    shiftKey, 
-    sheetContainerRef
+    shiftKey,
   }
 ) => {
   let { 
@@ -29,7 +28,7 @@ const TAB = (
 
   if(isEditMode) newState = saveActiveCellInputData({ newState });
 
-  sheetContainerRef.current.focus();
+  window.sheetContainerRef.current.focus();
 
   let selectionArea;
   let isBounded;

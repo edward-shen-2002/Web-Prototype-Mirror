@@ -7,7 +7,6 @@ import {
 const MOUSE_MOVE = (
   state,
   {
-    sheetContainerRef, 
     xOffset, 
     yOffset
   }) => {
@@ -43,16 +42,15 @@ const MOUSE_MOVE = (
 
   let newState = { ...state };
 
-  const { current: SheetContainerInstance } = sheetContainerRef;
   let { scrollTop, scrollLeft } = scrollData;
 
   if(isRowResizeMode) {
     const { row } = rowResizeData;
     const rowOffset = topOffsets[row];
-    const { clientHeight } = SheetContainerInstance;
+    const { clientHeight } = window.sheetContainerRef.current;
     const freezeRowOffset = topOffsets[sheetFreezeRowCount] + (sheetFreezeRowCount ? getNormalRowHeight(sheetRowHeights[sheetFreezeRowCount]) : DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER);
 
-    const componentOffset = SheetContainerInstance.offsetTop;
+    const componentOffset = window.sheetContainerRef.current.offsetTop;
 
     const scrollbarSize = getScrollbarSize();
 
@@ -82,9 +80,9 @@ const MOUSE_MOVE = (
     const columnOffset = leftOffsets[column];
     const freezeColumnOffset = leftOffsets[sheetFreezeColumnCount] + (sheetFreezeColumnCount ? getNormalColumnWidth(sheetColumnWidths[sheetFreezeColumnCount]) : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER);
 
-    const { clientWidth } = SheetContainerInstance;
+    const { clientWidth } = window.sheetContainerRef.current;
 
-    const componentOffset = SheetContainerInstance.offsetLeft;
+    const componentOffset = window.sheetContainerRef.current.offsetLeft;
 
     const scrollbarSize = getScrollbarSize();
 

@@ -4,11 +4,7 @@ import {
   CustomEditor
 } from "@tools/slate";
 
-const ESCAPE = (
-  state,
-  {
-    sheetContainerRef
-  }) => {
+const ESCAPE = (state) => {
   const { 
     isEditMode,
     // isSheetFocused,
@@ -51,7 +47,7 @@ const ESCAPE = (
     formulaValue
   };
 
-  sheetContainerRef.current.focus();
+  window.sheetContainerRef.current.focus();
 
   return newState;
 };
