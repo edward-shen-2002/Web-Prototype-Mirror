@@ -103,10 +103,7 @@ const SheetNameDraggable = ({
 
   const handleClick = useCallback(
     () => {
-      if(!isActive) {
-        dispatch(setSheet({ sheetName }));
-        window.sheetGridRef.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
-      }
+      if(!isActive) dispatch(setSheet({ sheetName }));
     },
     [ dispatch, isActive ]
   );

@@ -5,8 +5,9 @@
       sheetName
     }
   ) => {
+    let newState = { ...state };
+
     const {
-      name,
       activeCellPosition,
       activeCellInputData,
       activeCellSelectionAreaIndex,
@@ -20,10 +21,9 @@
       sheetRowHeights,
       sheetHiddenColumns,
       sheetHiddenRows,
-      stagnantSelectionAreas
-    } = state;
-
-    let newState = { ...state };
+      stagnantSelectionAreas,
+      inactiveSheets
+    } = newState;
 
     let currentSheetData = {
       activeCellPosition,
@@ -39,12 +39,14 @@
       stagnantSelectionAreas,
       activeCellSelectionAreaIndex
     };
-
     
     let newActiveSheetData = newState.inactiveSheets[sheetName];
 
-    newState.inactiveSheets[activeSheetName] = currentSheetData;
-    newState.inactiveSheets[sheetName] = undefined;
+    newState.inactiveSheets = {
+      ...inactiveSheets,
+      [activeSheetName]: currentSheetData,
+      [sheetName]: undefined
+    }
     
     // ! Need to updae active cell input data!
     newState = {
@@ -81,6 +83,8 @@
       isRowResizeMode: false,
       isFreezeRowResizeMode: false,
     };
+
+    window.sheetGridRef.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
 
     return newState;
   };
