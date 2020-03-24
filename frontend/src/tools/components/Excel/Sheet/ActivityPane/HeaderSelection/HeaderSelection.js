@@ -50,16 +50,18 @@ const mergeSegments = (segments) => {
 const mapHeaderStateToProps = ({
   ui: {
     excel: {
-      activeCellPosition,
-      activeSelectionArea,
-      stagnantSelectionAreas,
-      sheetCellData,
-      sheetColumnWidths,
-      sheetRowHeights,
-      sheetRowCount,
-      sheetColumnCount,
-      sheetFreezeColumnCount,
-      sheetFreezeRowCount
+      present: {
+        activeCellPosition,
+        activeSelectionArea,
+        stagnantSelectionAreas,
+        sheetCellData,
+        sheetColumnWidths,
+        sheetRowHeights,
+        sheetRowCount,
+        sheetColumnCount,
+        sheetFreezeColumnCount,
+        sheetFreezeRowCount
+      }
     }
   }
 }) => ({
@@ -177,13 +179,15 @@ HeaderSelection = connect(mapHeaderStateToProps)(HeaderSelection);
 const mapColumnHeaderStateToProps = ({
   ui: {
     excel: {
-      activeCellPosition,
-      activeSelectionArea,
-      stagnantSelectionAreas,
-      sheetCellData,
-      sheetColumnWidths,
-      sheetColumnCount,
-      sheetFreezeColumnCount
+      present: {
+        activeCellPosition,
+        activeSelectionArea,
+        stagnantSelectionAreas,
+        sheetCellData,
+        sheetColumnWidths,
+        sheetColumnCount,
+        sheetFreezeColumnCount
+      }
     }
   }
 }) => ({
@@ -263,13 +267,15 @@ ColumnHeaderSelection = connect(mapColumnHeaderStateToProps)(ColumnHeaderSelecti
 const mapRowHeaderStateToProps = ({
   ui: {
     excel: {
-      activeCellPosition,
-      activeSelectionArea,
-      stagnantSelectionAreas,
-      sheetCellData,
-      sheetRowHeights,
-      sheetRowCount,
-      sheetFreezeRowCount
+      present: {
+        activeCellPosition,
+        activeSelectionArea,
+        stagnantSelectionAreas,
+        sheetCellData,
+        sheetRowHeights,
+        sheetRowCount,
+        sheetFreezeRowCount
+      }
     }
   }
 }) => ({

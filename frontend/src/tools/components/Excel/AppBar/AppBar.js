@@ -55,7 +55,9 @@ let TemplateOptions = () => {
     ({
       ui: {
         excel: {
-          isTemplatePublished
+          present: {
+            isTemplatePublished
+          }
         }
       }
     }) => isTemplatePublished,

@@ -88,10 +88,12 @@ const MergedCell = ({
     ({
       ui: {
         excel: {
-          sheetRowCount,
-          sheetColumnCount,
-          sheetRowHeights,
-          sheetColumnWidths
+          present: {
+            sheetRowCount,
+            sheetColumnCount,
+            sheetRowHeights,
+            sheetColumnWidths
+          }
         }
       }
     }) => ({

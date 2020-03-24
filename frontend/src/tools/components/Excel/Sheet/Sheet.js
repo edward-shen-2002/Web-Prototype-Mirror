@@ -83,13 +83,15 @@ const SheetWindow = ({ sheetGridRef }) => {
     ({
       ui: {
         excel: {
-          sheetCellData,
-          sheetFreezeRowCount,
-          sheetFreezeColumnCount,
-          sheetColumnCount,
-          sheetRowCount,
-          sheetColumnWidths,
-          sheetRowHeights
+          present: {
+            sheetCellData,
+            sheetFreezeRowCount,
+            sheetFreezeColumnCount,
+            sheetColumnCount,
+            sheetRowCount,
+            sheetColumnWidths,
+            sheetRowHeights
+          }
         }
       }
     }) => ({
@@ -204,15 +206,17 @@ let Sheet = ({ sheetContainerRef, sheetGridRef }) => {
     ({
       ui: {
         excel: {
-          cursorType,
-          isEditMode,
-          sheetCellData,
-          sheetFreezeRowCount,
-          sheetFreezeColumnCount,
-          sheetColumnCount,
-          sheetRowCount,
-          sheetColumnWidths,
-          sheetRowHeights
+          present: {
+            cursorType,
+            isEditMode,
+            sheetCellData,
+            sheetFreezeRowCount,
+            sheetFreezeColumnCount,
+            sheetColumnCount,
+            sheetRowCount,
+            sheetColumnWidths,
+            sheetRowHeights
+          }
         }
       }
     }) => ({
@@ -324,10 +328,12 @@ let Sheet = ({ sheetContainerRef, sheetGridRef }) => {
     // console.log(paste);
   };
 
-  const handleClick = useCallback(
-    () => dispatch(enableSheetFocus()),
-    [ dispatch ]
-  );
+  // const handleClick = useCallback(
+  //   () => dispatch(enableSheetFocus()),
+  //   [ dispatch ]
+  // );
+
+  const handleClick = () => {};
 
   let style = {};
 

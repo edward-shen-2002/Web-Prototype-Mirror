@@ -14,14 +14,16 @@ const StagnantSelectionAreasComponents = ({ relevantStagnantSelectionAreasStyles
 const mapStateToProps = ({
   ui: {
     excel: {
-      stagnantSelectionAreas,
-
-      sheetFreezeColumnCount,
-      sheetFreezeRowCount,
-      sheetColumnWidths,
-      sheetRowHeights,
-      sheetColumnCount,
-      sheetRowCount
+      present: {
+        stagnantSelectionAreas,
+  
+        sheetFreezeColumnCount,
+        sheetFreezeRowCount,
+        sheetColumnWidths,
+        sheetRowHeights,
+        sheetColumnCount,
+        sheetRowCount
+      }
     }
   }
 }) => ({

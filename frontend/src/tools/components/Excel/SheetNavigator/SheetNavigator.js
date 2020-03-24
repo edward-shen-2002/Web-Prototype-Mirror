@@ -216,8 +216,10 @@ const SheetNavigator = ({ sheetGridRef }) => {
     ({
       ui: {
         excel: {
-          sheetNames,
-          activeSheetName
+          present: {
+            sheetNames,
+            activeSheetName
+          }
         }
       }
     }) => ({

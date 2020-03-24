@@ -70,7 +70,9 @@ const InputField = ({
     ({
       ui: {
         excel: {
-          activeCellInputData
+          present: {
+            activeCellInputData
+          }
         }
       }
     }) => activeCellInputData,

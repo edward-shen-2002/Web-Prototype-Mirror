@@ -119,61 +119,81 @@ const defaultState = {
   bundleId: ""
 };
 
-const excelReducer = createReducer(
-  defaultState, 
-  {
-    EXCEL_SET_EXCEL_DATA,
-    EXCEL_RESET_EXCEL_DATA,
+const excelReducer = (state = defaultState, action) => {
+  switch(action.type) {
+    case "EXCEL_SET_EXCEL_DATA":
+      return EXCEL_SET_EXCEL_DATA(state, action);
+    case "EXCEL_RESET_EXCEL_DATA":
+      return EXCEL_RESET_EXCEL_DATA(state, action);
+    case "EXCEL_SET_NAME":
+      return EXCEL_SET_NAME(state, action);
+    case "EXCEL_TOGGLE_TEMPLATE_PUBLISH":
+      return EXCEL_TOGGLE_TEMPLATE_PUBLISH(state, action);
+    case "EXCEL_ARROW_DOWN":
+      return EXCEL_ARROW_DOWN(state, action);
+    case "EXCEL_ARROW_UP":
+      return EXCEL_ARROW_UP(state, action);
+    case "EXCEL_ARROW_LEFT":
+      return EXCEL_ARROW_LEFT(state, action);
+    case "EXCEL_ARROW_RIGHT":
+      return EXCEL_ARROW_RIGHT(state, action);
+    case "EXCEL_SET_SCROLL_DATA":
+      return EXCEL_SET_SCROLL_DATA(state, action);
+    case "EXCEL_RIGHT_CLICK_CELL":
+      return EXCEL_RIGHT_CLICK_CELL(state, action);
+    case "EXCEL_DOUBLE_CLICK_EDITABLE_CELL":
+      return EXCEL_DOUBLE_CLICK_EDITABLE_CELL(state, action);
+    case "EXCEL_MOUSE_UP":
+      return EXCEL_MOUSE_UP(state, action);
+    case "EXCEL_MOUSE_MOVE":
+      return EXCEL_MOUSE_MOVE(state, action);
+    case "EXCEL_MOUSE_DOWN":
+      return EXCEL_MOUSE_DOWN(state, action);
+    case "EXCEL_SELECT_OVER":
+      return EXCEL_SELECT_OVER(state, action);
+    case "EXCEL_ADD_SHEET":
+      return EXCEL_ADD_SHEET(state, action);
+    case "EXCEL_SET_SHEET":
+      return EXCEL_SET_SHEET(state, action);
+    case "EXCEL_SET_ACTIVE_CELL_DIALOG":
+      return EXCEL_SET_ACTIVE_CELL_DIALOG(state, action);
+    case "EXCEL_RESET_ACTIVE_CELL_DIALOG":
+      return EXCEL_RESET_ACTIVE_CELL_DIALOG(state, action);
+    case "EXCEL_SET_ACTIVE_CELL_INPUT_VALUE":
+      return EXCEL_SET_ACTIVE_CELL_INPUT_VALUE(state, action);
+    case "EXCEL_DISABLE_EDIT_MODE":
+      return EXCEL_DISABLE_EDIT_MODE(state, action);
+    case "EXCEL_INSERT_ROW":
+      return EXCEL_INSERT_ROW(state, action);
+    case "EXCEL_INSERT_COLUMN":
+      return EXCEL_INSERT_COLUMN(state, action);
+    case "EXCEL_SET_PREPOPULATE":
+      return EXCEL_SET_PREPOPULATE(state, action);
+    case "EXCEL_SET_BUSINESS_CONCEPT":
+      return EXCEL_SET_BUSINESS_CONCEPT(state, action);
+    case "EXCEL_DELETE_CELLS_SHIFT_UP":
+      return EXCEL_DELETE_CELLS_SHIFT_UP(state, action);
+    case "EXCEL_DELETE_CELLS_SHIFT_LEFT":
+      return EXCEL_DELETE_CELLS_SHIFT_LEFT(state, action);
+    case "EXCEL_TAB":
+      return EXCEL_TAB(state, action);
+    case "EXCEL_ENTER":
+      return EXCEL_ENTER(state, action);
+    case "EXCEL_DELETE":
+      return EXCEL_DELETE(state, action);
+    case "EXCEL_SAVE":
+      return EXCEL_SAVE(state, action);
+    case "EXCEL_DOWNLOAD":
+      return EXCEL_DOWNLOAD(state, action);
+    case "EXCEL_ADD_COMMENT":
+      return EXCEL_ADD_COMMENT(state, action);
+    case "EXCEL_DELETE_COMMENT":
+      return EXCEL_DELETE_COMMENT(state, action);
+    case "EXCEL_SELECT_ALL":
+      return EXCEL_SELECT_ALL(state, action);
+    default: 
+      return state;
+  };
+};
 
-    EXCEL_SET_NAME,
-
-    EXCEL_TOGGLE_TEMPLATE_PUBLISH,
-
-    EXCEL_ARROW_DOWN,
-    EXCEL_ARROW_UP,
-    EXCEL_ARROW_LEFT,
-    EXCEL_ARROW_RIGHT,
-
-    EXCEL_SET_SCROLL_DATA,
-
-    EXCEL_RIGHT_CLICK_CELL,
-    EXCEL_DOUBLE_CLICK_EDITABLE_CELL,
-    EXCEL_MOUSE_UP,
-    EXCEL_MOUSE_MOVE,
-    EXCEL_MOUSE_DOWN,
-    EXCEL_SELECT_OVER,
-
-    EXCEL_ADD_SHEET,
-    EXCEL_SET_SHEET,
-
-    EXCEL_SET_ACTIVE_CELL_DIALOG,
-    EXCEL_RESET_ACTIVE_CELL_DIALOG,
-
-    EXCEL_SET_ACTIVE_CELL_INPUT_VALUE,
-
-    EXCEL_DISABLE_EDIT_MODE,
-
-    EXCEL_INSERT_ROW,
-    EXCEL_INSERT_COLUMN,
-
-    EXCEL_SET_PREPOPULATE,
-    EXCEL_SET_BUSINESS_CONCEPT,
-
-    EXCEL_DELETE_CELLS_SHIFT_UP,
-    EXCEL_DELETE_CELLS_SHIFT_LEFT,
-
-    EXCEL_TAB,
-    EXCEL_ENTER,
-    EXCEL_DELETE,
-    
-    EXCEL_SAVE,
-    EXCEL_DOWNLOAD,
-
-    EXCEL_ADD_COMMENT,
-    EXCEL_DELETE_COMMENT,
-
-    EXCEL_SELECT_ALL
-  }
-);
-
-export default excelReducer;
+export default undox(excelReducer);

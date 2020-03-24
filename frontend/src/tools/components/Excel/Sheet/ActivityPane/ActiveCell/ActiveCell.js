@@ -224,25 +224,26 @@ const ActiveCell = ({ computeActiveCellStyle, isActiveCellInCorrectPane }) => {
     ({
       ui: {
         excel: {
-          isEditMode, 
-          editorState,
-          isSheetFocused,
-        
-          activeCellPosition,
-        
-          sheetFreezeColumnCount,
-          sheetFreezeRowCount,
-        
-          sheetColumnCount,
-          sheetRowCount,
-        
-          sheetColumnWidths,
-          sheetRowHeights,
-        
-          sheetCellData,
-        
-
-          activeCellDialog,
+          present: {
+            isEditMode, 
+            editorState,
+            isSheetFocused,
+          
+            activeCellPosition,
+          
+            sheetFreezeColumnCount,
+            sheetFreezeRowCount,
+          
+            sheetColumnCount,
+            sheetRowCount,
+          
+            sheetColumnWidths,
+            sheetRowHeights,
+          
+            sheetCellData,
+          
+            activeCellDialog,
+          }
         }
       }
     }) => ({

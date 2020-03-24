@@ -121,13 +121,15 @@ const ToolBar = ({
     ({
       ui: {
         excel: {
-          sheetCellData,
-          isSheetFocused,
-          activeCellPosition: { x, y },
-          activeCellInputData: {
-            cellEditor
-          },
-          isEditMode
+          present: {
+            sheetCellData,
+            isSheetFocused,
+            activeCellPosition: { x, y },
+            activeCellInputData: {
+              cellEditor
+            },
+            isEditMode
+          }
         }
       }
     }) => ({

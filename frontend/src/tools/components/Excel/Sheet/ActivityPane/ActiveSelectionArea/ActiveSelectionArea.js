@@ -10,15 +10,17 @@ import "./ActiveSelectionArea.scss";
 const mapStateToProps = ({
   ui: {
     excel: {
-      isSelectionMode,
-      activeSelectionArea,
-
-      sheetFreezeColumnCount,
-      sheetFreezeRowCount,
-      sheetColumnWidths,
-      sheetRowHeights,
-      sheetColumnCount,
-      sheetRowCount,
+      present: {
+        isSelectionMode,
+        activeSelectionArea,
+  
+        sheetFreezeColumnCount,
+        sheetFreezeRowCount,
+        sheetColumnWidths,
+        sheetRowHeights,
+        sheetColumnCount,
+        sheetRowCount
+      }
     }
   }
 }) => ({

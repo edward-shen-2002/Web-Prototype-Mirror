@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 
-import { useSelector, shallowEqual, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import MenuItems from "@tools/components/Excel/commonComponents/MenuItems";
 

@@ -33,8 +33,10 @@ const ColumnDragger = ({
 const mapStateToProps = ({
   ui: {
     excel: {
-      cursorType,
-      isSelectionMode
+      present: {
+        cursorType,
+        isSelectionMode
+      }
     }
   }
 }) => ({

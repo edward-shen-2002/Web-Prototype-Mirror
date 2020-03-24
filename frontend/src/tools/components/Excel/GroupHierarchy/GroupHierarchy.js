@@ -9,7 +9,9 @@ const GroupHierarchy = () => {
     ({ 
       ui: {
         excel: {
-          sheetCellData
+          present: {
+            sheetCellData
+          }
         }
       } 
     }) => ({

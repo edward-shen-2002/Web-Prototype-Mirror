@@ -39,8 +39,10 @@ const CellEditor = ({ blockStyle }) => {
     ({ 
       ui: { 
         excel: { 
-          isSheetFocused,
-          activeCellInputData
+          present: {
+            isSheetFocused,
+            activeCellInputData
+          }
         } 
       } 
     }) => ({

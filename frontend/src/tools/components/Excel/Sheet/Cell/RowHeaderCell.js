@@ -38,8 +38,10 @@ const RowDragger = ({
 const mapStateToProps = ({
   ui: {
     excel: {
-      cursorType,
-      isSelectionMode
+      present: {
+        cursorType,
+        isSelectionMode
+      }
     }
   }
 }) => ({

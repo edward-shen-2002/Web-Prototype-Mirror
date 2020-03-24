@@ -14,12 +14,14 @@ import "./HeaderResize.scss";
 const mapRowHeaderStateToProps = ({
   ui: {
     excel: {
-      isRowResizeMode,
-      rowResizeData,
-      sheetRowHeights, 
-      sheetFreezeRowCount,
-      sheetFreezeColumnCount,
-      sheetRowCount
+      present: {
+        isRowResizeMode,
+        rowResizeData,
+        sheetRowHeights, 
+        sheetFreezeRowCount,
+        sheetFreezeColumnCount,
+        sheetRowCount
+      }
     }
   }
 }) => ({
@@ -65,11 +67,13 @@ RowHeaderIndicator = connect(mapRowHeaderStateToProps)(RowHeaderIndicator);
 const mapColumnHeaderStateToProps = ({
   ui: {
     excel: {
-      isColumnResizeMode,
-      columnResizeData,
-      sheetFreezeColumnCount,
-      sheetColumnWidths,
-      sheetColumnCount
+      present: {
+        isColumnResizeMode,
+        columnResizeData,
+        sheetFreezeColumnCount,
+        sheetColumnWidths,
+        sheetColumnCount
+      }
     }
   }
 }) => ({

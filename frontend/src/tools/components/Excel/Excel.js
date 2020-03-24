@@ -14,6 +14,9 @@ const Excel = ({ type, returnLink }) => {
   const sheetContainerRef = useRef(null);
   const sheetGridRef = useRef(null);
 
+  // window.sheetGridRef = sheetGridRef;
+  // console.log(window.sheetGridRef)
+
   return (
     <div className="excel">
       <AppBar type={type} returnLink={returnLink} />

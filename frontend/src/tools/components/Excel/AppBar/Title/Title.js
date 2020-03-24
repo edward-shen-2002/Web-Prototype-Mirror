@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 
-import { connect, useDispatch, useSelector, shallowEqual } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
 import { setName } from "@actions/ui/excel/commands";
 
@@ -15,7 +15,9 @@ let Title = () => {
     ({
       ui: {
         excel: {
-          name
+          present: {
+            name
+          }
         }
       }
     }) => name,
