@@ -2,7 +2,6 @@
 
 ## Prioritized
 
-- Excel history - redo/undo
 - Excel sheet mouse auto-scroll
 - Adjust z-index of cells when value is present
 - Convert excel editor state to Xlsx-populate rich text
@@ -16,6 +15,10 @@
 - User settings
 - Phase deadlines
 - Report
+- Excel history - change direct reference modification
+- Excel history - set initial index (when excel is fully loaded)
+- Excel history - make mouse actions specific (not mouse up/mouse down.. too general)
+- Excel history - Limit history scope - some actions are not included in history
 
 ## Unprioritized
 
