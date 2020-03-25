@@ -31,7 +31,7 @@ export const offsetSheetCellRowDataAtIndex = (sheetCellData, start, offset) => {
   const end = start + offset;
 
   for(let column in startData) {
-    if(startData[column] && startData[column].styles) template[column] = { type: "normal", styles: startData[column].styles };
+    if(startData[column] && startData[column].styles) template[column] = { type: "normal", styles: { ...startData[column].styles } };
   }
 
   // Offset data downwards
@@ -41,7 +41,7 @@ export const offsetSheetCellRowDataAtIndex = (sheetCellData, start, offset) => {
       const newRowOffset = Number(row) + offset;
       newData[newRowOffset] = rowData;
     } else {
-      newData[row] = sheetCellData[row];
+      newData[row] = { ...sheetCellData[row] };
     }
   }
 
@@ -68,7 +68,7 @@ export const offsetSheetCellColumnDataAtIndex = (sheetCellData, start, offset) =
     for(let column in columns) {
       const columnData = columns[column];
       if(start <= column && columnData) {
-        if(start == column && columnData.styles) template[row] = { styles: columnData.styles };
+        if(start == column && columnData.styles) template[row] = { styles: { ...columnData.styles } };
 
         const newColumnOffset = Number(column) + offset;
         newData[row][newColumnOffset] = sheetCellData[row][column];

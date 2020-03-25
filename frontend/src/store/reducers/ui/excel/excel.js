@@ -63,11 +63,13 @@ import EXCEL_SAVE from "./commands/SAVE";
 
 import EXCEL_SET_BUSINESS_CONCEPT from "./commands/SET_BUSINESS_CONCEPT";
 
+import MERGE_CELLS from "./commands/MERGE_CELLS";
+
 const ignoredActionsMap = {
   // EXCEL_MOUSE_DOWN: true,
-  EXCEL_SELECT_OVER: true,
-  EXCEL_SET_SCROLL_DATA: true,
-  EXCEL_SET_ACTIVE_CELL_INPUT_VALUE: true
+  // EXCEL_SELECT_OVER: true,
+  // EXCEL_SET_SCROLL_DATA: true,
+  // EXCEL_SET_ACTIVE_CELL_INPUT_VALUE: true
 };
 
 const defaultState = {
@@ -198,6 +200,8 @@ const excelReducer = (state = defaultState, action) => {
       return EXCEL_DELETE_COMMENT(state, action);
     case "EXCEL_SELECT_ALL":
       return EXCEL_SELECT_ALL(state, action);
+    case "EXCEL_MERGE_CELLS":
+      return MERGE_CELLS(state, action);
     default: 
       return state;
   };

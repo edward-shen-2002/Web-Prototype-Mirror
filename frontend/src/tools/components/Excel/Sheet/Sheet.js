@@ -244,21 +244,13 @@ let Sheet = ({ sheetGridRef }) => {
       let action;
   
       if(key === "ArrowUp") {
-        action = keyArrowUp({
-          shiftKey 
-        });
+        action = keyArrowUp({ shiftKey });
       } else if(key === "ArrowDown") {
-        action = keyArrowDown({ 
-          shiftKey 
-        });
+        action = keyArrowDown({ shiftKey });
       } else if(key === "ArrowLeft") {
-        action = keyArrowLeft({ 
-          shiftKey 
-        });
+        action = keyArrowLeft({ shiftKey });
       } else if(key === "ArrowRight") {
-        action = keyArrowRight({ 
-          shiftKey 
-        });
+        action = keyArrowRight({ shiftKey });
       } else if(key === "Tab") {
         event.preventDefault();
         action = keyTab({ shiftKey, sheetContainerRef });
@@ -272,7 +264,8 @@ let Sheet = ({ sheetGridRef }) => {
         // ! save
         action = save();
       } else if(key === "a" && (ctrlKey || metaKey)) {
-        action = selectAll({ event });
+        event.preventDefault();
+        action = selectAll();
       } else if((ctrlKey || metaKey)) {
         
       } else if(inputCharacterRegex.test(key)) {

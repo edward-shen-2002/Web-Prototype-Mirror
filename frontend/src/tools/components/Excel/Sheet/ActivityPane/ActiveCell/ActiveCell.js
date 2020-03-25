@@ -121,8 +121,7 @@ const ActiveCellDialog = ({
 const ActiveInputCell = ({ 
   activeCellStyle,
   blockStyle,
-  isSheetFocused,
-  eventListenerRef
+  isSheetFocused
 }) => {
   const handleReturn = (event) => {
     const { key, ctrlKey, altKey } = event;
@@ -149,7 +148,6 @@ const ActiveInputCell = ({
       <CellEditor
         key="active-cell-input"
         blockStyle={blockStyle}
-        eventListenerRef={eventListenerRef}
         readOnly={!isSheetFocused}
         handleReturn={handleReturn}
       />
@@ -162,7 +160,6 @@ const ActiveNormalCell = ({
   activeCellDialog,
   comments,
   value,
-  eventListenerRef
 }) => {
 
   return (
@@ -177,7 +174,6 @@ const ActiveNormalCell = ({
               activeCellDialog={activeCellDialog}
               comments={comments}
               value={value}
-              eventListenerRef={eventListenerRef}
             />  
           )}
         >

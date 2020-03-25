@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useCallback } from "react";
 
-import { useSelector, shallowEqual} from "react-redux";
+import { useSelector, shallowEqual, useDispatch} from "react-redux";
 
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
@@ -11,6 +11,7 @@ import FormatUnderlinedIcon from "@material-ui/icons/FormatUnderlined";
 import FormatStrikeThroguhIcon from "@material-ui/icons/StrikethroughS";
 import FormatColorFillIcon from "@material-ui/icons/FormatColorFill";
 import FormatColorTextIcon from "@material-ui/icons/FormatColorText";
+import MergeTypeIcon from "@material-ui/icons/MergeType";
 
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import FormatAlignCenterIcon from "@material-ui/icons/FormatAlignLeft";
@@ -19,12 +20,20 @@ import FormatAlignRightIcon from "@material-ui/icons/FormatAlignRight";
 import { getMainFontStylesStates } from "@tools/styles";
 import { getMainFontStyleEditorStates } from "@tools/slate";
 
+import { mergeCells } from "@actions/ui/excel/commands";
+
 import "./ToolBar.scss";
 
-const ToolBarButton = ({ id, children, state, handleClick }) => (
+const ToolBarButton = ({ 
+  id, 
+  children, 
+  state, 
+  className,
+  handleClick 
+}) => (
   <Button 
     id={id}
-    className={`toolBar__button ${state ? "toolBar__button--active" : ""}`}
+    className={`toolBar__button ${state ? "toolBar__button--active" : ""} ${className}`}
     disableRipple={true} 
     disableFocusRipple={true}
     onClick={handleClick}
@@ -48,6 +57,12 @@ const CenterAlignButton = ({ handleClick }) => (
 const RightAlignButton = ({ handleClick }) => (
   <ToolBarButton id="align-right" handleClick={handleClick}>
     <FormatAlignRightIcon/>
+  </ToolBarButton>
+);
+
+const MergeCellButton = ({ handleClick }) => (
+  <ToolBarButton handleClick={handleClick}>
+    <MergeTypeIcon/>
   </ToolBarButton>
 );
 
@@ -86,6 +101,26 @@ const StrikethroughButton = (props) => (
   </ToolBarButton>
 );
 
+const CellStyles = ({
+  isMergeAvailable
+}) => {
+  const dispatch = useDispatch();
+
+  const handleMerge = useCallback(
+    () => dispatch(mergeCells()),
+    [ dispatch ]
+  );
+
+  return (
+    <div>
+      <MergeCellButton 
+        disabled={!isMergeAvailable}
+        handleClick={handleMerge}
+      />
+    </div>
+  );
+};
+
 const MainFontStyles = ({ 
   cellStyles, 
   cellEditor, 
@@ -104,19 +139,18 @@ const MainFontStyles = ({
       <ItalicButton state={italic} handleClick={handleTextStyle}/>
       <UnderlineButton state={underline} handleClick={handleTextStyle}/>
       <StrikethroughButton state={strikethrough} handleClick={handleTextStyle}/>
+      
     </div>
   );
 };
 
-const ToolBar = ({
-  type,
-  eventListenerRef
-}) => {
+const ToolBar = () => {
   const { 
     cellStyles, 
     cellEditor, 
     isSheetFocused,
-    isEditMode 
+    isEditMode,
+    isMergeAvailable
   } = useSelector(
     ({
       ui: {
@@ -128,11 +162,13 @@ const ToolBar = ({
             activeCellInputData: {
               cellEditor
             },
+            stagnantSelectionAreas,
             isEditMode
           }
         }
       }
     }) => ({
+      isMergeAvailable: stagnantSelectionAreas.length <= 1,
       isEditMode,
       isSheetFocused,
       cellEditor,
@@ -141,8 +177,8 @@ const ToolBar = ({
     shallowEqual
   );
 
-  const handleApplyBlockStyle = ({ currentTarget: { id } }) => eventListenerRef.current.applyBlockStyle(id);
-  const handleTextStyle = ({ currentTarget: { id } }) => eventListenerRef.current.applyTextStyle(id, null, isSheetFocused);
+  const handleApplyBlockStyle = ({ currentTarget: { id } }) => {};
+  const handleTextStyle = ({ currentTarget: { id } }) => {};
 
   return (
     <div className="toolBar">
@@ -154,6 +190,8 @@ const ToolBar = ({
       />
       <Divider orientation="vertical"/>
       <AlignStyles handleApplyBlockStyle={handleApplyBlockStyle} cellStyles={cellStyles}/>
+      <Divider orientation="vertical"/>
+      <CellStyles isMergeAvailable={isMergeAvailable}/>
     </div>
   );
 };
