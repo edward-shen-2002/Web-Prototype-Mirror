@@ -36,7 +36,8 @@ import {
   EXCEL_ADD_COMMENT,
   EXCEL_DELETE_COMMENT,
 
-  EXCEL_MERGE_CELLS
+  EXCEL_MERGE_CELLS,
+  EXCEL_UNMERGE_CELLS
 } from "@actionCreators";
 
 export const selectAll = (props) => ({ type: EXCEL_SELECT_ALL, ...props });
@@ -79,3 +80,4 @@ export const undo = () => ({ type: UndoxTypes.UNDO });
 export const redo = () => ({ type: UndoxTypes.REDO });
 
 export const mergeCells = () => ({ type: EXCEL_MERGE_CELLS });
+export const unmergeCells = () => ({ type: EXCEL_UNMERGE_CELLS });

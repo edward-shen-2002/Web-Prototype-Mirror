@@ -20,7 +20,7 @@ import FormatAlignRightIcon from "@material-ui/icons/FormatAlignRight";
 import { getMainFontStylesStates } from "@tools/styles";
 import { getMainFontStyleEditorStates } from "@tools/slate";
 
-import { mergeCells } from "@actions/ui/excel/commands";
+import { mergeCells, unmergeCells } from "@actions/ui/excel/commands";
 
 import "./ToolBar.scss";
 
@@ -28,6 +28,7 @@ const ToolBarButton = ({
   id, 
   children, 
   state, 
+  disabled,
   className,
   handleClick 
 }) => (
@@ -37,6 +38,7 @@ const ToolBarButton = ({
     disableRipple={true} 
     disableFocusRipple={true}
     onClick={handleClick}
+    disabled={disabled}
   >
     {children}
   </Button>
@@ -60,8 +62,8 @@ const RightAlignButton = ({ handleClick }) => (
   </ToolBarButton>
 );
 
-const MergeCellButton = ({ handleClick }) => (
-  <ToolBarButton handleClick={handleClick}>
+const MergeCellButton = ({ disabled, handleClick }) => (
+  <ToolBarButton disabled={disabled} handleClick={handleClick}>
     <MergeTypeIcon/>
   </ToolBarButton>
 );
@@ -102,19 +104,20 @@ const StrikethroughButton = (props) => (
 );
 
 const CellStyles = ({
-  isMergeAvailable
+  isMergeButtonEnabled,
+  isCellMergeable
 }) => {
   const dispatch = useDispatch();
 
   const handleMerge = useCallback(
-    () => dispatch(mergeCells()),
-    [ dispatch ]
+    () => dispatch(isCellMergeable ? mergeCells() : unmergeCells()),
+    [ dispatch, isCellMergeable ]
   );
 
   return (
     <div>
       <MergeCellButton 
-        disabled={!isMergeAvailable}
+        disabled={!isMergeButtonEnabled}
         handleClick={handleMerge}
       />
     </div>
@@ -148,9 +151,10 @@ const ToolBar = () => {
   const { 
     cellStyles, 
     cellEditor, 
+    isCellMergeable,
     isSheetFocused,
     isEditMode,
-    isMergeAvailable
+    isMergeButtonEnabled
   } = useSelector(
     ({
       ui: {
@@ -158,6 +162,7 @@ const ToolBar = () => {
           present: {
             sheetCellData,
             isSheetFocused,
+            activeSelectionArea,
             activeCellPosition: { x, y },
             activeCellInputData: {
               cellEditor
@@ -168,7 +173,14 @@ const ToolBar = () => {
         }
       }
     }) => ({
-      isMergeAvailable: stagnantSelectionAreas.length <= 1,
+      isMergeButtonEnabled: (
+        !stagnantSelectionAreas.length && activeSelectionArea 
+        || stagnantSelectionAreas.length === 1 && !activeSelectionArea
+        || sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged && !activeSelectionArea && !stagnantSelectionAreas.length
+      ),
+      isCellMergeable: (
+        stagnantSelectionAreas.length === 1 || activeSelectionArea
+      ),
       isEditMode,
       isSheetFocused,
       cellEditor,
@@ -191,7 +203,7 @@ const ToolBar = () => {
       <Divider orientation="vertical"/>
       <AlignStyles handleApplyBlockStyle={handleApplyBlockStyle} cellStyles={cellStyles}/>
       <Divider orientation="vertical"/>
-      <CellStyles isMergeAvailable={isMergeAvailable}/>
+      <CellStyles isMergeButtonEnabled={isMergeButtonEnabled} isCellMergeable={isCellMergeable}/>
     </div>
   );
 };

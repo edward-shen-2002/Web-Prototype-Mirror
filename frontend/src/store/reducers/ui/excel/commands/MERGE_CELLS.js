@@ -1,10 +1,10 @@
-import cloneDeep from "clone-deep";
-
 const MERGE_CELLS = (state) => {
+  let newState = { ...state };
+
   const {
     stagnantSelectionAreas,
     sheetCellData
-  } = state;
+  } = newState;
 
   // Can only merge when there's only one area 
   if(stagnantSelectionAreas.length !== 1) return state;
@@ -16,7 +16,7 @@ const MERGE_CELLS = (state) => {
   const minY = Math.min(y1, y2);
   const maxY = Math.max(y1, y2);
 
-  let newSheetCellData = cloneDeep({ ...sheetCellData });
+  let newSheetCellData = { ...sheetCellData };
 
   for(let row = minY; row <= maxY; row++) {
     newSheetCellData[row] = { ...newSheetCellData[row] };
@@ -26,18 +26,16 @@ const MERGE_CELLS = (state) => {
     for(let column = minX; column <= maxX; column++) {
       const merged = { x1: minX, y1: minY, x2: maxX, y2: maxY };
       
-      if(row !== minX && column !== minY) {
-        rowData[column] = { merged };
+      if(row === minY && column === minX) {
+        rowData[column] = { ...rowData[column], merged };
       } else {
-        rowData[column] = { ...rowData[column], merged }
+        rowData[column] = { merged };
       }
     }
   }
 
-  const newState = {
-    ...state,
-    sheetCellData: newSheetCellData
-  }
+  newState.sheetCellData = newSheetCellData;
+  newState.stagnantSelectionAreas = [];
 
   return newState;
 };
