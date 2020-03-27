@@ -34,8 +34,7 @@ const ActiveCellDialog = ({
   targetRect,
   popoverRect,
   comments,
-  value,
-  eventListenerRef
+  value
 }) => {
   const handleKeyDownCapture = (event) => {
     const { key, ctrlKey } = event;
@@ -52,10 +51,6 @@ const ActiveCellDialog = ({
 
   const handleContextMenuCapture = (event) => event.stopPropagation();
 
-  const commonChildrenProps = { 
-    eventListenerRef 
-  };
-
   let Children;
 
   if(activeCellDialog) {
@@ -63,14 +58,12 @@ const ActiveCellDialog = ({
     if(dialog === "comment") {
       Children = (
         <CommentPopup 
-          {...commonChildrenProps}
           comments={comments}
         />
       );
     } else if(dialog === "concept") {
       Children = (
         <BusinessConceptPopup 
-          {...commonChildrenProps} 
           type={category} 
         />
       );
@@ -85,14 +78,12 @@ const ActiveCellDialog = ({
   
       Children = (
         <PrepopulatePopup
-          {...commonChildrenProps}
           {...conceptParameters}
         />
       );
     } else if(dialog === "group") {
       Children = (
         <GroupPopup
-          {...commonChildrenProps}
           type={category}
         />
       );

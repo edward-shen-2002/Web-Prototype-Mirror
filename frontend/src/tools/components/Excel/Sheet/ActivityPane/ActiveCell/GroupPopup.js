@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useDispatch } from "react-redux";
 
 import { publicAxios } from "@tools/rest";
 
@@ -15,6 +16,8 @@ import { REST_PUBLIC_DATA } from "@constants/rest";
 import { filterString } from "./utils";
 
 import { DialogActions } from "./components";
+
+import { resetActiveCellDialog, setGroups } from "@actions/ui/excel/commands";
 
 import "./GroupPopup.scss";
 
@@ -205,36 +208,36 @@ const isGroupsValid = (groups) => {
   return true;
 };
 
-const GroupPopup = ({
-  type,
-  eventListenerRef
-}) => {
-  const [ groups, setGroups ] = useState([]);
+const GroupPopup = ({ type }) => {
+  const [ currentGroups, setCurrentGroups ] = useState([]);
   const [ isDataFetched, setIsDataFetched ] = useState(false);
   const [ newGroups, setNewGroups ] = useState([]);
-  const [ groupPointer, setGroupPointer ] = useState(groups && groups.length ? groups.length - 1 : -1 );
+  const [ groupPointer, setGroupPointer ] = useState(currentGroups && currentGroups.length ? currentGroups.length - 1 : -1 );
   const [ selectedGroup, setSelectedGroup ] = useState();
   // const [ filterString, setFilterString ] = useState("");
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if(!isDataFetched) {
       setIsDataFetched(true);
       publicAxios.get(`${REST_PUBLIC_DATA}/groups`)
         .then(({ data: { data: { groups } } }) => {
-          setGroups(groups);  
+          setCurrentGroups(groups);  
         })
         .catch((error) => console.error(error));
     }
   }, [ isDataFetched ]);
 
-  const handleAdd = () => {
-    eventListenerRef.current.changeGroup({
-      type,
-      newGroups
-    });
-  };
+  const handleAdd = useCallback(
+    () => dispatch(setGroups({ category: type, newGroups })),
+    [ dispatch, newGroups ]
+  );
 
-  const handleCancel = () => eventListenerRef.current.resetActiveCellDialog();
+  const handleCancel = useCallback(
+    () => dispatch(resetActiveCellDialog()),
+    [ dispatch ]
+  );
 
   const handleUpdateGroupPointer = (index) => setGroupPointer(index);
   const handleRemoveLink = (index) => {
@@ -261,7 +264,7 @@ const GroupPopup = ({
       <GroupSection
         type={type}
         groups={newGroups}
-        definedGroups={groups}
+        definedGroups={currentGroups}
         selectedGroup={selectedGroup}
         handleRemoveLink={handleRemoveLink}
         handleUpdateGroupPointer={handleUpdateGroupPointer}

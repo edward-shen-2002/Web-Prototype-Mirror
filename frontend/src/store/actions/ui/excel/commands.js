@@ -9,7 +9,7 @@ import {
   EXCEL_INSERT_COLUMN,
   EXCEL_INSERT_ROW,
   
-  EXCEL_SET_GROUP,
+  EXCEL_SET_GROUPS,
   EXCEL_SET_PREPOPULATE,
   EXCEL_ENABLE_EDIT_MODE,
 
@@ -48,7 +48,7 @@ export const deleteCellsShiftLeft = (props) => ({ type: EXCEL_DELETE_CELLS_SHIFT
 export const insertColumn = () => ({ type: EXCEL_INSERT_COLUMN });
 export const insertRow = () => ({ type: EXCEL_INSERT_ROW });
 
-export const setGroup = (props) => ({ type: EXCEL_SET_GROUP, ...props });
+export const setGroups = (props) => ({ type: EXCEL_SET_GROUPS, ...props });
 export const setPrepopulate = (props) => ({ type: EXCEL_SET_PREPOPULATE, ...props });
 
 export const enableEditMode = () => ({ type: EXCEL_ENABLE_EDIT_MODE });

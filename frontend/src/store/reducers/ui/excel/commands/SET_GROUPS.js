@@ -1,7 +1,7 @@
-const CHANGE_GROUP = (
+const SET_GROUPS = (
   state,
   {
-    type, 
+    category, 
     newGroups
   }
 ) => {
@@ -15,13 +15,13 @@ const CHANGE_GROUP = (
   let newSheetCellData = { ...sheetCellData };
 
   // ! TODO
-  if(type === "attribute") {
+  if(category === "attribute") {
 
   } else {
     let groupIds = newGroups.map(({ id }) => id).join(" - ");
     let groupValues = newGroups.map(({ value }) => value).join(" - ");
 
-    if(!newSheetCellData[y]) newSheetCellData[y] = {};
+    newSheetCellData[y] = { ...newSheetCellData[y] };
 
     newSheetCellData[y][2] = { value: groupIds };
     newSheetCellData[y][3] = { value: groupValues };
@@ -33,4 +33,4 @@ const CHANGE_GROUP = (
   return newState;
 };
 
-export default CHANGE_GROUP;
+export default SET_GROUPS;

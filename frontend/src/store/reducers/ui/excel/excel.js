@@ -63,8 +63,10 @@ import EXCEL_SAVE from "./commands/SAVE";
 
 import EXCEL_SET_BUSINESS_CONCEPT from "./commands/SET_BUSINESS_CONCEPT";
 
-import MERGE_CELLS from "./commands/MERGE_CELLS";
-import UNMERGE_CELLS from "./commands/UNMERGE_CELLS";
+import EXCEL_MERGE_CELLS from "./commands/MERGE_CELLS";
+import EXCEL_UNMERGE_CELLS from "./commands/UNMERGE_CELLS";
+
+import EXCEL_SET_GROUPS from "./commands/SET_GROUPS";
 
 const ignoredActionsMap = {
   // EXCEL_MOUSE_DOWN: true,
@@ -202,9 +204,11 @@ const excelReducer = (state = defaultState, action) => {
     case "EXCEL_SELECT_ALL":
       return EXCEL_SELECT_ALL(state, action);
     case "EXCEL_MERGE_CELLS":
-      return MERGE_CELLS(state, action);
+      return EXCEL_MERGE_CELLS(state, action);
     case "EXCEL_UNMERGE_CELLS":
-      return UNMERGE_CELLS(state, action);
+      return EXCEL_UNMERGE_CELLS(state, action);
+    case "EXCEL_SET_GROUPS":
+      return EXCEL_SET_GROUPS(state, action);
     default: 
       return state;
   };
