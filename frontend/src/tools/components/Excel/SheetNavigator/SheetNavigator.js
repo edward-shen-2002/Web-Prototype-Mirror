@@ -193,7 +193,6 @@ const SheetSelectionContext = ({
   </DragDropContext>
 );
 
-// Move this state subscription and action to EventListener
 const SheetNavigator = () => {
   const [ isEditMode, setIsEditMode ] = useState(false);
   

@@ -1,7 +1,7 @@
 import { 
   updateActiveCellPosition,
   saveActiveCellInputData
-} from "./tools/cell";
+} from "../tools/cell";
 
 // ! should be triggered in START_SELECTION instead
 const SELECT_COLUMN = (

@@ -3,16 +3,14 @@ import { getNormalRowHeight } from "@tools/excel";
 const RESIZE_ROW_START = (
   state, 
   {
-    row
+    row,
+    topOffsets
   }
 ) => {
-  const { 
-    topOffsets,
-    sheetRowHeights
-  } = state;
-
   let newState = { ...state };
-  
+
+  const { sheetRowHeights } = newState;
+
   const height = getNormalRowHeight(sheetRowHeights[row]);
   const rowOffset = topOffsets[row];
   const offset = rowOffset + height;

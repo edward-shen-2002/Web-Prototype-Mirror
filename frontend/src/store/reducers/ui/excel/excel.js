@@ -36,8 +36,6 @@ import EXCEL_TOGGLE_TEMPLATE_PUBLISH from "./commands/TOGGLE_TEMPLATE_PUBLISH";
 
 import EXCEL_RIGHT_CLICK_CELL from "./mouse/RIGHT_CLICK_CELL";
 import EXCEL_DOUBLE_CLICK_EDITABLE_CELL from "./mouse/DOUBLE_CLICK_EDITABLE_CELL";
-import EXCEL_MOUSE_UP from "./mouse/MOUSE_UP";
-import EXCEL_MOUSE_MOVE from "./mouse/MOUSE_MOVE";
 import EXCEL_MOUSE_DOWN from "./mouse/MOUSE_DOWN"
 
 import EXCEL_ARROW_DOWN from "./keyboard/ARROW_DOWN";
@@ -67,6 +65,19 @@ import EXCEL_MERGE_CELLS from "./commands/MERGE_CELLS";
 import EXCEL_UNMERGE_CELLS from "./commands/UNMERGE_CELLS";
 
 import EXCEL_SET_GROUPS from "./commands/SET_GROUPS";
+
+import EXCEL_SELECT_ROW from "./mouse/SELECT_ROW";
+import EXCEL_RESIZE_ROW_START from "./mouse/RESIZE_ROW_START";
+
+import EXCEL_SELECT_COLUMN from "./mouse/SELECT_COLUMN";
+import EXCEL_RESIZE_COLUMN_START from "./mouse/RESIZE_COLUMN_START";
+
+import EXCEL_RESIZE_ROW from "./mouse/RESIZE_ROW";
+import EXCEL_RESIZE_COLUMN from "./mouse/RESIZE_COLUMN";
+
+import EXCEL_SELECT_END from "./mouse/SELECT_END";
+import EXCEL_RESIZE_ROW_END from "./mouse/RESIZE_ROW_END";
+import EXCEL_RESIZE_COLUMN_END from "./mouse/RESIZE_COLUMN_END";
 
 const ignoredActionsMap = {
   // EXCEL_MOUSE_DOWN: true,
@@ -131,87 +142,66 @@ const defaultState = {
   bundleId: ""
 };
 
+const reducerMap = {
+  EXCEL_ARROW_DOWN,
+  EXCEL_ARROW_LEFT,
+  EXCEL_ARROW_RIGHT,
+  EXCEL_ARROW_UP,
+  EXCEL_DELETE,
+  EXCEL_ENTER,
+  EXCEL_DELETE_CELLS_SHIFT_LEFT,
+  EXCEL_DELETE_CELLS_SHIFT_UP,
+  EXCEL_DOUBLE_CLICK_EDITABLE_CELL,
+  EXCEL_RESIZE_COLUMN_START,
+  EXCEL_RESIZE_ROW_START,
+  EXCEL_DISABLE_EDIT_MODE,
+  EXCEL_INSERT_COLUMN,
+  EXCEL_INSERT_ROW,
+  EXCEL_MOUSE_DOWN,
+  EXCEL_SELECT_OVER,
+  EXCEL_RIGHT_CLICK_CELL,
+  EXCEL_SELECT_ALL,
+  EXCEL_SELECT_COLUMN,
+  EXCEL_SELECT_ROW,
+  // EXCEL_SET_BLOCK_STYLE,
+  EXCEL_SET_BUSINESS_CONCEPT,
+  EXCEL_SET_GROUPS,
+  EXCEL_SET_PREPOPULATE,
+  EXCEL_SET_SCROLL_DATA,
+  // EXCEL_ESCAPE,
+  // EXCEL_SET_SHEET_NAME,
+  EXCEL_SET_SHEET,
+  EXCEL_TAB,
+  EXCEL_SET_EXCEL_DATA,
+  EXCEL_RESET_EXCEL_DATA,
+  EXCEL_SET_NAME,
+  EXCEL_TOGGLE_TEMPLATE_PUBLISH,
+  EXCEL_SET_ACTIVE_CELL_DIALOG,
+  EXCEL_RESET_ACTIVE_CELL_DIALOG,
+  EXCEL_SET_ACTIVE_CELL_INPUT_VALUE,
+  // EXCEL_SET_READ_ONLY,
+  // EXCEL_UNSET_READ_ONLY,
+  EXCEL_DOWNLOAD,
+  EXCEL_SAVE,
+  EXCEL_ADD_COMMENT,
+  EXCEL_DELETE_COMMENT,
+  // EXCEL_ENABLE_SHEET_FOCUS,
+  EXCEL_MERGE_CELLS,
+  EXCEL_UNMERGE_CELLS,
+
+  EXCEL_RESIZE_ROW,
+  EXCEL_RESIZE_COLUMN,
+
+  EXCEL_SELECT_END,
+
+  EXCEL_RESIZE_ROW_END,
+  EXCEL_RESIZE_COLUMN_END
+};
+
 const excelReducer = (state = defaultState, action) => {
-  switch(action.type) {
-    case "EXCEL_SET_EXCEL_DATA":
-      return EXCEL_SET_EXCEL_DATA(state, action);
-    case "EXCEL_RESET_EXCEL_DATA":
-      return EXCEL_RESET_EXCEL_DATA(state, action);
-    case "EXCEL_SET_NAME":
-      return EXCEL_SET_NAME(state, action);
-    case "EXCEL_TOGGLE_TEMPLATE_PUBLISH":
-      return EXCEL_TOGGLE_TEMPLATE_PUBLISH(state, action);
-    case "EXCEL_ARROW_DOWN":
-      return EXCEL_ARROW_DOWN(state, action);
-    case "EXCEL_ARROW_UP":
-      return EXCEL_ARROW_UP(state, action);
-    case "EXCEL_ARROW_LEFT":
-      return EXCEL_ARROW_LEFT(state, action);
-    case "EXCEL_ARROW_RIGHT":
-      return EXCEL_ARROW_RIGHT(state, action);
-    case "EXCEL_SET_SCROLL_DATA":
-      return EXCEL_SET_SCROLL_DATA(state, action);
-    case "EXCEL_RIGHT_CLICK_CELL":
-      return EXCEL_RIGHT_CLICK_CELL(state, action);
-    case "EXCEL_DOUBLE_CLICK_EDITABLE_CELL":
-      return EXCEL_DOUBLE_CLICK_EDITABLE_CELL(state, action);
-    case "EXCEL_MOUSE_UP":
-      return EXCEL_MOUSE_UP(state, action);
-    case "EXCEL_MOUSE_MOVE":
-      return EXCEL_MOUSE_MOVE(state, action);
-    case "EXCEL_MOUSE_DOWN":
-      return EXCEL_MOUSE_DOWN(state, action);
-    case "EXCEL_SELECT_OVER":
-      return EXCEL_SELECT_OVER(state, action);
-    case "EXCEL_ADD_SHEET":
-      return EXCEL_ADD_SHEET(state, action);
-    case "EXCEL_SET_SHEET":
-      return EXCEL_SET_SHEET(state, action);
-    case "EXCEL_SET_ACTIVE_CELL_DIALOG":
-      return EXCEL_SET_ACTIVE_CELL_DIALOG(state, action);
-    case "EXCEL_RESET_ACTIVE_CELL_DIALOG":
-      return EXCEL_RESET_ACTIVE_CELL_DIALOG(state, action);
-    case "EXCEL_SET_ACTIVE_CELL_INPUT_VALUE":
-      return EXCEL_SET_ACTIVE_CELL_INPUT_VALUE(state, action);
-    case "EXCEL_DISABLE_EDIT_MODE":
-      return EXCEL_DISABLE_EDIT_MODE(state, action);
-    case "EXCEL_INSERT_ROW":
-      return EXCEL_INSERT_ROW(state, action);
-    case "EXCEL_INSERT_COLUMN":
-      return EXCEL_INSERT_COLUMN(state, action);
-    case "EXCEL_SET_PREPOPULATE":
-      return EXCEL_SET_PREPOPULATE(state, action);
-    case "EXCEL_SET_BUSINESS_CONCEPT":
-      return EXCEL_SET_BUSINESS_CONCEPT(state, action);
-    case "EXCEL_DELETE_CELLS_SHIFT_UP":
-      return EXCEL_DELETE_CELLS_SHIFT_UP(state, action);
-    case "EXCEL_DELETE_CELLS_SHIFT_LEFT":
-      return EXCEL_DELETE_CELLS_SHIFT_LEFT(state, action);
-    case "EXCEL_TAB":
-      return EXCEL_TAB(state, action);
-    case "EXCEL_ENTER":
-      return EXCEL_ENTER(state, action);
-    case "EXCEL_DELETE":
-      return EXCEL_DELETE(state, action);
-    case "EXCEL_SAVE":
-      return EXCEL_SAVE(state, action);
-    case "EXCEL_DOWNLOAD":
-      return EXCEL_DOWNLOAD(state, action);
-    case "EXCEL_ADD_COMMENT":
-      return EXCEL_ADD_COMMENT(state, action);
-    case "EXCEL_DELETE_COMMENT":
-      return EXCEL_DELETE_COMMENT(state, action);
-    case "EXCEL_SELECT_ALL":
-      return EXCEL_SELECT_ALL(state, action);
-    case "EXCEL_MERGE_CELLS":
-      return EXCEL_MERGE_CELLS(state, action);
-    case "EXCEL_UNMERGE_CELLS":
-      return EXCEL_UNMERGE_CELLS(state, action);
-    case "EXCEL_SET_GROUPS":
-      return EXCEL_SET_GROUPS(state, action);
-    default: 
-      return state;
-  };
+  let reducer = reducerMap[action.type];
+
+  return reducer ? reducer(state, action) : state;
 };
 
 export default undox(excelReducer, undefined, undefined, ignoredActionsMap);

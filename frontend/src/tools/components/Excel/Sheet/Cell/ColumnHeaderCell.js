@@ -1,14 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 
-import { connect } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
 import { columnNumberToName } from "xlsx-populate/lib/addressConverter";
 
-const ColumnDragger = ({
-  column,
-  eventListenerRef
-}) => {
+import { resizeColumnStart, selectColumn } from "@actions/ui/excel/mouse";
+
+import leftOffsetsSelector from "@selectors/ui/excel/leftOffsets";
+
+const ColumnDragger = ({ column }) => {
   const [ isIndicatorActive, setIsIndicatorActive ] = useState(false);
+
+  const leftOffsets = useSelector(
+    ({
+      ui: {
+        excel: {
+          present: {
+            sheetColumnWidths,
+            sheetColumnCount
+          }
+        }
+      }
+    }) => leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths }),
+    shallowEqual
+  );
+  
+  const dispatch = useDispatch();
 
   const handleMouseEnter = () => setIsIndicatorActive(true);
 
@@ -16,7 +33,10 @@ const ColumnDragger = ({
 
   const handleClick = (event) => event.stopPropagation();
 
-  const handleMouseDown = () => eventListenerRef.current.startColumnDrag(column);
+  const handleMouseDown = useCallback(
+    () => dispatch(resizeColumnStart({ leftOffsets, column })),
+    [ dispatch, leftOffsets, column ]
+  );
 
   return (
     <div 
@@ -30,39 +50,42 @@ const ColumnDragger = ({
   );
 };
 
-const mapStateToProps = ({
-  ui: {
-    excel: {
-      present: {
-        cursorType,
-        isSelectionMode
+const ColumnHeaderCell = ({ style, column }) => {
+  const dispatch = useDispatch();
+
+  const { cursorType, isSelectionMode } = useSelector(
+    ({
+      ui: {
+        excel: {
+          present: {
+            cursorType,
+            isSelectionMode
+          }
+        }
       }
-    }
-  }
-}) => ({
-  cursorType,
-  isSelectionMode
-});
+    }) => ({
+      cursorType,
+      isSelectionMode
+    }),
+    shallowEqual
+  );
 
-let ColumnHeaderCell = ({ 
-  style, 
-  column, 
-  cursorType,
-  isSelectionMode,
-  eventListenerRef
-}) => {
-  const handleClick = ({ ctrlKey }) => eventListenerRef.current.clickColumnHeader(column, ctrlKey);
+  const handleClick = useCallback(
+    ({ ctrlKey }) => dispatch(selectColumn({ column, ctrlKey })),
+    [ dispatch ]
+  );
 
-  const value = columnNumberToName(column);
+  const value = useMemo(
+    () => columnNumberToName(column),
+    [ column ]
+  );
 
   return (
     <div className="cell cell--positionIndicator" style={style} onClick={handleClick}>
       <div>{value}</div>
-      {!isSelectionMode && cursorType === "default" && <ColumnDragger column={column} eventListenerRef={eventListenerRef}/>}
+      {!isSelectionMode && cursorType === "default" && <ColumnDragger column={column}/>}
     </div>
   );
 };
-
-ColumnHeaderCell =  connect(mapStateToProps)(ColumnHeaderCell);
 
 export default ColumnHeaderCell;

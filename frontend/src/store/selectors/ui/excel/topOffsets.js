@@ -5,9 +5,9 @@ import { getTopOffsets } from "@tools/excel";
 const getRowHeights = ({ sheetRowHeights }) => sheetRowHeights;
 const getRowCount = ({ sheetRowCount }) => sheetRowCount;
 
-const topoffsetsSelector = createSelector(
+const topOffsetsSelector = createSelector(
   [ getRowHeights, getRowCount ],
   (rowHeights, rowCount) => getTopOffsets(rowHeights, rowCount)
 );
 
-export default topoffsetsSelector;
+export default topOffsetsSelector;

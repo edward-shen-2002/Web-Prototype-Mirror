@@ -253,13 +253,13 @@ let Sheet = ({ sheetGridRef }) => {
         action = keyArrowRight({ shiftKey });
       } else if(key === "Tab") {
         event.preventDefault();
-        action = keyTab({ shiftKey, sheetContainerRef });
+        action = keyTab({ shiftKey });
       } else if(key === "Enter" && !(ctrlKey || metaKey) && !altKey) {
-        action = keyEnter({ shiftKey, sheetContainerRef });
+        action = keyEnter({ shiftKey });
       } else if(key === "Delete" || key === "Backspace") {
         action = keyDelete();
       } else if(key === "Escape") {
-        action = keyEscape({ sheetContainerRef });
+        action = keyEscape({});
       } else if(key === "s" && (ctrlKey || metaKey)) {
         // ! save
         action = save();
@@ -325,6 +325,8 @@ let Sheet = ({ sheetGridRef }) => {
   let style = {};
 
   if(cursorType !== "default") style.cursor = cursorType;
+
+  console.log('ref')
 
   return (
     <div 

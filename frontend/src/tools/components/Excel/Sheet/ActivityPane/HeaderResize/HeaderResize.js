@@ -1,6 +1,6 @@
 import React from "react";
 
-import { connect } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 
 import { getNormalRowHeight, getNormalColumnWidth } from "@tools/excel";
 
@@ -11,40 +11,39 @@ import leftOffsetsSelector from "@selectors/ui/excel/leftOffsets";
 
 import "./HeaderResize.scss";
 
-const mapRowHeaderStateToProps = ({
-  ui: {
-    excel: {
-      present: {
-        isRowResizeMode,
-        rowResizeData,
-        sheetRowHeights, 
-        sheetFreezeRowCount,
-        sheetFreezeColumnCount,
-        sheetRowCount
+export const RowHeaderIndicator = ({ isRelevantRowOffset, computeTopOffset }) => {
+  const {
+    isRowResizeMode,
+    rowResizeData,
+    sheetRowHeights, 
+    sheetFreezeRowCount,
+    topOffsets
+  } = useSelector(
+    ({
+      ui: {
+        excel: {
+          present: {
+            isRowResizeMode,
+            rowResizeData,
+            sheetRowHeights, 
+            sheetFreezeRowCount,
+            sheetFreezeColumnCount,
+            sheetRowCount
+          }
+        }
       }
-    }
-  }
-}) => ({
-  isRowResizeMode,
-  rowResizeData,
-  sheetRowHeights, 
-  sheetFreezeRowCount,
-  sheetFreezeColumnCount,
-  sheetRowCount,
+    }) => ({
+      isRowResizeMode,
+      rowResizeData,
+      sheetRowHeights, 
+      sheetFreezeRowCount,
+      sheetFreezeColumnCount,
+    
+      topOffsets: topOffsetsSelector({ sheetRowCount, sheetRowHeights })
+    }),
+    shallowEqual
+  );
 
-  topOffsets: topOffsetsSelector({ sheetRowCount, sheetRowHeights })
-});
-
-export let RowHeaderIndicator = ({
-  isRowResizeMode,
-  isRelevantRowOffset,
-  rowResizeData,
-  sheetFreezeRowCount,
-  sheetRowHeights, 
-  topOffsets,
-
-  computeTopOffset
-}) => {
   if(!isRowResizeMode) return null;
 
   const freezeRowOffset = topOffsets[sheetFreezeRowCount] + getNormalRowHeight(sheetRowHeights[sheetFreezeRowCount]);
@@ -62,38 +61,38 @@ export let RowHeaderIndicator = ({
   return <div style={indicatorStyle} className="resizeHeader resizeHeader__headerIndicator"/>;
 };
 
-RowHeaderIndicator = connect(mapRowHeaderStateToProps)(RowHeaderIndicator);
-
-const mapColumnHeaderStateToProps = ({
-  ui: {
-    excel: {
-      present: {
-        isColumnResizeMode,
-        columnResizeData,
-        sheetFreezeColumnCount,
-        sheetColumnWidths,
-        sheetColumnCount
+export const ColumnHeaderIndicator = ({ isRelevantColumnOffset }) => {
+  const {
+    isColumnResizeMode,
+    columnResizeData,
+    sheetFreezeColumnCount,
+    sheetColumnWidths,
+  
+    leftOffsets
+  } = useSelector(
+    ({
+      ui: {
+        excel: {
+          present: {
+            isColumnResizeMode,
+            columnResizeData,
+            sheetFreezeColumnCount,
+            sheetColumnWidths,
+            sheetColumnCount
+          }
+        }
       }
-    }
-  }
-}) => ({
-  isColumnResizeMode,
-  columnResizeData,
-  sheetFreezeColumnCount,
-  sheetColumnWidths,
-  sheetColumnCount,
+    }) => ({
+      isColumnResizeMode,
+      columnResizeData,
+      sheetFreezeColumnCount,
+      sheetColumnWidths,
+    
+      leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths })
+    }),
+    shallowEqual    
+  );
 
-  leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths })
-});
-
-export let ColumnHeaderIndicator = ({
-  isColumnResizeMode,
-  isRelevantColumnOffset,
-  columnResizeData,
-  sheetFreezeColumnCount,
-  sheetColumnWidths,
-  leftOffsets
-}) => {
   if(!isColumnResizeMode) return null;
 
   const freezeColumnOffset = leftOffsets[sheetFreezeColumnCount] + getNormalColumnWidth(sheetColumnWidths[sheetFreezeColumnCount]);
@@ -110,8 +109,6 @@ export let ColumnHeaderIndicator = ({
 
   return <div style={indicatorStyle} className="resizeHeader resizeHeader__headerIndicator"/>;
 };
-
-ColumnHeaderIndicator = connect(mapColumnHeaderStateToProps)(ColumnHeaderIndicator);
 
 export let RowContentIndicator = ({
 

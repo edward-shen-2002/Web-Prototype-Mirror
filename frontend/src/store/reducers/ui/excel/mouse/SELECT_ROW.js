@@ -1,4 +1,4 @@
-import { saveActiveCellInputData, updateActiveCellPosition } from "./tools/cell";
+import { saveActiveCellInputData, updateActiveCellPosition } from "../tools/cell";
 
 const SELECT_ROW = (
   state,
