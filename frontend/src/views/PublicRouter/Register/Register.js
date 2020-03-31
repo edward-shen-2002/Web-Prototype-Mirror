@@ -163,35 +163,94 @@ const ButtonBox = ({activeStep, handleBack, handleNext, ableToComplete}) => (
 );
 
 const selectOrgProgram = (organizationGroup, organizationOptions, handleOrgChange, handleProgramChange,programOptions, selectedPrograms) => {
-  switch (organizationGroup) {
-    case "Health Service Providers":
-      return(
-        <>
-          <Typography className="register__inputTitle"> *Organizations </Typography>
-          <Select
-            name = "organizations"
-            options = {organizationOptions}
-            onChange={handleOrgChange}
-            className="register__select"
-          />
-          <Typography className="register__inputTitle"> *Program </Typography>
+  const searchKeyOptions = [
+    {label: "Organization Code", value: "code"},
+    {label: "Organization Name", value: "name"},
+    {label: "Location Name", value: "LocationName"},
+  ]
+  let searchKey = "";
+  let reference = "";
+  const handleSearchKeyChange = (event) => {
+    searchKey = event.value;
+  }
+  const handleReferenceChange = (event) => {
+    console.log(reference);
+  }
+  if (organizationGroup !== "Health Service Providers") {
+    return (
+      <>
+        <Typography className="register__inputTitle"> *Organizations </Typography>
+        <Select
+          name="organizations"
+          options={organizationOptions}
+          onChange={handleOrgChange}
+          className="register__select"
+        />
+        <Typography className="register__inputTitle"> *Program </Typography>
 
-          <FilteredMultiSelect
-            onChange={handleProgramChange}
-            options={programOptions}
-            selectedOptions={selectedPrograms}
-            textProp="label"
-            valueProp="value"
-            buttonText="Add Program"
-            className="register__filteredMultiSelect"
-            showFilter={false}
-            classNames={{
-              button: "register__step3Button",
-              select: "register__multiSelect",
+        <FilteredMultiSelect
+          onChange={handleProgramChange}
+          options={programOptions}
+          selectedOptions={selectedPrograms}
+          textProp="label"
+          valueProp="value"
+          buttonText="Add Program"
+          className="register__filteredMultiSelect"
+          showFilter={false}
+          classNames={{
+            button: "register__step3Button",
+            select: "register__multiSelect",
+          }}
+        />
+      </>
+    )
+  }
+  else{
+    return(
+      <>
+        <Typography className="register__inputTitle"> Search </Typography>
+        <Select
+          name = "organizations"
+          options = {searchKeyOptions}
+          onChange={handleSearchKeyChange}
+          className="register__select"
+        />
+        <Typography className="register__inputTitle"> By </Typography>
+        <div className="register__searchKeyField">
+          <TextField
+            variant="outlined"
+            className="register__field"
+            type="text"
+            name="reference"
+            onChange={handleReferenceChange}
+            InputProps={{
+              style:{
+                height: 35
+              }
             }}
           />
-        </>
-      )
+        </div>
+        <Button variant="outlined" color="primary" className="register__button"  OnClick={handleOrgChange} >
+          Go
+        </Button>
+        <Typography className="register__inputTitle"> *Program </Typography>
+
+        <FilteredMultiSelect
+          onChange={handleProgramChange}
+          options={programOptions}
+          selectedOptions={selectedPrograms}
+          textProp="label"
+          valueProp="value"
+          buttonText="Add Program"
+          className="register__filteredMultiSelect"
+          showFilter={false}
+          classNames={{
+            button: "register__step3Button",
+            select: "register__multiSelect",
+          }}
+        />
+      </>
+    )
   }
 }
 
@@ -524,16 +583,6 @@ let Register = ({ isOnline, history }) => {
     programs: []
   });
 
-  //
-  // const handleOrgGroupChange = event => setOrganizationGroup(event.target.value);
-  // const handleUserTitleChange = event => setUserTitle(event.target.value);
-  // const handleUserPhoneNumberChange = event => setUserPhoneNumber(event.target.value);
-  // const handleUserEmailChange = event => setUserEmail(event.target.value);
-  // const handleUserIDChange = event => setUserID(event.target.value);
-  // const handlePasswordChange = event => setPassword(event.target.value);
-  // const handleLastNameChange = event => setLastName(event.target.value);
-  // const handleFirstNameChange = event => setFirstName(event.target.value);
-  // const handleExtChange = event => setExt(event.target.value);
 
   const handleRegister = () => {
 

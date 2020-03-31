@@ -113,6 +113,14 @@
 
   &__inputTitle {
     font-size: 15px;
+    margin-top: 30px;
+    flex-flow: column nowrap;
+    display: inline-block;
+    min-width: 70px;
+  }
+
+  &__searchKeyField {
+    font-size: 20px;
     margin-top: 30px !important;
     flex-flow: column nowrap;
     display: inline;
