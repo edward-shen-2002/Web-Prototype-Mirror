@@ -81,7 +81,7 @@ import EXCEL_RESIZE_COLUMN_END from "./mouse/RESIZE_COLUMN_END";
 
 const ignoredActionsMap = {
   // EXCEL_MOUSE_DOWN: true,
-  // EXCEL_SELECT_OVER: true,
+  EXCEL_SELECT_OVER: true,
   // EXCEL_SET_SCROLL_DATA: true,
   // EXCEL_SET_ACTIVE_CELL_INPUT_VALUE: true
 };

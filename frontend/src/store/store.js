@@ -7,17 +7,20 @@ const composeEnhancers = typeof window === 'object' &&
   window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ 
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
         // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
-        actionSanitizer: (action) => (
-          action.type === "EXCEL_SET_EXCEL_DATA" 
-            ? { 
+        actionSanitizer: (action) => {
+          switch (action.type) {
+            case "EXCEL_SET_EXCEL_DATA":
+              return { 
                 ...action, 
                 excelData: {
                   ...action.excelData,
                   inactiveSheets: "<<LONG_BLOB>>" 
                 }
-              }
-            : action
-        ),
+              };
+            default:
+              return action;
+          }
+        },
         stateSanitizer: (state) =>({
           ...state,
           ui: {

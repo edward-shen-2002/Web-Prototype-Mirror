@@ -59,8 +59,8 @@
     "slate-history": "../../slate/packages/slate-history",
     "slate-react": "../../slate/packages/slate-react",
     "typescript": "^3.6.3",
-    "uniqid": "^5.0.3",
     "undox": "../../undox",
+    "uniqid": "^5.0.3",
     "webpack-bundle-analyzer": "^3.6.0",
     "xlsx-populate": "https://github.com/greylemon/xlsx-populate",
     "yup": "^0.27.0"

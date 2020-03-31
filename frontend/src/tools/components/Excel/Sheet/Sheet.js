@@ -326,8 +326,6 @@ let Sheet = ({ sheetGridRef }) => {
 
   if(cursorType !== "default") style.cursor = cursorType;
 
-  console.log('ref')
-
   return (
     <div 
       ref={sheetContainerRef} 
