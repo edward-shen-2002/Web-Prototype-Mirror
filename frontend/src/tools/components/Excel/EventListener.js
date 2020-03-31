@@ -751,7 +751,6 @@ class EventRedux extends PureComponent {
     const { x, y } = activeCellPosition;
 
     if(activeCellSelectionAreaIndex >= 0) {
-      // { row: column }
       let selectionAreaCoveredCells = {};
 
       let combinedSelectionArea = activeSelectionArea ? [ ...stagnantSelectionAreas, activeSelectionArea ] : [ ...stagnantSelectionAreas ];
@@ -783,7 +782,11 @@ class EventRedux extends PureComponent {
           // ! Consider when everything is undefined -- do you remove it from sheet data?
           // ! Consider normal/rich text
           if(newSheetCellData[row] && newSheetCellData[row][column]) {
-            newSheetCellData[row][column] = { ...newSheetCellData[row][column], value: undefined };
+            newSheetCellData[row][column] = {
+              ...newSheetCellData[row][column],
+              value: undefined,
+              type: "normal"
+            };
           }
         });
       }
@@ -791,15 +794,10 @@ class EventRedux extends PureComponent {
       handleUpdateSheetCellData(newSheetCellData);
     } else {
       
-      if(sheetCellData[y] && sheetCellData[y][x]) this.changeValue(y, x, { ...sheetCellData[y][x], value: undefined });
+      if(sheetCellData[y] && sheetCellData[y][x]) this.changeValue(y, x, { ...sheetCellData[y][x], value: undefined, type: "normal" });
     }
 
-    const cellData = sheetCellData[y] && sheetCellData[y][x] ? sheetCellData[y][x] : undefined;
-
-    const type = cellData ? cellData.type : undefined;
-    const value = cellData ? cellData.value : undefined;
-
-    handleUpdateActiveCellInputData({ editorState: type === "rich-text" ? convertRichTextToEditorState(value) : convertTextToEditorState(value) });
+    handleUpdateActiveCellInputData({ editorState: convertTextToEditorState("") });
   }
 
   changeActiveInputData(data) {

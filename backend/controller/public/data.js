@@ -20,36 +20,67 @@ const data = ({
 }) => {
   router.get(`${ROUTE_DATA}/organizations`, (_req, res, next) => {
     OrganizationModel.find({})
-      .select("_id code name address programs contact")
+      .select("_id code name address")
       .then((organizations) => {
         res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { organizations } });
       })
       .catch(next);
   });
 
-  router.get(`${ROUTE_DATA}/organizationGroups`, (_req, res, next) => {
-    OrganizationGroupModel.find({})
-      .select("name organization")
-      .then((organizationGroups) => {
-        res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { organizationGroups } });
+  router.get(`${ROUTE_DATA}/organizations/:organizationGroup`, (_req, res, next) => {
+
+    const { organizationGroup } = _req.params
+
+    OrganizationModel.find({organizationGroup})
+      .select("_id code name address contact organizationGroup")
+      .then((organizations) => {
+        res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { organizations } });
       })
       .catch(next);
   });
 
-  router.get(`${ROUTE_DATA}/programs`, (_req, res, next) => {
-    OrganizationGroupModel.find({})
-      .select("name organization")
-      .then((organizationGroups) => {
-        res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { organizationGroups } });
+  router.get(`${ROUTE_DATA}/organizations/information/:code`, (_req, res, next) => {
+
+    const { code } = _req.params
+    console.log(code);
+
+    OrganizationModel.find({code})
+      .select("_id name address contact organizationGroup")
+      .then((organizations) => {
+        res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { organizations } });
       })
       .catch(next);
+  });
+
+  router.get(`${ROUTE_DATA}/programs/:organization`, (_req, res, next) => {
+
+    const { organization } = _req.params
+    ProgramModel.find({organization})
+      .select("name submission shortName")
+      .then((programs) => {
+        res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { programs } });
+      })
+      .catch(next);
+  });
+
+  router.post(`${ROUTE_DATA}/submissions/`, (_req, res, next) => {
+
+    const { programList } = _req.body;
+    console.log(programList);
+    SubmissionModel.find({program: {$in: programList}})
+      .select("shortName program ApproveAvailable ReviewAvailable SubmitAvailable InputAvailable ViewAvailable ViewCognosAvailable")
+      .then((submissions) => {
+        res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { submissions } });
+      })
+      .catch(next);
+
   });
 
   router.get(`${ROUTE_DATA}/sectors`, (_req, res, next) => {
     SectorModel.find({})
       .select("_id name")
       .then((sectors) => {
-        res.json({ msesage: MESSAGE_SUCCESS_SECTORS, data: { sectors } });
+        res.json({ message: MESSAGE_SUCCESS_SECTORS, data: { sectors } });
       })
       .catch(next);
   });

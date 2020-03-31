@@ -1,11 +1,14 @@
 import React, {lazy, useState} from "react";
+
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+
 import { Formik } from "formik";
+
 import { publicAxios } from "@tools/rest";
-import { AppNavbarBrand } from "@coreui/react";
+
 import logo from "@images/brand/ON_POS_LOGO_WHITE.svg";
 import SRIBar from "@images/brand/SRI.jpg";
+
 import { ROLE_LEVEL_NOT_APPLICABLE } from "@constants/roles";
 import { REST_PUBLIC_REGISTER, REST_PUBLIC_DATA } from "@constants/rest";
 import { ROUTE_PUBLIC_LOGIN, ROUTE_USER_PROFILE } from "@constants/routes";
@@ -49,61 +52,9 @@ import * as yup from "yup";
 import Snackbar from "@material-ui/core/Snackbar";
 import CustomSnackbarContent from "../../../tools/components/CustomSnackbarContent/CustomSnackbarContent";
 import uniqid from "uniqid";
+import {createProgram} from "typescript";
 
 const MaterialTable = lazy(() => import("material-table"));
-
-const checkBoxColumns = [
-  { title: "Organization", field: "organization" },
-  { title: "Program", field: "program" },
-  { title: "Submission", field: "submission"},
-  { title: "Approve*", field: "approve" ,render: rowData =>
-      <Checkbox>
-        value={rowData.Approve}
-        color="primary"
-      </Checkbox>
-  },
-  { title: "Review**", field: "review" ,render: rowData =>
-      <Checkbox>
-        value={rowData.Review}
-        color="primary"
-      </Checkbox>
-  },
-  { title: "Submit***", field: "submit" ,render: rowData =>
-      <Checkbox>
-        value={rowData.Submit}
-        color="primary"
-      </Checkbox>
-  },
-  { title: "Input****", field: "input" ,render: rowData =>
-      <Checkbox>
-        value={rowData.Input}
-        color="primary"
-      </Checkbox>
-  },
-  { title: "View*****", field: "view" ,render: rowData =>
-      <Checkbox>
-        value={rowData.View}
-        color="primary"
-      </Checkbox>
-  },
-  { title: "View Cognos******", field: "viewCognos" ,render: rowData =>
-      <Checkbox>
-        value={rowData.ViewCognos}
-        color="primary"
-      </Checkbox>
-  },
-]
-
-
-const columns = [
-  { title: "Organization", field: "organization" },
-  { title: "Program", field: "program" },
-  { title: "Submission", field: "submission" },
-  { title: "Permission", field: "permission" },
-  { title: "Authoritative Person Name", field: "authoritativePersonName" },
-  { title: "Authoritative Person's Phone Number", field: "authoritativePersonPhoneNumber" },
-  { title: "Authoritative Person's Email", field: "authoritativePersonEmail" }
-];
 
 function getSteps() {
   return ['Step1', 'Step2', 'Step3'];
@@ -113,6 +64,7 @@ class MySelect extends React.Component {
   handleChange = value => {
     // this is going to call setFieldValue and manually update values.topcis
     this.props.onChange(this.props.name, value);
+
   };
 
   handleBlur = () => {
@@ -121,6 +73,7 @@ class MySelect extends React.Component {
   };
 
   render() {
+    console.log(this.props.value);
     return (
       <div className={this.props.className}>
         <Select
@@ -128,7 +81,7 @@ class MySelect extends React.Component {
           options={this.props.options}
           onChange={this.handleChange}
           onBlur={this.handleBlur}
-          value={this.props.value}
+          defaultValue={this.props.value}
           name={this.props.name}
           variant="outlined"
         />
@@ -198,7 +151,8 @@ const actions=[
 
 
 const getStepContent = (steps, activeStep, organizationGroup, handleOrgGroupChange, isSnackbarOpen, setIsSnackbarOpen, handleBack, handleNext, handleSubmit, handleSnackbarClose,
-                        userOrganizations, organizationOptions, handleOrgChange, titleOptions, handleTitleChange, handleProgramChange, props) => {
+                        userOrganizations, userPrograms, userSubmissions, userPermissions, setUserSubmissionList, setUserPermissionList, columns, checkBoxColumns, organizationOptions, programOptions,
+                        handleOrgChange, titleOptions, handleTitleChange, handleProgramChange, handleSubmissionChange, createProgram, ableToComplete, setAbleToComplete, props) => {
 
   const { values, handleChange, touched, handleBlur, errors, setFieldValue, setFieldTouched} = props
   switch (activeStep) {
@@ -229,13 +183,14 @@ const getStepContent = (steps, activeStep, organizationGroup, handleOrgGroupChan
               Next
             </Button>
 
-            <Button disabled={activeStep !== 2} variant="outlined" color="primary" className="register__button"  onClick={handleSubmit} >
+            <Button disabled={activeStep !== 2} variant="outlined" color="primary" className="register__button"  onClick={handleNext} >
               COMPLETE REGISTRATION
             </Button>
           </Box>
         </>
       );
     case 1:
+      console.log(values.title);
       return (
         <>
           <form className="register__form">
@@ -459,7 +414,7 @@ const getStepContent = (steps, activeStep, organizationGroup, handleOrgGroupChan
                 Next
               </Button>
 
-              <Button disabled={activeStep !== 2} variant="outlined" color="primary" className="register__button"  onClick={handleSubmit} >
+              <Button disabled={activeStep !== 2} variant="outlined" color="primary" className="register__button"  onClick={handleNext} >
                 COMPLETE REGISTRATION
               </Button>
             </Box>
@@ -484,24 +439,24 @@ const getStepContent = (steps, activeStep, organizationGroup, handleOrgGroupChan
         </>
       );
     case 2:
-      let userOrgCode = "";
+      const selectedPrograms = [];
+      console.log(userSubmissions)
+
       return (
         <div className="register__form">
           <Typography className="register__inputTitle"> *Organizations </Typography>
-          <MySelect
+          <Select
             name = "organizations"
             options = {organizationOptions}
-            value={values.organization}
-            onChange={setFieldValue}
+            onChange={handleOrgChange}
             className="register__select"
-            onBlur={setFieldTouched}
           />
           <Typography className="register__inputTitle"> *Program </Typography>
 
           <FilteredMultiSelect
             onChange={handleProgramChange}
-            options={organizationOptions}
-            selectedOptions={values.programs}
+            options={programOptions}
+            selectedOptions={selectedPrograms}
             textProp="label"
             valueProp="value"
             buttonText="Add Program"
@@ -527,14 +482,11 @@ const getStepContent = (steps, activeStep, organizationGroup, handleOrgGroupChan
               style={{
                 backgroundColor: "#f2f5f7"
               }}
-              data={[
-                { organization: 'MOH', program: 'Hosipital1', Approve: false, Review: false, Input: false, Submit: false, View: false, ViewCognos: false },
-                { organization: 'MOH', surname: 'Hosipital2', Approve: false, Review: false, Input: false, Submit: false, View: false, ViewCognos: false  },
-              ]}
+              data={userSubmissions}
               // editable={editable} options={options}
             />
           </div>
-          <Button variant="outlined" color="primary" className="register__step3Button"  onClick={handleProgramChange} >
+          <Button variant="outlined" color="primary" className="register__step3Button"  onClick={handleSubmissionChange} >
             Add Submission
           </Button>
           <div className="register__tableContainer">
@@ -556,8 +508,11 @@ const getStepContent = (steps, activeStep, organizationGroup, handleOrgGroupChan
                   icon: 'delete',
                   tooltip: 'Delete Permission',
                   onClick: (event, rowData) => {
-                    rowData.organization= "";
-                    rowData.program="";
+                    console.log(rowData.tableData.id);
+                    console.log(rowData);
+                    let editedPermission = userPermissions.splice(rowData.tableData.id - 1, 1);
+                    setUserPermissionList(editedPermission);
+
                   }
                 }
               ]}
@@ -574,12 +529,26 @@ const getStepContent = (steps, activeStep, organizationGroup, handleOrgGroupChan
                   </Button>
                 )
               }}
-              data={[
-                { organization: 'MOH', program: 'Hospital1'},
-                { organization: 'MOH', program: 'Hospital2'},
-              ]}
+              data={userPermissions}
               // editable={editable} options={options}
             />
+            <Box border={1} color="primary" className="register__buttonBox" justifyContent="center">
+              <Button disabled={activeStep === 0} variant="outlined" color="primary" className="register__buttonBack" onClick={handleBack} >
+                Back
+              </Button>
+
+              <Button variant="outlined" color="primary" className="register__button"  href={ROUTE_PUBLIC_LOGIN} >
+                Cancel
+              </Button>
+
+              <Button disabled variant="outlined" color="primary" className="register__button"  onClick={handleNext} >
+                Next
+              </Button>
+
+              <Button disabled={!ableToComplete} variant="outlined" color="primary" className="register__button"  onClick={handleNext} >
+                COMPLETE REGISTRATION
+              </Button>
+            </Box>
           </div>
 
         </div>
@@ -641,7 +610,7 @@ let Register = ({ isOnline, history }) => {
 const Register_container = (props) => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [ organizationGroup, setOrganizationGroup] = useState("Health Service Providers");
-  const [ userTitle, setUserTitle] = useState("");
+  const [ helperState, setHelperState] = useState(true);
   const [ userPhoneNumber, setUserPhoneNumber] = useState("");
   const [ userEmail, setUserEmail] = useState("");
   const [ userID, setUserID] = useState("");
@@ -652,10 +621,85 @@ const Register_container = (props) => {
   const [ isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const steps = getSteps();
   const [ organizationOptions, setOrganizationOptions ] = useState([]);
-  const [ ProgramOptions, setProgramOptions ] = useState([]);
+  const [ programOptions, setProgramOptions ] = useState([]);
   const [ userOrganizations, setUserOrganizations ] = useState([]);
   const [ userPrograms, setUserPrograms ] = useState([]);
+  const [ userSubmissions, setUserSubmissionList] = useState([]);
+  const [ userOrgInformation, setUserOrgInformation] = useState({});
+  const [ userPermissions, setUserPermissionList] = useState([]);
+  const [ ableToComplete, setAbleToComplete] = useState(false);
 
+  let userInformation = {
+    organizationGroup: "",
+    organization: [{code: "", name: ""}],
+    program: [{name: ""}],
+    submission: [{name: "", Approve: false, Review: false, Submit: false, Input: false, View: false, ViewCognos: false}],
+    AuthorizedPerson: {name: "", email: "", phoneNumber: ""},
+    title: "",
+    userId: "",
+    lastName: "",
+    firstName: "",
+    phoneNumber: "",
+    etc: "",
+    email: "",
+    password: ""
+  };
+
+  const handleChangeApprove = (rowData, event) => {
+    let submissions = userSubmissions;
+    console.log(userSubmissions);
+    submissions[rowData.index].approve = event.target.checked;
+    rowData.approve = event.target.checked;
+    setUserSubmissionList(submissions);
+    setHelperState(!helperState)
+
+  }
+
+  const handleChangeReview = (rowData, event) => {
+    let submissions = userSubmissions;
+    console.log(userSubmissions);
+    submissions[rowData.index].review = event.target.checked;
+    rowData.review = event.target.checked;
+    setUserSubmissionList(submissions);
+    setHelperState(!helperState)
+
+  }
+  const handleChangeInput = (rowData, event) => {
+    let submissions = userSubmissions;
+    console.log(userSubmissions);
+    submissions[rowData.index].input = event.target.checked;
+    rowData.input = event.target.checked;
+    setUserSubmissionList(submissions);
+    setHelperState(!helperState)
+
+  }
+  const handleChangeView = (rowData, event) => {
+    let submissions = userSubmissions;
+    console.log(userSubmissions);
+    submissions[rowData.index].view = event.target.checked;
+    rowData.view = event.target.checked;
+    setUserSubmissionList(submissions);
+    setHelperState(!helperState)
+
+  }
+  const handleChangeSubmit = (rowData, event) => {
+    let submissions = userSubmissions;
+    console.log(userSubmissions);
+    submissions[rowData.index].submit = event.target.checked;
+    rowData.submit = event.target.checked;
+    setUserSubmissionList(submissions);
+    setHelperState(!helperState)
+
+  }
+  const handleChangeViewCognos = (rowData, event) => {
+    let submissions = userSubmissions;
+    console.log(userSubmissions);
+    submissions[rowData.index].viewCognos = event.target.checked;
+    rowData.viewCognos = event.target.checked;
+    setUserSubmissionList(submissions);
+    setHelperState(!helperState)
+
+  }
 
   const { values: { organizations: userOrganizationsMap, programs: userProgramsMap}, setFieldValue } = props;
 
@@ -666,30 +710,85 @@ const Register_container = (props) => {
     {label: "Dr.", value: "Dr."}
   ]
 
+  const checkBoxColumns = [
+    { title: "Organization", field: "organization" },
+    { title: "Program", field: "program" },
+    { title: "Submission", field: "submission"},
+    { title: "Approve*", field: "approve" ,render: rowData =>
+        <Checkbox
+          checked={rowData.approve}
+          disabled={!rowData.approveAvailable}
+          onChange={handleChangeApprove.bind(this, rowData)}
+          color="primary"
+        />
+    },
+    { title: "Review**", field: "review" ,render: rowData =>
+        <Checkbox
+          checked={rowData.review}
+          disabled={!rowData.reviewAvailable}
+          onChange={handleChangeReview.bind(this, rowData)}
+          color="primary"
+        />
+    },
+    { title: "Submit***", field: "submit" ,render: rowData =>
+        <Checkbox
+          checked={rowData.submit}
+          disabled={!rowData.submitAvailable}
+          onChange={handleChangeSubmit.bind(this, rowData)}
+          color="primary"
+        />
+    },
+    { title: "Input****", field: "input" ,render: rowData =>
+        <Checkbox
+          checked={rowData.input}
+          disabled={!rowData.inputAvailable}
+          onChange={handleChangeInput.bind(this, rowData)}
+          color="primary"
+        />
+    },
+    { title: "View*****", field: "view" ,render: rowData =>
+        <Checkbox
+          checked={rowData.view}
+          disabled={!rowData.viewAvailable}
+          onChange={handleChangeView.bind(this, rowData)}
+          color="primary"
+        />
+    },
+    { title: "View Cognos******", field: "viewCognos" ,render: rowData =>
+        <Checkbox
+          checked={rowData.viewCognos}
+          disabled={!rowData.viewCognosAvailable}
+          onChange={handleChangeViewCognos.bind(this, rowData)}
+          color="primary"
+        />
+    },
+  ]
+
+
+  const columns = [
+    { title: "Organization", field: "organization" },
+    { title: "Program", field: "program" },
+    { title: "Submission", field: "submission" },
+    { title: "Permission", field: "permission" },
+    { title: "Authoritative Person Name", field: "authoritativePersonName" },
+    { title: "Authoritative Person's Phone Number", field: "authoritativePersonPhoneNumber" },
+    { title: "Authoritative Person's Email", field: "authoritativePersonEmail" }
+  ];
+
 
   const handleNext = () => {
     if (activeStep === 0) {
-      publicAxios.get(`${REST_PUBLIC_DATA}/organizations`)
+      console.log(organizationGroup);
+      publicAxios.get(`${REST_PUBLIC_DATA}/organizations/${organizationGroup}`)
         .then(({data: {data: {organizations}}}) => {
           let options = []
           organizations.forEach(org => {
-            options.push({label: org.name, value: org.code});
+            options.push({label: "("+org.code+")"+org.name, value: org.code});
           });
           setOrganizationOptions(options);
           setUserOrganizations(Object.keys(userOrganizationsMap).map((_id) => ({...userOrganizationsMap[_id], _id})));
         })
         .catch((error) => console.error(error));
-
-      // publicAxios.get(`${REST_PUBLIC_DATA}/programs`)
-      //   .then(({data: {data: {organizations}}}) => {
-      //     let options = []
-      //     organizations.forEach(org => {
-      //       options.push({label: org.name, value: org.code});
-      //     });
-      //     setOrganizationOptions(options);
-      //     setUserOrganizations(Object.keys(userOrganizationsMap).map((_id) => ({...userOrganizationsMap[_id], _id})));
-      //   })
-      //   .catch((error) => console.error(error));
     }
     setActiveStep(prevActiveStep => prevActiveStep + 1);
 
@@ -715,16 +814,148 @@ const Register_container = (props) => {
   };
 
   const handleOrgChange = event => {
-    console.log(event);
-    setUserOrganizations(event.target.value);
-
+    setUserOrganizations(event.value);
+    console.log(event.value);
+    publicAxios.get(`${REST_PUBLIC_DATA}/programs/${event.value}`)
+      .then(({data: {data: {programs}}}) => {
+        let options = []
+        programs.forEach(program => {
+          options.push({label: "("+program.shortName+")"+program.name, value: program.name});
+        });
+        setProgramOptions(options);
+        setUserPrograms(Object.keys(userProgramsMap).map((_id) => ({...userProgramsMap[_id], _id})));
+      })
+      .catch((error) => console.error(error));
+    publicAxios.get(`${REST_PUBLIC_DATA}/organizations/information/${event.value}`)
+      .then(({data: {data: {organizations}}}) => {
+        console.log(organizations);
+        let orgInformation = {name: organizations[0].name, authorizedName: organizations[0].contact.name, phone: organizations[0].contact.telephone, email: organizations[0].contact.email};
+        setUserOrgInformation(orgInformation);
+      })
+      .catch((error) => console.error(error));
   }
 
   const handleTitleChange = event => props.values.title = event.target.value;
 
   const handleOrgGroupChange = event => setOrganizationGroup(event.target.value);
 
-  const handleProgramChange = event => props.values.program = event.target.selectedOptions;
+  const handleProgramChange = (selectedPrograms) => {
+    setUserPrograms(selectedPrograms);
+    let programList = [];
+    selectedPrograms.forEach(selectedProgram => {
+      programList.push(selectedProgram.value);
+    })
+    publicAxios.post(`${REST_PUBLIC_DATA}/submissions`,{ programList })
+      .then(({data: {data: {submissions}}}) => {
+        let submissionList = []
+        console.log(submissions);
+        let index = 0;
+        submissions.forEach(submission => {
+          submissionList.push({
+            organization: userOrganizations,
+            program: submission.program,
+            submission: submission.shortName,
+            approveAvailable: submission.ApproveAvailable,
+            reviewAvailable: submission.ReviewAvailable,
+            submitAvailable: submission.SubmitAvailable,
+            inputAvailable: submission.InputAvailable,
+            viewAvailable: submission.ViewAvailable,
+            viewCognosAvailable: submission.ViewCognosAvailable,
+            approve: false,
+            review: false,
+            submit: false,
+            input: false,
+            view: false,
+            viewCognos: false,
+            index: index,
+          });
+          index++;
+        });
+        setUserSubmissionList(submissionList);
+      })
+      .catch((error) => console.error(error));
+  }
+
+  const handleSubmissionChange = () => {
+    let permissionList = [];
+    setAbleToComplete(true);
+    userSubmissions.forEach(submission => {
+      console.log(userOrgInformation);
+      if (submission.approve) {
+        permissionList.push({
+          organization: userOrgInformation.name,
+          program: submission.program,
+          submission: submission.submission,
+          permission: "approve",
+          authoritativePersonName: userOrgInformation.authorizedName,
+          authoritativePersonPhoneNumber: userOrgInformation.phone,
+          authoritativePersonEmail: userOrgInformation.email,
+        })
+      }
+      else if (submission.review) {
+        permissionList.push({
+          organization: userOrgInformation.name,
+          program: submission.program,
+          submission: submission.submission,
+          permission: "review",
+          authoritativePersonName: userOrgInformation.authorizedName,
+          authoritativePersonPhoneNumber: userOrgInformation.phone,
+          authoritativePersonEmail: userOrgInformation.email,
+        })
+      }
+      else if (submission.submit) {
+        permissionList.push({
+          organization: userOrgInformation.name,
+          program: submission.program,
+          submission: submission.submission,
+          permission: "submit",
+          authoritativePersonName: userOrgInformation.authorizedName,
+          authoritativePersonPhoneNumber: userOrgInformation.phone,
+          authoritativePersonEmail: userOrgInformation.email,
+        })
+      }
+      else if (submission.input) {
+        permissionList.push({
+          organization: userOrgInformation.name,
+          program: submission.program,
+          submission: submission.submission,
+          permission: "input",
+          authoritativePersonName: userOrgInformation.authorizedName,
+          authoritativePersonPhoneNumber: userOrgInformation.phone,
+          authoritativePersonEmail: userOrgInformation.email,
+        })
+      }
+      else if (submission.view) {
+        permissionList.push({
+          organization: userOrgInformation.name,
+          program: submission.program,
+          submission: submission.submission,
+          permission: "view",
+          authoritativePersonName: userOrgInformation.authorizedName,
+          authoritativePersonPhoneNumber: userOrgInformation.phone,
+          authoritativePersonEmail: userOrgInformation.email,
+        })
+      }
+      else if (submission.viewCognos) {
+        permissionList.push({
+          organization: userOrgInformation.name,
+          program: submission.program,
+          submission: submission.submission,
+          permission: "view cognos",
+          authoritativePersonName: userOrgInformation.authorizedName,
+          authoritativePersonPhoneNumber: userOrgInformation.phone,
+          authoritativePersonEmail: userOrgInformation.email,
+        })
+      }
+    })
+    setUserPermissionList(permissionList);
+    setUserSubmissionList([]);
+
+  }
+
+  const createProgram = () => {
+
+  }
 
   return (
      <div>
@@ -748,7 +979,8 @@ const Register_container = (props) => {
         ) : (
           <div>
             {getStepContent(steps, activeStep, organizationGroup, handleOrgGroupChange, isSnackbarOpen, setIsSnackbarOpen, handleBack, handleNext, handleSubmit, handleSnackbarClose,
-              userOrganizations, organizationOptions, handleOrgChange, titleOptions, handleTitleChange, handleProgramChange, props)}
+              userOrganizations, userPrograms, userSubmissions, userPermissions, setUserSubmissionList, setUserPermissionList, columns, checkBoxColumns, organizationOptions, programOptions,
+              handleOrgChange, titleOptions, handleTitleChange, handleProgramChange, handleSubmissionChange, createProgram, ableToComplete, setAbleToComplete, props)}
           </div>
         )}
       </div>

@@ -3,16 +3,18 @@ import { Schema, model } from "mongoose";
 import { DEFAULT_ROLES } from "../../constants/roles";
 
 let registrationSchema = new Schema({
-  username: { type: String, lowercase: true, unique: true, required: true },
+  userId: { type: String, lowercase: true, unique: true, required: true },
   password: { type: String, required: true },
-  
+  title: { type: String, required: true },
+
   email: { type: String, unique: true, required: true },
 
   firstName: { type: String, default: "" },
   lastName: { type: String, default: "" },
-  
+
   phoneNumber: { type: String, default: "" },
 
+  organizationGroup: { type: Object, default: {} },
   organizations: { type: Object, default: {} },
   programs: [{ type: Object, default: {}}],
   submission:[{id: { type: Object}, permission: [{
@@ -23,17 +25,8 @@ let registrationSchema = new Schema({
       View: {type: Boolean},
       ViewCognos: {type: Boolean},
     }]}],
-  LHINs: { type: Object, default: {} },
 
-  roles: {
-    Approve: {submission: [{ type: Object}]},
-    Review: {submission: [{ type: Object}]},
-    Submit: {submission: [{ type: Object}]},
-    Input: {submission: [{ type: Object}]},
-    View: {submission: [{ type: Object}]},
-    ViewCognos: {submission: [{ type: Object}]},
-  },
-
+  approveStatus: { type: String, default: "Unapproved" },
   creationDate: { type: Date, default: Date.now, required: true }
 }, { minimize: false });
 
