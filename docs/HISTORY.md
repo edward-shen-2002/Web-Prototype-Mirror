@@ -2,7 +2,7 @@
 
 ## Solutions
 
-## Implementation 1
+## Implementation 1 (Impractical)
 
 Add a history to state values
 
@@ -23,6 +23,8 @@ Storage: Changed values in storage, history indices, action history, and action 
 #### Cons
 
 - Hard implementation, especially if state is dynamic - need to understand the structure of each state
+
+- Would all data be stored even if it doesn't have a value intially?
 
 ### Structure
 
@@ -103,11 +105,7 @@ Storage: History index, action history and action values
 
 #### Cons
 
-- Bad run-time
-
 - Have to retrace history from initial state to desired state - takes up to n actions and at least n re-renders (if values are different)
-
-#### Cons
 
 ### Structure
 

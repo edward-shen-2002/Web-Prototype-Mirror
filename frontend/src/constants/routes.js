@@ -4,6 +4,7 @@ export const ROUTE_ROOT = "/";
 
 export const ROUTE_PUBLIC = `${ROUTE_ROOT}public`;
 export const ROUTE_PUBLIC_LOGIN = `${ROUTE_PUBLIC}/login`;
+export const ROUTE_PUBLIC_PREREGISTER = `${ROUTE_PUBLIC}/preregister`;
 export const ROUTE_PUBLIC_REGISTER = `${ROUTE_PUBLIC}/register`;
 export const ROUTE_PUBLIC_RECOVERY = `${ROUTE_PUBLIC}/recovery`;
 

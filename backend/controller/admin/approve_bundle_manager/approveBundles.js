@@ -57,7 +57,8 @@ const approveBundles = ({
     try {
       // ! normal
       const bundle = await OrganizationBundleModel.findOneAndUpdate({ _id, phase: "approve" }, { approverNotes, phase: "finished", status: "APPROVED" });
-      
+      // const bundle = await OrganizationBundleModel.findOneAndUpdate({ _id, phase: "approve" }, {});
+
       if(!bundle) return res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_NOT_FOUND });
 
       // ! Remove existing data with parameters?
@@ -98,7 +99,7 @@ const approveBundles = ({
               if(column > 1) {
                 const { value } = firstRow[column];
   
-                if(isNumber(value)) attributesMap[column] = value;
+                if(value !== "" && isNumber(value)) attributesMap[column] = +value;
               }
             }
           }
@@ -110,11 +111,12 @@ const approveBundles = ({
               if(firstColumn) {
                 const { value } = firstColumn;
 
-                if(isNumber(value)) categoriesMap[row] = value;
+                if(value !== "" && isNumber(value)) categoriesMap[row] = +value;
               }
             }
           }
 
+          // ! Consider rich text attributes/category? Illegal?
           const attributes = Object.values(attributesMap);
           const categories = Object.values(categoriesMap);
 
