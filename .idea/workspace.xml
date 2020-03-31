@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="66b2dca1-b535-4344-884b-ed9f20e9adb2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/PublicRouter/Register/Register.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/PublicRouter/Register/Register.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/controller/admin/approve_bundle_manager/approveBundles.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controller/admin/approve_bundle_manager/approveBundles.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/ROLES.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/tools/components/Excel/EventListener.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/tools/components/Excel/EventListener.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -70,6 +72,7 @@
       <workItem from="1582031824355" duration="64165000" />
       <workItem from="1582637091485" duration="108448000" />
       <workItem from="1583764001191" duration="142065000" />
+      <workItem from="1585674047583" duration="322000" />
     </task>
     <servers />
   </component>
