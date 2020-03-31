@@ -20,6 +20,7 @@ import SubmissionModel from "../models/submission/Submission";
 import OrganizationGroupModel from "../models/organizationGroup/OrganizationGroup";
 import ProgramModel from "../models/program/Program";
 import MasterValueModel from "../models/masterValue/MasterValue";
+import GroupModel from "../models/template/Group";
 
 const serverSetup = async (app, passport, options = {}) => {
   const helpers = { 
@@ -37,7 +38,8 @@ const serverSetup = async (app, passport, options = {}) => {
     MasterValueModel,
     SubmissionModel,
     OrganizationGroupModel,
-    ProgramModel
+    ProgramModel,
+    GroupModel
   };
   
   passport.use(new LocalStrategy(UserModel.authenticate()));

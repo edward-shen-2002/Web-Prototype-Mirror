@@ -1,23 +1,93 @@
-import { useEffect } from "react";
+import { useCallback } from "react";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
-const WindowListener = ({ eventListenerRef, sheetContainerRef }) => {
-  useEffect(() => {
-    const { current: EventListenerInstance } = eventListenerRef;
+import { 
+  selectEnd, 
+  resizeRow, 
+  resizeColumn,
+  resizeRowEnd,
+  resizeColumnEnd
+} from "@actions/ui/excel/mouse";
 
-    window.onmouseup = (event) => {
-      const { ctrlKey } = event;
-      EventListenerInstance.mouseUp(ctrlKey);
-    };
+import topOffsetsSelector from "@selectors/ui/excel/topOffsets";
+import leftOffsetsSelector from "@selectors/ui/excel/leftOffsets";
 
-    // ! Handle scroll when outside sheet grid
-    window.onmousemove = ({ clientX, clientY }) => {
-      EventListenerInstance.mouseMove(sheetContainerRef, clientX, clientY);
-    };
+const WindowListener = () => {
+  const { 
+    isColumnResizeMode,
+    isRowResizeMode,
+    topOffsets,
+    leftOffsets,
+    isSelectionMode
+  } = useSelector(
+    ({
+      ui: {
+        excel: {
+          present: {
+            sheetRowHeights,
+            sheetColumnWidths,
+            sheetRowCount,
+            sheetColumnCount,
+            isRowResizeMode,
+            isColumnResizeMode,
+            isSelectionMode
+          }
+        }
+      }
+    }) => ({
+      topOffsets: topOffsetsSelector({ sheetRowCount, sheetRowHeights }),
+      leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths }),
+      isRowResizeMode,
+      isColumnResizeMode,
+      isSelectionMode
+    }),
+    shallowEqual
+  );
 
-    return () => {
-      window.onmouseup = null;
-    };
-  })
+  const dispatch = useDispatch();
+
+  window.onmouseup = useCallback(
+    ({ ctrlKey }) => {
+      if(isSelectionMode) {
+        dispatch(selectEnd({ ctrlKey }));
+      } else if(isColumnResizeMode) {
+        dispatch(resizeColumnEnd({ leftOffsets }));
+      } else if(isRowResizeMode) {
+        dispatch(resizeRowEnd({ topOffsets }));
+      }
+    
+      // dispatch(mouseUp({ ctrlKey, leftOffsets, topOffsets }));
+    },
+    [ 
+      dispatch, 
+      leftOffsets, 
+      topOffsets, 
+      isSelectionMode,
+      isColumnResizeMode,
+      isRowResizeMode
+    ]
+  );
+
+  // ! Handle scroll when outside sheet grid
+  window.onmousemove = useCallback(
+    ({ 
+      clientX: xOffset, 
+      clientY: yOffset 
+    }) => {
+      if(isColumnResizeMode) {
+        dispatch(resizeColumn({ xOffset, leftOffsets }));
+      } else if(isRowResizeMode) {
+        dispatch(resizeRow({ yOffset, topOffsets }));
+      }
+    },
+    [ 
+      dispatch, 
+      isColumnResizeMode, 
+      isRowResizeMode,
+      topOffsets,
+      leftOffsets
+    ]
+  );
 
   return null;
 };

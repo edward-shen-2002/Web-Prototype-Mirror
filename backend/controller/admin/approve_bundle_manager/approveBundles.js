@@ -4,12 +4,14 @@ import { ROUTE_ADMIN_BUNDLES_WORKFLOW } from "../../../constants/rest";
 import { HTTP_ERROR_NOT_FOUND } from "../../../constants/rest";
 import { MESSAGE_ERROR_NOT_FOUND } from "../../../constants/messages";
 import { getListDifference, isNumber } from "../../../tools/misc";
+import { isGroupString, getGroupData } from "../../../tools/workbook";
 
 const approveBundles = ({ 
   router, 
   OrganizationBundleModel,
   BusinessConceptModel,
-  MasterValueModel 
+  MasterValueModel,
+  GroupModel
 }) => {
   router.get(`${ROUTE_ADMIN_BUNDLES_WORKFLOW}/general`, (req, res, next) => {
     OrganizationBundleModel.find({ phase: "approve" })
@@ -58,6 +60,8 @@ const approveBundles = ({
       // ! normal
       const bundle = await OrganizationBundleModel.findOneAndUpdate({ _id, phase: "approve" }, { approverNotes, phase: "finished", status: "APPROVED" });
       // const bundle = await OrganizationBundleModel.findOneAndUpdate({ _id, phase: "approve" }, {});
+      // const bundle = await OrganizationBundleModel.findOneAndUpdate({ _id, phase: "approve" }, { approverNotes, phase: "finished", status: "APPROVED" });
+      // const bundle = await OrganizationBundleModel.findOneAndUpdate({ _id, phase: "approve" }, {});
 
       if(!bundle) return res.status(HTTP_ERROR_NOT_FOUND).json({ message: MESSAGE_ERROR_NOT_FOUND });
 
@@ -83,6 +87,13 @@ const approveBundles = ({
 
         const { sheetNames, workbookData } = workbook;
 
+        let attributes = new Set();
+        let categories = new Set();
+
+        let groupIds = new Set();
+        let groupValues = new Set();
+
+        // Todo: attribute groups
         for(let form of sheetNames) {
           const sheetData = JSON.parse(pako.inflate(workbookData[form], { to: "string" }));
           const { 
@@ -99,7 +110,9 @@ const approveBundles = ({
               if(column > 1) {
                 const { value } = firstRow[column];
   
-                if(value !== "" && isNumber(value)) attributesMap[column] = +value;
+                if(value !== "" && isNumber(value)) {
+                  attributesMap[column] = { id: +value };
+                }
               }
             }
           }
@@ -108,17 +121,41 @@ const approveBundles = ({
           for(let row in sheetCellData) {
             if(row > 1) {
               const firstColumn = sheetCellData[row][1];
+              const secondColumn = sheetCellData[row][2];
+              const thirdColumn = sheetCellData[row][3];
               if(firstColumn) {
                 const { value } = firstColumn;
 
-                if(value !== "" && isNumber(value)) categoriesMap[row] = +value;
+                if(value) {
+                  if(isNumber(value)) {
+                    let currentGroups;
+                    if(secondColumn && secondColumn.value) {
+                      currentGroups = secondColumn.value.split(" - ").map((id) => ({ id }));
+                      currentGroups.forEach(({ id }) => id);
+                       
+                    } else if(thirdColumn && thirdColumn.value) {
+                      currentGroups = thirdColumn.value.split(" - ").map((value) => ({ value }));
+                      currentGroups.forEach(({ value }) => groupValues.add(value));
+                    }
+
+                    categoriesMap[row] = { id: +value, groups: currentGroups };
+                    attributes.add(+value);
+                  }
+                }
               }
             }
           }
 
-          // ! Consider rich text attributes/category? Illegal?
-          const attributes = Object.values(attributesMap);
-          const categories = Object.values(categoriesMap);
+          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          // ! TODO : Shouldn't this also be verified in the template (when published check)? 
+          // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+          // Convert set to array
+          attributes = Array.from(attributes);
+          categories = Array.from(categories);
+
+          groupIds = Array.from(groupIds);
+          groupValues = Array.from(groupValues);
 
           // ! Check if attribute/category id exists and inform users if it doesn't
           const definedAttributes = (
@@ -130,18 +167,39 @@ const approveBundles = ({
             await BusinessConceptModel.find({ id: { $in: categories }})
               .select("id")
           ).map(({ id }) => id);
+          
+          const definedGroups = (
+            await GroupModel.find({ $or: [ { id: { $in: groupIds } }, { value: { $in: groupValues } } ]})
+              .select("id value")
+          );
+
+          const definedGroupsIdsMap = definedGroups.reduce((acc, { id, value }) => {
+            acc[ id ] = value;
+            return acc;
+          }, {});
+          const definedGroupsValuesMap = definedGroups.reduce((acc, { value, id }) => {
+            acc[ value ] = id;
+            return acc;
+          }, {});
 
           const invalidAttributes = getListDifference(definedAttributes, attributes);
           const invalidCategories = getListDifference(definedCategories, categories);
+          const invalidGroupIds = getListDifference(Object.keys(definedGroupsIdsMap), groupIds);
+          const invalidGroupValues = getListDifference(Object.keys(definedGroupsValuesMap), groupValues);
 
-          // ! Quadratic run time - optimize later
-          // Exclude rows without defined attributes/categories
-          for(let row in attributesMap) {
-            if(invalidAttributes.includes(attributesMap[row])) delete attributesMap[row];
-          }
-
-          for(let column in categoriesMap) {
-            if(invalidCategories.includes(categoriesMap[column])) delete categoriesMap[column];
+          if(
+            invalidAttributes.length 
+            || invalidCategories.length 
+            || invalidGroupIds.length
+            || invalidGroupValues.length
+          ) {
+            return res.status(HTTP_ERROR_NOT_FOUND).json({ 
+              message: MESSAGE_ERROR_NOT_FOUND, 
+              invalidAttributes, 
+              invalidCategories,
+              invalidGroupIds,
+              invalidGroupValues
+            });
           }
 
           // The remaining attributes/categories are the potential valid pairing
@@ -149,7 +207,23 @@ const approveBundles = ({
           // Column might not exist. Looping through rows ensures that undefined rows with column concept are not visited
           for(let row in categoriesMap) {
             const rowData = sheetCellData[row];
-            const businessConceptId1 = categoriesMap[row];
+            let businessConceptId1 = categoriesMap[row];
+
+            if(businessConceptId1.groups) {
+              let newGroups = [];
+              businessConceptId1.groups.forEach((group) => {
+                if(!group.id) {
+                  group.id = definedGroupsValuesMap[group.value];
+                } else if(!group.value) {
+                  group.value = definedGroupsIdsMap[group.id];
+                } 
+
+                newGroups.push(group);
+              });
+
+              businessConceptId1.groups = newGroups;
+            }
+            
             for(let column in attributesMap) {
               // Cell value might be rich text!
               const cellData = rowData[column];
@@ -161,7 +235,23 @@ const approveBundles = ({
                 // TODO : Convert rich text to plaintext
                 // Value could be prepopulate
                 if(value) {
-                  const businessConceptId2 = attributesMap[column];
+                  let businessConceptId2 = attributesMap[column];
+
+                  if(businessConceptId2.groups) {
+                    let newGroups = [];
+                    businessConceptId2.groups.forEach((group) => {
+                      if(!group.id) {
+                        group.id = definedGroupsValuesMap[group.value];
+                      } else if(!group.value) {
+                        group.value = definedGroupsIdsMap[group.id];
+                      } 
+
+                      newGroups.push(group);
+                    });
+      
+                    businessConceptId2.groups = newGroups;
+                  }
+                  
                   dataToInsert.push({
                     organizationId,
                     type: workbookName,

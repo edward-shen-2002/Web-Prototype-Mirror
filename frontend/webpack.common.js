@@ -11,6 +11,7 @@ module.exports = {
       "@tools": path.join(__dirname, "/src/tools"),
       "@images": path.join(__dirname, "/src/images"),
       "@store": path.join(__dirname, "/src/store"),
+      "@selectors": path.join(__dirname, "/src/store/selectors"),
       "@actions": path.join(__dirname, "/src/store/actions"),
       "@actionCreators": path.join(__dirname, "/src/store/actions/actionCreators")
     },

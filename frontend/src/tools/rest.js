@@ -13,7 +13,7 @@ import {
   REST_GROUP_ADMIN_EDIT_BUNDLE,
   REST_GROUP_ADMIN_REVIEW_BUNDLE,
   REST_GROUP_ADMIN_APPROVE_BUNDLE,
-  REST_GROUP_ADMIN_BUSINESS_CONCEPT
+  REST_GROUP_ADMIN_DATA_ENTITY
 } from "@constants/rest";
 
 export const publicAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_PUBLIC}` });
@@ -27,7 +27,7 @@ export const adminOrganizationRoleAxios = axios.create({ baseURL: `${SERVER_APP}
 export const adminSectorRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_SECTOR}` });
 export const adminTemplateRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_TEMPLATE}` });
 export const adminBundleRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_BUNDLE}` });
-export const adminBusinessConceptRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_BUSINESS_CONCEPT}` });
+export const adminDataEntityRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_DATA_ENTITY}` });
 
 export const adminEditBundleRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_EDIT_BUNDLE}` });
 export const adminReviewBundleRoleAxios = axios.create({ baseURL: `${SERVER_APP}${REST_GROUP_ADMIN_REVIEW_BUNDLE}` });
@@ -35,8 +35,7 @@ export const adminApproveBundleRoleAxios = axios.create({ baseURL: `${SERVER_APP
 
 const _setAxiosToken = (routeAxios, token) => routeAxios.defaults.headers.common = { ...routeAxios.defaults.headers.common, Authorization: `Bearer ${token}` };
 
-const tokenAxiosList = [ 
-  authAxios, 
+export const adminAxiosRouters = [
   adminUserRoleAxios, 
   adminOrganizationRoleAxios, 
   adminSectorRoleAxios, 
@@ -45,7 +44,12 @@ const tokenAxiosList = [
   adminEditBundleRoleAxios,
   adminReviewBundleRoleAxios,
   adminApproveBundleRoleAxios,
-  adminBusinessConceptRoleAxios
+  adminDataEntityRoleAxios
+];
+
+const tokenAxiosList = [ 
+  authAxios, 
+  ...adminAxiosRouters
 ];
 
 // Token is the same for all requests - representation of an authenticated registered user

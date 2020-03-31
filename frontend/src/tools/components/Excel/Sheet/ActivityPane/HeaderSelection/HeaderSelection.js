@@ -1,10 +1,8 @@
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment } from "react";
 
 import { connect } from "react-redux";
 
 import { 
-  getTopOffsets, 
-  getLeftOffsets,
   getNormalColumnWidth,
   getNormalRowHeight
 } from "@tools/excel";
@@ -14,33 +12,10 @@ import {
   DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER
 } from "@constants/excel";
 
-import "./HeaderSelection.scss";
+import topOffsetsSelector from "@selectors/ui/excel/topOffsets";
+import leftOffsetsSelector from "@selectors/ui/excel/leftOffsets";
 
-const mapHeaderStateToProps = ({
-  ui: {
-    excel: {
-      activeCellPosition,
-      activeSelectionArea,
-      stagnantSelectionAreas,
-      sheetColumnWidths,
-      sheetRowHeights,
-      sheetRowCount,
-      sheetColumnCount,
-      sheetFreezeColumnCount,
-      sheetFreezeRowCount
-    }
-  }
-}) => ({
-  activeCellPosition,
-  activeSelectionArea,
-  stagnantSelectionAreas,
-  sheetColumnWidths,
-  sheetRowHeights,
-  sheetRowCount,
-  sheetColumnCount,
-  sheetFreezeColumnCount,
-  sheetFreezeRowCount
-});
+import "./HeaderSelection.scss";
 
 const mergeSegments = (segments) => {
   if(!segments.length) return [];
@@ -72,6 +47,38 @@ const mergeSegments = (segments) => {
   return merged;
 };
 
+const mapHeaderStateToProps = ({
+  ui: {
+    excel: {
+      present: {
+        activeCellPosition,
+        activeSelectionArea,
+        stagnantSelectionAreas,
+        sheetCellData,
+        sheetColumnWidths,
+        sheetRowHeights,
+        sheetRowCount,
+        sheetColumnCount,
+        sheetFreezeColumnCount,
+        sheetFreezeRowCount
+      }
+    }
+  }
+}) => ({
+  activeCellPosition,
+  activeSelectionArea,
+  stagnantSelectionAreas,
+  sheetCellData,
+  sheetColumnWidths,
+  sheetRowHeights,
+  sheetRowCount,
+  sheetColumnCount,
+  sheetFreezeColumnCount,
+  sheetFreezeRowCount,
+  topOffsets: topOffsetsSelector({ sheetRowCount, sheetRowHeights }),
+  leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths })
+});
+
 const HeaderSelectionComponents = ({ headerStyles }) => headerStyles.map((headerStyle, index) => (
   <div key={`header-selection-${index}`} className="headerStyles" style={headerStyle}/>
 )); 
@@ -80,20 +87,24 @@ export let HeaderSelection = ({
   activeCellPosition, 
   activeSelectionArea, 
   stagnantSelectionAreas,
+  sheetCellData,
   sheetColumnWidths,
   sheetRowHeights,
-  sheetRowCount,
-  sheetColumnCount,
   sheetFreezeColumnCount,
-  sheetFreezeRowCount
+  sheetFreezeRowCount,
+  topOffsets,
+  leftOffsets
 }) => {
-  const topOffsets = useMemo(() => getTopOffsets(sheetRowHeights, sheetRowCount), [ sheetRowHeights, sheetRowCount ]);
-  const leftOffsets = useMemo(() => getLeftOffsets(sheetColumnWidths, sheetColumnCount), [ sheetColumnWidths, sheetColumnCount ]);
-
   const { x, y } = activeCellPosition;
-  // Combine/merge x and y segments
+
+  let activeCellPositionArea;
+  
   // Format active cell position
-  const activeCellPositionArea = { x1: x, y1: y, x2: x, y2: y };
+  if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
+    activeCellPositionArea = sheetCellData[y][x].merged;
+  } else {
+    activeCellPositionArea = { x1: x, y1: y, x2: x, y2: y };
+  }
 
   let combinedAreas = [ activeCellPositionArea, ...stagnantSelectionAreas ];
 
@@ -168,37 +179,48 @@ HeaderSelection = connect(mapHeaderStateToProps)(HeaderSelection);
 const mapColumnHeaderStateToProps = ({
   ui: {
     excel: {
-      activeCellPosition,
-      activeSelectionArea,
-      stagnantSelectionAreas,
-      sheetColumnWidths,
-      sheetColumnCount,
-      sheetFreezeColumnCount
+      present: {
+        activeCellPosition,
+        activeSelectionArea,
+        stagnantSelectionAreas,
+        sheetCellData,
+        sheetColumnWidths,
+        sheetColumnCount,
+        sheetFreezeColumnCount
+      }
     }
   }
 }) => ({
   activeCellPosition,
   activeSelectionArea,
   stagnantSelectionAreas,
+  sheetCellData,
   sheetColumnWidths,
   sheetColumnCount,
-  sheetFreezeColumnCount
+  sheetFreezeColumnCount,
+  leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths })
 });
 
 export let ColumnHeaderSelection = ({
   activeCellPosition, 
   activeSelectionArea, 
   stagnantSelectionAreas,
+  sheetCellData,
   sheetColumnWidths,
-  sheetColumnCount,
-  sheetFreezeColumnCount
+  sheetFreezeColumnCount,
+  leftOffsets
 }) => {
-  const leftOffsets = useMemo(() => getLeftOffsets(sheetColumnWidths, sheetColumnCount), [ sheetColumnWidths, sheetColumnCount ]);
+  const { y, x } = activeCellPosition;
 
-  const { x } = activeCellPosition;
-  // Combine/merge x and y segments
+  let activeCellPositionArea;
+  
   // Format active cell position
-  const activeCellPositionArea = { x1: x, x2: x };
+  if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
+    const { merged: { x1, x2 } } = sheetCellData[y][x];
+    activeCellPositionArea = { x1, x2 };
+  } else {
+    activeCellPositionArea = { x1: x, x2: x };
+  }
 
   let combinedAreas = [ activeCellPositionArea, ...stagnantSelectionAreas ];
 
@@ -245,38 +267,49 @@ ColumnHeaderSelection = connect(mapColumnHeaderStateToProps)(ColumnHeaderSelecti
 const mapRowHeaderStateToProps = ({
   ui: {
     excel: {
-      activeCellPosition,
-      activeSelectionArea,
-      stagnantSelectionAreas,
-
-      sheetRowHeights,
-      sheetRowCount,
-      sheetFreezeRowCount
+      present: {
+        activeCellPosition,
+        activeSelectionArea,
+        stagnantSelectionAreas,
+        sheetCellData,
+        sheetRowHeights,
+        sheetRowCount,
+        sheetFreezeRowCount
+      }
     }
   }
 }) => ({
   activeCellPosition,
   activeSelectionArea,
   stagnantSelectionAreas,
+  sheetCellData,
   sheetRowHeights,
   sheetRowCount,
-  sheetFreezeRowCount
+  sheetFreezeRowCount,
+
+  topOffsets: topOffsetsSelector({ sheetRowCount, sheetRowHeights })
 });
 
 export let RowHeaderSelection = ({ 
   activeCellPosition, 
   activeSelectionArea, 
   stagnantSelectionAreas,
+  sheetCellData,
   sheetRowHeights,
-  sheetRowCount,
-  sheetFreezeRowCount
+  sheetFreezeRowCount,
+  topOffsets
 }) => {
-  const topOffsets = useMemo(() => getTopOffsets(sheetRowHeights, sheetRowCount), [ sheetRowHeights, sheetRowCount ]);
+  const { y, x } = activeCellPosition;
 
-  const { y } = activeCellPosition;
-  // Combine/merge x and y segments
+  let activeCellPositionArea;
+  
   // Format active cell position
-  const activeCellPositionArea = { y1: y, y2: y };
+  if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
+    const { merged: { y1, y2 } } = sheetCellData[y][x];
+    activeCellPositionArea = { y1, y2 };
+  } else {
+    activeCellPositionArea = { y1: y, y2: y };
+  }
 
   let combinedAreas = [ activeCellPositionArea, ...stagnantSelectionAreas ];
 
@@ -315,7 +348,6 @@ export let RowHeaderSelection = ({
       width
     });
   });
-
 
   return (
     <HeaderSelectionComponents headerStyles={rowHeaderStyles}/>

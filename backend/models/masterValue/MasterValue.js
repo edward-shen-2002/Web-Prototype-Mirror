@@ -41,8 +41,8 @@ const masterValueSchema = new Schema({
   quarter: { type: String },
   form: { type: String },
   
-  businessConceptId1: { type: String, required: true },
-  businessConceptId2: { type: String, required: true },
+  businessConceptId1: { type: Object, required: true },
+  businessConceptId2: { type: Object, required: true },
 
   value: { type: String, required: true }
 }, { minimize: false });

@@ -2,7 +2,12 @@ import XlsxPopulate, { RichText, Range, FormulaError } from "xlsx-populate";
 
 import { sheetNameRegex } from "./regex";
 
-import { EditorState, ContentState, RichUtils } from "draft-js";
+import { 
+  convertTextToEditorValue,
+  convertRichTextToEditorValue,
+  createEmptyEditor,
+  createEmptyEditorValue
+} from "@tools/slate";
 
 import { isObjectEmpty } from "@tools/misc";
 
@@ -10,7 +15,11 @@ import pako from "pako";
 
 import Color from "color";
 
-import { themes } from "@constants/styles";
+import { 
+  themes,
+  borderFragmentMap,
+  completeBorderStyleMap
+} from "@constants/styles";
 
 import { Parser } from "hot-formula-parser";
 
@@ -171,26 +180,27 @@ const calculateFormula = (data, formula) => {
   return parser.parse(formula);
 };
 
-let size = -1;
+export const getScrollbarSize = (() => {
+  let size = -1;
 
-// This utility copied from "dom-helpers" package. -- from react-window
-export const getScrollbarSize = (recalculate = false) => {
-  if (size === -1 || recalculate) {
-    const div = document.createElement('div');
-    const style = div.style;
-    style.width = '50px';
-    style.height = '50px';
-    style.overflow = 'scroll';
-
-    ((document.body)).appendChild(div);
-
-    size = div.offsetWidth - div.clientWidth;
-
-    ((document.body)).removeChild(div);
-  }
-
-  return size;
-};
+  return (recalculate = false) => {
+    if (size === -1 || recalculate) {
+      const div = document.createElement('div');
+      const style = div.style;
+      style.width = '50px';
+      style.height = '50px';
+      style.overflow = 'scroll';
+  
+      ((document.body)).appendChild(div);
+  
+      size = div.offsetWidth - div.clientWidth;
+  
+      ((document.body)).removeChild(div);
+    }
+  
+    return size;
+  };
+})();
 
 // Copied from react-window
 export const getEstimatedTotalHeight = (
@@ -263,77 +273,100 @@ export const getNormalColumnWidth = (columnWidth) => columnWidth ? columnWidth *
 export const getExcelColumnWidth = (columnWidth) => columnWidth ? columnWidth/EXCEL_COLUMN_WIDTH_SCALE : columnWidth;
 export const getExcelRowHeight = (rowHeight) => rowHeight ? rowHeight/EXCEL_ROW_HEIGHT_SCALE : rowHeight;
   
-export const getWorkbookInstance = async ({
-  activeSheetName,
-  sheetNames,
-  activeCellPosition,
-  sheetsCellData,
-  sheetsColumnCount,
-  sheetsColumnWidths,
-  sheetsFreezeColumnCount,
-  sheetsRowCount,
-  sheetsRowHeights,
-  sheetsFreezeRowCount
-}) => {
+export const getWorkbookInstance = async (activeSheetName, sheets) => {
   let Workbook = await XlsxPopulate.fromBlankAsync();
-  const { x, y } = activeCellPosition;
+  let defaultSheetFound = false;
 
-  const sheetNamesLength = sheetNames.length;
+  for(let sheetName in sheets) {
+    const {
+      sheetCellData,
 
-  for(let sheetNameIndex = 0; sheetNameIndex < sheetNamesLength; sheetNameIndex++) {
-    const sheetName = sheetNames[sheetNameIndex];
+      sheetColumnWidths,
+      sheetFreezeColumnCount,
+      sheetHiddenColumns,
 
-    const sheetCellData = sheetsCellData[sheetName];
-    const sheetColumnCount = sheetsColumnCount[sheetName];
-    const sheetColumnWidths = sheetsColumnWidths[sheetName];
-    const sheetFreezeColumnCount = sheetsFreezeColumnCount[sheetName];
-    const sheetRowCount = sheetsRowCount[sheetName];
-    const sheetRowHeights = sheetsRowHeights[sheetName];
-    const sheetFreezeRowCount = sheetsFreezeRowCount[sheetName];
+      sheetRowHeights,
+      sheetFreezeRowCount,
+      sheetHiddenRows,
+
+      activeCellPosition: { x, y },
+    } = sheets[sheetName];
 
     // May be a default sheet
-    let sheet =  sheetName === "Sheet1" ? await Workbook.sheet(sheetName) : await Workbook.addSheet(sheetName);
+    let sheet;
+
+    if(sheetName === "Sheet1") {
+      sheet = await Workbook.sheet(sheetName); 
+      defaultSheetFound = true;
+    } else {
+      sheet = await Workbook.addSheet(sheetName);
+    }
+
+    for(let row in sheetCellData) {
+      const rowData = sheetCellData[row];
+
+      row = parseInt(row);
+      
+      for(let column in rowData) {
+        const { 
+          value,
+          formula,
+          hyperlink,
+          styles
+        } = sheetCellData[row][column];
+
+        column = parseInt(column);
+
+        const sheetCell = sheet.row(row).cell(column);
+        if(value !== undefined) sheetCell.setValue(value);
+
+        if(formula) sheetCell.formula(formula);
+
+        if(hyperlink) sheetCell.hyperlink(hyperlink);
+      }
+    }
 
     sheet.freezePanes(sheetFreezeColumnCount, sheetFreezeRowCount);
 
-    for(let row in sheetCellData) {
-      row = parseInt(row);
-      
-      let columns = Object.keys(sheetCellData[row]);
+    for(let row in sheetHiddenRows) sheet.row(row).hidden(true);
 
-      columns.forEach((column) => {
-        column = parseInt(column);
-
-        const { value } = sheetCellData[row][column];
-  
-        if(value !== undefined) {
-          const sheetCell = sheet.row(row).cell(column);
-          sheetCell.setValue(value);
-        }
-      })
-    }
+    for(let column in sheetHiddenColumns) sheet.column(column).hidden(true);
 
     // Set row heights
-    for(let row = 1; row < sheetRowCount; row++) {
-      const sheetRowHeight = sheetRowHeights[row];
-
-      if(sheetRowHeight) sheet.row(row).height(sheetRowHeight);
-    }
+    for(let row in sheetRowHeights) sheet.row(row).height(sheetRowHeights[row]);
 
     // Set column widths
-    for(let column = 1; column < sheetColumnCount; column++) {
-      const sheetColumnWidth = sheetColumnWidths[column];
+    for(let column in sheetColumnWidths) sheet.column(column).width(sheetColumnWidths[column]);
 
-      if(sheetColumnWidth) sheet.column(column).width(sheetColumnWidth);
-    }
+    sheet.activeCell(x, y);
   };
 
-  // Set active sheet and cell
-  const activeSheet = Workbook.sheet(activeSheetName);
-  activeSheet.active(true);
-  activeSheet.row(y).cell(x).active(true);
+  if(!defaultSheetFound) Workbook.deleteSheet("Sheet1");
+
+  // Set active sheet
+  Workbook.activeSheet(activeSheetName);
 
   return Workbook;
+};
+
+export const downloadWorkbook = async (fileName, activeSheetName, sheets) => {
+  let xlsxInstance = await getWorkbookInstance(activeSheetName, sheets);
+
+  const blob = await xlsxInstance.outputAsync()
+
+  if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+    // If IE, you must uses a different method.
+    window.navigator.msSaveOrOpenBlob(blob, fileName);
+  } else {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    document.body.appendChild(a);
+    a.href = url;
+    a.download = `${fileName}.xlsx`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }
 };
 
 export const getCellData = (sheetCellData, row, column) => (
@@ -402,12 +435,19 @@ export const getSheetRowsData = (sheet, rowCount) => {
   return { sheetRowHeights, sheetHiddenRows };
 };
 
-// TODO
 const convertXlsxColorToCss = ({ rgb, theme, tint }) => {
   let convertedStyle;
 
   if(rgb) {
-    convertedStyle = `#${rgb.length === 6 ? rgb : rgb.substring(2)}`;
+    if(rgb === "System Foreground") {
+      convertedStyle = "#000000";
+    } else if(rgb === "System Background") {
+      convertedStyle = "#FFFFFF";
+    } else if(rgb.length === 6) { 
+      convertedStyle = `#${rgb}`;
+    } else {
+      convertedStyle = `#${rgb.substring(2)}`;
+    }
   } else if (theme !== undefined) {
     convertedStyle = themes[theme];
 
@@ -470,36 +510,47 @@ export const convertXlsxStyleToInlineStyle = (xlsxStyle) => {
     border,
     borderColor,
     borderStyle,
-    leftBorder, 
-    rightBorder, 
-    topBorder, 
-    bottomBorder, 
+    // leftBorder, 
+    // rightBorder, 
+    // topBorder, 
+    // bottomBorder, 
     diagonalBorder,
     diagonalBorderDirection, 
     numberFormat
   } = xlsxStyle;
 
-  // ! TODO
-  // if(borderColor) console.log("b", borderColor);
-  // if(leftBorder) console.log("lb", leftBorder);
-  // if(rightBorder) console.log("rb", rightBorder);
-  // if(topBorder) console.log("tb", topBorder);
-  // if(bottomBorder) console.log("bb", bottomBorder);
-  // if(borderStyle) console.log("bs", borderStyle);
+  if(borderColor) inlineStyle.borderColor = convertXlsxColorToCss(borderColor);
+  if(borderStyle) {}
+  if(border) {
+    for(let borderFragment in border) {
+      let { style, color } = border[borderFragment];
+      const borderProperty = borderFragmentMap[borderFragment];
 
+      const fragmentStyles = completeBorderStyleMap[style];
+
+      // ! TODO: Need to keep non-supported styles as meta deta!
+      for(let fragmentProperty in fragmentStyles) {
+        let fragmentStyle = fragmentStyles[fragmentProperty];
+        let fullProperty = `${borderProperty}${fragmentProperty}`;
+        inlineStyle[fullProperty] = fragmentStyle;
+
+      }
+
+      inlineStyle[`${borderProperty}Color`] = convertXlsxColorToCss(color);
+    }
+  } 
+  // ! Font styles
   if(bold) inlineStyle.fontWeight = "bold";
   if(italic) inlineStyle.fontStyle = "italic";
   if(underline) inlineStyle.textDecoration = "underline";
   if(strikethrough) inlineStyle.textDecoration = underline ? inlineStyle.textDecoration + " line-through" : "line-through";
   if(subscript) inlineStyle.verticalAlign = "sub";
   if(superscript) inlineStyle.verticalAlign = "super";
-
   if(fontSize) inlineStyle.fontSize = fontSize;
-
   if(fontFamily) inlineStyle.fontFamily = fontFamily;
-
   if(fontColor) inlineStyle.color = convertXlsxColorToCss(fontColor);
 
+  // ! Block styles
   if(fill) {
     let { 
       type, 
@@ -640,17 +691,15 @@ export const getBlockStyle = (cellStyles) => {
   if(cellStyles === undefined) return undefined;
   
   const {
-    fill,
-    horizontalAlignment
+    backgroundColor
   } = cellStyles;
 
   return {
-    fill,
-    horizontalAlignment
+    backgroundColor
   };
 };
 
-export const isPrepopulateString = (string) => string && string.charAt(0) === "|";
+export const isPrepopulateString = (string) => string && typeof string === "string" && string.charAt(0) === "|";
 
 export const parsePrepopulateString = (string) => (
   string.substring(1)
@@ -658,7 +707,13 @@ export const parsePrepopulateString = (string) => (
     .reduce((acc, parameter) => {
       const [ group, value ] = parameter.split("=");
 
-      if(group && value) acc[group] = value;
+      if(group && value) {
+        try {
+          acc[group] = JSON.parse(value);
+        } catch(error) {
+          acc[group] = value;
+        }
+      }
 
       return acc;
     }, {})
@@ -681,54 +736,72 @@ const extractRichTextData = (richText) => {
   return plainRichTextObject;
 };
 
-const extractCellData = (cellData) => {
-  const cellValue = cellData.value();
+const extractCellData = (cellData, row, column) => {
+  let extractedCellData = {};
+  
+  const value = cellData.value();
 
-  const cellFormula = cellData.formula();
+  const formula = cellData.formula();
   
   // !! TODO May be internal - ie in another sheet
-  const cellHyperlinkData = cellData.hyperlink();
+  const hyperlinkData = cellData.hyperlink();
 
-  if(cellHyperlinkData) {
-    const { _sheet, _data } = cellHyperlinkData;
+  const merged = cellData.merged();
 
-    // Internal
+  if(merged) {
+    const { _data: [ y1, x1, y2, x2 ] } = merged;
+
+    extractedCellData.merged = { x1, y1, x2, y2 };
+  }
+
+  if(hyperlinkData) {
+    const { 
+      hyperlink,
+      _sheet, 
+      _data 
+    } = hyperlinkData;
+
+    extractedCellData.hyperlink = {};
+
+    // Internal - Could it be from another workbook?
     if(_sheet) {
       const [ y, x ] = _data;
-      // External -- Potentially unsafe
-      // ! unsure when this undefined value occurs... what is the value of the cell?
-      if(cellValue === undefined) {
-        // console.log(_sheet, _data)
-      }
+
+      extractedCellData.hyperlink.type = "internal";
+      extractedCellData.hyperlink.sheet = _sheet;
+      extractedCellData.hyperlink.cell = { x, y };
+    // External -- Potentially unsafe
     } else {
-      // console.log(cellValue)
+      extractedCellData.hyperlink.type = "external";
+      extractedCellData.hyperlink.link = hyperlink;
     }
   }
 
-  let extractedCellData = {};
-
   // TODO : Add error field in cellData!!
-  if(cellValue !== undefined) {
-    if(cellValue instanceof RichText) {
+  if(value !== undefined) {
+    if(value instanceof RichText) {
       extractedCellData.type = "rich-text";
-      extractedCellData.value = extractRichTextData(cellValue);
+      extractedCellData.value = extractRichTextData(value);
     } else {
-      if(cellFormula) {
+      if(formula) {
         extractedCellData.type = "formula";
-        extractedCellData.formula = cellFormula;
-      } else if(typeof cellValue === "string" && isPrepopulateString(cellValue)) {
+        extractedCellData.formula = formula;
+      } else if(typeof value === "string" && isPrepopulateString(value)) {
         extractedCellData.type = "prepopulate";
       } else {
         extractedCellData.type = "normal";
       }
 
       // ! possibly more conditions but not discovered yet
-      extractedCellData.value = cellValue instanceof FormulaError ? cellValue._error : cellValue;
+      extractedCellData.value = value instanceof FormulaError ? value._error : value;
     }
   }
 
+  
   const cellStyles = extractCellStyle(cellData);
- if(cellStyles) extractedCellData.styles = cellStyles;
+  if(cellStyles) {
+    extractedCellData.styles = cellStyles;
+  }
 
   return isObjectEmpty(extractedCellData) ? undefined : extractedCellData;
 };
@@ -736,17 +809,16 @@ const extractCellData = (cellData) => {
 export const getSheetCellData = (sheet, columnCount, rowCount) => {
   let sheetCellData = {};
 
-  for(let row = 0; row < rowCount; row++) {
-    for(let column = 0; column < columnCount; column++) {
-      if(row && column) {
-        const cellData = extractCellData(sheet.row(row).cell(column));
+  for(let row = 1; row < rowCount; row++) {
+    const rowData = sheet.row(row);
+    for(let column = 1; column < columnCount; column++) {
+      const cellData = extractCellData(rowData.cell(column), row, column);
 
-        if(cellData) {
-          if(!sheetCellData[row]) sheetCellData[row] = {};
+      if(cellData) {
+        if(!sheetCellData[row]) sheetCellData[row] = {};
 
-          sheetCellData[row][column] = cellData;
-        }
-      } 
+        sheetCellData[row][column] = cellData;
+      }
     }
   }
 
@@ -769,31 +841,17 @@ export const getSheetFreezeHeader = (sheet) => {
   return freezeHeader;
 };
 
-export const convertRichTextToEditorState = (richText, editorState = EditorState.createEmpty()) => {
-  richText.forEach(({ styles, text }) => {
-    if(styles) editorState = RichUtils.toggleInlineStyle(editorState, styles);
-    
-    editorState = EditorState.push(
-      editorState,
-      ContentState.createFromText(text ? text.toString() : ""),
-      "change-inline-style"
-    );
-  })
-  
-  return EditorState.moveFocusToEnd(editorState);
-};
+// export const convertTextToEditorState = (text) => {
+//   if(text !== undefined && typeof text !== "string") text = text.toString();
 
-export const convertTextToEditorState = (text) => {
-  if(text !== undefined && typeof text !== "string") text = text.toString();
-
-  return (
-    EditorState.moveFocusToEnd((
-      text 
-        ? EditorState.createWithContent(ContentState.createFromText(text)) 
-        : EditorState.createWithContent(ContentState.createFromText(""))
-    ))
-  );
-};
+//   return (
+//     EditorState.moveFocusToEnd((
+//       text 
+//         ? EditorState.createWithContent(ContentState.createFromText(text)) 
+//         : EditorState.createWithContent(ContentState.createFromText(""))
+//     ))
+//   );
+// };
 
 export const getTopOffsets = (rowHeights, rowCount) => {
   let topOffsetsTotal = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER;
@@ -829,12 +887,25 @@ export const getActiveCellInputData = (sheetCellData, activeRow, activeColumn) =
       ? sheetCellData[activeRow][activeColumn]
       : undefined
   );
+
+  let cellValue;
+  let formulaValue;
+
+  if(activeCellInputValueData && activeCellInputValueData.type === "rich-text") {
+    cellValue = convertRichTextToEditorValue(activeCellInputValueData.value);
+    formulaValue = convertRichTextToEditorValue(activeCellInputValueData.value);
+  } else {
+    let value = activeCellInputValueData ? activeCellInputValueData.value : "";
+    cellValue = convertTextToEditorValue(value);
+    formulaValue = convertTextToEditorValue(value);
+  }
   
-  return (
-    activeCellInputValueData && activeCellInputValueData.type === "rich-text"
-      ? { editorState: convertRichTextToEditorState(activeCellInputValueData.value) }
-      : { editorState: convertTextToEditorState(activeCellInputValueData ? activeCellInputValueData.value : undefined) }
-  );
+  return {
+    formulaEditor: createEmptyEditor(),
+    cellEditor: createEmptyEditor(),
+    cellValue,
+    formulaValue
+  }
 };
 
 const getMaxSheetRange = (sheetCellData) => {
@@ -953,8 +1024,11 @@ export const convertExcelFileToState = async (excelFile) => {
       activeColumn = 1;
     }
 
+    const stagnantSelectionAreas = [];
+
     let activeCellPosition = { x: activeColumn, y: activeRow };
 
+    // ! Fill other params
     const sheetContent = {
       activeCellPosition,
       sheetCellData,
@@ -965,7 +1039,8 @@ export const convertExcelFileToState = async (excelFile) => {
       sheetFreezeRowCount,
       sheetRowHeights,
       sheetHiddenColumns,
-      sheetHiddenRows
+      sheetHiddenRows,
+      stagnantSelectionAreas
     };
 
     workbookData[name] = pako.deflate(JSON.stringify(sheetContent), { to: "string" });
@@ -980,35 +1055,42 @@ export const convertExcelFileToState = async (excelFile) => {
 };
 
 export const convertStateToReactState = (state) => {
-  
   const workbookData = state.workbookData;
+
+  let data = {};
+
+  for(let sheetName in workbookData) data[sheetName] = JSON.parse(pako.inflate(workbookData[sheetName], { to: "string" }));
+  
   const activeSheetName = state.activeSheetName;
-  const activeSheetData = JSON.parse(pako.inflate(workbookData[activeSheetName], { to: "string" }));
+  const activeSheetData = data[activeSheetName];
   const { activeCellPosition: { x, y } } = activeSheetData;
 
   const activeCellInputData = getActiveCellInputData(activeSheetData.sheetCellData, y, x);
-
-  let inactiveSheetsData = JSON.stringify({ ...workbookData, [activeSheetName]: undefined });
-
-  sessionStorage.setItem("inactiveSheets", inactiveSheetsData);
 
   return {
     ...state,
     ...activeSheetData,
     activeCellInputData,
+    inactiveSheets: { ...data, [ activeSheetName ]: undefined },
     workbookData: undefined
   };
 };
 
-export const getWorkbookData = (activeSheetName, activeSheetData) => {
-  const inactiveSheetsData = sessionStorage.getItem("inactiveSheets");
-  
-  const rawInactiveSheetsData = JSON.parse(inactiveSheetsData);
+export const getWorkbookData = (activeSheetName, activeSheetData, inactiveSheets) => {
+  const workbookData = {};
 
-  return { ...rawInactiveSheetsData, [activeSheetName]: pako.deflate(JSON.stringify(activeSheetData), { to: "string" }) };
+  Object.keys(inactiveSheets)
+    .filter((sheetName) => sheetName !== activeSheetName)
+    .forEach((sheetName) => {
+      workbookData[sheetName] =  pako.deflate(JSON.stringify(inactiveSheets[sheetName]), { to: "string" });
+    });
+  
+  workbookData[activeSheetName] = pako.deflate(JSON.stringify(activeSheetData), { to: "string" });
+
+  return workbookData;
 };
 
-export const extractReactAndWorkbookState = (state) => {
+export const extractReactAndWorkbookState = (state, inactiveSheets) => {
   const {
     name,
     activeSheetName,
@@ -1039,7 +1121,7 @@ export const extractReactAndWorkbookState = (state) => {
     sheetHiddenColumns,
     sheetHiddenRows,
     stagnantSelectionAreas,
-  });
+  }, inactiveSheets);
 
   return {
     name,
@@ -1065,4 +1147,44 @@ export const getCellDataText = (cellData) => {
   return text;
 };
 
-export const clearEditorStateText = (richText) => convertRichTextToEditorState(richText.length ? richText[0] : []);
+export const getAreaDimensions = ({
+  x1, y1, x2, y2,
+  topOffsets,
+  leftOffsets,
+  sheetColumnWidths,
+  sheetRowHeights
+}) => {
+  const height = topOffsets[y2] + getNormalRowHeight(sheetRowHeights[y2]) - topOffsets[y1];
+  const width = leftOffsets[x2] + getNormalColumnWidth(sheetColumnWidths[x2]) - leftOffsets[x1];
+
+  return { height, width };
+};
+
+// export const extractScrollToData = ({
+//   scrollTo,
+//   props: {
+//     width,
+//     height,
+//   },
+//   _instanceProps: {
+//     rowMetadataMap, 
+//     estimatedRowHeight, 
+//     lastMeasuredRowIndex,
+      
+//     columnMetadataMap,
+//     estimatedColumnWidth,
+//     lastMeasuredColumnIndex
+//   }
+// }) => ({
+//   sheetGridRefScrollTo: scrollTo,
+//   width,
+//   height,
+
+//   rowMetadataMap, 
+//   estimatedRowHeight, 
+//   lastMeasuredRowIndex,
+    
+//   columnMetadataMap,
+//   estimatedColumnWidth,
+//   lastMeasuredColumnIndex
+// });

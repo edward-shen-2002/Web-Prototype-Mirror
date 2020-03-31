@@ -98,12 +98,33 @@ const computeSelectionAreaStyle = (columnWidths, leftOffsets, rowHeights, topOff
   return customSelectionStyle;
 };
 
-const computeActiveCellStyle = (x, y, columnWidths, leftOffsets, rowHeights, topOffsets, _sheetFreezeColumnCount, sheetFreezeRowCount) => {
+const computeActiveCellStyle = (x, y, columnWidths, leftOffsets, rowHeights, topOffsets, _sheetFreezeColumnCount, sheetFreezeRowCount, sheetCellData) => {
+  let height;
+  let width;
+  let left;
+  let top;
+
+  const mergeData = sheetCellData[y] && sheetCellData[y][x] ? sheetCellData[y][x].merged : null;
+
+  if(mergeData) {
+    const { x1, x2, y1, y2 } = mergeData;
+
+    height = topOffsets[y2] + getNormalRowHeight(rowHeights[y2]) - topOffsets[y1];
+    width = leftOffsets[x2] + getNormalColumnWidth(columnWidths[x2]) - leftOffsets[x1];
+    top = topOffsets[y1];
+    left = leftOffsets[x1];
+  } else {
+    height = getNormalRowHeight(rowHeights[y]);
+    width = getNormalColumnWidth(columnWidths[x]); 
+    top = topOffsets[y];
+    left = leftOffsets[x];
+  }
+
   let activeCellStyle = { 
-    top: topOffsets[y], 
-    left: leftOffsets[x], 
-    height: getNormalRowHeight(rowHeights[y]), 
-    width: getNormalColumnWidth(columnWidths[x]) 
+    top,
+    left,
+    height, 
+    width
   };
 
   let topFreeze = topOffsets[sheetFreezeRowCount];
@@ -114,16 +135,9 @@ const computeActiveCellStyle = (x, y, columnWidths, leftOffsets, rowHeights, top
   return activeCellStyle;
 };
 
-const computeTopOffset = (offset, freezeEndOffset) => offset - freezeEndOffset;
 
-const BottomLeftActivityPane = ({ 
-  handleChangeActiveInputData,
-  handleCloseActiveCellDialog,
-  handleChangeBusinessConcept,
-  handleAddComment,
-  handleDeleteComment,
-  handleSetPrepopulate
-}) => {
+const BottomLeftActivityPane = () => {
+  const computeTopOffset = (offset, freezeEndOffset) => offset - freezeEndOffset;
   const isActiveCellInCorrectPane = (x, y, sheetFreezeColumnCount, sheetFreezeRowCount) => (x <= sheetFreezeColumnCount && y > sheetFreezeRowCount);
   const isRelevantArea = (x1, y1, x2, y2, sheetFreezeColumnCount, sheetFreezeRowCount) => ((x1 <= sheetFreezeColumnCount || x2 <= sheetFreezeColumnCount) && (y1 > sheetFreezeRowCount || y2 > sheetFreezeRowCount));
   const isRelevantRowOffset = (rowOffset, freezeRowOffset) => rowOffset > freezeRowOffset;
@@ -136,12 +150,6 @@ const BottomLeftActivityPane = ({
         isRelevantArea={isRelevantArea}
         computeActiveCellStyle={computeActiveCellStyle}
         computeSelectionAreaStyle={computeSelectionAreaStyle}
-        handleChangeActiveInputData={handleChangeActiveInputData}
-        handleCloseActiveCellDialog={handleCloseActiveCellDialog}
-        handleChangeBusinessConcept={handleChangeBusinessConcept}
-        handleAddComment={handleAddComment}
-        handleDeleteComment={handleDeleteComment}
-        handleSetPrepopulate={handleSetPrepopulate}
       />
       <RowHeaderSelection/>
       <RowHeaderIndicator 

@@ -154,21 +154,33 @@ const bundles = ({
             for(let row in sheetCellData) {
               const columns = sheetCellData[row];
   
+              let categoryIds;
+
+              if(columns[2] && columns[2].value) {
+                const { value } = columns[2];
+
+                categoryIds = value.split(" - ").map((id) => id);
+              }
+
               for(let column in columns) {
                 const { type, value } = columns[column];
-
                 if(type === "prepopulate" && value) {
-                  const groups = value.substring(1).split("&");
+                  const masterKeys = value.substring(1).split("&");
   
                   // ! Validation?
                   let {
-                    type,
                     year,
                     quarter
-                  } = groups.reduce((acc, cur) => {
+                  } = masterKeys.reduce((acc, cur) => {
                     const [ group, value ] = cur.split("=");
   
-                    if(group && value !== undefined) acc[group] = value;
+                    if(group && value !== undefined) {
+                      try {
+                        acc[group] = JSON.parse(value);
+                      } catch(error) {
+                        acc[group] = value;
+                      }
+                    }
   
                     return acc;
                   }, {});
@@ -190,7 +202,6 @@ const bundles = ({
   
                   if(
                     organizationId 
-                    && type 
                     && year 
                     && quarter 
                     && form 
@@ -198,19 +209,31 @@ const bundles = ({
                     && category
                   ) {
                     // Search database
-  
                     // successful search => continue and skip fallback
-                    const masterValue = await MasterValueModel.findOne({ organizationId, type, year, quarter, form })
-                      .or([
+                    const masterValue = await MasterValueModel.findOne({ 
+                      organizationId, 
+                      year, 
+                      quarter, 
+                      form,
+                      $or: [
                         { 
-                          businessConceptId1: attribute, 
-                          businessConceptId2: category
+                          "businessConceptId1.id": attribute, 
+                          $and: [
+                            { "businessConceptId2.id": category },
+                            { "businessConceptId2.groups.id": { $in: categoryIds } }
+                          ]
                         },
                         {
-                          businessConceptId1: category, 
-                          businessConceptId2: attribute
+                          $and: [
+                            { "businessConceptId1.id": category },
+                            { "businessConceptId1.groups.id": { $in: categoryIds } }
+                          ],
+                          "businessConceptId2.id": attribute
                         }
-                      ]);
+                      ]
+                    });
+
+                    console.log(JSON.stringify(masterValue, null, 1));
   
                     if(masterValue) {
                       sheetCellData[row][column] = { 
@@ -238,6 +261,7 @@ const bundles = ({
             workbookData[form] = pako.deflate(JSON.stringify(inflatedWorkbookData), { to: "string" });
           }
         }
+
         if(possibleDuplication.length) {
           await OrganizationBundleModel.findOneAndUpdate(
             { 

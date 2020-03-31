@@ -1,4 +1,6 @@
-import React, { useRef } from "react";
+import React, { useRef, useCallback } from "react";
+
+import { useDispatch } from "react-redux";
 
 import AppBar from "./AppBar";
 import ToolBar from "./ToolBar";
@@ -6,61 +8,48 @@ import FormulaBar from "./FormulaBar";
 import Sheet from "./Sheet";
 import SheetNavigator from "./SheetNavigator";
 
-import EventListener from "./EventListener";
+import { undo, redo } from "@actions/ui/excel/commands";
 
 import "./Excel.scss";
 
 const Divider = () => <hr className="divider"/>;
 
-const Excel = ({ 
-  name, 
-  type,
-  returnLink, 
-  templateData,
-  handleUpdateTemplate,
-  handleToggleTemplatePublish
-}) => {
-  const eventListenerRef = useRef(null);
+const Excel = ({ type, returnLink }) => {
   const sheetContainerRef = useRef(null);
   const sheetGridRef = useRef(null);
-  const excelRef = useRef(null);
+
+  const dispatch = useDispatch();
+
+  window.sheetGridRef = sheetGridRef;
+  window.sheetContainerRef = sheetContainerRef;
+
+  const handleKeyDown = useCallback(
+    ({ key, ctrlKey, metaKey }) => {
+      if(ctrlKey || metaKey) {
+        if(key === "y") {
+          dispatch(redo());
+        } else if(key === "z") {
+          dispatch(undo());
+        }
+      }
+    },
+    [ dispatch ]
+  );
 
   return (
-    <div ref={excelRef} className="excel">
-      <AppBar 
-        eventListenerRef={eventListenerRef}
-        name={name} 
-        type={type}
-        returnLink={returnLink} 
-        templateData={templateData}
-        handleUpdateTemplate={handleUpdateTemplate}
-        handleToggleTemplatePublish={handleToggleTemplatePublish}
-        />
+    <div 
+      className="excel"
+      onKeyDown={handleKeyDown}
+    >
+      <AppBar type={type} returnLink={returnLink} />
       <Divider/>
-      <ToolBar
-        type={type}
-      />
+      <ToolBar type={type}/>
       <Divider/>
-      <FormulaBar
-        eventListenerRef={eventListenerRef}
-        sheetContainerRef={sheetContainerRef}
-      />
+      <FormulaBar/>
       <Divider/>
-      <Sheet
-        sheetContainerRef={sheetContainerRef}
-        eventListenerRef={eventListenerRef}
-        sheetGridRef={sheetGridRef}
-      />
+      <Sheet sheetGridRef={sheetGridRef}/>
       <Divider/>
-      <SheetNavigator
-        sheetGridRef={sheetGridRef}
-        eventListenerRef={eventListenerRef}
-      />
-      <EventListener 
-        sheetGridRef={sheetGridRef}
-        sheetContainerRef={sheetContainerRef}
-        eventListenerRef={eventListenerRef}
-      />
+      <SheetNavigator/>
     </div>
   );
 };

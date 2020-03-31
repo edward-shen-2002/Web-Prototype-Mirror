@@ -10,6 +10,7 @@ import logo from "@images/brand/ON_POS_LOGO_WHITE.svg";
 import SRIBar from "@images/brand/SRI.jpg";
 
 import { ROLE_LEVEL_NOT_APPLICABLE } from "@constants/roles";
+
 import { REST_PUBLIC_REGISTER, REST_PUBLIC_DATA } from "@constants/rest";
 import { ROUTE_PUBLIC_LOGIN, ROUTE_USER_PROFILE } from "@constants/routes";
 
@@ -45,9 +46,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
 
-
 import "./Register.scss";
 import Box from "@material-ui/core/Box";
+
 import * as yup from "yup";
 import Snackbar from "@material-ui/core/Snackbar";
 import CustomSnackbarContent from "../../../tools/components/CustomSnackbarContent/CustomSnackbarContent";
@@ -974,5 +975,6 @@ const Register_container = (props) => {
      </div>
   );
 }
+
 
 export default Register;

@@ -1,28 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 
-import { connect } from "react-redux";
+import { connect, useDispatch, useSelector, shallowEqual } from "react-redux";
 
-const RowDragger = ({
-  row,
-  handleRowDragStart
-}) => {
+import { resizeRowStart, selectRow  } from "@actions/ui/excel/mouse";
+import topOffsetsSelector from "@selectors/ui/excel/topOffsets";
+
+const RowDragger = ({ row }) => {
+  const topOffsets = useSelector(
+    ({
+      ui: {
+        excel: {
+          present: {
+            sheetRowHeights,
+            sheetRowCount
+          }
+        }
+      }
+    }) => topOffsetsSelector({ sheetRowCount, sheetRowHeights }),
+    shallowEqual
+  );
+
+  const dispatch = useDispatch();
   const [ isIndicatorActive, setIsIndicatorActive ] = useState(false);
 
-  const handleMouseEnter = () => {
-    setIsIndicatorActive(true);
-  };
+  const handleMouseEnter = () => setIsIndicatorActive(true);
 
-  const handleMouseLeave = () => {
-    setIsIndicatorActive(false);
-  };
+  const handleMouseLeave = () => setIsIndicatorActive(false);
 
-  const handleClick = (event) => {
-    event.stopPropagation();
-  };
 
-  const handleMouseDown = () => {
-    handleRowDragStart(row);
-  };
+  const handleClick = (event) => event.stopPropagation();
+
+  const handleMouseDown = useCallback(
+    () => dispatch(resizeRowStart({ row, topOffsets })),
+    [ dispatch, topOffsets, row ]
+  );
 
   return (
     <div 
@@ -31,44 +42,41 @@ const RowDragger = ({
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
-    >
-      {/* <hr/> */}
-    </div>
+    />
   );
 };
 
-const mapStateToProps = ({
-  ui: {
-    excel: {
+const RowHeaderCell = ({ style, row }) => {
+  const dispatch = useDispatch();
+
+  const { cursorType, isSelectionMode } = useSelector(
+    ({
+      ui: {
+        excel: {
+          present: {
+            cursorType,
+            isSelectionMode
+          }
+        }
+      }
+    }) => ({
       cursorType,
       isSelectionMode
-    }
-  }
-}) => ({
-  cursorType,
-  isSelectionMode
-});
+    }),
+    shallowEqual
+  );
 
-let RowHeaderCell = ({ 
-  style, 
-  row, 
-  cursorType,
-  isSelectionMode,
-  handleRowDragStart,
-  handleClickRowHeader 
-}) => {
-  const handleClick = ({ ctrlKey }) => handleClickRowHeader(row, ctrlKey);
-
-  const value = row;
+  const handleClick = useCallback(
+    ({ ctrlKey }) => dispatch(selectRow({ row, ctrlKey })),
+    [ dispatch, row ]
+  );
 
   return (
     <div className="cell cell--positionIndicator cell--header" style={style} onClick={handleClick}>
-      <div>{value}</div>
-      {!isSelectionMode && cursorType === "default" && <RowDragger row={row} handleRowDragStart={handleRowDragStart}/>}
+      <div>{row}</div>
+      {!isSelectionMode && cursorType === "default" && <RowDragger row={row}/>}
     </div>
   );
 };
-
-RowHeaderCell = connect(mapStateToProps)(RowHeaderCell);
 
 export default RowHeaderCell;

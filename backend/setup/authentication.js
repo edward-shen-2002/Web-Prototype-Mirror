@@ -14,7 +14,7 @@ import {
   ROLE_ORGANIZATION_MANAGER, 
   ROLE_BUNDLE_MANAGER, 
   ROLE_SECTOR_MANAGER, 
-  ROLE_BUSINESS_CONCEPT_MANAGER,
+  ROLE_DATA_ENTITY_MANAGER,
   ROLE_EDIT_BUNDLE_MANAGER,
   ROLE_REVIEW_BUNDLE_MANAGER,
   ROLE_APPROVE_BUNDLE_MANAGER,
@@ -201,7 +201,7 @@ export const editBundleRoleMiddleware = () => (req, res, next) => adminRoleMiddl
 export const reviewBundleRoleMiddleware = () => (req, res, next) => adminRoleMiddleware(req, res, next, ROLE_REVIEW_BUNDLE_MANAGER);
 export const approveBundleRoleMiddleware = () => (req, res, next) => adminRoleMiddleware(req, res, next, ROLE_APPROVE_BUNDLE_MANAGER);
 
-export const businessConceptRoleMiddleware = () => (req, res, next) => adminRoleMiddleware(req, res, next, ROLE_BUSINESS_CONCEPT_MANAGER);
+export const dataEntityRoleMiddleware = () => (req, res, next) => adminRoleMiddleware(req, res, next, ROLE_DATA_ENTITY_MANAGER);
 
 // TODO : Handle other errors. Currently assumes database error occured previously.
 // Final errors route. To be used for handling errors that occur at the end of the router stack.
@@ -220,7 +220,7 @@ const setupAuthentication = (helpers) => {
     
     console.log("Auth: Successfully set up authentication");
   } catch(error) {
-    console.error("Auth: Failed to set up authentication");
+    throw `Auth: Failed to set up authentication\n${error}`;
   }
 };
 

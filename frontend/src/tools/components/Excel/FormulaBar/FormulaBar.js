@@ -1,73 +1,99 @@
-import React from "react";
+import React, { useCallback } from "react";
 
-import { connect } from "react-redux";
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
 
 import Divider from "@material-ui/core/Divider";
 
-import InputBase from "@material-ui/core/InputBase";
+import { Editable, Slate } from "slate-react";
 
-import { Editor } from "draft-js";
+import { setActiveCellInputValue } from "@actions/ui/excel/commands";
+
+import {
+  keyEnter,
+  keyTab,
+  keyEscape
+} from "@actions/ui/excel/keyboard";
 
 import "./FormulaBar.scss";
 
-const mapStateToProps = ({
-  ui: {
-    excel: {
-      activeCellInputData: { rawText }
-    }
-  }
-}) => ({
-  rawText
-});
+const Leaf = ({ attributes, children }) =>  <span {...attributes}>{children}</span>;
 
-let InputField = ({ 
-  eventListenerRef, 
-  sheetContainerRef,
-  rawText
-}) => {
+// ! Only one element for now
+const Element = ({ attributes, children }) => (
+  <p {...attributes}>{children}</p>
+);
 
-  const handleKeyDown = (event) => {
-    const { key } = event;
-    const { current: EventListenerInstance } = eventListenerRef;
-  
-    if(key === "Enter") {
-      EventListenerInstance.enter(event, false, sheetContainerRef);
-    } else if(key === "Tab") {
-      EventListenerInstance.tab(event, false, sheetContainerRef);
-    } else if(key === "Escape") {
-      EventListenerInstance.escape(sheetContainerRef);
-    }
-  };
+const InputField = () => {
+  const dispatch = useDispatch();
 
-  const handleChange = ({ target: { value } }) => eventListenerRef.current.changeActiveInputData({ rawText: value });
-  const handleFocus = () => eventListenerRef.current.focusFormulaInput();
-  const handleBlur = () => eventListenerRef.current.blurFormulaInput();
+  const renderElement = useCallback((props) => <Element {...props}/>, []);
+  const renderLeaf = useCallback((props) => <Leaf {...props}/>, []);
+
+  const handleKeyDown = useCallback(
+    (event) => {
+      const { key } = event;
+
+      if(key === "Enter") {
+        event.preventDefault();
+        dispatch(
+          keyEnter()
+        );
+      } else if(key === "Tab") {
+        event.preventDefault();
+        dispatch(
+          keyTab());
+      } else if(key === "Escape") {
+        dispatch(keyEscape());
+      } else {
+
+      }
+    },
+    [ dispatch ]
+  );
+
+  const {
+    formulaEditor,
+    formulaValue
+  } = useSelector(
+    ({
+      ui: {
+        excel: {
+          present: {
+            activeCellInputData
+          }
+        }
+      }
+    }) => activeCellInputData,
+    shallowEqual
+  );
+
+  const handleInputChange = useCallback(
+    (value) => dispatch(setActiveCellInputValue({ value, input: "formula" })),
+    [ dispatch ]
+  );
 
   return (
-    <InputBase
-      className="formulaBar__input"
-      type="text"
-      value={rawText}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-      onChange={handleChange}
-      onKeyDown={handleKeyDown}
-      fullWidth
-    />
-  )
-};
-
-InputField = connect(mapStateToProps)(InputField);
-
-const FormulaBar = ({ eventListenerRef, sheetContainerRef }) => {
-
-  return (
-    <div className="formulaBar">
-      <div className="formulaBar__icon">fx</div>
-      <Divider orientation="vertical" light/>
-      <InputField eventListenerRef={eventListenerRef} sheetContainerRef={sheetContainerRef}/>
-    </div>
+    <Slate
+      editor={formulaEditor}
+      value={formulaValue}
+      onChange={handleInputChange}
+    >
+      <Editable
+        className="formulaBar__input"
+        renderElement={renderElement}
+        renderLeaf={renderLeaf}
+        onKeyDown={handleKeyDown}
+      />
+    </Slate>
   );
 };
+
+const FormulaBar = () => (
+  <div className="formulaBar">
+    <div className="formulaBar__icon">fx</div>
+    <Divider orientation="vertical" light/>
+    <InputField/>
+  </div>
+);
 
 export default FormulaBar;

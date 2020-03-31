@@ -1,6 +1,6 @@
-const PORT = 3003;
+const FRONTEND_PORT = 3003;
 
-const FRONTEND_LOCAL = `http://localhost:${PORT}`;
+const FRONTEND_LOCAL = `http://localhost:${FRONTEND_PORT}`;
 
 export const FRONTEND_SERVER = process.env.NODE_ENV === "production" ? process.env.PUBLIC_URL : FRONTEND_LOCAL;
 
@@ -32,8 +32,9 @@ export const ROUTE_ADMIN_SECTORS = "/sectors";
 export const ROUTE_GROUP_ADMIN_TEMPLATE = `${ROUTE_GROUP_ADMIN}/template_manager`;
 export const ROUTE_ADMIN_TEMPLATES = "/templates";
 
-export const ROUTE_GROUP_ADMIN_BUSINESS_CONCEPT = `${ROUTE_GROUP_ADMIN}/business_concept_manager`;
+export const ROUTE_GROUP_ADMIN_DATA_ENTITY = `${ROUTE_GROUP_ADMIN}/data_entity_manager`;
 export const ROUTE_ADMIN_BUSINESS_CONCEPTS = "/business_concepts";
+export const ROUTE_ADMIN_GROUPS = "/groups";
 
 export const ROUTE_GROUP_ADMIN_BUNDLE = `${ROUTE_GROUP_ADMIN}/bundle_manager`;
 export const ROUTE_ADMIN_BUNDLES = "/bundles";

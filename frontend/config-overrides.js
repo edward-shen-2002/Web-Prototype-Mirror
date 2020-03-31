@@ -4,7 +4,6 @@ const TerserPlugin = require("terser-webpack-plugin");
 const webpack = require("webpack");
 
 const rewireAliases = require('react-app-rewire-aliases');
-const { paths } = require('react-app-rewired');
 const path = require('path');
 
 module.exports = {
@@ -17,6 +16,7 @@ module.exports = {
       "@images": path.join(__dirname, "/src/images"),
       "@store": path.join(__dirname, "/src/store"),
       "@actions": path.join(__dirname, "/src/store/actions"),
+      "@selectors": path.join(__dirname, "/src/store/selectors"),
       "@actionCreators": path.join(__dirname, "/src/store/actions/actionCreators")
     })(config, env);
 

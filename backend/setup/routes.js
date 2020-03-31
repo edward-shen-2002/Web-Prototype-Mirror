@@ -10,7 +10,7 @@ import {
   sectorRoleMiddleware,
   templateRoleMiddleware,
   bundleRoleMiddleware,
-  businessConceptRoleMiddleware,
+  dataEntityRoleMiddleware,
 
   editBundleRoleMiddleware,
   reviewBundleRoleMiddleware,
@@ -37,7 +37,8 @@ import registrationController from "../controller/admin/user_manager/registratio
 import organizationController from "../controller/admin/organization_manager/organizations";
 import sectorController from "../controller/admin/sector_manager/sectors";
 import templateController from "../controller/admin/template_manager/templates";
-import businessConceptController from "../controller/admin/business_concept_manager/businessConcepts";
+import businessConceptController from "../controller/admin/data_entity_manager/businessConcepts";
+import groupsController from "../controller/admin/data_entity_manager/groups";
 import bundleController from "../controller/admin/bundle_manager/bundles";
 
 import editBundleController from "../controller/admin/edit_bundle_manager/editBundles";
@@ -57,7 +58,7 @@ import {
   ROUTE_GROUP_ADMIN_EDIT_BUNDLE,
   ROUTE_GROUP_ADMIN_REVIEW_BUNDLE,
   ROUTE_GROUP_ADMIN_APPROVE_BUNDLE,
-  ROUTE_GROUP_ADMIN_BUSINESS_CONCEPT
+  ROUTE_GROUP_ADMIN_DATA_ENTITY
 } from "../constants/rest";
 
 /**
@@ -194,12 +195,13 @@ const approveBundleRoleRoutes = (helpers) => {
   return router;
 };
 
-const businessConceptRoleRoutes = (helpers) => {
+const dataEntityRoleRoutes = (helpers) => {
   let router = new Router();
 
-  router.use(businessConceptRoleMiddleware());
+  router.use(dataEntityRoleMiddleware());
 
   businessConceptController({ ...helpers, router }); 
+  groupsController({ ...helpers, router });
   
   return router;
 };
@@ -218,22 +220,22 @@ const setupRouteGroups = (helpers) => {
     app.use(ROUTE_GROUP_VERIFICATION, verificationRoutes(helpers));
     
     // Admin routes
-    // Worflow routes - edit/review/approve bundles
     app.use(ROUTE_GROUP_ADMIN, adminRoutes(helpers), generalErrorHandler());
     app.use(ROUTE_GROUP_ADMIN_USER, userRoleRoutes(helpers), generalErrorHandler());
     app.use(ROUTE_GROUP_ADMIN_ORGANIZATION, organizationRoleRoutes(helpers), generalErrorHandler());
     app.use(ROUTE_GROUP_ADMIN_SECTOR, sectorRoleRoutes(helpers), generalErrorHandler());
     app.use(ROUTE_GROUP_ADMIN_TEMPLATE, templateRoleRoutes(helpers), generalErrorHandler());
     app.use(ROUTE_GROUP_ADMIN_BUNDLE, bundleRoleRoutes(helpers), generalErrorHandler());
-    app.use(ROUTE_GROUP_ADMIN_BUSINESS_CONCEPT, businessConceptRoleRoutes(helpers), generalErrorHandler());
-
+    app.use(ROUTE_GROUP_ADMIN_DATA_ENTITY, dataEntityRoleRoutes(helpers), generalErrorHandler());
+    
+    // Worflow routes - edit/review/approve bundles
     app.use(ROUTE_GROUP_ADMIN_EDIT_BUNDLE, editBundleRoleRoutes(helpers), generalErrorHandler());
     app.use(ROUTE_GROUP_ADMIN_REVIEW_BUNDLE, reviewBundleRoleRoutes(helpers), generalErrorHandler());
     app.use(ROUTE_GROUP_ADMIN_APPROVE_BUNDLE, approveBundleRoleRoutes(helpers), generalErrorHandler());
     
     console.log("REST: Successfully set up routes");
   } catch(error) {
-    console.error("REST: Failed to set up routes", error);
+    throw `REST: Failed to set up routes\n${error}`;
   }
 };
 

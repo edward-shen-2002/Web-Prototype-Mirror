@@ -1,32 +1,23 @@
 import React from "react";
 
-import EditableCell from "./EditableCell";
+import EditableCellContainer from "./EditableCell";
 import RowHeaderCell from "./RowHeaderCell";
 import ColumnHeaderCell from "./ColumnHeaderCell";
 import RootHeaderCell from "./RootHeaderCell";
 
 import "./Cell.scss";
 
-const Cell = ({ style, data, columnIndex, rowIndex }) => {
+const Cell = ({ 
+  style, 
+  data, 
+  columnIndex, 
+  rowIndex 
+}) => {
   const {
-    eventListenerRef,
     sheetCellData,
 
     columnCount,
-    rowCount,
-
-    handleSelectionStart,
-    handleSelectionOver,
-
-    handleDoubleClickEditableCell,
-
-    handleRowDragStart,
-    handleColumnDragStart,
-
-    handleClickColumnHeader,
-    handleClickRowHeader,
-    handleClickRootHeader,
-    handleRightClickCell
+    rowCount
   } = data;
   
   let cellData;
@@ -36,16 +27,11 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
     cellData = sheetCellData[rowIndex] && sheetCellData[rowIndex][columnIndex] ? sheetCellData[rowIndex][columnIndex] : undefined;
 
     Component = (
-      <EditableCell 
+      <EditableCellContainer 
         style={style} 
         cellData={cellData} 
         columnIndex={columnIndex} 
         rowIndex={rowIndex} 
-
-        handleRightClickCell={handleRightClickCell}
-        handleSelectionStart={handleSelectionStart}
-        handleSelectionOver={handleSelectionOver}
-        handleDoubleClickEditableCell={handleDoubleClickEditableCell}
       />
     );
   } else if(columnIndex) {
@@ -54,9 +40,6 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         style={style} 
         column={columnIndex}
         rowCount={rowCount}
-        handleRightClickCell={handleRightClickCell}
-        handleColumnDragStart={handleColumnDragStart}
-        handleClickColumnHeader={handleClickColumnHeader}
       />
     );
   } else if(rowIndex) {
@@ -65,9 +48,6 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         style={style} 
         row={rowIndex}
         columnCount={columnCount}
-        handleRightClickCell={handleRightClickCell}
-        handleRowDragStart={handleRowDragStart}
-        handleClickRowHeader={handleClickRowHeader}
       />
     );
   } else {
@@ -76,8 +56,6 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         style={style} 
         columnCount={columnCount}
         rowCount={rowCount}
-        handleRightClickCell={handleRightClickCell}
-        handleClickRootHeader={handleClickRootHeader}
       />
     );
   }
