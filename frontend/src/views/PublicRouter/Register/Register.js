@@ -230,7 +230,7 @@ const selectOrgProgram = (organizationGroup, organizationOptions, handleOrgChang
             }}
           />
         </div>
-        <Button variant="outlined" color="primary" className="register__button"  OnClick={handleOrgChange} >
+        <Button variant="outlined" color="primary" className="register__button"  onClick={handleOrgChange} >
           Go
         </Button>
         <Typography className="register__inputTitle"> *Program </Typography>
