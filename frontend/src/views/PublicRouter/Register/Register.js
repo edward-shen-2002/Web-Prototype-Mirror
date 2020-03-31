@@ -138,17 +138,29 @@ const Header = () => (
   </div>
 )
 
-const actions=[
-  {
-    icon: 'delete',
-    tooltip: 'Delete Permission',
-    onClick: (event, rowData) => {
-      rowData.organization= "";
-      rowData.program="";
-    }
-  }
-]
+const ButtonBox = ({activeStep, handleBack, handleNext, ableToComplete}) => (
+  <Box border={1} color="primary" className="register__buttonBox" justifyContent="center">
+    <Button disabled={activeStep === 0} variant="outlined" color="primary" className="register__buttonBack" onClick={handleBack} >
+      Back
+    </Button>
 
+    <Button variant="outlined" color="primary" className="register__button"  href={ROUTE_PUBLIC_LOGIN} >
+      Cancel
+    </Button>
+
+    <Button disabled={activeStep == 2} variant="outlined" color="primary" className="register__button"  onClick={handleNext} >
+      Next
+    </Button>
+
+    <Button disabled={!ableToComplete || activeStep !== 2} variant="outlined" color="primary" className="register__button"  onClick={handleNext} >
+      COMPLETE REGISTRATION
+    </Button>
+    <Typography className="register__inputTitle">
+      To navigate from one page to the next for registration, please use the button provided on the page. Do not use your browsers's Back and Forward buttons.
+    </Typography>
+
+  </Box>
+);
 
 const getStepContent = (steps, activeStep, organizationGroup, handleOrgGroupChange, isSnackbarOpen, setIsSnackbarOpen, handleBack, handleNext, handleSubmit, handleSnackbarClose,
                         userOrganizations, userPrograms, userSubmissions, userPermissions, setUserSubmissionList, setUserPermissionList, columns, checkBoxColumns, organizationOptions, programOptions,
@@ -170,23 +182,7 @@ const getStepContent = (steps, activeStep, organizationGroup, handleOrgGroupChan
               </RadioGroup>
             </FormControl>
           </Box>
-          <Box border={1} color="primary" className="register__buttonBox" justifyContent="center">
-            <Button disabled={activeStep === 0} variant="outlined" color="primary" className="register__buttonBack" onClick={handleBack} >
-              Back
-            </Button>
-
-            <Button variant="outlined" color="primary" className="register__button"  href={ROUTE_PUBLIC_LOGIN} >
-              Cancel
-            </Button>
-
-            <Button variant="outlined" color="primary" className="register__button"  onClick={handleNext} >
-              Next
-            </Button>
-
-            <Button disabled={activeStep !== 2} variant="outlined" color="primary" className="register__button"  onClick={handleNext} >
-              COMPLETE REGISTRATION
-            </Button>
-          </Box>
+          <ButtonBox activeStep = {activeStep} handleBack = {handleBack} handleNext = {handleNext} ableToComplete = {ableToComplete} />
         </>
       );
     case 1:
@@ -390,51 +386,7 @@ const getStepContent = (steps, activeStep, organizationGroup, handleOrgGroupChan
             </div>
             <br/>
             {/*<Button className="register__button" variant="contained" color="primary" type="submit">Complete Registration</Button>*/}
-            <Box border={1} color="primary" className="register__buttonBox" justifyContent="center">
-              <Button disabled={activeStep === 0} variant="outlined" color="primary" className="register__buttonBack" onClick={handleBack} >
-                Back
-              </Button>
-
-              <Button variant="outlined" color="primary" className="register__button"  href={ROUTE_PUBLIC_LOGIN} >
-                Cancel
-              </Button>
-
-              <Button variant="outlined" color="primary" className="register__button"
-                onClick={ ()=>{
-                  registerSchema
-                  .isValid(values)
-                  .then(function(valid) {
-                    if(!valid){
-                      setIsSnackbarOpen(true);
-                    }
-                    else handleNext();
-                  });
-                } }
-               >
-                Next
-              </Button>
-
-              <Button disabled={activeStep !== 2} variant="outlined" color="primary" className="register__button"  onClick={handleNext} >
-                COMPLETE REGISTRATION
-              </Button>
-            </Box>
-
-            <Snackbar
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              open={isSnackbarOpen}
-              autoHideDuration={6000}
-              color="primary"
-              onClose={handleSnackbarClose}
-            >
-              <CustomSnackbarContent
-                onClose={handleSnackbarClose}
-                variant="error"
-                message="Information Required"
-              />
-            </Snackbar>
+            <ButtonBox activeStep = {activeStep} handleBack = {handleBack} handleNext = {handleNext} ableToComplete = {ableToComplete} />
           </form>
         </>
       );
@@ -532,23 +484,7 @@ const getStepContent = (steps, activeStep, organizationGroup, handleOrgGroupChan
               data={userPermissions}
               // editable={editable} options={options}
             />
-            <Box border={1} color="primary" className="register__buttonBox" justifyContent="center">
-              <Button disabled={activeStep === 0} variant="outlined" color="primary" className="register__buttonBack" onClick={handleBack} >
-                Back
-              </Button>
-
-              <Button variant="outlined" color="primary" className="register__button"  href={ROUTE_PUBLIC_LOGIN} >
-                Cancel
-              </Button>
-
-              <Button disabled variant="outlined" color="primary" className="register__button"  onClick={handleNext} >
-                Next
-              </Button>
-
-              <Button disabled={!ableToComplete} variant="outlined" color="primary" className="register__button"  onClick={handleNext} >
-                COMPLETE REGISTRATION
-              </Button>
-            </Box>
+            <ButtonBox activeStep = {activeStep} handleBack = {handleBack} handleNext = {handleNext} ableToComplete = {ableToComplete} />
           </div>
 
         </div>
@@ -794,10 +730,6 @@ const Register_container = (props) => {
 
   };
 
-  const handleRowDelete = (oldOrganization) => new Promise((resolve, reject) => {
-
-  });
-
   const handleBack = () => {
     setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
@@ -950,10 +882,6 @@ const Register_container = (props) => {
     })
     setUserPermissionList(permissionList);
     setUserSubmissionList([]);
-
-  }
-
-  const createProgram = () => {
 
   }
 
