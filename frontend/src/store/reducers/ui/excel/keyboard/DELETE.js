@@ -21,17 +21,24 @@ const DELETE = (
   for(let row in selectionAreaCoveredCells) {
     let columns = Object.keys(selectionAreaCoveredCells[row]);
 
-    columns.forEach((column) => {
-      // ! Consider when everything is undefined -- do you remove it from sheet data?
-      // ! Consider normal/rich text
-      if(newSheetCellData[row] && newSheetCellData[row][column]) {
-        newSheetCellData[row][column] = { 
-          ...newSheetCellData[row][column], 
-          value: undefined,
-          type: "normal"
-        };
-      }
-    });
+    let rowData = { ...newSheetCellData[row] };
+
+    if(rowData) {
+      columns.forEach((column) => {
+        // ! Consider when everything is undefined -- do you remove it from sheet data?
+        // ! Consider normal/rich text
+
+        if(rowData[column]) {
+          rowData[column] = { 
+            ...rowData[column], 
+            value: undefined,
+            type: "normal"            
+           };
+        }
+      });
+
+      newSheetCellData[row] = rowData;
+    }
   }
 
   newState.sheetCellData = newSheetCellData;
