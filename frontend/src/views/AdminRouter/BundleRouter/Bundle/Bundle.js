@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 
 import { publicAxios, adminBundleRoleAxios } from "@tools/rest";
 
@@ -6,7 +6,7 @@ import Select from "react-select";
 
 import Loading from "@tools/components/Loading";
 import TextDialog from "@tools/components/TextDialog";
-import { EntitiesContent, deleteItemAndGetUpdatedList, addItemAndGetUpdatedList } from "@tools/components/EntitiesDialog";
+import { deleteItemAndGetUpdatedList, addItemAndGetUpdatedList } from "@tools/components/EntitiesDialog";
 
 import Paper from "@material-ui/core/Paper";
 import Divider from "@material-ui/core/Divider";
@@ -34,17 +34,15 @@ const EditorActions = ({
 );
 
 const BundleTextField = ({ label, text, textFieldProps, handleChange }) => (
-  <div className="field">
-    <Typography className="field__label">{label}</Typography>
-    <TextField className="field__input" value={text} onChange={handleChange} {...textFieldProps} fullWidth/>
-  </div>
-);
-
-const BundleSelectField = ({ label, options, value, handleChange }) => (
-  <div className="field">
-    <Typography className="field__label">{label}</Typography>
-    <Select className="field__select" options={options} value={value} onChange={handleChange}/>
-  </div>
+  <TextField 
+    className="field__input" 
+    variant="outlined"
+    value={text} 
+    label={label}
+    onChange={handleChange} 
+    fullWidth
+    {...textFieldProps} 
+  />
 );
 
 const BundleHeader = ({ handleOpenDeleteWarningDialog }) => (
@@ -81,88 +79,125 @@ const BundleContent = ({
 
   const handleChangeQuarter = ({ value }) => setQuarter(value);
 
-  const handleAddTemplate = (newTemplate) => setTemplates(addItemAndGetUpdatedList(templates, newTemplate));
+  const publicTemplatesOptions = useMemo(
+    () => publicTemplates.map((publicTemplate) => ({ value: publicTemplate, label: publicTemplate })),
+    [ publicTemplates ]
+  );
 
-  const handleDeleteTemplate = (template) => setTemplates(deleteItemAndGetUpdatedList(templates, template));
+  const publicOrganizationsOptions = useMemo(
+    () => publicOrganizations.map((publicOrganization) => ({ value: publicOrganization, label: publicOrganization })),
+    [ publicOrganizations ]
+  );
 
-  const handleAddSector = (newSector) => setSectors(addItemAndGetUpdatedList(sectors, newSector));
+  const publicSectorsOptions = useMemo(
+    () => publicSectors.map((publicSector) => ({ value: publicSector, label: publicSector })),
+    [ publicSectors ]
+  );
 
-  const handleDeleteSector = (sector) => setSectors(deleteItemAndGetUpdatedList(sectors, sector));
+  const handleAddTemplate = useCallback(
+    (newTemplate) => setTemplates(addItemAndGetUpdatedList(templates, newTemplate)),
+    [ templates ]
+  );
 
-  const handleAddOrganization = (newOrganization) => setOrganizations(addItemAndGetUpdatedList(organizations, newOrganization));
+  const handleDeleteTemplate = useCallback(
+    (template) => setTemplates(deleteItemAndGetUpdatedList(templates, template)),
+    [ templates ]
+  );
 
-  const handleDeleteOrganization = (organization) => setOrganizations(deleteItemAndGetUpdatedList(organizations, organization));
+  const handleAddSector = useCallback(
+    (newSector) => setSectors(addItemAndGetUpdatedList(sectors, newSector)),
+    [ sectors ]
+  );
+
+  const handleDeleteSector = useCallback(
+    (sector) => setSectors(deleteItemAndGetUpdatedList(sectors, sector)),
+    [ sectors ]
+  );
+
+  const handleAddOrganization = useCallback(
+    (newOrganization) => setOrganizations(addItemAndGetUpdatedList(organizations, newOrganization)),
+    [ organizations ]
+  );
+
+  const handleDeleteOrganization = useCallback(
+    (organization) => setOrganizations(deleteItemAndGetUpdatedList(organizations, organization)),
+    [ organizations ]
+  );
 
   const handleOpenDeleteWarningDialog = () => setIsDeleteDialogOpen(true);
   const handleCloseDeleteWarningDialog = () => setIsDeleteDialogOpen(false);
-  const handleDeleteBundle = () => {
-    adminBundleRoleAxios.delete(`${REST_ADMIN_BUNDLES}/${_id}`)
-      .then(() => {
-        history.push(ROUTE_ADMIN_BUNDLE_BUNDLES);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
 
-  const handleSaveBundle = () => {
-    const newBundle = {
-      _id,
-      name,
-      year,
-      quarter,
-      templates,
-      organizations,
-      sectors,
-    };
+  const handleDeleteBundle = useCallback(
+    () => (
+      adminBundleRoleAxios.delete(`${REST_ADMIN_BUNDLES}/${_id}`)
+        .then(() => history.push(ROUTE_ADMIN_BUNDLE_BUNDLES))
+        .catch((error) => console.error(error))
+    ),
+    [ _id ]
+  );
 
-    adminBundleRoleAxios.put(REST_ADMIN_BUNDLES, { newBundle })
-      .catch((error) => console.error(error));
-  };
+  const handleSaveBundle = useCallback(
+    () => (
+      adminBundleRoleAxios.put(
+        REST_ADMIN_BUNDLES, 
+        { 
+          newBundle: { _id, name, year, quarter, templates, organizations, sectors }
+        }
+      )
+      .catch((error) => console.error(error))
+    ),
+    [ _id, name, year, quarter, templates, organizations, sectors ]
+  );
 
-  const handlePublishBundle = () => {
-    const newBundle = {
-      _id,
-      name,
-      year,
-      quarter,
-      templates,
-      organizations,
-      sectors,
-      published: true
-    };
-
-    adminBundleRoleAxios.put(`${REST_ADMIN_BUNDLES}/publish`, { newBundle })
-      .catch((error) => console.error(error));
-  };
+  const handlePublishBundle = useCallback(
+    () => (
+      adminBundleRoleAxios.put(
+        `${REST_ADMIN_BUNDLES}/publish`, 
+        { 
+          newBundle: { _id, name, year, quarter, templates, organizations, sectors }
+        }
+      )
+      .catch((error) => console.error(error))
+    ),
+    [ _id, name, year, quarter, templates, organizations, sectors ]
+  );
 
   const handleCancelChanges = () => history.push(ROUTE_ADMIN_BUNDLE_BUNDLES);
 
-  const currentQuarter = quarter ? { label: quarter, value: quarter } : null;
+  const currentQuarter = useMemo(
+    () => quarter ? { label: quarter, value: quarter } : null,
+    [ quarter ]
+  );
 
-  let quarters = [];
+  // ! Fetched from the database?
+  const quarters = useMemo(
+    () => {
+      let quarters = [];
 
-  for(let i = 1; i < 5; i++) {
-    const quarterString = `Q${i}`;
-    quarters.push({ label: quarterString, value: quarterString });
-  }
-
-  const entityStyles = {
-    marginTop: 20,
-    padding: 20,
-    border: "1px solid lightgray",
-    borderRadius: 3
-  };
-
-  const descriptionTextFieldProps = {
-    variant: "outlined",
-    multiline: true,
-    InputProps: {
-      style: {
-        minHeight: 200
+      for(let i = 1; i < 5; i++) {
+        const quarterString = `Q${i}`;
+        quarters.push({ label: quarterString, value: quarterString });
       }
-    }
-  };
+
+      return quarters;
+    },
+    []
+  );
+
+  const descriptionTextFieldProps = useMemo(
+    () => (
+      {
+        variant: "outlined",
+        multiline: true,
+        InputProps: {
+          style: {
+            minHeight: 200
+          }
+        }
+      }
+    ),
+    []
+  );
 
   return (
     <Paper className="bundlePage">
@@ -170,41 +205,8 @@ const BundleContent = ({
       <Divider/>
       <BundleTextField label="Name" text={name} handleChange={handleChangeName}/>
       <BundleTextField label="Year" text={year} handleChange={handleChangeYear}/>
-      <BundleSelectField label="Quarter" value={currentQuarter} options={quarters} handleChange={handleChangeQuarter}/>
+      <Select label="Quarter" placeholder="Quarter" value={currentQuarter} options={quarters} handleChange={handleChangeQuarter}/>
       <BundleTextField label="Description" textFieldProps={descriptionTextFieldProps}/>
-      <EntitiesContent
-        style={entityStyles}
-        userEntities={templates} 
-        entities={publicTemplates} 
-        userTitle="Current Templates"
-        allTitle="Add Templates"
-        userSearchPlaceholder="Search current templates..."
-        allSearchPlaceholder="Search all templates..."
-        handleAddEntity={handleAddTemplate} 
-        handleDeleteUserEntity={handleDeleteTemplate}
-      />
-      <EntitiesContent
-        style={entityStyles}
-        userEntities={organizations} 
-        entities={publicOrganizations} 
-        userTitle="Current Organizations"
-        allTitle="Add Organizations"
-        userSearchPlaceholder="Search current organizations..."
-        allSearchPlaceholder="Search all organizations..."
-        handleAddEntity={handleAddOrganization} 
-        handleDeleteUserEntity={handleDeleteOrganization}
-      />
-      <EntitiesContent
-        style={entityStyles}
-        userEntities={sectors} 
-        entities={publicSectors} 
-        userTitle="Current Sectors"
-        allTitle="Add Sectors"
-        userSearchPlaceholder="Search current sectors..."
-        allSearchPlaceholder="Search all sectors..."
-        handleAddEntity={handleAddSector} 
-        handleDeleteUserEntity={handleDeleteSector}
-      />
       <EditorActions 
         handleSave={handleSaveBundle}
         handlePublish={handlePublishBundle}
@@ -221,10 +223,7 @@ const BundleContent = ({
   );
 };
 
-const Bundle = ({ 
-  match: { params: { _id } }, 
-  history
-}) => {
+const Bundle = ({ match: { params: { _id } }, history }) => {
   const [ name, setName ] = useState("");
   const [ year, setYear ] = useState("");
   const [ quarter, setQuarter ] = useState("");
@@ -237,43 +236,64 @@ const Bundle = ({
 
   const [ isDataFetched, setIsDataFetched ] = useState(false);
 
-  useEffect(() => {
-    if(!isDataFetched) {
-      const fetchData = async () => {
-        try {
-          const bundleData = await adminBundleRoleAxios.get(`${REST_ADMIN_BUNDLES}/${_id}`);
-          const templatesData = await publicAxios.get(`${REST_PUBLIC_DATA}/templates`);
-          const organizationsData = await publicAxios.get(`${REST_PUBLIC_DATA}/organizations`);
-          const sectorsData = await publicAxios.get(`${REST_PUBLIC_DATA}/sectors`);
+  useEffect(
+    () => {
+      (
+        async () => {
+          try {
+            const { 
+              data: 
+              { 
+                data: { 
+                  bundle: { name, templates, organizations, sectors, quarter, year }
+                } 
+              } 
+            } = await adminBundleRoleAxios.get(`${REST_ADMIN_BUNDLES}/${_id}`);
 
-          // ! Get publid template, organization, ... data
-          const { data: { data: { templates: publicTemplates } } } = templatesData;
-          const { data: { data: { organizations: publicOrganizations } } } = organizationsData;
-          const { data: { data: { sectors: publicSectors } } } = sectorsData; 
+            const { 
+              data: { 
+                data: { 
+                  templates: publicTemplates 
+                } 
+              } 
+            } = await publicAxios.get(`${REST_PUBLIC_DATA}/templates`);
 
-          const { data: { data: { bundle } } } = bundleData;
-          const { name, templates, organizations, sectors, quarter, year } = bundle;
+            const { 
+              data: { 
+                data: { 
+                  organizations: publicOrganizations 
+                } 
+              } 
+            } = await publicAxios.get(`${REST_PUBLIC_DATA}/organizations`);
 
-          setName(name);
-          setYear(year);
-          setQuarter(quarter);
-          setTemplates(templates);
-          setOrganizations(organizations);
-          setSectors(sectors);
-          setPublicTemplates(publicTemplates);
-          setPublicOrganizations(publicOrganizations);
-          setPublicSectors(publicSectors);
+            const { 
+              data: { 
+                data: { 
+                  sectors: publicSectors 
+                } 
+              } 
+            } = await publicAxios.get(`${REST_PUBLIC_DATA}/sectors`);
 
-          setIsDataFetched(true);
-        } catch(error) {
-          console.error(error);
-          history.push(ROUTE_ADMIN_BUNDLE_BUNDLES);
+            setName(name);
+            setYear(year);
+            setQuarter(quarter);
+            setTemplates(templates);
+            setOrganizations(organizations);
+            setSectors(sectors);
+            setPublicTemplates(publicTemplates);
+            setPublicOrganizations(publicOrganizations);
+            setPublicSectors(publicSectors);
+
+            setIsDataFetched(true);
+          } catch(error) {
+            console.error(error);
+            history.push(ROUTE_ADMIN_BUNDLE_BUNDLES);
+          }
         }
-      };
-
-      fetchData();
-    }
-  }, [ isDataFetched ]);
+      )()
+    },
+    []
+  );
 
   return (
     isDataFetched 
