@@ -33,22 +33,45 @@ const EditorActions = ({
   </ButtonGroup>
 );
 
-const BundleTextField = ({ label, text, textFieldProps, handleChange }) => (
-  <TextField 
-    className="field__input" 
-    variant="outlined"
-    value={text} 
-    label={label}
-    onChange={handleChange} 
-    fullWidth
-    {...textFieldProps} 
-  />
-);
-
 const BundleHeader = ({ handleOpenDeleteWarningDialog }) => (
   <div className="bundleHeader">
     <Typography variant="h4">Bundle Editor</Typography>
     <Button variant="contained" color="secondary" onClick={handleOpenDeleteWarningDialog}>Delete Bundle</Button>
+  </div>
+);
+
+const Label = ({ label }) => <h5>{label}</h5>;
+
+const BundleTextField = ({ label, value, onChange, InputProps }) => (
+  <div className="field">
+    <Label label={label}/>
+    <TextField
+      size="small"
+      variant="outlined" 
+      value={value}
+      InputProps={InputProps}
+      onChange={onChange}
+    />
+  </div>
+);
+
+const SelectField = ({ 
+  label, 
+  styles,
+  placeholder,
+  value,
+  options,
+  onChange 
+}) => (
+  <div className="field">
+    <Label label={label}/>
+    <Select
+      styles={styles}
+      placeholder={placeholder}
+      value={value}
+      options={options}
+      onChange={onChange} 
+    />
   </div>
 );
 
@@ -58,30 +81,27 @@ const BundleContent = ({
   year,
   quarter,
   templates,
-  organizations,
-  sectors,
   publicTemplates,
   publicOrganizations,
   publicSectors,
+  organizations,
+  sectors,
+  history,
   setName,
-  setTemplates,
-  setOrganizations,
-  setSectors,
   setQuarter,
-  setYear,
-  history
+  setYear
 }) => {
-  const [ isDeleteDialogOpen, setIsDeleteDialogOpen ] = useState(false);
-
   const handleChangeName = ({ target: { value } }) => setName(value);
 
   const handleChangeYear = ({ target: { value } }) => setYear(value);
 
   const handleChangeQuarter = ({ value }) => setQuarter(value);
 
+  const handleChangeDescription = () => {};
+
   const publicTemplatesOptions = useMemo(
     () => publicTemplates.map((publicTemplate) => ({ value: publicTemplate, label: publicTemplate })),
-    [ publicTemplates ]
+    [ templates ]
   );
 
   const publicOrganizationsOptions = useMemo(
@@ -93,6 +113,169 @@ const BundleContent = ({
     () => publicSectors.map((publicSector) => ({ value: publicSector, label: publicSector })),
     [ publicSectors ]
   );
+
+  const currentQuarter = useMemo(
+    () => quarter ? { label: quarter, value: quarter } : null,
+    [ quarter ]
+  );
+
+  // ! Fetched from the database?
+  const quarters = useMemo(
+    () => {
+      let quarters = [];
+
+      for(let i = 1; i < 5; i++) {
+        const quarterString = `Q${i}`;
+        quarters.push({ label: quarterString, value: quarterString });
+      }
+
+      return quarters;
+    },
+    []
+  );
+
+  const descriptionTextFieldInputProps = useMemo(
+    () => (
+      {
+          style: {
+            minHeight: 200
+          }
+      }
+    ),
+    []
+  );
+
+  const selectStyles = useMemo(
+    () => (
+      {
+        container: (base) => (
+          {
+            ...base,
+            zIndex: 2
+          }
+        )
+      }
+    ),
+    []
+  );
+
+  return (
+    <Paper className="bundlePageContent">
+      <BundleTextField 
+        label="Name"
+        value={name} 
+        onChange={handleChangeName}
+      />
+      <BundleTextField 
+        label="Year" 
+        value={year} 
+        onChange={handleChangeYear}
+      />
+      <SelectField
+        label="Quarter" 
+        styles={selectStyles} 
+        placeholder="Quarter" 
+        value={currentQuarter} 
+        options={quarters} 
+        onChange={handleChangeQuarter}
+      />
+      <BundleTextField 
+        label="Description" 
+        onChange={handleChangeDescription}
+        multiline
+        InputProps={descriptionTextFieldInputProps}
+      />
+    </Paper>
+  );
+};
+
+const BundleContainer = (
+  {
+    _id,
+    name,
+    year,
+    quarter,
+    templates,
+    organizations,
+    sectors,
+
+    publicTemplates,
+    publicOrganizations,
+    publicSectors,
+    
+    history,
+    isDeleteDialogOpen,
+    setName,
+    setQuarter,
+    setYear,
+    handleCloseDeleteWarningDialog,
+    handleOpenDeleteWarningDialog,
+    handleCancelChanges,
+    handleSaveBundle,
+    handlePublishBundle,
+    handleDeleteBundle
+  }
+) => (
+  <div className="bundle">
+    <BundleHeader handleOpenDeleteWarningDialog={handleOpenDeleteWarningDialog}/>
+    <BundleContent
+      _id={_id}
+      name={name}
+      year={year}
+      quarter={quarter}
+      templates={templates}
+      organizations={organizations}
+      sectors={sectors}
+      publicTemplates={publicTemplates}
+      publicOrganizations={publicOrganizations}
+      publicSectors={publicSectors}
+      history={history}
+      setName={setName}
+      setQuarter={setQuarter}
+      setYear={setYear}
+    />
+    <EditorActions 
+      handleSave={handleSaveBundle}
+      handlePublish={handlePublishBundle}
+      handleCancel={handleCancelChanges}
+    />
+    <TextDialog 
+      open={isDeleteDialogOpen} 
+      title="Delete Bundle" 
+      message="Are you sure you want to delete this bundle?"
+      handleClose={handleCloseDeleteWarningDialog}
+      handleConfirm={handleDeleteBundle}
+    />
+  </div>
+);
+
+const Bundle = ({ match: { params: { _id } }, history }) => {
+  const [ name, setName ] = useState("");
+  const [ year, setYear ] = useState("");
+  const [ quarter, setQuarter ] = useState("");
+  const [ templates, setTemplates ] = useState([]); 
+  const [ organizations, setOrganizations ] = useState([]);
+  const [ sectors, setSectors ] = useState([]);
+  const [ publicTemplates, setPublicTemplates ] = useState([]);
+  const [ publicOrganizations, setPublicOrganizations ] = useState([]);
+  const [ publicSectors, setPublicSectors ] = useState([]);
+
+  const [ isDataFetched, setIsDataFetched ] = useState(false);
+  const [ isDeleteDialogOpen, setIsDeleteDialogOpen ] = useState(false);
+
+  const handleOpenDeleteWarningDialog = () => setIsDeleteDialogOpen(true);
+  const handleCloseDeleteWarningDialog = () => setIsDeleteDialogOpen(false);
+
+  const handleDeleteBundle = useCallback(
+    () => (
+      adminBundleRoleAxios.delete(`${REST_ADMIN_BUNDLES}/${_id}`)
+        .then(() => history.push(ROUTE_ADMIN_BUNDLE_BUNDLES))
+        .catch((error) => console.error(error))
+    ),
+    [ _id ]
+  );
+
+
 
   const handleAddTemplate = useCallback(
     (newTemplate) => setTemplates(addItemAndGetUpdatedList(templates, newTemplate)),
@@ -124,18 +307,6 @@ const BundleContent = ({
     [ organizations ]
   );
 
-  const handleOpenDeleteWarningDialog = () => setIsDeleteDialogOpen(true);
-  const handleCloseDeleteWarningDialog = () => setIsDeleteDialogOpen(false);
-
-  const handleDeleteBundle = useCallback(
-    () => (
-      adminBundleRoleAxios.delete(`${REST_ADMIN_BUNDLES}/${_id}`)
-        .then(() => history.push(ROUTE_ADMIN_BUNDLE_BUNDLES))
-        .catch((error) => console.error(error))
-    ),
-    [ _id ]
-  );
-
   const handleSaveBundle = useCallback(
     () => (
       adminBundleRoleAxios.put(
@@ -163,78 +334,6 @@ const BundleContent = ({
   );
 
   const handleCancelChanges = () => history.push(ROUTE_ADMIN_BUNDLE_BUNDLES);
-
-  const currentQuarter = useMemo(
-    () => quarter ? { label: quarter, value: quarter } : null,
-    [ quarter ]
-  );
-
-  // ! Fetched from the database?
-  const quarters = useMemo(
-    () => {
-      let quarters = [];
-
-      for(let i = 1; i < 5; i++) {
-        const quarterString = `Q${i}`;
-        quarters.push({ label: quarterString, value: quarterString });
-      }
-
-      return quarters;
-    },
-    []
-  );
-
-  const descriptionTextFieldProps = useMemo(
-    () => (
-      {
-        variant: "outlined",
-        multiline: true,
-        InputProps: {
-          style: {
-            minHeight: 200
-          }
-        }
-      }
-    ),
-    []
-  );
-
-  return (
-    <Paper className="bundlePage">
-      <BundleHeader handleOpenDeleteWarningDialog={handleOpenDeleteWarningDialog}/>
-      <Divider/>
-      <BundleTextField label="Name" text={name} handleChange={handleChangeName}/>
-      <BundleTextField label="Year" text={year} handleChange={handleChangeYear}/>
-      <Select label="Quarter" placeholder="Quarter" value={currentQuarter} options={quarters} handleChange={handleChangeQuarter}/>
-      <BundleTextField label="Description" textFieldProps={descriptionTextFieldProps}/>
-      <EditorActions 
-        handleSave={handleSaveBundle}
-        handlePublish={handlePublishBundle}
-        handleCancel={handleCancelChanges}
-      />
-      <TextDialog 
-        open={isDeleteDialogOpen} 
-        title="Delete Bundle" 
-        message="Are you sure you want to delete this bundle?"
-        handleClose={handleCloseDeleteWarningDialog}
-        handleConfirm={handleDeleteBundle}
-      />
-    </Paper>
-  );
-};
-
-const Bundle = ({ match: { params: { _id } }, history }) => {
-  const [ name, setName ] = useState("");
-  const [ year, setYear ] = useState("");
-  const [ quarter, setQuarter ] = useState("");
-  const [ templates, setTemplates ] = useState([]); 
-  const [ organizations, setOrganizations ] = useState([]);
-  const [ sectors, setSectors ] = useState([]);
-  const [ publicTemplates, setPublicTemplates ] = useState([]);
-  const [ publicOrganizations, setPublicOrganizations ] = useState([]);
-  const [ publicSectors, setPublicSectors ] = useState([]);
-
-  const [ isDataFetched, setIsDataFetched ] = useState(false);
 
   useEffect(
     () => {
@@ -297,24 +396,36 @@ const Bundle = ({ match: { params: { _id } }, history }) => {
 
   return (
     isDataFetched 
-      ? <BundleContent
+      ? <BundleContainer
           _id={_id}
           name={name}
           year={year}
           quarter={quarter}
           templates={templates}
+          organizations={organizations}
+          sectors={sectors}
+
           publicTemplates={publicTemplates}
           publicOrganizations={publicOrganizations}
           publicSectors={publicSectors}
-          organizations={organizations}
-          sectors={sectors}
+
+          history={history}
+
+          isDeleteDialogOpen={isDeleteDialogOpen}
+
           setName={setName}
           setTemplates={setTemplates}
           setOrganizations={setOrganizations}
           setSectors={setSectors}
           setYear={setYear}
           setQuarter={setQuarter}
-          history={history}
+
+          handlePublishBundle={handlePublishBundle}
+          handleSaveBundle={handleSaveBundle}
+          handleCancelChanges={handleCancelChanges}
+          handleOpenDeleteWarningDialog={handleOpenDeleteWarningDialog}
+          handleCloseDeleteWarningDialog={handleCloseDeleteWarningDialog}
+          handleDeleteBundle={handleDeleteBundle}
         />
       : <Loading/>
   );

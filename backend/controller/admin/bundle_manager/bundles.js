@@ -233,8 +233,6 @@ const bundles = ({
                       ]
                     });
 
-                    console.log(JSON.stringify(masterValue, null, 1));
-  
                     if(masterValue) {
                       sheetCellData[row][column] = { 
                         ...sheetCellData[row][column], 
