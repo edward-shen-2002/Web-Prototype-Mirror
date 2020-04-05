@@ -61,12 +61,14 @@ const SelectField = ({
   placeholder,
   value,
   options,
+  isMulti,
   onChange 
 }) => (
   <div className="field">
     <Label label={label}/>
     <Select
       styles={styles}
+      isMulti={isMulti}
       placeholder={placeholder}
       value={value}
       options={options}
@@ -274,8 +276,6 @@ const Bundle = ({ match: { params: { _id } }, history }) => {
     ),
     [ _id ]
   );
-
-
 
   const handleAddTemplate = useCallback(
     (newTemplate) => setTemplates(addItemAndGetUpdatedList(templates, newTemplate)),
