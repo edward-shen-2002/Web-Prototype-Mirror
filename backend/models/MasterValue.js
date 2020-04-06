@@ -35,14 +35,19 @@ const ObjectId = Schema.Types.ObjectId;
 
 const masterValueSchema = new Schema({
   organizationId: { type: ObjectId, required: true },
-  type: { type: String },
 
   year: { type: Number, required: true },
-  quarter: { type: String },
+  reportPeriod: { type: String },
   form: { type: String },
   
-  businessConceptId1: { type: Object, required: true },
-  businessConceptId2: { type: Object, required: true },
+  attributeID: { type: ObjectId, ref: "Attribute" },
+  categoryID: { type: ObjectId, ref: "Category" },
+
+  categoryGroupIDs: [
+    {
+      type: ObjectId, ref: "CategoryGroup"
+    }
+  ],
 
   value: { type: String, required: true }
 }, { minimize: false });

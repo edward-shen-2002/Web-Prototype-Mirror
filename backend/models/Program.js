@@ -4,9 +4,7 @@ const ObjectId = Schema.Types.ObjectId;
 
 let programSchema = new Schema({
   name: { type: String, required: true, unique: true },
-  shortName: { type: String, required: true },
-  organization: [{type: String, required: true}],
-
+  code: String
 }, { minimize: false });
 
 export default model("Program", programSchema);

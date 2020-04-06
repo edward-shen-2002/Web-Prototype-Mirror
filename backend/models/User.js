@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 
 import passportLocalMongoose from "passport-local-mongoose";
 
-import { DEFAULT_ROLES } from "../../constants/roles";
+import { DEFAULT_ROLES } from "../constants/roles";
 
 // TODO : Replace with https://github.com/dropbox/zxcvbn
 const passwordValidator = (password, cb) => {
@@ -27,31 +27,56 @@ const passwordValidator = (password, cb) => {
   return error ? cb(error) : cb();
 };  
 
-// Prevent inactive/banned accounts from logging in
-const findByUsername = (model, queryParameters) => model.findOne({ ...queryParameters, active: true });
+// Conditions to check for when the user authenticates/logs in
+const findByUsername = (
+  model, 
+  queryParameters
+) => (
+  model.findOne(
+    { 
+      ...queryParameters, 
+      isActive: true,
+      isEmailVerified: true,
+      isApproved: true
+    }
+  )
+);
 
 let userSchema = new Schema({
-  username: { type: String, lowercase: true, unique: true, required: true },
+  username: { type: String, lowercase: true, required: true },
   
-  email: { type: String, unique: true, required: true },
+  email: { type: String, required: true },
 
+  title: { type: String, default: "" },
+  // Organization: {  }
   firstName: { type: String, default: "" },
   lastName: { type: String, default: "" },
   
   phoneNumber: { type: String, default: "" },
 
-  organizations: { type: Object, default: {} },
-  LHINs: { type: Object, default: {} },
+  /**
+    Organization: {
+      $[organization]: {
 
-  roles: { 
-    type: Object, 
-    required: true,
-    default: DEFAULT_ROLES
-  },
+        programs: {
+          $[program]: {
+            submissions: {
+              $[submission]
+            }
+          }
+        }
+
+      }
+    }
+   */
+  organizations: { type: Object, default: {} },
+  
+  isActive: { type: Boolean, required: true, default: true },
+  isEmailVerified: { type: Boolean, required: true, default: false },
+  isApproved: { type: Boolean, required: true, default: false },
 
   creationDate: { type: Date, default: Date.now, required: true },
   approvedDate: { type: Date, default: Date.now, required: true },
-  active: { type: Boolean, required: true, default: true }
 }, { minimize: false });
 
 userSchema.plugin(passportLocalMongoose, { usernameUnique: false, findByUsername, passwordValidator });

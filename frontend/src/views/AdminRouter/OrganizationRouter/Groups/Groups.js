@@ -2,7 +2,7 @@ import React, { useState, useEffect, lazy } from "react";
 
 import uniqid from "uniqid";
 
-import { adminSectorRoleAxios } from "@tools/rest";
+import { adminOrganizationGroupRoleAxios } from "@tools/rest";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -17,52 +17,52 @@ import DialogActions from "@material-ui/core/DialogActions";
 
 import { REST_ADMIN_SECTORS } from "@constants/rest";
 
-import "./Sectors.scss";
+import "./Groups.scss";
 
 const MaterialTable = lazy(() => import("material-table"));
 
-const Sectors = () => {
-  const [ sectors, setSectors ] = useState([]);
+const Groups = () => {
+  const [ groups, setGroups ] = useState([]);
   const [ isDataFetched, setIsDataFetched ] = useState(false);
 
   useEffect(() => {
     if(!isDataFetched) {
-      adminSectorRoleAxios.get(REST_ADMIN_SECTORS)
-        .then(({ data: { data: { sectors } } }) => setSectors(sectors))
+      adminOrganizationGroupRoleAxios.get(REST_ADMIN_SECTORS)
+        .then(({ data: { data: { groups } } }) => setGroups(groups))
         .catch((error) => console.error(error));
       setIsDataFetched(true);
     } 
   });
 
-  const handleRowAdd = (newSector) => new Promise((resolve, reject) => {
+  const handleRowAdd = (newGroup) => new Promise((resolve, reject) => {
     setTimeout(() => {
-      adminSectorRoleAxios.post(REST_ADMIN_SECTORS, newSector)
+      adminOrganizationGroupRoleAxios.post(REST_ADMIN_SECTORS, newGroup)
       .then(() => {
-        setSectors([ ...sectors, newSector ]);
+        setGroups([ ...groups, newGroup ]);
         resolve();
       })
       .catch(reject);
     }, 600);
   });
 
-  const handleRowDelete = (sector) => new Promise((resolve, reject) => {
+  const handleRowDelete = (group) => new Promise((resolve, reject) => {
     setTimeout(() => {
-      adminSectorRoleAxios.delete(`${REST_ADMIN_SECTORS}/${sector._id}`)
+      adminOrganizationGroupRoleAxios.delete(`${REST_ADMIN_SECTORS}/${group._id}`)
         .then(() => {
-          const sectorIndex = sectors.indexOf(sector);
-          setSectors([ ...sectors.slice(0, sectorIndex), ...sectors.slice(sectorIndex + 1) ]);
+          const groupIndex = groups.indexOf(group);
+          setGroups([ ...groups.slice(0, groupIndex), ...groups.slice(groupIndex + 1) ]);
           resolve();
         })
         .catch(reject);
     }, 1000);
   });
 
-  const handleRowUpdate = (newSector, oldSector) => new Promise((resolve, reject) => {
+  const handleRowUpdate = (newGroup, oldGroup) => new Promise((resolve, reject) => {
     setTimeout(() => {
-      adminSectorRoleAxios.put(REST_ADMIN_SECTORS, { newSector, oldSector })
+      adminOrganizationGroupRoleAxios.put(REST_ADMIN_SECTORS, { newGroup, oldGroup })
         .then(() => {
-          const oldSectorIndex = sectors.indexOf(oldSector);
-          setSectors([ ...sectors.slice(0, oldSectorIndex), newSector, ...sectors.slice(oldSectorIndex + 1) ]);
+          const oldGroupIndex = groups.indexOf(oldGroup);
+          setGroups([ ...groups.slice(0, oldGroupIndex), newGroup, ...groups.slice(oldGroupIndex + 1) ]);
           resolve();
         })
         .catch(reject);
@@ -72,12 +72,12 @@ const Sectors = () => {
   const columns = [ { title: "Name", field: "name" } ];
 
   return (
-    <div className="sectorsPage">
+    <div className="groupsPage">
       <MaterialTable
-        className="sectorsPage__table"
-        title="Sectors"
+        className="groupsPage__table"
+        title="Groups"
         columns={columns}
-        data={sectors}
+        data={groups}
         editable={{ onRowAdd: handleRowAdd, onRowUpdate: handleRowUpdate, onRowDelete: handleRowDelete }}
         options={{ actionsColumnIndex: -1 }}
       />
@@ -85,4 +85,4 @@ const Sectors = () => {
   );
 };
 
-export default Sectors;
+export default Groups;
