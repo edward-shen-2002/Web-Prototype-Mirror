@@ -1,0 +1,25 @@
+import { Document } from 'mongoose'
+
+interface IUser {
+  username: string
+  
+  email: string
+
+  title: string
+
+  firstName: string
+  lastName: string
+  
+  phoneNumber: string
+
+  organizations: object
+  
+  isActive: boolean
+  isEmailVerified: boolean
+  isApproved: boolean
+
+  creationDate: Date
+  approvedDate: Date
+}
+
+export default interface IUserModel extends IUser, Document {}
