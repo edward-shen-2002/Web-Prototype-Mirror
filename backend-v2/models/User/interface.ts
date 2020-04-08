@@ -1,25 +1,25 @@
 import { Document } from 'mongoose'
 
 interface IUser {
-  username: string
+  username        : string
   
-  email: string
+  email           : string
 
-  title: string
+  title           : string
 
-  firstName: string
-  lastName: string
+  firstName       : string
+  lastName        : string
   
-  phoneNumber: string
+  phoneNumber     : string
 
-  organizations: object
+  organizations   : object
   
-  isActive: boolean
-  isEmailVerified: boolean
-  isApproved: boolean
+  isActive        : boolean
+  isEmailVerified : boolean
+  isApproved      : boolean
 
-  creationDate: Date
-  approvedDate: Date
+  creationDate    : Date
+  approvedDate    : Date
 }
 
-export default interface IUserModel extends IUser, Document {}
+export default interface IUserDocument extends IUser, Document {}

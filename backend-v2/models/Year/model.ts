@@ -1,7 +1,8 @@
-import { Schema, model } from "mongoose";
+import { Schema, model } from 'mongoose';
+import IYearDocument from './interface';
 
-export default model(
-  "Year", 
+export default model<IYearDocument>(
+  'Year', 
   new Schema(
     {
       value: { type: String }

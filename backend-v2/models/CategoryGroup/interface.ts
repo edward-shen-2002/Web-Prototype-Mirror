@@ -4,4 +4,4 @@ interface ICategoryGroup {
   value: string
 }
 
-export default interface ICategoryGroupModel extends ICategoryGroup, Document {}
+export default interface ICategoryGroupDocument extends ICategoryGroup, Document {}

@@ -1,9 +1,9 @@
-import { Schema, model } from "mongoose";
+import { Schema, model } from 'mongoose';
 
-import IOrganizationGroupModel from './interface'
+import IOrganizationGroupDocument from './interface'
 
-export default model<IOrganizationGroupModel>(
-  "OrganizationGroup", 
+export default model<IOrganizationGroupDocument>(
+  'OrganizationGroup', 
   new Schema(
     {
       name: { type: String, required: true, unique: true }

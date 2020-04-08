@@ -4,4 +4,4 @@ interface IYear {
   value: string
 }
 
-interface IYearModel extends IYear, Document {}
+export default interface IYearDocument extends IYear, Document {}

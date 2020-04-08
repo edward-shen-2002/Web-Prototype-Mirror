@@ -5,4 +5,4 @@ interface IProgram {
   code: string
 }
 
-export default interface IProgramModel extends IProgram, Document {}
+export default interface IProgramDocument extends IProgram, Document {}

@@ -1,20 +1,20 @@
 import { Schema, model, Document } from 'mongoose'
-import ITemplateModel from './interface'
+import ITemplateDocument from './interface'
 
-export default model<ITemplateModel>(
+export default model<ITemplateDocument>(
   'Template', 
   new Schema(
     {
-      name: { type: String, required: true },
+      name                  : { type: String, required: true },
     
-      year: { type: Number, required: true },
+      year                  : { type: Number, required: true },
     
-      reportPeriod: { type: String, required: true },
+      reportPeriod          : { type: String, required: true },
     
-      submissionCategoryID: { type: Schema.Types.ObjectId, ref: 'SubmissionCategory' },
-      workbookData: {},
+      submissionCategoryID  : { type: Schema.Types.ObjectId, ref: 'SubmissionCategory' },
+      workbookData          : {},
     
-      isPublished: { type: Boolean, default: false }
+      isPublished           : { type: Boolean, default: false }
     }, 
     { minimize: false }
   )

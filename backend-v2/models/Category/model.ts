@@ -1,8 +1,8 @@
 import { Schema, model } from 'mongoose'
-import ICategoryGroupDocument from './interface'
+import ICategoryDocument from './interface'
 
-export default model<ICategoryGroupDocument>(
-  'Group', 
+export default model<ICategoryDocument>(
+  'Category', 
   new Schema(
     {
       value: { type: String, required: true }

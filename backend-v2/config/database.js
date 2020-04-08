@@ -1,1 +1,0 @@
-export const DATABASE_KEY = 'mongodb://localhost:27017/mohltc-web-app'

@@ -1,8 +1,8 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model, Model } from 'mongoose'
 
 import PassportLocalMongoose from 'passport-local-mongoose'
 
-import IUserModel from './interface'
+import IUserDocument from './interface'
 
 // TODO : Replace with https://github.com/dropbox/zxcvbn
 const passwordValidator = (password: string, cb: (error?: string) => any) => {
@@ -29,7 +29,7 @@ const passwordValidator = (password: string, cb: (error?: string) => any) => {
 
 // Conditions to check for when the user authenticates/logs in
 const findByUsername = (
-  model: IUserModel & PassportLocalMongoose, 
+  model: Model<IUserDocument>, 
   queryParameters: object
 ) => (
   model.findOne(
@@ -44,16 +44,15 @@ const findByUsername = (
 
 const User = new Schema(
   {
-    username: { type: String, lowercase: true, required: true },
+    username          : { type: String, lowercase: true, required: true },
     
-    email: { type: String, required: true },
+    email             : { type: String, required: true },
 
-    title: { type: String, default: '' },
-    // Organization: {  }
-    firstName: { type: String, default: '' },
-    lastName: { type: String, default: '' },
+    title             : { type: String, default: '' },
+    firstName         : { type: String, default: '' },
+    lastName          : { type: String, default: '' },
     
-    phoneNumber: { type: String, default: '' },
+    phoneNumber       : { type: String, default: '' },
 
     /**
       Organization: {
@@ -70,18 +69,18 @@ const User = new Schema(
         }
       }
     */
-    organizations: { type: Object, default: {} },
+    organizations     : { type: Object, default: {} },
     
-    isActive: { type: Boolean, required: true, default: true },
-    isEmailVerified: { type: Boolean, required: true, default: false },
-    isApproved: { type: Boolean, required: true, default: false },
+    isActive          : { type: Boolean, required: true, default: true },
+    isEmailVerified   : { type: Boolean, required: true, default: false },
+    isApproved        : { type: Boolean, required: true, default: false },
 
-    creationDate: { type: Date, default: Date.now, required: true },
-    approvedDate: { type: Date, default: Date.now, required: true }
+    creationDate      : { type: Date, default: Date.now, required: true },
+    approvedDate      : { type: Date, default: Date.now, required: true }
   }, 
   { minimize: false }
 )
 
 User.plugin(PassportLocalMongoose, { usernameUnique: false, findByUsername, passwordValidator })
 
-export default model('User', User)
+export default model<IUserDocument>('User', User)

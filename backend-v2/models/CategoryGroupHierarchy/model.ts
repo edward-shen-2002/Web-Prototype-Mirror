@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
-import ICategoryGroupHierarchyModel from './interface';
+import ICategoryGroupHierarchyDocument from './interface';
 
-export default model<ICategoryGroupHierarchyModel>(
+export default model<ICategoryGroupHierarchyDocument>(
   'CategoryGroupHierarchy', 
   new Schema(
     {

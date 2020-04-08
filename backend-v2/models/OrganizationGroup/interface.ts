@@ -1,7 +1,7 @@
-import { Schema, Document } from "mongoose";
+import { Schema, Document } from 'mongoose';
 
 interface IOrganizationGroup {
   name: string
 }
 
-export default interface IOrganizationGroupModel extends IOrganizationGroup, Document {}
+export default interface IOrganizationGroupDocument extends IOrganizationGroup, Document {}

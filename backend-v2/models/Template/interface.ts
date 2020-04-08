@@ -1,13 +1,13 @@
 import { Schema, Document } from 'mongoose'
 
 interface ITemplate {
-  name: string
-  year: number
-  reportPeriod: string
-  submissionCategoryID: Schema.Types.ObjectId
-  workbookData: object
+  name                  : string
+  year                  : number
+  reportPeriod          : string
+  submissionCategoryID  : Schema.Types.ObjectId
+  workbookData          : object
   
-  isPublished: boolean
+  isPublished           : boolean
 }
 
-export default interface ITemplateModel extends ITemplate, Document {}
+export default interface ITemplateDocument extends ITemplate, Document {}
