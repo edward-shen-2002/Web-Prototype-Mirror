@@ -16,7 +16,7 @@ const defaultOptions: IOptions = {
 export default class Database implements IDatabase {
   public models: IModels
 
-  public async initialize (customOptions: IOptions = defaultOptions) {
+  public async initialize (customOptions = defaultOptions) {
     try {
       console.log(logTag, 'Initializing...')
       await this.initializeMongoose()
