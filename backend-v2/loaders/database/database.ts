@@ -4,7 +4,7 @@ import { DATABASE_KEY } from '../../config/database'
 
 import { IOptions, IDatabase } from './interface'
 
-import IModels from '../../models/interface'
+import IDataAccess from '../../dataAccess/interface'
 
 const logTag = '[DB][MongoDB]: '
 
@@ -14,7 +14,7 @@ const defaultOptions: IOptions = {
 }
 
 export default class Database implements IDatabase {
-  public models: IModels
+  public models: IDataAccess
 
   public async initialize (customOptions = defaultOptions) {
     try {
