@@ -1,4 +1,4 @@
-import IModels from '../../models/interface'
+import IDataRepositories from '../../repositories/interface'
 
 /**
  * Methods to prepopulate databases with sample data for testing purposes
@@ -9,7 +9,7 @@ import IModels from '../../models/interface'
  * 
  * @param models The data models of the database
  */
-type CreateDummyData = (models: IModels) => Promise<void>
+type CreateDummyData = (repositories: IDataRepositories) => Promise<void>
 type WipeDatabase = () => Promise<void>
 type ApplyOptions = (options: IOptions) => Promise<void>
 
