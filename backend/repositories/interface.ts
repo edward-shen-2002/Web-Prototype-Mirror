@@ -14,6 +14,10 @@ import IYearRepository from "./Year/interface"
 
 import IMasterValueRepository from "./MasterValue/interface"
 
+export interface IRepository {
+  
+}
+
 export default interface IRepositories {
   UserRepository                     : IUserRepository,
   
