@@ -1,5 +1,3 @@
 import { IRepository } from "../interface";
 
-export default interface IProgramRepository extends IRepository {
-
-} 
+export default interface IProgramRepository<T> extends IRepository<T> {} 

@@ -9,12 +9,24 @@ import ITemplateRepository from "./Template/interface"
 
 import ICategoryGroupHierarchyRepository from "./CategoryGroupHierarchy/interface"
 import ICategoryGroupRepository from "./CategoryGroup/interface"
-import IReportPeriodRepository from "./ReportPeriod/interface"
+import IReportingPeriodRepository from "./ReportingPeriod/interface"
 import IYearRepository from "./Year/interface"
 
 import IMasterValueRepository from "./MasterValue/interface"
 
-export interface IRepository {
+// https://medium.com/@erickwendel/generic-repository-with-typescript-and-node-js-731c10a1b98e
+interface IWrite<T> {
+  create(item: T): Promise<Boolean>
+  update(id: string, item: T): Promise<Boolean>
+  delete(id: string): Promise<Boolean>
+}
+
+interface IRead<T> {
+  find(item: T): Promise<T[]>
+  findOne(id: string): Promise<T>
+}
+
+export interface IRepository<T> extends IWrite<T>, IRead<T> {
   
 }
 
@@ -30,7 +42,7 @@ export default interface IRepositories {
  
   CategoryGroupHierarchyRepository   : ICategoryGroupHierarchyRepository,
   CategoryGroupRepository            : ICategoryGroupRepository,
-  ReportPeriodRepository             : IReportPeriodRepository,
+  ReportPeriodRepository             : IReportingPeriodRepository,
   YearRepository                     : IYearRepository,
 
   MasterValueRepository              : IMasterValueRepository

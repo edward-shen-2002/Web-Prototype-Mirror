@@ -1,5 +1,22 @@
-import ICategoryRepository from "./interface";
+import ICategoryGroupRepository from "./interface";
+import IMongoRepository from '../mongo';
+import Category from "../../entities/Category";
 
-export default class CategoryRepository implements ICategoryRepository {
+export default class CategoryGroupRepository implements IMongoRepository<ICategoryGroupRepository<Category>> {
+  create(item: ICategoryGroupRepository<Category>): Promise<Boolean> {
+    throw new Error("Method not implemented.");
+  }
+  update(id: string, item: ICategoryGroupRepository<Category>): Promise<Boolean> {
+    throw new Error("Method not implemented.");
+  }
+  delete(id: string): Promise<Boolean> {
+    throw new Error("Method not implemented.");
+  }
+  find(item: ICategoryGroupRepository<Category>): Promise<ICategoryGroupRepository<Category>[]> {
+    throw new Error("Method not implemented.");
+  }
+  findOne(id: string): Promise<ICategoryGroupRepository<Category>> {
+    throw new Error("Method not implemented.");
+  }
   
 }

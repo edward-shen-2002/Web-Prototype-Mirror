@@ -1,5 +1,22 @@
 import IProgramRepository from "./interface";
+import IMongoRepository from '../mongo';
+import Program from "../../entities/Program";
 
-export default class ProgramRepository implements IProgramRepository {
+export default class ProgramRepository implements IMongoRepository<IProgramRepository<Program>> {
+  create(item: IProgramRepository<Program>): Promise<Boolean> {
+    throw new Error("Method not implemented.");
+  }
+  update(id: string, item: IProgramRepository<Program>): Promise<Boolean> {
+    throw new Error("Method not implemented.");
+  }
+  delete(id: string): Promise<Boolean> {
+    throw new Error("Method not implemented.");
+  }
+  find(item: IProgramRepository<Program>): Promise<IProgramRepository<Program>[]> {
+    throw new Error("Method not implemented.");
+  }
+  findOne(id: string): Promise<IProgramRepository<Program>> {
+    throw new Error("Method not implemented.");
+  }
   
 }

@@ -1,5 +1,3 @@
 import { IRepository } from "../interface";
 
-export default interface IMasterValueRepository extends IRepository {
-
-} 
+export default interface IMasterValueRepository<T> extends IRepository<T> {} 
