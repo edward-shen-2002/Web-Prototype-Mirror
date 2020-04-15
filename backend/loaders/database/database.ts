@@ -1,10 +1,10 @@
-import * as mongoose from 'mongoose'
+import mongoose from 'mongoose'
 
 import { DATABASE_KEY } from '../../config/database'
 
 import { IOptions, IDatabase } from './interface'
 
-import IDataAccess from '../../dataAccess/interface'
+import IRepositories from '../../repositories/interface'
 
 const logTag = '[DB][MongoDB]: '
 
@@ -14,14 +14,14 @@ const defaultOptions: IOptions = {
 }
 
 export default class Database implements IDatabase {
-  public models: IDataAccess
+  public repositories: IRepositories
 
   public async initialize (customOptions = defaultOptions) {
     try {
       console.log(logTag, 'Initializing...')
       await this.initializeMongoose()
 
-      this.loadModels()
+      this.loadRepositories()
 
       await this.applyOptions({ ...defaultOptions, ...customOptions })
 
@@ -36,7 +36,7 @@ export default class Database implements IDatabase {
       console.log(logTag, 'Applying options...')
   
       if(shouldWipeDatabase) await this.wipeDatabase()
-      if(shouldCreateDummyData) await this.createDummyData(this.models)
+      if(shouldCreateDummyData) await this.createDummyData(this.repositories)
   
       console.log(logTag, 'Applied options')
     } catch(error) {
@@ -44,26 +44,8 @@ export default class Database implements IDatabase {
     }
   }
 
-  public loadModels() {
-    if(this.models) return
+  public loadRepositories() {
 
-    this.models = {
-      UserModel: require('../../models/User'),
-      
-      OrganizationModel: require('../../models/Organization'),
-      OrganizationGroupModel: require('../../models/OrganizationGroup'),
-
-      ProgramModel: require('../../models/Program'),
-      SubmissionModel: require('../../models/Submission'),
-      TemplateModel: require('../../models/Template'),
-
-      CategoryGroupHierarchyModel: require('../../models/CategoryGroupHierarchy'),
-      CategoryGroupModel: require('../../models/CategoryGroup'),
-      ReportPeriodModel: require('../../models/ReportPeriod'),
-      YearModel: require('../../models/Year'),
-
-      MasterValueModel: require('../../models/MasterValue')
-    }
   }
 
   public async wipeDatabase() {
