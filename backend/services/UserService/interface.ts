@@ -1,9 +1,12 @@
 import User from "../../entities/User"
 
-type GetUserByUsername = (username: string) => User
-type GetUserByUserID = (userID: string) => User
-
 export default interface IUserService {
-  getUserByUsername : GetUserByUsername
-  getUserByUserID   : GetUserByUserID
+  login           : () => void
+  register        : (user: object) => void 
+  logout          : () => void
+
+  verifyEmail     : (code: string) => void
+
+  // Account management
+  changePassword  : (password: string) => void
 }

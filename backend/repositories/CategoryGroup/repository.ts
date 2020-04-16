@@ -2,7 +2,7 @@ import ICategoryGroupRepository from "./interface";
 import IMongoRepository from '../mongo';
 import Category from "../../entities/Category";
 
-export default class CategoryGroupRepository implements IMongoRepository<ICategoryGroupRepository<Category>> {
+export default class CategoryGroupRepository implements ICategoryGroupRepository<Category> {
   create(item: ICategoryGroupRepository<Category>): Promise<Boolean> {
     throw new Error("Method not implemented.");
   }

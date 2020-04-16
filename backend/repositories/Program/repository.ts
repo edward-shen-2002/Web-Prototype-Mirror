@@ -1,8 +1,7 @@
 import IProgramRepository from "./interface";
-import IMongoRepository from '../mongo';
 import Program from "../../entities/Program";
 
-export default class ProgramRepository implements IMongoRepository<IProgramRepository<Program>> {
+export default class ProgramRepository implements IProgramRepository<Program> {
   create(item: IProgramRepository<Program>): Promise<Boolean> {
     throw new Error("Method not implemented.");
   }

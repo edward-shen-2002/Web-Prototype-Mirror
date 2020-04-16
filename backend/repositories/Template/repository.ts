@@ -1,8 +1,7 @@
 import ITemplateRepository from "./interface";
-import IMongoRepository from '../mongo';
 import Template from "../../entities/Template";
 
-export default class TemplateRepository implements IMongoRepository<ITemplateRepository<Template>> {
+export default class TemplateRepository implements ITemplateRepository<Template> {
   create(item: ITemplateRepository<Template>): Promise<Boolean> {
     throw new Error("Method not implemented.");
   }

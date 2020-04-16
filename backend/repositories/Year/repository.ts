@@ -1,8 +1,7 @@
 import IYearRepository from "./interface";
-import IMongoRepository from '../mongo';
 import Year from "../../entities/Year";
 
-export default class YearRepository implements IMongoRepository<IYearRepository<Year>> {
+export default class YearRepository implements IYearRepository<Year> {
   create(item: IYearRepository<Year>): Promise<Boolean> {
     throw new Error("Method not implemented.");
   }

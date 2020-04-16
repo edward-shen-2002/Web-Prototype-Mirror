@@ -1,8 +1,7 @@
 import ISubmissionRepository from "./interface";
-import IMongoRepository from '../mongo';
 import Submission from "../../entities/Submission";
 
-export default class SubmissionRepository implements IMongoRepository<ISubmissionRepository<Submission>> {
+export default class SubmissionRepository implements ISubmissionRepository<Submission> {
   create(item: ISubmissionRepository<Submission>): Promise<Boolean> {
     throw new Error("Method not implemented.");
   }

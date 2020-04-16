@@ -1,8 +1,7 @@
 import IMasterValueRepository from "./interface";
-import IMongoRepository from '../mongo';
 import MasterValue from "../../entities/MasterValue";
 
-export default class MasterValueRepository implements IMongoRepository<IMasterValueRepository<MasterValue>> {
+export default class MasterValueRepository implements IMasterValueRepository<MasterValue> {
   create(item: IMasterValueRepository<MasterValue>): Promise<Boolean> {
     throw new Error("Method not implemented.");
   }

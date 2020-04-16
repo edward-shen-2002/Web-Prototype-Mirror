@@ -1,8 +1,8 @@
 import IUserRepository from "./interface";
-import IMongoRepository from '../mongo';
 import User from "../../entities/User";
 
-export default class UserRepository implements IMongoRepository<IUserRepository<User>> {
+export default class UserRepository implements IUserRepository<User> {
+  findActiveUserByUsername: (username: string) => User;
   create(item: IUserRepository<User>): Promise<Boolean> {
     throw new Error("Method not implemented.");
   }
@@ -18,5 +18,4 @@ export default class UserRepository implements IMongoRepository<IUserRepository<
   findOne(id: string): Promise<IUserRepository<User>> {
     throw new Error("Method not implemented.");
   }
-  
 }

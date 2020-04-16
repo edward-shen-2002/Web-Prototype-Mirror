@@ -1,8 +1,7 @@
 import IReportingPeriodRepository from "./interface";
-import IMongoRepository from '../mongo';
 import ReportingPeriod from "../../entities/ReportingPeriod";
 
-export default class ReportPeriodRepository implements IMongoRepository<IReportingPeriodRepository<ReportingPeriod>> {
+export default class ReportPeriodRepository implements IReportingPeriodRepository<ReportingPeriod> {
   create(item: IReportingPeriodRepository<ReportingPeriod>): Promise<Boolean> {
     throw new Error("Method not implemented.");
   }

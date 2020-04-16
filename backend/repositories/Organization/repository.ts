@@ -1,8 +1,7 @@
 import IOrganizationRepository from "./interface";
-import IMongoRepository from '../mongo';
 import Organization from "../../entities/Organization";
 
-export default class OrganizationRepository implements IMongoRepository<IOrganizationRepository<Organization>> {
+export default class OrganizationRepository implements IOrganizationRepository<Organization> {
   create(item: IOrganizationRepository<Organization>): Promise<Boolean> {
     throw new Error("Method not implemented.");
   }

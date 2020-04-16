@@ -1,8 +1,7 @@
 import IAttributeRepository from './interface'
-import IMongoRepository from '../mongo';
 import Attribute from '../../entities/Attribute';
 
-export default class AttributeRepository implements IMongoRepository<IAttributeRepository<Attribute>> {
+export default class AttributeRepository implements IAttributeRepository<Attribute> {
   create(item: IAttributeRepository<Attribute>): Promise<Boolean> {
     throw new Error("Method not implemented.");
   }
