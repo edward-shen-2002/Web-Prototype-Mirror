@@ -1,4 +1,4 @@
-import { Schema, Document } from 'mongoose'
+import { Document } from 'mongoose'
 import { IId } from '../interface';
 
 export interface ISubmission {

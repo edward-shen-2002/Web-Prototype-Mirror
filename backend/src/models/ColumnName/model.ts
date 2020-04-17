@@ -1,8 +1,8 @@
 import { Schema, model } from 'mongoose'
-import ICategoryDocument from './interface'
+import IColumnNameDocument from './interface'
 
-export default model<ICategoryDocument>(
-  'Category', 
+export default model<IColumnNameDocument>(
+  'ColumnName', 
   new Schema(
     {
       value: { type: String, required: true }

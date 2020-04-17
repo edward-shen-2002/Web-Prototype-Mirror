@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from '../../models/ColumnName/node_modules/mongoose'
 
 import { DATABASE_KEY } from '../../config/database'
 

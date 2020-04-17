@@ -1,17 +1,11 @@
-import { Schema, Document } from 'mongoose'
+import { Document } from 'mongoose'
 import { IId } from '../interface';
 
 export interface IMasterValue {
-  organizationId    : IId
-
-  year              : number
-  reportPeriod      : string
-  form              : string
-  
-  attributeId       : IId
-  categoryId        : IId
-  categoryGroupIds  : Array<IId>
-  value             : string
+  chartOfAccountGroupLeafId
+  chartOfAccountId
+  columnNameId
+  value
 }
 
 export default interface IMasterValueDocument extends IMasterValue, Document {}
