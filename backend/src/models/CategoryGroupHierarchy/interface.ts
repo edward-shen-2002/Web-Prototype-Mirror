@@ -1,7 +1,8 @@
-import { Schema, model, Document } from 'mongoose';
+import { Document } from 'mongoose';
+import { IId } from '../interface';
 
-interface ICategoryGroupHierarchy {
-  submissionCategoryID  : Schema.Types.ObjectId;
+export interface ICategoryGroupHierarchy {
+  submissionCategoryId  : IId
   hierarchy             : object
 }
 

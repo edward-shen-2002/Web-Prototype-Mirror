@@ -1,6 +1,6 @@
 import { Document } from 'mongoose'
 
-interface IReportPeriod {
+export interface IReportPeriod {
   value: string
 }
 

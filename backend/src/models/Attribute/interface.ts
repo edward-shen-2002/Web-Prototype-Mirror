@@ -1,6 +1,6 @@
 import { Document } from 'mongoose'
 
-interface IAttribute {
+export interface IAttribute {
   value: string
 }
 

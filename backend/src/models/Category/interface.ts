@@ -1,6 +1,6 @@
 import { Document } from 'mongoose'
 
-interface ICategory {
+export interface ICategory {
   value: string
 }
 

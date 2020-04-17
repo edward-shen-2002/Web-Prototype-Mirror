@@ -1,6 +1,6 @@
 import { Document } from 'mongoose'
 
-interface IProgram {
+export interface IProgram {
   name: string
   code: string
 }

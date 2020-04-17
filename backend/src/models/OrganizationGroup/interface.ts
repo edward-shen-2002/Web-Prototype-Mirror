@@ -1,6 +1,6 @@
-import { Schema, Document } from 'mongoose';
+import { Document } from 'mongoose';
 
-interface IOrganizationGroup {
+export interface IOrganizationGroup {
   name: string
 }
 

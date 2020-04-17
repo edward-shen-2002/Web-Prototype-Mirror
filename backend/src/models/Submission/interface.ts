@@ -1,10 +1,11 @@
 import { Schema, Document } from 'mongoose'
+import { IId } from '../interface';
 
-interface ISubmission {
+export interface ISubmission {
   name            : string
-  organizationID  : Schema.Types.ObjectId
-  templateID      : Schema.Types.ObjectId
-  programID       : Schema.Types.ObjectId
+  organizationId  : IId
+  templateId      : IId
+  programId       : IId
   workbookData    : object
   phase           : string
   status          : string

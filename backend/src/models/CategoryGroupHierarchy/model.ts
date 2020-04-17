@@ -5,8 +5,8 @@ export default model<ICategoryGroupHierarchyDocument>(
   'CategoryGroupHierarchy', 
   new Schema(
     {
-      submissionCategoryID: { type: Schema.Types.ObjectId, ref: 'SubmissionCategory' },
-      hierarchy: { type: Object, default: {} }
+      submissionCategoryId  : { type: Schema.Types.ObjectId, ref: 'SubmissionCategory' },
+      hierarchy             : { type: Object, default: {} }
     }, 
     { minimize: false }
   )

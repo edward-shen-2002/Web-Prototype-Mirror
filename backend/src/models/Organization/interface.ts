@@ -1,18 +1,19 @@
 import { Schema, Document } from 'mongoose';
+import { IId } from '../interface';
 
-interface IOrganization {
+export interface IOrganization {
   name                : string
   code                : string
-  address: string
+  address             : string
   
-  organizationGroupID : Schema.Types.ObjectId
+  organizationGroupId : IId
 
-  managerUserIDs      : Array<Schema.Types.ObjectId>
-  contactUserID       : Schema.Types.ObjectId
-  authorizedUserID    : Schema.Types.ObjectId
+  managerUserIds      : Array<IId>
+  contactUserId       : IId
+  authorizedUserId    : IId
 
   location            : string
-  programIDs          : Array<Schema.Types.ObjectId>
+  programIds          : Array<IId>
 }
 
 export default interface IOrganizationDocument extends IOrganization, Document {}

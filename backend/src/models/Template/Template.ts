@@ -11,7 +11,7 @@ export default model<ITemplateDocument>(
     
       reportPeriod          : { type: String, required: true },
     
-      submissionCategoryID  : { type: Schema.Types.ObjectId, ref: 'SubmissionCategory' },
+      submissionCategoryId  : { type: Schema.Types.ObjectId, ref: 'SubmissionCategory' },
       workbookData          : {},
     
       isPublished           : { type: Boolean, default: false }

@@ -12,6 +12,8 @@ import IYearModel from './Year/interface';
 import IMasterValueDocument from './MasterValue/interface';
 import ITemplateDocument from './Template/interface'
 
+export type IId = string | object
+
 export default interface IModels {
   UserModel                     : Model<IUserDocument>,
 

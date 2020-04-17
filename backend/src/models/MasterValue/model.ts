@@ -37,22 +37,18 @@ export default model<IMasterValueDocument>(
   'MasterValue', 
   new Schema(
     {
-      organizationId: { type: ObjectId, required: true },
+      organizationId      : { type: ObjectId, required: true },
     
-      year: { type: Number, required: true },
-      reportPeriod: { type: String },
-      form: { type: String },
+      year                : { type: Number, required: true },
+      reportPeriod        : { type: String },
+      form                : { type: String },
       
-      attributeID: { type: ObjectId, ref: 'Attribute' },
-      categoryID: { type: ObjectId, ref: 'Category' },
+      attributeId         : { type: ObjectId, ref: 'Attribute' },
+      categoryId          : { type: ObjectId, ref: 'Category' },
     
-      categoryGroupIDs: [
-        {
-          type: ObjectId, ref: 'CategoryGroup'
-        }
-      ],
+      categoryGroupIds    : [{ type: ObjectId, ref: 'CategoryGroup' }],
     
-      value: { type: String, required: true }
+      value               : { type: String, required: true }
     }, 
     { minimize: false }
   )

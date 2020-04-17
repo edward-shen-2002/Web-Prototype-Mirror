@@ -7,19 +7,19 @@ export default model<IOrganizationDocument>(
   'Organization', 
   new Schema(
     {
-      name: { type: String, required: true },
-      code: { type: String, required: true, unique: true },
-      address: { type: String, default: '' },
+      name                : { type: String, required: true },
+      code                : { type: String, required: true, unique: true },
+      address             : { type: String, default: '' },
       
-      organizationGroupID: { type: ObjectId, ref: 'OrganizationGroup' },
+      organizationGroupId : { type: ObjectId, ref: 'OrganizationGroup' },
     
-      managerUserIDs: [ { type: ObjectId, ref: 'User' } ],
-      contactUserID: { type: ObjectId, ref: 'User' },
-      authorizedUserID: { type: ObjectId, ref: 'User' },
+      managerUserIds      : [ { type: ObjectId, ref: 'User' } ],
+      contactUserId       : { type: ObjectId, ref: 'User' },
+      authorizedUserId    : { type: ObjectId, ref: 'User' },
     
-      location: { type: String, default: '' },
+      location            : { type: String, default: '' },
     
-      programIDs: [ { type: ObjectId, ref: 'Program' } ]
+      programIds          : [ { type: ObjectId, ref: 'Program' } ]
     }, 
     { minimize: false }
   )

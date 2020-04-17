@@ -1,10 +1,11 @@
 import { Schema, Document } from 'mongoose'
+import { IId } from '../interface';
 
-interface ITemplate {
+export interface ITemplate {
   name                  : string
   year                  : number
   reportPeriod          : string
-  submissionCategoryID  : Schema.Types.ObjectId
+  submissionCategoryId  : IId
   workbookData          : object
   
   isPublished           : boolean

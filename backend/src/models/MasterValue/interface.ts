@@ -1,15 +1,16 @@
 import { Schema, Document } from 'mongoose'
+import { IId } from '../interface';
 
-interface IMasterValue {
-  organizationId    : Schema.Types.ObjectId
+export interface IMasterValue {
+  organizationId    : IId
 
   year              : number
   reportPeriod      : string
   form              : string
   
-  attributeID       : Schema.Types.ObjectId
-  categoryID        : Schema.Types.ObjectId
-  categoryGroupIDs  : Array<Schema.Types.ObjectId>
+  attributeId       : IId
+  categoryId        : IId
+  categoryGroupIds  : Array<IId>
   value             : string
 }
 

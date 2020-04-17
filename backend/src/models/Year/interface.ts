@@ -1,6 +1,6 @@
 import { Document } from 'mongoose'
 
-interface IYear {
+export interface IYear {
   value: string
 }
 
