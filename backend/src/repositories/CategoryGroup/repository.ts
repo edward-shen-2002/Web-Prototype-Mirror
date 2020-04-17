@@ -1,5 +1,4 @@
 import ICategoryGroupRepository from "./interface";
-import IMongoRepository from '../mongo';
 import Category from "../../entities/Category";
 
 export default class CategoryGroupRepository implements ICategoryGroupRepository<Category> {
