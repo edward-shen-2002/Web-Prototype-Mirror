@@ -3,7 +3,7 @@ import IChartOfAccountsGroup from './interface';
 
 const ObjectId = Schema.Types.ObjectId;
 
-export default model<IChartOfAccountsGroup>(
+const ChartOfAccountsGroupModel = model<IChartOfAccountsGroup>(
   'ChartOfAccountsGroup', 
   new Schema(
     {
@@ -12,3 +12,5 @@ export default model<IChartOfAccountsGroup>(
     { minimize: false }
   )
 )
+
+export default ChartOfAccountsGroupModel

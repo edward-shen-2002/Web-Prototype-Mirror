@@ -33,7 +33,7 @@ const ObjectId = Schema.Types.ObjectId;
  * This is just one example of indexing and is not fully optimized or researched. 
  * However, it is much more efficient than a flat list due to the fact that it acts as a multi-layer map and reduces the search results on every index layer.
  */
-export default model<IMasterValueDocument>(
+const MasterValueModel = model<IMasterValueDocument>(
   'MasterValue', 
   new Schema(
     {
@@ -53,3 +53,5 @@ export default model<IMasterValueDocument>(
     { minimize: false }
   )
 )
+
+export default MasterValueModel

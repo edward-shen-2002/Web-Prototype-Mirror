@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 
 import IOrganizationGroupDocument from './interface'
 
-export default model<IOrganizationGroupDocument>(
+const OrganizationGroupModel = model<IOrganizationGroupDocument>(
   'OrganizationGroup', 
   new Schema(
     {
@@ -11,3 +11,5 @@ export default model<IOrganizationGroupDocument>(
     { minimize: false }
   )
 );
+
+export default OrganizationGroupModel

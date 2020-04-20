@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose'
 import IColumnNameDocument from './interface'
 
-export default model<IColumnNameDocument>(
+const ColumnNameModel = model<IColumnNameDocument>(
   'ColumnName', 
   new Schema(
     {
@@ -10,3 +10,5 @@ export default model<IColumnNameDocument>(
     { minimize: false }
   )
 )
+
+export default ColumnNameModel

@@ -1,7 +1,7 @@
 import { Document } from 'mongoose'
 
-export interface IReportPeriod {
+export interface IReportingPeriod {
   value: string
 }
 
-export default interface IReportPeriodDocument extends IReportPeriod, Document {}
+export default interface IReportPeriodDocument extends IReportingPeriod, Document {}

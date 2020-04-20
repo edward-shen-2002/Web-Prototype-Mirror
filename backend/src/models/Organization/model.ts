@@ -3,7 +3,7 @@ import IOrganizationDocument from './interface';
 
 const ObjectId = Schema.Types.ObjectId;
 
-export default model<IOrganizationDocument>(
+const OrganizationModel = model<IOrganizationDocument>(
   'Organization', 
   new Schema(
     {
@@ -24,3 +24,5 @@ export default model<IOrganizationDocument>(
     { minimize: false }
   )
 );
+
+export default OrganizationModel

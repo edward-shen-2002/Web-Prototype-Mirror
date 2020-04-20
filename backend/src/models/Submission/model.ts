@@ -3,7 +3,7 @@ import ISubmissionDocument from './interface';
 
 const ObjectId = Schema.Types.ObjectId;
 
-export default model<ISubmissionDocument>(
+const SubmissionModel = model<ISubmissionDocument>(
   'Submission', 
   new Schema(
     {
@@ -21,4 +21,6 @@ export default model<ISubmissionDocument>(
     }, 
     { minimize: false, timestamps: true }
   )
-);
+)
+
+export default SubmissionModel

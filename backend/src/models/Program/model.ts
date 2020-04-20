@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 import IProgramDocument from './interface';
 
-export default model<IProgramDocument>(
+const ProgramModel = model<IProgramDocument>(
   'Program', 
   new Schema(
     {
@@ -11,3 +11,5 @@ export default model<IProgramDocument>(
     { minimize: false }
   )
 )
+
+export default ProgramModel

@@ -1,7 +1,7 @@
 import { Schema, model, Document } from 'mongoose'
 import ITemplateDocument from './interface'
 
-export default model<ITemplateDocument>(
+const TemplateModel = model<ITemplateDocument>(
   'Template', 
   new Schema(
     {
@@ -19,3 +19,5 @@ export default model<ITemplateDocument>(
     { minimize: false }
   )
 )
+
+export default TemplateModel

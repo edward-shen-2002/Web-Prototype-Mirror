@@ -83,4 +83,6 @@ const User = new Schema(
 
 User.plugin(PassportLocalMongoose, { usernameUnique: false, findByUsername, passwordValidator })
 
-export default model<IUserDocument>('User', User)
+const UserModel = model<IUserDocument>('User', User)
+
+export default UserModel

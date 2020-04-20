@@ -1,9 +1,11 @@
 import { Schema, model } from 'mongoose';
-import IReportPeriodDocument from './interface';
+import IReportingPeriodDocument from './interface'
 
-export default model<IReportPeriodDocument>(
+const ReportingPeriodModel = model<IReportingPeriodDocument>(
   'ReportPeriod', 
   new Schema({
     value: { type: String }
   }, { minimize: false })
-);
+)
+
+export default ReportingPeriodModel

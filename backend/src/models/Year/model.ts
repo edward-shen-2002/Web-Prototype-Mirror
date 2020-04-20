@@ -1,7 +1,7 @@
-import { Schema, model } from 'mongoose';
-import IYearDocument from './interface';
+import { Schema, model } from 'mongoose'
+import IYearDocument from './interface'
 
-export default model<IYearDocument>(
+const YearModel = model<IYearDocument>(
   'Year', 
   new Schema(
     {
@@ -9,4 +9,6 @@ export default model<IYearDocument>(
     }, 
     { minimize: false }
   )
-);
+)
+
+export default YearModel
