@@ -21,7 +21,7 @@ import Program from "../entities/Program"
 import Submission from "../entities/Submission"
 import Template from "../entities/Template"
 import CategoryGroup from "../entities/ChartOfAccountsHierarchy"
-import CategoryGroupHierarchy from "../entities/ChartOfAccouns"
+import ChartOfAccounts from "../entities/ChartOfAccouns"
 import ReportingPeriod from "../entities/ReportingPeriod"
 import Year from "../entities/Year"
 import MasterValue from "../entities/MasterValue"
@@ -52,7 +52,7 @@ export default interface IRepositories {
   SubmissionRepository               : ISubmissionRepository<Submission>,
   TemplateRepository                 : ITemplateRepository<Template>,
  
-  CategoryGroupHierarchyRepository   : IChartOfAccountsHierarchyRepository<CategoryGroupHierarchy>,
+  CategoryGroupHierarchyRepository   : IChartOfAccountsHierarchyRepository<ChartOfAccounts>,
   CategoryGroupRepository            : ICategoryGroupRepository<CategoryGroup>,
   ReportPeriodRepository             : IReportingPeriodRepository<ReportingPeriod>,
   YearRepository                     : IYearRepository<Year>,
