@@ -6,8 +6,6 @@ import cors from "cors"
 import passport from "passport"
 import compression from "compression"
 
-import serverSetup from "./setup"
-
 const logger = require("morgan")
 
 const _init = async () => {
@@ -27,7 +25,6 @@ const _init = async () => {
   app.use(passport.initialize())
   
   // Initialize database, authentication, routes, etc ...
-  await serverSetup(app, passport, { wipeDatabase: false, createDummyUser: true })
 
   const port = app.get("port")
 

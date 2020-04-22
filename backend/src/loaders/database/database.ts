@@ -13,6 +13,9 @@ const defaultOptions: IOptions = {
   shouldCreateDummyData   : false
 }
 
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// TODO: DO NOT LOAD REPOSITORIES HERE - Singleton database connection
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 export default class Database implements IDatabase {
   public repositories: IRepositories
 

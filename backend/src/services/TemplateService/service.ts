@@ -17,11 +17,15 @@ export default class TemplateService implements ITemplateService {
       .catch((error) => { throw error })
   }
 
-  public deleteTemplate(id: IId) {
+  public async deleteTemplate(id: IId) {
     return this.templateRepository.delete(id)
   }
 
-  public updateTemplate(id: IId, template: Template) {
+  public async updateTemplate(id: IId, template: Template) {
     return this.templateRepository.update(id, template)
+  }
+
+  public async findTemplate(template: Template) {
+    return this.templateRepository.find(template)
   }
 }
