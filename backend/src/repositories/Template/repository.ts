@@ -3,14 +3,24 @@ import Template from "../../entities/Template";
 import TemplateModel from "../../models/Template";
 import { IId } from "../../models/interface";
 import StatusRepository from "../Status";
+import UserRepository from "../User";
+import { ITemplate } from "../../models/Template/interface";
+import { Service } from "typedi";
+import TemplateTypeRepository from "../TemplateType";
+import BaseRepository from "../repository";
 
 // MongoDB implementation
-export default class TemplateRepository implements ITemplateRepository<Template> {
+@Service()
+export default class TemplateRepository extends BaseRepository<Template> implements ITemplateRepository<Template>{
   constructor(
-    private statusRepository: StatusRepository
-  ) {}
+    private statusRepository: StatusRepository,
+    private userRepository: UserRepository,
+    private templateTypeRepository: TemplateTypeRepository
+  ) {
+    super(TemplateModel)
+  }
 
-  create(
+  public async create(
     {
       name,
       templateData,
@@ -20,37 +30,64 @@ export default class TemplateRepository implements ITemplateRepository<Template>
       expirationDate,
       statusId
     }: Template
-  ): Promise<Boolean> {
+  ): Promise<void> {
     return (
-      TemplateModel.create(
-        {
-          name,
-          templateData,
-          templateTypeId,
-          userCreatorId,
-          creationDate,
-          expirationDate,
-          statusId
-        }
-      )
-      .then(() => true)
-      .catch(() => false)
+      this.statusRepository.validate(statusId)
+        .then(() => this.userRepository.validate(userCreatorId))
+        .then(() => this.templateTypeRepository.validate(templateTypeId))
+        .then(
+          () => (
+            TemplateModel.create(
+              {
+                name,
+                templateData,
+                templateTypeId,
+                userCreatorId,
+                creationDate,
+                expirationDate,
+                statusId
+              }
+            )
+          )
+        )
+        .then(() => {})
+        .catch((error) => { throw error })
     )
   }
 
-  update(id: IId, item: Template): Promise<Boolean> {
-    throw new Error("Method not implemented.");
-  }
-
-  delete(id: IId): Promise<Boolean> {
-    throw new Error("Method not implemented.");
-  }
-
-  find(item: Template): Promise<Template[]> {
-    throw new Error("Method not implemented.");
-  }
-
-  findOne(id: IId): Promise<Template> {
-    throw new Error("Method not implemented.");
+  public async update(
+    id: IId, 
+    {
+      name,
+      templateData,
+      templateTypeId,
+      userCreatorId,
+      creationDate,
+      expirationDate,
+      statusId
+    }: Template
+  ): Promise<void> {
+    return (
+      new Promise(() => { if(userCreatorId) return this.userRepository.validate(userCreatorId) })
+        .then(() => { if(statusId) return this.statusRepository.validate(statusId) })
+        .then(
+          () => (
+            TemplateModel.findByIdAndUpdate(
+              id, 
+              {
+                name,
+                templateData,
+                templateTypeId,
+                userCreatorId,
+                creationDate,
+                expirationDate,
+                statusId
+              } as ITemplate
+            )
+          )
+        )
+        .then(() => {})
+        .catch((error) => { throw error })
+    )
   }
 }

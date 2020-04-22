@@ -29,9 +29,9 @@ import { IId } from "../models/interface"
 
 // https://medium.com/@erickwendel/generic-repository-with-typescript-and-node-js-731c10a1b98e
 interface IWrite<T> {
-  create(item: T): Promise<Boolean>
-  update(id: IId, item: T): Promise<Boolean>
-  delete(id: IId): Promise<Boolean>
+  create(item: T): Promise<void>
+  update(id: IId, item: T): Promise<void>
+  delete(id: IId): Promise<void>
 }
 
 interface IRead<T> {
@@ -39,7 +39,11 @@ interface IRead<T> {
   findOne(id: IId): Promise<T>
 }
 
-export interface IRepository<T> extends IWrite<T>, IRead<T> {
+interface IValidation<T> {
+  validate(id: IId): Promise<void>
+}
+
+export interface IRepository<T> extends IWrite<T>, IRead<T>, IValidation<T> {
   
 }
 

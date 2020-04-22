@@ -3,19 +3,23 @@ import User from "../../entities/User";
 
 export default class UserRepository implements IUserRepository<User> {
   findActiveUserByUsername: (username: string) => User;
-  create(item: IUserRepository<User>): Promise<Boolean> {
+  create(item: User): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  update(id: string, item: IUserRepository<User>): Promise<Boolean> {
+  update(id: import("../../models/interface").IId, item: User): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  delete(id: string): Promise<Boolean> {
+  delete(id: import("../../models/interface").IId): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  find(item: IUserRepository<User>): Promise<IUserRepository<User>[]> {
+  find(item: User): Promise<User[]> {
     throw new Error("Method not implemented.");
   }
-  findOne(id: string): Promise<IUserRepository<User>> {
+  findOne(id: import("../../models/interface").IId): Promise<User> {
     throw new Error("Method not implemented.");
   }
+  validate(id: import("../../models/interface").IId): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
 }

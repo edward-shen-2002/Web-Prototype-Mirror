@@ -1,20 +1,25 @@
 import { Schema, model, Document } from 'mongoose'
 import ITemplateDocument from './interface'
 
+const ObjectId = Schema.Types.ObjectId
+
 const TemplateModel = model<ITemplateDocument>(
   'Template', 
   new Schema(
     {
       name                  : { type: String, required: true },
     
-      year                  : { type: Number, required: true },
-    
-      reportPeriod          : { type: String, required: true },
-    
-      submissionCategoryId  : { type: Schema.Types.ObjectId, ref: 'SubmissionCategory' },
-      workbookData          : {},
-    
-      isPublished           : { type: Boolean, default: false }
+      templateData          : { type: Object },
+
+      templateTypeId        : { type: ObjectId, ref: 'TemplateType' },
+
+      userCreatorId         : { type: ObjectId, ref: 'User' },
+
+      creationDate          : { type: Date },
+
+      expirationDate        : { type: Date },
+
+      statusId              : { type: ObjectId, ref: 'Status' }
     }, 
     { minimize: false }
   )

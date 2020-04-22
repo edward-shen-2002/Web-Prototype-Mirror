@@ -1,14 +1,15 @@
 import IStatusRepository from "./interface";
 import Status from "../../entities/Status";
+import BaseRepository from "../repository";
 
-export default class StatusRepository implements IStatusRepository<Status> {
-  create(item: Status): Promise<Boolean> {
+export default class StatusRepository extends BaseRepository<Status> implements IStatusRepository<Status> {
+  create(item: Status): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  update(id: import("../../models/interface").IId, item: Status): Promise<Boolean> {
+  update(id: import("../../models/interface").IId, item: Status): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  delete(id: import("../../models/interface").IId): Promise<Boolean> {
+  delete(id: import("../../models/interface").IId): Promise<void> {
     throw new Error("Method not implemented.");
   }
   find(item: Status): Promise<Status[]> {
