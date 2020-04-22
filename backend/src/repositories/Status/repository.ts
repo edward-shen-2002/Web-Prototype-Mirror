@@ -1,8 +1,14 @@
 import IStatusRepository from "./interface";
 import Status from "../../entities/Status";
 import BaseRepository from "../repository";
+import { Service } from "typedi";
+import StatusModel from "../../models/Status";
 
+@Service()
 export default class StatusRepository extends BaseRepository<Status> implements IStatusRepository<Status> {
+  constructor() {
+    super(StatusModel)
+  }
   create(item: Status): Promise<void> {
     throw new Error("Method not implemented.");
   }

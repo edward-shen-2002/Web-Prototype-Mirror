@@ -1,14 +1,16 @@
 import ITemplateService from "./interface";
 import Template from "../../entities/Template";
 import { IId } from "../../models/interface";
-import { Service } from "typedi";
+import Container, { Service, Inject } from "typedi";
 import TemplateRepository from "../../repositories/Template";
 
 @Service()
 export default class TemplateService implements ITemplateService {
-  constructor(
-    private templateRepository: TemplateRepository
-  ) {}
+  private templateRepository: TemplateRepository
+
+  constructor() {
+    this.templateRepository = Container.get(TemplateRepository)
+  }
 
   public async createTemplate(
     template: Template
@@ -26,6 +28,10 @@ export default class TemplateService implements ITemplateService {
   }
 
   public async findTemplate(template: Template) {
+    // console.log(this.templateRepository)
+    // const repository = Container.get(TemplateRepository)
+    // return repository.find(template)
+
     return this.templateRepository.find(template)
   }
 }

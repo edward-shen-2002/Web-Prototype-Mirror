@@ -1,10 +1,9 @@
-import mongoose from '../../models/ColumnName/node_modules/mongoose'
-
-import { DATABASE_KEY } from '../../config/database'
+import mongoose from 'mongoose'
 
 import { IOptions, IDatabase } from './interface'
 
 import IRepositories from '../../repositories/interface'
+import { DATABASE_KEY } from '../../configs/database'
 
 const logTag = '[DB][MongoDB]: '
 
@@ -15,6 +14,7 @@ const defaultOptions: IOptions = {
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // TODO: DO NOT LOAD REPOSITORIES HERE - Singleton database connection
+// TODO: Change to promise
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 export default class Database implements IDatabase {
   public repositories: IRepositories
@@ -24,13 +24,11 @@ export default class Database implements IDatabase {
       console.log(logTag, 'Initializing...')
       await this.initializeMongoose()
 
-      this.loadRepositories()
-
-      await this.applyOptions({ ...defaultOptions, ...customOptions })
+      // await this.applyOptions({ ...defaultOptions, ...customOptions })
 
       console.log(logTag, 'Initialize successful')
     } catch(error) {
-      throw `${logTag} Failed to initialize`
+      throw `${logTag} Failed to initialize ${error}`
     }
   }
 
@@ -69,7 +67,7 @@ export default class Database implements IDatabase {
   public async initializeMongoose() {
     try {
       console.log(logTag, 'Connecting...')
-      mongoose.set('autoCreate', true)
+      // mongoose.set('autoCreate', true)
 
       await mongoose.connect(
         DATABASE_KEY, 

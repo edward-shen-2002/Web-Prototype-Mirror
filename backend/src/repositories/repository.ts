@@ -17,7 +17,7 @@ export default abstract class BaseRepository<T> implements IRepository<T> {
     throw new Error("Method not implemented.");
   }
 
-  find(item: T): Promise<T[]> {
+  public async find(item: T): Promise<T[]> {
     return (
       this._model.find({ ...item })
         .then((documents) => documents.map((document) => new (document.toObject()) as T))

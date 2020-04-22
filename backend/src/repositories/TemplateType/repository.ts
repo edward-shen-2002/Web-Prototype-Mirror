@@ -2,9 +2,13 @@ import ITemplateTypeRepository from "./interface";
 import TemplateType from "../../entities/TemplateType";
 import { Service } from "typedi";
 import BaseRepository from "../repository";
+import TemplateTypeModel from "../../models/TemplateType/model";
 
 @Service()
 export default class TemplateTypeRepository extends BaseRepository<TemplateType> implements ITemplateTypeRepository<TemplateType> {
+  constructor() {
+    super(TemplateTypeModel)
+  }
   create(item: TemplateType): Promise<void> {
     throw new Error("Method not implemented.");
   }

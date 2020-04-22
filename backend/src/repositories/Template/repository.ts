@@ -5,19 +5,23 @@ import { IId } from "../../models/interface";
 import StatusRepository from "../Status";
 import UserRepository from "../User";
 import { ITemplate } from "../../models/Template/interface";
-import { Service } from "typedi";
+import Container, { Service } from "typedi";
 import TemplateTypeRepository from "../TemplateType";
 import BaseRepository from "../repository";
 
 // MongoDB implementation
 @Service()
 export default class TemplateRepository extends BaseRepository<Template> implements ITemplateRepository<Template>{
-  constructor(
-    private statusRepository: StatusRepository,
-    private userRepository: UserRepository,
-    private templateTypeRepository: TemplateTypeRepository
-  ) {
+  private statusRepository: StatusRepository
+  private userRepository: UserRepository
+  private templateTypeRepository: TemplateTypeRepository
+
+  constructor() {
     super(TemplateModel)
+
+    this.statusRepository = Container.get(StatusRepository)
+    this.userRepository = Container.get(UserRepository)
+    this.templateTypeRepository = Container.get(TemplateTypeRepository)
   }
 
   public async create(

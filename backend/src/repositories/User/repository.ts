@@ -1,6 +1,8 @@
 import IUserRepository from "./interface";
 import User from "../../entities/User";
+import { Service } from "typedi";
 
+@Service()
 export default class UserRepository implements IUserRepository<User> {
   findActiveUserByUsername: (username: string) => User;
   create(item: User): Promise<void> {

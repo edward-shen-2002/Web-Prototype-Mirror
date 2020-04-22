@@ -1,0 +1,16 @@
+# GET http://localhost:3000/root/test/router
+
+POST http://localhost:3000/root/test/router?name=hello HTTP/1.1
+content-type: application/json
+
+{
+  "template": {
+    "name": "sample",
+    "templateData" : {},
+    "templateTypeId": "55",
+    "userCreatorId": "13",
+    "creationDate": "52",
+    "expirationDate": "05/05/2010",
+    "statusId": "51"
+  }
+}

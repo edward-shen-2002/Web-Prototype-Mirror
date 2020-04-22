@@ -37,9 +37,11 @@ const TemplateController = Service(
 
         templateService.updateTemplate(id, template as Template)
           .then(() => res.end())
-          .catch(next)
+          .catch((error) => console.error(error))
       }
     )
+
+    return router
   }
 )
 
