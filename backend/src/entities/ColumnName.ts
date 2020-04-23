@@ -1,5 +1,5 @@
 
 
-export default class ClassName {
+export default class ColumnName {
   
 }

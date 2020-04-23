@@ -12,9 +12,7 @@ export default class TemplateService implements ITemplateService {
     this.templateRepository = Container.get(TemplateRepository)
   }
 
-  public async createTemplate(
-    template: Template
-  ) {
+  public async createTemplate(template: Template) {
     return this.templateRepository.create(template)
       .catch((error) => { throw error })
   }
@@ -28,10 +26,6 @@ export default class TemplateService implements ITemplateService {
   }
 
   public async findTemplate(template: Template) {
-    // console.log(this.templateRepository)
-    // const repository = Container.get(TemplateRepository)
-    // return repository.find(template)
-
     return this.templateRepository.find(template)
   }
 }

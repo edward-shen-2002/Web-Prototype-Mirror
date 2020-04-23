@@ -1,16 +1,16 @@
-# GET http://localhost:3000/root/test/router
+# GET http://localhost:3000/root/templates
 
-POST http://localhost:3000/root/test/router?name=hello HTTP/1.1
+POST http://localhost:3000/root/templates HTTP/1.1
 content-type: application/json
 
 {
   "template": {
     "name": "sample",
     "templateData" : {},
-    "templateTypeId": "55",
-    "userCreatorId": "13",
-    "creationDate": "52",
+    "templateTypeId": "507f191e810c19729de860ee",
+    "userCreatorId": "507f191e810c19729de860ea",
+    "creationDate": "02/03/2009",
     "expirationDate": "05/05/2010",
-    "statusId": "51"
+    "statusId": "507f191e810c19729de860ec"
   }
 }

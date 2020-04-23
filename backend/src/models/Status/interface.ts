@@ -1,7 +1,9 @@
 import { Document } from 'mongoose'
 
 export interface IStatus {
-  value: string
+  name          : string,
+  description   : string,
+  isActive      : boolean
 }
 
 export default interface IStatusDocument extends IStatus, Document {}

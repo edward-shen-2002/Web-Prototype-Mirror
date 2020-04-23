@@ -2,6 +2,7 @@ import { Service } from "typedi"
 import TemplateService from "../../../services/TemplateService"
 import Template from "../../../entities/Template"
 import { Response, NextFunction, Request } from 'express'
+import { convertTemplateOjectToEntity } from "../../../utils/conversion/entity"
 
 const TemplateController = Service(
   [
@@ -9,35 +10,34 @@ const TemplateController = Service(
   ],
   (templateService) => ({ router }) => {
     router.get(
-      '/test/router',
+      '/templates',
       (req: Request, res: Response, next: NextFunction) => {
-        const query = new Template(req.query) 
+        // Get query from middleware -- auth handler
 
-        templateService.findTemplate(query)
+        templateService.findTemplate({} as Template)
           .then((templates) => res.json({ templates }))
           .catch(next)
       }
     )
 
     router.post(
-      '/test/router',
+      '/templates',
       (req: Request, res: Response, next: NextFunction) => {
-        const template = req.body.template as Template 
 
-        templateService.createTemplate(template)
+        templateService.createTemplate(convertTemplateOjectToEntity(req.body.template))
           .then((template) => res.json({ template }))
           .catch(next)
       }
     )
 
     router.put(
-      '/test/router',
+      '/templates',
       (req: Request, res: Response, next: NextFunction) => {
         const { id, template } = req.body
 
         templateService.updateTemplate(id, template as Template)
           .then(() => res.end())
-          .catch((error) => console.error(error))
+          .catch(next)
       }
     )
 

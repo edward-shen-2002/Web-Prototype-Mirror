@@ -94,4 +94,13 @@ export default class TemplateRepository extends BaseRepository<Template> impleme
         .catch((error) => { throw error })
     )
   }
+
+  public async find(query: Template): Promise<Template[]> {
+    let realQuery = {}
+
+    for(let key in query) { if(query[key]) realQuery[key] = query[key] }
+
+    return TemplateModel.find(realQuery)
+      .then((templates) => templates.map((template) => new Template(template.toObject())))
+  }
 }
