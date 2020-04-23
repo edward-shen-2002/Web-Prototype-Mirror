@@ -37,4 +37,20 @@ export default abstract class BaseRepository<T> implements IRepository<T> {
         } 
       )
   }
+
+  public async validateMany(ids: Array<IId>): Promise<void> {
+    return this._model.find(
+        {
+          _id: {
+            $in: ids
+          }
+        }
+      )
+      .then(
+        (documents) => {
+          console.log(documents, ids)
+          if(documents.length !== ids.length) throw `${this._model.collection.name}(s) not found`
+        }
+      )
+  }
 }

@@ -55,7 +55,6 @@ export default class TemplateRepository extends BaseRepository<Template> impleme
           )
         )
         .then(() => {})
-        .catch((error) => { throw error })
     )
   }
 
@@ -91,7 +90,6 @@ export default class TemplateRepository extends BaseRepository<Template> impleme
           )
         )
         .then(() => {})
-        .catch((error) => { throw error })
     )
   }
 

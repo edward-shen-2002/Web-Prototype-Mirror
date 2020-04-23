@@ -1,0 +1,18 @@
+# GET http://localhost:3000/root/templateTypes
+
+# POST http://localhost:3000/root/templateTypes HTTP/1.1
+# content-type: application/json
+
+# {
+#   "templateType": {
+#     "name"            : "Accounting",
+#     "description"     : "Related accounting forms",
+#     "programIds"      : [],
+#     "isApprovable"    : true,
+#     "isReviewable"    : false,
+#     "isSubmittable"   : true,
+#     "isInputtable"    : true,
+#     "isViewable"      : true,
+#     "isReportable"    : true
+#   }
+# }

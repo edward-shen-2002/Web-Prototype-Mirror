@@ -12,6 +12,7 @@ import { Container } from "typedi"
 import TemplateController from "./controllers/designer/Template"
 import Database from "./loaders/database"
 import StatusController from "./controllers/dimension/Status"
+import TemplateTypeController from "./controllers/designer/TemplateType"
 
 const logger = require("morgan")
 
@@ -38,6 +39,7 @@ const _init = async () => {
   // ! No auth for now - Direct connection to router
   app.use('/root', Container.get(TemplateController)({ router: Router() }))
   app.use('/root', Container.get(StatusController)({ router: Router() }))
+  app.use('/root', Container.get(TemplateTypeController)({ router: Router() }))
 
   const port = app.get("port")
 

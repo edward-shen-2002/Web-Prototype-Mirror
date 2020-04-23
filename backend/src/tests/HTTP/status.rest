@@ -5,8 +5,8 @@
 
 # {
 #   "status": {
-#     "name": "sample",
-#     "description": "testing",
-#     "isActive": false
+#     "name"        : "sample",
+#     "description" : "testing",
+#     "isActive"    : false
 #   }
 # }

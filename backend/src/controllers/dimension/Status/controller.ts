@@ -1,6 +1,6 @@
 import { Service } from "typedi"
 import { Response, NextFunction, Request } from 'express'
-import StatusService from "../../../services/StatusService"
+import StatusService from "../../../services/Status"
 import Status from "../../../entities/Status"
 
 const StatusController = Service(

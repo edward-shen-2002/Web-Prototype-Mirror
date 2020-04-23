@@ -1,8 +1,7 @@
 import { Service } from "typedi"
-import TemplateService from "../../../services/TemplateService"
+import TemplateService from "../../../services/Template"
 import Template from "../../../entities/Template"
 import { Response, NextFunction, Request } from 'express'
-import { convertTemplateOjectToEntity } from "../../../utils/conversion/entity"
 
 const TemplateController = Service(
   [
@@ -24,7 +23,7 @@ const TemplateController = Service(
       '/templates',
       (req: Request, res: Response, next: NextFunction) => {
 
-        templateService.createTemplate(convertTemplateOjectToEntity(req.body.template))
+        templateService.createTemplate(req.body.template)
           .then((template) => res.json({ template }))
           .catch(next)
       }

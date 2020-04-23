@@ -5,12 +5,12 @@ content-type: application/json
 
 {
   "template": {
-    "name": "sample",
-    "templateData" : {},
-    "templateTypeId": "507f191e810c19729de860ee",
-    "userCreatorId": "507f191e810c19729de860ea",
-    "creationDate": "02/03/2009",
-    "expirationDate": "05/05/2010",
-    "statusId": "507f191e810c19729de860ec"
+    "name"            : "sample",
+    "templateData"    : {},
+    "templateTypeId"  : "507f191e810c19729de860ee",
+    "userCreatorId"   : "507f191e810c19729de860ea",
+    "creationDate"    : "02/03/2009",
+    "expirationDate"  : "05/05/2010",
+    "statusId"        : "507f191e810c19729de860ec"
   }
 }

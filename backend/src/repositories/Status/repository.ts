@@ -15,7 +15,6 @@ export default class StatusRepository extends BaseRepository<Status> implements 
     return (
       StatusModel.create(status)
         .then(() => {})
-        .catch((error) => { throw error })
     )
   }
 
@@ -26,7 +25,6 @@ export default class StatusRepository extends BaseRepository<Status> implements 
     return (
       StatusModel.findByIdAndUpdate(id, status)
         .then(() => {})
-        .catch((error) => { throw error })
     )
   }
 
@@ -37,6 +35,5 @@ export default class StatusRepository extends BaseRepository<Status> implements 
 
     return StatusModel.find(realQuery)
       .then((status) => status.map((status) => new Status(status.toObject())))
-      .catch((error) => { throw error })
   }
 }
