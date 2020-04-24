@@ -5,7 +5,7 @@
     "prettier/@typescript-eslint",
     "plugin:prettier/recommended"
   ],
-  "plugins": ["@typescript-eslint", "import", "react", "prettier"],
+  "plugins": ["@typescript-eslint", "import", "prettier"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "sourceType": "module",
@@ -15,10 +15,7 @@
     }
   },
   "settings": {
-    "import/extensions": [".js", ".ts", ".jsx", ".tsx"],
-    "react": {
-      "version": "detect"
-    }
+    "import/extensions": [".js", ".ts"]
   },
   "env": {
     "browser": true,
@@ -96,21 +93,6 @@
     "prefer-template": "error",
     "prettier/prettier": "error",
     "radix": "error",
-    "react/jsx-boolean-value": ["error", "never"],
-    "react/jsx-no-duplicate-props": "error",
-    "react/jsx-no-target-blank": "error",
-    "react/jsx-no-undef": "error",
-    "react/jsx-uses-react": "error",
-    "react/jsx-uses-vars": "error",
-    "react/jsx-wrap-multilines": "error",
-    "react/no-deprecated": "error",
-    "react/no-did-mount-set-state": "error",
-    "react/no-did-update-set-state": "error",
-    "react/no-string-refs": "error",
-    "react/no-unknown-property": "error",
-    "react/react-in-jsx-scope": "error",
-    "react/self-closing-comp": "error",
-    "react/sort-prop-types": "error",
     "spaced-comment": ["error", "always", { "exceptions": ["-"] }],
     "use-isnan": "error",
     "valid-jsdoc": [
