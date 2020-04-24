@@ -1,24 +1,24 @@
-import { Schema, model } from 'mongoose';
-import ITemplateTypeDocument from './interface';
+import { Schema, model } from 'mongoose'
+import ITemplateTypeDocument from './interface'
 
 const ObjectId = Schema.Types.ObjectId
 
 const TemplateTypeModel = model<ITemplateTypeDocument>(
-  'TemplateType', 
+  'TemplateType',
   new Schema(
     {
-      name            : { type: String },
-      description     : { type: String },
+      name: { type: String },
+      description: { type: String },
 
-      programIds      : [ { type: ObjectId, ref: 'Program' } ],
+      programIds: [{ type: ObjectId, ref: 'Program' }],
 
-      isApprovable    : { type: Boolean },
-      isReviewable    : { type: Boolean },
-      isSubmittable   : { type: Boolean },
-      isInputtable    : { type: Boolean },
-      isViewable      : { type: Boolean },
-      isReportable    : { type: Boolean }
-    }, 
+      isApprovable: { type: Boolean },
+      isReviewable: { type: Boolean },
+      isSubmittable: { type: Boolean },
+      isInputtable: { type: Boolean },
+      isViewable: { type: Boolean },
+      isReportable: { type: Boolean },
+    },
     { minimize: false, timestamps: true }
   )
 )

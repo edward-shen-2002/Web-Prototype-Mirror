@@ -1,5 +1,1 @@
-
-
-export default class ColumnName {
-  
-}
+export default class ColumnName {}

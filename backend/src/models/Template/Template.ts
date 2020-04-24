@@ -4,23 +4,23 @@ import ITemplateDocument from './interface'
 const ObjectId = Schema.Types.ObjectId
 
 const TemplateModel = model<ITemplateDocument>(
-  'Template', 
+  'Template',
   new Schema(
     {
-      name                  : { type: String, required: true },
-    
-      templateData          : { type: Object },
+      name: { type: String, required: true },
 
-      templateTypeId        : { type: ObjectId, ref: 'TemplateType' },
+      templateData: { type: Object },
 
-      userCreatorId         : { type: ObjectId, ref: 'User' },
+      templateTypeId: { type: ObjectId, ref: 'TemplateType' },
 
-      creationDate          : { type: Date },
+      userCreatorId: { type: ObjectId, ref: 'User' },
 
-      expirationDate        : { type: Date },
+      creationDate: { type: Date },
 
-      statusId              : { type: ObjectId, ref: 'Status' }
-    }, 
+      expirationDate: { type: Date },
+
+      statusId: { type: ObjectId, ref: 'Status' },
+    },
     { minimize: false }
   )
 )

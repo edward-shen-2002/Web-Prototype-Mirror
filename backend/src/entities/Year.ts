@@ -1,3 +1,1 @@
-export default class Year {
-  
-}
+export default class Year {}

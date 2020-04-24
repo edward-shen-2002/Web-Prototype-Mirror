@@ -1,3 +1,1 @@
-export default class CategoryGroup {
-  
-}
+export default class CategoryGroup {}

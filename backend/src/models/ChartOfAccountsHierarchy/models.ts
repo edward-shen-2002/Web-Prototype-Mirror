@@ -1,16 +1,11 @@
-import { Schema, model } from 'mongoose';
-import IChartOfAccountsHierarchy from './interface';
+import { Schema, model } from 'mongoose'
+import IChartOfAccountsHierarchy from './interface'
 
-const ObjectId = Schema.Types.ObjectId;
+const ObjectId = Schema.Types.ObjectId
 
 const ChartOfAccountsHierarchyModel = model<IChartOfAccountsHierarchy>(
-  'ChartOfAccountsHierarchy', 
-  new Schema(
-    {
-
-    }, 
-    { minimize: false }
-  )
+  'ChartOfAccountsHierarchy',
+  new Schema({}, { minimize: false })
 )
 
 export default ChartOfAccountsHierarchyModel

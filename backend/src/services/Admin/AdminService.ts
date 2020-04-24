@@ -1,15 +1,9 @@
 import IAdminservice from './interface'
 
 export default class AdminService implements IAdminservice {
-  public approveUser() {
+  public approveUser() {}
 
-  } 
-  
-  public activateUser() {
+  public activateUser() {}
 
-  } 
-
-  public deActivateUser() {
-
-  } 
+  public deActivateUser() {}
 }

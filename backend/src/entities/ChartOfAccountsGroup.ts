@@ -1,3 +1,1 @@
-export default class ChartOfAccountsGroup {
-  
-}
+export default class ChartOfAccountsGroup {}

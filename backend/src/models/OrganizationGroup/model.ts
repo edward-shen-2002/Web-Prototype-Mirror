@@ -1,15 +1,15 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose'
 
 import IOrganizationGroupDocument from './interface'
 
 const OrganizationGroupModel = model<IOrganizationGroupDocument>(
-  'OrganizationGroup', 
+  'OrganizationGroup',
   new Schema(
     {
-      name: { type: String, required: true, unique: true }
-    }, 
+      name: { type: String, required: true, unique: true },
+    },
     { minimize: false }
   )
-);
+)
 
 export default OrganizationGroupModel

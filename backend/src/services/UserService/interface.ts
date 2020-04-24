@@ -1,12 +1,12 @@
-import User from "../../entities/User"
+import User from '../../entities/User'
 
 export default interface IUserService {
-  login           : () => void
-  register        : (user: object) => void 
-  logout          : () => void
+  login: () => void
+  register: (user: object) => void
+  logout: () => void
 
-  verifyEmail     : (code: string) => void
+  verifyEmail: (code: string) => void
 
   // Account management
-  changePassword  : (password: string) => void
+  changePassword: (password: string) => void
 }

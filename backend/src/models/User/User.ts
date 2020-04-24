@@ -14,45 +14,39 @@ const passwordValidator = (password: string, cb: (error?: string) => any) => {
 
   let error: string
 
-  if(!isLessThanMaxLength) {
+  if (!isLessThanMaxLength) {
     error = 'Password has to be at least 8 characters long'
-  } else if(!isGreaterThanMinLength) {
+  } else if (!isGreaterThanMinLength) {
     error = 'Password has to be no more than 28 characters long'
-  } else if(!containsSymbolRegex.test(password)) {
+  } else if (!containsSymbolRegex.test(password)) {
     error = 'Password has to contain at least one symbol'
-  } else if(!containsCapitalRegex) {
+  } else if (!containsCapitalRegex) {
     error = 'Password has to contain at least one capital character'
   }
 
   return error ? cb(error) : cb()
-}  
+}
 
 // Conditions to check for when the user authenticates/logs in
-const findByUsername = (
-  model: Model<IUserDocument>, 
-  queryParameters: object
-) => (
-  model.findOne(
-    { 
-      ...queryParameters, 
-      isActive: true,
-      isEmailVerified: true,
-      isApproved: true
-    }
-  )
-)
+const findByUsername = (model: Model<IUserDocument>, queryParameters: object) =>
+  model.findOne({
+    ...queryParameters,
+    isActive: true,
+    isEmailVerified: true,
+    isApproved: true,
+  })
 
 const User = new Schema(
   {
-    username          : { type: String, lowercase: true, required: true },
-    
-    email             : { type: String, required: true },
+    username: { type: String, lowercase: true, required: true },
 
-    title             : { type: String, default: '' },
-    firstName         : { type: String, default: '' },
-    lastName          : { type: String, default: '' },
-    
-    phoneNumber       : { type: String, default: '' },
+    email: { type: String, required: true },
+
+    title: { type: String, default: '' },
+    firstName: { type: String, default: '' },
+    lastName: { type: String, default: '' },
+
+    phoneNumber: { type: String, default: '' },
 
     /**
       Organization: {
@@ -69,19 +63,23 @@ const User = new Schema(
         }
       }
     */
-    organizations     : { type: Object, default: {} },
-    
-    isActive          : { type: Boolean, required: true, default: true },
-    isEmailVerified   : { type: Boolean, required: true, default: false },
-    isApproved        : { type: Boolean, required: true, default: false },
+    organizations: { type: Object, default: {} },
 
-    creationDate      : { type: Date, default: Date.now, required: true },
-    approvedDate      : { type: Date, default: Date.now, required: true }
-  }, 
+    isActive: { type: Boolean, required: true, default: true },
+    isEmailVerified: { type: Boolean, required: true, default: false },
+    isApproved: { type: Boolean, required: true, default: false },
+
+    creationDate: { type: Date, default: Date.now, required: true },
+    approvedDate: { type: Date, default: Date.now, required: true },
+  },
   { minimize: false }
 )
 
-User.plugin(PassportLocalMongoose, { usernameUnique: false, findByUsername, passwordValidator })
+User.plugin(PassportLocalMongoose, {
+  usernameUnique: false,
+  findByUsername,
+  passwordValidator,
+})
 
 const UserModel = model<IUserDocument>('User', User)
 

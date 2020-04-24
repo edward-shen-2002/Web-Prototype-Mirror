@@ -1,3 +1,1 @@
-export default class Organization {
-  
-}
+export default class Organization {}

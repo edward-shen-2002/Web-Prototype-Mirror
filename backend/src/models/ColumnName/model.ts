@@ -2,11 +2,11 @@ import { Schema, model } from 'mongoose'
 import IColumnNameDocument from './interface'
 
 const ColumnNameModel = model<IColumnNameDocument>(
-  'ColumnName', 
+  'ColumnName',
   new Schema(
     {
-      value: { type: String, required: true }
-    }, 
+      value: { type: String, required: true },
+    },
     { minimize: false }
   )
 )

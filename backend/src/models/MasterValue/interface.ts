@@ -1,5 +1,5 @@
 import { Document } from 'mongoose'
-import { IId } from '../interface';
+import { IId } from '../interface'
 
 export interface IMasterValue {
   chartOfAccountGroupLeafId

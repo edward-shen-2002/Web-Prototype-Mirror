@@ -1,8 +1,8 @@
-import ITemplateTypeService from "./interface";
-import TemplateType from "../../entities/TemplateType";
-import { IId } from "../../models/interface";
-import Container, { Service, Inject } from "typedi";
-import TemplateTypeRepository from "../../repositories/TemplateType";
+import ITemplateTypeService from './interface'
+import TemplateType from '../../entities/TemplateType'
+import { IId } from '../../models/interface'
+import Container, { Service, Inject } from 'typedi'
+import TemplateTypeRepository from '../../repositories/TemplateType'
 
 @Service()
 export default class TemplateTypeService implements ITemplateTypeService {
@@ -13,8 +13,9 @@ export default class TemplateTypeService implements ITemplateTypeService {
   }
 
   public async createTemplateType(templateType: TemplateType) {
-    return this.templateTypeRepository.create(templateType)
-      .catch((error) => { throw error })
+    return this.templateTypeRepository.create(templateType).catch((error) => {
+      throw error
+    })
   }
 
   public async deleteTemplateType(id: IId) {

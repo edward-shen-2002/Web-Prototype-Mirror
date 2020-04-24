@@ -1,8 +1,10 @@
-import { Document } from 'mongoose';
+import { Document } from 'mongoose'
 
 export interface IOrganizationGroup {
-  name      : string
-  isActive  : boolean
+  name: string
+  isActive: boolean
 }
 
-export default interface IOrganizationGroupDocument extends IOrganizationGroup, Document {}
+export default interface IOrganizationGroupDocument
+  extends IOrganizationGroup,
+    Document {}

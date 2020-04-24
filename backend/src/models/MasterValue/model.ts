@@ -1,12 +1,12 @@
-import { Schema, model } from 'mongoose';
-import IMasterValueDocument from './interface';
+import { Schema, model } from 'mongoose'
+import IMasterValueDocument from './interface'
 
-const ObjectId = Schema.Types.ObjectId;
+const ObjectId = Schema.Types.ObjectId
 
 /**
  * Contains the values of successfully approved workbooks
- * 
- * Example: 
+ *
+ * Example:
  * {
  *   organizationCode: '995',
  *   sectorName: 'Health',
@@ -14,9 +14,9 @@ const ObjectId = Schema.Types.ObjectId;
  *   quarter: '4',
  *   ...
  * }
- * 
+ *
  * Since this is a very general schema, we can optimize this by index optimization to:
- * 
+ *
  * {
  *   $_sectorName_: {
  *     $_organizationCode_: {
@@ -29,27 +29,27 @@ const ObjectId = Schema.Types.ObjectId;
  *     }
  *   }
  * }
- * 
- * This is just one example of indexing and is not fully optimized or researched. 
+ *
+ * This is just one example of indexing and is not fully optimized or researched.
  * However, it is much more efficient than a flat list due to the fact that it acts as a multi-layer map and reduces the search results on every index layer.
  */
 const MasterValueModel = model<IMasterValueDocument>(
-  'MasterValue', 
+  'MasterValue',
   new Schema(
     {
-      organizationId      : { type: ObjectId, required: true },
-    
-      year                : { type: Number, required: true },
-      reportPeriod        : { type: String },
-      form                : { type: String },
-      
-      attributeId         : { type: ObjectId, ref: 'Attribute' },
-      categoryId          : { type: ObjectId, ref: 'Category' },
-    
-      categoryGroupIds    : [{ type: ObjectId, ref: 'CategoryGroup' }],
-    
-      value               : { type: String, required: true }
-    }, 
+      organizationId: { type: ObjectId, required: true },
+
+      year: { type: Number, required: true },
+      reportPeriod: { type: String },
+      form: { type: String },
+
+      attributeId: { type: ObjectId, ref: 'Attribute' },
+      categoryId: { type: ObjectId, ref: 'Category' },
+
+      categoryGroupIds: [{ type: ObjectId, ref: 'CategoryGroup' }],
+
+      value: { type: String, required: true },
+    },
     { minimize: false }
   )
 )

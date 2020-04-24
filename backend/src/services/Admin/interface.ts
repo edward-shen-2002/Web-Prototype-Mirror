@@ -1,5 +1,3 @@
-import { IUserManagement } from "../interface";
+import { IUserManagement } from '../interface'
 
-export default interface IAdminService extends IUserManagement {
-  
-}
+export default interface IAdminService extends IUserManagement {}

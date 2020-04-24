@@ -1,4 +1,3 @@
-import { IRepository } from "../interface";
+import { IRepository } from '../interface'
 
-
-export default interface IYearRepository<T> extends IRepository<T> {} 
+export default interface IYearRepository<T> extends IRepository<T> {}

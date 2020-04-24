@@ -1,3 +1,3 @@
-import { IRepository } from "../interface";
+import { IRepository } from '../interface'
 
-export default interface IChartOfAccountsRepository<T> extends IRepository<T> {} 
+export default interface IChartOfAccountsRepository<T> extends IRepository<T> {}

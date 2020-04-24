@@ -7,9 +7,9 @@ import { DATABASE_KEY } from '../../configs/database'
 
 const logTag = '[DB][MongoDB]: '
 
-const defaultOptions: IOptions = { 
-  shouldWipeDatabase      : false, 
-  shouldCreateDummyData   : false
+const defaultOptions: IOptions = {
+  shouldWipeDatabase: false,
+  shouldCreateDummyData: false,
 }
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -19,7 +19,7 @@ const defaultOptions: IOptions = {
 export default class Database implements IDatabase {
   public repositories: IRepositories
 
-  public async initialize (customOptions = defaultOptions) {
+  public async initialize(customOptions = defaultOptions) {
     try {
       console.log(logTag, 'Initializing...')
       await this.initializeMongoose()
@@ -27,7 +27,7 @@ export default class Database implements IDatabase {
       // await this.applyOptions({ ...defaultOptions, ...customOptions })
 
       console.log(logTag, 'Initialize successful')
-    } catch(error) {
+    } catch (error) {
       throw `${logTag} Failed to initialize ${error}`
     }
   }
@@ -35,19 +35,17 @@ export default class Database implements IDatabase {
   public async applyOptions({ shouldCreateDummyData, shouldWipeDatabase }) {
     try {
       console.log(logTag, 'Applying options...')
-  
-      if(shouldWipeDatabase) await this.wipeDatabase()
-      if(shouldCreateDummyData) await this.createDummyData(this.repositories)
-  
+
+      if (shouldWipeDatabase) await this.wipeDatabase()
+      if (shouldCreateDummyData) await this.createDummyData(this.repositories)
+
       console.log(logTag, 'Applied options')
-    } catch(error) {
+    } catch (error) {
       throw `${logTag}Failed to apply options`
     }
   }
 
-  public loadRepositories() {
-
-  }
+  public loadRepositories() {}
 
   public async wipeDatabase() {
     try {
@@ -56,7 +54,7 @@ export default class Database implements IDatabase {
       await mongoose.connection.dropDatabase()
 
       console.warn(logTag, 'Wiped database')
-    } catch(error) {
+    } catch (error) {
       throw `${logTag}Failed to wipe database`
     }
   }
@@ -69,34 +67,29 @@ export default class Database implements IDatabase {
       console.log(logTag, 'Connecting...')
       // mongoose.set('autoCreate', true)
 
-      await mongoose.connect(
-        DATABASE_KEY, 
-        { 
-          useNewUrlParser     : true, 
-          useCreateIndex      : true, 
-          useFindAndModify    : false, 
-          useUnifiedTopology  : true 
-        }
-      )
+      await mongoose.connect(DATABASE_KEY, {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useFindAndModify: false,
+        useUnifiedTopology: true,
+      })
 
       console.log(logTag, 'Connection successful')
-    } catch(error) {
+    } catch (error) {
       throw `${logTag}Failed to connect to database\n${error}`
     }
   }
-
 
   public async createDummyData(models) {
     try {
       console.log(logTag, 'Creating dummy data...')
 
-      ///////////////////
+      // /////////////////
       // ! TODO
-      ///////////////////
-
+      // /////////////////
 
       console.log(logTag, 'Created dummy data')
-    } catch(error) {
+    } catch (error) {
       throw `${logTag}Failed to create dummy data`
     }
   }

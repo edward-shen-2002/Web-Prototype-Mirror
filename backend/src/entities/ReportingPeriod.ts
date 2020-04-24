@@ -1,3 +1,1 @@
-export default class ReportingPeriod {
-  
-}
+export default class ReportingPeriod {}

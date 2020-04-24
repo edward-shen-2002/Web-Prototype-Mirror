@@ -2,11 +2,11 @@ import { Schema, model } from 'mongoose'
 import IYearDocument from './interface'
 
 const YearModel = model<IYearDocument>(
-  'Year', 
+  'Year',
   new Schema(
     {
-      value: { type: String }
-    }, 
+      value: { type: String },
+    },
     { minimize: false }
   )
 )

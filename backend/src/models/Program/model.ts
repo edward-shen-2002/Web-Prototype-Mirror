@@ -1,13 +1,13 @@
-import { Schema, model } from 'mongoose';
-import IProgramDocument from './interface';
+import { Schema, model } from 'mongoose'
+import IProgramDocument from './interface'
 
 const ProgramModel = model<IProgramDocument>(
-  'Program', 
+  'Program',
   new Schema(
     {
       name: { type: String, required: true, unique: true },
-      code: String
-    }, 
+      code: String,
+    },
     { minimize: false }
   )
 )

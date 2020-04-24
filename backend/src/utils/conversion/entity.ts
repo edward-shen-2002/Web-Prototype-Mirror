@@ -1,5 +1,5 @@
 import { Types } from 'mongoose'
-import Template from "../../entities/Template"
+import Template from '../../entities/Template'
 import TemplateType from '../../entities/TemplateType'
 import { ITemplateType } from '../../models/TemplateType/interface'
 import { ITemplate } from '../../models/Template/interface'

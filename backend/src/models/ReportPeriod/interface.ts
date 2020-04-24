@@ -4,4 +4,6 @@ export interface IReportingPeriod {
   value: string
 }
 
-export default interface IReportPeriodDocument extends IReportingPeriod, Document {}
+export default interface IReportPeriodDocument
+  extends IReportingPeriod,
+    Document {}

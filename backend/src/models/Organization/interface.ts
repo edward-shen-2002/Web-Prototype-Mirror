@@ -1,29 +1,30 @@
-import { Document } from 'mongoose';
-import { IId } from '../interface';
+import { Document } from 'mongoose'
+import { IId } from '../interface'
 
 export interface IOrganization {
-  name                      : string
-  legalName                 : string
-  
-  IFISNumber                : string
-  code                      : string
-  
-  address                   : string
-  postalCode                : string
-  province                  : string
-  city                      : string
+  name: string
+  legalName: string
 
-  organizationGroupId       : IId
+  IFISNumber: string
+  code: string
 
-  
-  CFOUserId                 : IId
-  signingAuthorityUserId    : IId
-  contactUserId             : IId
+  address: string
+  postalCode: string
+  province: string
+  city: string
 
-  location                  : string
-  programIds                : Array<IId>
+  organizationGroupId: IId
 
-  isActive                  : boolean
+  CFOUserId: IId
+  signingAuthorityUserId: IId
+  contactUserId: IId
+
+  location: string
+  programIds: Array<IId>
+
+  isActive: boolean
 }
 
-export default interface IOrganizationDocument extends IOrganization, Document {}
+export default interface IOrganizationDocument
+  extends IOrganization,
+    Document {}

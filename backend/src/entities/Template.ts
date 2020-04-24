@@ -1,5 +1,5 @@
-import { IId } from "../models/interface"
-import { ITemplate } from "../models/Template/interface"
+import { IId } from '../models/interface'
+import { ITemplate } from '../models/Template/interface'
 
 // It's possible that we can extend an object for all entity classes
 export default class Template {
@@ -11,17 +11,15 @@ export default class Template {
   public expirationDate: Date
   public statusId: IId
 
-  constructor(
-    {
-      name,
-      templateData,
-      templateTypeId,
-      userCreatorId,
-      creationDate,
-      expirationDate,
-      statusId
-    }: ITemplate
-  ) {
+  constructor({
+    name,
+    templateData,
+    templateTypeId,
+    userCreatorId,
+    creationDate,
+    expirationDate,
+    statusId,
+  }: ITemplate) {
     this.name = name
     this.templateData = templateData
     this.templateTypeId = templateTypeId

@@ -5,6 +5,6 @@ export const mailConfig: object = {
   port: 587,
   auth: {
     user: 'julio32@ethereal.email',
-    pass: 'qdjK2XgTyyHtR9zScz'
-  }
+    pass: 'qdjK2XgTyyHtR9zScz',
+  },
 }

@@ -1,8 +1,8 @@
 import { Document } from 'mongoose'
-import { IId } from '../interface';
+import { IId } from '../interface'
 
-export interface IChartOfAccounts {
+export interface IChartOfAccounts {}
 
-}
-
-export default interface IChartOfAccountsDocument extends IChartOfAccounts, Document {}
+export default interface IChartOfAccountsDocument
+  extends IChartOfAccounts,
+    Document {}
