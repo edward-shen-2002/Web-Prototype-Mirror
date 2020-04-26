@@ -19,14 +19,15 @@ const defaultOptions: IOptions = {
 export default class Database implements IDatabase {
   public repositories: IRepositories
 
-  public async initialize(customOptions = defaultOptions) {
+  public connect(customOptions = defaultOptions) {
     console.log(logTag, 'Initializing...')
 
-    return this.initializeMongoose()
-      .then(() => console.log(logTag, 'Initialize successful'))
-      .catch((error) => {
-        throw `${logTag} Failed to initialize \n${error}`
-      })
+    this.initializeMongoose()
+    console.log(logTag, 'Initialize successful')
+  }
+
+  public disconnect() {
+    mongoose.disconnect()
   }
 
   public async applyOptions({ shouldCreateDummyData, shouldWipeDatabase }) {}
@@ -46,19 +47,16 @@ export default class Database implements IDatabase {
   /**
    * Connects to and creates the configuration for the database
    */
-  public async initializeMongoose() {
+  public initializeMongoose() {
     console.log(logTag, 'Connecting...')
-    return mongoose
+    mongoose
       .connect(DATABASE_KEY, {
         useNewUrlParser: true,
         useCreateIndex: true,
         useFindAndModify: false,
         useUnifiedTopology: true,
       })
-      .then(() => console.log(logTag, 'Connection successful'))
-      .catch((error) => {
-        throw `${logTag}Failed to connect to database\n${error}`
-      })
+    console.log(logTag, 'Connection successful')
   }
 
   public async createDummyData(models) {

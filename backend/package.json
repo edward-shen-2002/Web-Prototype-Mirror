@@ -10,7 +10,7 @@
     "fix:prettier": "yarn lint:prettier --write",
     "lint:eslint": "eslint \"./**/*.{js,ts}\"",
     "lint:prettier": "prettier --list-different \"**/*.{css,md,js,json,ts}\"",
-    "test": "jest"
+    "test": "jest --detectOpenHandles"
   },
   "dependencies": {
     "@types/compression": "^1.7.0",
@@ -19,6 +19,7 @@
     "@types/mongoose": "^5.7.8",
     "@types/node": "^13.11.0",
     "@types/passport": "^1.0.3",
+    "@types/supertest": "^2.0.8",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
@@ -43,17 +44,19 @@
     "jest": "^25.4.0",
     "nodemon": "^2.0.3",
     "prettier": "2.0.4",
+    "supertest": "^4.0.2",
     "ts-jest": "^25.4.0",
     "ts-node": "^8.9.0",
     "typescript": "^3.8.3"
   },
   "jest": {
+    "testEnvironment": "node",
     "moduleFileExtensions": [
       "ts",
       "js"
     ],
     "transform": {
-      "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+      "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest"
     },
     "testRegex": "/tests/.*\\.test.(ts|tsx|js)$"
   }

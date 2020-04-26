@@ -13,39 +13,32 @@ import TemplateController from './controllers/designer/Template'
 import Database from './loaders/database'
 import StatusController from './controllers/dimension/Status'
 import TemplateTypeController from './controllers/designer/TemplateType'
+import { PORT } from './configs/host'
 
 const logger = require('morgan')
 
-// TODO: Promise here
-const _init = async () => {
-  const app = express()
+const app = express()
 
-  app.set('port', process.env.PORT || 3000)
+app.set('port', process.env.PORT || PORT)
 
-  app.use(json({ limit: '50mb' }))
-  app.use(urlencoded({ extended: true }))
+app.use(json({ limit: '50mb' }))
+app.use(urlencoded({ extended: true }))
 
-  app.use(cors())
+app.use(cors())
 
-  app.use(compression())
+app.use(compression())
 
-  app.use(logger('dev'))
+app.use(logger('dev'))
 
-  app.use(passport.initialize())
+app.use(passport.initialize())
 
-  const dbUtil = new Database()
-  await dbUtil.initialize()
+export const dbUtil = new Database()
 
-  // ! No auth for now - Direct connection to router
-  app.use('/root', Container.get(TemplateController)({ router: Router() }))
-  app.use('/root', Container.get(StatusController)({ router: Router() }))
-  app.use('/root', Container.get(TemplateTypeController)({ router: Router() }))
+dbUtil.connect()
 
-  const port = app.get('port')
+// ! No auth for now - Direct connection to router
+app.use('/root', Container.get(TemplateController)({ router: Router() }))
+app.use('/root', Container.get(StatusController)({ router: Router() }))
+app.use('/root', Container.get(TemplateTypeController)({ router: Router() }))
 
-  app.listen(port, () => console.log(`App listening on port ${port}`))
-
-  return app
-}
-
-_init()
+export default app
