@@ -23,6 +23,5 @@ describe('Status liffecycle', () => {
   })
 
   afterAll(() => {
-    // exit()
   })
 })

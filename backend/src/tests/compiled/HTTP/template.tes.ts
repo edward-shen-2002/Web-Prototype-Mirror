@@ -1,10 +1,8 @@
 import 'jest'
 import { IStatus } from '../../../models/Status/interface'
 import { ITemplateType } from '../../../models/TemplateType/interface'
-// import app from '../../../app'
-import server from '../../../server'
-
-export const request = require('supertest')(server)
+import { request } from '../../config/HTTP'
+import mongoose from 'mongoose'
 
 describe('Template lifecycle', () => {
   let status: IStatus
@@ -29,13 +27,13 @@ describe('Template lifecycle', () => {
       // })
   ))
 
-  afterAll(() => {
-    return server.close()
+  afterAll((done) => {
+    mongoose.disconnect()
   })
 
-  it('Template creation', (done) => {
-    done()
-  })
+  // it('Template creation', (done) => {
+  //   done()
+  // })
 
   // it('Template deletion', () => {
 
