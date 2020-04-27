@@ -1,20 +1,21 @@
-import { ITemplateType } from '../models/TemplateType/interface'
-import { IId } from '../models/interface'
+import { IId } from '../../models/interface'
 
 export default class TemplateType {
-  public name: string
-  public description: string
+  public _id?: IId
+  public name?: string
+  public description?: string
 
-  public programIds: Array<IId>
+  public programIds?: Array<IId>
 
-  public isApprovable: boolean
-  public isReviewable: boolean
-  public isSubmittable: boolean
-  public isInputtable: boolean
-  public isViewable: boolean
-  public isReportable: boolean
+  public isApprovable?: boolean
+  public isReviewable?: boolean
+  public isSubmittable?: boolean
+  public isInputtable?: boolean
+  public isViewable?: boolean
+  public isReportable?: boolean
 
   constructor({
+    _id,
     name,
     description,
 
@@ -25,8 +26,9 @@ export default class TemplateType {
     isSubmittable,
     isInputtable,
     isViewable,
-    isReportable,
-  }: ITemplateType) {
+    isReportable
+  }) {
+    this._id = _id
     this.name = name
     this.description = description
     this.programIds = programIds

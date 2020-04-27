@@ -7,7 +7,7 @@ const TemplateModel = model<ITemplateDocument>(
   'Template',
   new Schema(
     {
-      name: { type: String, required: true },
+      name: { type: String },
 
       templateData: { type: Object },
 

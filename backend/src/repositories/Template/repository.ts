@@ -4,7 +4,6 @@ import TemplateModel from '../../models/Template'
 import { IId } from '../../models/interface'
 import StatusRepository from '../Status'
 import UserRepository from '../User'
-import { ITemplate } from '../../models/Template/interface'
 import Container, { Service } from 'typedi'
 import TemplateTypeRepository from '../TemplateType'
 import BaseRepository from '../repository'
@@ -49,7 +48,7 @@ export default class TemplateRepository extends BaseRepository<Template>
           statusId,
         })
       )
-      .then((template) => new Template(template))
+      .then((template) => new Template(template.toObject()))
   }
 
   public async update(
@@ -79,7 +78,7 @@ export default class TemplateRepository extends BaseRepository<Template>
           creationDate,
           expirationDate,
           statusId,
-        } as ITemplate)
+        })
       )
       .then((template) => new Template(template))
   }

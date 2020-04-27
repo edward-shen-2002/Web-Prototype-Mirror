@@ -11,7 +11,7 @@ const TemplateController = Service(
       (req: Request, res: Response, next: NextFunction) => {
         // Get query from middleware -- auth handler
         templateService
-          .findTemplate(new Template({ ...req.query }))
+          .findTemplate(new Template(req.body))
           .then((templates) => res.json({ templates }))
           .catch(next)
       }
