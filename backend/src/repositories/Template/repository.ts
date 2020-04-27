@@ -33,7 +33,7 @@ export default class TemplateRepository extends BaseRepository<Template>
     creationDate,
     expirationDate,
     statusId,
-  }: Template): Promise<void> {
+  }: Template): Promise<Template> {
     return this.statusRepository
       .validate(statusId)
       .then(() => this.userRepository.validate(userCreatorId))
@@ -49,7 +49,7 @@ export default class TemplateRepository extends BaseRepository<Template>
           statusId,
         })
       )
-      .then(() => {})
+      .then((template) => new Template(template))
   }
 
   public async update(
@@ -63,7 +63,7 @@ export default class TemplateRepository extends BaseRepository<Template>
       expirationDate,
       statusId,
     }: Template
-  ): Promise<void> {
+  ): Promise<Template> {
     return new Promise(() => {
       if (userCreatorId) return this.userRepository.validate(userCreatorId)
     })
@@ -81,7 +81,7 @@ export default class TemplateRepository extends BaseRepository<Template>
           statusId,
         } as ITemplate)
       )
-      .then(() => {})
+      .then((template) => new Template(template))
   }
 
   public async find(query: Template): Promise<Template[]> {

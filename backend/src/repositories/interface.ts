@@ -29,9 +29,9 @@ import { IId } from '../models/interface'
 
 // https://medium.com/@erickwendel/generic-repository-with-typescript-and-node-js-731c10a1b98e
 interface IWrite<T> {
-  create(item: T): Promise<void>
-  update(id: IId, item: T): Promise<void>
-  delete(id: IId): Promise<void>
+  create(item: T): Promise<T>
+  update(id: IId, item: T): Promise<T>
+  delete(id: IId): Promise<T>
 }
 
 interface IRead<T> {

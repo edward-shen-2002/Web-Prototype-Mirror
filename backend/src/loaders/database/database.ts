@@ -49,13 +49,12 @@ export default class Database implements IDatabase {
    */
   public initializeMongoose() {
     console.log(logTag, 'Connecting...')
-    mongoose
-      .connect(DATABASE_KEY, {
-        useNewUrlParser: true,
-        useCreateIndex: true,
-        useFindAndModify: false,
-        useUnifiedTopology: true,
-      })
+    mongoose.connect(DATABASE_KEY, {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useFindAndModify: false,
+      useUnifiedTopology: true,
+    })
     console.log(logTag, 'Connection successful')
   }
 

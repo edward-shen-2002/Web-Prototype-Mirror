@@ -8,6 +8,9 @@ export default abstract class BaseRepository<T> implements IRepository<T> {
   constructor(model: Model<Document>) {
     this._model = model
   }
+  delete(id: IId): Promise<T> {
+    throw new Error('Method not implemented.')
+  }
   find(item: T): Promise<T[]> {
     throw new Error('Method not implemented.')
   }
@@ -15,16 +18,12 @@ export default abstract class BaseRepository<T> implements IRepository<T> {
     throw new Error('Method not implemented.')
   }
 
-  create(item: T): Promise<void> {
+  create(item: T): Promise<T> {
     throw new Error('Method not implemented.')
   }
 
-  update(id: IId, item: T): Promise<void> {
+  update(id: IId, item: T): Promise<T> {
     throw new Error('Method not implemented.')
-  }
-
-  public async delete(id: IId): Promise<void> {
-    return this._model.findByIdAndRemove(id).then(() => {})
   }
   public async validate(id: IId): Promise<void> {
     return this._model.findById(id).then((document) => {

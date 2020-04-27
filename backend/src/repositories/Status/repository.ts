@@ -12,12 +12,18 @@ export default class StatusRepository extends BaseRepository<Status>
     super(StatusModel)
   }
 
-  public async create(status: Status): Promise<void> {
-    return StatusModel.create(status).then(() => {})
+  public async delete(id: IId): Promise<Status> {
+    throw new Error('Method not implemented.')
   }
 
-  public async update(id: IId, status: Status): Promise<void> {
-    return StatusModel.findByIdAndUpdate(id, status).then(() => {})
+  public async create(status: Status): Promise<Status> {
+    return StatusModel.create(status).then((status) => new Status(status))
+  }
+
+  public async update(id: IId, status: Status): Promise<Status> {
+    return StatusModel.findByIdAndUpdate(id, status).then(
+      (status) => new Status(status)
+    )
   }
 
   public async find(query: Status): Promise<Status[]> {

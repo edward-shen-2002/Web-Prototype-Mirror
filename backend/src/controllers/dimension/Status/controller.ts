@@ -23,7 +23,11 @@ const StatusController = Service(
       (req: Request, res: Response, next: NextFunction) => {
         statusService
           .createStatus(req.body.status)
-          .then(() => res.end())
+          .then((status) => res.json({ status }))
+          .catch((error) => {
+            console.error(error)
+            throw error
+          })
           .catch(next)
       }
     )

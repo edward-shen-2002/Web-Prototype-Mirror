@@ -16,7 +16,7 @@ export default class TemplateTypeRepository extends BaseRepository<TemplateType>
 
     this.programRepository = Container.get(ProgramRepository)
   }
-  create({
+  public async create({
     name,
     description,
 
@@ -28,7 +28,7 @@ export default class TemplateTypeRepository extends BaseRepository<TemplateType>
     isInputtable,
     isViewable,
     isReportable,
-  }: TemplateType): Promise<void> {
+  }: TemplateType): Promise<TemplateType> {
     return this.programRepository
       .validateMany(programIds)
       .then(() =>
@@ -46,9 +46,10 @@ export default class TemplateTypeRepository extends BaseRepository<TemplateType>
           isReportable,
         })
       )
-      .then(() => {})
+      .then((templateType) => new TemplateType(templateType))
   }
-  update(id: IId, item: TemplateType): Promise<void> {
+
+  public async update(id: IId, item: TemplateType): Promise<TemplateType> {
     throw new Error('Method not implemented.')
   }
 
@@ -60,9 +61,7 @@ export default class TemplateTypeRepository extends BaseRepository<TemplateType>
     }
 
     return TemplateTypeModel.find(realQuery).then((templateTypes) =>
-      templateTypes.map(
-        (templateType) => new TemplateType(templateType.toObject())
-      )
+      templateTypes.map((templateType) => new TemplateType(templateType))
     )
   }
 
