@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "deps": "yarn & yarn --cwd backend & yarn --cwd frontend",
-    "dev": "concurrently \"yarn --cwd backend dev\" \"yarn --cwd frontend dev\"",
-    "dev:cra": "concurrently \"yarn --cwd backend dev\" \"yarn --cwd frontend dev:cra\"",
-    "dev:frontend": "yarn --cwd frontend dev",
+    "start": "concurrently \"yarn --cwd backend start\" \"yarn --cwd frontend start\"",
+    "start:cra": "concurrently \"yarn --cwd backend start\" \"yarn --cwd frontend start:cra\"",
+    "start:frontend": "yarn --cwd frontend start",
     "build:frontend": "yarn --cwd frontend build",
     "build:frontend:cra": "yarn --cwd frontend build:cra",
     "build:dev-run": "concurrently \"yarn --cwd backend dev\" \"serve -s frontend/build\"",
