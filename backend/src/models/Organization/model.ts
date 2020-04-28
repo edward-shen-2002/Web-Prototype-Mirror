@@ -19,7 +19,7 @@ const OrganizationModel = model<IOrganizationDocument>(
 
       location: { type: String, default: '' },
 
-      programIds: [{ type: ObjectId, ref: 'Program' }],
+      programIds: [{ type: ObjectId, ref: 'Program' }]
     },
     { minimize: false }
   )

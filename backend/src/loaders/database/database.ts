@@ -9,7 +9,7 @@ const logTag = '[DB][MongoDB]: '
 
 const defaultOptions: IOptions = {
   shouldWipeDatabase: false,
-  shouldCreateDummyData: false,
+  shouldCreateDummyData: false
 }
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -53,7 +53,7 @@ export default class Database implements IDatabase {
       useNewUrlParser: true,
       useCreateIndex: true,
       useFindAndModify: false,
-      useUnifiedTopology: true,
+      useUnifiedTopology: true
     })
     console.log(logTag, 'Connection successful')
   }

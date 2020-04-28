@@ -17,7 +17,7 @@ const TemplateTypeModel = model<ITemplateTypeDocument>(
       isSubmittable: { type: Boolean },
       isInputtable: { type: Boolean },
       isViewable: { type: Boolean },
-      isReportable: { type: Boolean },
+      isReportable: { type: Boolean }
     },
     { minimize: false, timestamps: true }
   )

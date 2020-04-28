@@ -33,7 +33,7 @@ const findByUsername = (model: Model<IUserDocument>, queryParameters: object) =>
     ...queryParameters,
     isActive: true,
     isEmailVerified: true,
-    isApproved: true,
+    isApproved: true
   })
 
 const User = new Schema(
@@ -70,7 +70,7 @@ const User = new Schema(
     isApproved: { type: Boolean, required: true, default: false },
 
     creationDate: { type: Date, default: Date.now, required: true },
-    approvedDate: { type: Date, default: Date.now, required: true },
+    approvedDate: { type: Date, default: Date.now, required: true }
   },
   { minimize: false }
 )
@@ -78,7 +78,7 @@ const User = new Schema(
 User.plugin(PassportLocalMongoose, {
   usernameUnique: false,
   findByUsername,
-  passwordValidator,
+  passwordValidator
 })
 
 const UserModel = model<IUserDocument>('User', User)

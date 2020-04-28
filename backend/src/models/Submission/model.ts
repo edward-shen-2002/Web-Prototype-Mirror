@@ -17,7 +17,7 @@ const SubmissionModel = model<ISubmissionDocument>(
       phase: { type: String, default: 'edit' },
       status: { type: String, default: 'TBD' },
 
-      isPublished: { type: Boolean, default: false },
+      isPublished: { type: Boolean, default: false }
     },
     { minimize: false, timestamps: true }
   )

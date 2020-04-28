@@ -7,7 +7,7 @@ const StatusModel = model<IStatusDocument>(
     {
       name: { type: String, required: true },
       description: { type: String },
-      isActive: { type: Boolean },
+      isActive: { type: Boolean }
     },
     { minimize: false, timestamps: true }
   )

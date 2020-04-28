@@ -13,7 +13,7 @@ const TemplateTypeController = Service(
         // Get query from middleware -- auth handler
 
         templateTypeService
-          .findTemplateType({} as TemplateType)
+          .findTemplateType({})
           .then((templateTypes) => res.json({ templateTypes }))
           .catch(next)
       }
@@ -23,7 +23,7 @@ const TemplateTypeController = Service(
       '/templateTypes',
       (req: Request, res: Response, next: NextFunction) => {
         templateTypeService
-          .createTemplateType(req.body.templateType as TemplateType)
+          .createTemplateType(req.body.templateType)
           .then((templateType) => res.json({ templateType }))
           .catch(next)
       }
@@ -35,7 +35,7 @@ const TemplateTypeController = Service(
         const { id, templateType } = req.body
 
         templateTypeService
-          .updateTemplateType(id, templateType as TemplateType)
+          .updateTemplateType(id, templateType)
           .then(() => res.end())
           .catch(next)
       }

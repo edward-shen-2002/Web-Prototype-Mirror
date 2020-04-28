@@ -5,7 +5,7 @@ const ColumnNameModel = model<IColumnNameDocument>(
   'ColumnName',
   new Schema(
     {
-      value: { type: String, required: true },
+      value: { type: String, required: true }
     },
     { minimize: false }
   )

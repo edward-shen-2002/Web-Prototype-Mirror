@@ -4,13 +4,13 @@ import Status from '../../../entities/Status'
 
 describe('Status lifecycle', () => {
   let statusCreated: Status
-  
+
   it('Status creation', (done) => {
     const mockStatus = {
       name: 'Draft',
       description:
         'Represents an item which is not finalized or not ready for production',
-      isActive: true,
+      isActive: true
     } as Status
 
     request

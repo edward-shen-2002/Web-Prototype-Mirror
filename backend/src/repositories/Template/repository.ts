@@ -31,7 +31,7 @@ export default class TemplateRepository extends BaseRepository<Template>
     userCreatorId,
     creationDate,
     expirationDate,
-    statusId,
+    statusId
   }: Template): Promise<Template> {
     return this.statusRepository
       .validate(statusId)
@@ -45,7 +45,7 @@ export default class TemplateRepository extends BaseRepository<Template>
           userCreatorId,
           creationDate,
           expirationDate,
-          statusId,
+          statusId
         })
       )
       .then((template) => new Template(template.toObject()))
@@ -60,7 +60,7 @@ export default class TemplateRepository extends BaseRepository<Template>
       userCreatorId,
       creationDate,
       expirationDate,
-      statusId,
+      statusId
     }: Template
   ): Promise<Template> {
     return new Promise(() => {
@@ -77,7 +77,7 @@ export default class TemplateRepository extends BaseRepository<Template>
           userCreatorId,
           creationDate,
           expirationDate,
-          statusId,
+          statusId
         })
       )
       .then((template) => new Template(template))

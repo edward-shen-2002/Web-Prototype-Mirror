@@ -6,7 +6,7 @@ const ProgramModel = model<IProgramDocument>(
   new Schema(
     {
       name: { type: String, required: true, unique: true },
-      code: String,
+      code: String
     },
     { minimize: false }
   )

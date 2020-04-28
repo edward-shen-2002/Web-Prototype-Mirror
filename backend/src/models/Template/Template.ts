@@ -19,7 +19,7 @@ const TemplateModel = model<ITemplateDocument>(
 
       expirationDate: { type: Date },
 
-      statusId: { type: ObjectId, ref: 'Status' },
+      statusId: { type: ObjectId, ref: 'Status' }
     },
     { minimize: false }
   )

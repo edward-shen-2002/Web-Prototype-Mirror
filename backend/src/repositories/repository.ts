@@ -35,8 +35,8 @@ export default abstract class BaseRepository<T> implements IRepository<T> {
     return this._model
       .find({
         _id: {
-          $in: ids,
-        },
+          $in: ids
+        }
       })
       .then((documents) => {
         console.log(documents, ids)

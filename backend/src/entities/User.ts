@@ -1,4 +1,4 @@
-import { IId } from "../models/interface";
+import { IId } from '../models/interface'
 
 export default class User {
   public _id?: IId

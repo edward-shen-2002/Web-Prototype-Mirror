@@ -5,7 +5,7 @@ const YearModel = model<IYearDocument>(
   'Year',
   new Schema(
     {
-      value: { type: String },
+      value: { type: String }
     },
     { minimize: false }
   )

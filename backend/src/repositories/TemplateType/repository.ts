@@ -27,7 +27,7 @@ export default class TemplateTypeRepository extends BaseRepository<TemplateType>
     isSubmittable,
     isInputtable,
     isViewable,
-    isReportable,
+    isReportable
   }: TemplateType): Promise<TemplateType> {
     return this.programRepository
       .validateMany(programIds)
@@ -43,7 +43,7 @@ export default class TemplateTypeRepository extends BaseRepository<TemplateType>
           isSubmittable,
           isInputtable,
           isViewable,
-          isReportable,
+          isReportable
         })
       )
       .then((templateType) => new TemplateType(templateType))

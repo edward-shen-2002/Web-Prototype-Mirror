@@ -48,7 +48,7 @@ const MasterValueModel = model<IMasterValueDocument>(
 
       categoryGroupIds: [{ type: ObjectId, ref: 'CategoryGroup' }],
 
-      value: { type: String, required: true },
+      value: { type: String, required: true }
     },
     { minimize: false }
   )
