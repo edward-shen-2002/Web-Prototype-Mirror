@@ -13,7 +13,9 @@ module.exports = {
       "@store": path.join(__dirname, "/src/store"),
       "@selectors": path.join(__dirname, "/src/store/selectors"),
       "@actions": path.join(__dirname, "/src/store/actions"),
-      "@actionCreators": path.join(__dirname, "/src/store/actions/actionCreators")
+      "@actionCreators": path.join(__dirname, "/src/store/actions/actionCreators"),
+      "@controllers": path.join(__dirname, "/src/controllers"),
+      "@thunks": path.join(__dirname, "/src/store/thunks"),
     },
     extensions: ["*", ".js", ".jsx"]
   },

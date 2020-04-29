@@ -2,6 +2,7 @@ import { Service } from 'typedi'
 import TemplateService from '../../../services/Template'
 import Template from '../../../entities/Template'
 import { Response, NextFunction, Request } from 'express'
+import { IId } from '../../../models/interface'
 
 const TemplateController = Service(
   [TemplateService],
@@ -28,12 +29,28 @@ const TemplateController = Service(
     )
 
     router.put(
-      '/templates',
+      '/templates/:_id',
       (req: Request, res: Response, next: NextFunction) => {
-        const { id, template } = req.body
+        const { _id } = req.params
+        const { template } = req.body
+
+        console.log(_id, template)
 
         templateService
-          .updateTemplate(id, template as Template)
+          .updateTemplate(_id, template)
+          .then(() => res.end())
+          .catch((error) => console.error(error))
+          .catch(next)
+      }
+    )
+
+    router.delete(
+      '/templates/:_id',
+      (req: Request, res: Response, next: NextFunction) => {
+        const { _id } = req.params
+        
+        templateService
+          .deleteTemplate(_id as IId)
           .then(() => res.end())
           .catch(next)
       }

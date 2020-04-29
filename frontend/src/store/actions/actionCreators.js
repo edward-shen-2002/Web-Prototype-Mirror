@@ -17,6 +17,15 @@ export const DISABLE_RECONNECTION = "DISABLE_RECONNECTION";
 export const UPDATE_ACCOUNT = "UPDATE_ACCOUNT";
 export const RESET_ACCOUNT = "RESET_ACCOUNT";
 
+// Templates Store
+export const FAIL_TEMPLATES_REQUEST = "FAIL_TEMPLATES_REQUEST";
+export const RECEIVE_TEMPLATES = "RECEIVE_TEMPLATES";
+export const REQUEST_TEMPLATES = "REQUEST_TEMPLATES";
+export const CREATE_TEMPLATE = "CREATE_TEMPLATE";
+export const DELETE_TEMPLATE = "DELETE_TEMPLATE";
+export const UPDATE_TEMPLATE = "UPDATE_TEMPLATE";
+
+
 /**
  * UI data: data related to the views/components display state
  */

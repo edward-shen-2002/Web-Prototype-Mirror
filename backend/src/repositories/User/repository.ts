@@ -1,26 +1,14 @@
 import IUserRepository from './interface'
 import User from '../../entities/User'
 import { Service } from 'typedi'
+import BaseRepository from '../repository'
+import UserModel from '../../models/User'
 
 @Service()
-export default class UserRepository implements IUserRepository<User> {
-  create(item: User): Promise<User> {
-    throw new Error('Method not implemented.')
+export default class UserRepository extends BaseRepository<User> implements IUserRepository<User> {
+  constructor() {
+    super(UserModel)
   }
-  update(id: import('../../models/interface').IId, item: User): Promise<User> {
-    throw new Error('Method not implemented.')
-  }
-  delete(id: import('../../models/interface').IId): Promise<User> {
-    throw new Error('Method not implemented.')
-  }
-  find(item: User): Promise<User[]> {
-    throw new Error('Method not implemented.')
-  }
-  findOne(id: import('../../models/interface').IId): Promise<User> {
-    throw new Error('Method not implemented.')
-  }
-  validate(id: import('../../models/interface').IId): Promise<void> {
-    throw new Error('Method not implemented.')
-  }
+
   findActiveUserByUsername: (username: string) => User
 }

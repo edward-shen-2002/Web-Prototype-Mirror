@@ -25,7 +25,7 @@ import {
 import TemplateRouter from "./TemplateRouter";
 import OrganizationRouter from "./OrganizationRouter";
 import UserRouter from "./UserRouter";
-import SectorRouter from "./SectorRouter";
+// import SectorRouter from "./SectorRouter";
 import BundleRouter from "./BundleRouter";
 import DataEntityRouter from "./DataEntityRouter";
 
@@ -34,7 +34,7 @@ import NotFound from "@tools/components/NotFound";
 const AdminRouter = () => (
   <Switch>
     <AdminRoleRoute path={ROUTE_ADMIN_USER} requiredRole={ROLE_USER_MANAGER} Component={UserRouter}/>
-    <AdminRoleRoute path={ROUTE_ADMIN_SECTOR} requiredRole={ROLE_SECTOR_MANAGER} Component={SectorRouter}/>
+    {/* <AdminRoleRoute path={ROUTE_ADMIN_SECTOR} requiredRole={ROLE_SECTOR_MANAGER} Component={SectorRouter}/> */}
     <AdminRoleRoute path={ROUTE_ADMIN_BUNDLE} requiredRole={ROLE_BUNDLE_MANAGER} Component={BundleRouter}/>
     <AdminRoleRoute path={ROUTE_ADMIN_ORGANIZATION} requiredRole={ROLE_ORGANIZATION_MANAGER} Component={OrganizationRouter}/>
     <AdminRoleRoute path={ROUTE_ADMIN_TEMPLATE} requiredRole={ROLE_TEMPLATE_MANAGER} Component={TemplateRouter}/>

@@ -7,10 +7,10 @@ content-type: application/json
   "template": {
     "name"            : "sample",
     "templateData"    : {},
-    "templateTypeId"  : "507f191e810c19729de860ee",
+    "templateTypeId"  : "5ea9965762ed3039b5bb47e3",
     "userCreatorId"   : "507f191e810c19729de860ea",
     "creationDate"    : "02/03/2009",
     "expirationDate"  : "05/05/2010",
-    "statusId"        : "507f191e810c19729de860ec"
+    "statusId"        : "5ea995cda6ed043848a65f8e"
   }
 }

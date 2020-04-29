@@ -35,7 +35,7 @@ export default class TemplateRepository extends BaseRepository<Template>
   }: Template): Promise<Template> {
     return this.statusRepository
       .validate(statusId)
-      .then(() => this.userRepository.validate(userCreatorId))
+      // .then(() => this.userRepository.validate(userCreatorId))
       .then(() => this.templateTypeRepository.validate(templateTypeId))
       .then(() =>
         TemplateModel.create({
@@ -63,12 +63,10 @@ export default class TemplateRepository extends BaseRepository<Template>
       statusId
     }: Template
   ): Promise<Template> {
-    return new Promise(() => {
-      if (userCreatorId) return this.userRepository.validate(userCreatorId)
-    })
-      .then(() => {
-        if (statusId) return this.statusRepository.validate(statusId)
-      })
+    return (statusId ? this.statusRepository.validate(statusId) : new Promise((resolve) => resolve()))
+      // .then(() => {
+      //   if (userCreatorId) return this.userRepository.validate(userCreatorId)
+      // })
       .then(() =>
         TemplateModel.findByIdAndUpdate(id, {
           name,
@@ -80,7 +78,7 @@ export default class TemplateRepository extends BaseRepository<Template>
           statusId
         })
       )
-      .then((template) => new Template(template))
+      .then((template) => new Template(template.toObject()))
   }
 
   public async find(query: Template): Promise<Template[]> {
@@ -90,8 +88,13 @@ export default class TemplateRepository extends BaseRepository<Template>
       if (query[key]) realQuery[key] = query[key]
     }
 
-    return TemplateModel.find(realQuery).then((templates) =>
+    return TemplateModel.find(realQuery).select('-templateData').then((templates) =>
       templates.map((template) => new Template(template.toObject()))
     )
+  }
+
+  public async delete(id: IId): Promise<Template> {
+    return TemplateModel.findByIdAndDelete(id)
+      .then((template) => new Template(template))
   }
 }

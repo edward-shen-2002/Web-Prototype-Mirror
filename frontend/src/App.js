@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, lazy, Suspense } from "react";
+import React, { useEffect, useState, useCallback, useMemo, lazy, Suspense } from "react";
 
 import { connect } from "react-redux";
 
@@ -117,23 +117,11 @@ let App = ({
 }) => {
   const [ isDataFetched, setIsDataFetched ] = useState(false);
 
-  // Set up auth middleware - only shared information among all auth requests must be present here to ensure functionality
-  // TODO : Check edge cases - Will 'isOnline' parameter work for all cases? When can it fail?
-  useMemo(() => {
-    const authErrorMiddleware = (error) => {
-      const { response: { status } } = error;
-      if(status === HTTP_ERROR_INVALID_TOKEN) handleLogout(history);
-      return Promise.reject(error);
-    };
-
-    // Redirect to dashboard when the user is not authorized... 
-    // TODO: Possibly fetch user data again since this may indicate that the user has an outdated server resource - Will be impossible if the token is invalid... Check if server sent back user data. Logout if invalid token
-    // TODO : Check if there is a conflict with this middleware and the original caller handler. For example, when unauthorized, will there be any async issues when original caller set state on error. Could possibly add a value to error to notify original caller
-    const adminErrorMiddleware = (error) => {
+  const authErrorMiddleware = useCallback(
+    (error) => {
       console.error("error middleware", error)
       const { response: { status } } = error;
 
-      // TODO : Add values to error to notify the original caller that the component will unmount and async calls should be prevented only when certain conditions occur (unauthorized, invalid token, etc...)
       if(status === HTTP_ERROR_INVALID_TOKEN) {
         handleLogout(history);
       } else if(status === HTTP_ERROR_UNAUTHORIZED) {
@@ -142,9 +130,16 @@ let App = ({
       }
 
       return Promise.reject(error);
-    };
+    },
+    [ history, handleSetReconnectOn, handleLogout ]
+  )
 
-    const setMiddleware = (routeAxios, middleware) => routeAxios.interceptors.response.use(null, middleware);
+  const setMiddleware = useCallback(
+    (routeAxios, middleware) => routeAxios.interceptors.response.use(null, middleware),
+    []
+  )
+
+  useEffect(() => {
 
     if(isOnline) {
       setMiddleware(authAxios, authErrorMiddleware);
@@ -162,7 +157,7 @@ let App = ({
     } else if(!isDataFetched) {
       setIsDataFetched(true);
     }
-  });
+  }, [ shouldReconnect, handleReconnect, setIsDataFetched ]);
 
   return (
     <div className="appContainer">
@@ -170,7 +165,7 @@ let App = ({
         isDataFetched
           ? <AppContent
               isOnline={isOnline} 
-              isAppNavigationOpen={isAppNavigationOpen} 
+              isAppNavigationOpen={isAppNavigationOpen} TemplateType
               account={account} 
               location={location} 
               history={history}
