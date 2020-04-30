@@ -5,7 +5,14 @@ const ObjectId = Schema.Types.ObjectId
 
 const ChartOfAccountsGroupModel = model<IChartOfAccountsGroup>(
   'ChartOfAccountsGroup',
-  new Schema({}, { minimize: false })
+  new Schema(
+    {
+      name: { type: String },
+      code: { type: String },
+      isActive: { type: Boolean }
+    }, 
+    { minimize: false }
+  )
 )
 
 export default ChartOfAccountsGroupModel

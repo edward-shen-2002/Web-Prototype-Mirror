@@ -48,29 +48,14 @@ const User = new Schema(
 
     phoneNumber: { type: String, default: '' },
 
-    /**
-      Organization: {
-        $[organization]: {
-
-          programs: {
-            $[program]: {
-              submissions: {
-                $[submission]
-              }
-            }
-          }
-
-        }
-      }
-    */
-    organizations: { type: Object, default: {} },
-
     isActive: { type: Boolean, required: true, default: true },
     isEmailVerified: { type: Boolean, required: true, default: false },
-    isApproved: { type: Boolean, required: true, default: false },
 
     creationDate: { type: Date, default: Date.now, required: true },
-    approvedDate: { type: Date, default: Date.now, required: true }
+    approvedDate: { type: Date, default: Date.now, required: true },
+
+    startDate: { type: Date },
+    endDate: { type: Date }
   },
   { minimize: false }
 )

@@ -48,7 +48,7 @@ const TemplateController = Service(
       '/templates/:_id',
       (req: Request, res: Response, next: NextFunction) => {
         const { _id } = req.params
-        
+
         templateService
           .deleteTemplate(_id as IId)
           .then(() => res.end())

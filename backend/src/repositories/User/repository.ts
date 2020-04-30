@@ -5,7 +5,8 @@ import BaseRepository from '../repository'
 import UserModel from '../../models/User'
 
 @Service()
-export default class UserRepository extends BaseRepository<User> implements IUserRepository<User> {
+export default class UserRepository extends BaseRepository<User>
+  implements IUserRepository<User> {
   constructor() {
     super(UserModel)
   }

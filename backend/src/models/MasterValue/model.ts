@@ -37,18 +37,11 @@ const MasterValueModel = model<IMasterValueDocument>(
   'MasterValue',
   new Schema(
     {
-      organizationId: { type: ObjectId, required: true },
-
-      year: { type: Number, required: true },
-      reportPeriod: { type: String },
-      form: { type: String },
-
-      attributeId: { type: ObjectId, ref: 'Attribute' },
-      categoryId: { type: ObjectId, ref: 'Category' },
-
-      categoryGroupIds: [{ type: ObjectId, ref: 'CategoryGroup' }],
-
-      value: { type: String, required: true }
+      submissionId: { type: ObjectId, ref: "Submission" },
+      chartOfAccountsTreeId: { type: ObjectId, ref: "ChartOfAccountsTree" },
+      chartOfAccountsId: { type: ObjectId, ref: "ChartOfAccounts" },
+      columnNameId: { type: ObjectId, ref: "ColumnName" },
+      value: { type: String }
     },
     { minimize: false }
   )

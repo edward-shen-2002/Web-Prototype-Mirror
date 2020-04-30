@@ -33,22 +33,24 @@ export default class TemplateRepository extends BaseRepository<Template>
     expirationDate,
     statusId
   }: Template): Promise<Template> {
-    return this.statusRepository
-      .validate(statusId)
-      // .then(() => this.userRepository.validate(userCreatorId))
-      .then(() => this.templateTypeRepository.validate(templateTypeId))
-      .then(() =>
-        TemplateModel.create({
-          name,
-          templateData,
-          templateTypeId,
-          userCreatorId,
-          creationDate,
-          expirationDate,
-          statusId
-        })
-      )
-      .then((template) => new Template(template.toObject()))
+    return (
+      this.statusRepository
+        .validate(statusId)
+        // .then(() => this.userRepository.validate(userCreatorId))
+        .then(() => this.templateTypeRepository.validate(templateTypeId))
+        .then(() =>
+          TemplateModel.create({
+            name,
+            templateData,
+            templateTypeId,
+            userCreatorId,
+            creationDate,
+            expirationDate,
+            statusId
+          })
+        )
+        .then((template) => new Template(template.toObject()))
+    )
   }
 
   public async update(
@@ -63,22 +65,27 @@ export default class TemplateRepository extends BaseRepository<Template>
       statusId
     }: Template
   ): Promise<Template> {
-    return (statusId ? this.statusRepository.validate(statusId) : new Promise((resolve) => resolve()))
-      // .then(() => {
-      //   if (userCreatorId) return this.userRepository.validate(userCreatorId)
-      // })
-      .then(() =>
-        TemplateModel.findByIdAndUpdate(id, {
-          name,
-          templateData,
-          templateTypeId,
-          userCreatorId,
-          creationDate,
-          expirationDate,
-          statusId
-        })
+    return (
+      (statusId
+        ? this.statusRepository.validate(statusId)
+        : new Promise((resolve) => resolve())
       )
-      .then((template) => new Template(template.toObject()))
+        // .then(() => {
+        //   if (userCreatorId) return this.userRepository.validate(userCreatorId)
+        // })
+        .then(() =>
+          TemplateModel.findByIdAndUpdate(id, {
+            name,
+            templateData,
+            templateTypeId,
+            userCreatorId,
+            creationDate,
+            expirationDate,
+            statusId
+          })
+        )
+        .then((template) => new Template(template.toObject()))
+    )
   }
 
   public async find(query: Template): Promise<Template[]> {
@@ -88,13 +95,16 @@ export default class TemplateRepository extends BaseRepository<Template>
       if (query[key]) realQuery[key] = query[key]
     }
 
-    return TemplateModel.find(realQuery).select('-templateData').then((templates) =>
-      templates.map((template) => new Template(template.toObject()))
-    )
+    return TemplateModel.find(realQuery)
+      .select('-templateData')
+      .then((templates) =>
+        templates.map((template) => new Template(template.toObject()))
+      )
   }
 
   public async delete(id: IId): Promise<Template> {
-    return TemplateModel.findByIdAndDelete(id)
-      .then((template) => new Template(template))
+    return TemplateModel.findByIdAndDelete(id).then(
+      (template) => new Template(template)
+    )
   }
 }

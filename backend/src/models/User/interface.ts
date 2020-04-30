@@ -12,14 +12,14 @@ export interface IUser {
 
   phoneNumber: string
 
-  organizations: object
-
   isActive: boolean
   isEmailVerified: boolean
-  isApproved: boolean
 
   creationDate: Date
   approvedDate: Date
+
+  startDate: Date
+  endDate: Date
 }
 
 export default interface IUserDocument extends IUser, Document {}

@@ -7,7 +7,7 @@ import IProgramDocument from './Program/interface'
 import ISubmissionDocument from './Submission/interface'
 
 import IChartOfAccounts from './ChartOfAccounts/interface'
-import IChartOfAccountsHierarchyDocument from './ChartOfAccountsHierarchy/interface'
+import IChartOfAccountsHierarchyDocument from './ChartOfAccountsTree/interface'
 import IChartOfAccountsGroupDocument from './ChartOfAccountsGroup/interface'
 
 import IReportPeriodDocument from './ReportPeriod/interface'
