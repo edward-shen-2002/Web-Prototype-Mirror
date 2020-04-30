@@ -16,7 +16,7 @@ import TemplateModel from "../models/template/Template";
 import BusinessConceptModel from "../models/template/BusinessConcept";
 import BundleModel from "../models/bundle/Bundle";
 import OrganizationBundleModel from "../models/bundle/OrganizationBundle";
-import SubmissionModel from "../models/submission/Submission";
+import SubmissionCategoryModel from "../models/submission/SubmissionCategory";
 import OrganizationGroupModel from "../models/organizationGroup/OrganizationGroup";
 import ProgramModel from "../models/program/Program";
 import MasterValueModel from "../models/masterValue/MasterValue";
@@ -36,7 +36,7 @@ const serverSetup = async (app, passport, options = {}) => {
     BundleModel,
     OrganizationBundleModel,
     MasterValueModel,
-    SubmissionModel,
+    SubmissionCategoryModel,
     OrganizationGroupModel,
     ProgramModel,
     GroupModel

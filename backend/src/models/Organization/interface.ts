@@ -2,12 +2,13 @@ import { Document } from 'mongoose';
 import { IId } from '../interface';
 
 export interface IOrganization {
+  id                        : number
   name                      : string
   legalName                 : string
-  
+
   IFISNumber                : string
   code                      : string
-  
+
   address                   : string
   postalCode                : string
   province                  : string
@@ -15,7 +16,7 @@ export interface IOrganization {
 
   organizationGroupId       : IId
 
-  
+
   CFOUserId                 : IId
   signingAuthorityUserId    : IId
   contactUserId             : IId

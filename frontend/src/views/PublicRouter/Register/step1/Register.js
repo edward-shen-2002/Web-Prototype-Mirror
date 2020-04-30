@@ -93,7 +93,7 @@ const RegisterForm = ({handleSubmit, organizationGroup, handleOrgGroupChange}) =
 );
 
 const RegisterFormContainer = (props) => {
-  const [ organizationGroup, setOrganizationGroup] = useState("Health Service Providers");
+  const [ organizationGroup, setOrganizationGroup] = useState("Health service Providers");
   const [ isRolesDialogOpen, setIsRolesDialogOpen ] = useState(false);
   const [ isOrganizationsDialogOpen, setIsOrganizationsDialogOpen ] = useState(false);
 

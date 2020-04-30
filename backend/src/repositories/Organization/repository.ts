@@ -2,8 +2,17 @@ import IOrganizationRepository from "./interface";
 import Organization from "../../entities/Organization";
 
 export default class OrganizationRepository implements IOrganizationRepository<Organization> {
-  create(item: IOrganizationRepository<Organization>): Promise<Boolean> {
-    throw new Error("Method not implemented.");
+  create({
+    name,
+    code,
+    address,
+    organizationGroupId,
+    managerUserId,
+    contactUserId,
+    authorizedUserId,
+    location,
+    programIds
+  }): Promise<Boolean> {
   }
   update(id: string, item: IOrganizationRepository<Organization>): Promise<Boolean> {
     throw new Error("Method not implemented.");
@@ -17,5 +26,5 @@ export default class OrganizationRepository implements IOrganizationRepository<O
   findOne(id: string): Promise<IOrganizationRepository<Organization>> {
     throw new Error("Method not implemented.");
   }
-  
+
 }

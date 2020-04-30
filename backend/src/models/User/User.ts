@@ -25,37 +25,55 @@ const passwordValidator = (password: string, cb: (error?: string) => any) => {
   }
 
   return error ? cb(error) : cb()
-}  
+}
 
 // Conditions to check for when the user authenticates/logs in
 const findByUsername = (
-  model: Model<IUserDocument>, 
+  model: Model<IUserDocument>,
   queryParameters: object
 ) => (
   model.findOne(
-    { 
-      ...queryParameters, 
+    {
+      ...queryParameters,
       isActive: true,
-      isEmailVerified: true,
-      isApproved: true
+      isVerified: true
     }
   )
 )
 
 const User = new Schema(
   {
-    username          : { type: String, lowercase: true, required: true },
-    
+    id                : { type: Number, required: true },
+    userName          : { type: String, lowercase: true, required: true },
+
     email             : { type: String, required: true },
 
     title             : { type: String, default: '' },
     firstName         : { type: String, default: '' },
     lastName          : { type: String, default: '' },
-    
-    phoneNumber       : { type: String, default: '' },
 
-    /**
-      Organization: {
+    phoneNumber       : { type: String, default: '' },
+    //
+    // organizations     : { type: Object, default: {} },
+
+    active            : { type: Boolean, required: true, default: false },
+    isVerified        : { type: Boolean, required: true, default: false },
+
+    createDate        : { type: Date, default: Date.now, required: true },
+    approveDate       : { type: Date, default: Date.now, required: true },
+
+    startDate         : { type: Date, default: Date.now, required: true },
+    endDate           : { type: Date, default: Date.now, required: true },
+  },
+  { minimize: false }
+)
+
+
+User.plugin(PassportLocalMongoose, { usernameUnique: false, findByUsername, passwordValidator })
+
+export default model<IUserDocument>('User', User)
+/**
+ Organization: {
         $[organization]: {
 
           programs: {
@@ -68,19 +86,4 @@ const User = new Schema(
 
         }
       }
-    */
-    organizations     : { type: Object, default: {} },
-    
-    isActive          : { type: Boolean, required: true, default: true },
-    isEmailVerified   : { type: Boolean, required: true, default: false },
-    isApproved        : { type: Boolean, required: true, default: false },
-
-    creationDate      : { type: Date, default: Date.now, required: true },
-    approvedDate      : { type: Date, default: Date.now, required: true }
-  }, 
-  { minimize: false }
-)
-
-User.plugin(PassportLocalMongoose, { usernameUnique: false, findByUsername, passwordValidator })
-
-export default model<IUserDocument>('User', User)
+ */

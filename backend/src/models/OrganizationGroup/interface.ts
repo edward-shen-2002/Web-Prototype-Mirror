@@ -1,6 +1,7 @@
 import { Document } from 'mongoose';
 
 export interface IOrganizationGroup {
+  id        : number
   name      : string
   isActive  : boolean
 }
