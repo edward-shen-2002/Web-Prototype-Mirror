@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon src/index.ts --exec 'ts-node'",
+    "production": "cross-env NODE_ENV='production' nodemon src/index.ts --exec 'ts-node'",
     "fix": "yarn fix:prettier && yarn fix:eslint",
     "fix:eslint": "yarn lint:eslint --fix",
     "fix:prettier": "yarn lint:prettier --write",
@@ -36,6 +37,7 @@
     "@typescript-eslint/eslint-plugin": "^2.9.0",
     "@typescript-eslint/parser": "^2.9.0",
     "babel-eslint": "^10.0.3",
+    "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-import": "^2.18.2",

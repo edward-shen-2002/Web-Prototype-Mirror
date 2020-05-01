@@ -10,8 +10,7 @@ import IChartOfAccounts from './ChartOfAccounts/interface'
 import IChartOfAccountsHierarchyDocument from './ChartOfAccountsTree/interface'
 import IChartOfAccountsGroupDocument from './ChartOfAccountsGroup/interface'
 
-import IReportPeriodDocument from './ReportPeriod/interface'
-import IYearModel from './Year/interface'
+import IReportPeriodDocument from './ReportingPeriod/interface'
 import IMasterValueDocument from './MasterValue/interface'
 import ITemplateDocument from './Template/interface'
 
@@ -32,7 +31,6 @@ export default interface IModels {
   ChartOfAccountsGroupHierarchyModel: Model<IChartOfAccountsHierarchyDocument>
 
   ReportPeriodModel: Model<IReportPeriodDocument>
-  YearModel: Model<IYearModel>
 
   MasterValueModel: Model<IMasterValueDocument>
 }

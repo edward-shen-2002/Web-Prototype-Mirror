@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose'
 import IReportingPeriodDocument from './interface'
 
 const ReportingPeriodModel = model<IReportingPeriodDocument>(
-  'ReportPeriod',
+  'ReportingPeriod',
   new Schema(
     {
       value: { type: String }

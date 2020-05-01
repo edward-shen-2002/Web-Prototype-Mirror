@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose'
 import IAppResourceDocument from './interface'
 
 const AppResourceModel = model<IAppResourceDocument>(
-  'AppRoleResource',
+  'AppResource',
   new Schema(
     {
       name: { type: String },
@@ -10,7 +10,7 @@ const AppResourceModel = model<IAppResourceDocument>(
       contextRoot: { type: String },
       isProtected: { type: Boolean }
     },
-    { minimize: false }
+    { minimize: false, autoIndex: true }
   )
 )
 

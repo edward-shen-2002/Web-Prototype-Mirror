@@ -10,7 +10,7 @@ const AppRoleModel = model<IAppRoleDocument>(
       code: { type: String },
       name: { type: String }
     },
-    { minimize: false }
+    { minimize: false, autoIndex: true }
   )
 )
 
