@@ -39,7 +39,6 @@ export default abstract class BaseRepository<T> implements IRepository<T> {
         }
       })
       .then((documents) => {
-        console.log(documents, ids)
         if (documents.length !== ids.length)
           throw `${this._model.collection.name}(s) not found`
       })

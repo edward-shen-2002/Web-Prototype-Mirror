@@ -14,7 +14,6 @@ const defaultOptions: IOptions = {
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // TODO: DO NOT LOAD REPOSITORIES HERE - Singleton database connection
-// TODO: Change to promise
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 export default class Database implements IDatabase {
   public repositories: IRepositories
@@ -23,6 +22,7 @@ export default class Database implements IDatabase {
     console.log(logTag, 'Initializing...')
 
     this.initializeMongoose()
+
     console.log(logTag, 'Initialize successful')
   }
 
@@ -55,6 +55,7 @@ export default class Database implements IDatabase {
       useFindAndModify: false,
       useUnifiedTopology: true
     })
+
     console.log(logTag, 'Connection successful')
   }
 

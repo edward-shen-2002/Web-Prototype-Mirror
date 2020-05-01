@@ -34,8 +34,6 @@ const TemplateController = Service(
         const { _id } = req.params
         const { template } = req.body
 
-        console.log(_id, template)
-
         templateService
           .updateTemplate(_id, template)
           .then(() => res.end())
