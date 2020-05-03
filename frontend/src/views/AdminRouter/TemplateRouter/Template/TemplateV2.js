@@ -43,8 +43,8 @@ const Template = ({ match: { params: { _id } } }) => {
 
   return (
     isCallInProgress 
-      ? <Excel type="template" returnLink={ROUTE_ADMIN_TEMPLATE_TEMPLATES}/>
-      : <Loading/>
+      ? <Loading/>
+      : <Excel type="template" returnLink={ROUTE_ADMIN_TEMPLATE_TEMPLATES}/>
   );
 };
 
