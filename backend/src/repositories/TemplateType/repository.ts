@@ -49,8 +49,47 @@ export default class TemplateTypeRepository extends BaseRepository<TemplateType>
       .then((templateType) => new TemplateType(templateType))
   }
 
-  public async update(id: IId, item: TemplateType): Promise<TemplateType> {
-    throw new Error('Method not implemented.')
+  public async update(
+    id: IId, 
+    {
+      name,
+      description,
+  
+      programIds,
+  
+      isApprovable,
+      isReviewable,
+      isSubmittable,
+      isInputtable,
+      isViewable,
+      isReportable
+    }: TemplateType
+  ): Promise<TemplateType> {
+    return (
+      this.programRepository.validateMany(programIds)
+        .then(
+          () => TemplateTypeModel.findByIdAndUpdate(
+            id, 
+            {
+              name,
+              description,
+          
+              programIds,
+          
+              isApprovable,
+              isReviewable,
+              isSubmittable,
+              isInputtable,
+              isViewable,
+              isReportable
+            }
+          )
+        )
+        .then(
+          (templateType) => new TemplateType(templateType.toObject())
+        )
+
+    )
   }
 
   public async find(query: TemplateType): Promise<TemplateType[]> {

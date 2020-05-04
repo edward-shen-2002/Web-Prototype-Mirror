@@ -30,12 +30,14 @@ const TemplateTypeController = Service(
     )
 
     router.put(
-      '/templateTypes',
+      '/templateTypes/:_id',
       (req: Request, res: Response, next: NextFunction) => {
-        const { id, templateType } = req.body
+        const { _id } = req.params
+        const { templateType } = req.body
+
 
         templateTypeService
-          .updateTemplateType(id, templateType)
+          .updateTemplateType(_id, templateType)
           .then(() => res.end())
           .catch(next)
       }
