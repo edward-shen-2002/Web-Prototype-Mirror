@@ -1,11 +1,11 @@
-import React, { useMemo, useEffect } from 'react'
+import React, { useCallback, useMemo, useEffect } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import { 
-  getTemplatesRequest, 
-  createTemplateRequest, 
-  deleteTemplateRequest, 
-  updateTemplateRequest 
+  getTemplateTypesRequest, 
+  createTemplateTypeRequest, 
+  deleteTemplateTypeRequest, 
+  updateTemplateTypeRequest 
 } from "@thunks/templateType"
 
 import MaterialTable from 'material-table'
@@ -16,29 +16,29 @@ import Typography from "@material-ui/core/Typography";
 
 import './TemplateTypes.scss'
 
-// const TemplateFileDropzone = () => {}
+// const TemplateTypeFileDropzone = () => {}
 
 // TODO : Finish Excel integration
-const TemplateTypesHeader = () => {
+const TemplateTypeHeader = () => {
 
 
   return (
     <Paper className="header">
-      <Typography variant="h5">Templates</Typography>
+      <Typography variant="h5">TemplateTypes</Typography>
       {/* <HeaderActions/> */}
     </Paper>
   )
 }
 
-const TemplatesTable = ({ history }) => {
+const TemplateTypesTable = ({ history }) => {
   const dispatch = useDispatch()
 
   const {
-    templates
+    templateTypes
   } = useSelector(
     (
       {
-        TemplateStore: {
+        TemplateTypeStore: {
           response: {
             Values
           }
@@ -46,21 +46,22 @@ const TemplatesTable = ({ history }) => {
       }
     ) => (
       {
-        templates: Values
+        templateTypes: Values
       }
     ),
     shallowEqual
   )
 
-
   const columns = useMemo(
     () => [
       { title: "Name", field: "name" },
-      { title: "TemplateTypeId", field: "templateTypeId" },
-      { title: "UserCreatorId", field: "userCreatorId" },
-      { title: "CreationDate", type: "date", field: "creationDate" },
-      { title: "ExpirationDate", type: "date", field: "expirationDate" },
-      { title: "StatusId", field: "statusId" }
+      { title: "Description", field: "description" },
+      { title: "Approvable", type: "boolean", field: "isApprovable" },
+      { title: "Reviewable", type: "boolean", field: "isReviewable" },
+      { title: "Submittable", type: "boolean", field: "isSubmittable" },
+      { title: "Inputtable", type: "boolean", field: "isInputtable" },
+      { title: "Viewable", type: "boolean", field: "isViewable" },
+      { title: "Reportable", type: "boolean", field: "isReportable" }
     ],
     []
   )
@@ -69,8 +70,8 @@ const TemplatesTable = ({ history }) => {
     () => [
       { 
         icon: LaunchIcon, 
-        tooltip: "Open TemplateType", 
-        onClick: (_event, templateType) => history.push(`/template_manager/templateType/${templateType._id}`)
+        tooltip: "View Programs", 
+        onClick: (_event, templateType) => {}
       }
     ],
     [ history ]
@@ -88,19 +89,23 @@ const TemplatesTable = ({ history }) => {
       { 
         onRowAdd: (templateType) => new Promise(
           (resolve) => {
-            dispatch(createTemplateRequest(templateType))
+            // templateType = {
+
+            // }
+
+            dispatch(createTemplateTypeRequest(templateType))
             resolve()
           }
         ), 
         onRowUpdate: (templateType) => new Promise(
           (resolve) => {
-            dispatch(updateTemplateRequest(templateType))
+            dispatch(updateTemplateTypeRequest(templateType))
             resolve()
           }
         ), 
         onRowDelete: (templateType) => new Promise(
           (resolve) => {
-            dispatch(deleteTemplateRequest(templateType._id))
+            dispatch(deleteTemplateTypeRequest(templateType._id))
             resolve()
           }
         ) 
@@ -111,7 +116,7 @@ const TemplatesTable = ({ history }) => {
 
   useEffect(
     () => {
-      dispatch(getTemplatesRequest())
+      dispatch(getTemplateTypesRequest())
     },
     [ dispatch ]
   )
@@ -120,7 +125,7 @@ const TemplatesTable = ({ history }) => {
     <MaterialTable
       columns={columns} 
       actions={actions} 
-      data={templates} 
+      data={templateTypes} 
       editable={editable} 
       options={options}
     />
@@ -128,10 +133,10 @@ const TemplatesTable = ({ history }) => {
 }
 
 const TemplateType = (props) => (
-  <div className="">
-    <TemplateTypesHeader/>
+  <div className="templateTypesPage">
+    <TemplateTypeHeader/>
     {/* <FileDropzone/> */}
-    <TemplatesTable {...props}/>
+    <TemplateTypesTable {...props}/>
   </div>
 )
 
