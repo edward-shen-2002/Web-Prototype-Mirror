@@ -13,7 +13,19 @@ const TemplateController = Service(
         // Get query from middleware -- auth handler
         templateService
           .findTemplate(new Template(req.body))
-          .then((templates) => res.json({ templates }))
+          .then((templates) => res.json({ templates: templates.map((template) => ({ ...template, templateData: undefined })) }))
+          .catch(next)
+      }
+    )
+
+    router.get(
+      '/templates/:_id',
+      (req: Request, res: Response, next: NextFunction) => {
+        // Get query from middleware -- auth handler
+
+        templateService
+          .findTemplate(new Template({  _id: req.params._id }))
+          .then((template) => res.json({ template }))
           .catch(next)
       }
     )

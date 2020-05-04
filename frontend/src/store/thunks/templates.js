@@ -9,13 +9,21 @@ import {
   updateTemplate
 } from '@actions/TemplateStore'
 
+import { 
+  setExcelData,
+  resetExcelData
+} from "@actions/ui/excel/commands";
+
 import { createBlankReactState } from "@tools/excel";
 
 export const getTemplateRequest = (_id) => (dispatch) => {
   dispatch(requestTemplates())
 
   return templateController.fetchTemplate(_id)
-    .then((template) => dispatch(receiveTemplates({ Values: [ template ] })))
+    .then((template) => {
+      dispatch(receiveTemplates({ Values: [ template ] }))
+      dispatch(setExcelData(template.templateData))
+    })
     .catch((error) => dispatch(failTemplatesRequest(error)))
 }
 
