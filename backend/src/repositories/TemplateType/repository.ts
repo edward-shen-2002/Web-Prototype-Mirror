@@ -107,4 +107,10 @@ export default class TemplateTypeRepository extends BaseRepository<TemplateType>
   findOne(id: IId): Promise<TemplateType> {
     throw new Error('Method not implemented.')
   }
+
+  public async delete(id: IId): Promise<TemplateType> {
+    return TemplateTypeModel.findByIdAndDelete(id).then(
+      (templateType) => new TemplateType(templateType)
+    )
+  }
 }

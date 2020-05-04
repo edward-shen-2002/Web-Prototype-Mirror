@@ -43,6 +43,18 @@ const TemplateTypeController = Service(
       }
     )
 
+    router.delete(
+      '/templateTypes/:_id',
+      (req: Request, res: Response, next: NextFunction) => {
+        const { _id } = req.params
+
+        templateTypeService
+          .deleteTemplateType(_id)
+          .then(() => res.end())
+          .catch(next)
+      }
+    )
+
     return router
   }
 )
