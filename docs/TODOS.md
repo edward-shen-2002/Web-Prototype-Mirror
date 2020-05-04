@@ -11,6 +11,7 @@
 - User settings
 - Phase deadlines
 - Report
+- Remove Save and Download from Excel reducer
 
 ## Unprioritized
 
