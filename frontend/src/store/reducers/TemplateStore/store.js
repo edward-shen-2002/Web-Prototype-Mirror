@@ -1,9 +1,9 @@
-import REQUEST_TEMPLATES from './REQUEST_TEMPLATES'
-import RECEIVE_TEMPLATES from './RECEIVE_TEMPLATES'
-import FAIL_TEMPLATES_REQUEST from './FAIL_TEMPLATES_REQUEST'
-import CREATE_TEMPLATE from './CREATE_TEMPLATE'
-import DELETE_TEMPLATE from './DELETE_TEMPLATE'
-import UPDATE_TEMPLATE from './UPDATE_TEMPLATE'
+import REQUEST_TEMPLATES from '../common/REQUEST'
+import RECEIVE_TEMPLATES from '../common/RECEIVE'
+import FAIL_TEMPLATES_REQUEST from '../common/FAIL_REQUEST'
+import CREATE_TEMPLATE from '../common/CREATE'
+import DELETE_TEMPLATE from '../common/DELETE'
+import UPDATE_TEMPLATE from '../common/UPDATE'
 
 const reducersMap = {
   REQUEST_TEMPLATES,
@@ -22,10 +22,10 @@ const defaultState = {
   isCallInProgress: false
 }
 
-const TemplatesStore = (state = defaultState, action) => {
+const TemplateStore = (state = defaultState, action) => {
   const reducer = reducersMap[action.type]
 
   return reducer ? reducer(state, action) : state
 }
 
-export default TemplatesStore
+export default TemplateStore

@@ -1,4 +1,4 @@
-const DELETE_TEMPLATE = (
+const DELETE = (
   state,
   {
     response
@@ -9,4 +9,4 @@ const DELETE_TEMPLATE = (
   error: null
 })
 
-export default DELETE_TEMPLATE
+export default DELETE

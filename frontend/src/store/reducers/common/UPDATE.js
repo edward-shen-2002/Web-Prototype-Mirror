@@ -1,11 +1,9 @@
-const UPDATE_TEMPLATE = (
+const UPDATE = (
   state,
   {
     response
   }
-) => {
-  console.log("response", response)
-  return ({ 
+) => ({ 
   response: { 
     ...state.response, 
     Values: state.response.Values.map((value) => value._id === response.Value._id ? response.Value : value)
@@ -13,6 +11,5 @@ const UPDATE_TEMPLATE = (
   isCallInProgress: false, 
   error: null
 })
-}
 
-export default UPDATE_TEMPLATE
+export default UPDATE

@@ -1,4 +1,4 @@
-const CREATE_TEMPLATE = (
+const CREATE = (
   state,
   {
     response
@@ -9,4 +9,4 @@ const CREATE_TEMPLATE = (
   error: null
 })
 
-export default CREATE_TEMPLATE
+export default CREATE

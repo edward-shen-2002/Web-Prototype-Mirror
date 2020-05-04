@@ -1,4 +1,4 @@
-const FAIL_TEMPLATES_REQUEST = (
+const FAIL_REQUEST = (
   state,
   {
     error
@@ -9,4 +9,4 @@ const FAIL_TEMPLATES_REQUEST = (
   error 
 })
 
-export default FAIL_TEMPLATES_REQUEST
+export default FAIL_REQUEST

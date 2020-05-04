@@ -1,4 +1,4 @@
-const RECEIVE_TEMPLATES = (
+const RECEIVE = (
   _state,
   {
     response
@@ -9,4 +9,4 @@ const RECEIVE_TEMPLATES = (
   error: null
 })
 
-export default RECEIVE_TEMPLATES
+export default RECEIVE
