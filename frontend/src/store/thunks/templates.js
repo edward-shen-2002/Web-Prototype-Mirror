@@ -9,6 +9,16 @@ import {
   updateTemplate
 } from '@actions/TemplateStore'
 
+import { createBlankReactState } from "@tools/excel";
+
+export const getTemplateRequest = (_id) => (dispatch) => {
+  dispatch(requestTemplates())
+
+  return templateController.fetchTemplate(_id)
+    .then((template) => dispatch(receiveTemplates({ Values: [ template ] })))
+    .catch((error) => dispatch(failTemplatesRequest(error)))
+}
+
 export const getTemplatesRequest = (query) => (dispatch) => {
   dispatch(requestTemplates())
 
@@ -17,11 +27,15 @@ export const getTemplatesRequest = (query) => (dispatch) => {
     .catch((error) => dispatch(failTemplatesRequest(error)))
 }
 
-
 export const createTemplateRequest = (template) => (dispatch) => {
   dispatch(requestTemplates())
-
-  return templateController.createTemplate(template)
+  
+  return templateController.createTemplate(
+      {
+        ...template,
+        templateData: createBlankReactState()
+      }
+    )
     .then((template) => dispatch(createTemplate({ Value: template })))
     .catch((error) => dispatch(failTemplatesRequest(error)))
 }

@@ -4,20 +4,13 @@ import { Switch, Route } from "react-router-dom";
 
 import NotFound from "@tools/components/NotFound";
 
-import { 
-  ROUTE_ADMIN_TEMPLATE_TEMPLATE,
-  ROUTE_ADMIN_TEMPLATE_TEMPLATES
-} from "@constants/routes";
-
-const Templates = lazy(() => import("./Templates"));
-const Template = lazy(() => import("./Template"));
+import Template from './Template/TemplateV2'
+import Templates from './Templates/Templatesv2'
 
 const TemplateRouter = () => (
   <Switch>
-    <Route exact path={ROUTE_ADMIN_TEMPLATE_TEMPLATES} component={Templates}/>
-    <Route path={ROUTE_ADMIN_TEMPLATE_TEMPLATE} component={Template}/>
-    
-    <Route component={NotFound}/>
+    <Route exact path="/" component={Templates}/>
+    <Route path="/templates/:_id" component={Template}/>
   </Switch>
 );
 

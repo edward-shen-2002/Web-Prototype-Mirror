@@ -4,6 +4,7 @@ const templateController = (
   () => {
     const templateAxios = axios.create({ baseURL: 'http://localhost:3000/root/templates' })
     return {
+      fetchTemplate: async (_id) => templateAxios.get(`/${_id}`),
       fetchTemplates: async (query) => templateAxios.get('').then((res) => res.data.templates),
       createTemplate: async (template) => templateAxios.post('', { template }).then((res) => res.data.template),
       deleteTemplate: async (_id) => templateAxios.delete(`/${_id}`),
