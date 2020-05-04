@@ -14,15 +14,16 @@ import {
   resetExcelData
 } from "@actions/ui/excel/commands";
 
-import { createBlankReactState } from "@tools/excel";
+import { createBlankReactState, convertStateToReactState } from "@tools/excel";
 
 export const getTemplateRequest = (_id) => (dispatch) => {
   dispatch(requestTemplates())
+  
 
   return templateController.fetchTemplate(_id)
     .then((template) => {
+      dispatch(setExcelData(convertStateToReactState(template.templateData)))
       dispatch(receiveTemplates({ Values: [ template ] }))
-      dispatch(setExcelData(template.templateData))
     })
     .catch((error) => dispatch(failTemplatesRequest(error)))
 }

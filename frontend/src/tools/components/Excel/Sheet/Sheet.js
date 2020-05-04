@@ -133,6 +133,18 @@ const SheetWindow = ({ sheetGridRef }) => {
 
   const commonSelectionPaneProps = {};
 
+  console.log(
+    tableFreezeColumnCount,
+    tableFreezeRowCount,
+    sheetColumnCount,
+    sheetRowCount,
+    // columnWidth,
+    // rowHeight,
+    // itemData,
+    EXCEL_WINDOW_OVERSCAN_COLUMN_COUNT,
+    EXCEL_WINDOW_OVERSCAN_ROW_COUNT,
+  )
+
   return (
     <AutoSizer>
       {({ height, width }) => (

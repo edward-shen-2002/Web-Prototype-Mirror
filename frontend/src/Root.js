@@ -5,12 +5,13 @@ import { BrowserRouter, Route } from "react-router-dom";
 // import App from "./App";
 
 import { ROUTE_ROOT } from "@constants/routes";
-import TemplateRouter from "./views/AdminRouter/TemplateRouter";
+
+import AppV2 from './AppV2'
 
 const Root = () => (
   <BrowserRouter>
     {/* <Route path={ROUTE_ROOT} component={App}/> */}
-    <Route path={ROUTE_ROOT} component={TemplateRouter}/>
+    <Route path={ROUTE_ROOT} component={AppV2}/>
   </BrowserRouter>
 );
 

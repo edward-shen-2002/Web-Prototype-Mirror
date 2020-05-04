@@ -25,7 +25,7 @@ const TemplateController = Service(
 
         templateService
           .findTemplate(new Template({  _id: req.params._id }))
-          .then((template) => res.json({ template }))
+          .then(([ template ]) => res.json({ template }))
           .catch(next)
       }
     )
