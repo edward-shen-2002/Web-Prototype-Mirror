@@ -1,3 +1,5 @@
+import { batch } from 'react-redux'
+
 import templateController from '@controllers/template'
 
 import {
@@ -14,16 +16,22 @@ import {
   resetExcelData
 } from "@actions/ui/excel/commands";
 
+import { hideAppNavigation } from "@actions/ui/isAppNavigationOpen"; 
+
 import { createBlankReactState, convertStateToReactState } from "@tools/excel";
 
 export const getTemplateRequest = (_id) => (dispatch) => {
   dispatch(requestTemplates())
-  
 
   return templateController.fetchTemplate(_id)
     .then((template) => {
-      dispatch(setExcelData(convertStateToReactState(template.templateData)))
-      dispatch(receiveTemplates({ Values: [ template ] }))
+      batch(
+        () => {
+          dispatch(setExcelData(convertStateToReactState(template.templateData)))
+          dispatch(receiveTemplates({ Values: [ template ] }))
+          dispatch(hideAppNavigation())
+        }
+      )
     })
     .catch((error) => dispatch(failTemplatesRequest(error)))
 }

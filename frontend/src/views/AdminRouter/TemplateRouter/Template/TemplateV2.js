@@ -10,6 +10,8 @@ import {
 
 import Loading from "@tools/components/Loading";
 
+import { showAppNavigation } from "@actions/ui/isAppNavigationOpen"; 
+
 import "./Template.scss";
 
 const Template = ({ match: { params: { _id } } }) => {
@@ -29,6 +31,10 @@ const Template = ({ match: { params: { _id } } }) => {
     () => {
       // If fetch fails, push back to /tempaltes
       dispatch(getTemplateRequest(_id))
+
+      return () => {
+        dispatch(showAppNavigation())
+      }
     }, 
     []
   );

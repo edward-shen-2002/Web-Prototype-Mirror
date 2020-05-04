@@ -76,11 +76,21 @@ const createUserNavigation = () => {
 
   const userBundles = { name: "Bundles", url: ROUTE_USER_BUNDLES, icon: "mdi mdi-pen" };
 
-  const templates = { name: "Templates", url: "/designer/template", icon: "mdi mdi-note-multiple" }
+  const template = { name: "Template", url: "/designer/template", icon: "mdi mdi-note-multiple" }
+  const status = { name: "Status", url: "/designer/status", icon: "mdi mdi-note-multiple" }
+  const templateType = { name: "Template Type", url: "/designer/templateType", icon: "mdi mdi-note-multiple" }
 
   // const userDashboard = { name: "Dashboard", url: ROUTE_USER_DASHBOARD, icon: "mdi mdi-library-books" }
 
-  return [ userTitle, /*userDashboard,*/ userProfile, userBundles, templates ];
+  return [ 
+    userTitle, 
+    /*userDashboard,*/ 
+    userProfile, 
+    userBundles, 
+    template, 
+    status, 
+    templateType 
+  ];
 };
 
 const config = (roles) => {
