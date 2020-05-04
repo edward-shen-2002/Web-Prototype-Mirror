@@ -41,9 +41,7 @@ Login with ```email: julio32@ethereal.email``` and ```password: qdjK2XgTyyHtR9zS
 
 ## Testing
 
-Currently, there is no testing in the application due to time constraints. However, this is something that must be implemented in the future.
-
-Possible Libraries: [Jest](https://jestjs.io/docs/en/tutorial-react), [Enzyme](https://airbnb.io/enzyme/), [Mocha](https://mochajs.org/), [Jasmine](https://jasmine.github.io/)
+[Jest](https://jestjs.io/docs/en/tutorial-react)
 
 ## Issues
 
