@@ -33,12 +33,26 @@ const StatusController = Service(
     )
 
     router.put(
-      '/statuses',
+      '/statuses/:_id',
       (req: Request, res: Response, next: NextFunction) => {
-        const { id, status } = req.body
+        const { _id } = req.params
+        const { status } = req.body
+
 
         statusService
-          .updateStatus(id, status)
+          .updateStatus(_id, status)
+          .then(() => res.end())
+          .catch(next)
+      }
+    )
+
+    router.delete(
+      '/statuses/:_id',
+      (req: Request, res: Response, next: NextFunction) => {
+        const { _id } = req.params
+
+        statusService
+          .deleteStatus(_id)
           .then(() => res.end())
           .catch(next)
       }

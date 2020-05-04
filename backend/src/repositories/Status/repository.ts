@@ -13,7 +13,9 @@ export default class StatusRepository extends BaseRepository<Status>
   }
 
   public async delete(id: IId): Promise<Status> {
-    throw new Error('Method not implemented.')
+    return StatusModel.findByIdAndDelete(id).then(
+      (templateType) => new Status(templateType)
+    )
   }
 
   public async create(status: Status): Promise<Status> {
