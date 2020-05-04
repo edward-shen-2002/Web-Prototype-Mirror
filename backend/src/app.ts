@@ -79,8 +79,8 @@ dbUtil.connect()
 // UserSysRoleModel.createCollection()
 
 // ! No auth for now - Direct connection to router
-app.use('/root', Container.get(TemplateController)({ router: Router() }))
-app.use('/root', Container.get(StatusController)({ router: Router() }))
-app.use('/root', Container.get(TemplateTypeController)({ router: Router() }))
+app.use('/designer', Container.get(TemplateController)({ router: Router() }))
+app.use('/designer', Container.get(StatusController)({ router: Router() }))
+app.use('/designer', Container.get(TemplateTypeController)({ router: Router() }))
 
 export default app

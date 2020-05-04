@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useEffect } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import { 
@@ -6,7 +6,7 @@ import {
   createTemplateRequest, 
   deleteTemplateRequest, 
   updateTemplateRequest 
-} from "@thunks/template"
+} from "@thunks/templateType"
 
 import MaterialTable from 'material-table'
 import LaunchIcon from "@material-ui/icons/Launch";
@@ -14,12 +14,12 @@ import Paper from '@material-ui/core/Paper';
 
 import Typography from "@material-ui/core/Typography";
 
-import './Templates.scss'
+import './TemplateTypes.scss'
 
 // const TemplateFileDropzone = () => {}
 
 // TODO : Finish Excel integration
-const TemplateHeader = () => {
+const TemplateTypesHeader = () => {
 
 
   return (
@@ -69,8 +69,8 @@ const TemplatesTable = ({ history }) => {
     () => [
       { 
         icon: LaunchIcon, 
-        tooltip: "Open Template", 
-        onClick: (_event, template) => history.push(`/designer/template/${template._id}`)
+        tooltip: "Open TemplateType", 
+        onClick: (_event, templateType) => history.push(`/template_manager/templateType/${templateType._id}`)
       }
     ],
     [ history ]
@@ -86,9 +86,9 @@ const TemplatesTable = ({ history }) => {
   const editable = useMemo(
     () => (
       { 
-        onRowAdd: (template) => new Promise(
+        onRowAdd: (templateType) => new Promise(
           (resolve) => {
-            template = {
+            templateType = {
               "_id": "5ea9d31a446e017d2b379bc0",
               "name": "sample",
               "templateData": {},
@@ -99,19 +99,19 @@ const TemplatesTable = ({ history }) => {
               "statusId": "5eb02cc0a037591fed65a3f6"
             }
 
-            dispatch(createTemplateRequest(template))
+            dispatch(createTemplateRequest(templateType))
             resolve()
           }
         ), 
-        onRowUpdate: (template) => new Promise(
+        onRowUpdate: (templateType) => new Promise(
           (resolve) => {
-            dispatch(updateTemplateRequest(template))
+            dispatch(updateTemplateRequest(templateType))
             resolve()
           }
         ), 
-        onRowDelete: (template) => new Promise(
+        onRowDelete: (templateType) => new Promise(
           (resolve) => {
-            dispatch(deleteTemplateRequest(template._id))
+            dispatch(deleteTemplateRequest(templateType._id))
             resolve()
           }
         ) 
@@ -138,12 +138,12 @@ const TemplatesTable = ({ history }) => {
   )
 }
 
-const Template = (props) => (
-  <div className="templatesPage">
-    <TemplateHeader/>
+const TemplateType = (props) => (
+  <div className="">
+    <TemplateTypesHeader/>
     {/* <FileDropzone/> */}
     <TemplatesTable {...props}/>
   </div>
 )
 
-export default Template
+export default TemplateType

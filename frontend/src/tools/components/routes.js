@@ -10,7 +10,8 @@ import { ROLE_LEVEL_NOT_APPLICABLE } from "@constants/roles";
 
 import { ONLINE, OFFLINE } from "@constants/states";
 
-const mapActivityStateToProps = ({ app: { isOnline, shouldReconnect } }) => ({ isOnline, shouldReconnect });
+// ! Hardcoded isOnline and shouldReconnect for testing purposes
+const mapActivityStateToProps = ({ app: { isOnline, shouldReconnect } }) => ({ isOnline : true, shouldReconnect: false });
 
 export let ActivityRoute = ({ isOnline, requiredState, exact, path, Component }) => (
   <Route 

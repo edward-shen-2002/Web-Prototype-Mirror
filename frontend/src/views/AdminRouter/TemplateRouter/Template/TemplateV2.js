@@ -6,7 +6,7 @@ import Excel from "@tools/components/Excel";
 
 import { 
   getTemplateRequest
-} from "@thunks/templates"
+} from "@thunks/template"
 
 import Loading from "@tools/components/Loading";
 
@@ -36,7 +36,7 @@ const Template = ({ match: { params: { _id } } }) => {
   return (
     isCallInProgress 
       ? <Loading/>
-      : <Excel type="template" returnLink="/"/>
+      : <Excel type="template" returnLink="/designer/template"/>
   );
 };
 

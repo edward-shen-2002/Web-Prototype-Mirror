@@ -1,4 +1,4 @@
-import templateController from '@controllers/templates'
+import templateController from '@controllers/template'
 
 import {
   requestTemplates,

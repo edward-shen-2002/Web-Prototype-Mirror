@@ -1,6 +1,6 @@
 # GET http://localhost:3000/root/templates
 
-POST http://localhost:3000/root/templates HTTP/1.1
+POST http://localhost:3000/designer/templates HTTP/1.1
 content-type: application/json
 
 {

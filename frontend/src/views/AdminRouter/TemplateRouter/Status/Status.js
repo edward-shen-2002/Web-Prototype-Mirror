@@ -6,7 +6,7 @@ import {
   createTemplateRequest, 
   deleteTemplateRequest, 
   updateTemplateRequest 
-} from "@thunks/template"
+} from "@thunks/statuses"
 
 import MaterialTable from 'material-table'
 import LaunchIcon from "@material-ui/icons/Launch";
@@ -14,12 +14,10 @@ import Paper from '@material-ui/core/Paper';
 
 import Typography from "@material-ui/core/Typography";
 
-import './Templates.scss'
-
 // const TemplateFileDropzone = () => {}
 
 // TODO : Finish Excel integration
-const TemplateHeader = () => {
+const StatusHeader = () => {
 
 
   return (
@@ -30,15 +28,15 @@ const TemplateHeader = () => {
   )
 }
 
-const TemplatesTable = ({ history }) => {
+const StatusesTable = ({ history }) => {
   const dispatch = useDispatch()
 
   const {
-    templates
+    statuses
   } = useSelector(
     (
       {
-        TemplateStore: {
+        StatusStore: {
           response: {
             Values
           }
@@ -46,7 +44,7 @@ const TemplatesTable = ({ history }) => {
       }
     ) => (
       {
-        templates: Values
+        statuses: Values
       }
     ),
     shallowEqual
@@ -56,24 +54,12 @@ const TemplatesTable = ({ history }) => {
   const columns = useMemo(
     () => [
       { title: "Name", field: "name" },
-      { title: "TemplateTypeId", field: "templateTypeId" },
-      { title: "UserCreatorId", field: "userCreatorId" },
-      { title: "CreationDate", type: "date", field: "creationDate" },
-      { title: "ExpirationDate", type: "date", field: "expirationDate" },
-      { title: "StatusId", field: "statusId" }
+      { title: "Description", field: "description" },
+      { title: "Active", field: "isActive" },
+      { title: "Creation", type: "date", field: "creeatedAt" },
+      { title: "Modification", type: "date", field: "updatedAt" }
     ],
     []
-  )
-
-  const actions = useMemo(
-    () => [
-      { 
-        icon: LaunchIcon, 
-        tooltip: "Open Template", 
-        onClick: (_event, template) => history.push(`/designer/template/${template._id}`)
-      }
-    ],
-    [ history ]
   )
 
   const options = useMemo(
@@ -86,32 +72,32 @@ const TemplatesTable = ({ history }) => {
   const editable = useMemo(
     () => (
       { 
-        onRowAdd: (template) => new Promise(
+        onRowAdd: (status) => new Promise(
           (resolve) => {
-            template = {
+            status = {
               "_id": "5ea9d31a446e017d2b379bc0",
               "name": "sample",
-              "templateData": {},
-              "templateTypeId": "5eb02cb4a037591fed65a3f5",
+              "statusData": {},
+              "statusTypeId": "5eb02cb4a037591fed65a3f5",
               "userCreatorId": "507f191e810c19729de860ea",
               "creationDate": "2009-02-03T05:00:00.000Z",
               "expirationDate": "2010-05-05T04:00:00.000Z",
               "statusId": "5eb02cc0a037591fed65a3f6"
             }
 
-            dispatch(createTemplateRequest(template))
+            dispatch(createTemplateRequest(status))
             resolve()
           }
         ), 
-        onRowUpdate: (template) => new Promise(
+        onRowUpdate: (status) => new Promise(
           (resolve) => {
-            dispatch(updateTemplateRequest(template))
+            dispatch(updateTemplateRequest(status))
             resolve()
           }
         ), 
-        onRowDelete: (template) => new Promise(
+        onRowDelete: (status) => new Promise(
           (resolve) => {
-            dispatch(deleteTemplateRequest(template._id))
+            dispatch(deleteTemplateRequest(status._id))
             resolve()
           }
         ) 
@@ -130,8 +116,7 @@ const TemplatesTable = ({ history }) => {
   return (
     <MaterialTable
       columns={columns} 
-      actions={actions} 
-      data={templates} 
+      data={statuses} 
       editable={editable} 
       options={options}
     />
@@ -139,10 +124,10 @@ const TemplatesTable = ({ history }) => {
 }
 
 const Template = (props) => (
-  <div className="templatesPage">
-    <TemplateHeader/>
+  <div>
+    <StatusHeader/>
     {/* <FileDropzone/> */}
-    <TemplatesTable {...props}/>
+    <StatusesTable {...props}/>
   </div>
 )
 

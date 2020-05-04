@@ -76,9 +76,11 @@ const createUserNavigation = () => {
 
   const userBundles = { name: "Bundles", url: ROUTE_USER_BUNDLES, icon: "mdi mdi-pen" };
 
+  const templates = { name: "Templates", url: "/designer/template", icon: "mdi mdi-note-multiple" }
+
   // const userDashboard = { name: "Dashboard", url: ROUTE_USER_DASHBOARD, icon: "mdi mdi-library-books" }
 
-  return [ userTitle, /*userDashboard,*/ userProfile, userBundles ];
+  return [ userTitle, /*userDashboard,*/ userProfile, userBundles, templates ];
 };
 
 const config = (roles) => {
