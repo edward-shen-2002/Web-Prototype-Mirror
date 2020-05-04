@@ -33,6 +33,14 @@ export const CREATE_TEMPLATE_TYPE = "CREATE_TEMPLATE_TYPE";
 export const DELETE_TEMPLATE_TYPE = "DELETE_TEMPLATE_TYPE";
 export const UPDATE_TEMPLATE_TYPE = "UPDATE_TEMPLATE_TYPE";
 
+// Statuses Store
+export const FAIL_STATUSES_REQUEST = "FAIL_STATUSES_REQUEST";
+export const RECEIVE_STATUSES = "RECEIVE_STATUSES";
+export const REQUEST_STATUSES = "REQUEST_STATUSES";
+export const CREATE_STATUS = "CREATE_STATUS";
+export const DELETE_STATUS = "DELETE_STATUS";
+export const UPDATE_STATUS = "UPDATE_STATUS";
+
 /**
  * UI data: data related to the views/components display state
  */
