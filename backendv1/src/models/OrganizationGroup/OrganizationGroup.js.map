@@ -1,0 +1,1 @@
+{"version":3,"file":"OrganizationGroup.js","sourceRoot":"","sources":["OrganizationGroup.ts"],"names":[],"mappings":";;AAAA,qCAAyC;AAIzC,kBAAe,gBAAK,CAClB,mBAAmB,EACnB,IAAI,iBAAM,CACR;IACE,EAAE,EAAiB,EAAE,IAAI,EAAE,MAAM,EAAE;IACnC,IAAI,EAAe,EAAE,IAAI,EAAE,MAAM,EAAE,QAAQ,EAAE,IAAI,EAAE,MAAM,EAAE,IAAI,EAAE;CAClE,EACD,EAAE,QAAQ,EAAE,KAAK,EAAE,CACpB,CACF,CAAC"}

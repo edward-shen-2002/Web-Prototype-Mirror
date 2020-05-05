@@ -1,0 +1,12 @@
+{
+  contact: {
+    name: 'Haonan',
+    telephone: '1112223333',
+    email: 'haonan@ontario.ca'
+  },
+  address: '',
+  _id: 5e6fb7e430323715b41587ca,
+  organizationGroup: 'Health Service Providers',
+  code: '111',
+  name: 'HOSPITAL1'
+}

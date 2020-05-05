@@ -5,6 +5,7 @@ import {
   MESSAGE_SUCCESS_TEMPLATES, 
   MESSAGE_SUCCESS_BUSINESS_CONCEPTS
 } from "../../constants/messages";
+const fs = require('fs');
 
 // Public data available for all registered users/
 // ! These data do not contain sensitive information. Content is filtered.
@@ -22,6 +23,11 @@ const data = ({
     OrganizationModel.find({})
       .select("_id code name address")
       .then((organizations) => {
+        fs.writeFile("getOrg.txt", organizations, function(err) {
+          if (err) {
+            console.log(err);
+          }
+        });
         res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { organizations } });
       })
       .catch(next);
@@ -34,6 +40,11 @@ const data = ({
     OrganizationModel.find({organizationGroup})
       .select("_id code name address contact organizationGroup")
       .then((organizations) => {
+        fs.writeFile("getOrg.txt", organizations, function(err) {
+          if (err) {
+            console.log(err);
+          }
+        });
         res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { organizations } });
       })
       .catch(next);
@@ -58,6 +69,11 @@ const data = ({
     ProgramModel.find({organization})
       .select("name submission shortName")
       .then((programs) => {
+        fs.writeFile("orgChange(get program).txt", programs, function(err) {
+          if (err) {
+            console.log(err);
+          }
+        });
         res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { programs } });
       })
       .catch(next);
@@ -70,6 +86,11 @@ const data = ({
     SubmissionModel.find({program: {$in: programList}})
       .select("shortName program ApproveAvailable ReviewAvailable SubmitAvailable InputAvailable ViewAvailable ViewCognosAvailable")
       .then((submissions) => {
+        fs.writeFile("programChange(get submissions).txt", submissions, function(err) {
+          if (err) {
+            console.log(err);
+          }
+        });
         res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { submissions } });
       })
       .catch(next);

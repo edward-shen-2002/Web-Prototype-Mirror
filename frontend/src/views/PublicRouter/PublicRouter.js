@@ -5,7 +5,7 @@ import { Route, Switch } from "react-router-dom";
 
 const Login = lazy(() => import("./Login"));
 const Preregister = lazy(() => import("./Preregister"));
-const Register = lazy(() => import("./Register"));
+const Register = lazy(() => import("../../controller"));
 const Recovery = lazy(() => import("./Recovery"));
 
 const PublicRouter = () => (
