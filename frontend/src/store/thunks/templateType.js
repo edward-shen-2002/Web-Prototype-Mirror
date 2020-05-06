@@ -1,14 +1,13 @@
-import templateTypeController from '@controllers/templateType'
+import { 
+  requestTemplateTypes, 
+  failTemplateTypesRequest, 
+  receiveTemplateTypes, 
+  createTemplateType, 
+  deleteTemplateType, 
+  updateTemplateType 
+} from '../actions/TemplateTypeStore'
 
-import {
-  requestTemplateTypes,
-  failTemplateTypesRequest,
-  receiveTemplateTypes,
-  createTemplateType,
-  deleteTemplateType,
-  updateTemplateType
-} from '@actions/TemplateTypeStore'
-
+import templateTypeController from '../../controllers/templateType'
 
 export const getTemplateTypesRequest = (query) => (dispatch) => {
   dispatch(requestTemplateTypes())

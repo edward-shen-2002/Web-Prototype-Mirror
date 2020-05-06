@@ -1,5 +1,3 @@
-import statusController from '@controllers/status'
-
 import {
   requestStatuses,
   failStatusesRequest,
@@ -7,8 +5,9 @@ import {
   createStatus,
   deleteStatus,
   updateStatus
-} from '@actions/StatusStore'
+} from '../actions/StatusStore'
 
+import statusController from '../../controllers/status'
 
 export const getStatusesRequest = (query) => (dispatch) => {
   dispatch(requestStatuses())

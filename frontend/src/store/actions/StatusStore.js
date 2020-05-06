@@ -5,7 +5,7 @@ import {
   CREATE_STATUS,
   DELETE_STATUS,
   UPDATE_STATUS
-} from "@actionCreators"
+} from "./actionCreators"
 
 export const failStatusesRequest = (error) => ({ type: FAIL_STATUSES_REQUEST, error })
 export const receiveStatuses = (response) => ({ type: RECEIVE_STATUSES, response })

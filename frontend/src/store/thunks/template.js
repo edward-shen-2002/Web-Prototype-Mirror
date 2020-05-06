@@ -1,7 +1,5 @@
 import { batch } from 'react-redux'
 
-import templateController from '@controllers/template'
-
 import {
   requestTemplates,
   failTemplatesRequest,
@@ -9,14 +7,15 @@ import {
   createTemplate,
   deleteTemplate,
   updateTemplate
-} from '@actions/TemplateStore'
+} from '../actions/TemplateStore'
 
 import { 
   setExcelData,
   resetExcelData
-} from "@actions/ui/excel/commands";
+} from "../actions/ui/excel/commands";
 
-import { createBlankReactState, convertStateToReactState } from "@tools/excel";
+import templateController from '../../controllers/template';
+import { createBlankReactState, convertStateToReactState } from '../../tools/excel';
 
 export const getTemplateRequest = (_id) => (dispatch) => {
   dispatch(requestTemplates())

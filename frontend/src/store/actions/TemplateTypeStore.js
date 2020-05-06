@@ -5,7 +5,7 @@ import {
   CREATE_TEMPLATE_TYPE,
   DELETE_TEMPLATE_TYPE,
   UPDATE_TEMPLATE_TYPE
-} from "@actionCreators"
+} from "./actionCreators"
 
 export const failTemplateTypesRequest = (error) => ({ type: FAIL_TEMPLATE_TYPES_REQUEST, error })
 export const receiveTemplateTypes = (response) => ({ type: RECEIVE_TEMPLATE_TYPES, response })

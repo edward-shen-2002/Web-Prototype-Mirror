@@ -6,7 +6,7 @@ import {
   createTemplateRequest, 
   deleteTemplateRequest, 
   updateTemplateRequest 
-} from "@thunks/template"
+} from "../../../../store/thunks/template"
 
 import MaterialTable from 'material-table'
 import LaunchIcon from "@material-ui/icons/Launch";

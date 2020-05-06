@@ -2,16 +2,11 @@ import React, { useState, useEffect, useCallback } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import Excel from "@tools/components/Excel";
+import { showAppNavigation, hideAppNavigation } from "../../../../store/actions/ui/isAppNavigationOpen";
+import Loading from "../../../../tools/components/Loading/Loading";
 
-import { 
-  getTemplateRequest,
-  updateTemplateRequest
-} from "@thunks/template"
-
-import Loading from "@tools/components/Loading";
-
-import { showAppNavigation, hideAppNavigation } from "@actions/ui/isAppNavigationOpen"; 
+import { updateTemplateRequest, getTemplateRequest } from "../../../../store/thunks/template";
+import { Excel } from "../../../../tools/components/Excel";
 
 import "./Template.scss";
 
@@ -43,7 +38,6 @@ const Template = ({ match: { params: { _id } } }) => {
 
       return () => {
         dispatch(showAppNavigation())
-        // dispatch()
       }
     }, 
     []

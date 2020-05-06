@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useEffect } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import { 
@@ -6,10 +6,9 @@ import {
   createStatusRequest, 
   deleteStatusRequest, 
   updateStatusRequest 
-} from "@thunks/status"
+} from '../../../../store/thunks/status'
 
 import MaterialTable from 'material-table'
-import LaunchIcon from "@material-ui/icons/Launch";
 import Paper from '@material-ui/core/Paper';
 
 import Typography from "@material-ui/core/Typography";
@@ -30,7 +29,7 @@ const StatusHeader = () => {
   )
 }
 
-const StatusesTable = ({ history }) => {
+const StatusesTable = () => {
   const dispatch = useDispatch()
 
   const {
