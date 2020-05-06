@@ -9,34 +9,58 @@ import {
 
 import templateTypeController from '../../controllers/templateType'
 
-export const getTemplateTypesRequest = (query) => (dispatch) => {
+export const getTemplateTypesRequest = (query, resolve, reject) => (dispatch) => {
   dispatch(requestTemplateTypes())
 
   templateTypeController.fetchTemplateTypes(query)
-    .then((templateTypes) => dispatch(receiveTemplateTypes({ Values: templateTypes })))
-    .catch((error) => dispatch(failTemplateTypesRequest(error)))
+    .then((templateTypes) => {
+      dispatch(receiveTemplateTypes({ Values: templateTypes }))
+      resolve()
+    })
+    .catch((error) => {
+      dispatch(failTemplateTypesRequest(error))
+      reject()
+    })
 }
 
-export const createTemplateTypeRequest = (templateType) => (dispatch) => {
+export const createTemplateTypeRequest = (templateType, resolve, reject) => (dispatch) => {
   dispatch(requestTemplateTypes())
   
   templateTypeController.createTemplateType(templateType)
-    .then((templateType) => dispatch(createTemplateType({ Value: templateType })))
-    .catch((error) => dispatch(failTemplateTypesRequest(error)))
+    .then((templateType) => {
+      dispatch(createTemplateType({ Value: templateType }))
+      resolve()
+    })
+    .catch((error) => {
+      dispatch(failTemplateTypesRequest(error))
+      reject()
+    })
 }
 
-export const deleteTemplateTypeRequest = (_id) => (dispatch) => {
+export const deleteTemplateTypeRequest = (_id, resolve, reject) => (dispatch) => {
   dispatch(requestTemplateTypes())
 
   templateTypeController.deleteTemplateType(_id)
-    .then(() => dispatch(deleteTemplateType({ Value: { _id } })))
-    .catch((error) => dispatch(failTemplateTypesRequest(error)))
+    .then(() => {
+      dispatch(deleteTemplateType({ Value: { _id } }))
+      resolve()
+    })
+    .catch((error) => {
+      dispatch(failTemplateTypesRequest(error))
+      reject()
+    })
 }
 
-export const updateTemplateTypeRequest = (templateType) => (dispatch) => {
+export const updateTemplateTypeRequest = (templateType, resolve, reject) => (dispatch) => {
   dispatch(requestTemplateTypes())
 
   templateTypeController.updateTemplateType(templateType)
-    .then(() => dispatch(updateTemplateType({ Value: templateType })))
-    .catch((error) => dispatch(failTemplateTypesRequest(error)))
+    .then(() => {
+      dispatch(updateTemplateType({ Value: templateType }))
+      resolve()
+    })
+    .catch((error) => {
+      dispatch(failTemplateTypesRequest(error))
+      reject()
+    })
 }

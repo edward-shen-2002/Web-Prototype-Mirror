@@ -87,7 +87,7 @@ const TemplatesTable = ({ history }) => {
     () => (
       { 
         onRowAdd: (template) => new Promise(
-          (resolve) => {
+          (resolve, reject) => {
             template = {
               "_id": "5ea9d31a446e017d2b379bc0",
               "name": "sample",
@@ -99,20 +99,17 @@ const TemplatesTable = ({ history }) => {
               "statusId": "5eb1aeac3168281b9c23d41f"
             }
 
-            dispatch(createTemplateRequest(template))
-            resolve()
+            dispatch(createTemplateRequest(template, resolve, reject))
           }
         ), 
         onRowUpdate: (template) => new Promise(
-          (resolve) => {
-            dispatch(updateTemplateRequest(template))
-            resolve()
+          (resolve, reject) => {
+            dispatch(updateTemplateRequest(template, resolve, reject))
           }
         ), 
         onRowDelete: (template) => new Promise(
-          (resolve) => {
-            dispatch(deleteTemplateRequest(template._id))
-            resolve()
+          (resolve, reject) => {
+            dispatch(deleteTemplateRequest(template._id, resolve, reject))
           }
         ) 
       }

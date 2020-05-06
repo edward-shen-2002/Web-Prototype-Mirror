@@ -2,39 +2,39 @@ import React, { useMemo, useEffect } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import { 
-  getStatusesRequest, 
-  createStatusRequest, 
-  deleteStatusRequest, 
-  updateStatusRequest 
-} from '../../../../store/thunks/status'
+  getPackagesRequest, 
+  createPackageRequest, 
+  deletePackageRequest, 
+  updatePackageRequest 
+} from '../../../../store/thunks/package'
 
 import MaterialTable from 'material-table'
 import Paper from '@material-ui/core/Paper';
 
 import Typography from "@material-ui/core/Typography";
 
-import './Statuses.scss'
+import './Packages.scss'
 
-const StatusHeader = () => {
+const PackageHeader = () => {
 
 
   return (
     <Paper className="header">
-      <Typography variant="h5">Statuses</Typography>
+      <Typography variant="h5">Packages</Typography>
       {/* <HeaderActions/> */}
     </Paper>
   )
 }
 
-const StatusesTable = () => {
+const PackagesTable = () => {
   const dispatch = useDispatch()
 
   const {
-    statuses
+    packages
   } = useSelector(
     (
       {
-        StatusStore: {
+        PackageStore: {
           response: {
             Values
           }
@@ -42,7 +42,7 @@ const StatusesTable = () => {
       }
     ) => (
       {
-        statuses: Values
+        packages: Values
       }
     ),
     shallowEqual
@@ -67,25 +67,21 @@ const StatusesTable = () => {
   const editable = useMemo(
     () => (
       { 
-        onRowAdd: (status) => new Promise(
+        onRowAdd: (package) => new Promise(
           (resolve) => {
-            // status = {
-
-            // }
-
-            dispatch(createStatusRequest(status))
+            dispatch(createPackageRequest(package))
             resolve()
           }
         ), 
-        onRowUpdate: (status) => new Promise(
+        onRowUpdate: (package) => new Promise(
           (resolve) => {
-            dispatch(updateStatusRequest(status))
+            dispatch(updatePackageRequest(package))
             resolve()
           }
         ), 
-        onRowDelete: (status) => new Promise(
+        onRowDelete: (package) => new Promise(
           (resolve) => {
-            dispatch(deleteStatusRequest(status._id))
+            dispatch(deletePackageRequest(package._id))
             resolve()
           }
         ) 
@@ -96,7 +92,7 @@ const StatusesTable = () => {
 
   useEffect(
     () => {
-      dispatch(getStatusesRequest())
+      dispatch(getPackagesRequest())
     },
     [ dispatch ]
   )
@@ -104,18 +100,18 @@ const StatusesTable = () => {
   return (
     <MaterialTable
       columns={columns} 
-      data={statuses} 
+      data={packages} 
       editable={editable} 
       options={options}
     />
   )
 }
 
-const Status = (props) => (
-  <div className="statusesPage">
-    <StatusHeader/>
-    <StatusesTable {...props}/>
+const Package = (props) => (
+  <div className="packagesPage">
+    <PackageHeader/>
+    <PackagesTable {...props}/>
   </div>
 )
 
-export default Status
+export default Package

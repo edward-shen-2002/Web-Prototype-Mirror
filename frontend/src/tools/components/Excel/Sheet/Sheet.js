@@ -187,7 +187,7 @@ const SheetWindow = ({ sheetGridRef }) => {
   );
 };
 
-let Sheet = ({ sheetGridRef }) => {
+let Sheet = ({ sheetGridRef, handleSave }) => {
   const dispatch = useDispatch();
 
   const {
@@ -262,7 +262,7 @@ let Sheet = ({ sheetGridRef }) => {
         action = keyEscape({});
       } else if(key === "s" && (ctrlKey || metaKey)) {
         // ! save
-        action = save();
+        action = save(handleSave);
       } else if(key === "a" && (ctrlKey || metaKey)) {
         event.preventDefault();
         action = selectAll();

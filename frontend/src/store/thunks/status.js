@@ -9,34 +9,58 @@ import {
 
 import statusController from '../../controllers/status'
 
-export const getStatusesRequest = (query) => (dispatch) => {
+export const getStatusesRequest = (query, resolve, reject) => (dispatch) => {
   dispatch(requestStatuses())
 
   statusController.fetchStatuses(query)
-    .then((statuses) => dispatch(receiveStatuses({ Values: statuses })))
-    .catch((error) => dispatch(failStatusesRequest(error)))
+    .then((statuses) => {
+      dispatch(receiveStatuses({ Values: statuses }))
+      resolve()
+    })
+    .catch((error) => {
+      dispatch(failStatusesRequest(error))
+      reject()
+    })
 }
 
-export const createStatusRequest = (status) => (dispatch) => {
+export const createStatusRequest = (status, resolve, reject) => (dispatch) => {
   dispatch(requestStatuses())
   
   statusController.createStatus(status)
-    .then((status) => dispatch(createStatus({ Value: status })))
-    .catch((error) => dispatch(failStatusesRequest(error)))
+    .then((status) => {
+      dispatch(createStatus({ Value: status }))
+      resolve()
+    })
+    .catch((error) => {
+      dispatch(failStatusesRequest(error))
+      reject()
+    })
 }
 
-export const deleteStatusRequest = (_id) => (dispatch) => {
+export const deleteStatusRequest = (_id, resolve, reject) => (dispatch) => {
   dispatch(requestStatuses())
 
   statusController.deleteStatus(_id)
-    .then(() => dispatch(deleteStatus({ Value: { _id } })))
-    .catch((error) => dispatch(failStatusesRequest(error)))
+    .then(() => {
+      dispatch(deleteStatus({ Value: { _id } }))
+      resolve()
+    })
+    .catch((error) => {
+      dispatch(failStatusesRequest(error))
+      reject()
+    })
 }
 
-export const updateStatusRequest = (status) => (dispatch) => {
+export const updateStatusRequest = (status, resolve, reject) => (dispatch) => {
   dispatch(requestStatuses())
 
   statusController.updateStatus(status)
-    .then(() => dispatch(updateStatus({ Value: status })))
-    .catch((error) => dispatch(failStatusesRequest(error)))
+    .then(() => {
+      dispatch(updateStatus({ Value: status }))
+      resolve()
+    })
+    .catch((error) => {
+      dispatch(failStatusesRequest(error))
+      reject()
+    })
 }

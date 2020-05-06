@@ -17,7 +17,8 @@ const File = ({
   openedMenuName, 
 
   handleClickMenu, 
-  handleHoverMenu
+  handleHoverMenu,
+  handleSave
 }) => {
   const dispatch = useDispatch();
 
@@ -26,7 +27,7 @@ const File = ({
       {
         icon: <SaveIcon/>,
         label: "Save",
-        handleClick: () => dispatch(save())
+        handleClick: () => dispatch(save(handleSave))
       },
       {
         icon: <GetAppIcon/>,

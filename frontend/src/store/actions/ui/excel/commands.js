@@ -71,7 +71,7 @@ export const setReadOnly = () => ({ type: EXCEL_SET_READ_ONLY });
 export const unsetReadOnly = () => ({ type: EXCEL_UNSET_READ_ONLY });
 
 export const download = () => ({ type: EXCEL_DOWNLOAD });
-export const save = () => ({ type: EXCEL_SAVE });
+export const save = (handleSave) => ({ type: EXCEL_SAVE, handleSave });
 
 export const deleteComment = (props) => ({ type: EXCEL_DELETE_COMMENT, ...props });
 export const addComment = (props) => ({ type: EXCEL_ADD_COMMENT, ...props });

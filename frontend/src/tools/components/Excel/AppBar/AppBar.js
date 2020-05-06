@@ -33,11 +33,12 @@ const ExcelReturnButton = ({ returnLink }) => (
  * The header of the workbook, which contains the title (?and related actions)
  */
 const Header = ({ 
-  name
+  name,
+  handleSave
 }) => (
   <div>
     <Title name={name}/>
-    <Menu/>
+    <Menu handleSave={handleSave}/>
   </div>
 );
 
@@ -84,16 +85,16 @@ const SideOptions = ({ type }) => (
   </div>
 );
 
-const MainAppBarOptions = ({ returnLink }) => (
+const MainAppBarOptions = ({ returnLink, handleSave }) => (
   <div className="appBarMain">
     <ExcelReturnButton returnLink={returnLink}/>
-    <Header/>
+    <Header handleSave={handleSave}/>
   </div>
 );
 
-const AppBar = ({ type, returnLink }) => (
+const AppBar = ({ type, returnLink, handleSave }) => (
   <div className="appBarContainer">
-    <MainAppBarOptions returnLink={returnLink} />
+    <MainAppBarOptions returnLink={returnLink} handleSave={handleSave}/>
     <SideOptions type={type}/>
   </div>
 );

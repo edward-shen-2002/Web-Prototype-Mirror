@@ -14,7 +14,7 @@ import "./Excel.scss";
 
 const Divider = () => <hr className="divider"/>;
 
-const Excel = ({ type, returnLink }) => {
+const Excel = ({ type, returnLink, handleSave }) => {
   const sheetContainerRef = useRef(null);
   const sheetGridRef = useRef(null);
 
@@ -41,13 +41,13 @@ const Excel = ({ type, returnLink }) => {
       className="excel"
       onKeyDown={handleKeyDown}
     >
-      <AppBar type={type} returnLink={returnLink} />
+      <AppBar type={type} returnLink={returnLink} handleSave={handleSave}/>
       <Divider/>
       <ToolBar type={type}/>
       <Divider/>
       <FormulaBar/>
       <Divider/>
-      <Sheet sheetGridRef={sheetGridRef}/>
+      <Sheet sheetGridRef={sheetGridRef} handleSave={handleSave}/>
       <Divider/>
       <SheetNavigator/>
     </div>
