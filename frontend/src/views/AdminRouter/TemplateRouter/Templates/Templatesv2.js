@@ -92,11 +92,11 @@ const TemplatesTable = ({ history }) => {
               "_id": "5ea9d31a446e017d2b379bc0",
               "name": "sample",
               "templateData": {},
-              "templateTypeId": "5eb02cb4a037591fed65a3f5",
+              "templateTypeId": "5eb1ae9d3168281b9c23d41e",
               "userCreatorId": "507f191e810c19729de860ea",
               "creationDate": "2009-02-03T05:00:00.000Z",
               "expirationDate": "2010-05-05T04:00:00.000Z",
-              "statusId": "5eb02cc0a037591fed65a3f6"
+              "statusId": "5eb1aeac3168281b9c23d41f"
             }
 
             dispatch(createTemplateRequest(template))

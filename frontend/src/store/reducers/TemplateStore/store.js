@@ -4,6 +4,7 @@ import FAIL_TEMPLATES_REQUEST from '../common/FAIL_REQUEST'
 import CREATE_TEMPLATE from '../common/CREATE'
 import DELETE_TEMPLATE from '../common/DELETE'
 import UPDATE_TEMPLATE from '../common/UPDATE'
+import RESET_TEMPLATES from '../common/RESET'
 
 const reducersMap = {
   REQUEST_TEMPLATES,
@@ -11,7 +12,8 @@ const reducersMap = {
   FAIL_TEMPLATES_REQUEST,
   CREATE_TEMPLATE,
   DELETE_TEMPLATE,
-  UPDATE_TEMPLATE
+  UPDATE_TEMPLATE,
+  RESET_TEMPLATES
 }
 
 const defaultState = {
