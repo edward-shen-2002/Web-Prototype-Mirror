@@ -5,12 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import Excel from "@tools/components/Excel";
 
 import { 
-  getTemplateRequest
+  getTemplateRequest,
+  updateTemplateRequest
 } from "@thunks/template"
 
 import Loading from "@tools/components/Loading";
 
-import { showAppNavigation } from "@actions/ui/isAppNavigationOpen"; 
+import { showAppNavigation, hideAppNavigation } from "@actions/ui/isAppNavigationOpen"; 
 
 import "./Template.scss";
 
@@ -27,10 +28,18 @@ const Template = ({ match: { params: { _id } } }) => {
     ) => isCallInProgress
   )
 
+  const handleSaveTemplate = useCallback(
+    (templateData) => {
+      dispatch(updateTemplateRequest({ _id, templateData }))
+    },
+    []
+  )
+
   useEffect(
     () => {
       // If fetch fails, push back to /tempaltes
       dispatch(getTemplateRequest(_id))
+      dispatch(hideAppNavigation())
 
       return () => {
         dispatch(showAppNavigation())
@@ -42,7 +51,11 @@ const Template = ({ match: { params: { _id } } }) => {
   return (
     isCallInProgress 
       ? <Loading/>
-      : <Excel type="template" returnLink="/designer/template"/>
+      : <Excel 
+          type="template" 
+          returnLink="/designer/template"
+          handleSave={handleSaveTemplate}
+        />
   );
 };
 

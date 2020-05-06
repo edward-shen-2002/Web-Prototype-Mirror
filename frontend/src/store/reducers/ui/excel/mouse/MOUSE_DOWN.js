@@ -26,7 +26,6 @@ const MOUSE_DOWN = (
   
   if((!ctrlKey && stagnantSelectionAreasLength) || shiftKey) newState.stagnantSelectionAreas = []; 
 
-  // ! Lorem, ipsum dolor sit amet consectetur adipisicing elit. Possimus doloremque nesciunt consequuntur natus enim ipsum dolor tempore corporis at accusantium asperiores, itaque suscipit earum blanditiis, repellendus harum modi. Placeat, illo.
   newState = saveActiveCellInputData({ newState });
 
   newState.isSelectionMode = true;

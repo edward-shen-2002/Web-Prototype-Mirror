@@ -4,11 +4,11 @@
 const SAVE = (
   state,
   {
-    type
+    handleSave
   }
 ) => {
   // Consider type of workbook then route properly
-  
+  handleSave(state)
   return state;
 }; 
 

@@ -16,8 +16,6 @@ import {
   resetExcelData
 } from "@actions/ui/excel/commands";
 
-import { hideAppNavigation } from "@actions/ui/isAppNavigationOpen"; 
-
 import { createBlankReactState, convertStateToReactState } from "@tools/excel";
 
 export const getTemplateRequest = (_id) => (dispatch) => {
@@ -29,7 +27,6 @@ export const getTemplateRequest = (_id) => (dispatch) => {
         () => {
           dispatch(setExcelData(convertStateToReactState(template.templateData)))
           dispatch(receiveTemplates({ Values: [ template ] }))
-          dispatch(hideAppNavigation())
         }
       )
     })
