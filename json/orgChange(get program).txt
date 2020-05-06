@@ -1,1 +1,1 @@
-{ _id: 5e6fb7e430323715b41587ca, name: 'Program1', shortName: 'P1' }
+{ _id: 5e6fb7e430323715b41587ca, name: 'Program1', shortName: 'P1' },{ _id: 5e6fb7e430323715b41587cb, name: 'Program2', shortName: 'P2' }
