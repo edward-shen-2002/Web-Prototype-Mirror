@@ -34,6 +34,7 @@ const Template = ({ match: { params: { _id } } }) => {
 
       return () => {
         dispatch(showAppNavigation())
+        // dispatch()
       }
     }, 
     []
