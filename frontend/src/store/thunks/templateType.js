@@ -12,7 +12,7 @@ import templateTypeController from '../../controllers/templateType'
 export const getTemplateTypesRequest = (query) => (dispatch) => {
   dispatch(requestTemplateTypes())
 
-  return templateTypeController.fetchTemplateTypes(query)
+  templateTypeController.fetchTemplateTypes(query)
     .then((templateTypes) => dispatch(receiveTemplateTypes({ Values: templateTypes })))
     .catch((error) => dispatch(failTemplateTypesRequest(error)))
 }
@@ -20,7 +20,7 @@ export const getTemplateTypesRequest = (query) => (dispatch) => {
 export const createTemplateTypeRequest = (templateType) => (dispatch) => {
   dispatch(requestTemplateTypes())
   
-  return templateTypeController.createTemplateType(templateType)
+  templateTypeController.createTemplateType(templateType)
     .then((templateType) => dispatch(createTemplateType({ Value: templateType })))
     .catch((error) => dispatch(failTemplateTypesRequest(error)))
 }
@@ -28,7 +28,7 @@ export const createTemplateTypeRequest = (templateType) => (dispatch) => {
 export const deleteTemplateTypeRequest = (_id) => (dispatch) => {
   dispatch(requestTemplateTypes())
 
-  return templateTypeController.deleteTemplateType(_id)
+  templateTypeController.deleteTemplateType(_id)
     .then(() => dispatch(deleteTemplateType({ Value: { _id } })))
     .catch((error) => dispatch(failTemplateTypesRequest(error)))
 }
@@ -36,7 +36,7 @@ export const deleteTemplateTypeRequest = (_id) => (dispatch) => {
 export const updateTemplateTypeRequest = (templateType) => (dispatch) => {
   dispatch(requestTemplateTypes())
 
-  return templateTypeController.updateTemplateType(templateType)
+  templateTypeController.updateTemplateType(templateType)
     .then(() => dispatch(updateTemplateType({ Value: templateType })))
     .catch((error) => dispatch(failTemplateTypesRequest(error)))
 }

@@ -17,10 +17,11 @@ import {
 import templateController from '../../controllers/template';
 import { createBlankReactState, convertStateToReactState } from '../../tools/excel';
 
+// ? Cause page redirection on error
 export const getTemplateRequest = (_id) => (dispatch) => {
   dispatch(requestTemplates())
 
-  return templateController.fetchTemplate(_id)
+  templateController.fetchTemplate(_id)
     .then((template) => {
       batch(
         () => {
@@ -29,42 +30,68 @@ export const getTemplateRequest = (_id) => (dispatch) => {
         }
       )
     })
-    .catch((error) => dispatch(failTemplatesRequest(error)))
+    .catch((error) => {
+      dispatch(failTemplatesRequest(error))
+    })
 }
 
-export const getTemplatesRequest = (query) => (dispatch) => {
+export const getTemplatesRequest = (query, resolve, reject) => (dispatch) => {
   dispatch(requestTemplates())
 
-  return templateController.fetchTemplates(query)
-    .then((templates) => dispatch(receiveTemplates({ Values: templates })))
-    .catch((error) => dispatch(failTemplatesRequest(error)))
+  templateController.fetchTemplates(query)
+    .then((templates) => {
+      dispatch(receiveTemplates({ Values: templates }))
+      resolve()
+    })
+    .catch((error) => {
+      dispatch(failTemplatesRequest(error))
+      reject()
+    })
 }
 
-export const createTemplateRequest = (template) => (dispatch) => {
+export const createTemplateRequest = (template, resolve, reject) => (dispatch) => {
   dispatch(requestTemplates())
   
-  return templateController.createTemplate(
+  templateController.createTemplate(
       {
         ...template,
         templateData: createBlankReactState()
       }
     )
-    .then((template) => dispatch(createTemplate({ Value: template })))
-    .catch((error) => dispatch(failTemplatesRequest(error)))
+    .then((template) => {
+      dispatch(createTemplate({ Value: template }))
+      resolve()
+    })
+    .catch((error) => {
+      dispatch(failTemplatesRequest(error))
+      reject()
+    })
 }
 
-export const deleteTemplateRequest = (_id) => (dispatch) => {
+export const deleteTemplateRequest = (_id, resolve, reject) => (dispatch) => {
   dispatch(requestTemplates())
 
-  return templateController.deleteTemplate(_id)
-    .then(() => dispatch(deleteTemplate({ Value: { _id } })))
-    .catch((error) => dispatch(failTemplatesRequest(error)))
+  templateController.deleteTemplate(_id)
+    .then(() => {
+      dispatch(deleteTemplate({ Value: { _id } }))
+      resolve()
+    })
+    .catch((error) => {
+      dispatch(failTemplatesRequest(error))
+      reject()
+    })
 }
 
-export const updateTemplateRequest = (template) => (dispatch) => {
+export const updateTemplateRequest = (template, resolve, reject) => (dispatch) => {
   dispatch(requestTemplates())
 
-  return templateController.updateTemplate(template)
-    .then(() => dispatch(updateTemplate({ Value: template })))
-    .catch((error) => dispatch(failTemplatesRequest(error)))
+  templateController.updateTemplate(template)
+    .then(() => {
+      dispatch(updateTemplate({ Value: template }))
+      resolve()
+    })
+    .catch((error) => {
+      dispatch(failTemplatesRequest(error))
+      reject()
+    })
 }
