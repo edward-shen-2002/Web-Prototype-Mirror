@@ -9,7 +9,7 @@ const TemplatePackageModel = model<ITemplatePackageDocument>(
     {
       code: { type: String },
       submissionPeriodId: { type: ObjectId, ref: "SubmissionPeriod" },
-      templateId: { type: ObjectId, ref: "SubmissionPeriod" },
+      templateIds: [{ type: ObjectId, ref: "Template" }],
       isPublished: { type: Boolean },
       creationDate: { type: Date },
       userCreatorId: { type: ObjectId, ref: "User" }
