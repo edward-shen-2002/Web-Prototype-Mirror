@@ -1,10 +1,10 @@
-import REQUEST_STATUSES from '../common/REQUEST'
-import RECEIVE_STATUSES from '../common/RECEIVE'
-import FAIL_STATUSES_REQUEST from '../common/FAIL_REQUEST'
-import CREATE_STATUS from '../common/CREATE'
-import DELETE_STATUS from '../common/DELETE'
-import UPDATE_STATUS from '../common/UPDATE'
-import RESET_STATUSES from '../common/RESET'
+import REQUEST_STATUSES from './common/REQUEST'
+import RECEIVE_STATUSES from './common/RECEIVE'
+import FAIL_STATUSES_REQUEST from './common/FAIL_REQUEST'
+import CREATE_STATUS from './common/CREATE'
+import DELETE_STATUS from './common/DELETE'
+import UPDATE_STATUS from './common/UPDATE'
+import RESET_STATUSES from './common/RESET'
 
 const reducersMap = {
   REQUEST_STATUSES,

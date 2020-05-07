@@ -2,39 +2,39 @@ import React, { useMemo, useEffect } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import { 
-  getPackagesRequest, 
-  createPackageRequest, 
-  deletePackageRequest, 
-  updatePackageRequest 
-} from '../../../../store/thunks/package'
+  getTemplatePackagesRequest, 
+  createTemplatePackageRequest, 
+  deleteTemplatePackageRequest, 
+  updateTemplatePackageRequest 
+} from '../../../../store/thunks/templatePackage'
 
 import MaterialTable from 'material-table'
 import Paper from '@material-ui/core/Paper';
 
 import Typography from "@material-ui/core/Typography";
 
-import './Packages.scss'
+import './TemplatePackages.scss'
 
-const PackageHeader = () => {
+const TemplatePackageHeader = () => {
 
 
   return (
     <Paper className="header">
-      <Typography variant="h5">Packages</Typography>
+      <Typography variant="h5">TemplatePackages</Typography>
       {/* <HeaderActions/> */}
     </Paper>
   )
 }
 
-const PackagesTable = () => {
+const TemplatePackagesTable = () => {
   const dispatch = useDispatch()
 
   const {
-    packages
+    templatePackages
   } = useSelector(
     (
       {
-        PackageStore: {
+        TemplatePackageStore: {
           response: {
             Values
           }
@@ -42,7 +42,7 @@ const PackagesTable = () => {
       }
     ) => (
       {
-        packages: Values
+        templatePackages: Values
       }
     ),
     shallowEqual
@@ -67,21 +67,21 @@ const PackagesTable = () => {
   const editable = useMemo(
     () => (
       { 
-        onRowAdd: (package) => new Promise(
+        onRowAdd: (templatePackage) => new Promise(
           (resolve) => {
-            dispatch(createPackageRequest(package))
+            dispatch(createTemplatePackageRequest(templatePackage))
             resolve()
           }
         ), 
-        onRowUpdate: (package) => new Promise(
+        onRowUpdate: (templatePackage) => new Promise(
           (resolve) => {
-            dispatch(updatePackageRequest(package))
+            dispatch(updateTemplatePackageRequest(templatePackage))
             resolve()
           }
         ), 
-        onRowDelete: (package) => new Promise(
+        onRowDelete: (templatePackage) => new Promise(
           (resolve) => {
-            dispatch(deletePackageRequest(package._id))
+            dispatch(deleteTemplatePackageRequest(templatePackage._id))
             resolve()
           }
         ) 
@@ -92,7 +92,7 @@ const PackagesTable = () => {
 
   useEffect(
     () => {
-      dispatch(getPackagesRequest())
+      dispatch(getTemplatePackagesRequest())
     },
     [ dispatch ]
   )
@@ -100,18 +100,18 @@ const PackagesTable = () => {
   return (
     <MaterialTable
       columns={columns} 
-      data={packages} 
+      data={templatePackages} 
       editable={editable} 
       options={options}
     />
   )
 }
 
-const Package = (props) => (
-  <div className="packagesPage">
-    <PackageHeader/>
-    <PackagesTable {...props}/>
+const TemplatePackage = (props) => (
+  <div className="templatePackagesPage">
+    <TemplatePackageHeader/>
+    <TemplatePackagesTable {...props}/>
   </div>
 )
 
-export default Package
+export default TemplatePackage

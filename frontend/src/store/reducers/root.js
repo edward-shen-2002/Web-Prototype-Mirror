@@ -6,11 +6,13 @@ import ui from "./ui";
 import TemplateStore from './TemplateStore'
 import TemplateTypeStore from './TemplateTypeStore'
 import StatusStore from './StatusStore'
+import TemplatePackageStore from './TemplatePackageStore'
 
 export const root = combineReducers({
   TemplateStore,
   TemplateTypeStore,
   StatusStore,
+  TemplatePackageStore,
   app,
   domain,
   ui

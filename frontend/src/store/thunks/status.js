@@ -9,17 +9,15 @@ import {
 
 import statusController from '../../controllers/status'
 
-export const getStatusesRequest = (query, resolve, reject) => (dispatch) => {
+export const getStatusesRequest = (query) => (dispatch) => {
   dispatch(requestStatuses())
 
   statusController.fetchStatuses(query)
     .then((statuses) => {
       dispatch(receiveStatuses({ Values: statuses }))
-      resolve()
     })
     .catch((error) => {
       dispatch(failStatusesRequest(error))
-      reject()
     })
 }
 

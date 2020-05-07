@@ -1,10 +1,10 @@
-import REQUEST_TEMPLATE_TYPES from '../common/REQUEST'
-import RECEIVE_TEMPLATE_TYPES from '../common/RECEIVE'
-import FAIL_TEMPLATE_TYPES_REQUEST from '../common/FAIL_REQUEST'
-import CREATE_TEMPLATE_TYPE from '../common/CREATE'
-import DELETE_TEMPLATE_TYPE from '../common/DELETE'
-import UPDATE_TEMPLATE_TYPE from '../common/UPDATE'
-import RESET_TEMPLATE_TYPES from '../common/RESET'
+import REQUEST_TEMPLATE_TYPES from './common/REQUEST'
+import RECEIVE_TEMPLATE_TYPES from './common/RECEIVE'
+import FAIL_TEMPLATE_TYPES_REQUEST from './common/FAIL_REQUEST'
+import CREATE_TEMPLATE_TYPE from './common/CREATE'
+import DELETE_TEMPLATE_TYPE from './common/DELETE'
+import UPDATE_TEMPLATE_TYPE from './common/UPDATE'
+import RESET_TEMPLATE_TYPES from './common/RESET'
 
 const reducersMap = {
   REQUEST_TEMPLATE_TYPES,

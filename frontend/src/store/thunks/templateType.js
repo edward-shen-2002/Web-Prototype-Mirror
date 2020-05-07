@@ -9,17 +9,15 @@ import {
 
 import templateTypeController from '../../controllers/templateType'
 
-export const getTemplateTypesRequest = (query, resolve, reject) => (dispatch) => {
+export const getTemplateTypesRequest = (query) => (dispatch) => {
   dispatch(requestTemplateTypes())
 
   templateTypeController.fetchTemplateTypes(query)
     .then((templateTypes) => {
       dispatch(receiveTemplateTypes({ Values: templateTypes }))
-      resolve()
     })
     .catch((error) => {
       dispatch(failTemplateTypesRequest(error))
-      reject()
     })
 }
 

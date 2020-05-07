@@ -35,17 +35,15 @@ export const getTemplateRequest = (_id) => (dispatch) => {
     })
 }
 
-export const getTemplatesRequest = (query, resolve, reject) => (dispatch) => {
+export const getTemplatesRequest = (query) => (dispatch) => {
   dispatch(requestTemplates())
 
   templateController.fetchTemplates(query)
     .then((templates) => {
       dispatch(receiveTemplates({ Values: templates }))
-      resolve()
     })
     .catch((error) => {
       dispatch(failTemplatesRequest(error))
-      reject()
     })
 }
 
