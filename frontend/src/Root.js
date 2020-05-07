@@ -6,12 +6,11 @@ import { BrowserRouter, Route } from "react-router-dom";
 
 import { ROUTE_ROOT } from "@constants/routes";
 
-import AppV2 from './AppV2'
+import App from './App'
 
 const Root = () => (
   <BrowserRouter>
-    {/* <Route path={ROUTE_ROOT} component={App}/> */}
-    <Route path={ROUTE_ROOT} component={AppV2}/>
+    <Route path={ROUTE_ROOT} component={App}/>
   </BrowserRouter>
 );
 

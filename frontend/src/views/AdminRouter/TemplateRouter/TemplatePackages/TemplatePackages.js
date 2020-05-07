@@ -10,6 +10,7 @@ import {
 
 import MaterialTable from 'material-table'
 import Paper from '@material-ui/core/Paper';
+import LaunchIcon from "@material-ui/icons/Launch";
 
 import Typography from "@material-ui/core/Typography";
 
@@ -20,13 +21,13 @@ const TemplatePackageHeader = () => {
 
   return (
     <Paper className="header">
-      <Typography variant="h5">TemplatePackages</Typography>
+      <Typography variant="h5">Template Packages</Typography>
       {/* <HeaderActions/> */}
     </Paper>
   )
 }
 
-const TemplatePackagesTable = () => {
+const TemplatePackagesTable = ({ history }) => {
   const dispatch = useDispatch()
 
   const {
@@ -46,6 +47,17 @@ const TemplatePackagesTable = () => {
       }
     ),
     shallowEqual
+  )
+
+  const actions = useMemo(
+    () => [
+      { 
+        icon: LaunchIcon, 
+        tooltip: "Open Package", 
+        onClick: (_event, templatePackage) => history.push(`/designer/templatePackage/${templatePackage._id}`)
+      }
+    ],
+    [ history ]
   )
 
   const columns = useMemo(
@@ -101,6 +113,7 @@ const TemplatePackagesTable = () => {
     <MaterialTable
       columns={columns} 
       data={templatePackages} 
+      actions={actions}
       editable={editable} 
       options={options}
     />
@@ -108,7 +121,7 @@ const TemplatePackagesTable = () => {
 }
 
 const TemplatePackage = (props) => (
-  <div className="templatePackagesPage">
+  <div className="templatePackages">
     <TemplatePackageHeader/>
     <TemplatePackagesTable {...props}/>
   </div>

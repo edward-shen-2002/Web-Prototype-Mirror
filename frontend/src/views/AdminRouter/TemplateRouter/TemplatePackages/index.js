@@ -1,1 +1,1 @@
-export { default } from './Statuses'
+export { default } from './TemplatePackages'

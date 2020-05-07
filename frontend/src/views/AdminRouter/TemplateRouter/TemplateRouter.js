@@ -8,6 +8,7 @@ import Template from './Template/TemplateV2'
 import Templates from './Templates/Templatesv2'
 import TemplateTypes from './TemplateTypes'
 import Statuses from "./Statuses";
+import TemplatePackages from './TemplatePackages'
 
 const TemplateRouter = () => (
   <Switch>
@@ -15,6 +16,9 @@ const TemplateRouter = () => (
     <Route path="/designer/template/:_id" component={Template}/>
     <Route path="/designer/templateType" component={TemplateTypes}/>
     <Route path="/designer/status" component={Statuses}/>
+    <Route path="/designer/templatePackage" component={TemplatePackages}/>
+
+    {/* NOT FOUND ROUTE */}
   </Switch>
 );
 
