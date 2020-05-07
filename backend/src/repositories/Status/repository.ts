@@ -14,7 +14,7 @@ export default class StatusRepository extends BaseRepository<Status>
 
   public async delete(id: IId): Promise<Status> {
     return StatusModel.findByIdAndDelete(id).then(
-      (templateType) => new Status(templateType)
+      (status) => new Status(status)
     )
   }
 

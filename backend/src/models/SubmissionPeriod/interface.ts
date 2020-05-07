@@ -2,10 +2,11 @@ import { Document } from 'mongoose'
 import { IId } from '../interface';
 
 export interface ISubmissionPeriod {
-  note: string
-  submissionId: IId
-  creationDate: Date
-  userCreatorId: IId
+  reportingPeriodId?: IId
+  programId?: IId
+  name?: string
+  startDate?: Date
+  endDate?: Date
 }
 
 export default interface ISubmissionPeriodDocument extends ISubmissionPeriod, Document {}

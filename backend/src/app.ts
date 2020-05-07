@@ -15,6 +15,8 @@ import StatusController from './controllers/dimension/Status'
 import TemplateTypeController from './controllers/designer/TemplateType'
 import { PORT } from './configs/host'
 import TemplatePackageController from './controllers/designer/TemplatePackage'
+import SubmissionPeriodController from './controllers/dimension/SubmissionPeriod'
+import ReportingPeriodController from './controllers/dimension/ReportingPeriod'
 
 const logger = require('morgan')
 
@@ -42,5 +44,7 @@ app.use('/designer', Container.get(TemplateController)({ router: Router() }))
 app.use('/designer', Container.get(StatusController)({ router: Router() }))
 app.use('/designer', Container.get(TemplateTypeController)({ router: Router() }))
 app.use('/designer', Container.get(TemplatePackageController)({ router: Router() }))
+app.use('/designer', Container.get(SubmissionPeriodController)({ router: Router() }))
+app.use('/designer', Container.get(ReportingPeriodController)({ router: Router() }))
 
 export default app

@@ -5,7 +5,10 @@ const ReportingPeriodModel = model<IReportingPeriodDocument>(
   'ReportingPeriod',
   new Schema(
     {
-      value: { type: String }
+      name: { type: String },
+      startDate: { type: Date },
+      endDate: { type: Date },
+      application: { type: String }
     },
     { minimize: false }
   )

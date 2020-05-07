@@ -4,7 +4,7 @@ import ISubmissionPeriodDocument from './interface'
 const ObjectId = Schema.Types.ObjectId
 
 const SubmissionPeriodModel = model<ISubmissionPeriodDocument>(
-  'SubmissionNote',
+  'SubmissionPeriod',
   new Schema(
     {
       reportingPeriodId: { type: ObjectId, ref: "ReportingPeriod" },

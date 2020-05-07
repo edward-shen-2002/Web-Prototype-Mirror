@@ -21,7 +21,7 @@ const TemplateTypeHeader = () => {
 
   return (
     <Paper className="header">
-      <Typography variant="h5">TemplateTypes</Typography>
+      <Typography variant="h5">Template Types</Typography>
       {/* <HeaderActions/> */}
     </Paper>
   )
