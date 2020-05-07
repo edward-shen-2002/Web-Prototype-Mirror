@@ -16,9 +16,6 @@ import Typography from "@material-ui/core/Typography";
 
 import './TemplateTypes.scss'
 
-// const TemplateTypeFileDropzone = () => {}
-
-// TODO : Finish Excel integration
 const TemplateTypeHeader = () => {
 
 

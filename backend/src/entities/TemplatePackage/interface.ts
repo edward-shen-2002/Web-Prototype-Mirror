@@ -1,6 +1,6 @@
-import { ITemplate } from '../../models/Template/interface'
+import { ITemplatePackage } from '../../models/TemplatePackage/interface'
 import { IId } from '../../models/interface'
 
-export default interface ITemplateEntity extends ITemplate {
+export default interface ITemplatePackageEntity extends ITemplatePackage {
   _id?: IId
 }

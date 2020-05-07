@@ -1,34 +1,30 @@
 import { IId } from '../../models/interface'
-import ITemplateEntity from './interface'
+import ITemplatePackageEntity from './interface'
 
-// It's possible that we can extend an object for all entity classes
-export default class Template {
+export default class TemplatePackage {
   public _id?: IId
   public name?: string
-  public templateData?: object
-  public templateTypeId?: IId
-  public userCreatorId?: IId
-  public creationDate?: Date
-  public expirationDate?: Date
+  public submissionPeriodId?: IId
+  public templateId?: IId
   public statusId?: IId
+  public creationDate?: Date
+  public userCreatorId?: IId
 
   constructor({
     _id,
     name,
-    templateData,
-    templateTypeId,
-    userCreatorId,
+    submissionPeriodId,
+    templateId,
+    statusId,
     creationDate,
-    expirationDate,
-    statusId
-  }: ITemplateEntity) {
+    userCreatorId
+  }: ITemplatePackageEntity) {
     this._id = _id
     this.name = name
-    this.templateData = templateData
-    this.templateTypeId = templateTypeId
-    this.userCreatorId = userCreatorId
-    this.creationDate = creationDate
-    this.expirationDate = expirationDate
+    this.submissionPeriodId = submissionPeriodId
+    this.templateId = templateId
     this.statusId = statusId
+    this.creationDate = creationDate
+    this.userCreatorId = userCreatorId 
   }
 }

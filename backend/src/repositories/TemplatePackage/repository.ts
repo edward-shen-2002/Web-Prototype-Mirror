@@ -1,58 +1,58 @@
 import ITemplatePackageRepository from './interface'
-import Template from '../../entities/Template'
-import TemplateModel from '../../models/Template'
 import { IId } from '../../models/interface'
-import StatusRepository from '../Status'
 import UserRepository from '../User'
 import Container, { Service } from 'typedi'
-import TemplateTypeRepository from '../TemplateType'
 import BaseRepository from '../repository'
 import TemplateRepository from '../Template/repository'
+import SubmissionPeriodRepository from '../SubmissionPeriod'
+import TemplatePackageModel from '../../models/TemplatePackage'
+import TemplatePackage from '../../entities/TemplatePackage'
+import StatusRepository from '../Status'
 
 // MongoDB implementation
 @Service()
-export default class TemplatePackageRepository extends BaseRepository<Template>
-  implements ITemplatePackageRepository<Template> {
+export default class TemplatePackageRepository extends BaseRepository<TemplatePackage>
+  implements ITemplatePackageRepository<TemplatePackage> {
+  private submissionPeriodRepository: SubmissionPeriodRepository
   private userRepository: UserRepository
-  private templateTypeRepository: TemplateTypeRepository
   private templateRepository: TemplateRepository
-  
+  private statusRepository: StatusRepository
 
   constructor() {
-    super(TemplateModel)
+    super(TemplatePackageModel)
 
-    // this.statusRepository = Container.get(StatusRepository)
+    this.submissionPeriodRepository = Container.get(SubmissionPeriodRepository)
     this.userRepository = Container.get(UserRepository)
-    this.templateTypeRepository = Container.get(TemplateTypeRepository)
-    // this
+    this.templateRepository = Container.get(TemplateRepository)
+    this.statusRepository = Container.get(StatusRepository)
   }
 
-  public async create({
-    name,
-    templateData,
-    templateTypeId,
-    userCreatorId,
-    creationDate,
-    expirationDate,
-    statusId
-  }: Template): Promise<Template> {
+  public async create(
+    {
+      name,
+      submissionPeriodId,
+      templateId,
+      statusId,
+      creationDate,
+      userCreatorId
+    }: TemplatePackage
+  ): Promise<TemplatePackage> {
     return (
-      this.statusRepository
-        .validate(statusId)
-        // .then(() => this.userRepository.validate(userCreatorId))
-        .then(() => this.templateTypeRepository.validate(templateTypeId))
-        .then(() =>
-          TemplateModel.create({
+      this.submissionPeriodRepository.validate(submissionPeriodId)
+        .then(() => this.templateRepository.validate(templateId))
+        .then(() => this.statusRepository.validate(statusId))
+        .then(() => this.userRepository.validate(userCreatorId))
+        .then(() => TemplatePackageModel.create(
+          {
             name,
-            templateData,
-            templateTypeId,
-            userCreatorId,
+            submissionPeriodId,
+            templateId,
+            statusId,
             creationDate,
-            expirationDate,
-            statusId
-          })
-        )
-        .then((template) => new Template(template.toObject()))
+            userCreatorId
+          }
+        ))
+        .then((templatePackage) => new TemplatePackage(templatePackage.toObject()))
     )
   }
 
@@ -60,53 +60,57 @@ export default class TemplatePackageRepository extends BaseRepository<Template>
     id: IId,
     {
       name,
-      templateData,
-      templateTypeId,
-      userCreatorId,
+      submissionPeriodId,
+      templateId,
+      statusId,
       creationDate,
-      expirationDate,
-      statusId
-    }: Template
-  ): Promise<Template> {
+      userCreatorId
+    }: TemplatePackage
+  ): Promise<TemplatePackage> {
     return (
       (statusId
         ? this.statusRepository.validate(statusId)
         : new Promise((resolve) => resolve())
       )
-        // .then(() => {
-        //   if (userCreatorId) return this.userRepository.validate(userCreatorId)
-        // })
+        .then(() => {
+          if (userCreatorId) return this.userRepository.validate(userCreatorId)
+        })
+        .then(() => {
+          if(templateId) return this.templateRepository.validate(templateId)
+        })
+        .then(() => {
+          if(submissionPeriodId) return this.submissionPeriodRepository.validate(submissionPeriodId)
+        })
         .then(() =>
-          TemplateModel.findByIdAndUpdate(id, {
+          TemplatePackageModel.findByIdAndUpdate(id, {
             name,
-            templateData,
-            templateTypeId,
-            userCreatorId,
+            submissionPeriodId,
+            templateId,
+            statusId,
             creationDate,
-            expirationDate,
-            statusId
+            userCreatorId
           })
         )
-        .then((template) => new Template(template.toObject()))
+        .then((templatePackage) => new TemplatePackage(templatePackage.toObject()))
     )
   }
 
-  public async find(query: Template): Promise<Template[]> {
+  public async find(query: TemplatePackage): Promise<TemplatePackage[]> {
     const realQuery = {}
 
     for (const key in query) {
       if (query[key]) realQuery[key] = query[key]
     }
 
-    return TemplateModel.find(realQuery)
-      .then((templates) =>
-        templates.map((template) => new Template(template.toObject()))
+    return TemplatePackageModel.find(realQuery)
+      .then((templatePackages) =>
+        templatePackages.map((templatePackage) => new TemplatePackage(templatePackage.toObject()))
       )
   }
 
-  public async delete(id: IId): Promise<Template> {
-    return TemplateModel.findByIdAndDelete(id).then(
-      (template) => new Template(template)
+  public async delete(id: IId): Promise<TemplatePackage> {
+    return TemplatePackageModel.findByIdAndDelete(id).then(
+      (templatePackage) => new TemplatePackage(templatePackage.toObject())
     )
   }
 }
