@@ -5,7 +5,7 @@ export default class TemplatePackage {
   public _id?: IId
   public name?: string
   public submissionPeriodId?: IId
-  public templateId?: IId
+  public templateIds?: Array<IId>
   public statusId?: IId
   public creationDate?: Date
   public userCreatorId?: IId
@@ -14,7 +14,7 @@ export default class TemplatePackage {
     _id,
     name,
     submissionPeriodId,
-    templateId,
+    templateIds,
     statusId,
     creationDate,
     userCreatorId
@@ -22,7 +22,7 @@ export default class TemplatePackage {
     this._id = _id
     this.name = name
     this.submissionPeriodId = submissionPeriodId
-    this.templateId = templateId
+    this.templateIds = templateIds
     this.statusId = statusId
     this.creationDate = creationDate
     this.userCreatorId = userCreatorId 

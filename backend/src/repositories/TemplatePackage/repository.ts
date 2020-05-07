@@ -31,7 +31,7 @@ export default class TemplatePackageRepository extends BaseRepository<TemplatePa
     {
       name,
       submissionPeriodId,
-      templateId,
+      templateIds,
       statusId,
       creationDate,
       userCreatorId
@@ -39,14 +39,14 @@ export default class TemplatePackageRepository extends BaseRepository<TemplatePa
   ): Promise<TemplatePackage> {
     return (
       this.submissionPeriodRepository.validate(submissionPeriodId)
-        .then(() => this.templateRepository.validate(templateId))
+        .then(() => this.templateRepository.validateMany(templateIds))
         .then(() => this.statusRepository.validate(statusId))
         .then(() => this.userRepository.validate(userCreatorId))
         .then(() => TemplatePackageModel.create(
           {
             name,
             submissionPeriodId,
-            templateId,
+            templateIds,
             statusId,
             creationDate,
             userCreatorId
@@ -61,7 +61,7 @@ export default class TemplatePackageRepository extends BaseRepository<TemplatePa
     {
       name,
       submissionPeriodId,
-      templateId,
+      templateIds,
       statusId,
       creationDate,
       userCreatorId
@@ -76,7 +76,7 @@ export default class TemplatePackageRepository extends BaseRepository<TemplatePa
           if (userCreatorId) return this.userRepository.validate(userCreatorId)
         })
         .then(() => {
-          if(templateId) return this.templateRepository.validate(templateId)
+          if(templateIds) return this.templateRepository.validateMany(templateIds)
         })
         .then(() => {
           if(submissionPeriodId) return this.submissionPeriodRepository.validate(submissionPeriodId)
@@ -85,7 +85,7 @@ export default class TemplatePackageRepository extends BaseRepository<TemplatePa
           TemplatePackageModel.findByIdAndUpdate(id, {
             name,
             submissionPeriodId,
-            templateId,
+            templateIds,
             statusId,
             creationDate,
             userCreatorId

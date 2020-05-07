@@ -4,7 +4,7 @@ import { IId } from '../interface';
 export interface ITemplatePackage {
   name?: string
   submissionPeriodId?: IId
-  templateId?: IId
+  templateIds?: Array<IId>
   statusId?: IId
   creationDate?: Date
   userCreatorId?: IId
