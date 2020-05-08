@@ -49,20 +49,20 @@ describe('Template lifecycle', () => {
     }
 
     request
-      .post('/root/statuses')
+      .post('/designer/statuses')
       .send({ status: mockStatus })
       .then((res) => {
         statusCreated = res.body.status
       })
-      .then(() => request.post('/root/templateTypes'))
+      .then(() => request.post('/designer/templateTypes').send({ templateType: mockTemplateType }))
       .then((res) => {
         templateTypeCreated = res.body.templateType
       })
-      .then(() => request.post('/root/users'))
-      .send({ user: mockUser })
-      .then((res) => {
-        userCreated = res.body.status
-      })
+      // .then(() => request.post('/root/users'))
+      // .send({ user: mockUser })
+      // .then((res) => {
+      //   userCreated = res.body.status
+      // })
       .then(() => done())
   })
 
@@ -71,20 +71,27 @@ describe('Template lifecycle', () => {
       name: 'Sample',
       templateData: {},
       templateTypeId: templateTypeCreated._id,
-      userCreatorId: userCreated._id,
+      // userCreatorId: userCreated._id,
+      userCreatorId: null,
       creationDate: new Date(),
       expirationDate: new Date(),
       statusId: statusCreated._id
     }
 
     request
-      .post('/root/templates')
+      .post('/designer/templates')
       .send({ template: mockTemplate })
-      .then((template: Template) => {
+      .then((res) => {
+        const template: Template = res.body.template
         templateCreated = template
 
-        for (const key in mockTemplate)
-          expect(templateCreated[key]).toBe(mockTemplate[key])
+        expect(templateCreated.name).toBe(mockTemplate.name)
+        expect(templateCreated.templateData).toEqual(mockTemplate.templateData)
+        expect(templateCreated.templateTypeId).toBe(mockTemplate.templateTypeId)
+        expect(templateCreated.creationDate).toBe(mockTemplate.creationDate.toISOString())
+        expect(templateCreated.expirationDate).toBe(mockTemplate.expirationDate.toISOString())
+        expect(templateCreated.statusId).toBe(mockTemplate.statusId)
+        // expect(templateCreated.userCreatorId).toBe(mockTemplate.userCreatorId)
 
         done()
       })

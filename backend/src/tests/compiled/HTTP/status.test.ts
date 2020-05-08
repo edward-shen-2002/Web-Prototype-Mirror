@@ -14,7 +14,7 @@ describe('Status lifecycle', () => {
     } as Status
 
     request
-      .post('/root/statuses')
+      .post('/designer/statuses')
       .send({ status: mockStatus })
       .then((res) => {
         statusCreated = res.body.status

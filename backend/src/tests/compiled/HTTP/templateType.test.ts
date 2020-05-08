@@ -21,7 +21,7 @@ describe('Template type lifecycle', () => {
     } as TemplateType
 
     request
-      .post('/root/templateTypes')
+      .post('/designer/templateTypes')
       .send({ templateType: mockTemplateType })
       .then((res) => {
         templateTypeCreated = res.body.templateType
