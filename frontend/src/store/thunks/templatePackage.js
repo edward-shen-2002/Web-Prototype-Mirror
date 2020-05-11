@@ -44,12 +44,7 @@ export const getTemplatePackagesRequest = (query) => (dispatch) => {
 export const createTemplatePackageRequest = (templatePackage, resolve, reject) => (dispatch) => {
   dispatch(requestTemplatePackages())
   
-  templatePackageController.createTemplatePackage(
-      {
-        ...templatePackage,
-        templatePackageData: createBlankReactState()
-      }
-    )
+  templatePackageController.createTemplatePackage(templatePackage)
     .then((templatePackage) => {
       dispatch(createTemplatePackage({ Value: templatePackage }))
       resolve()

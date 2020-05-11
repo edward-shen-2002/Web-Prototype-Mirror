@@ -27,6 +27,7 @@ export default abstract class BaseRepository<T> implements IRepository<T> {
   }
   public async validate(id: IId): Promise<void> {
     return this._model.findById(id).then((document) => {
+      console.log('document', document, id)
       if (!document) throw `${this._model.collection.name} not found`
     })
   }

@@ -4,8 +4,8 @@ import { Switch, Route } from "react-router-dom";
 
 // import NotFound from "@tools/components/NotFound";
 
-import Template from './Template/TemplateV2'
-import Templates from './Templates/Templatesv2'
+import Template from './Template/Template'
+import Templates from './Templates/Templates'
 import TemplateTypes from './TemplateTypes'
 import Statuses from "./Statuses";
 import TemplatePackages from './TemplatePackages'

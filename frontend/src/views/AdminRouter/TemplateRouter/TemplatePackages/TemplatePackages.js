@@ -62,16 +62,24 @@ const TemplatePackagesTable = ({ history }) => {
 
   const columns = useMemo(
     () => [
+      { title: "_id", field: "_id" },
       { title: "Name", field: "name" },
-      { title: "Description", field: "description" },
-      { title: "Active", type: "boolean", field: "isActive" }
+      { title: "SubmissionPeriodId", field: "submissionPeriodId" },
+      // { title: "TemplateIds", type: "boolean", field: "templateIds" },
+      { title: "StatusId", field: "statusId" },
+      { title: "Creation Date", field: "creationDate" },
+      { title: "UserCreatorId", field: "userCreatorId" }
     ],
     []
   )
 
   const options = useMemo(
     () => (
-      { actionsColumnIndex: -1, search: false, showTitle: false }
+      { 
+        actionsColumnIndex: -1, 
+        search: false, 
+        showTitle: false        
+      }
     ),
     []
   )
@@ -81,20 +89,17 @@ const TemplatePackagesTable = ({ history }) => {
       { 
         onRowAdd: (templatePackage) => new Promise(
           (resolve) => {
-            dispatch(createTemplatePackageRequest(templatePackage))
-            resolve()
+            dispatch(createTemplatePackageRequest(templatePackage, resolve, reject))
           }
         ), 
         onRowUpdate: (templatePackage) => new Promise(
           (resolve) => {
-            dispatch(updateTemplatePackageRequest(templatePackage))
-            resolve()
+            dispatch(updateTemplatePackageRequest(templatePackage, resolve, reject))
           }
         ), 
         onRowDelete: (templatePackage) => new Promise(
           (resolve) => {
-            dispatch(deleteTemplatePackageRequest(templatePackage._id))
-            resolve()
+            dispatch(deleteTemplatePackageRequest(templatePackage._id, resolve, reject))
           }
         ) 
       }
