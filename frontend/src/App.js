@@ -4,9 +4,10 @@ import { Route, Switch, Redirect } from 'react-router-dom'
 import { useSelector, shallowEqual } from 'react-redux'
 
 import { ActivityRoute } from "@tools/components/routes";
-import TemplateRouter from "./views/AdminRouter/TemplateRouter";
+import TemplateRouter from "./views/TemplateRouter";
 import Navigation from './Navigation'
 import Header from './Header'
+import Statuses from './views/Statuses'
 
 import './App.scss'
 
@@ -37,7 +38,8 @@ const AppPageRouter = () => {
           )
         }
       />
-      <ActivityRoute path="/designer" requiredState="online" Component={TemplateRouter}/>
+      <ActivityRoute path="/designer/template_manager" requiredState="online" Component={TemplateRouter}/>
+      <Route path="/designer/status" component={Statuses}/>
     </Switch>
   )
 }

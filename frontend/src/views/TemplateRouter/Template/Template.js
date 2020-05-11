@@ -2,11 +2,11 @@ import React, { useState, useEffect, useCallback } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { showAppNavigation, hideAppNavigation } from "../../../../store/actions/ui/isAppNavigationOpen";
-import Loading from "../../../../tools/components/Loading/Loading";
+import { showAppNavigation, hideAppNavigation } from "../../../store/actions/ui/isAppNavigationOpen";
+import Loading from "../../../tools/components/Loading/Loading";
 
-import { updateTemplateRequest, getTemplateRequest } from "../../../../store/thunks/template";
-import { Excel } from "../../../../tools/components/Excel";
+import { updateTemplateRequest, getTemplateRequest } from "../../../store/thunks/templates";
+import { Excel } from "../../../tools/components/Excel";
 
 import "./Template.scss";
 
@@ -16,7 +16,7 @@ const Template = ({ match: { params: { _id } } }) => {
   const isCallInProgress = useSelector(
     (
       {
-        TemplateStore: {
+        TemplatesStore: {
           isCallInProgress
         }
       }
@@ -49,7 +49,7 @@ const Template = ({ match: { params: { _id } } }) => {
       ? <Loading/>
       : <Excel 
           type="template" 
-          returnLink="/designer/template"
+          returnLink="/designer/template_manager/template"
           handleSave={handleSaveTemplate}
         />
   );

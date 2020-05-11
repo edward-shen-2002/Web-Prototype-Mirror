@@ -6,7 +6,8 @@ import {
   createStatusRequest, 
   deleteStatusRequest, 
   updateStatusRequest 
-} from '../../../../store/thunks/status'
+} from '../../store/thunks/status'
+
 
 import MaterialTable from 'material-table'
 import Paper from '@material-ui/core/Paper';
@@ -34,7 +35,7 @@ const StatusesTable = () => {
   } = useSelector(
     (
       {
-        StatusStore: {
+        StatusesStore: {
           response: {
             Values
           }

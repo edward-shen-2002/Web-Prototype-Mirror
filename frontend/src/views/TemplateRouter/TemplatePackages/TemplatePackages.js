@@ -6,7 +6,7 @@ import {
   createTemplatePackageRequest, 
   deleteTemplatePackageRequest, 
   updateTemplatePackageRequest 
-} from '../../../../store/thunks/templatePackage'
+} from '../../../store/thunks/templatePackage'
 
 import MaterialTable from 'material-table'
 import Paper from '@material-ui/core/Paper';
@@ -35,7 +35,7 @@ const TemplatePackagesTable = ({ history }) => {
   } = useSelector(
     (
       {
-        TemplatePackageStore: {
+        TemplatePackagesStore: {
           response: {
             Values
           }

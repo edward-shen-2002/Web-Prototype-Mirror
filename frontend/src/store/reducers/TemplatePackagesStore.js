@@ -1,3 +1,5 @@
+import { createReducer } from "../tools/setup"
+
 import REQUEST_TEMPLATE_PACKAGES from './common/REQUEST'
 import RECEIVE_TEMPLATE_PACKAGES from './common/RECEIVE'
 import FAIL_TEMPLATE_PACKAGES_REQUEST from './common/FAIL_REQUEST'
@@ -24,10 +26,6 @@ const defaultState = {
   isCallInProgress: false
 }
 
-const TemplatePackageStore = (state = defaultState, action) => {
-  const reducer = reducersMap[action.type]
-
-  return reducer ? reducer(state, action) : state
-}
+const TemplatePackageStore = createReducer(defaultState, reducersMap)
 
 export default TemplatePackageStore

@@ -6,7 +6,7 @@ import {
   createTemplateRequest, 
   deleteTemplateRequest, 
   updateTemplateRequest 
-} from "../../../../store/thunks/template"
+} from "../../../store/thunks/templates"
 
 import MaterialTable from 'material-table'
 import LaunchIcon from "@material-ui/icons/Launch";
@@ -38,7 +38,7 @@ const TemplatesTable = ({ history }) => {
   } = useSelector(
     (
       {
-        TemplateStore: {
+        TemplatesStore: {
           response: {
             Values
           }
@@ -71,7 +71,7 @@ const TemplatesTable = ({ history }) => {
       { 
         icon: LaunchIcon, 
         tooltip: "Open Template", 
-        onClick: (_event, template) => history.push(`/designer/template/${template._id}`)
+        onClick: (_event, template) => history.push(`/designer/template_manager/template/${template._id}`)
       }
     ],
     [ history ]

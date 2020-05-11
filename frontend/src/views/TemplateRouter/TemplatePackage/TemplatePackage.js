@@ -27,7 +27,7 @@ const TemplatePackagesTable = ({ history }) => {
   } = useSelector(
     (
       {
-        TemplatePackageStore: {
+        TemplatePackagesStore: {
           isCallInProgress
         }
       }

@@ -6,7 +6,7 @@ import {
   createTemplateTypeRequest, 
   deleteTemplateTypeRequest, 
   updateTemplateTypeRequest 
-} from "@thunks/templateType"
+} from "../../../store/thunks/templateType"
 
 import MaterialTable from 'material-table'
 import LaunchIcon from "@material-ui/icons/Launch";
@@ -35,7 +35,7 @@ const TemplateTypesTable = ({ history }) => {
   } = useSelector(
     (
       {
-        TemplateTypeStore: {
+        TemplateTypesStore: {
           response: {
             Values
           }

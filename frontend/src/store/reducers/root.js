@@ -3,16 +3,16 @@ import { combineReducers } from "redux";
 import domain from "./domain";
 import app from "./app";
 import ui from "./ui";
-import TemplateStore from './TemplateStore'
-import TemplateTypeStore from './TemplateTypeStore'
-import StatusStore from './StatusStore'
-import TemplatePackageStore from './TemplatePackageStore'
+import TemplatesStore from './TemplatesStore'
+import TemplateTypesStore from './TemplateTypesStore'
+import StatusesStore from './StatusesStore'
+import TemplatePackagesStore from './TemplatePackagesStore'
 
 export const root = combineReducers({
-  TemplateStore,
-  TemplateTypeStore,
-  StatusStore,
-  TemplatePackageStore,
+  TemplatesStore,
+  TemplateTypesStore,
+  StatusesStore,
+  TemplatePackagesStore,
   app,
   domain,
   ui
