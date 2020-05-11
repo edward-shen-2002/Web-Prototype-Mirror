@@ -68,8 +68,8 @@ const MOUSE_DOWN = (
           oldX2 = mergedX2;
           oldY2 = mergedY2;
         } else {
-          oldY2 = y1;
-          oldX2 = x1;
+          oldY2 = y;
+          oldX2 = x;
         }
 
         newState.stagnantSelectionAreas = [ { x1: x, y1: y, x2: oldX2, y2: oldY2 } ];
