@@ -34,7 +34,7 @@ const AppPageRouter = () => {
         component={
           (props) => (
             isOnline 
-              ? <Redirect to="/"/> 
+              ? <Redirect to="/template_manager/templates"/> 
               : <Login {...props}/> 
           )
         }

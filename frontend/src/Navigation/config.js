@@ -3,7 +3,7 @@ const createUserNavigation = () => {
 
   const template = { 
     name: "Template", 
-    url: "/template_manager/template", 
+    url: "/template_manager/templates", 
     icon: "mdi mdi-note-multiple" 
   }
   const status = { 
@@ -22,20 +22,31 @@ const createUserNavigation = () => {
     icon: "mdi mdi-note-multiple" 
   }
 
-  const COATree = { name: "COA Trees", url: "/COA_manager/COA_tree", icon: "mdi mdi-shape" }
+  const COATrees = { name: "COA Trees", url: "/COA_manager/COA_trees", icon: "mdi mdi-shape" }
+
+  const COATree = { name: "COA Tree", url: "/COA_manager/COA_tree", icon: "mdi mdi-shape" }
+
+  const COAGroups = { name: "COA Groups", url: "/COA_manager/COA_groups", icon: "mdi mdi-shape" }
+
+  const COAs = { name: "COAs", url: "/COA_manager/COAs", icon: "mdi mdi-shape" }
 
   // const userDashboard = { name: "Dashboard", url: ROUTE_USER_DASHBOARD, icon: "mdi mdi-library-books" }
+
+  // ! Need to figure out how to nest navigation items
 
   return [ 
     userTitle, 
     /*userDashboard,*/ 
     // userProfile, 
     // userBundles, 
-    template, 
     status, 
+    template, 
     templateType,
     templatePackage,
-    COATree
+    COATree,
+    COATrees,
+    COAGroups,
+    COAs
   ];
 };
 
