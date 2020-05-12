@@ -21,7 +21,7 @@ const COATreesHeader = () => {
 
   return (
     <Paper className="header">
-      <Typography variant="h5">COA Trees</Typography>
+      <Typography variant="h5">COAs</Typography>
       {/* <HeaderActions/> */}
     </Paper>
   )
