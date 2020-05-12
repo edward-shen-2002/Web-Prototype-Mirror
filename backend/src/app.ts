@@ -1,4 +1,4 @@
-import express, { Router } from 'express'
+import express from 'express'
 
 import 'reflect-metadata'
 
@@ -44,14 +44,18 @@ dbUtil.connect()
 
 // ! No auth for now - Direct connection to router
 // ! Change these base routes 
-app.use('/designer', Container.get(TemplateController))
+
+app.use('/template_manager', Container.get(TemplateController))
+app.use('/template_manager', Container.get(TemplatePackageController))
+app.use('/template_manager', Container.get(TemplateTypeController))
+
 app.use('/designer', Container.get(StatusController))
-app.use('/designer', Container.get(TemplateTypeController))
-app.use('/designer', Container.get(TemplatePackageController))
 app.use('/designer', Container.get(SubmissionPeriodController))
 app.use('/designer', Container.get(ReportingPeriodController))
-app.use('/designer', Container.get(COAController))
-app.use('/designer', Container.get(COATreeController))
-app.use('/designer', Container.get(COAGroupController))
+
+app.use('/COA_manager', Container.get(COAController))
+app.use('/COA_manager', Container.get(COATreeController))
+app.use('/COA_manager', Container.get(COAGroupController))
+
 
 export default app

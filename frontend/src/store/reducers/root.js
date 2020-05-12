@@ -8,6 +8,9 @@ import TemplateTypesStore from './TemplateTypesStore'
 import StatusesStore from './StatusesStore'
 import TemplatePackagesStore from './TemplatePackagesStore'
 import COATreeStore from './COATreeStore'
+import COATreesStore from './COATreesStore'
+import COAGroupsStore from './COAGroupsStore'
+import COAStore from './COAStore'
 
 export const root = combineReducers({
   TemplatesStore,
@@ -15,9 +18,12 @@ export const root = combineReducers({
   StatusesStore,
   TemplatePackagesStore,
   COATreeStore,
+  COATreesStore,
+  COAGroupsStore,
+  COAStore,
   app,
   domain,
   ui
 });
 
-export default root;
+export default root;  

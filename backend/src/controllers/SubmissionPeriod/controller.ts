@@ -5,63 +5,63 @@ import SubmissionPeriod from '../../entities/SubmissionPeriod'
 
 const SubmissionPeriodController = Service(
   [SubmissionPeriodService],
-  (submissionPeriodService) => {
+  (service) => {
     const router = Router()
     return (
       () => {
-    router.get(
-      '/submissionPeriods',
-      (req: Request, res: Response, next: NextFunction) => {
-        // Get query from middleware -- auth handler
+        router.get(
+          '/submissionPeriods',
+          (req: Request, res: Response, next: NextFunction) => {
+            // Get query from middleware -- auth handler
 
-        submissionPeriodService
-          .findSubmissionPeriod({} as SubmissionPeriod)
-          .then((submissionPeriods) => res.json({ submissionPeriods }))
-          .catch(next)
-      }
-    )
+            service
+              .findSubmissionPeriod({} as SubmissionPeriod)
+              .then((submissionPeriods) => res.json({ submissionPeriods }))
+              .catch(next)
+          }
+        )
 
-    router.post(
-      '/submissionPeriods',
-      (req: Request, res: Response, next: NextFunction) => {
-        submissionPeriodService
-          .createSubmissionPeriod(req.body.submissionPeriod)
-          .then((submissionPeriod) => res.json({ submissionPeriod }))
-          .catch((error) => {
-            console.error(error)
-            throw error
-          })
-          .catch(next)
-      }
-    )
+        router.post(
+          '/submissionPeriods',
+          (req: Request, res: Response, next: NextFunction) => {
+            service
+              .createSubmissionPeriod(req.body.submissionPeriod)
+              .then((submissionPeriod) => res.json({ submissionPeriod }))
+              .catch((error) => {
+                console.error(error)
+                throw error
+              })
+              .catch(next)
+          }
+        )
 
-    router.put(
-      '/submissionPeriods/:_id',
-      (req: Request, res: Response, next: NextFunction) => {
-        const { _id } = req.params
-        const { submissionPeriod } = req.body
+        router.put(
+          '/submissionPeriods/:_id',
+          (req: Request, res: Response, next: NextFunction) => {
+            const { _id } = req.params
+            const { submissionPeriod } = req.body
 
 
-        submissionPeriodService
-          .updateSubmissionPeriod(_id, submissionPeriod)
-          .then(() => res.end())
-          .catch(next)
-      }
-    )
+            service
+              .updateSubmissionPeriod(_id, submissionPeriod)
+              .then(() => res.end())
+              .catch(next)
+          }
+        )
 
-    router.delete(
-      '/submissionPeriods/:_id',
-      (req: Request, res: Response, next: NextFunction) => {
-        const { _id } = req.params
+        router.delete(
+          '/submissionPeriods/:_id',
+          (req: Request, res: Response, next: NextFunction) => {
+            const { _id } = req.params
 
-        submissionPeriodService
-          .deleteSubmissionPeriod(_id)
-          .then(() => res.end())
-          .catch(next)
-      }
-    )
+            service
+              .deleteSubmissionPeriod(_id)
+              .then(() => res.end())
+              .catch(next)
+          }
+        )
 
-    return router
+        return router
       }
     )
   }

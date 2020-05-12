@@ -6,7 +6,7 @@ import { IId } from '../../models/interface'
 
 const TemplatePackageController = Service(
   [TemplatePackageService],
-  (templatePackageService) => {
+  (service) => {
     const router = Router()
     return (
       () => {
@@ -14,7 +14,7 @@ const TemplatePackageController = Service(
           '/templatePackages',
           (req: Request, res: Response, next: NextFunction) => {
             // Get query from middleware -- auth handler
-            templatePackageService
+            service
               .findTemplatePackage(new TemplatePackage(req.body))
               .then((templatePackages) => res.json({ templatePackages: templatePackages.map((templatePackage) => ({ ...templatePackage, templatePackageData: undefined })) }))
               .catch(next)
@@ -26,7 +26,7 @@ const TemplatePackageController = Service(
           (req: Request, res: Response, next: NextFunction) => {
             // Get query from middleware -- auth handler
 
-            templatePackageService
+            service
               .findTemplatePackage(new TemplatePackage({  _id: req.params._id }))
               .then(([ templatePackage ]) => res.json({ templatePackage }))
               .catch(next)
@@ -36,7 +36,7 @@ const TemplatePackageController = Service(
         router.post(
           '/templatePackages',
           (req: Request, res: Response, next: NextFunction) => {
-            templatePackageService
+            service
               .createTemplatePackage(req.body.templatePackage)
               .then((templatePackage) => res.json({ templatePackage }))
               .catch(next)
@@ -49,7 +49,7 @@ const TemplatePackageController = Service(
             const { _id } = req.params
             const { templatePackage } = req.body
 
-            templatePackageService
+            service
               .updateTemplatePackage(_id, templatePackage)
               .then(() => res.end())
               .catch((error) => console.error(error))
@@ -62,7 +62,7 @@ const TemplatePackageController = Service(
           (req: Request, res: Response, next: NextFunction) => {
             const { _id } = req.params
 
-            templatePackageService
+            service
               .deleteTemplatePackage(_id as IId)
               .then(() => res.end())
               .catch(next)

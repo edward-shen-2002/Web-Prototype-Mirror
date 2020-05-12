@@ -5,7 +5,7 @@ import Status from '../../entities/Status'
 
 const StatusController = Service(
   [StatusService],
-  (statusService) => {
+  (service) => {
     const router = Router()
 
     return (
@@ -15,7 +15,7 @@ const StatusController = Service(
           (req: Request, res: Response, next: NextFunction) => {
             // Get query from middleware -- auth handler
 
-            statusService
+            service
               .findStatus({} as Status)
               .then((statuses) => res.json({ statuses }))
               .catch(next)
@@ -25,7 +25,7 @@ const StatusController = Service(
         router.post(
           '/statuses',
           (req: Request, res: Response, next: NextFunction) => {
-            statusService
+            service
               .createStatus(req.body.status)
               .then((status) => res.json({ status }))
               .catch((error) => {
@@ -43,7 +43,7 @@ const StatusController = Service(
             const { status } = req.body
 
 
-            statusService
+            service
               .updateStatus(_id, status)
               .then(() => res.end())
               .catch(next)
@@ -55,7 +55,7 @@ const StatusController = Service(
           (req: Request, res: Response, next: NextFunction) => {
             const { _id } = req.params
 
-            statusService
+            service
               .deleteStatus(_id)
               .then(() => res.end())
               .catch(next)

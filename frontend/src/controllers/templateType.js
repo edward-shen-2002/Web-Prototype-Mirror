@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const templateTypeController = (
   () => {
-    const templateTypeAxios = axios.create({ baseURL: 'http://localhost:3000/designer/templateTypes' })
+    const templateTypeAxios = axios.create({ baseURL: 'http://localhost:3000/template_manager/templateTypes' })
     return {
       fetchTemplateTypes: async (query) => templateTypeAxios.get('').then((res) => res.data.templateTypes),
       createTemplateType: async (templateType) => templateTypeAxios.post('', { templateType }).then((res) => res.data.templateType),

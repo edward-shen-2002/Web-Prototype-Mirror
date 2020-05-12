@@ -2,11 +2,11 @@ import React, { useCallback, useMemo, useEffect } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import { 
-  getCOATreesRequest, 
-  createCOATreeRequest, 
-  deleteCOATreeRequest, 
-  updateCOATreeRequest 
-} from "../../../store/thunks/COATree"
+  getCOAGroupsRequest, 
+  createCOAGroupRequest, 
+  deleteCOAGroupRequest, 
+  updateCOAGroupRequest 
+} from "../../../store/thunks/COAGroup"
 
 import MaterialTable from 'material-table'
 import LaunchIcon from "@material-ui/icons/Launch";
@@ -14,28 +14,28 @@ import Paper from '@material-ui/core/Paper';
 
 import Typography from "@material-ui/core/Typography";
 
-import './COATrees.scss'
+import './COAGroups.scss'
 
-const COATreesHeader = () => {
+const COAGroupsHeader = () => {
 
 
   return (
     <Paper className="header">
-      <Typography variant="h5">COA Trees</Typography>
+      <Typography variant="h5">COA Groups</Typography>
       {/* <HeaderActions/> */}
     </Paper>
   )
 }
 
-const COATreesTable = ({ history }) => {
+const COAGroupsTable = ({ history }) => {
   const dispatch = useDispatch()
 
   const {
-    COATrees
+    COAGroups
   } = useSelector(
     (
       {
-        COATreesStore: {
+        COAGroupsStore: {
           response: {
             Values
           }
@@ -43,32 +43,20 @@ const COATreesTable = ({ history }) => {
       }
     ) => (
       {
-        COATrees: Values
+        COAGroups: Values
       }
     ),
     shallowEqual
   )
-  
+
   const columns = useMemo(
     () => [
       { title: "_id", field: "_id" },
-      { title: "ParentId", field: "parentId" },
-      { title: "GroupId", field: "COAGroupId" },
-      { title: "COAId", field: "COAId" },
-      { title: "SheetNameId", field: "sheetNameId" }
+      { title: "Name", field: "name" },
+      { title: "Code", field: "code" },
+      { title: "Active", field: "isActive" }
     ],
     []
-  )
-
-  const actions = useMemo(
-    () => [
-      { 
-        icon: LaunchIcon, 
-        tooltip: "View Tree", 
-        onClick: (_event, COATree) => {}
-      }
-    ],
-    [ history ]
   )
 
   const options = useMemo(
@@ -81,25 +69,25 @@ const COATreesTable = ({ history }) => {
   const editable = useMemo(
     () => (
       { 
-        onRowAdd: (COATree) => new Promise(
+        onRowAdd: (COAGroup) => new Promise(
           (resolve) => {
-            // COATree = {
+            // COAGroup = {
 
             // }
 
-            dispatch(createCOATreeRequest(COATree))
+            dispatch(createCOAGroupRequest(COAGroup))
             resolve()
           }
         ), 
-        onRowUpdate: (COATree) => new Promise(
+        onRowUpdate: (COAGroup) => new Promise(
           (resolve) => {
-            dispatch(updateCOATreeRequest(COATree))
+            dispatch(updateCOAGroupRequest(COAGroup))
             resolve()
           }
         ), 
-        onRowDelete: (COATree) => new Promise(
+        onRowDelete: (COAGroup) => new Promise(
           (resolve) => {
-            dispatch(deleteCOATreeRequest(COATree._id))
+            dispatch(deleteCOAGroupRequest(COAGroup._id))
             resolve()
           }
         ) 
@@ -110,7 +98,7 @@ const COATreesTable = ({ history }) => {
 
   useEffect(
     () => {
-      dispatch(getCOATreesRequest())
+      dispatch(getCOAGroupsRequest())
     },
     [ dispatch ]
   )
@@ -118,20 +106,19 @@ const COATreesTable = ({ history }) => {
   return (
     <MaterialTable
       columns={columns} 
-      actions={actions} 
-      data={COATrees} 
+      data={COAGroups} 
       editable={editable} 
       options={options}
     />
   )
 }
 
-const COATrees = (props) => (
-  <div className="COATrees">
-    <COATreesHeader/>
+const COAGroups = (props) => (
+  <div className="COAGroups">
+    <COAGroupsHeader/>
     {/* <FileDropzone/> */}
-    <COATreesTable {...props}/>
+    <COAGroupsTable {...props}/>
   </div>
 )
 
-export default COATrees
+export default COAGroups

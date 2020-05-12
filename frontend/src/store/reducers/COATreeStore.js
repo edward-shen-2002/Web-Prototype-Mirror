@@ -1,6 +1,8 @@
 import { createReducer } from "../tools/setup"
 import cloneDeep from 'clone-deep'
 
+// import { getTreeFromFlatData } from 'react-sortable-tree'
+
 const UPDATE_ORIGINAL_COA_TREE_UI = (state) => (
   {
     ...state,
@@ -8,7 +10,7 @@ const UPDATE_ORIGINAL_COA_TREE_UI = (state) => (
   }
 )
 
-const LOAD_COA_TREE_UI = (_state, { treeList }) => {
+const LOAD_COA_TREE_UI = (state, { treeList }) => {
   let dependencyMap = {}
 
   // Hash table of the tree
@@ -35,9 +37,16 @@ const LOAD_COA_TREE_UI = (_state, { treeList }) => {
     (parentNode) => createTreeBranch(parentNode._id, normalizedTreeMap, dependencyMap)
   )
 
+  // const t = getTreeFromFlatData({
+  //   flatData: treeList, 
+  //   getKey: (node) => node._id,
+  //   getParentKey: (node) => node.parentId
+  // })
+
   let localTree = cloneDeep(originalTree)
 
   return {
+    ...state,
     originalTree,
     localTree,
     saveTimeStamp: null,
@@ -49,6 +58,7 @@ const createTreeBranch = (rootId, normalizedTreeMap, dependencyMap) => {
   let children = dependencyMap[rootId]
 
   return {
+    ...normalizedTreeMap[rootId],
     title: rootId,
     children: children 
       ? children.map((child) => createTreeBranch(child, normalizedTreeMap, dependencyMap))
@@ -70,41 +80,34 @@ const REVERT_COA_TREE_UI = () => (
   }
 )
 
+const OPEN_GROUP_DIALOG_COA_TREE_UI = (state) => ({
+  ...state,
+  isGroupDialogOpen: true
+}) 
+
+const CLOSE_GROUP_DIALOG_COA_TREE_UI = (state) => ({
+  ...state,
+  isGroupDialogOpen: false
+})
+
 const reducersMap = {
   LOAD_COA_TREE_UI,
   UPDATE_ORIGINAL_COA_TREE_UI,
   UPDATE_LOCAL_COA_TREE_UI,
-  REVERT_COA_TREE_UI
+  REVERT_COA_TREE_UI,
+  OPEN_GROUP_DIALOG_COA_TREE_UI,
+  CLOSE_GROUP_DIALOG_COA_TREE_UI
 }
-
-const TEST_DATA = [
-  {
-   'title': 123,
-   'children': [
-    {
-     'title': 124,
-     'children': [
-      {
-       'title': 126
-      }
-     ]
-    }
-   ]
-  },
-  {
-   'title': 125
-  }
- ]
 
 const defaultState = {
   originalTree: {
 
   },
-  // localTree: [],
-  localTree: TEST_DATA,  
+  localTree: [],
   error: null,
   isCallInProgress: false,
-  saveTimeStamp: null
+  saveTimeStamp: null,
+  isGroupDialogOpen: false
 }
 
 const COATreeeStore = createReducer(defaultState, reducersMap)

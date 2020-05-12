@@ -14,7 +14,7 @@ import Paper from '@material-ui/core/Paper';
 
 import Typography from "@material-ui/core/Typography";
 
-import './COATrees.scss'
+import './COAs.scss'
 
 const COATreesHeader = () => {
 
@@ -48,14 +48,11 @@ const COATreesTable = ({ history }) => {
     ),
     shallowEqual
   )
-  
+
   const columns = useMemo(
     () => [
       { title: "_id", field: "_id" },
-      { title: "ParentId", field: "parentId" },
-      { title: "GroupId", field: "COAGroupId" },
-      { title: "COAId", field: "COAId" },
-      { title: "SheetNameId", field: "sheetNameId" }
+      { title: "Name", field: "name" }
     ],
     []
   )

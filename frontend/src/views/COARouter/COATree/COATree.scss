@@ -6,3 +6,13 @@
 .COATreeContent {
   height: 500px;
 }
+
+.header {
+  &__actions {
+    display: flex;
+  }
+}
+
+.searchBar {
+  margin-right: 10px !important;
+}
