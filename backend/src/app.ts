@@ -9,14 +9,14 @@ import passport from 'passport'
 import compression from 'compression'
 
 import { Container } from 'typedi'
-import TemplateController from './controllers/designer/Template'
+import TemplateController from './controllers/Template'
 import Database from './loaders/database'
-import StatusController from './controllers/dimension/Status'
-import TemplateTypeController from './controllers/designer/TemplateType'
+import StatusController from './controllers/Status'
+import TemplateTypeController from './controllers/TemplateType'
 import { PORT } from './configs/host'
-import TemplatePackageController from './controllers/designer/TemplatePackage'
-import SubmissionPeriodController from './controllers/dimension/SubmissionPeriod'
-import ReportingPeriodController from './controllers/dimension/ReportingPeriod'
+import TemplatePackageController from './controllers/TemplatePackage'
+import SubmissionPeriodController from './controllers/SubmissionPeriod'
+import ReportingPeriodController from './controllers/ReportingPeriod'
 
 const logger = require('morgan')
 
@@ -40,11 +40,11 @@ export const dbUtil = new Database()
 dbUtil.connect()
 
 // ! No auth for now - Direct connection to router
-app.use('/designer', Container.get(TemplateController)({ router: Router() }))
-app.use('/designer', Container.get(StatusController)({ router: Router() }))
-app.use('/designer', Container.get(TemplateTypeController)({ router: Router() }))
-app.use('/designer', Container.get(TemplatePackageController)({ router: Router() }))
-app.use('/designer', Container.get(SubmissionPeriodController)({ router: Router() }))
-app.use('/designer', Container.get(ReportingPeriodController)({ router: Router() }))
+app.use('/designer', Container.get(TemplateController))
+app.use('/designer', Container.get(StatusController))
+app.use('/designer', Container.get(TemplateTypeController))
+app.use('/designer', Container.get(TemplatePackageController))
+app.use('/designer', Container.get(SubmissionPeriodController))
+app.use('/designer', Container.get(ReportingPeriodController))
 
 export default app

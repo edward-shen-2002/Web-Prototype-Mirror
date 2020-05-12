@@ -1,12 +1,15 @@
 import { Service } from 'typedi'
 
-import TemplateType from '../../../entities/TemplateType'
-import { Response, NextFunction, Request } from 'express'
-import TemplateTypeService from '../../../services/TemplateType'
+import TemplateType from '../../entities/TemplateType'
+import { Response, NextFunction, Request, Router } from 'express'
+import TemplateTypeService from '../../services/TemplateType'
 
 const TemplateTypeController = Service(
   [TemplateTypeService],
-  (templateTypeService) => ({ router }) => {
+  (templateTypeService) => {
+    const router = Router()
+    return (
+      () => {
     router.get(
       '/templateTypes',
       (req: Request, res: Response, next: NextFunction) => {
@@ -56,6 +59,8 @@ const TemplateTypeController = Service(
     )
 
     return router
+      }
+    )()
   }
 )
 

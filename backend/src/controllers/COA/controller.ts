@@ -1,29 +1,29 @@
 import { Service } from 'typedi'
 import { Response, NextFunction, Request } from 'express'
-import StatusService from '../../../services/Status'
-import Status from '../../../entities/Status'
+import COAService from '../../../services/COA'
+import COA from '../../../entities/COA'
 
-const StatusController = Service(
-  [StatusService],
-  (statusService) => ({ router }) => {
+const COAController = Service(
+  [COAService],
+  (COAService) => ({ router }) => {
     router.get(
-      '/statuses',
+      '/COAs',
       (req: Request, res: Response, next: NextFunction) => {
         // Get query from middleware -- auth handler
 
-        statusService
-          .findStatus({} as Status)
-          .then((statuses) => res.json({ statuses }))
+        COAService
+          .findCOA({} as COA)
+          .then((COAs) => res.json({ COAs }))
           .catch(next)
       }
     )
 
     router.post(
-      '/statuses',
+      '/COAs',
       (req: Request, res: Response, next: NextFunction) => {
-        statusService
-          .createStatus(req.body.status)
-          .then((status) => res.json({ status }))
+        COAService
+          .createCOA(req.body.COA)
+          .then((COA) => res.json({ COA }))
           .catch((error) => {
             console.error(error)
             throw error
@@ -33,26 +33,26 @@ const StatusController = Service(
     )
 
     router.put(
-      '/statuses/:_id',
+      '/COAs/:_id',
       (req: Request, res: Response, next: NextFunction) => {
         const { _id } = req.params
-        const { status } = req.body
+        const { COA } = req.body
 
 
-        statusService
-          .updateStatus(_id, status)
+        COAService
+          .updateCOA(_id, COA)
           .then(() => res.end())
           .catch(next)
       }
     )
 
     router.delete(
-      '/statuses/:_id',
+      '/COAs/:_id',
       (req: Request, res: Response, next: NextFunction) => {
         const { _id } = req.params
 
-        statusService
-          .deleteStatus(_id)
+        COAService
+          .deleteCOA(_id)
           .then(() => res.end())
           .catch(next)
       }
@@ -62,4 +62,4 @@ const StatusController = Service(
   }
 )
 
-export default StatusController
+export default COAController

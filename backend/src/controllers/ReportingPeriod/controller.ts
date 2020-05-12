@@ -1,11 +1,14 @@
 import { Service } from 'typedi'
-import { Response, NextFunction, Request } from 'express'
-import ReportingPeriodService from '../../../services/ReportingPeriod'
-import ReportingPeriod from '../../../entities/ReportingPeriod'
+import { Response, NextFunction, Request, Router } from 'express'
+import ReportingPeriodService from '../../services/ReportingPeriod'
+import ReportingPeriod from '../../entities/ReportingPeriod'
 
 const ReportingPeriodController = Service(
   [ReportingPeriodService],
-  (reportingPeriodService) => ({ router }) => {
+  (reportingPeriodService) => {
+    const router = Router()
+    return (
+      () => {
     router.get(
       '/reportingPeriods',
       (req: Request, res: Response, next: NextFunction) => {
@@ -59,6 +62,8 @@ const ReportingPeriodController = Service(
     )
 
     return router
+      }
+    )()
   }
 )
 
