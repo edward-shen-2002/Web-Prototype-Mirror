@@ -1,14 +1,15 @@
 import ISubmissionRepository from './interface'
-import Submission from '../../entities/Submission'
+import SubmissionEntity from '../../entities/Submission'
+import BaseRepository from '../repository'
 
-export default class SubmissionRepository
-  implements ISubmissionRepository<Submission> {
-  create(item: ISubmissionRepository<Submission>): Promise<Boolean> {
+export default class SubmissionRepository extends BaseRepository<SubmissionEntity>
+  implements ISubmissionRepository<SubmissionEntity> {
+  create(item: ISubmissionRepository<SubmissionEntity>): Promise<Boolean> {
     throw new Error('Method not implemented.')
   }
   update(
     id: string,
-    item: ISubmissionRepository<Submission>
+    item: ISubmissionRepository<SubmissionEntity>
   ): Promise<Boolean> {
     throw new Error('Method not implemented.')
   }
@@ -16,11 +17,11 @@ export default class SubmissionRepository
     throw new Error('Method not implemented.')
   }
   find(
-    item: ISubmissionRepository<Submission>
-  ): Promise<ISubmissionRepository<Submission>[]> {
+    item: ISubmissionRepository<SubmissionEntity>
+  ): Promise<ISubmissionRepository<SubmissionEntity>[]> {
     throw new Error('Method not implemented.')
   }
-  findOne(id: string): Promise<ISubmissionRepository<Submission>> {
+  findOne(id: string): Promise<ISubmissionRepository<SubmissionEntity>> {
     throw new Error('Method not implemented.')
   }
 }

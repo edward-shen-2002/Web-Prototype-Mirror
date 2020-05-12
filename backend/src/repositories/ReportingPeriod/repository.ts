@@ -1,28 +1,28 @@
 import IReportingPeriodRepository from './interface'
-import ReportingPeriod from '../../entities/ReportingPeriod'
+import ReportingPeriodEntity from '../../entities/ReportingPeriod'
 import BaseRepository from '../repository'
 import ReportingPeriodModel from '../../models/ReportingPeriod'
 import { IId } from '../../models/interface'
 
-export default class ReportPeriodRepository extends BaseRepository<ReportingPeriod>
-  implements IReportingPeriodRepository<ReportingPeriod> {
-    public async delete(id: IId): Promise<ReportingPeriod> {
+export default class ReportPeriodRepository extends BaseRepository<ReportingPeriodEntity>
+  implements IReportingPeriodRepository<ReportingPeriodEntity> {
+    public async delete(id: IId): Promise<ReportingPeriodEntity> {
       return ReportingPeriodModel.findByIdAndDelete(id).then(
-        (reportingPeriod) => new ReportingPeriod(reportingPeriod.toObject())
+        (reportingPeriod) => new ReportingPeriodEntity(reportingPeriod.toObject())
       )
     }
   
-    public async create(reportingPeriod: ReportingPeriod): Promise<ReportingPeriod> {
-      return ReportingPeriodModel.create(reportingPeriod).then((reportingPeriod) => new ReportingPeriod(reportingPeriod.toObject()))
+    public async create(reportingPeriod: ReportingPeriodEntity): Promise<ReportingPeriodEntity> {
+      return ReportingPeriodModel.create(reportingPeriod).then((reportingPeriod) => new ReportingPeriodEntity(reportingPeriod.toObject()))
     }
   
-    public async update(id: IId, reportingPeriod: ReportingPeriod): Promise<ReportingPeriod> {
+    public async update(id: IId, reportingPeriod: ReportingPeriodEntity): Promise<ReportingPeriodEntity> {
       return ReportingPeriodModel.findByIdAndUpdate(id, reportingPeriod).then(
-        (reportingPeriod) => new ReportingPeriod(reportingPeriod.toObject())
+        (reportingPeriod) => new ReportingPeriodEntity(reportingPeriod.toObject())
       )
     }
   
-    public async find(query: ReportingPeriod): Promise<ReportingPeriod[]> {
+    public async find(query: ReportingPeriodEntity): Promise<ReportingPeriodEntity[]> {
       const realQuery = {}
   
       for (const key in query) {
@@ -30,7 +30,7 @@ export default class ReportPeriodRepository extends BaseRepository<ReportingPeri
       }
   
       return ReportingPeriodModel.find(realQuery).then((status) =>
-        status.map((reportingPeriod) => new ReportingPeriod(reportingPeriod.toObject()))
+        status.map((reportingPeriod) => new ReportingPeriodEntity(reportingPeriod.toObject()))
       )
     }
 }

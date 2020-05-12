@@ -13,9 +13,7 @@ export default class ReportingPeriodService implements IReportingPeriodService {
   }
 
   public async createReportingPeriod(reportingPeriod: ReportingPeriod) {
-    return this.reportingPeriodRepository.create(reportingPeriod).catch((error) => {
-      throw error
-    })
+    return this.reportingPeriodRepository.create(reportingPeriod)
   }
 
   public async deleteReportingPeriod(id: IId) {

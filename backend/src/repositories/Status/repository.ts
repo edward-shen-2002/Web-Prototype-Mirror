@@ -1,34 +1,34 @@
 import IStatusRepository from './interface'
-import Status from '../../entities/Status'
+import StatusEntity from '../../entities/Status'
 import BaseRepository from '../repository'
 import { Service } from 'typedi'
 import StatusModel from '../../models/Status'
 import { IId } from '../../models/interface'
 
 @Service()
-export default class StatusRepository extends BaseRepository<Status>
-  implements IStatusRepository<Status> {
+export default class StatusRepository extends BaseRepository<StatusEntity>
+  implements IStatusRepository<StatusEntity> {
   constructor() {
     super(StatusModel)
   }
 
-  public async delete(id: IId): Promise<Status> {
+  public async delete(id: IId): Promise<StatusEntity> {
     return StatusModel.findByIdAndDelete(id).then(
-      (status) => new Status(status)
+      (status) => new StatusEntity(status)
     )
   }
 
-  public async create(status: Status): Promise<Status> {
-    return StatusModel.create(status).then((status) => new Status(status))
+  public async create(status: StatusEntity): Promise<StatusEntity> {
+    return StatusModel.create(status).then((status) => new StatusEntity(status))
   }
 
-  public async update(id: IId, status: Status): Promise<Status> {
+  public async update(id: IId, status: StatusEntity): Promise<StatusEntity> {
     return StatusModel.findByIdAndUpdate(id, status).then(
-      (status) => new Status(status)
+      (status) => new StatusEntity(status)
     )
   }
 
-  public async find(query: Status): Promise<Status[]> {
+  public async find(query: StatusEntity): Promise<StatusEntity[]> {
     const realQuery = {}
 
     for (const key in query) {
@@ -36,7 +36,7 @@ export default class StatusRepository extends BaseRepository<Status>
     }
 
     return StatusModel.find(realQuery).then((status) =>
-      status.map((status) => new Status(status.toObject()))
+      status.map((status) => new StatusEntity(status.toObject()))
     )
   }
 }

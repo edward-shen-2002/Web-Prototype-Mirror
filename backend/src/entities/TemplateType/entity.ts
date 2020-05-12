@@ -1,6 +1,6 @@
 import { IId } from '../../models/interface'
 
-export default class TemplateType {
+export default class TemplateTypeEntity {
   public _id?: IId
   public name?: string
   public description?: string

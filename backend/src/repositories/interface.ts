@@ -7,24 +7,19 @@ import IProgramRepository from './Program/interface'
 import ISubmissionRepository from './Submission/interface'
 import ITemplateRepository from './Template/interface'
 
-import IChartOfAccountsHierarchyRepository from './ChartOfAccountsHierarchy/interface'
-import ICategoryGroupRepository from './ChartOfAccountsGroup/interface'
 import IReportingPeriodRepository from './ReportingPeriod/interface'
-import IYearRepository from './Year/interface'
 
 import IMasterValueRepository from './MasterValue/interface'
 
-import User from '../entities/User'
-import Organization from '../entities/Organization'
-import OrganizationGroup from '../entities/OrganizationGroup'
-import Program from '../entities/Program'
-import Submission from '../entities/Submission'
+import UserEntity from '../entities/User'
+import OrganizationEntity from '../entities/Organization'
+import OrganizationGroupEntity from '../entities/OrganizationGroup'
+import ProgramEntity from '../entities/Program'
+import SubmissionEntity from '../entities/Submission'
 import Template from '../entities/Template'
-import CategoryGroup from '../entities/ChartOfAccountsHierarchy'
-import ChartOfAccounts from '../entities/ChartOfAccouns'
 import ReportingPeriod from '../entities/ReportingPeriod'
 import Year from '../entities/Year'
-import MasterValue from '../entities/MasterValue'
+import MasterValueEntity from '../entities/MasterValue'
 import { IId } from '../models/interface'
 
 // https://medium.com/@erickwendel/generic-repository-with-typescript-and-node-js-731c10a1b98e
@@ -46,21 +41,15 @@ interface IValidation<T> {
 export interface IRepository<T> extends IWrite<T>, IRead<T>, IValidation<T> {}
 
 export default interface IRepositories {
-  UserRepository: IUserRepository<User>
+  UserRepository: IUserRepository<UserEntity>
 
-  OrganizationRepository: IOrganizationRepository<Organization>
-  OrganizationGroupRepository: IOrganizationGroupRepository<OrganizationGroup>
+  OrganizationRepository: IOrganizationRepository<OrganizationEntity>
+  OrganizationGroupRepository: IOrganizationGroupRepository<OrganizationGroupEntity>
 
-  ProgramRepository: IProgramRepository<Program>
-  SubmissionRepository: ISubmissionRepository<Submission>
+  ProgramRepository: IProgramRepository<ProgramEntity>
+  SubmissionRepository: ISubmissionRepository<SubmissionEntity>
   TemplateRepository: ITemplateRepository<Template>
-
-  CategoryGroupHierarchyRepository: IChartOfAccountsHierarchyRepository<
-    ChartOfAccounts
-  >
-  CategoryGroupRepository: ICategoryGroupRepository<CategoryGroup>
   ReportPeriodRepository: IReportingPeriodRepository<ReportingPeriod>
-  YearRepository: IYearRepository<Year>
 
-  MasterValueRepository: IMasterValueRepository<MasterValue>
+  MasterValueRepository: IMasterValueRepository<MasterValueEntity>
 }

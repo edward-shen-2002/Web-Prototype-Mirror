@@ -1,5 +1,5 @@
 import ITemplateRepository from './interface'
-import Template from '../../entities/Template'
+import TemplateEntity from '../../entities/Template'
 import TemplateModel from '../../models/Template'
 import { IId } from '../../models/interface'
 import StatusRepository from '../Status'
@@ -10,8 +10,8 @@ import BaseRepository from '../repository'
 
 // MongoDB implementation
 @Service()
-export default class TemplateRepository extends BaseRepository<Template>
-  implements ITemplateRepository<Template> {
+export default class TemplateRepository extends BaseRepository<TemplateEntity>
+  implements ITemplateRepository<TemplateEntity> {
   private statusRepository: StatusRepository
   private userRepository: UserRepository
   private templateTypeRepository: TemplateTypeRepository
@@ -32,7 +32,7 @@ export default class TemplateRepository extends BaseRepository<Template>
     creationDate,
     expirationDate,
     statusId
-  }: Template): Promise<Template> {
+  }: TemplateEntity): Promise<TemplateEntity> {
     return (
       this.statusRepository
         .validate(statusId)
@@ -49,7 +49,7 @@ export default class TemplateRepository extends BaseRepository<Template>
             statusId
           })
         )
-        .then((template) => new Template(template.toObject()))
+        .then((template) => new TemplateEntity(template.toObject()))
     )
   }
 
@@ -63,8 +63,8 @@ export default class TemplateRepository extends BaseRepository<Template>
       creationDate,
       expirationDate,
       statusId
-    }: Template
-  ): Promise<Template> {
+    }: TemplateEntity
+  ): Promise<TemplateEntity> {
     return (
       (statusId
         ? this.statusRepository.validate(statusId)
@@ -84,11 +84,11 @@ export default class TemplateRepository extends BaseRepository<Template>
             statusId
           })
         )
-        .then((template) => new Template(template.toObject()))
+        .then((template) => new TemplateEntity(template.toObject()))
     )
   }
 
-  public async find(query: Template): Promise<Template[]> {
+  public async find(query: TemplateEntity): Promise<TemplateEntity[]> {
     const realQuery = {}
 
     for (const key in query) {
@@ -97,13 +97,13 @@ export default class TemplateRepository extends BaseRepository<Template>
 
     return TemplateModel.find(realQuery)
       .then((templates) =>
-        templates.map((template) => new Template(template.toObject()))
+        templates.map((template) => new TemplateEntity(template.toObject()))
       )
   }
 
-  public async delete(id: IId): Promise<Template> {
+  public async delete(id: IId): Promise<TemplateEntity> {
     return TemplateModel.findByIdAndDelete(id).then(
-      (template) => new Template(template)
+      (template) => new TemplateEntity(template)
     )
   }
 }

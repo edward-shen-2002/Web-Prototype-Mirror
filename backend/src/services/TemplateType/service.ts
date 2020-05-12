@@ -13,9 +13,7 @@ export default class TemplateTypeService implements ITemplateTypeService {
   }
 
   public async createTemplateType(templateType: TemplateType) {
-    return this.templateTypeRepository.create(templateType).catch((error) => {
-      throw error
-    })
+    return this.templateTypeRepository.create(templateType)
   }
 
   public async deleteTemplateType(id: IId) {

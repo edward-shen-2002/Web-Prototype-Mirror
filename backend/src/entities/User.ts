@@ -1,6 +1,6 @@
 import { IId } from '../models/interface'
 
-export default class User {
+export default class UserEntity {
   public _id?: IId
   public username?: string
   public email?: string

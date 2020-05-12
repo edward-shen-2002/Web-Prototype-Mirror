@@ -1,7 +1,7 @@
 import { Service } from 'typedi'
 import { Response, NextFunction, Request } from 'express'
-import COAService from '../../../services/COA'
-import COA from '../../../entities/COA'
+import COAService from '../../services/COA'
+import COAEntity from '../../entities/COA'
 
 const COAController = Service(
   [COAService],
@@ -12,7 +12,7 @@ const COAController = Service(
         // Get query from middleware -- auth handler
 
         COAService
-          .findCOA({} as COA)
+          .findCOA({} as COAEntity)
           .then((COAs) => res.json({ COAs }))
           .catch(next)
       }

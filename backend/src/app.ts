@@ -17,6 +17,9 @@ import { PORT } from './configs/host'
 import TemplatePackageController from './controllers/TemplatePackage'
 import SubmissionPeriodController from './controllers/SubmissionPeriod'
 import ReportingPeriodController from './controllers/ReportingPeriod'
+import COAController from './controllers/COA'
+import COATreeController from './controllers/COATree'
+import COAGroupController from './controllers/COAGroup'
 
 const logger = require('morgan')
 
@@ -40,11 +43,15 @@ export const dbUtil = new Database()
 dbUtil.connect()
 
 // ! No auth for now - Direct connection to router
+// ! Change these base routes 
 app.use('/designer', Container.get(TemplateController))
 app.use('/designer', Container.get(StatusController))
 app.use('/designer', Container.get(TemplateTypeController))
 app.use('/designer', Container.get(TemplatePackageController))
 app.use('/designer', Container.get(SubmissionPeriodController))
 app.use('/designer', Container.get(ReportingPeriodController))
+app.use('/designer', Container.get(COAController))
+app.use('/designer', Container.get(COATreeController))
+app.use('/designer', Container.get(COAGroupController))
 
 export default app

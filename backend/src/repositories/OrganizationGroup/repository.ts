@@ -1,16 +1,17 @@
 import IOrganizationGroupRepository from './interface'
-import OrganizationGroup from '../../entities/OrganizationGroup'
+import OrganizationGroupEntity from '../../entities/OrganizationGroup'
+import BaseRepository from '../repository'
 
-export default class OrganizationGroupRepository
-  implements IOrganizationGroupRepository<OrganizationGroup> {
+export default class OrganizationGroupRepository extends BaseRepository<OrganizationGroupEntity>
+  implements IOrganizationGroupRepository<OrganizationGroupEntity> {
   create(
-    item: IOrganizationGroupRepository<OrganizationGroup>
+    item: IOrganizationGroupRepository<OrganizationGroupEntity>
   ): Promise<Boolean> {
     throw new Error('Method not implemented.')
   }
   update(
     id: string,
-    item: IOrganizationGroupRepository<OrganizationGroup>
+    item: IOrganizationGroupRepository<OrganizationGroupEntity>
   ): Promise<Boolean> {
     throw new Error('Method not implemented.')
   }
@@ -18,13 +19,13 @@ export default class OrganizationGroupRepository
     throw new Error('Method not implemented.')
   }
   find(
-    item: IOrganizationGroupRepository<OrganizationGroup>
-  ): Promise<IOrganizationGroupRepository<OrganizationGroup>[]> {
+    item: IOrganizationGroupRepository<OrganizationGroupEntity>
+  ): Promise<IOrganizationGroupRepository<OrganizationGroupEntity>[]> {
     throw new Error('Method not implemented.')
   }
   findOne(
     id: string
-  ): Promise<IOrganizationGroupRepository<OrganizationGroup>> {
+  ): Promise<IOrganizationGroupRepository<OrganizationGroupEntity>> {
     throw new Error('Method not implemented.')
   }
 }

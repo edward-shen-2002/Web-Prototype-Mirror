@@ -1,5 +1,5 @@
 import ITemplateTypeRepository from './interface'
-import TemplateType from '../../entities/TemplateType'
+import TemplateTypeEntity from '../../entities/TemplateType'
 import Container, { Service } from 'typedi'
 import BaseRepository from '../repository'
 import TemplateTypeModel from '../../models/TemplateType/model'
@@ -7,8 +7,8 @@ import { IId } from '../../models/interface'
 import ProgramRepository from '../Program'
 
 @Service()
-export default class TemplateTypeRepository extends BaseRepository<TemplateType>
-  implements ITemplateTypeRepository<TemplateType> {
+export default class TemplateTypeRepository extends BaseRepository<TemplateTypeEntity>
+  implements ITemplateTypeRepository<TemplateTypeEntity> {
   private programRepository: ProgramRepository
 
   constructor() {
@@ -28,7 +28,7 @@ export default class TemplateTypeRepository extends BaseRepository<TemplateType>
     isInputtable,
     isViewable,
     isReportable
-  }: TemplateType): Promise<TemplateType> {
+  }: TemplateTypeEntity): Promise<TemplateTypeEntity> {
     return this.programRepository
       .validateMany(programIds)
       .then(() =>
@@ -46,7 +46,7 @@ export default class TemplateTypeRepository extends BaseRepository<TemplateType>
           isReportable
         })
       )
-      .then((templateType) => new TemplateType(templateType))
+      .then((templateType) => new TemplateTypeEntity(templateType))
   }
 
   public async update(
@@ -63,8 +63,8 @@ export default class TemplateTypeRepository extends BaseRepository<TemplateType>
       isInputtable,
       isViewable,
       isReportable
-    }: TemplateType
-  ): Promise<TemplateType> {
+    }: TemplateTypeEntity
+  ): Promise<TemplateTypeEntity> {
     return (
       this.programRepository.validateMany(programIds)
         .then(
@@ -86,13 +86,13 @@ export default class TemplateTypeRepository extends BaseRepository<TemplateType>
           )
         )
         .then(
-          (templateType) => new TemplateType(templateType.toObject())
+          (templateType) => new TemplateTypeEntity(templateType.toObject())
         )
 
     )
   }
 
-  public async find(query: TemplateType): Promise<TemplateType[]> {
+  public async find(query: TemplateTypeEntity): Promise<TemplateTypeEntity[]> {
     const realQuery = {}
 
     for (const key in query) {
@@ -100,17 +100,17 @@ export default class TemplateTypeRepository extends BaseRepository<TemplateType>
     }
 
     return TemplateTypeModel.find(realQuery).then((templateTypes) =>
-      templateTypes.map((templateType) => new TemplateType(templateType))
+      templateTypes.map((templateType) => new TemplateTypeEntity(templateType))
     )
   }
 
-  findOne(id: IId): Promise<TemplateType> {
+  findOne(id: IId): Promise<TemplateTypeEntity> {
     throw new Error('Method not implemented.')
   }
 
-  public async delete(id: IId): Promise<TemplateType> {
+  public async delete(id: IId): Promise<TemplateTypeEntity> {
     return TemplateTypeModel.findByIdAndDelete(id).then(
-      (templateType) => new TemplateType(templateType)
+      (templateType) => new TemplateTypeEntity(templateType)
     )
   }
 }

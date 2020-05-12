@@ -1,1 +1,1 @@
-export default class MasterValue {}
+export default class MasterValueEntity {}

@@ -13,9 +13,7 @@ export default class SubmissionPeriodService implements ISubmissionPeriodService
   }
 
   public async createSubmissionPeriod(submissionPeriod: SubmissionPeriod) {
-    return this.submissionPeriodRepository.create(submissionPeriod).catch((error) => {
-      throw error
-    })
+    return this.submissionPeriodRepository.create(submissionPeriod)
   }
 
   public async deleteSubmissionPeriod(id: IId) {

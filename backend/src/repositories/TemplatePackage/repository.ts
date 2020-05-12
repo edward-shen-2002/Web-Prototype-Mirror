@@ -6,13 +6,13 @@ import BaseRepository from '../repository'
 import TemplateRepository from '../Template/repository'
 import SubmissionPeriodRepository from '../SubmissionPeriod'
 import TemplatePackageModel from '../../models/TemplatePackage'
-import TemplatePackage from '../../entities/TemplatePackage'
+import TemplatePackageEntity from '../../entities/TemplatePackage'
 import StatusRepository from '../Status'
 
 // MongoDB implementation
 @Service()
-export default class TemplatePackageRepository extends BaseRepository<TemplatePackage>
-  implements ITemplatePackageRepository<TemplatePackage> {
+export default class TemplatePackageRepository extends BaseRepository<TemplatePackageEntity>
+  implements ITemplatePackageRepository<TemplatePackageEntity> {
   private submissionPeriodRepository: SubmissionPeriodRepository
   private userRepository: UserRepository
   private templateRepository: TemplateRepository
@@ -35,8 +35,8 @@ export default class TemplatePackageRepository extends BaseRepository<TemplatePa
       statusId,
       creationDate,
       userCreatorId
-    }: TemplatePackage
-  ): Promise<TemplatePackage> {
+    }: TemplatePackageEntity
+  ): Promise<TemplatePackageEntity> {
     return (
       this.submissionPeriodRepository.validate(submissionPeriodId)
         .then(() => this.templateRepository.validateMany(templateIds))
@@ -52,7 +52,7 @@ export default class TemplatePackageRepository extends BaseRepository<TemplatePa
             userCreatorId
           }
         ))
-        .then((templatePackage) => new TemplatePackage(templatePackage.toObject()))
+        .then((templatePackage) => new TemplatePackageEntity(templatePackage.toObject()))
     )
   }
 
@@ -65,8 +65,8 @@ export default class TemplatePackageRepository extends BaseRepository<TemplatePa
       statusId,
       creationDate,
       userCreatorId
-    }: TemplatePackage
-  ): Promise<TemplatePackage> {
+    }: TemplatePackageEntity
+  ): Promise<TemplatePackageEntity> {
     return (
       (statusId
         ? this.statusRepository.validate(statusId)
@@ -91,11 +91,11 @@ export default class TemplatePackageRepository extends BaseRepository<TemplatePa
             userCreatorId
           })
         )
-        .then((templatePackage) => new TemplatePackage(templatePackage.toObject()))
+        .then((templatePackage) => new TemplatePackageEntity(templatePackage.toObject()))
     )
   }
 
-  public async find(query: TemplatePackage): Promise<TemplatePackage[]> {
+  public async find(query: TemplatePackageEntity): Promise<TemplatePackageEntity[]> {
     const realQuery = {}
 
     for (const key in query) {
@@ -104,13 +104,13 @@ export default class TemplatePackageRepository extends BaseRepository<TemplatePa
 
     return TemplatePackageModel.find(realQuery)
       .then((templatePackages) =>
-        templatePackages.map((templatePackage) => new TemplatePackage(templatePackage.toObject()))
+        templatePackages.map((templatePackage) => new TemplatePackageEntity(templatePackage.toObject()))
       )
   }
 
-  public async delete(id: IId): Promise<TemplatePackage> {
+  public async delete(id: IId): Promise<TemplatePackageEntity> {
     return TemplatePackageModel.findByIdAndDelete(id).then(
-      (templatePackage) => new TemplatePackage(templatePackage.toObject())
+      (templatePackage) => new TemplatePackageEntity(templatePackage.toObject())
     )
   }
 }

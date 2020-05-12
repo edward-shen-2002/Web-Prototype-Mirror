@@ -1,7 +1,7 @@
 import { IId } from '../../models/interface'
 import IStatusEntity from './interface'
 
-export default class Status {
+export default class StatusEntity {
   public _id?: IId
   public name?: string
   public description?: string

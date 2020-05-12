@@ -1,7 +1,7 @@
 import { IId } from '../../models/interface'
 import IReportingPeriodEntity from './interface'
 
-export default class ReportingPeriod {
+export default class ReportingPeriodEntity {
   public _id?: IId
   public name?: string
   public startDate?: Date

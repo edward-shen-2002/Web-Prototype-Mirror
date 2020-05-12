@@ -2,7 +2,7 @@ import { IId } from '../../models/interface'
 import ITemplateEntity from './interface'
 
 // It's possible that we can extend an object for all entity classes
-export default class Template {
+export default class TemplateEntity {
   public _id?: IId
   public name?: string
   public templateData?: object

@@ -1,1 +1,1 @@
-export default class Program {}
+export default class ProgramEntity {}

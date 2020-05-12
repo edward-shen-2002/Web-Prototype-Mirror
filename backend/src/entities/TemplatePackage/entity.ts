@@ -1,7 +1,7 @@
 import { IId } from '../../models/interface'
 import ITemplatePackageEntity from './interface'
 
-export default class TemplatePackage {
+export default class TemplatePackageEntity {
   public _id?: IId
   public name?: string
   public submissionPeriodId?: IId
