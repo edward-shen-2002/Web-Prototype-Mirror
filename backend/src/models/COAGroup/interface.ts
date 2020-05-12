@@ -1,12 +1,12 @@
 import { Document } from 'mongoose'
 import { IId } from '../interface'
 
-export interface IChartOfAccountsGroup {
+export interface ICOAGroup {
   name: string
   code: string
   isActive: boolean
 }
 
-export default interface IChartOfAccountsGroupDocument
-  extends IChartOfAccountsGroup,
+export default interface ICOAGroupDocument
+  extends ICOAGroup,
     Document {}

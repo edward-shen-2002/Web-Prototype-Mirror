@@ -5,7 +5,7 @@ import {
   createStatus,
   deleteStatus,
   updateStatus
-} from '../actions/StatusStore'
+} from '../actions/StatusesStore'
 
 import statusController from '../../controllers/status'
 

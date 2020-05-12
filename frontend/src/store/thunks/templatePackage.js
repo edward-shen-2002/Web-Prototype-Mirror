@@ -7,7 +7,7 @@ import {
   createTemplatePackage,
   deleteTemplatePackage,
   updateTemplatePackage
-} from '../actions/TemplatePackageStore'
+} from '../actions/TemplatePackagesStore'
 
 import templatePackageController from '../../controllers/templatePackage';
 

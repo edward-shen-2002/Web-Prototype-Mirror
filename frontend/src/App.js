@@ -5,6 +5,7 @@ import { useSelector, shallowEqual } from 'react-redux'
 
 import { ActivityRoute } from "@tools/components/routes";
 import TemplateRouter from "./views/TemplateRouter";
+import COARouter from './views/COARouter'
 import Navigation from './Navigation'
 import Header from './Header'
 import Statuses from './views/Statuses'
@@ -33,13 +34,14 @@ const AppPageRouter = () => {
         component={
           (props) => (
             isOnline 
-              ? <Redirect to="/designer/template"/> 
+              ? <Redirect to="/"/> 
               : <Login {...props}/> 
           )
         }
       />
-      <ActivityRoute path="/designer/template_manager" requiredState="online" Component={TemplateRouter}/>
-      <Route path="/designer/status" component={Statuses}/>
+      <ActivityRoute path="/template_manager" requiredState="online" Component={TemplateRouter}/>
+      <ActivityRoute path="/COA_manager" requiredState="online" Component={COARouter}/>
+      <Route path="/status" component={Statuses}/>
     </Switch>
   )
 }

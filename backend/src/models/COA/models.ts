@@ -1,10 +1,10 @@
 import { Schema, model } from 'mongoose'
-import IChartOfAccounts from './interface'
+import ICOA from './interface'
 
 const ObjectId = Schema.Types.ObjectId
 
-const ChartOfAccountsModel = model<IChartOfAccounts>(
-  'ChartOfAccounts',
+const COAModel = model<ICOA>(
+  'COA',
   new Schema(
     {
       name: { type: String }
@@ -13,4 +13,4 @@ const ChartOfAccountsModel = model<IChartOfAccounts>(
   )
 )
 
-export default ChartOfAccountsModel
+export default COAModel

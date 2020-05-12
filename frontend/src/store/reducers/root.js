@@ -7,12 +7,14 @@ import TemplatesStore from './TemplatesStore'
 import TemplateTypesStore from './TemplateTypesStore'
 import StatusesStore from './StatusesStore'
 import TemplatePackagesStore from './TemplatePackagesStore'
+import COATreeStore from './COATreeStore'
 
 export const root = combineReducers({
   TemplatesStore,
   TemplateTypesStore,
   StatusesStore,
   TemplatePackagesStore,
+  COATreeStore,
   app,
   domain,
   ui

@@ -7,7 +7,7 @@ import {
   createTemplate,
   deleteTemplate,
   updateTemplate
-} from '../actions/TemplateStore'
+} from '../actions/TemplatesStore'
 
 import { 
   setExcelData,

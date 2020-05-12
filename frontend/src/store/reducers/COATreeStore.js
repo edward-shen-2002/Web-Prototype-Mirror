@@ -77,13 +77,31 @@ const reducersMap = {
   REVERT_COA_TREE_UI
 }
 
+const TEST_DATA = [
+  {
+   'title': 123,
+   'children': [
+    {
+     'title': 124,
+     'children': [
+      {
+       'title': 126
+      }
+     ]
+    }
+   ]
+  },
+  {
+   'title': 125
+  }
+ ]
+
 const defaultState = {
   originalTree: {
 
   },
-  localTree: {
-
-  },
+  // localTree: [],
+  localTree: TEST_DATA,  
   error: null,
   isCallInProgress: false,
   saveTimeStamp: null

@@ -5,7 +5,7 @@ import {
   createTemplateType, 
   deleteTemplateType, 
   updateTemplateType 
-} from '../actions/TemplateTypeStore'
+} from '../actions/TemplateTypesStore'
 
 import templateTypeController from '../../controllers/templateType'
 
