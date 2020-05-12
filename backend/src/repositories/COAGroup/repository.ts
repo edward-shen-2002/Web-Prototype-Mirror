@@ -29,8 +29,8 @@ export default class ReportPeriodRepository extends BaseRepository<COAGroupEntit
         if (query[key]) realQuery[key] = query[key]
       }
   
-      return COAGroupModel.find(realQuery).then((status) =>
-        status.map((COAGroup) => new COAGroupEntity(COAGroup.toObject()))
+      return COAGroupModel.find(realQuery).then((COAGroups) => 
+        COAGroups.map((COAGroup) => new COAGroupEntity(COAGroup.toObject()))
       )
     }
 }

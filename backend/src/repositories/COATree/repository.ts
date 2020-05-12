@@ -29,8 +29,8 @@ export default class ReportPeriodRepository extends BaseRepository<COATreeEntity
         if (query[key]) realQuery[key] = query[key]
       }
   
-      return COATreeModel.find(realQuery).then((status) =>
-        status.map((COATree) => new COATreeEntity(COATree.toObject()))
+      return COATreeModel.find(realQuery).then((COATrees) =>
+        COATrees.map((COATree) => new COATreeEntity(COATree.toObject()))
       )
     }
 }

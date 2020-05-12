@@ -48,13 +48,13 @@ const COAGroupsTable = ({ history }) => {
     ),
     shallowEqual
   )
-
+  
   const columns = useMemo(
     () => [
       { title: "_id", field: "_id" },
       { title: "Name", field: "name" },
       { title: "Code", field: "code" },
-      { title: "Active", field: "isActive" }
+      { title: "Active", type: "boolean", field: "isActive" }
     ],
     []
   )
@@ -70,24 +70,20 @@ const COAGroupsTable = ({ history }) => {
     () => (
       { 
         onRowAdd: (COAGroup) => new Promise(
-          (resolve) => {
-            // COAGroup = {
-
-            // }
-
-            dispatch(createCOAGroupRequest(COAGroup))
+          (resolve, reject) => {
+            dispatch(createCOAGroupRequest(COAGroup, resolve, reject))
             resolve()
           }
         ), 
         onRowUpdate: (COAGroup) => new Promise(
-          (resolve) => {
-            dispatch(updateCOAGroupRequest(COAGroup))
+          (resolve, reject) => {
+            dispatch(updateCOAGroupRequest(COAGroup, resolve, reject))
             resolve()
           }
         ), 
         onRowDelete: (COAGroup) => new Promise(
-          (resolve) => {
-            dispatch(deleteCOAGroupRequest(COAGroup._id))
+          (resolve, reject) => {
+            dispatch(deleteCOAGroupRequest(COAGroup._id, resolve, reject))
             resolve()
           }
         ) 

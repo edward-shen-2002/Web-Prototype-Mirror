@@ -35,8 +35,8 @@ export default class StatusRepository extends BaseRepository<StatusEntity>
       if (query[key]) realQuery[key] = query[key]
     }
 
-    return StatusModel.find(realQuery).then((status) =>
-      status.map((status) => new StatusEntity(status.toObject()))
+    return StatusModel.find(realQuery).then((statuses) =>
+      statuses.map((status) => new StatusEntity(status.toObject()))
     )
   }
 }

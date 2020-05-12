@@ -159,11 +159,14 @@ const COATreeTreeStructure = () => {
   )
 }
 
-const COATree = () => (
-  <div className="COATree">
-    <COATreeHeader/>
-    <COATreeTreeStructure/>
-  </div>
-)
+const COATree = () => {
+
+  return (
+    <div className="COATree">
+      <COATreeHeader/>
+      <COATreeTreeStructure/>
+    </div>
+  )
+}
 
 export default COATree

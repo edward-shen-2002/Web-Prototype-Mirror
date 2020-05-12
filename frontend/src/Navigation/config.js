@@ -24,8 +24,6 @@ const createUserNavigation = () => {
 
   const COATrees = { name: "COA Trees", url: "/COA_manager/COA_trees", icon: "mdi mdi-shape" }
 
-  const COATree = { name: "COA Tree", url: "/COA_manager/COA_tree", icon: "mdi mdi-shape" }
-
   const COAGroups = { name: "COA Groups", url: "/COA_manager/COA_groups", icon: "mdi mdi-shape" }
 
   const COAs = { name: "COAs", url: "/COA_manager/COAs", icon: "mdi mdi-shape" }
@@ -43,7 +41,6 @@ const createUserNavigation = () => {
     template, 
     templateType,
     templatePackage,
-    COATree,
     COATrees,
     COAGroups,
     COAs

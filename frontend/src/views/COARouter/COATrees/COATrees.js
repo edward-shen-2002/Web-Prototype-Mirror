@@ -65,7 +65,7 @@ const COATreesTable = ({ history }) => {
       { 
         icon: LaunchIcon, 
         tooltip: "View Tree", 
-        onClick: (_event, COATree) => {}
+        onClick: (_event, COATree) => history.push(`/COA_manager/${COATree._id}`)
       }
     ],
     [ history ]
