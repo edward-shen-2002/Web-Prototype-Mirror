@@ -20,6 +20,7 @@ import ReportingPeriodController from './controllers/ReportingPeriod'
 import COAController from './controllers/COA'
 import COATreeController from './controllers/COATree'
 import COAGroupController from './controllers/COAGroup'
+import SheetNameController from './controllers/SheetName'
 
 const logger = require('morgan')
 
@@ -52,10 +53,12 @@ app.use('/template_manager', Container.get(TemplateTypeController))
 app.use('/designer', Container.get(StatusController))
 app.use('/designer', Container.get(SubmissionPeriodController))
 app.use('/designer', Container.get(ReportingPeriodController))
+app.use('/designer', Container.get(SheetNameController))
 
 app.use('/COA_manager', Container.get(COAController))
 app.use('/COA_manager', Container.get(COATreeController))
 app.use('/COA_manager', Container.get(COAGroupController))
+
 
 
 export default app

@@ -72,19 +72,16 @@ const COAGroupsTable = ({ history }) => {
         onRowAdd: (COAGroup) => new Promise(
           (resolve, reject) => {
             dispatch(createCOAGroupRequest(COAGroup, resolve, reject))
-            resolve()
           }
         ), 
         onRowUpdate: (COAGroup) => new Promise(
           (resolve, reject) => {
             dispatch(updateCOAGroupRequest(COAGroup, resolve, reject))
-            resolve()
           }
         ), 
         onRowDelete: (COAGroup) => new Promise(
           (resolve, reject) => {
             dispatch(deleteCOAGroupRequest(COAGroup._id, resolve, reject))
-            resolve()
           }
         ) 
       }

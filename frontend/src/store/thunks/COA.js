@@ -5,7 +5,7 @@ import {
   createCOA,
   deleteCOA,
   updateCOA
-} from '../actions/COAStore'
+} from '../actions/COAsStore'
 
 import COAController from '../../controllers/COA'
 

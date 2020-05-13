@@ -2,11 +2,11 @@ import React, { useCallback, useMemo, useEffect } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import { 
-  getCOATreesRequest, 
-  createCOATreeRequest, 
-  deleteCOATreeRequest, 
-  updateCOATreeRequest 
-} from "../../../store/thunks/COATree"
+  getCOAsRequest, 
+  createCOARequest, 
+  deleteCOARequest, 
+  updateCOARequest 
+} from "../../../store/thunks/COA"
 
 import MaterialTable from 'material-table'
 import LaunchIcon from "@material-ui/icons/Launch";
@@ -16,7 +16,7 @@ import Typography from "@material-ui/core/Typography";
 
 import './COAs.scss'
 
-const COATreesHeader = () => {
+const COAsHeader = () => {
 
 
   return (
@@ -27,15 +27,15 @@ const COATreesHeader = () => {
   )
 }
 
-const COATreesTable = ({ history }) => {
+const COAsTable = ({ history }) => {
   const dispatch = useDispatch()
 
   const {
-    COATrees
+    COAs
   } = useSelector(
     (
       {
-        COATreesStore: {
+        COAsStore: {
           response: {
             Values
           }
@@ -43,7 +43,7 @@ const COATreesTable = ({ history }) => {
       }
     ) => (
       {
-        COATrees: Values
+        COAs: Values
       }
     ),
     shallowEqual
@@ -57,17 +57,6 @@ const COATreesTable = ({ history }) => {
     []
   )
 
-  const actions = useMemo(
-    () => [
-      { 
-        icon: LaunchIcon, 
-        tooltip: "View Tree", 
-        onClick: (_event, COATree) => {}
-      }
-    ],
-    [ history ]
-  )
-
   const options = useMemo(
     () => (
       { actionsColumnIndex: -1, search: false, showTitle: false }
@@ -78,26 +67,19 @@ const COATreesTable = ({ history }) => {
   const editable = useMemo(
     () => (
       { 
-        onRowAdd: (COATree) => new Promise(
-          (resolve) => {
-            // COATree = {
-
-            // }
-
-            dispatch(createCOATreeRequest(COATree))
-            resolve()
+        onRowAdd: (COA) => new Promise(
+          (resolve, reject) => {
+            dispatch(createCOARequest(COA, resolve, reject))
           }
         ), 
-        onRowUpdate: (COATree) => new Promise(
-          (resolve) => {
-            dispatch(updateCOATreeRequest(COATree))
-            resolve()
+        onRowUpdate: (COA) => new Promise(
+          (resolve, reject) => {
+            dispatch(updateCOARequest(COA, resolve, reject))
           }
         ), 
-        onRowDelete: (COATree) => new Promise(
-          (resolve) => {
-            dispatch(deleteCOATreeRequest(COATree._id))
-            resolve()
+        onRowDelete: (COA) => new Promise(
+          (resolve, reject) => {
+            dispatch(deleteCOARequest(COA._id, resolve, reject))
           }
         ) 
       }
@@ -107,7 +89,7 @@ const COATreesTable = ({ history }) => {
 
   useEffect(
     () => {
-      dispatch(getCOATreesRequest())
+      dispatch(getCOAsRequest())
     },
     [ dispatch ]
   )
@@ -115,20 +97,19 @@ const COATreesTable = ({ history }) => {
   return (
     <MaterialTable
       columns={columns} 
-      actions={actions} 
-      data={COATrees} 
+      data={COAs} 
       editable={editable} 
       options={options}
     />
   )
 }
 
-const COATrees = (props) => (
-  <div className="COATrees">
-    <COATreesHeader/>
+const COAs = (props) => (
+  <div className="COAs">
+    <COAsHeader/>
     {/* <FileDropzone/> */}
-    <COATreesTable {...props}/>
+    <COAsTable {...props}/>
   </div>
 )
 
-export default COATrees
+export default COAs

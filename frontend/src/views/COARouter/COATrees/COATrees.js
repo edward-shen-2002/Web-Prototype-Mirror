@@ -82,25 +82,18 @@ const COATreesTable = ({ history }) => {
     () => (
       { 
         onRowAdd: (COATree) => new Promise(
-          (resolve) => {
-            // COATree = {
-
-            // }
-
-            dispatch(createCOATreeRequest(COATree))
-            resolve()
+          (resolve, reject) => {
+            dispatch(createCOATreeRequest(COATree, resolve, reject))
           }
         ), 
         onRowUpdate: (COATree) => new Promise(
-          (resolve) => {
-            dispatch(updateCOATreeRequest(COATree))
-            resolve()
+          (resolve, reject) => {
+            dispatch(updateCOATreeRequest(COATree, resolve, reject))
           }
         ), 
         onRowDelete: (COATree) => new Promise(
-          (resolve) => {
-            dispatch(deleteCOATreeRequest(COATree._id))
-            resolve()
+          (resolve, reject) => {
+            dispatch(deleteCOATreeRequest(COATree._id, resolve, reject))
           }
         ) 
       }
