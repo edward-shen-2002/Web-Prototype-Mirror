@@ -53,7 +53,7 @@ app.use('/template_manager', Container.get(TemplateTypeController))
 app.use('/designer', Container.get(StatusController))
 app.use('/designer', Container.get(SubmissionPeriodController))
 app.use('/designer', Container.get(ReportingPeriodController))
-app.use('/designer', Container.get(SheetNameController))
+app.use('/sheetNames', Container.get(SheetNameController))
 
 app.use('/COA_manager', Container.get(COAController))
 app.use('/COA_manager', Container.get(COATreeController))

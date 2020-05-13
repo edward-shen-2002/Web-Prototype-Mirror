@@ -2,11 +2,8 @@ import React, { useCallback, useMemo, useEffect } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import { 
-  getCOATreesRequest, 
-  createCOATreeRequest, 
-  deleteCOATreeRequest, 
-  updateCOATreeRequest 
-} from "../../../store/thunks/COATree"
+  getSheetNamesRequest,
+} from "../../../store/thunks/sheetName"
 
 import MaterialTable from 'material-table'
 import LaunchIcon from "@material-ui/icons/Launch";
@@ -31,11 +28,11 @@ const COATreesTable = ({ history }) => {
   const dispatch = useDispatch()
 
   const {
-    COATrees
+    sheetNames
   } = useSelector(
     (
       {
-        COATreesStore: {
+        SheetNamesStore: {
           response: {
             Values
           }
@@ -43,7 +40,7 @@ const COATreesTable = ({ history }) => {
       }
     ) => (
       {
-        COATrees: Values
+        sheetNames: Values
       }
     ),
     shallowEqual
@@ -52,10 +49,7 @@ const COATreesTable = ({ history }) => {
   const columns = useMemo(
     () => [
       { title: "_id", field: "_id" },
-      { title: "ParentId", field: "parentId" },
-      { title: "GroupId", field: "COAGroupId" },
-      { title: "COAId", field: "COAId" },
-      { title: "SheetNameId", field: "sheetNameId" }
+      { title: "Sheet Name", field: "name" }
     ],
     []
   )
@@ -64,8 +58,8 @@ const COATreesTable = ({ history }) => {
     () => [
       { 
         icon: LaunchIcon, 
-        tooltip: "View Tree", 
-        onClick: (_event, COATree) => history.push(`/COA_manager/${COATree._id}`)
+        tooltip: "View Sheet's Tree", 
+        onClick: (_event, sheetName) => history.push(`/COA_manager/COA_trees/${sheetName._id}`)
       }
     ],
     [ history ]
@@ -78,32 +72,9 @@ const COATreesTable = ({ history }) => {
     []
   )
 
-  const editable = useMemo(
-    () => (
-      { 
-        onRowAdd: (COATree) => new Promise(
-          (resolve, reject) => {
-            dispatch(createCOATreeRequest(COATree, resolve, reject))
-          }
-        ), 
-        onRowUpdate: (COATree) => new Promise(
-          (resolve, reject) => {
-            dispatch(updateCOATreeRequest(COATree, resolve, reject))
-          }
-        ), 
-        onRowDelete: (COATree) => new Promise(
-          (resolve, reject) => {
-            dispatch(deleteCOATreeRequest(COATree._id, resolve, reject))
-          }
-        ) 
-      }
-    ),
-    [ dispatch ]
-  )
-
   useEffect(
     () => {
-      dispatch(getCOATreesRequest())
+      dispatch(getSheetNamesRequest())
     },
     [ dispatch ]
   )
@@ -112,8 +83,7 @@ const COATreesTable = ({ history }) => {
     <MaterialTable
       columns={columns} 
       actions={actions} 
-      data={COATrees} 
-      editable={editable} 
+      data={sheetNames} 
       options={options}
     />
   )

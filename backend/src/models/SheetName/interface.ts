@@ -2,7 +2,7 @@ import { Document } from 'mongoose'
 import { IId } from '../interface'
 
 export interface ISheetName {
-  templateId: IId,
+  // templateId: IId,
   name: string,
   isActive: boolean
 }

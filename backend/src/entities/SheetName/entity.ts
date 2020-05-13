@@ -5,18 +5,18 @@ export default class SheetNameEntity {
   public _id?: IId
   public name?: string
   public isActive?: boolean
-  public templateId?: IId
+  // public templateId?: IId
 
   constructor(
     { 
       _id,
       name,
       isActive,
-      templateId
+      // templateId
     }: ISheetNameEntity) {
       this._id = _id
       this.name = name
       this.isActive = isActive
-      this.templateId = templateId
+      // this.templateId = templateId
   }
 }

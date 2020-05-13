@@ -11,7 +11,7 @@ import COATreeStore from './COATreeStore'
 import COATreesStore from './COATreesStore'
 import COAGroupsStore from './COAGroupsStore'
 import COAsStore from './COAsStore'
-import SheetNamesStore from ./SheetNamesStoree'
+import SheetNamesStore from './SheetNamesStore'
 
 export const root = combineReducers({
   StatusesStore,

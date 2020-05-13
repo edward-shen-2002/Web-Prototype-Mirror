@@ -17,41 +17,56 @@ export default class SheetNameRepository extends BaseRepository<SheetNameEntity>
     this.templateRepository = Container.get(TemplateRepository)
   }
   public async create({
-    templateId,
+    // templateId,
     name,
     isActive
   }: SheetNameEntity): Promise<SheetNameEntity> {
-    return this.templateRepository
-      .validate(templateId)
-      .then(() =>
-        SheetNameModel.create({
-          templateId,
-          name,
-          isActive
-        })
-      )
+    return (
+      // this.templateRepository
+      // .validate(templateId)
+      // .then(() =>
+      //   SheetNameModel.create({
+      //     templateId,
+      //     name,
+      //     isActive
+      //   })
+      // )
+      SheetNameModel.create({
+        // templateId,
+        name,
+        isActive
+      })
       .then((sheetName) => new SheetNameEntity(sheetName))
+    )
   }
 
   public async update(
     id: IId, 
     {
-      templateId,
+      // templateId,
       name,
       isActive
     }: SheetNameEntity
   ): Promise<SheetNameEntity> {
     return (
-      this.templateRepository.validate(templateId)
-        .then(
-          () => SheetNameModel.findByIdAndUpdate(
-            id, 
-            {
-              templateId,
-              name,
-              isActive
-            }
-          )
+      // this.templateRepository.validate(templateId)
+      //   .then(
+      //     () => SheetNameModel.findByIdAndUpdate(
+      //       id, 
+      //       {
+      //         templateId,
+      //         name,
+      //         isActive
+      //       }
+      //     )
+      //   )
+        SheetNameModel.findByIdAndUpdate(
+          id, 
+          {
+            // templateId,
+            name,
+            isActive
+          }
         )
         .then(
           (sheetName) => new SheetNameEntity(sheetName.toObject())

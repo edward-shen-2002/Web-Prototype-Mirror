@@ -13,7 +13,7 @@ const TemplateRouter = () => (
     <Route path="/COA_manager/COA_groups" component={COAGroups}/>
     <Route path="/COA_manager/COAs" component={COAs}/>
     <Route path="/COA_manager/COA_trees" component={COATrees}/>
-    <Route path="/COA_manager/COA_tree/:_id" component={COATree}/>
+    <Route path="/COA_manager/COA_trees/:_id" component={COATree}/>
 
     <Route component={NotFound}/>
   </Switch>

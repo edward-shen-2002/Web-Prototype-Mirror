@@ -7,7 +7,7 @@ const SheetNameModel = model<ISheetName>(
   'SheetName',
   new Schema(
     {
-      templateId: { type: ObjectId, ref: "Template" },
+      // templateId: { type: ObjectId, ref: "Template" },
       name: { type: String },
       isActive: { type: Boolean }
     }, 

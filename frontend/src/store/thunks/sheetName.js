@@ -1,64 +1,64 @@
 import { 
-  requestSheetNamees, 
-  failSheetNameesRequest, 
-  receiveSheetNamees, 
-  createSheetNamee, 
-  deleteSheetNamee, 
-  updateSheetNamee 
-} from '../actions/SheetNameesStore'
+  requestSheetNames, 
+  failSheetNamesRequest, 
+  receiveSheetNames, 
+  createSheetName, 
+  deleteSheetName, 
+  updateSheetName 
+} from '../actions/SheetNamesStore'
 
-import sheetNameeController from '../../controllers/sheetNamee'
+import sheetNameController from '../../controllers/sheetName'
 
-export const getSheetNameesRequest = (query) => (dispatch) => {
-  dispatch(requestSheetNamees())
+export const getSheetNamesRequest = (query) => (dispatch) => {
+  dispatch(requestSheetNames())
 
-  sheetNameeController.fetchSheetNamees(query)
-    .then((sheetNamees) => {
-      dispatch(receiveSheetNamees({ Values: sheetNamees }))
+  sheetNameController.fetchSheetNames(query)
+    .then((sheetNames) => {
+      dispatch(receiveSheetNames({ Values: sheetNames }))
     })
     .catch((error) => {
-      dispatch(failSheetNameesRequest(error))
+      dispatch(failSheetNamesRequest(error))
     })
 }
 
-export const createSheetNameeRequest = (sheetNamee, resolve, reject) => (dispatch) => {
-  dispatch(requestSheetNamees())
+export const createSheetNameRequest = (sheetName, resolve, reject) => (dispatch) => {
+  dispatch(requestSheetNames())
   
-  sheetNameeController.createSheetNamee(sheetNamee)
-    .then((sheetNamee) => {
-      dispatch(createSheetNamee({ Value: sheetNamee }))
+  sheetNameController.createSheetName(sheetName)
+    .then((sheetName) => {
+      dispatch(createSheetName({ Value: sheetName }))
       resolve()
     })
     .catch((error) => {
-      dispatch(failSheetNameesRequest(error))
+      dispatch(failSheetNamesRequest(error))
       reject()
     })
 }
 
-export const deleteSheetNameeRequest = (_id, resolve, reject) => (dispatch) => {
-  dispatch(requestSheetNamees())
+export const deleteSheetNameRequest = (_id, resolve, reject) => (dispatch) => {
+  dispatch(requestSheetNames())
 
-  sheetNameeController.deleteSheetNamee(_id)
+  sheetNameController.deleteSheetName(_id)
     .then(() => {
-      dispatch(deleteSheetNamee({ Value: { _id } }))
+      dispatch(deleteSheetName({ Value: { _id } }))
       resolve()
     })
     .catch((error) => {
-      dispatch(failSheetNameesRequest(error))
+      dispatch(failSheetNamesRequest(error))
       reject()
     })
 }
 
-export const updateSheetNameeRequest = (sheetNamee, resolve, reject) => (dispatch) => {
-  dispatch(requestSheetNamees())
+export const updateSheetNameRequest = (sheetName, resolve, reject) => (dispatch) => {
+  dispatch(requestSheetNames())
 
-  sheetNameeController.updateSheetNamee(sheetNamee)
+  sheetNameController.updateSheetName(sheetName)
     .then(() => {
-      dispatch(updateSheetNamee({ Value: sheetNamee }))
+      dispatch(updateSheetName({ Value: sheetName }))
       resolve()
     })
     .catch((error) => {
-      dispatch(failSheetNameesRequest(error))
+      dispatch(failSheetNamesRequest(error))
       reject()
     })
 }
