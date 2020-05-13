@@ -16,3 +16,11 @@
 .searchBar {
   margin-right: 10px !important;
 }
+
+.groupList__item {
+  cursor: pointer;
+
+  &:hover {
+    background-color: lightgray;
+  }
+}

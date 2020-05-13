@@ -24,6 +24,10 @@ export default class COATreeService implements ICOATreeService {
     return this.COATreeRepository.update(id, COATree)
   }
 
+  public async updateSheetCOATrees(sheetNameId: IId, COATrees: Array<COATree>) {
+    return this.COATreeRepository.updateBySheet(sheetNameId, COATrees)
+  }
+
   public async findCOATree(COATree: COATree) {
     return this.COATreeRepository.find(COATree)
   }

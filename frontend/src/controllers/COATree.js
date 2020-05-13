@@ -8,7 +8,8 @@ const COATreeController = (
       fetchCOATrees: async (query) => COATreeAxios.get('').then((res) => res.data.COATrees),
       createCOATree: async (COATree) => COATreeAxios.post('', { COATree }).then((res) => res.data.COATree),
       deleteCOATree: async (_id) => COATreeAxios.delete(`/${_id}`),
-      updateCOATree: async (COATree) => COATreeAxios.put(`/${COATree._id}`, { COATree })
+      updateCOATree: async (COATree) => COATreeAxios.put(`/${COATree._id}`, { COATree }),
+      updateCOATrees: async (COATrees, sheetNameId) => COATreeAxios.put(`/sheetName/${sheetNameId}`, { COATrees })
     }
   }
 )()

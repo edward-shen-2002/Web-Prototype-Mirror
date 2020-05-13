@@ -5,7 +5,7 @@ export default class COATreeEntity {
   public _id?: IId
   public parentId?: IId
   public COAGroupId?: IId 
-  public COAId?: IId
+  public COAIds?: Array<IId>
   public sheetNameId?: IId
 
   constructor(
@@ -13,13 +13,13 @@ export default class COATreeEntity {
       _id,
       parentId,
       COAGroupId,
-      COAId,
+      COAIds,
       sheetNameId
     }: ICOATreeEntity) {
       this._id = _id
       this.parentId = parentId
       this.COAGroupId = COAGroupId
-      this.COAId = COAId
+      this.COAIds = COAIds
       this.sheetNameId = sheetNameId
   }
 }

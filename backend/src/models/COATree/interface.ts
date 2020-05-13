@@ -2,10 +2,10 @@ import { Document } from 'mongoose'
 import { IId } from '../interface'
 
 export interface ICOATree {
-  parentId: IId
-  COAGroupId: IId
-  COAId: IId
-  sheetNameId: IId
+  parentId?: IId
+  COAGroupId?: IId
+  COAIds?: Array<IId>
+  sheetNameId?: IId
 }
 
 export default interface ICOATreeDocument

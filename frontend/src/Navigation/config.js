@@ -1,24 +1,24 @@
 const createUserNavigation = () => {
   const userTitle = { title: true, name: "User" };
 
-  const template = { 
-    name: "Template", 
+  const templates = { 
+    name: "Templates", 
     url: "/template_manager/templates", 
     icon: "mdi mdi-note-multiple" 
   }
-  const status = { 
-    name: "Status", 
-    url: "/status", 
+  const statuses = { 
+    name: "Statuses", 
+    url: "/statuses", 
     icon: "mdi mdi-note-multiple" 
   }
-  const templateType = { 
-    name: "Template Type", 
-    url: "/template_manager/templateType", 
+  const templateTypes = { 
+    name: "Template Types", 
+    url: "/template_manager/templateTypes", 
     icon: "mdi mdi-note-multiple" 
   }
-  const templatePackage = { 
-    name: "Template Package", 
-    url: "/template_manager/templatePackage", 
+  const templatePackages = { 
+    name: "Template Packages", 
+    url: "/template_manager/templatePackages", 
     icon: "mdi mdi-note-multiple" 
   }
 
@@ -27,6 +27,12 @@ const createUserNavigation = () => {
   const COAGroups = { name: "COA Groups", url: "/COA_manager/COA_groups", icon: "mdi mdi-shape" }
 
   const COAs = { name: "COAs", url: "/COA_manager/COAs", icon: "mdi mdi-shape" }
+
+  const sheetNames = { 
+    name: "Sheet Names", 
+    url: "/sheetNames", 
+    icon: "mdi mdi-note-multiple" 
+  }
 
   // const userDashboard = { name: "Dashboard", url: ROUTE_USER_DASHBOARD, icon: "mdi mdi-library-books" }
 
@@ -37,13 +43,14 @@ const createUserNavigation = () => {
     /*userDashboard,*/ 
     // userProfile, 
     // userBundles, 
-    status, 
-    template, 
-    templateType,
-    templatePackage,
+    statuses, 
+    templates, 
+    templateTypes,
+    templatePackages,
     COATrees,
     COAGroups,
-    COAs
+    COAs,
+    sheetNames
   ];
 };
 

@@ -9,6 +9,7 @@ import COARouter from './views/COARouter'
 import Navigation from './Navigation'
 import Header from './Header'
 import Statuses from './views/Statuses'
+import SheetNames from './views/SheetNames'
 
 import './App.scss'
 
@@ -41,7 +42,8 @@ const AppPageRouter = () => {
       />
       <ActivityRoute path="/template_manager" requiredState="online" Component={TemplateRouter}/>
       <ActivityRoute path="/COA_manager" requiredState="online" Component={COARouter}/>
-      <Route path="/status" component={Statuses}/>
+      <ActivityRoute path="/sheetNames" requiredState="online" Component={SheetNames}/>
+      <ActivityRoute path="/statuses" requiredState="online" Component={Statuses}/>
     </Switch>
   )
 }

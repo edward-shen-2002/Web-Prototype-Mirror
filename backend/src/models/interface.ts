@@ -14,7 +14,7 @@ import IReportPeriodDocument from './ReportingPeriod/interface'
 import IMasterValueDocument from './MasterValue/interface'
 import ITemplateDocument from './Template/interface'
 
-export type IId = string | number
+export type IId = string | number | object
 
 export default interface IModels {
   UserModel: Model<IUserDocument>

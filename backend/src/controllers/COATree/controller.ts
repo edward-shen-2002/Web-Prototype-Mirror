@@ -22,17 +22,18 @@ const COATreeController = Service(
           }
         )
 
-        // router.get(
-        //   '/COATrees/:_id',
-        //   (req: Request, res: Response, next: NextFunction) => {
-        //     // Get query from middleware -- auth handler
+        router.get(
+          '/COATrees/:_id',
+          (req: Request, res: Response, next: NextFunction) => {
+            // Get query from middleware -- auth handler
+            const sheetNameId = req.params._id
 
-        //     service
-        //       .findCOATree(new COATree({  _id: req.params._id }))
-        //       .then(([ COATree ]) => res.json({ COATree }))
-        //       .catch(next)
-        //   }
-        // )
+            service
+              .findCOATree(new COATreeEntity({  sheetNameId }))
+              .then(([ COATree ]) => res.json({ COATree }))
+              .catch(next)
+          }
+        )
 
         router.post(
           '/COATrees',
@@ -52,6 +53,19 @@ const COATreeController = Service(
 
             service
               .updateCOATree(_id, COATree)
+              .then(() => res.end())
+              .catch(next)
+          }
+        )
+
+        router.put(
+          '/COATrees/sheetName/:_id',
+          (req: Request, res: Response, next: NextFunction) => {
+            const { _id: sheetNameId } = req.params
+            const { COATrees } = req.body
+
+            service
+              .updateSheetCOATrees(sheetNameId, COATrees)
               .then(() => res.end())
               .catch((error) => console.error(error))
               .catch(next)

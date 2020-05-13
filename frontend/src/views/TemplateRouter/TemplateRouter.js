@@ -12,9 +12,9 @@ import TemplatePackages from './TemplatePackages'
 const TemplateRouter = () => (
   <Switch>
     <Route exact path="/template_manager/templates" component={Templates}/>
-    <Route path="/template_manager/template/:_id" component={Template}/>
-    <Route path="/template_manager/templateType" component={TemplateTypes}/>
-    <Route path="/template_manager/templatePackage" component={TemplatePackages}/>
+    <Route exact path="/template_manager/templates/:_id" component={Template}/>
+    <Route exact path="/template_manager/templateTypes" component={TemplateTypes}/>
+    <Route exact path="/template_manager/templatePackages" component={TemplatePackages}/>
 
     <Route component={NotFound}/>
   </Switch>

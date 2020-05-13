@@ -2,11 +2,11 @@ import React, { useMemo, useEffect } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import { 
-  getStatusesRequest, 
-  createStatusRequest, 
-  deleteStatusRequest, 
-  updateStatusRequest 
-} from '../../store/thunks/status'
+  getSheetNamesRequest, 
+  createSheetNameRequest, 
+  deleteSheetNameRequest, 
+  updateSheetNameRequest 
+} from '../../store/thunks/sheetName'
 
 
 import MaterialTable from 'material-table'
@@ -14,28 +14,28 @@ import Paper from '@material-ui/core/Paper';
 
 import Typography from "@material-ui/core/Typography";
 
-import './Statuses.scss'
+import './SheetNames.scss'
 
-const StatusHeader = () => {
+const SheetNameHeader = () => {
 
 
   return (
     <Paper className="header">
-      <Typography variant="h5">Statuses</Typography>
+      <Typography variant="h5">SheetNames</Typography>
       {/* <HeaderActions/> */}
     </Paper>
   )
 }
 
-const StatusesTable = () => {
+const SheetNamesTable = () => {
   const dispatch = useDispatch()
 
   const {
-    statuses
+    sheetNames
   } = useSelector(
     (
       {
-        StatusesStore: {
+        SheetNamesStore: {
           response: {
             Values
           }
@@ -43,7 +43,7 @@ const StatusesTable = () => {
       }
     ) => (
       {
-        statuses: Values
+        sheetNames: Values
       }
     ),
     shallowEqual
@@ -53,7 +53,6 @@ const StatusesTable = () => {
     () => [
       { title: "_id", field: "_id" },
       { title: "Name", field: "name" },
-      { title: "Description", field: "description" },
       { title: "Active", type: "boolean", field: "isActive" }
     ],
     []
@@ -69,19 +68,19 @@ const StatusesTable = () => {
   const editable = useMemo(
     () => (
       { 
-        onRowAdd: (status) => new Promise(
+        onRowAdd: (sheetName) => new Promise(
           (resolve, reject) => {
-            dispatch(createStatusRequest(status, resolve, reject))
+            dispatch(createSheetNameRequest(sheetName, resolve, reject))
           }
         ), 
-        onRowUpdate: (status) => new Promise(
+        onRowUpdate: (sheetName) => new Promise(
           (resolve, reject) => {
-            dispatch(updateStatusRequest(status, resolve, reject))
+            dispatch(updateSheetNameRequest(sheetName, resolve, reject))
           }
         ), 
-        onRowDelete: (status) => new Promise(
+        onRowDelete: (sheetName) => new Promise(
           (resolve, reject) => {
-            dispatch(deleteStatusRequest(status._id, resolve, reject))
+            dispatch(deleteSheetNameRequest(sheetName._id, resolve, reject))
           }
         ) 
       }
@@ -91,7 +90,7 @@ const StatusesTable = () => {
 
   useEffect(
     () => {
-      dispatch(getStatusesRequest())
+      dispatch(getSheetNamesRequest())
     },
     [ dispatch ]
   )
@@ -99,18 +98,18 @@ const StatusesTable = () => {
   return (
     <MaterialTable
       columns={columns} 
-      data={statuses} 
+      data={sheetNames} 
       editable={editable} 
       options={options}
     />
   )
 }
 
-const Status = (props) => (
-  <div className="statusesPage">
-    <StatusHeader/>
-    <StatusesTable {...props}/>
+const SheetName = (props) => (
+  <div className="sheetNames">
+    <SheetNameHeader/>
+    <SheetNamesTable {...props}/>
   </div>
 )
 
-export default Status
+export default SheetName

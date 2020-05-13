@@ -1,3 +1,5 @@
+import { batch } from 'react-redux'
+
 import {
   requestCOATrees,
   failCOATreesRequest,
@@ -8,19 +10,49 @@ import {
 } from '../actions/COATreesStore'
 
 import {
-
+  loadCOATreeUI,
+  addRootCOATreeUI,
+  updateOriginalCOATreeUI
 } from '../actions/COATreeStore'
 
 import COATreeController from '../../controllers/COATree'
 
-const normalizeTree = () => {}
+const normalizeTrees = (denormalizedCOATrees) => {
+  let stack = [ ...denormalizedCOATrees ]
+
+  let normalizedTrees = denormalizedCOATrees.map(
+    (COATree) => ({ ...COATree.content, parentId: undefined, content: undefined }) 
+  )
+
+  while(stack.length) {
+    const node = stack.pop()
+
+    const { children } = node
+
+    const parentId = node.content._id
+
+    if(children) {
+      children.forEach(
+        (child) => {
+          const childContent = child.content
+
+          normalizedTrees.push({ ...childContent, parentId, content: undefined })
+          
+          stack.push(child)
+        }
+      )
+    }
+  }
+
+  return normalizedTrees
+}
 
 export const getCOATreeRequest = (_id) => (dispatch) => {
   dispatch(requestCOATrees())
 
   COATreeController.fetchCOATree(_id)
     .then((COATree) => {
-      
+      dispatch(loadCOATreeUI(COATree))
     })
     .catch((error) => {
       dispatch(failCOATreesRequest(error))
@@ -32,38 +64,49 @@ export const getCOATreesRequest = (query) => (dispatch) => {
 
   COATreeController.fetchCOATrees(query)
     .then((COATrees) => {
-      dispatch(receiveCOATrees({ Values: COATrees }))
+      batch(
+        () => {
+          dispatch(receiveCOATrees({ Values: COATrees }))
+          dispatch(loadCOATreeUI(COATrees))
+        }
+      )
     })
     .catch((error) => {
       dispatch(failCOATreesRequest(error))
     })
 }
 
-export const createCOATreeRequest = (COATree, resolve, reject) => (dispatch) => {
+export const createCOATreeRequest = (COAGroup, sheetNameId) => (dispatch) => {
+  const COATree = {
+    sheetNameId,
+    COAGroupId: COAGroup._id
+  }
+
   dispatch(requestCOATrees())
-  
+
   COATreeController.createCOATree(COATree)
     .then((COATree) => {
-      dispatch(createCOATree({ Value: COATree }))
-      resolve()
+      batch(
+        () => {
+          dispatch(createCOATree({ Value: COATree }))
+          dispatch(addRootCOATreeUI(COATree))
+        }
+      )
     })
     .catch((error) => {
       dispatch(failCOATreesRequest(error))
-      reject()
     })
 }
 
-export const deleteCOATreeRequest = (_id, resolve, reject) => (dispatch) => {
+export const deleteCOATreeRequest = (_id) => (dispatch) => {
   dispatch(requestCOATrees())
 
   COATreeController.deleteCOATree(_id)
     .then(() => {
       dispatch(deleteCOATree({ Value: { _id } }))
-      resolve()
     })
     .catch((error) => {
       dispatch(failCOATreesRequest(error))
-      reject()
     })
 }
 
@@ -79,4 +122,28 @@ export const updateCOATreeRequest = (COATree, resolve, reject) => (dispatch) => 
       dispatch(failCOATreesRequest(error))
       reject()
     })
+}
+
+export const updateCOATreesRequest = (sheetNameId) => (dispatch, getState) => {
+  const {
+    COATreeStore: {
+      localTree
+    }
+  } = getState()
+  
+  dispatch(requestCOATrees())
+
+  const normalizedTrees = normalizeTrees(localTree)
+
+  COATreeController.updateCOATrees(normalizedTrees, sheetNameId)
+    .then(
+      (_COATrees) => {
+        dispatch(updateOriginalCOATreeUI())
+      }
+    )
+    .catch(
+      (error) => {
+        dispatch(failCOATreesRequest(error))
+      }
+    )
 }
