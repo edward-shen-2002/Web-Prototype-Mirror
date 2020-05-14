@@ -13,10 +13,23 @@ const COATreeController = Service(
         router.get(
           '/COATrees',
           (req: Request, res: Response, next: NextFunction) => {
-            // Get query from middleware -- auth handler
+            // Get query from middleware -- auth 
 
             service
               .findCOATree(new COATreeEntity(req.body))
+              .then((COATrees) => res.json({ COATrees: COATrees.map((COATree) => ({ ...COATree, COATreeData: undefined })) }))
+              .catch(next)
+          }
+        )
+
+        router.get(
+          '/COATrees/sheetName/:_id',
+          (req: Request, res: Response, next: NextFunction) => {
+            // Get query from middleware -- auth 
+            const { _id: sheetNameId } = req.params
+
+            service
+              .findCOATree(new COATreeEntity({ sheetNameId }))
               .then((COATrees) => res.json({ COATrees: COATrees.map((COATree) => ({ ...COATree, COATreeData: undefined })) }))
               .catch(next)
           }
