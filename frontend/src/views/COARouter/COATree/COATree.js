@@ -10,7 +10,6 @@ import TextField from '@material-ui/core/TextField'
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import Table from '@material-ui/core/Table';
@@ -19,16 +18,16 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 import { useParams } from "react-router-dom";
 
 import {
-  updateOriginalCOATreeUI,
-  loadCOATreeUI,
   updateLocalCOATreeUI,
-  reverCOATreeUI,
+  deleteCOATreeUI,
   openGroupCOATreeUIDialog,
-  closeGroupCOATreeUIDialog,
-  addCOATree
+  closeGroupCOATreeUIDialog
 } from '../../../store/actions/COATreeStore'
 
 import { 
@@ -209,7 +208,17 @@ const COATreeHeader = ({ sheetNameId }) => {
     </Paper>
   )
 }
- 
+
+const DeleteButton = (
+  {
+    handleClick
+  }
+) => (
+  <IconButton aria-label="delete" onClick={handleClick}>
+    <DeleteIcon />
+  </IconButton>
+)
+
 const COATreeTreeStructure = ({ sheetNameId }) => {
   const dispatch = useDispatch()
 
@@ -237,6 +246,17 @@ const COATreeTreeStructure = ({ sheetNameId }) => {
     [ dispatch ]
   )
 
+  const nodeProps = useCallback(
+    (nodeProps) => {
+      const handleDelete = () => dispatch(deleteCOATreeUI(nodeProps.path))
+
+      return {
+        buttons: [ <DeleteButton handleClick={handleDelete}/> ]
+      }
+    },
+    [ dispatch ]
+  )
+
   useEffect(
     () => {
       dispatch(getCOATreesRequest(sheetNameId))
@@ -249,6 +269,7 @@ const COATreeTreeStructure = ({ sheetNameId }) => {
       <SortableTree
         treeData={localTree}
         onChange={handleChange}
+        generateNodeProps={nodeProps}
       />
     </Paper>
   )

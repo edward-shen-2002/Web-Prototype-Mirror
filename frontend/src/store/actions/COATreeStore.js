@@ -5,7 +5,8 @@ import {
   REVERT_COA_TREE_UI,
   OPEN_GROUP_COA_TREE_UI_DIALOG,
   CLOSE_GROUP_COA_TREE_UI_DIALOG,
-  ADD_ROOT_COA_TREE_UI
+  ADD_ROOT_COA_TREE_UI,
+  DELETE_COA_TREE_UI
 } from './actionCreators'
 
 export const updateOriginalCOATreeUI = () => ({ type: UPDATE_ORIGINAL_COA_TREE_UI })
@@ -18,4 +19,5 @@ export const closeGroupCOATreeUIDialog = () => ({ type: CLOSE_GROUP_COA_TREE_UI_
 
 // UNIMPLEMENTED
 export const addRootCOATreeUI = (tree) => ({ type: ADD_ROOT_COA_TREE_UI, tree })
+export const deleteCOATreeUI = (path) => ({ type: DELETE_COA_TREE_UI, path })
 // export const removeCOATreeGroup = () => ({})

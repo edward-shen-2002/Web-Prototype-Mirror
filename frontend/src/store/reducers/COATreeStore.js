@@ -1,6 +1,8 @@
 import { createReducer } from "../tools/setup"
 import cloneDeep from 'clone-deep'
 
+import { removeNode } from 'react-sortable-tree'
+
 const generateTitle = ({ _id, COAGroupId }) => `(${COAGroupId}) ${_id}`
 
 const UPDATE_ORIGINAL_COA_TREE_UI = (state) => (
@@ -99,6 +101,21 @@ const ADD_ROOT_COA_TREE_UI = (state, { tree }) => {
   }
 }
 
+export const DELETE_COA_TREE_UI = (state, { path }) => {
+  const newLocalTree = removeNode(
+    {
+      treeData: state.localTree,
+      path,
+      getNodeKey: ({ treeIndex }) => treeIndex
+    }
+  ).treeData
+
+  return {
+    ...state,
+    localTree: newLocalTree
+  }
+}
+
 const reducersMap = {
   LOAD_COA_TREE_UI,
   UPDATE_ORIGINAL_COA_TREE_UI,
@@ -106,7 +123,8 @@ const reducersMap = {
   REVERT_COA_TREE_UI,
   OPEN_GROUP_COA_TREE_UI_DIALOG,
   CLOSE_GROUP_COA_TREE_UI_DIALOG,
-  ADD_ROOT_COA_TREE_UI
+  ADD_ROOT_COA_TREE_UI,
+  DELETE_COA_TREE_UI
 }
 
 const defaultState = {
