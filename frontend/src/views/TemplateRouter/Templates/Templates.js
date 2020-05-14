@@ -71,7 +71,7 @@ const TemplatesTable = ({ history }) => {
       { 
         icon: LaunchIcon, 
         tooltip: "Open Template", 
-        onClick: (_event, template) => history.push(`/designer/template_manager/template/${template._id}`)
+        onClick: (_event, template) => history.push(`/template_manager/templates/${template._id}`)
       }
     ],
     [ history ]
