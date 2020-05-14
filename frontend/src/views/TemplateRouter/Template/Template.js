@@ -49,7 +49,7 @@ const Template = ({ match: { params: { _id } } }) => {
       ? <Loading/>
       : <Excel 
           type="template" 
-          returnLink="/template_manager/template"
+          returnLink="/template_manager/templates"
           handleSave={handleSaveTemplate}
         />
   );
