@@ -1,9 +1,7 @@
 import { Schema, model } from 'mongoose'
-import ICOAGroup from './interface'
+import ICOAGroupDocument from './interface'
 
-const ObjectId = Schema.Types.ObjectId
-
-const COAGroupModel = model<ICOAGroup>(
+const COAGroupModel = model<ICOAGroupDocument>(
   'COAGroup',
   new Schema(
     {

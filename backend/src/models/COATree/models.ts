@@ -1,9 +1,9 @@
 import { Schema, model } from 'mongoose'
-import ICOATree from './interface'
+import ICOATreeDocument from './interface'
 
 const ObjectId = Schema.Types.ObjectId
 
-const COATreeModel = model<ICOATree>(
+const COATreeModel = model<ICOATreeDocument>(
   'COATree',
   new Schema(
     {

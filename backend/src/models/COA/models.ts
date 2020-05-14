@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose'
-import ICOA from './interface'
+import ICOADocument from './interface'
 
-const COAModel = model<ICOA>(
+const COAModel = model<ICOADocument>(
   'COA',
   new Schema(
     {
