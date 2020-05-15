@@ -26,7 +26,7 @@ import {
   createCOATreeRequest
 } from "../../../store/thunks/COATree"
 
-import SelectableTable from './SelectableTable'
+import SelectableTable from '../../../tools/components/SelectableTable'
 
 import './COATree.scss'
 import 'react-sortable-tree/style.css';
