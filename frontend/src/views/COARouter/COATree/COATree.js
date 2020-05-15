@@ -20,14 +20,18 @@ import TableRow from '@material-ui/core/TableRow';
 
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add'
 
 import { useParams } from "react-router-dom";
 
 import {
+  openCOAGroupDialog,
+  openCOADialog
+} from '../../../store/actions/DialogsStore'
+
+import {
   updateLocalCOATreeUI,
-  deleteCOATreeUI,
-  openGroupCOATreeUIDialog,
-  closeGroupCOATreeUIDialog
+  deleteCOATreeUI
 } from '../../../store/actions/COATreeStore'
 
 import { 
@@ -40,143 +44,37 @@ import {
   getCOATreesRequest
 } from "../../../store/thunks/COATree"
 
+import GroupDialog from './COAGroupDialog'
+import COADialog from './COADialog'
 
 import './COATree.scss'
 import 'react-sortable-tree/style.css';
 
-const GroupTableCell = ({ value, props }) => (
-  <TableCell align="right" {...props}>{value}</TableCell>
-)
-
-const GroupDialogActions = (
+const DeleteButton = (
   {
-    handleClose
+    handleClick
   }
 ) => (
-  <DialogActions>
-    <Button color="secondary" variant="contained" onClick={handleClose}>Cancel</Button>
-  </DialogActions>
+  <IconButton aria-label="delete" onClick={handleClick}>
+    <DeleteIcon />
+  </IconButton>
 )
 
-const GroupListItems = ({ COAGroups, handleSelect }) => COAGroups.map(
-  (
-    COAGroup
-  ) => {
-    const {
-      _id,
-      name,
-      code
-    } = COAGroup
-
-    const handleClick = useCallback(
-      () => handleSelect(COAGroup),
-      [ handleSelect ]
-    )
-
-    return (
-      <TableRow key={_id} className="groupList__item" onClick={handleClick}>
-        <GroupTableCell value={_id}/>
-        <GroupTableCell value={name}/>
-        <GroupTableCell value={code}/>
-      </TableRow>
-    )
+const AddButton = (
+  {
+    handleClick
   }
+) => (
+  <IconButton aria-label="add" onClick={handleClick}>
+    <AddIcon/>
+  </IconButton>
 )
-
-const GroupTableBody = ({ COAGroups, handleSelect }) => (
-  <TableBody>
-    <GroupListItems COAGroups={COAGroups} handleSelect={handleSelect}/>
-  </TableBody>
-)
-
-const GroupTableHead = () => (
-  <TableHead>
-    <TableRow>
-      <GroupTableCell value="_id"/>
-      <GroupTableCell value="Name"/>
-      <GroupTableCell value="Code"/>
-      {/* <TableCell align="right">isActive</TableCell> */}
-    </TableRow>
-  </TableHead>
-)
-
-const GroupTable = ({ COAGroups, handleSelect }) => (
-  <Table>
-    <GroupTableHead/>
-    <GroupTableBody COAGroups={COAGroups} handleSelect={handleSelect}/>
-  </Table>
-)
-
-const GroupDialogContent = ({ COAGroups, handleSelect }) => (
-  <DialogContent>
-    <GroupTable COAGroups={COAGroups} handleSelect={handleSelect}/>
-  </DialogContent>
-)
-
-const GroupDialog = ({ sheetNameId }) => {
-  const dispatch = useDispatch()
-  
-  const {
-    isGroupDialogOpen,
-    COAGroups
-  } = useSelector(
-    (
-      {
-        COATreeStore: {
-          isGroupDialogOpen
-        },
-        COAGroupsStore: {
-          response: {
-            Values
-          }
-        }
-      }
-    ) => (
-      {
-        isGroupDialogOpen,
-        COAGroups: Values
-      }
-    ),
-    shallowEqual
-  )
-  
-  const handleClose = useCallback(
-    () => {
-      dispatch(closeGroupCOATreeUIDialog())
-    },
-    [ dispatch ]
-  )
-
-  const handleSelect = useCallback(
-    (COAGroup) => {
-      dispatch(createCOATreeRequest(COAGroup, sheetNameId))
-    },
-    [ dispatch ]
-  )
-
-  useEffect(
-    () => {
-      if(isGroupDialogOpen) {
-        dispatch(getCOAGroupsRequest())
-      }
-    },
-    [ dispatch, isGroupDialogOpen ]
-  )
-
-  return (
-    <Dialog open={isGroupDialogOpen} onClose={handleClose}>
-      <DialogTitle>COA Groups</DialogTitle>
-      <GroupDialogContent COAGroups={COAGroups} handleSelect={handleSelect}/>
-      <GroupDialogActions handleClose={handleClose}/>
-    </Dialog>
-  )
-}
 
 const COATreeActions = ({ sheetNameId }) => {
   const dispatch = useDispatch()
   const handleOpenGroupDialog = useCallback(
     () => {
-      dispatch(openGroupCOATreeUIDialog())
+      dispatch(openCOAGroupDialog())
     },
     [ dispatch ]
   )
@@ -209,16 +107,6 @@ const COATreeHeader = ({ sheetNameId }) => {
   )
 }
 
-const DeleteButton = (
-  {
-    handleClick
-  }
-) => (
-  <IconButton aria-label="delete" onClick={handleClick}>
-    <DeleteIcon />
-  </IconButton>
-)
-
 const COATreeTreeStructure = ({ sheetNameId }) => {
   const dispatch = useDispatch()
 
@@ -246,12 +134,20 @@ const COATreeTreeStructure = ({ sheetNameId }) => {
     [ dispatch ]
   )
 
+  const handleOpenCOADialog = useCallback(
+    () => dispatch(openCOADialog()),
+    [ dispatch ]
+  )
+
   const nodeProps = useCallback(
     (nodeProps) => {
       const handleDelete = () => dispatch(deleteCOATreeUI(nodeProps.path))
 
       return {
-        buttons: [ <DeleteButton handleClick={handleDelete}/> ]
+        buttons: [ 
+          <DeleteButton handleClick={handleDelete}/>,
+          <AddButton handleClick={handleOpenCOADialog}/>
+        ]
       }
     },
     [ dispatch ]
@@ -271,6 +167,7 @@ const COATreeTreeStructure = ({ sheetNameId }) => {
         onChange={handleChange}
         generateNodeProps={nodeProps}
       />
+      <COADialog/>
     </Paper>
   )
 }

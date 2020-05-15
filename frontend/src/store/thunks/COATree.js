@@ -15,6 +15,10 @@ import {
   updateOriginalCOATreeUI
 } from '../actions/COATreeStore'
 
+import {
+  closeCOAGroupDialog
+} from '../actions/DialogsStore'
+
 import COATreeController from '../../controllers/COATree'
 
 const normalizeTrees = (denormalizedCOATrees) => {
@@ -90,6 +94,7 @@ export const createCOATreeRequest = (COAGroup, sheetNameId) => (dispatch) => {
         () => {
           dispatch(createCOATree({ Value: COATree }))
           dispatch(addRootCOATreeUI(COATree))
+          dispatch(closeCOAGroupDialog())
         }
       )
     })

@@ -77,27 +77,12 @@ const REVERT_COA_TREE_UI = () => (
   }
 )
 
-const OPEN_GROUP_COA_TREE_UI_DIALOG = (state) => (
-  {
-    ...state,
-    isGroupDialogOpen: true
-  }
-) 
-
-const CLOSE_GROUP_COA_TREE_UI_DIALOG = (state) => (
-  {
-    ...state,
-    isGroupDialogOpen: false
-  }
-)
-
 const ADD_ROOT_COA_TREE_UI = (state, { tree }) => {
   const newRootNode = { content: tree, title: generateTitle(tree) }
 
   return {
     ...state,
-    localTree: [ ...state.localTree, newRootNode ],
-    isGroupDialogOpen: false
+    localTree: [ ...state.localTree, newRootNode ]
   }
 }
 
@@ -121,8 +106,6 @@ const reducersMap = {
   UPDATE_ORIGINAL_COA_TREE_UI,
   UPDATE_LOCAL_COA_TREE_UI,
   REVERT_COA_TREE_UI,
-  OPEN_GROUP_COA_TREE_UI_DIALOG,
-  CLOSE_GROUP_COA_TREE_UI_DIALOG,
   ADD_ROOT_COA_TREE_UI,
   DELETE_COA_TREE_UI
 }
@@ -135,7 +118,7 @@ const defaultState = {
   error: null,
   isCallInProgress: false,
   saveTimeStamp: null,
-  isGroupDialogOpen: false
+  nodeCOAs: {}
 }
 
 const COATreeeStore = createReducer(defaultState, reducersMap)

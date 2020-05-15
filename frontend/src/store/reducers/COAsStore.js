@@ -23,9 +23,10 @@ const defaultState = {
     Values: []
   },
   error: null,
-  isCallInProgress: false
+  isCallInProgress: false,
+  isCOADialogOpen: false
 }
 
-const COAStore = createReducer(defaultState, reducersMap)
+const COAsStore = createReducer(defaultState, reducersMap)
 
-export default COAStore
+export default COAsStore

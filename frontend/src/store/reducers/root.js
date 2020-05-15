@@ -12,6 +12,7 @@ import COATreesStore from './COATreesStore'
 import COAGroupsStore from './COAGroupsStore'
 import COAsStore from './COAsStore'
 import SheetNamesStore from './SheetNamesStore'
+import DialogsStore from './DialogsStore'
 
 export const root = combineReducers({
   StatusesStore,
@@ -26,6 +27,8 @@ export const root = combineReducers({
   COAsStore,
 
   SheetNamesStore,
+  DialogsStore,
+  
   app,
   domain,
   ui
