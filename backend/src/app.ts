@@ -21,6 +21,7 @@ import COAController from './controllers/COA'
 import COATreeController from './controllers/COATree'
 import COAGroupController from './controllers/COAGroup'
 import SheetNameController from './controllers/SheetName'
+import AppSysController from './controllers/AppSys'
 
 const logger = require('morgan')
 
@@ -59,6 +60,6 @@ app.use('/COA_manager', Container.get(COAController))
 app.use('/COA_manager', Container.get(COATreeController))
 app.use('/COA_manager', Container.get(COAGroupController))
 
-
+app.use('/appsys_manager', Container.get(AppSysController))
 
 export default app
