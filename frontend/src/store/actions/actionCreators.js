@@ -104,6 +104,15 @@ export const DELETE_STATUS = "DELETE_STATUS";
 export const UPDATE_STATUS = "UPDATE_STATUS";
 export const RESET_STATUSES = "RESET_STATUSES";
 
+// AppSys Store
+export const FAIL_APPSYSES_REQUEST = "FAIL_APPSYSES_REQUEST"
+export const RECEIVE_APPSYSES = "RECEIVE_APPSYSES"
+export const REQUEST_APPSYSES = "REQUEST_APPSYSES"
+export const CREATE_APPSYS = "CREATE_APPSYS"
+export const DELETE_APPSYS = "DELETE_APPSYS"
+export const UPDATE_APPSYS = "UPDATE_APPSYS"
+export const RESET_APPSYSES = "RESET_APPSYSES"
+
 /**
  * UI data: data related to the views/components display state
  */
