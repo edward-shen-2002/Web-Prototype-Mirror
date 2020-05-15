@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react'
 
 import SortableTree from 'react-sortable-tree'
-import { useSelector, shallowEqual, useDispatch } from 'react-redux'
+import { useSelector, shallowEqual, useDispatch, batch } from 'react-redux'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
@@ -31,7 +31,8 @@ import {
 
 import {
   updateLocalCOATreeUI,
-  deleteCOATreeUI
+  deleteCOATreeUI,
+  updateSelectedNodeCOATreeUI
 } from '../../../store/actions/COATreeStore'
 
 import { 
@@ -79,7 +80,6 @@ const COATreeActions = ({ sheetNameId }) => {
     [ dispatch ]
   )
 
-  // TODO
   const handleSave = useCallback(
     () => dispatch(updateCOATreesRequest(sheetNameId)),
     [ dispatch ]
@@ -134,14 +134,17 @@ const COATreeTreeStructure = ({ sheetNameId }) => {
     [ dispatch ]
   )
 
-  const handleOpenCOADialog = useCallback(
-    () => dispatch(openCOADialog()),
-    [ dispatch ]
-  )
-
   const nodeProps = useCallback(
     (nodeProps) => {
       const handleDelete = () => dispatch(deleteCOATreeUI(nodeProps.path))
+      const handleOpenCOADialog = () => {
+        batch(
+          () => {
+            dispatch(openCOADialog())
+            dispatch(updateSelectedNodeCOATreeUI(nodeProps))
+          }
+        )
+      }
 
       return {
         buttons: [ 
@@ -163,6 +166,7 @@ const COATreeTreeStructure = ({ sheetNameId }) => {
   return (
     <Paper className="COATreeContent">
       <SortableTree
+        className="COATreeContent__sortableTree"
         treeData={localTree}
         onChange={handleChange}
         generateNodeProps={nodeProps}

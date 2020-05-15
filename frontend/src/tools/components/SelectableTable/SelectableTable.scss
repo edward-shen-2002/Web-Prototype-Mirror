@@ -1,0 +1,13 @@
+.list {
+  &__item {
+    cursor: pointer;
+
+    &--selected {
+      background-color: rgb(238, 238, 238);
+    }
+
+    &:hover {
+      background-color: lightgray;
+    }
+  }
+}

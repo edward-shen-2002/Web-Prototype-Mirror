@@ -7,31 +7,26 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import { closeCOADialog } from '../../../store/actions/DialogsStore'
 
-import {
-  closeCOADialog
-} from '../../../store/actions/DialogsStore'
+import { selectCOACOATreeUI } from '../../../store/actions/COATreeStore'
 
-import { } from '../../../store/actions/COATreeStore'
+import { getCOAsRequest } from "../../../store/thunks/COA"
 
-import {  getCOATreesRequest } from "../../../store/thunks/COATree"
+import SelectableTable from '../../../tools/components/SelectableTable'
+
+import { selectedCOAIdsSelector } from '../../../store/selectors/COATreeStore'
 
 import './COATree.scss'
 import 'react-sortable-tree/style.css';
+import { useMemo } from 'react';
 
-
-const COADialog = () => {
+const COADialogContent = () => {
   const dispatch = useDispatch()
 
   const {
     COAs,
-    isCOADialogOpen,
-    nodeCOAs
+    selectedCOAIds
   } = useSelector(
     (
       {
@@ -40,31 +35,73 @@ const COADialog = () => {
             Values
           },
         },
-        COATreeStore: {
-          nodeCOAs
-        },
+        COATreeStore
+      }
+    ) => (
+      {
+        selectedCOAIds: selectedCOAIdsSelector(COATreeStore),
+        COAs: Values
+      }
+    ),
+    shallowEqual
+  )
+
+  const columns = useMemo(
+    () => [
+      { title: "_id", field: "_id" },
+      { title: "Name", field: "name" }
+    ],
+    []
+  )
+
+  const getKey = useCallback(
+    (item) => item._id 
+  )
+
+  const handleSelect = useCallback(
+    (item) => {
+      dispatch(selectCOACOATreeUI(item._id))
+    },
+    [ dispatch ]
+  )
+
+  return (
+    <DialogContent>
+      <SelectableTable data={COAs} columns={columns} selectedKeys={selectedCOAIds} getKey={getKey} handleSelect={handleSelect}/>
+    </DialogContent>
+  )
+}
+
+const COADialog = () => {
+  const dispatch = useDispatch()
+
+  const isCOADialogOpen = useSelector(
+    (
+      {
         DialogsStore: {
           isCOADialogOpen
         }
       }
-    ) => (
-      {
-        COAs: Values,
-        isCOADialogOpen,
-        nodeCOAs
-      }
-    ),
+    ) => isCOADialogOpen,
     shallowEqual
-  ) 
+  )
+
+  useEffect(
+    () => {
+      if(isCOADialogOpen) dispatch(getCOAsRequest())
+    },
+    [ dispatch, isCOADialogOpen ]
+  )
 
   const handleCloseCOADialog = useCallback(
     () => dispatch(closeCOADialog()),
     [ dispatch ]
-   )
+  )
 
   return (
     <Dialog open={isCOADialogOpen} onClose={handleCloseCOADialog}>
-
+      <DialogTitle>COAs</DialogTitle>
+      <COADialogContent/>
     </Dialog>
   )
 }

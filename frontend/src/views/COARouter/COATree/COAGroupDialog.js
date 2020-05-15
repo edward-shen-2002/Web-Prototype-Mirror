@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 import Button from '@material-ui/core/Button'
@@ -36,15 +36,18 @@ const GroupDialogActions = (
 )
 
 const GroupDialogContent = ({ COAGroups, handleSelect }) => {
-  const columns = [
-    { title: "_id", field: "_id" },
-    { title: "Name", field: "name" },
-    { title: "Code", field: "code" }
-  ]
+  const columns = useMemo(
+    () => [
+      { title: "_id", field: "_id" },
+      { title: "Name", field: "name" },
+      { title: "Code", field: "code" }
+    ],
+    []
+  )
 
   return (
     <DialogContent>
-      <SelectableTable columns={columns} listData={COAGroups} handleSelect={handleSelect}/>
+      <SelectableTable columns={columns} data={COAGroups} handleSelect={handleSelect}/>
     </DialogContent>
   )
 }
@@ -92,9 +95,7 @@ const GroupDialog = ({ sheetNameId }) => {
 
   useEffect(
     () => {
-      if(isCOAGroupDialogOpen) {
-        dispatch(getCOAGroupsRequest())
-      }
+      if(isCOAGroupDialogOpen) dispatch(getCOAGroupsRequest())
     },
     [ dispatch, isCOAGroupDialogOpen ]
   )

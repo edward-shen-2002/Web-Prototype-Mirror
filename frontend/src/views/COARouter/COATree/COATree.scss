@@ -3,8 +3,9 @@
   margin: 20px;
 }
 
+// TODO: Fit content of node or change to full height
 .COATreeContent {
-  height: 500px;
+  height: 600px;
 }
 
 .header {
@@ -15,12 +16,4 @@
 
 .searchBar {
   margin-right: 10px !important;
-}
-
-.groupList__item {
-  cursor: pointer;
-
-  &:hover {
-    background-color: lightgray;
-  }
 }
