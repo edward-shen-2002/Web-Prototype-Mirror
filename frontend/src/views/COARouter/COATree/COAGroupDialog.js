@@ -8,12 +8,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-
 import {
   closeCOAGroupDialog
 } from '../../../store/actions/DialogsStore'
@@ -42,11 +36,15 @@ const GroupDialogActions = (
 )
 
 const GroupDialogContent = ({ COAGroups, handleSelect }) => {
-  const columns = [ "_id", "Name", "Code" ]
-  const fields = [ "_id", "name", "code" ]
+  const columns = [
+    { title: "_id", field: "_id" },
+    { title: "Name", field: "name" },
+    { title: "Code", field: "code" }
+  ]
+
   return (
     <DialogContent>
-      <SelectableTable columns={columns} fields={fields} listData={COAGroups} handleSelect={handleSelect}/>
+      <SelectableTable columns={columns} listData={COAGroups} handleSelect={handleSelect}/>
     </DialogContent>
   )
 }
