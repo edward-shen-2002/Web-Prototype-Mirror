@@ -30,8 +30,8 @@ export default class ReportPeriodRepository extends BaseRepository<AppSysEntity>
     }
 
     //TODO: filter to be active
-    return AppSysModel.find(realQuery).then((AppSysList) =>
-      AppSysList.filter(AppSys => AppSys).map((AppSys) => new AppSysEntity(AppSys.toObject()))
+    return AppSysModel.find(realQuery).then((AppSyses) =>
+      AppSyses.filter(AppSys => AppSys).map((AppSys) => new AppSysEntity(AppSys.toObject()))
     )
   }
 }

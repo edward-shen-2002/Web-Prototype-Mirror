@@ -10,19 +10,19 @@ const AppSysController = Service(
     return (
       () => {
         router.get(
-          '/appsys',
+          '/appSyses',
           (req: Request, res: Response, next: NextFunction) => {
             // Get query from middleware -- auth handler
 
             service
               .findAppSys({} as AppSysEntity)
-              .then((AppSysList) => res.json({ AppSysList }))
+              .then((AppSyses) => res.json({ AppSyses }))
               .catch(next)
           }
         )
 
         router.post(
-          '/appsys',
+          '/appSyses',
           (req: Request, res: Response, next: NextFunction) => {
             service
               .createAppSys(req.body.AppSys)
@@ -36,7 +36,7 @@ const AppSysController = Service(
         )
 
         router.put(
-          '/appsys/:_id',
+          '/appSyses/:_id',
           (req: Request, res: Response, next: NextFunction) => {
             const { _id } = req.params
             const { AppSys } = req.body
@@ -49,7 +49,7 @@ const AppSysController = Service(
         )
 
         router.delete(
-          '/appsys/:_id',
+          '/appSyses/:_id',
           (req: Request, res: Response, next: NextFunction) => {
             const { _id } = req.params
 
