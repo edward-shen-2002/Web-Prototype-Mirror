@@ -131,8 +131,6 @@ const SheetWindow = ({ sheetGridRef }) => {
     sheetRowCount
   });
 
-  const commonSelectionPaneProps = {};
-
   return (
     <AutoSizer>
       {({ height, width }) => (
@@ -154,30 +152,10 @@ const SheetWindow = ({ sheetGridRef }) => {
             overscanColumnCount={EXCEL_WINDOW_OVERSCAN_COLUMN_COUNT}
             overscanRowCount={EXCEL_WINDOW_OVERSCAN_ROW_COUNT}
             onScroll={handleScroll}
-            extraTopLeftElement={
-              <TopLeftActivityPane 
-                key="top-left-selection-pane" 
-                {...commonSelectionPaneProps}
-              />
-            }
-            extraTopRightElement={
-              <TopRightActivityPane 
-                key="top-right-activity-pane" 
-                {...commonSelectionPaneProps}
-              />  
-            }
-            extraBottomLeftElement={
-              <BottomLeftActivityPane 
-                key="bottom-left-activity-pane" 
-                {...commonSelectionPaneProps}
-              />
-            }
-            extraBottomRightElement={
-              <BottomRightActivityPane 
-                key="bottom-right-activity-pane" 
-                {...commonSelectionPaneProps}
-              />
-            }
+            extraTopLeftElement={<TopLeftActivityPane key="top-left-selection-pane"/>}
+            extraTopRightElement={<TopRightActivityPane key="top-right-activity-pane"/>}
+            extraBottomLeftElement={<BottomLeftActivityPane key="bottom-left-activity-pane"/>}
+            extraBottomRightElement={<BottomRightActivityPane key="bottom-right-activity-pane"/>}
           >
             {Cell}
           </VariableSizeGrid>

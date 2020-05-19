@@ -56,4 +56,3 @@ There are many functions of Excel that has not been implemented in Xlsx-populate
 [Todos](docs/TODOS.md), [Bugs](docs/BUGS.md), [Redo/Undo](docs/HISTORY.md), [Notes](docs/NOTES.md), [Optimizations](docs/OPTIMIZATIONS.md)
 
 [Documents](https://drive.google.com/drive/folders/1I6qYLaF09vQbc-BvzwttG26WZ3t2yZSQ?usp=sharing)
-

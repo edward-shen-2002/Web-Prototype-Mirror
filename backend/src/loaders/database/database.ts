@@ -4,13 +4,9 @@ import { IOptions, IDatabase } from './interface'
 
 import IRepositories from '../../repositories/interface'
 import { DATABASE_KEY } from '../../configs/database'
+import COAModel from '../../models/COA'
 
 const logTag = '[DB][MongoDB]: '
-
-const defaultOptions: IOptions = {
-  shouldWipeDatabase: false,
-  shouldCreateDummyData: false
-}
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // TODO: DO NOT LOAD REPOSITORIES HERE - Singleton database connection
@@ -18,7 +14,7 @@ const defaultOptions: IOptions = {
 export default class Database implements IDatabase {
   public repositories: IRepositories
 
-  public connect(customOptions = defaultOptions) {
+  public connect() {
     console.log(logTag, 'Initializing...')
 
     this.initializeMongoose()
@@ -28,20 +24,6 @@ export default class Database implements IDatabase {
 
   public disconnect() {
     mongoose.disconnect()
-  }
-
-  public async applyOptions({ shouldCreateDummyData, shouldWipeDatabase }) {}
-
-  public loadRepositories() {}
-
-  public async wipeDatabase() {
-    console.warn(logTag, 'Wiping database...')
-    return mongoose.connection
-      .dropDatabase()
-      .then(() => console.warn(logTag, 'Wiped database'))
-      .catch((error) => {
-        throw `${logTag}Failed to wipe database\n${error}`
-      })
   }
 
   /**
@@ -54,19 +36,15 @@ export default class Database implements IDatabase {
       useCreateIndex: true,
       useFindAndModify: false,
       useUnifiedTopology: true
-    })
+    }).then(
+      (db) => {
+        console.log('connected')
+        // console.log(db)
+        COAModel.find({}).then((COAs) => console.log('COAS', COAs))
+        console.log(db.modelNames())
+      }
+    )
 
     console.log(logTag, 'Connection successful')
-  }
-
-  public async createDummyData(models) {
-    console.log(logTag, 'Creating dummy data...')
-
-    // .then(() => {
-    console.log(logTag, 'Created dummy data')
-    // })
-    // .catch(() => {
-    //   throw `${logTag}Failed to create dummy data`
-    // })
   }
 }
