@@ -66,6 +66,6 @@ User.plugin(PassportLocalMongoose, {
   passwordValidator
 })
 
-const UserModel = model<IUserDocument>('User', User)
+const UserModel = model<IUserDocument>('User', User, 'User')
 
 export default UserModel

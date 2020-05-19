@@ -8,7 +8,8 @@ const ColumnNameModel = model<IColumnNameDocument>(
       value: { type: String, required: true }
     },
     { minimize: false }
-  )
+  ),
+  'ColumnName'
 )
 
 export default ColumnNameModel

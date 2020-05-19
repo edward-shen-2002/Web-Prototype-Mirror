@@ -10,7 +10,8 @@ const COAGroupModel = model<ICOAGroupDocument>(
       isActive: { type: Boolean }
     }, 
     { minimize: false }
-  )
+  ),
+  'COAGroup'
 )
 
 export default COAGroupModel

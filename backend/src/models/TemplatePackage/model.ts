@@ -15,7 +15,8 @@ const TemplatePackageModel = model<ITemplatePackageDocument>(
       userCreatorId: { type: ObjectId, ref: "User" }
     },
     { minimize: false, autoIndex: true }
-  )
+  ),
+  'TemplatePackage'
 )
 
 export default TemplatePackageModel

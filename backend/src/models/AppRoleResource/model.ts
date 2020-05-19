@@ -11,7 +11,8 @@ const AppRoleResourceModel = model<IAppRoleResourceDocument>(
       appSysRoleId: { type: ObjectId, ref: "AppSysRole" }
     },
     { minimize: false }
-  )
+  ),
+  'AppRoleResource'
 )
 
 export default AppRoleResourceModel

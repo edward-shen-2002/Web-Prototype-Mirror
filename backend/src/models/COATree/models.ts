@@ -13,7 +13,8 @@ const COATreeModel = model<ICOATreeDocument>(
       sheetNameId: { type: ObjectId, ref: "SheetName" }
     }, 
     { minimize: false }
-  )
+  ),
+  'COATree'
 )
 
 export default COATreeModel

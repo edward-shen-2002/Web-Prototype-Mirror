@@ -10,7 +10,8 @@ const StatusModel = model<IStatusDocument>(
       isActive: { type: Boolean }
     },
     { minimize: false, timestamps: true }
-  )
+  ),
+  'Status'
 )
 
 export default StatusModel

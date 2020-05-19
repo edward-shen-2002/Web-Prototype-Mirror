@@ -22,7 +22,8 @@ const OrganizationModel = model<IOrganizationDocument>(
       programIds: [{ type: ObjectId, ref: 'Program' }]
     },
     { minimize: false }
-  )
+  ),
+  'Organization'
 )
 
 export default OrganizationModel

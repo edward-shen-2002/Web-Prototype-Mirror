@@ -13,7 +13,8 @@ const UserSysRoleModel = model<IUserSysRoleDocument>(
       programId: { type: ObjectId, ref: "Program" }
     },
     { minimize: false }
-  )
+  ),
+  'UserSysRole'
 )
 
 export default UserSysRoleModel

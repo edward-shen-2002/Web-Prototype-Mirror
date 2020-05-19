@@ -9,7 +9,8 @@ const AppSysModel = model<IAppSysDocument>(
       name: { type: String }
     },
     { minimize: false }
-  )
+  ),
+  'AppSys'
 )
 
 export default AppSysModel

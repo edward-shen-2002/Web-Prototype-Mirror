@@ -44,7 +44,8 @@ const MasterValueModel = model<IMasterValueDocument>(
       value: { type: String }
     },
     { minimize: false }
-  )
+  ),
+  'MasterValue'
 )
 
 export default MasterValueModel

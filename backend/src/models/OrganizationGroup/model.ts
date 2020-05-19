@@ -9,7 +9,8 @@ const OrganizationGroupModel = model<IOrganizationGroupDocument>(
       name: { type: String, required: true, unique: true }
     },
     { minimize: false }
-  )
+  ),
+  'OrganizationGroup'
 )
 
 export default OrganizationGroupModel

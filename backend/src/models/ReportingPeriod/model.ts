@@ -11,7 +11,8 @@ const ReportingPeriodModel = model<IReportingPeriodDocument>(
       application: { type: String }
     },
     { minimize: false }
-  )
+  ),
+  'ReportingPeriod'
 )
 
 export default ReportingPeriodModel

@@ -20,7 +20,8 @@ const TemplateTypeModel = model<ITemplateTypeDocument>(
       isReportable: { type: Boolean }
     },
     { minimize: false, timestamps: true }
-  )
+  ),
+  'TemplateType'
 )
 
 export default TemplateTypeModel

@@ -9,7 +9,8 @@ const ProgramModel = model<IProgramDocument>(
       code: String
     },
     { minimize: false }
-  )
+  ),
+  'Program'
 )
 
 export default ProgramModel

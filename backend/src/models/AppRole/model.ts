@@ -11,7 +11,8 @@ const AppRoleModel = model<IAppRoleDocument>(
       name: { type: String }
     },
     { minimize: false, autoIndex: true }
-  )
+  ),
+  'AppRole'
 )
 
 export default AppRoleModel

@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose'
 import ISubmissionPhaseDocument from './interface'
 
 const SubmissionPhaseModel = model<ISubmissionPhaseDocument>(
-  'SubmissionNote',
+  'SubmissionPhase',
   new Schema(
     {
       name: { type: String },
@@ -11,7 +11,8 @@ const SubmissionPhaseModel = model<ISubmissionPhaseDocument>(
 
     },
     { minimize: false, autoIndex: true }
-  )
+  ),
+  'SubmissionPhase'
 )
 
 export default SubmissionPhaseModel

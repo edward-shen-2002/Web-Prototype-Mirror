@@ -8,7 +8,8 @@ const COAModel = model<ICOADocument>(
       name: { type: String }
     }, 
     { minimize: false }
-  )
+  ),
+  'COA'
 )
 
 export default COAModel

@@ -20,7 +20,8 @@ const SubmissionModel = model<ISubmissionDocument>(
       isPublished: { type: Boolean, default: false }
     },
     { minimize: false, timestamps: true }
-  )
+  ),
+  'Submisssion'
 )
 
 export default SubmissionModel

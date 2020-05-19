@@ -13,7 +13,8 @@ const SubmissionNoteModel = model<ISubmissionNoteDocument>(
       userCreatorId: { type: ObjectId, ref: "User" }
     },
     { minimize: false, autoIndex: true }
-  )
+  ),
+  'SubmissionNote'
 )
 
 export default SubmissionNoteModel

@@ -12,7 +12,8 @@ const SheetNameModel = model<ISheetName>(
       isActive: { type: Boolean }
     }, 
     { minimize: false }
-  )
+  ),
+  'SheetName'
 )
 
 export default SheetNameModel

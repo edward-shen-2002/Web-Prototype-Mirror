@@ -11,7 +11,8 @@ const AppResourceModel = model<IAppResourceDocument>(
       isProtected: { type: Boolean }
     },
     { minimize: false, autoIndex: true }
-  )
+  ),
+  'AppResource'
 )
 
 export default AppResourceModel

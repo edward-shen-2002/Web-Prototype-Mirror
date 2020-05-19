@@ -22,7 +22,8 @@ const TemplateModel = model<ITemplateDocument>(
       statusId: { type: ObjectId, ref: 'Status' }
     },
     { minimize: false }
-  )
+  ),
+  'Template'
 )
 
 export default TemplateModel

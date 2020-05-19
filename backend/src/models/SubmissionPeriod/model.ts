@@ -14,7 +14,8 @@ const SubmissionPeriodModel = model<ISubmissionPeriodDocument>(
       endDate: { type: Date }
     },
     { minimize: false, autoIndex: true }
-  )
+  ),
+  'SubmissionPeriod'
 )
 
 export default SubmissionPeriodModel
