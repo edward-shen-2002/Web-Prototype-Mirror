@@ -14,6 +14,7 @@ export const getAppSysesRequest = (query) => (dispatch) => {
 
   AppSysController.fetchAppSyses(query)
     .then((AppSyses) => {
+      console.log(AppSyses)
       dispatch(receiveAppSyses({ Values: AppSyses }))
     })
     .catch((error) => {

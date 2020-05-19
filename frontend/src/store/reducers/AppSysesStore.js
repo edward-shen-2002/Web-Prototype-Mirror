@@ -1,21 +1,21 @@
 import { createReducer } from "../tools/setup"
 
-import REQUEST_AppSyses from './common/REQUEST'
-import RECEIVE_AppSyses from './common/RECEIVE'
-import FAIL_AppSyses_REQUEST from './common/FAIL_REQUEST'
-import CREATE_AppSys from './common/CREATE'
-import DELETE_AppSys from './common/DELETE'
-import UPDATE_AppSys from './common/UPDATE'
-import RESET_AppSyses from './common/RESET'
+import REQUEST_APPSYSES from './common/REQUEST'
+import RECEIVE_APPSYSES from './common/RECEIVE'
+import FAIL_APPSYSES_REQUEST from './common/FAIL_REQUEST'
+import CREATE_APPSYS from './common/CREATE'
+import DELETE_APPSYS from './common/DELETE'
+import UPDATE_APPSYS from './common/UPDATE'
+import RESET_APPSYSES from './common/RESET'
 
 const reducersMap = {
-  REQUEST_AppSyses,
-  RECEIVE_AppSyses,
-  FAIL_AppSyses_REQUEST,
-  CREATE_AppSys,
-  DELETE_AppSys,
-  UPDATE_AppSys,
-  RESET_AppSyses
+  REQUEST_APPSYSES,
+  RECEIVE_APPSYSES,
+  FAIL_APPSYSES_REQUEST,
+  CREATE_APPSYS,
+  DELETE_APPSYS,
+  UPDATE_APPSYS,
+  RESET_APPSYSES
 }
 
 const defaultState = {
@@ -26,6 +26,6 @@ const defaultState = {
   isCallInProgress: false
 }
 
-const AppSysestore = createReducer(defaultState, reducersMap)
+const AppSysesStore = createReducer(defaultState, reducersMap)
 
-export default AppSysestore
+export default AppSysesStore

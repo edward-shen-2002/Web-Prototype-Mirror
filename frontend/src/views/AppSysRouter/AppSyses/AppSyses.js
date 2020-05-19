@@ -24,10 +24,10 @@ const AppSysesHeader = () => {
   )
 }
 
-const AppSysesTable = ({ history }) => {
+const AppSysesTable = () => {
   const dispatch = useDispatch()
   const {
-    AppSyses
+    appSyses
   } = useSelector(
     (
       {
@@ -39,7 +39,7 @@ const AppSysesTable = ({ history }) => {
       }
     ) => (
         {
-          AppSyses: Values
+          appSyses: Values
         }
       ),
     shallowEqual
@@ -47,7 +47,7 @@ const AppSysesTable = ({ history }) => {
 
   const columns = useMemo(
     () => [
-      { title: "_id", field: "_id" },
+      { title: "_id", field: "_id", editable: false },
       { title: "Code", field: "code" },
       { title: "Name", field: "name" }
     ],
@@ -64,19 +64,19 @@ const AppSysesTable = ({ history }) => {
   const editable = useMemo(
     () => (
       {
-        onRowAdd: (AppSys) => new Promise(
+        onRowAdd: (appSys) => new Promise(
           (resolve, reject) => {
-            dispatch(createAppSysRequest(AppSys, resolve, reject))
+            dispatch(createAppSysRequest(appSys, resolve, reject))
           }
         ),
-        onRowUpdate: (AppSys) => new Promise(
+        onRowUpdate: (appSys) => new Promise(
           (resolve, reject) => {
-            dispatch(updateAppSysRequest(AppSys, resolve, reject))
+            dispatch(updateAppSysRequest(appSys, resolve, reject))
           }
         ),
-        onRowDelete: (AppSys) => new Promise(
+        onRowDelete: (appSys) => new Promise(
           (resolve, reject) => {
-            dispatch(deleteAppSysRequest(AppSys._id, resolve, reject))
+            dispatch(deleteAppSysRequest(appSys._id, resolve, reject))
           }
         )
       }
@@ -94,7 +94,7 @@ const AppSysesTable = ({ history }) => {
   return (
     <MaterialTable
       columns={columns}
-      data={AppSyses}
+      data={appSyses}
       editable={editable}
       options={options}
     />
