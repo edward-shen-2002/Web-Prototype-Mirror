@@ -181,7 +181,7 @@ const MenuItemLink = (
 )
 
 const MenuItems = ({ menuItems }) => {
-  return menuItems.map((menuItem, index) => <MenuItemLink key={`${menuItem.type}-${menuItem.name}-${menuItem.index}`} {...menuItem}/>)
+  return menuItems.map((menuItem, index) => <MenuItemLink key={`${menuItem.type}-${menuItem.name}-${index}`} {...menuItem}/>)
 }
 
 
