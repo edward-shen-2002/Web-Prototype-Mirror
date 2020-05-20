@@ -1,58 +1,58 @@
 import { Service } from 'typedi'
 
-import SubmissionPeriod from '../../entities/SubmissionPeriod'
+import Submission from '../../entities/Submission'
 import { Response, NextFunction, Request, Router } from 'express'
-import SubmissionPeriodService from '../../services/SubmissionPeriod'
+import SubmissionService from '../../services/Submission'
 
-const SubmissionPeriodController = Service(
-  [SubmissionPeriodService],
+const SubmissionController = Service(
+  [SubmissionService],
   (service) => {
     const router = Router()
     return (
       () => {
         router.get(
-          '/submissionPeriods',
+          '/submissions',
           (req: Request, res: Response, next: NextFunction) => {
             // Get query from middleware -- auth handler
 
             service
-              .findSubmissionPeriod({})
-              .then((submissionPeriods) => res.json({ submissionPeriods }))
+              .findSubmission({})
+              .then((submissions) => res.json({ submissions }))
               .catch(next)
           }
         )
 
         router.post(
-          '/submissionPeriods',
+          '/submissions',
           (req: Request, res: Response, next: NextFunction) => {
             service
-              .createSubmissionPeriod(req.body.submissionPeriod)
-              .then((submissionPeriod) => res.json({ submissionPeriod }))
+              .createSubmission(req.body.submission)
+              .then((submission) => res.json({ submission }))
               .catch(next)
           }
         )
 
         router.put(
-          '/submissionPeriods/:_id',
+          '/submissions/:_id',
           (req: Request, res: Response, next: NextFunction) => {
             const { _id } = req.params
-            const { submissionPeriod } = req.body
+            const { submission } = req.body
 
 
             service
-              .updateSubmissionPeriod(_id, submissionPeriod)
+              .updateSubmission(_id, submission)
               .then(() => res.end())
               .catch(next)
           }
         )
 
         router.delete(
-          '/submissionPeriods/:_id',
+          '/submissions/:_id',
           (req: Request, res: Response, next: NextFunction) => {
             const { _id } = req.params
 
             service
-              .deleteSubmissionPeriod(_id)
+              .deleteSubmission(_id)
               .then(() => res.end())
               .catch(next)
           }
@@ -64,4 +64,4 @@ const SubmissionPeriodController = Service(
   }
 )
 
-export default SubmissionPeriodController
+export default SubmissionController

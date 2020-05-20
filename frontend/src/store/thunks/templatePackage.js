@@ -11,24 +11,6 @@ import {
 
 import templatePackageController from '../../controllers/templatePackage';
 
-// ? Cause page redirection on error
-// export const getTemplatePackageRequest = (_id) => (dispatch) => {
-//   dispatch(requestTemplatePackages())
-
-//   templatePackageController.fetchTemplatePackage(_id)
-//     .then((templatePackage) => {
-//       batch(
-//         () => {
-//           dispatch(setExcelData(convertStateToReactState(templatePackage.templatePackageData)))
-//           dispatch(receiveTemplatePackages({ Values: [ templatePackage ] }))
-//         }
-//       )
-//     })
-//     .catch((error) => {
-//       dispatch(failTemplatePackagesRequest(error))
-//     })
-// }
-
 export const getTemplatePackagesRequest = (query) => (dispatch) => {
   dispatch(requestTemplatePackages())
 

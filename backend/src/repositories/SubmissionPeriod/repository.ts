@@ -6,6 +6,9 @@ import { IId } from '../../models/interface'
 
 export default class SubmissionPeriodRepository extends BaseRepository<SubmissionPeriodEntity>
   implements ISubmissionPeriodRepository<SubmissionPeriodEntity> {
+    constructor() {
+      super(SubmissionPeriodModel)
+    }
 
     public async delete(id: IId): Promise<SubmissionPeriodEntity> {
       return SubmissionPeriodModel.findByIdAndDelete(id).then(
@@ -30,8 +33,8 @@ export default class SubmissionPeriodRepository extends BaseRepository<Submissio
         if (query[key]) realQuery[key] = query[key]
       }
   
-      return SubmissionPeriodModel.find(realQuery).then((status) =>
-        status.map((submissionPeriod) => new SubmissionPeriodEntity(submissionPeriod.toObject()))
+      return SubmissionPeriodModel.find(realQuery).then((submissionPeriods) =>
+        submissionPeriods.map((submissionPeriod) => new SubmissionPeriodEntity(submissionPeriod.toObject()))
       )
     }
 }

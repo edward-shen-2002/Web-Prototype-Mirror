@@ -14,6 +14,9 @@ import COAsStore from './COAsStore'
 import SheetNamesStore from './SheetNamesStore'
 import AppSysesStore from './AppSysesStore'
 import DialogsStore from './DialogsStore'
+import SubmissionPeriodsStore from './SubmissionPeriodsStore'
+import ReportingPeriodsStore from './ReportingPeriodsStore'
+import SubmissionsStore from './SubmissionsStore'
 
 export const root = combineReducers({
   StatusesStore,
@@ -30,6 +33,11 @@ export const root = combineReducers({
   SheetNamesStore,
   AppSysesStore,
   DialogsStore,
+  
+  SubmissionPeriodsStore,
+  SubmissionsStore,
+  
+  ReportingPeriodsStore,
 
   app,
   domain,

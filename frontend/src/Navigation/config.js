@@ -59,6 +59,25 @@ const createUserNavigation = () => {
           icon: <InboxIcon /> ,
         }
       ]
+    }, 
+    {
+      name: "Submission",
+      icon: <InboxIcon />,
+      type: "drawer",
+      children: [
+        { 
+          name: "Submissions", 
+          type: "menu",
+          url: "/submission_manager/submissions", 
+          icon: <InboxIcon /> ,
+        },
+        { 
+          name: "Submission Periods", 
+          type: "menu",
+          url: "/submission_manager/submissionPeriods", 
+          icon: <InboxIcon /> ,
+        }
+      ]
     },  
     {
       name: "Sheet Names",
@@ -76,6 +95,12 @@ const createUserNavigation = () => {
       name: "AppSyses", 
       type: "menu",
       url: "/appsys_manager/AppSyses", 
+      icon: <InboxIcon /> ,
+    },
+    { 
+      name: "Reporting Periods", 
+      type: "menu",
+      url: "/reportingPeriods", 
       icon: <InboxIcon /> ,
     }
   ];
