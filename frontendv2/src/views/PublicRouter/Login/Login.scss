@@ -1,0 +1,41 @@
+@import "~@styles/mixins/layouts";
+
+.login {
+  @include center;
+
+  &__container {
+    width: 500px !important;
+    height: fit-content;
+  }
+
+  &__form {
+    display: flex;
+    flex-flow: column nowrap;
+  
+    padding: 50px;
+  }
+
+  &__field {
+    margin-bottom: 10px !important;
+  }
+
+  &__error {
+    color: red;
+  }
+}
+
+.loginButtonsMain {
+  margin-top: 5px;
+
+  &__button {
+    width: 50%;
+  }
+  
+  &__login {
+    border-radius: 3px 0px 0px 3px !important;
+  }
+
+  &__register {
+    border-radius: 0px 3px 3px 0px !important;
+  }
+}
