@@ -21,8 +21,6 @@ import Collapse from '@material-ui/core/Collapse'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 
-import uniqid from 'uniqid'
-
 import { Link } from 'react-router-dom'
 
 import navigationConfig from './config'
@@ -78,10 +76,15 @@ const useStyles = makeStyles((theme) => ({
       width: theme.spacing(7),
     },
   },
+  toolbarTitle: {
+    marginLeft: 15
+  },
+  toolbarHandle: {
+  },
   toolbar: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
@@ -113,14 +116,15 @@ const HeaderHandle = (
   </IconButton>
 )
 
-const HeaderTitle = () => (
+const HeaderTitle = ({ title }) => (
   <Typography variant="h6" noWrap>
-    MOHLTC - Generic Data Collection Tool
+    {title}
   </Typography>
 )
 
 const Header = (
   {
+    title,
     classes,
     open,
     handleDrawerOpen
@@ -138,20 +142,22 @@ const Header = (
         classes={classes}  
         handleDrawerOpen={handleDrawerOpen}
       />
-      <HeaderTitle/>
+      <HeaderTitle title={title}/>
     </Toolbar>
   </AppBar>
 );
 
 const DrawerHandle = (
   {
+    title,
     classes,
     handleDrawerClose,
     theme
   }
 ) => (
   <div className={classes.toolbar}>
-    <IconButton onClick={handleDrawerClose}>
+    <Typography className={classes.toolbarTitle}>{title}</Typography>
+    <IconButton className={classes.toolbarHandle} onClick={handleDrawerClose}>
       {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
     </IconButton>
   </div>
@@ -258,8 +264,9 @@ const NavigationContent = ({ config }) => {
   )
 }
 
-const Navigation = (
+const NavigationDrawer = (
   { 
+    title,
     open,
     theme,
     config,
@@ -281,6 +288,7 @@ const Navigation = (
     }}
   >
     <DrawerHandle 
+      title={title}
       classes={classes} 
       handleDrawerClose={handleDrawerClose} 
       theme={theme}
@@ -298,6 +306,8 @@ const PageContent = ({ classes, children }) => (
 
 const AuthPage = (
   { 
+    headerTitle = 'MOHLTC - Generic Data Collection Tool',
+    drawerTitle = 'MOHLTC - GDCT',
     config = navigationConfig,
     children 
   }
@@ -314,11 +324,13 @@ const AuthPage = (
     <div className={classes.root}>
       <CssBaseline />
       <Header
+        title={headerTitle}
         classes={classes}
         open={open}
         handleDrawerOpen={handleDrawerOpen}
       />
-      <Navigation
+      <NavigationDrawer
+        title={drawerTitle}
         theme={theme}
         classes={classes}
         open={open}
