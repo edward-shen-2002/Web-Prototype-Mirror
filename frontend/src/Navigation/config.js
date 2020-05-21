@@ -48,6 +48,9 @@ const createUserNavigation = () => {
       ]
     },  
     {
+      type: "divider"
+    },
+    {
       name: "COA",
       icon: <DataUsageIcon />,
       type: "drawer",
@@ -73,6 +76,9 @@ const createUserNavigation = () => {
       ]
     }, 
     {
+      type: "divider"
+    },
+    {
       name: "Submission",
       icon: <SendIcon />,
       type: "drawer",
@@ -90,7 +96,10 @@ const createUserNavigation = () => {
           icon: <HourglassEmptyIcon /> ,
         }
       ]
-    },  
+    }, 
+    {
+      type: "divider"
+    },
     {
       name: "Sheet Names",
       type: "menu",

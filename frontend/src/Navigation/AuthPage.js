@@ -30,7 +30,7 @@ const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
+    display: 'flex'
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -250,6 +250,10 @@ const NavigationContent = ({ config }) => {
       switch(type) {
         case "drawer":
           Component = MenuDrawer
+          break
+        
+        case "divider":
+          Component = Divider
           break
 
         case "title": 
