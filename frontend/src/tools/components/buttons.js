@@ -90,12 +90,12 @@ export const MarkButton = ({
 
 export const SelectIdButton = ({ value, handleClick }) => {
   const text = useMemo(
-    () => value === undefined ? 'Select Id' : value,
+    () => value === undefined ? 'SELECT ID' : value,
     [ value ]
   )
 
   return (
-    <Button onClick={handleClick}>
+    <Button className="text-lowercase"  onClick={handleClick}>
       {text}
     </Button>
   )
