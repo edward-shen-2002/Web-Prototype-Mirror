@@ -14,12 +14,14 @@ import { CustomEditor } from "@tools/slate";
 import {
   openSubmissionPeriodDialog,
   openStatusDialog,
-  openUserDialog
+  openUserDialog,
+  openTemplateTypeDialog
 } from '../../store/actions/DialogsStore'
 
 import { cx, css } from 'emotion'
-import SubmissionPeriodIdDialog from "./dialogs/SubmissionPeriodDialog";
+import SubmissionPeriodDialog from "./dialogs/SubmissionPeriodDialog";
 import StatusDialog from "./dialogs/StatusDialog";
+import TemplateTypeDialog from "./dialogs/TemplateTypeDialog";
 
 export const DeleteButton = ({ handleDelete }) => (
   <IconButton onClick={handleDelete} aria-label="delete">
@@ -88,68 +90,52 @@ export const MarkButton = ({
   )
 }
 
-export const SelectIdButton = ({ value, handleClick }) => {
+export const SelectIdButton = ({ value, action, children }) => {
+  const dispatch = useDispatch()
+
   const text = useMemo(
     () => value === undefined ? 'SELECT ID' : value,
     [ value ]
   )
 
-  return (
-    <Button className="text-lowercase"  onClick={handleClick}>
-      {text}
-    </Button>
-  )
-}
-
-export const SubmissionPeriodIdButton = ({ value, onChange }) => {
-  const dispatch = useDispatch()
-
   const handleClick = useCallback(
     () => {
-      dispatch(openSubmissionPeriodDialog())
+      dispatch(action())
     },
     [ dispatch ]
   )
 
   return (
     <div>
-      <SelectIdButton value={value} handleClick={handleClick}/>
-      <SubmissionPeriodIdDialog handleChange={onChange}/>
+      <Button className="text-lowercase"  onClick={handleClick}>
+        {text}
+      </Button>
+      {children}
     </div>
   )
 }
 
-export const StatusIdButton = ({ value, onChange }) => {
-  const dispatch = useDispatch()
+export const SubmissionPeriodIdButton = ({ value, onChange }) =>  (
+  <SelectIdButton value={value} action={openSubmissionPeriodDialog}>
+    <SubmissionPeriodDialog handleChange={onChange}/>
+  </SelectIdButton>
+)
 
-  const handleClick = useCallback(
-    () => {
-      dispatch(openStatusDialog())
-    },
-    [ dispatch ]
-  )
 
-  return (
-    <div>
-      <SelectIdButton value={value} handleClick={handleClick}/>
-      <StatusDialog handleChange={onChange}/>
-    </div>
-  )
-}
+export const StatusIdButton = ({ value, onChange }) => (
+  <SelectIdButton value={value} action={openStatusDialog}>
+    <StatusDialog handleChange={onChange}/>
+  </SelectIdButton>
+)
 
-export const UserIdButton = ({ value, onChange }) => {
-  const dispatch = useDispatch()
+export const TemplateTypeIdButton = ({ value, onChange }) => (
+  <SelectIdButton value={value} action={openTemplateTypeDialog}>
+    <TemplateTypeDialog handleChange={onChange}/>
+  </SelectIdButton>
+)
 
-  const handleClick = useCallback(
-    () => {
-      dispatch(openUserDialog())
-    },
-    [ dispatch ]
-  )
-
-  return (
-    <div>
-      <SelectIdButton value={value} handleClick={handleClick}/>
-    </div>
-  )
-}
+export const UserIdButton = ({ value, onChange }) => (
+  <SelectIdButton value={value} action={openUserDialog}>
+    {/* <TemplateTypeDialog handleChange={onChange}/> */}
+  </SelectIdButton>
+)

@@ -14,6 +14,8 @@ import Paper from '@material-ui/core/Paper';
 
 import Typography from "@material-ui/core/Typography";
 
+import { StatusIdButton, TemplateTypeIdButton } from '../../../tools/components/buttons'
+
 import './Templates.scss'
 
 // const TemplateFileDropzone = () => {}
@@ -57,11 +59,11 @@ const TemplatesTable = ({ history }) => {
     () => [
       { title: "_id", field: "_id" },
       { title: "Name", field: "name" },
-      { title: "TemplateTypeId", field: "templateTypeId" },
+      { title: "TemplateTypeId", field: "templateTypeId", editComponent: TemplateTypeIdButton },
       { title: "UserCreatorId", field: "userCreatorId" },
       { title: "CreationDate", type: "date", field: "creationDate" },
       { title: "ExpirationDate", type: "date", field: "expirationDate" },
-      { title: "StatusId", field: "statusId" }
+      { title: "StatusId", field: "statusId", editComponent: StatusIdButton }
     ],
     []
   )

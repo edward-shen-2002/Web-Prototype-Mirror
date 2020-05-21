@@ -1,31 +1,31 @@
 import React, { useCallback, useEffect } from 'react'
 
 import {
-  closeSubmissionPeriodDialog
+  closeUserDialog
 } from '../../../store/actions/DialogsStore'
 
 import SelectableTableDialog from './SelectableTableDialog'
 
 import { 
-  getSubmissionPeriodsRequest
-} from '../../../store/thunks/submissionPeriod'
+  getUsersRequest
+} from '../../../store/thunks/user'
 
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 import { useMemo } from 'react'
 
-const SubmissionPeriodDialog = ({ handleChange }) => {
+const UserDialog = ({ handleChange }) => {
   const dispatch = useDispatch()
 
   const {
-    isSubmissionPeriodDialogOpen,
-    submissionPeriods
+    isUserDialogOpen,
+    users
   } = useSelector(
     (
       {
         DialogsStore: {
-          isSubmissionPeriodDialogOpen
+          isUserDialogOpen
         },
-        SubmissionPeriodsStore: {
+        UsersStore: {
           response: {
             Values
           }
@@ -33,15 +33,15 @@ const SubmissionPeriodDialog = ({ handleChange }) => {
       }
     ) => (
       {
-        isSubmissionPeriodDialogOpen,
-        submissionPeriods: Values
+        isUserDialogOpen,
+        users: Values
       }
     ),
     shallowEqual
   )
 
   const handleClose = useCallback(
-    () => dispatch(closeSubmissionPeriodDialog()),
+    () => dispatch(closeUserDialog()),
     [ dispatch ]
   )
 
@@ -55,9 +55,9 @@ const SubmissionPeriodDialog = ({ handleChange }) => {
 
   useEffect(
     () => {
-      if(isSubmissionPeriodDialogOpen && !submissionPeriods.length) dispatch(getSubmissionPeriodsRequest())
+      if(isUserDialogOpen && !users.length) dispatch(getUsersRequest())
     },
-    [ dispatch, isSubmissionPeriodDialogOpen ]
+    [ dispatch, isUserDialogOpen ]
   )
 
   const columns = useMemo(
@@ -67,8 +67,8 @@ const SubmissionPeriodDialog = ({ handleChange }) => {
         field: '_id',
       },
       {
-        title: 'Name',
-        field: 'name'
+        title: 'Username',
+        field: 'username'
       }
     ],
     []
@@ -76,14 +76,14 @@ const SubmissionPeriodDialog = ({ handleChange }) => {
 
   return (
     <SelectableTableDialog
-      title="Submission Period"
+      title="User"
       columns={columns}
-      isOpen={isSubmissionPeriodDialogOpen}
-      data={submissionPeriods}
+      isOpen={isUserDialogOpen}
+      data={users}
       handleClose={handleClose}
       handleSelect={handleSelect}
     />
   )
 }
 
-export default SubmissionPeriodDialog
+export default UserDialog

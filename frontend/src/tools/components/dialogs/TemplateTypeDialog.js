@@ -1,31 +1,31 @@
 import React, { useCallback, useEffect } from 'react'
 
 import {
-  closeSubmissionPeriodDialog
+  closeTemplateTypeDialog
 } from '../../../store/actions/DialogsStore'
 
 import SelectableTableDialog from './SelectableTableDialog'
 
 import { 
-  getSubmissionPeriodsRequest
-} from '../../../store/thunks/submissionPeriod'
+  getTemplateTypesRequest
+} from '../../../store/thunks/templateType'
 
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 import { useMemo } from 'react'
 
-const SubmissionPeriodDialog = ({ handleChange }) => {
+const TemplateTypeDialog = ({ handleChange }) => {
   const dispatch = useDispatch()
 
   const {
-    isSubmissionPeriodDialogOpen,
-    submissionPeriods
+    isTemplateTypeDialogOpen,
+    templateTypes
   } = useSelector(
     (
       {
         DialogsStore: {
-          isSubmissionPeriodDialogOpen
+          isTemplateTypeDialogOpen
         },
-        SubmissionPeriodsStore: {
+        TemplateTypesStore: {
           response: {
             Values
           }
@@ -33,15 +33,15 @@ const SubmissionPeriodDialog = ({ handleChange }) => {
       }
     ) => (
       {
-        isSubmissionPeriodDialogOpen,
-        submissionPeriods: Values
+        isTemplateTypeDialogOpen,
+        templateTypes: Values
       }
     ),
     shallowEqual
   )
 
   const handleClose = useCallback(
-    () => dispatch(closeSubmissionPeriodDialog()),
+    () => dispatch(closeTemplateTypeDialog()),
     [ dispatch ]
   )
 
@@ -55,9 +55,9 @@ const SubmissionPeriodDialog = ({ handleChange }) => {
 
   useEffect(
     () => {
-      if(isSubmissionPeriodDialogOpen && !submissionPeriods.length) dispatch(getSubmissionPeriodsRequest())
+      if(isTemplateTypeDialogOpen && !templateTypes.length) dispatch(getTemplateTypesRequest())
     },
-    [ dispatch, isSubmissionPeriodDialogOpen ]
+    [ dispatch, isTemplateTypeDialogOpen ]
   )
 
   const columns = useMemo(
@@ -76,14 +76,14 @@ const SubmissionPeriodDialog = ({ handleChange }) => {
 
   return (
     <SelectableTableDialog
-      title="Submission Period"
+      title="Template Type"
       columns={columns}
-      isOpen={isSubmissionPeriodDialogOpen}
-      data={submissionPeriods}
+      isOpen={isTemplateTypeDialogOpen}
+      data={templateTypes}
       handleClose={handleClose}
       handleSelect={handleSelect}
     />
   )
 }
 
-export default SubmissionPeriodDialog
+export default TemplateTypeDialog
