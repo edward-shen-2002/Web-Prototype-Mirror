@@ -1,21 +1,21 @@
 import { createReducer } from "../tools/setup"
 
-import REQUEST_SHEETNAMES from './common/REQUEST'
-import RECEIVE_SHEETNAMES from './common/RECEIVE'
-import FAIL_SHEETNAMES_REQUEST from './common/FAIL_REQUEST'
-import CREATE_SHEETNAME from './common/CREATE'
-import DELETE_SHEETNAME from './common/DELETE'
-import UPDATE_SHEETNAME from './common/UPDATE'
-import RESET_SHEETNAMES from './common/RESET'
+import REQUEST_SHEET_NAMES from './common/REQUEST'
+import RECEIVE_SHEET_NAMES from './common/RECEIVE'
+import FAIL_SHEET_NAMES_REQUEST from './common/FAIL_REQUEST'
+import CREATE_SHEET_NAME from './common/CREATE'
+import DELETE_SHEET_NAME from './common/DELETE'
+import UPDATE_SHEET_NAME from './common/UPDATE'
+import RESET_SHEET_NAMES from './common/RESET'
 
 const reducersMap = {
-  REQUEST_SHEETNAMES,
-  RECEIVE_SHEETNAMES,
-  FAIL_SHEETNAMES_REQUEST,
-  CREATE_SHEETNAME,
-  DELETE_SHEETNAME,
-  UPDATE_SHEETNAME,
-  RESET_SHEETNAMES
+  REQUEST_SHEET_NAMES,
+  RECEIVE_SHEET_NAMES,
+  FAIL_SHEET_NAMES_REQUEST,
+  CREATE_SHEET_NAME,
+  DELETE_SHEET_NAME,
+  UPDATE_SHEET_NAME,
+  RESET_SHEET_NAMES
 }
 
 const defaultState = {
@@ -26,6 +26,6 @@ const defaultState = {
   isCallInProgress: false
 }
 
-const SheetNameStore = createReducer(defaultState, reducersMap)
+const SheetNamesStore = createReducer(defaultState, reducersMap)
 
-export default SheetNameStore
+export default SheetNamesStore

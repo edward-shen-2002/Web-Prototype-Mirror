@@ -4,7 +4,7 @@
 
 .appContainer {
   min-height: fit-content;
-  height: 100vh;
+  // height: 100vh;
 }
 
 .app {
@@ -22,4 +22,9 @@
       display: flex;
     }
   }
+}
+
+.appPage {
+  margin: 20px;
+  width: 100%;
 }

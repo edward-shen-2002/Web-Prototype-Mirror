@@ -1,27 +1,40 @@
 import ISubmissionRepository from './interface'
-import SubmissionEntity from '../../entities/Submission'
+import SubmissionEntity from '../../entities/Submission/Submission'
 import BaseRepository from '../repository'
+import SubmissionModel from '../../models/Submission'
+import { IId } from '../../models/interface'
 
 export default class SubmissionRepository extends BaseRepository<SubmissionEntity>
   implements ISubmissionRepository<SubmissionEntity> {
-  create(item: ISubmissionRepository<SubmissionEntity>): Promise<Boolean> {
-    throw new Error('Method not implemented.')
-  }
-  update(
-    id: string,
-    item: ISubmissionRepository<SubmissionEntity>
-  ): Promise<Boolean> {
-    throw new Error('Method not implemented.')
-  }
-  delete(id: string): Promise<Boolean> {
-    throw new Error('Method not implemented.')
-  }
-  find(
-    item: ISubmissionRepository<SubmissionEntity>
-  ): Promise<ISubmissionRepository<SubmissionEntity>[]> {
-    throw new Error('Method not implemented.')
-  }
-  findOne(id: string): Promise<ISubmissionRepository<SubmissionEntity>> {
-    throw new Error('Method not implemented.')
-  }
+    constructor() {
+      super(SubmissionModel)
+    }
+
+    public async delete(id: IId): Promise<SubmissionEntity> {
+      return SubmissionModel.findByIdAndDelete(id).then(
+        (submission) => new SubmissionEntity(submission.toObject())
+      )
+    }
+  
+    public async create(submission: SubmissionEntity): Promise<SubmissionEntity> {
+      return SubmissionModel.create(submission).then((submission) => new SubmissionEntity(submission.toObject()))
+    }
+  
+    public async update(id: IId, submission: SubmissionEntity): Promise<SubmissionEntity> {
+      return SubmissionModel.findByIdAndUpdate(id, submission).then(
+        (submission) => new SubmissionEntity(submission.toObject())
+      )
+    }
+  
+    public async find(query: SubmissionEntity): Promise<SubmissionEntity[]> {
+      const realQuery = {}
+  
+      for (const key in query) {
+        if (query[key]) realQuery[key] = query[key]
+      }
+  
+      return SubmissionModel.find(realQuery).then((submissions) =>
+        submissions.map((submission) => new SubmissionEntity(submission.toObject()))
+      )
+    }
 }

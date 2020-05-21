@@ -158,17 +158,17 @@ const TemplatePackagesTable = ({ history }) => {
     () => (
       { 
         onRowAdd: (templatePackage) => new Promise(
-          (resolve) => {
+          (resolve, reject) => {
             dispatch(createTemplatePackageRequest(templatePackage, resolve, reject))
           }
         ), 
         onRowUpdate: (templatePackage) => new Promise(
-          (resolve) => {
+          (resolve, reject) => {
             dispatch(updateTemplatePackageRequest(templatePackage, resolve, reject))
           }
         ), 
         onRowDelete: (templatePackage) => new Promise(
-          (resolve) => {
+          (resolve, reject) => {
             dispatch(deleteTemplatePackageRequest(templatePackage._id, resolve, reject))
           }
         ) 

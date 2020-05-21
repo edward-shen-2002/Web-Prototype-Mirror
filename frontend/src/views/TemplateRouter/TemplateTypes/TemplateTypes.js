@@ -86,25 +86,18 @@ const TemplateTypesTable = ({ history }) => {
     () => (
       { 
         onRowAdd: (templateType) => new Promise(
-          (resolve) => {
-            // templateType = {
-
-            // }
-
-            dispatch(createTemplateTypeRequest(templateType))
-            resolve()
+          (resolve, reject) => {
+            dispatch(createTemplateTypeRequest(templateType, resolve, reject))
           }
         ), 
         onRowUpdate: (templateType) => new Promise(
-          (resolve) => {
-            dispatch(updateTemplateTypeRequest(templateType))
-            resolve()
+          (resolve, reject) => {
+            dispatch(updateTemplateTypeRequest(templateType, resolve, reject))
           }
         ), 
         onRowDelete: (templateType) => new Promise(
-          (resolve) => {
-            dispatch(deleteTemplateTypeRequest(templateType._id))
-            resolve()
+          (resolve, reject) => {
+            dispatch(deleteTemplateTypeRequest(templateType._id, resolve, reject))
           }
         ) 
       }

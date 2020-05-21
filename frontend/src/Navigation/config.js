@@ -1,66 +1,113 @@
+import React from 'react'
+
+import InboxIcon from '@material-ui/icons/Inbox'
+
 const createUserNavigation = () => {
-  const userTitle = { title: true, name: "User" };
-
-  const templates = {
-    name: "Templates",
-    url: "/template_manager/templates",
-    icon: "mdi mdi-note-multiple"
-  }
-  const statuses = {
-    name: "Statuses",
-    url: "/statuses",
-    icon: "mdi mdi-note-multiple"
-  }
-  const templateTypes = {
-    name: "Template Types",
-    url: "/template_manager/templateTypes",
-    icon: "mdi mdi-note-multiple"
-  }
-  const templatePackages = {
-    name: "Template Packages",
-    url: "/template_manager/templatePackages",
-    icon: "mdi mdi-note-multiple"
-  }
-
-  const COATrees = { name: "COA Trees", url: "/COA_manager/COA_trees", icon: "mdi mdi-shape" }
-
-  const COAGroups = { name: "COA Groups", url: "/COA_manager/COA_groups", icon: "mdi mdi-shape" }
-
-  const COAs = { name: "COAs", url: "/COA_manager/COAs", icon: "mdi mdi-shape" }
-
-  const sheetNames = {
-    name: "Sheet Names",
-    url: "/sheetNames",
-    icon: "mdi mdi-note-multiple"
-  }
-
-  const appSyses = { name: "AppSyses", url: "/appsys_manager/AppSyses", icon: "mdi mdi-shape" }
-
-  // const userDashboard = { name: "Dashboard", url: ROUTE_USER_DASHBOARD, icon: "mdi mdi-library-books" }
-
-  // ! Need to figure out how to nest navigation items
-
   return [
-    userTitle,
-    /*userDashboard,*/
-    // userProfile, 
-    // userBundles, 
-    statuses,
-    templates,
-    templateTypes,
-    templatePackages,
-    COATrees,
-    COAGroups,
-    COAs,
-    sheetNames,
-    appSyses
+    { 
+      name: "User",
+      button: false,
+      type: "title",
+      icon: <InboxIcon /> 
+    },
+    {
+      name: "Template",
+      type: "drawer",
+      icon: <InboxIcon /> ,
+      children: [
+        {
+          name: "Templates",
+          type: "menu",
+          url: "/template_manager/templates",
+          icon: <InboxIcon /> 
+        },
+        {
+          name: "Template Types",
+          type: "menu",
+          url: "/template_manager/templateTypes",
+          icon: <InboxIcon /> 
+        },
+        {
+          name: "Template Packages",
+          type: "menu",
+          url: "/template_manager/templatePackages",
+          icon: <InboxIcon /> ,
+        }
+      ]
+    },  
+    {
+      name: "COA",
+      icon: <InboxIcon />,
+      type: "drawer",
+      children: [
+        { 
+          name: "COAs", 
+          type: "menu",
+          url: "/COA_manager/COAs", 
+          icon: <InboxIcon /> ,
+        },
+        { 
+          name: "COA Groups", 
+          type: "menu",
+          url: "/COA_manager/COA_groups", 
+          icon: <InboxIcon /> ,
+        },
+        { 
+          name: "COA Trees", 
+          type: "menu",
+          url: "/COA_manager/COA_trees", 
+          icon: <InboxIcon /> ,
+        }
+      ]
+    }, 
+    {
+      name: "Submission",
+      icon: <InboxIcon />,
+      type: "drawer",
+      children: [
+        { 
+          name: "Submissions", 
+          type: "menu",
+          url: "/submission_manager/submissions", 
+          icon: <InboxIcon /> ,
+        },
+        { 
+          name: "Submission Periods", 
+          type: "menu",
+          url: "/submission_manager/submissionPeriods", 
+          icon: <InboxIcon /> ,
+        }
+      ]
+    },  
+    {
+      name: "Sheet Names",
+      type: "menu",
+      url: "/sheetNames",
+      icon: <InboxIcon /> ,
+    },
+    {
+      name: "Statuses",
+      type: "menu",
+      url: "/statuses",
+      icon: <InboxIcon /> ,
+    },  
+    { 
+      name: "AppSyses", 
+      type: "menu",
+      url: "/appsys_manager/AppSyses", 
+      icon: <InboxIcon /> ,
+    },
+    { 
+      name: "Reporting Periods", 
+      type: "menu",
+      url: "/reportingPeriods", 
+      icon: <InboxIcon /> ,
+    }
   ];
 };
 
-const config = (roles) => {
-  const userNavigation = createUserNavigation();
-
-  return { items: [...userNavigation] };
-};
+const config = [
+  ...createUserNavigation()
+]
 
 export default config;

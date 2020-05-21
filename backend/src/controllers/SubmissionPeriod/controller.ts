@@ -1,7 +1,8 @@
 import { Service } from 'typedi'
+
+import SubmissionPeriod from '../../entities/SubmissionPeriod'
 import { Response, NextFunction, Request, Router } from 'express'
 import SubmissionPeriodService from '../../services/SubmissionPeriod'
-import SubmissionPeriod from '../../entities/SubmissionPeriod'
 
 const SubmissionPeriodController = Service(
   [SubmissionPeriodService],
@@ -15,7 +16,7 @@ const SubmissionPeriodController = Service(
             // Get query from middleware -- auth handler
 
             service
-              .findSubmissionPeriod({} as SubmissionPeriod)
+              .findSubmissionPeriod({})
               .then((submissionPeriods) => res.json({ submissionPeriods }))
               .catch(next)
           }
@@ -27,10 +28,6 @@ const SubmissionPeriodController = Service(
             service
               .createSubmissionPeriod(req.body.submissionPeriod)
               .then((submissionPeriod) => res.json({ submissionPeriod }))
-              .catch((error) => {
-                console.error(error)
-                throw error
-              })
               .catch(next)
           }
         )
@@ -63,7 +60,7 @@ const SubmissionPeriodController = Service(
 
         return router
       }
-    )
+    )()
   }
 )
 
