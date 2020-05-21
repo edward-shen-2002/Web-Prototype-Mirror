@@ -50,10 +50,7 @@ const ReportingPeriodsTable = () => {
   const columns = useMemo(
     () => [
       { title: "_id", field: "_id" },
-      { title: "Name", field: "name" },
-      { title: "Start Date", type: "date", field: "startDate" },
-      { title: "End Date", type: "date", field: "endDate" },
-      { title: "Application", field: "application" }
+      { title: "Name", field: "name" }
     ],
     []
   )

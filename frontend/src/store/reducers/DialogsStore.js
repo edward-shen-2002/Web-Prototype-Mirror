@@ -13,7 +13,8 @@ const OPEN_SUBMISSION_PERIOD_DIALOG = (state) => ({ ...state, isSubmissionPeriod
 const CLOSE_SUBMISSION_PERIOD_DIALOG = (state) => ({ ...state, isSubmissionPeriodDialogOpen: false })
 const OPEN_TEMPLATE_TYPE_DIALOG = (state) => ({ ...state, isTemplateTypeDialogOpen: true })
 const CLOSE_TEMPLATE_TYPE_DIALOG = (state) => ({ ...state, isTemplateTypeDialogOpen: false })
-
+const OPEN_REPORTING_PERIOD_DIALOG = (state) => ({ ...state, isReportingPeriodDialogOpen: true })
+const CLOSE_REPORTING_PERIOD_DIALOG = (state) => ({ ...state, isReportingPeriodDialogOpen: false })
 const reducersMap = {
   OPEN_COA_GROUP_DIALOG,
   CLOSE_COA_GROUP_DIALOG,
@@ -27,7 +28,9 @@ const reducersMap = {
   OPEN_SUBMISSION_PERIOD_DIALOG,
   CLOSE_SUBMISSION_PERIOD_DIALOG,
   OPEN_TEMPLATE_TYPE_DIALOG,
-  CLOSE_TEMPLATE_TYPE_DIALOG
+  CLOSE_TEMPLATE_TYPE_DIALOG,
+  OPEN_REPORTING_PERIOD_DIALOG,
+  CLOSE_REPORTING_PERIOD_DIALOG
 }
 
 const defaultState = {
@@ -36,7 +39,8 @@ const defaultState = {
   isUserDialogOpen: false,
   isStatusDialogOpen: false,
   isSubmissionPeriodDialogOpen: false,
-  isTemplateTypeDialogOpen: false
+  isTemplateTypeDialogOpen: false,
+  isReportingPeriodDialogOpen: false
 }
 
 const DialogsStore = createReducer(defaultState, reducersMap)

@@ -8,11 +8,12 @@ import {
   updateSubmissionPeriodRequest 
 } from '../../store/thunks/submissionPeriod'
 
-
 import MaterialTable from 'material-table'
 import Paper from '@material-ui/core/Paper';
 
 import Typography from "@material-ui/core/Typography";
+
+import { ReportingPeriodIdButton } from '../../tools/components/buttons'
 
 const SubmissionPeriodHeader = () => {
 
@@ -24,7 +25,7 @@ const SubmissionPeriodHeader = () => {
   )
 }
 
-const SubmissionPeriodsTable = () => {
+const SubmissionPeriod = () => {
   const dispatch = useDispatch()
 
   const {
@@ -48,11 +49,11 @@ const SubmissionPeriodsTable = () => {
 
   const columns = useMemo(
     () => [
-      { title: "_id", field: "_id" },
+      { title: "_id", field: "_id", editable: "never" },
       { title: "Name", field: "name" },
       { title: "Start Date", type: "date", field: "startDate" },
       { title: "End Date", type: "date", field: "endDate" },
-      { title: "ReportingPeriodId", field: "reportingPeriodId" }
+      { title: "ReportingPeriodId", field: "reportingPeriodId", editComponent: ReportingPeriodIdButton }
     ],
     []
   )
@@ -95,20 +96,16 @@ const SubmissionPeriodsTable = () => {
   )
 
   return (
-    <MaterialTable
-      columns={columns} 
-      data={submissionPeriods} 
-      editable={editable} 
-      options={options}
-    />
+    <div>
+      <SubmissionPeriodHeader/>
+      <MaterialTable
+        columns={columns} 
+        data={submissionPeriods} 
+        editable={editable} 
+        options={options}
+      />
+    </div>
   )
 }
-
-const SubmissionPeriod = (props) => (
-  <div className="submissionPeriods">
-    <SubmissionPeriodHeader/>
-    <SubmissionPeriodsTable {...props}/>
-  </div>
-)
 
 export default SubmissionPeriod

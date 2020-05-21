@@ -15,13 +15,15 @@ import {
   openSubmissionPeriodDialog,
   openStatusDialog,
   openUserDialog,
-  openTemplateTypeDialog
+  openTemplateTypeDialog,
+  openReportingPeriodDialog
 } from '../../store/actions/DialogsStore'
 
 import { cx, css } from 'emotion'
 import SubmissionPeriodDialog from "./dialogs/SubmissionPeriodDialog";
 import StatusDialog from "./dialogs/StatusDialog";
 import TemplateTypeDialog from "./dialogs/TemplateTypeDialog";
+import ReportingPeriodDialog from './dialogs/ReportingPeriodDialog'
 
 export const DeleteButton = ({ handleDelete }) => (
   <IconButton onClick={handleDelete} aria-label="delete">
@@ -118,6 +120,12 @@ export const SelectIdButton = ({ value, action, children }) => {
 export const SubmissionPeriodIdButton = ({ value, onChange }) =>  (
   <SelectIdButton value={value} action={openSubmissionPeriodDialog}>
     <SubmissionPeriodDialog handleChange={onChange}/>
+  </SelectIdButton>
+)
+
+export const ReportingPeriodIdButton = ({ value, onChange }) =>  (
+  <SelectIdButton value={value} action={openReportingPeriodDialog}>
+    <ReportingPeriodDialog handleChange={onChange}/>
   </SelectIdButton>
 )
 

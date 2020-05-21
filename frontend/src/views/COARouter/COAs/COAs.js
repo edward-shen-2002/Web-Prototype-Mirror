@@ -27,7 +27,7 @@ const COAsHeader = () => {
   )
 }
 
-const COAsTable = ({ history }) => {
+const COAs = ({ history }) => {
   const dispatch = useDispatch()
 
   const {
@@ -52,7 +52,8 @@ const COAsTable = ({ history }) => {
   const columns = useMemo(
     () => [
       { title: "_id", field: "_id", editable: "never" },
-      { title: "Name", field: "name" }
+      { title: "Name", field: "name" },
+      { title: "COA", field: "COA" }
     ],
     []
   )
@@ -95,21 +96,16 @@ const COAsTable = ({ history }) => {
   )
 
   return (
-    <MaterialTable
-      columns={columns} 
-      data={COAs} 
-      editable={editable} 
-      options={options}
-    />
+    <div>
+      <COAsHeader/>
+      <MaterialTable
+        columns={columns} 
+        data={COAs} 
+        editable={editable} 
+        options={options}
+      />
+    </div>
   )
 }
-
-const COAs = (props) => (
-  <div className="COAs">
-    <COAsHeader/>
-    {/* <FileDropzone/> */}
-    <COAsTable {...props}/>
-  </div>
-)
 
 export default COAs
