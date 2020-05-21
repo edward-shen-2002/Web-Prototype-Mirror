@@ -51,7 +51,7 @@ const COAGroupsTable = ({ history }) => {
   
   const columns = useMemo(
     () => [
-      { title: "_id", field: "_id" },
+      { title: "_id", field: "_id", editable: "never" },
       { title: "Name", field: "name" },
       { title: "Code", field: "code" },
       { title: "Active", type: "boolean", field: "isActive" }

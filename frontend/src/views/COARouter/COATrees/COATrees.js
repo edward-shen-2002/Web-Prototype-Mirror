@@ -48,7 +48,7 @@ const COATreesTable = ({ history }) => {
   
   const columns = useMemo(
     () => [
-      { title: "_id", field: "_id" },
+      { title: "_id", field: "_id", editable: "never" },
       { title: "Sheet Name", field: "name" }
     ],
     []

@@ -121,7 +121,6 @@ export const SubmissionPeriodIdButton = ({ value, onChange }) =>  (
   </SelectIdButton>
 )
 
-
 export const StatusIdButton = ({ value, onChange }) => (
   <SelectIdButton value={value} action={openStatusDialog}>
     <StatusDialog handleChange={onChange}/>

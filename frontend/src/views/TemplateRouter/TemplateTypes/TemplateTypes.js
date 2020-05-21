@@ -51,7 +51,7 @@ const TemplateTypesTable = ({ history }) => {
 
   const columns = useMemo(
     () => [
-      { title: "_id", field: "_id" },
+      { title: "_id", field: "_id", editable: "never" },
       { title: "Name", field: "name" },
       { title: "Description", field: "description" },
       { title: "Approvable", type: "boolean", field: "isApprovable" },

@@ -33,7 +33,7 @@ const TemplatePackageHeader = () => {
   )
 }
 
-const TemplatePackage = ({ history }) => {
+const TemplatePackage = () => {
   const dispatch = useDispatch()
 
   const {
@@ -55,20 +55,9 @@ const TemplatePackage = ({ history }) => {
     shallowEqual
   )
 
-  const actions = useMemo(
-    () => [
-      { 
-        icon: LaunchIcon, 
-        tooltip: "Open Package", 
-        onClick: (_event, templatePackage) => history.push(`/designer/templatePackage/${templatePackage._id}`)
-      }
-    ],
-    [ history ]
-  )
-
   const columns = useMemo(
     () => [
-      { title: "_id", field: "_id" },
+      { title: "_id", field: "_id", editable: "never" },
       { title: "Name", field: "name" },
       { title: "SubmissionPeriodId", field: "submissionPeriodId", editComponent: SubmissionPeriodIdButton },
       // { title: "TemplateIds", type: "boolean", field: "templateIds" },
@@ -128,7 +117,6 @@ const TemplatePackage = ({ history }) => {
       <MaterialTable
         columns={columns} 
         data={templatePackages} 
-        actions={actions}
         editable={editable} 
         options={options}
       />
