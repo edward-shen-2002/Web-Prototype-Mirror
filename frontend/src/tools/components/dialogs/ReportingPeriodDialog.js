@@ -67,8 +67,8 @@ const ReportingPeriodDialog = ({ handleChange }) => {
         field: '_id',
       },
       {
-        title: 'ReportingPeriodname',
-        field: 'reportingPeriodname'
+        title: 'Name',
+        field: 'name'
       }
     ],
     []
@@ -76,7 +76,7 @@ const ReportingPeriodDialog = ({ handleChange }) => {
 
   return (
     <SelectableTableDialog
-      title="ReportingPeriod"
+      title="Reporting Period"
       columns={columns}
       isOpen={isReportingPeriodDialogOpen}
       data={reportingPeriods}
