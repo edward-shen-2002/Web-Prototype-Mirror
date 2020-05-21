@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useMemo, useCallback } from "react";
+
+import { useDispatch } from 'react-redux'
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 
 import Fab from "@material-ui/core/Fab";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
+import Button from '@material-ui/core/Button'
 
 import { CustomEditor } from "@tools/slate";
+
+import {
+  openSubmissionPeriodDialog,
+  openStatusDialog,
+  openUserDialog
+} from '../../store/actions/DialogsStore'
 
 import { cx, css } from 'emotion'
 
@@ -74,5 +83,69 @@ export const MarkButton = ({
     >
       <MarkIcon>{icon}</MarkIcon>
     </MarkToggler>
+  )
+}
+
+export const SelectIdButton = ({ value, handleClick }) => {
+  const text = useMemo(
+    () => value === undefined ? 'Select Id' : value,
+    [ value ]
+  )
+
+  return (
+    <Button onClick={handleClick}>
+      {text}
+    </Button>
+  )
+}
+
+export const SubmissionPeriodIdButton = () => {
+  const dispatch = useDispatch()
+
+  const handleClick = useCallback(
+    () => {
+      dispatch(openSubmissionPeriodDialog())
+    },
+    [ dispatch ]
+  )
+
+  return (
+    <SelectIdButton
+      handleClick={handleClick}
+    />
+  )
+}
+
+export const StatusIdButton = () => {
+  const dispatch = useDispatch()
+
+  const handleClick = useCallback(
+    () => {
+      dispatch(openStatusDialog())
+    },
+    [ dispatch ]
+  )
+
+  return (
+    <SelectIdButton
+      handleClick={handleClick}
+    />
+  )
+}
+
+export const UserIdButton = () => {
+  const dispatch = useDispatch()
+
+  const handleClick = useCallback(
+    () => {
+      dispatch(openUserDialog())
+    },
+    [ dispatch ]
+  )
+
+  return (
+    <SelectIdButton
+      handleClick={handleClick}
+    />
   )
 }

@@ -9,8 +9,9 @@ import {
 } from '../../../store/thunks/templatePackage'
 
 import {
-  openSubmissionPeriodDialog,
-  closeSubmissionPeriodDialog
+  closeSubmissionPeriodDialog,
+  closeStatusDialog,
+  closeUserDialog
 } from '../../../store/actions/DialogsStore'
 
 import MaterialTable from 'material-table'
@@ -19,6 +20,14 @@ import LaunchIcon from "@material-ui/icons/Launch";
 import Button from '@material-ui/core/Button'
 
 import Typography from "@material-ui/core/Typography";
+
+import {
+  UserIdButton,
+  StatusIdButton,
+  SubmissionPeriodIdButton
+} from '../../../tools/components/buttons'
+
+import StatusIdDialog from './StatusIdDialog'
 
 import './TemplatePackages.scss'
 
@@ -33,71 +42,7 @@ const TemplatePackageHeader = () => {
   )
 }
 
-const SelectIdButton = ({ value, handleClick }) => {
-  const text = useMemo(
-    () => value === undefined ? 'Select Id' : value,
-    [ value ]
-  )
-
-  return (
-    <Button>
-      {text}
-    </Button>
-  )
-}
-
-const SubmissionPeriodIdButton = () => {
-  const dispatch = useDispatch()
-
-  const handleClick = useCallback(
-    () => {
-      dispatch(openSubmissionPeriodDialog())
-    },
-    [ dispatch ]
-  )
-
-  return (
-    <SelectIdButton
-      handleClick={handleClick}
-    />
-  )
-}
-
-const StatusIdButton = () => {
-  const dispatch = useDispatch()
-
-  const handleClick = useCallback(
-    () => {
-      // dispatch(openSubmissionPeriodDialog())
-    },
-    [ dispatch ]
-  )
-
-  return (
-    <SelectIdButton
-      handleClick={handleClick}
-    />
-  )
-}
-
-const UserIdButton = () => {
-  const dispatch = useDispatch()
-
-  const handleClick = useCallback(
-    () => {
-      // dispatch(openSubmissionPeriodDialog())
-    },
-    [ dispatch ]
-  )
-
-  return (
-    <SelectIdButton
-      handleClick={handleClick}
-    />
-  )
-}
-
-const TemplatePackagesTable = ({ history }) => {
+const TemplatePackage = ({ history }) => {
   const dispatch = useDispatch()
 
   const {
@@ -185,21 +130,18 @@ const TemplatePackagesTable = ({ history }) => {
   )
 
   return (
-    <MaterialTable
-      columns={columns} 
-      data={templatePackages} 
-      actions={actions}
-      editable={editable} 
-      options={options}
-    />
+    <div>
+      <TemplatePackageHeader/>
+      <MaterialTable
+        columns={columns} 
+        data={templatePackages} 
+        actions={actions}
+        editable={editable} 
+        options={options}
+      />
+      <StatusIdDialog/>
+    </div>
   )
 }
-
-const TemplatePackage = (props) => (
-  <div className="templatePackages">
-    <TemplatePackageHeader/>
-    <TemplatePackagesTable {...props}/>
-  </div>
-)
 
 export default TemplatePackage

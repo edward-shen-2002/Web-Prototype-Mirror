@@ -11,16 +11,25 @@ import {
 
 import MaterialTable from 'material-table'
 import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button'
 
 import Typography from "@material-ui/core/Typography";
+
+const HeaderActions = () => (
+  <div>
+    <Button color="primary" variant="contained" size="large">
+      Create
+    </Button>
+  </div>
+)
 
 const SubmissionHeader = () => {
 
 
   return (
     <Paper className="header">
-      <Typography variant="h5">Submission s</Typography>
-      {/* <HeaderActions/> */}
+      <Typography variant="h5">Submissions</Typography>
+      <HeaderActions/>
     </Paper>
   )
 }

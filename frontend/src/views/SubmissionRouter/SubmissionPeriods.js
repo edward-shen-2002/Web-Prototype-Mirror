@@ -20,7 +20,6 @@ const SubmissionPeriodHeader = () => {
   return (
     <Paper className="header">
       <Typography variant="h5">Submission Periods</Typography>
-      {/* <HeaderActions/> */}
     </Paper>
   )
 }

@@ -1,12 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
 
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
-import Button from '@material-ui/core/Button'
-
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 
 import {
   closeCOAGroupDialog
@@ -20,41 +14,11 @@ import {
   createCOATreeRequest
 } from "../../../store/thunks/COATree"
 
-import SelectableTable from '../../../tools/components/SelectableTable'
+import SelectableTableDialog from '../../../tools/components/dialogs/SelectableTableDialog'
 
-import './COATree.scss'
-import 'react-sortable-tree/style.css';
-
-const GroupDialogActions = (
-  {
-    handleClose
-  }
-) => (
-  <DialogActions>
-    <Button color="secondary" variant="contained" onClick={handleClose}>Cancel</Button>
-  </DialogActions>
-)
-
-const GroupDialogContent = ({ COAGroups, handleSelect }) => {
-  const columns = useMemo(
-    () => [
-      { title: "_id", field: "_id" },
-      { title: "Name", field: "name" },
-      { title: "Code", field: "code" }
-    ],
-    []
-  )
-
-  return (
-    <DialogContent>
-      <SelectableTable columns={columns} data={COAGroups} handleSelect={handleSelect}/>
-    </DialogContent>
-  )
-}
-
-const GroupDialog = ({ sheetNameId }) => {
+const COAGroupDialog = ({ sheetNameId }) => {
   const dispatch = useDispatch()
-  
+
   const {
     isCOAGroupDialogOpen,
     COAGroups
@@ -78,7 +42,7 @@ const GroupDialog = ({ sheetNameId }) => {
     ),
     shallowEqual
   )
-  
+
   const handleClose = useCallback(
     () => {
       dispatch(closeCOAGroupDialog())
@@ -100,13 +64,25 @@ const GroupDialog = ({ sheetNameId }) => {
     [ dispatch, isCOAGroupDialogOpen ]
   )
 
+  const columns = useMemo(
+    () => [
+      { title: "_id", field: "_id" },
+      { title: "Name", field: "name" },
+      { title: "Code", field: "code" }
+    ],
+    []
+  )
+
   return (
-    <Dialog open={isCOAGroupDialogOpen} onClose={handleClose}>
-      <DialogTitle>COA Groups</DialogTitle>
-      <GroupDialogContent COAGroups={COAGroups} handleSelect={handleSelect}/>
-      <GroupDialogActions handleClose={handleClose}/>
-    </Dialog>
+    <SelectableTableDialog
+      title="COA Groups"
+      columns={columns}
+      isOpen={isCOAGroupDialogOpen}
+      data={COAGroups}
+      handleClose={handleClose}
+      handleSelect={handleSelect}
+    />
   )
 }
 
-export default GroupDialog
+export default COAGroupDialog
