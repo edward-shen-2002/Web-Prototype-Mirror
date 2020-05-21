@@ -1,6 +1,18 @@
 import React from 'react'
 
 import InboxIcon from '@material-ui/icons/Inbox'
+import ExtensionIcon from '@material-ui/icons/Extension';
+import PhotoFilterIcon from '@material-ui/icons/PhotoFilter';
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
+import DataUsageIcon from '@material-ui/icons/DataUsage';
+import GroupWorkIcon from '@material-ui/icons/GroupWork';
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import SendIcon from '@material-ui/icons/Send';
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
+import GridOnIcon from '@material-ui/icons/GridOn';
+import AllInclusiveIcon from '@material-ui/icons/AllInclusive';
+import AppsIcon from '@material-ui/icons/Apps';
 
 const createUserNavigation = () => {
   return [
@@ -8,74 +20,74 @@ const createUserNavigation = () => {
       name: "User",
       button: false,
       type: "title",
-      icon: <InboxIcon /> 
+      icon: <PeopleAltIcon /> 
     },
     {
       name: "Template",
       type: "drawer",
-      icon: <InboxIcon /> ,
+      icon: <PhotoFilterIcon /> ,
       children: [
         {
           name: "Templates",
           type: "menu",
           url: "/template_manager/templates",
-          icon: <InboxIcon /> 
+          icon: <PhotoFilterIcon /> 
         },
         {
           name: "Template Types",
           type: "menu",
           url: "/template_manager/templateTypes",
-          icon: <InboxIcon /> 
+          icon: <ExtensionIcon /> 
         },
         {
           name: "Template Packages",
           type: "menu",
           url: "/template_manager/templatePackages",
-          icon: <InboxIcon /> ,
+          icon: <DashboardIcon /> ,
         }
       ]
     },  
     {
       name: "COA",
-      icon: <InboxIcon />,
+      icon: <DataUsageIcon />,
       type: "drawer",
       children: [
         { 
           name: "COAs", 
           type: "menu",
           url: "/COA_manager/COAs", 
-          icon: <InboxIcon /> ,
+          icon: <DataUsageIcon /> ,
         },
         { 
           name: "COA Groups", 
           type: "menu",
           url: "/COA_manager/COA_groups", 
-          icon: <InboxIcon /> ,
+          icon: <GroupWorkIcon /> ,
         },
         { 
           name: "COA Trees", 
           type: "menu",
           url: "/COA_manager/COA_trees", 
-          icon: <InboxIcon /> ,
+          icon: <AccountTreeIcon /> ,
         }
       ]
     }, 
     {
       name: "Submission",
-      icon: <InboxIcon />,
+      icon: <SendIcon />,
       type: "drawer",
       children: [
         { 
           name: "Submissions", 
           type: "menu",
           url: "/submission_manager/submissions", 
-          icon: <InboxIcon /> ,
+          icon: <SendIcon /> ,
         },
         { 
           name: "Submission Periods", 
           type: "menu",
           url: "/submission_manager/submissionPeriods", 
-          icon: <InboxIcon /> ,
+          icon: <HourglassEmptyIcon /> ,
         }
       ]
     },  
@@ -83,25 +95,25 @@ const createUserNavigation = () => {
       name: "Sheet Names",
       type: "menu",
       url: "/sheetNames",
-      icon: <InboxIcon /> ,
+      icon: <GridOnIcon /> ,
     },
     {
       name: "Statuses",
       type: "menu",
       url: "/statuses",
-      icon: <InboxIcon /> ,
+      icon: <AllInclusiveIcon /> ,
     },  
     { 
       name: "AppSyses", 
       type: "menu",
       url: "/appsys_manager/AppSyses", 
-      icon: <InboxIcon /> ,
+      icon: <AppsIcon /> ,
     },
     { 
       name: "Reporting Periods", 
       type: "menu",
       url: "/reportingPeriods", 
-      icon: <InboxIcon /> ,
+      icon: <HourglassEmptyIcon /> ,
     }
   ];
 };
