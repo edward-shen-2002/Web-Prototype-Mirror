@@ -18,6 +18,8 @@ import {
 } from '../../store/actions/DialogsStore'
 
 import { cx, css } from 'emotion'
+import SubmissionPeriodIdDialog from "./dialogs/SubmissionPeriodDialog";
+import StatusDialog from "./dialogs/StatusDialog";
 
 export const DeleteButton = ({ handleDelete }) => (
   <IconButton onClick={handleDelete} aria-label="delete">
@@ -99,7 +101,7 @@ export const SelectIdButton = ({ value, handleClick }) => {
   )
 }
 
-export const SubmissionPeriodIdButton = () => {
+export const SubmissionPeriodIdButton = ({ value, onChange }) => {
   const dispatch = useDispatch()
 
   const handleClick = useCallback(
@@ -110,13 +112,14 @@ export const SubmissionPeriodIdButton = () => {
   )
 
   return (
-    <SelectIdButton
-      handleClick={handleClick}
-    />
+    <div>
+      <SelectIdButton value={value} handleClick={handleClick}/>
+      <SubmissionPeriodIdDialog handleChange={onChange}/>
+    </div>
   )
 }
 
-export const StatusIdButton = () => {
+export const StatusIdButton = ({ value, onChange }) => {
   const dispatch = useDispatch()
 
   const handleClick = useCallback(
@@ -127,13 +130,14 @@ export const StatusIdButton = () => {
   )
 
   return (
-    <SelectIdButton
-      handleClick={handleClick}
-    />
+    <div>
+      <SelectIdButton value={value} handleClick={handleClick}/>
+      <StatusDialog handleChange={onChange}/>
+    </div>
   )
 }
 
-export const UserIdButton = () => {
+export const UserIdButton = ({ value, onChange }) => {
   const dispatch = useDispatch()
 
   const handleClick = useCallback(
@@ -144,8 +148,8 @@ export const UserIdButton = () => {
   )
 
   return (
-    <SelectIdButton
-      handleClick={handleClick}
-    />
+    <div>
+      <SelectIdButton value={value} handleClick={handleClick}/>
+    </div>
   )
 }

@@ -15,7 +15,7 @@ const SelectableTableDialogActions = (
   }
 ) => (
   <DialogActions>
-    <Button color="secondary" variant="contained" onClick={handleClose}>Cancel</Button>
+    <Button color="secondary" variant="contained" onClick={handleClose}>Finish</Button>
   </DialogActions>
 )
 

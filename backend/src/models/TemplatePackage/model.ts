@@ -7,11 +7,11 @@ const TemplatePackageModel = model<ITemplatePackageDocument>(
   'TemplatePackage',
   new Schema(
     {
-      code: { type: String },
+      name: { type: String },
       submissionPeriodId: { type: ObjectId, ref: "SubmissionPeriod" },
+      statusId: { type: ObjectId, ref: "Status" },
       templateIds: [{ type: ObjectId, ref: "Template" }],
-      isPublished: { type: Boolean },
-      creationDate: { type: Date },
+      creationDate: { type: Date, default: Date.now },
       userCreatorId: { type: ObjectId, ref: "User" }
     },
     { minimize: false, autoIndex: true }

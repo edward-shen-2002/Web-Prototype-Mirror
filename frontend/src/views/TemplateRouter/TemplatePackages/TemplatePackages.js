@@ -8,16 +8,9 @@ import {
   updateTemplatePackageRequest 
 } from '../../../store/thunks/templatePackage'
 
-import {
-  closeSubmissionPeriodDialog,
-  closeStatusDialog,
-  closeUserDialog
-} from '../../../store/actions/DialogsStore'
-
 import MaterialTable from 'material-table'
 import Paper from '@material-ui/core/Paper';
 import LaunchIcon from "@material-ui/icons/Launch";
-import Button from '@material-ui/core/Button'
 
 import Typography from "@material-ui/core/Typography";
 
@@ -26,8 +19,6 @@ import {
   StatusIdButton,
   SubmissionPeriodIdButton
 } from '../../../tools/components/buttons'
-
-import StatusIdDialog from './StatusIdDialog'
 
 import './TemplatePackages.scss'
 
@@ -82,7 +73,7 @@ const TemplatePackage = ({ history }) => {
       { title: "SubmissionPeriodId", field: "submissionPeriodId", editComponent: SubmissionPeriodIdButton },
       // { title: "TemplateIds", type: "boolean", field: "templateIds" },
       { title: "StatusId", field: "statusId", editComponent: StatusIdButton },
-      { title: "Creation Date", field: "creationDate" },
+      { title: "Creation Date", field: "creationDate", type: 'date' },
       { title: "UserCreatorId", field: "userCreatorId", editComponent: UserIdButton }
     ],
     []
@@ -104,6 +95,8 @@ const TemplatePackage = ({ history }) => {
       { 
         onRowAdd: (templatePackage) => new Promise(
           (resolve, reject) => {
+            console.log(templatePackage)
+            templatePackage = { ...templatePackage, templateIds: [] }
             dispatch(createTemplatePackageRequest(templatePackage, resolve, reject))
           }
         ), 
@@ -139,7 +132,6 @@ const TemplatePackage = ({ history }) => {
         editable={editable} 
         options={options}
       />
-      <StatusIdDialog/>
     </div>
   )
 }

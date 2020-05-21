@@ -41,7 +41,7 @@ export default class TemplatePackageRepository extends BaseRepository<TemplatePa
       this.submissionPeriodRepository.validate(submissionPeriodId)
         .then(() => this.templateRepository.validateMany(templateIds))
         .then(() => this.statusRepository.validate(statusId))
-        .then(() => this.userRepository.validate(userCreatorId))
+        // .then(() => this.userRepository.validate(userCreatorId))
         .then(() => TemplatePackageModel.create(
           {
             name,
@@ -72,9 +72,9 @@ export default class TemplatePackageRepository extends BaseRepository<TemplatePa
         ? this.statusRepository.validate(statusId)
         : new Promise((resolve) => resolve())
       )
-        .then(() => {
-          if (userCreatorId) return this.userRepository.validate(userCreatorId)
-        })
+        // .then(() => {
+        //   if (userCreatorId) return this.userRepository.validate(userCreatorId)
+        // })
         .then(() => {
           if(templateIds) return this.templateRepository.validateMany(templateIds)
         })

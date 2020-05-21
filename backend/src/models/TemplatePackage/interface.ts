@@ -8,7 +8,6 @@ export interface ITemplatePackage {
   statusId?: IId
   creationDate?: Date
   userCreatorId?: IId
-
 }
 
 export default interface ITemplatePackageDocument extends ITemplatePackage, Document {}

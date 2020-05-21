@@ -1,31 +1,31 @@
 import React, { useCallback, useEffect } from 'react'
 
 import {
-  closeStatusDialog
+  closeSubmissionPeriodDialog
 } from '../../../store/actions/DialogsStore'
 
-import SelectableTableDialog from '../../../tools/components/dialogs/SelectableTableDialog'
+import SelectableTableDialog from './SelectableTableDialog'
 
 import { 
-  getStatusesRequest
-} from '../../../store/thunks/status'
+  getSubmissionPeriodsRequest
+} from '../../../store/thunks/submissionPeriod'
 
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 import { useMemo } from 'react'
 
-const StatusIdDialog = () => {
+const SubmissionPeriodIdDialog = ({ handleChange }) => {
   const dispatch = useDispatch()
 
   const {
-    isStatusDialogOpen,
-    statuses
+    isSubmissionPeriodDialogOpen,
+    submissionPeriods
   } = useSelector(
     (
       {
         DialogsStore: {
-          isStatusDialogOpen
+          isSubmissionPeriodDialogOpen
         },
-        StatusesStore: {
+        SubmissionPeriodsStore: {
           response: {
             Values
           }
@@ -33,28 +33,31 @@ const StatusIdDialog = () => {
       }
     ) => (
       {
-        isStatusDialogOpen,
-        statuses: Values
+        isSubmissionPeriodDialogOpen,
+        submissionPeriods: Values
       }
     ),
     shallowEqual
   )
 
   const handleClose = useCallback(
-    () => dispatch(closeStatusDialog()),
+    () => dispatch(closeSubmissionPeriodDialog()),
     [ dispatch ]
   )
 
   const handleSelect = useCallback(
-    () => {},
+    (data) => {
+      handleChange(data._id)
+      handleClose()
+    },
     [ dispatch ]
   )
 
   useEffect(
     () => {
-      if(isStatusDialogOpen && !statuses.length) dispatch(getStatusesRequest())
+      if(isSubmissionPeriodDialogOpen && !submissionPeriods.length) dispatch(getSubmissionPeriodsRequest())
     },
-    [ dispatch, isStatusDialogOpen ]
+    [ dispatch, isSubmissionPeriodDialogOpen ]
   )
 
   const columns = useMemo(
@@ -73,14 +76,14 @@ const StatusIdDialog = () => {
 
   return (
     <SelectableTableDialog
-      title="Status"
+      title="Submission Period"
       columns={columns}
-      isOpen={isStatusDialogOpen}
-      data={statuses}
+      isOpen={isSubmissionPeriodDialogOpen}
+      data={submissionPeriods}
       handleClose={handleClose}
       handleSelect={handleSelect}
     />
   )
 }
 
-export default StatusIdDialog
+export default SubmissionPeriodIdDialog

@@ -1,16 +1,16 @@
 import { createSelector } from "reselect";
 
-const getCOAIds = (
+const getCOANode = (
   {
     selectedNodeProps: {
       node
     }
   }
-) => node && node.content ? node.content.COAIds : []
+) => node ? node : { content: { COAIds: [] } }
 
 export const selectedCOAIdsSelector = createSelector(
-  [ getCOAIds ],
-  (COAIds) => {
+  [ getCOANode ],
+  ({ content: { COAIds } }) => {
     let selectedCOAIds = {}
 
     COAIds.forEach((COAId) => selectedCOAIds[COAId] = true)
@@ -18,3 +18,8 @@ export const selectedCOAIdsSelector = createSelector(
     return selectedCOAIds
   }
 );
+
+export const selectedCOATreeIdSelector = createSelector(
+  [ getCOANode ],
+  ({ content: { _id } }) => _id
+)

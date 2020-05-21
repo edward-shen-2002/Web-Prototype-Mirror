@@ -8,7 +8,7 @@ import { selectCOACOATreeUI } from '../../../store/actions/COATreeStore'
 
 import { getCOAsRequest } from "../../../store/thunks/COA"
 
-import { selectedCOAIdsSelector } from '../../../store/selectors/COATreeStore'
+import { selectedCOAIdsSelector, selectedCOATreeIdSelector } from '../../../store/selectors/COATreeStore'
 
 import SelectableTableDialog from '../../../tools/components/dialogs/SelectableTableDialog'
 
@@ -18,7 +18,8 @@ const COAGroupDialog = () => {
   const {
     COAs,
     selectedCOAIds,
-    isCOADialogOpen
+    isCOADialogOpen,
+    COATreeId
   } = useSelector(
     (
       {
@@ -35,6 +36,7 @@ const COAGroupDialog = () => {
     ) => (
       {
         selectedCOAIds: selectedCOAIdsSelector(COATreeStore),
+        COATreeId: selectedCOATreeIdSelector(COATreeStore),
         COAs: Values,
         isCOADialogOpen
       }
@@ -76,7 +78,7 @@ const COAGroupDialog = () => {
 
   return (
     <SelectableTableDialog
-      title="COAs"
+      title={`COAs - ${COATreeId}`}
       columns={columns}
       selectedKeys={selectedCOAIds}
       getKey={getKey}
