@@ -26,12 +26,17 @@ const DELETE_CELLS_SHIFT_LEFT = (state) => {
     } else {
       for(let column in columns) {
         if(column < shiftStartX) {
-          if(!newSheetCellData[row]) newSheetCellData[row] = {};
-          newSheetCellData[row][column] = sheetCellData[row][column];
+          newSheetCellData[row] = {
+            ...sheetCellData[row],
+            [column]: sheetCellData[row][column]
+          }
         } else if(column >= shiftEndX) {
-          if(!newSheetCellData[row]) newSheetCellData[row] = {};
           const newColumnOffset = column - shiftOffsetX - 1;
-          newSheetCellData[row][newColumnOffset] = sheetCellData[row][column];
+
+          newSheetCellData[row] = {
+            ...sheetCellData[row],
+            [newColumnOffset]: sheetCellData[row][column]
+          }
         }
       }
     }

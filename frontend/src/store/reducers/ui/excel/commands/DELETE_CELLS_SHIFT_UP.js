@@ -3,7 +3,8 @@ import { getLastArea } from "../tools/area";
 const DELETE_CELLS_SHIFT_UP = (state) => {
   const { 
     stagnantSelectionAreas,
-    activeCellPosition
+    activeCellPosition,
+    sheetCellData
   } = state;
 
   let newState = { ...state };
@@ -17,10 +18,10 @@ const DELETE_CELLS_SHIFT_UP = (state) => {
   const columnStart = Math.min(x1, x2);
   const columnEnd = Math.max(x1, x2);
 
-  let newSheetCellData = { ...newState.sheetCellData };
+  let newSheetCellData = {};
 
-  for(let row in newSheetCellData) {
-    const columns = newSheetCellData[row];
+  for(let row in sheetCellData) {
+    const columns = sheetCellData[row];
 
     if(row < shiftStartY) {
       newSheetCellData[row] = columns;
@@ -28,11 +29,15 @@ const DELETE_CELLS_SHIFT_UP = (state) => {
       for(let column in columns) {
         if(row >= shiftEndY && column >= columnStart && column <= columnEnd) {
           const newRowOffset = row - shiftOffsetY - 1;
-          if(!newSheetCellData[newRowOffset]) newSheetCellData[newRowOffset] = {};
-          newSheetCellData[newRowOffset][column] = newSheetCellData[row][column];
+          newSheetCellData[newRowOffset] = { 
+            ...sheetCellData[newRowOffset],
+            [column]: sheetCellData[row][column]
+          };
         } else if(column < columnStart || column > columnEnd) {
-          if(!newSheetCellData[row]) newSheetCellData[row] = {};
-          newSheetCellData[row][column] = newSheetCellData[row][column];
+          newSheetCellData[row] = { 
+            ...sheetCellData[row],
+            [column]: sheetCellData[row][column]
+          }
         }
       }
     } 
