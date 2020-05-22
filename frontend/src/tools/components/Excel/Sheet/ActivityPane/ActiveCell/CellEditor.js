@@ -8,6 +8,11 @@ import {
   setActiveCellInputValue
 } from "@actions/ui/excel/commands";
 
+import {
+  enableSheetFocus
+} from '@actions/ui/excel/events'
+
+
 const Leaf = ({ attributes, children, leaf }) => {
   if(leaf.bold) children = <strong>{children}</strong>;
   if(leaf.italic) children = <em>{children}</em>;
@@ -23,8 +28,6 @@ const Element = ({ attributes, children, element }) => (
 
 const CellEditor = ({ blockStyle }) => {
   const dispatch = useDispatch();
-
-  const [ isMounted, setIsMounted ] = useState(false);
 
   const renderElement = useCallback((props) => <Element {...props}/>, []);
   const renderLeaf = useCallback((props) => <Leaf {...props}/>, []);
@@ -53,15 +56,11 @@ const CellEditor = ({ blockStyle }) => {
   );
 
   useEffect(() => {
-    // if(!isMounted) {
-    //   if(isSheetFocused) {
-    //     ReactEditor.focus(cellEditor);
-    //     Transforms.select(cellEditor, Editor.end(cellEditor, []));
-    //   }
-  
-    //   setIsMounted(true);
-    // }
-  }, []);
+    if(isSheetFocused) {
+      ReactEditor.focus(cellEditor);
+      Transforms.select(cellEditor, Editor.end(cellEditor, []));
+    }
+  }, [ isSheetFocused ]);
 
   const handleInputChange = useCallback(
     (value) => dispatch(setActiveCellInputValue({ value, input: "cell" })),
@@ -83,6 +82,7 @@ const CellEditor = ({ blockStyle }) => {
         }}
         renderElement={renderElement}
         renderLeaf={renderLeaf}
+        // onClick={handleClick}
       />
     </Slate>
   )

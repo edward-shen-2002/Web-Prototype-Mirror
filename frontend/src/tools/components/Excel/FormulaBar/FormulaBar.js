@@ -1,12 +1,18 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
 
 import Divider from "@material-ui/core/Divider";
 
-import { Editable, Slate } from "slate-react";
+import { Editable, Slate, ReactEditor } from "slate-react";
+
+import { Transforms, Editor } from "slate";
 
 import { setActiveCellInputValue } from "@actions/ui/excel/commands";
+
+import {
+  disableSheetFocus
+} from '@actions/ui/excel/events'
 
 import {
   keyEnter,
@@ -53,36 +59,69 @@ const InputField = () => {
 
   const {
     formulaEditor,
-    formulaValue
+    formulaValue,
+    isSheetFocused
   } = useSelector(
     ({
       ui: {
         excel: {
           present: {
-            activeCellInputData
+            activeCellInputData: {
+              formulaEditor,
+              formulaValue
+            },
+            isSheetFocused
           }
         }
       }
-    }) => activeCellInputData,
+    }) => (
+      {
+        formulaEditor,
+        formulaValue,
+        isSheetFocused
+      }
+    ),
     shallowEqual
   );
 
   const handleInputChange = useCallback(
-    (value) => dispatch(setActiveCellInputValue({ value, input: "formula" })),
-    [ dispatch ]
+    (value) => {
+      if(!isSheetFocused) dispatch(setActiveCellInputValue({ value, input: "formula" }))
+    },
+    [ dispatch, isSheetFocused ]
   );
 
+  useEffect(
+    () => {
+      if(!isSheetFocused) {
+        ReactEditor.focus(formulaEditor);
+        Transforms.select(formulaEditor, Editor.end(formulaEditor, []));
+      }
+    },
+    [ dispatch, isSheetFocused ]
+  )
+
+  const handleClick = useCallback(
+    () => {
+      dispatch(disableSheetFocus())
+      
+    },
+    [ dispatch ]
+  )
+  
   return (
     <Slate
       editor={formulaEditor}
       value={formulaValue}
       onChange={handleInputChange}
+      onClick={handleClick}
     >
       <Editable
         className="formulaBar__input"
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         onKeyDown={handleKeyDown}
+        onFocus={handleClick}
       />
     </Slate>
   );

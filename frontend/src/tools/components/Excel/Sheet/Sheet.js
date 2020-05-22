@@ -293,12 +293,12 @@ let Sheet = ({ sheetGridRef, handleSave }) => {
     // console.log(paste);
   };
 
-  // const handleClick = useCallback(
-  //   () => dispatch(enableSheetFocus()),
-  //   [ dispatch ]
-  // );
-
-  const handleClick = () => {};
+  const handleClick = useCallback(
+    () => {
+      dispatch(enableSheetFocus())
+    },
+    [ dispatch ]
+  );
 
   let style = {};
 

@@ -79,6 +79,9 @@ import EXCEL_SELECT_END from "./mouse/SELECT_END";
 import EXCEL_RESIZE_ROW_END from "./mouse/RESIZE_ROW_END";
 import EXCEL_RESIZE_COLUMN_END from "./mouse/RESIZE_COLUMN_END";
 
+import EXCEL_ENABLE_SHEET_FOCUS from './events/ENABLE_SHEET_FOCUS'
+import EXCEL_DISABLE_SHEET_FOCUS from './events/DISABLE_SHEET_FOCUS'
+
 const ignoredActionsMap = {
   // EXCEL_MOUSE_DOWN: true,
   EXCEL_SELECT_OVER: true,
@@ -185,7 +188,7 @@ const reducerMap = {
   EXCEL_SAVE,
   EXCEL_ADD_COMMENT,
   EXCEL_DELETE_COMMENT,
-  // EXCEL_ENABLE_SHEET_FOCUS,
+  
   EXCEL_MERGE_CELLS,
   EXCEL_UNMERGE_CELLS,
 
@@ -195,13 +198,12 @@ const reducerMap = {
   EXCEL_SELECT_END,
 
   EXCEL_RESIZE_ROW_END,
-  EXCEL_RESIZE_COLUMN_END
+  EXCEL_RESIZE_COLUMN_END,
+
+  EXCEL_ENABLE_SHEET_FOCUS,
+  EXCEL_DISABLE_SHEET_FOCUS
 };
 
-const excelReducer = (state = defaultState, action) => {
-  let reducer = reducerMap[action.type];
-
-  return reducer ? reducer(state, action) : state;
-};
+const excelReducer = createReducer(defaultState, reducerMap)
 
 export default undox(excelReducer, undefined, undefined, ignoredActionsMap);
