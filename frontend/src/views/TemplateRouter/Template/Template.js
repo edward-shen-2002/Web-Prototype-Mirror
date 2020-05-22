@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { showAppNavigation, hideAppNavigation } from "../../../store/actions/ui/isAppNavigationOpen";
 import Loading from "../../../tools/components/Loading/Loading";
 
-import { updateTemplateRequest, getTemplateRequest } from "../../../store/thunks/templates";
+import { updateTemplateExcelRequest, getTemplateRequest } from "../../../store/thunks/templates";
 import { Excel } from "../../../tools/components/Excel";
 
 import "./Template.scss";
@@ -24,9 +24,8 @@ const Template = ({ match: { params: { _id } } }) => {
   )
 
   const handleSaveTemplate = useCallback(
-    (templateData) => {
-      console.log(templateData)
-      // dispatch(updateTemplateRequest({ _id, templateData }))
+    () => {
+      dispatch(updateTemplateExcelRequest())
     },
     []
   )

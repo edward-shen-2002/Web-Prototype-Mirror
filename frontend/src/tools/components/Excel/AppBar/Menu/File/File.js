@@ -27,7 +27,7 @@ const File = ({
       {
         icon: <SaveIcon/>,
         label: "Save",
-        handleClick: () => dispatch(save(handleSave))
+        handleClick: handleSave
       },
       {
         icon: <GetAppIcon/>,

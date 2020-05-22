@@ -240,7 +240,8 @@ let Sheet = ({ sheetGridRef, handleSave }) => {
         action = keyEscape({});
       } else if(key === "s" && (ctrlKey || metaKey)) {
         // ! save
-        action = save(handleSave);
+        handleSave()
+        // action = save(handleSave);
       } else if(key === "a" && (ctrlKey || metaKey)) {
         event.preventDefault();
         action = selectAll();

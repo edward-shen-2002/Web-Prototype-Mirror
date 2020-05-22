@@ -15,7 +15,7 @@ import {
 } from "../actions/ui/excel/commands";
 
 import templateController from '../../controllers/template';
-import { createBlankReactState, convertStateToReactState } from '../../tools/excel';
+import { createBlankReactState, convertStateToReactState, extractReactAndWorkbookState } from '../../tools/excel';
 
 // ? Cause page redirection on error
 export const getTemplateRequest = (_id) => (dispatch) => {
@@ -91,5 +91,38 @@ export const updateTemplateRequest = (template, resolve, reject) => (dispatch) =
     .catch((error) => {
       dispatch(failTemplatesRequest(error))
       reject()
+    })
+}
+
+export const updateTemplateExcelRequest = () => (dispatch, getState) => {
+  // dispatch(requestTemplates())
+
+  const {
+    TemplatesStore: {
+      response: {
+        Values
+      }
+    },
+    ui: {
+      excel: {
+        present
+      }
+    }
+  } = getState()
+
+  const [ template ] = Values
+
+  const newTemplate = { 
+    ...template, 
+    name: present.name,
+    templateData: extractReactAndWorkbookState(present, present.inactiveSheets)
+  }
+
+  templateController.updateTemplate(newTemplate)
+    .then(() => {
+      dispatch(updateTemplate({ Value: newTemplate }))
+    })
+    .catch((error) => {
+      dispatch(failTemplatesRequest(error))
     })
 }

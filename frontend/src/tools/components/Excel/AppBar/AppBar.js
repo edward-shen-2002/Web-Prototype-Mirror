@@ -74,7 +74,7 @@ let TemplateOptions = () => {
 
   return (
     <div>
-      <DoubleArrowIconButton buttonStyle={publishStyle} text={isTemplatePublished ? "Unpublish" : "Publish"} handleClick={togglePublish}/>
+      {/* <DoubleArrowIconButton buttonStyle={publishStyle} text={isTemplatePublished ? "Unpublish" : "Publish"} handleClick={togglePublish}/> */}
     </div>
   );
 };

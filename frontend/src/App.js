@@ -54,7 +54,7 @@ const AppPageRouter = () => {
 }
 
 const App = () => (
-  <div className="">
+  <div className="appContainer">
     <AuthPage>
       <AppPageRouter />
     </AuthPage>
