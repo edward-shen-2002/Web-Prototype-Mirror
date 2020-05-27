@@ -1,36 +1,29 @@
-const SET_GROUPS = (
-  state,
-  {
-    category, 
-    newGroups
-  }
-) => {
-  let { 
+const SET_GROUPS = (state, { category, newGroups }) => {
+  let {
     sheetCellData,
-    activeCellPosition: { y }
-  } = state;
+    activeCellPosition: { y },
+  } = state
 
-  let newState = { ...state };
+  let newState = { ...state }
 
-  let newSheetCellData = { ...sheetCellData };
+  let newSheetCellData = { ...sheetCellData }
 
   // ! TODO
-  if(category === "attribute") {
-
+  if (category === 'attribute') {
   } else {
-    let groupIds = newGroups.map(({ id }) => id).join(" - ");
-    let groupValues = newGroups.map(({ value }) => value).join(" - ");
+    let groupIds = newGroups.map(({ id }) => id).join(' - ')
+    let groupValues = newGroups.map(({ value }) => value).join(' - ')
 
-    newSheetCellData[y] = { ...newSheetCellData[y] };
+    newSheetCellData[y] = { ...newSheetCellData[y] }
 
-    newSheetCellData[y][2] = { value: groupIds };
-    newSheetCellData[y][3] = { value: groupValues };
+    newSheetCellData[y][2] = { value: groupIds }
+    newSheetCellData[y][3] = { value: groupValues }
 
-    newState.sheetCellData = newSheetCellData;
-    newState.activeCellDialog = "";
+    newState.sheetCellData = newSheetCellData
+    newState.activeCellDialog = ''
   }
 
-  return newState;
-};
+  return newState
+}
 
-export default SET_GROUPS;
+export default SET_GROUPS

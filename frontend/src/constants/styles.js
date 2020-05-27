@@ -1,51 +1,51 @@
-export const STYLE_SELECTION_BORDER_COLOR = "rgba(75, 135, 255, 0.95)";
-export const STYLE_SELECTION_BORDER_WIDTH = "1px";
-export const STYLE_ACTIVE_SELECTION_BORDER_STYLE = "dashed";
-export const STYLE_STAGNANT_SELECTION_BORDER_STYLE = "solid";
+export const STYLE_SELECTION_BORDER_COLOR = 'rgba(75, 135, 255, 0.95)'
+export const STYLE_SELECTION_BORDER_WIDTH = '1px'
+export const STYLE_ACTIVE_SELECTION_BORDER_STYLE = 'dashed'
+export const STYLE_STAGNANT_SELECTION_BORDER_STYLE = 'solid'
 
 export const themes = [
-  "#FFFFFF",
-  "#000000",
-  "#E7E6E6",
-  "#44546A",
-  "#5B9BD5",
-  "#ED7D31",
-  "#A5A5A5",
-  "#FFC000",
-  "#4472C4",
-  "#70AD47"
-];
+  '#FFFFFF',
+  '#000000',
+  '#E7E6E6',
+  '#44546A',
+  '#5B9BD5',
+  '#ED7D31',
+  '#A5A5A5',
+  '#FFC000',
+  '#4472C4',
+  '#70AD47',
+]
 
 export const borderFragmentMap = {
-  left: "borderLeft",
-  right: "borderRight",
-  bottom: "borderBottom",
-  top: "borderTop"
-};
+  left: 'borderLeft',
+  right: 'borderRight',
+  bottom: 'borderBottom',
+  top: 'borderTop',
+}
 
 const supportedBorderStyleMap = {
   thin: {
-    Style: "solid",
-    Width: "1px"
-  }, 
+    Style: 'solid',
+    Width: '1px',
+  },
   medium: {
-    Style: "solid",
-    Width: "2px"
+    Style: 'solid',
+    Width: '2px',
   },
   thick: {
-    Style: "solid",
-    Width: "4px"
+    Style: 'solid',
+    Width: '4px',
   },
   dashed: {
-    Style: "dashed"
+    Style: 'dashed',
   },
   dotted: {
-    Style: "dotted"
+    Style: 'dotted',
   },
   double: {
-    Style: "double"
-  }
-};
+    Style: 'double',
+  },
+}
 
 export const completeBorderStyleMap = {
   ...supportedBorderStyleMap,
@@ -56,40 +56,40 @@ export const completeBorderStyleMap = {
   mediumDashed: supportedBorderStyleMap.dashed,
   mediumDashDot: supportedBorderStyleMap.dashed,
   mediumDashDotDot: supportedBorderStyleMap.dashed,
-  slantDashDot: supportedBorderStyleMap.dashed
-};
+  slantDashDot: supportedBorderStyleMap.dashed,
+}
 
 export const richTextToEditorMap = {
   fontWeight: {
-    bold: "bold"
+    bold: 'bold',
   },
   fontStyle: {
-    italic: "italic"
+    italic: 'italic',
   },
   textDecoration: {
-    underline: "underline",
-    "line-through": "strikethrough"
+    underline: 'underline',
+    'line-through': 'strikethrough',
   },
   verticalAlign: {
-    sub: "subscript",
-    super: "superscript"
+    sub: 'subscript',
+    super: 'superscript',
   },
   color: {},
   fontSize: {},
-  fontFamily: {}
-};
+  fontFamily: {},
+}
 
 export const editorToRichTextMap = {
   // Boolean behaviours
-  bold: { property: "fontWeight", style: "bold" },
-  italic: { property: "fontStyle", style: "italic" },
-  underline: { property: "textDecoration", style: "underline" },
-  strikethrough: { property: "textDecoration", style: "line-through" },
-  subscript: { property: "verticalAlign", style: "sub" },
-  superscript: { property: "vericalAlign", style: "super" },
+  bold: { property: 'fontWeight', style: 'bold' },
+  italic: { property: 'fontStyle', style: 'italic' },
+  underline: { property: 'textDecoration', style: 'underline' },
+  strikethrough: { property: 'textDecoration', style: 'line-through' },
+  subscript: { property: 'verticalAlign', style: 'sub' },
+  superscript: { property: 'vericalAlign', style: 'super' },
 
   // Dynamic/non-boolean properties
-  color: { property: "color" },
-  fontSize: { property: "fontSize" },
-  fontFamily: { property: "fontFamily" }
-};
+  color: { property: 'color' },
+  fontSize: { property: 'fontSize' },
+  fontFamily: { property: 'fontFamily' },
+}

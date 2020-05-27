@@ -1,43 +1,32 @@
-import uniqid from "uniqid";
+import uniqid from 'uniqid'
 
-const ADD_COMMENT = (
-  state,
-  {
-    comment,
-    accountId,
-    firstName,
-    lastName
-  }
-) => {
-  let newState = { ...state };
+const ADD_COMMENT = (state, { comment, accountId, firstName, lastName }) => {
+  let newState = { ...state }
 
-  const {
-    sheetCellData,
-    activeCellPosition
-  } = newState;
+  const { sheetCellData, activeCellPosition } = newState
 
-  const newSheetCellData = { ...sheetCellData };
+  const newSheetCellData = { ...sheetCellData }
 
-  const { x, y } = activeCellPosition;
+  const { x, y } = activeCellPosition
 
-  if(!newSheetCellData[y]) newSheetCellData[y] = {};
+  if (!newSheetCellData[y]) newSheetCellData[y] = {}
 
-  if(!newSheetCellData[y][x]) newSheetCellData[y][x] = {};
+  if (!newSheetCellData[y][x]) newSheetCellData[y][x] = {}
 
-  if(!newSheetCellData[y][x].comments) newSheetCellData[y][x].comments = [];
+  if (!newSheetCellData[y][x].comments) newSheetCellData[y][x].comments = []
 
   const commentData = {
     id: uniqid(),
     by: `${firstName} ${lastName}`,
     accountId,
-    comment
-  };
-  
-  newSheetCellData[y][x].comments.push(commentData);
-  
-  newState.sheetCellData = newSheetCellData;
+    comment,
+  }
 
-  return newState;
-};
+  newSheetCellData[y][x].comments.push(commentData)
 
-export default ADD_COMMENT;
+  newState.sheetCellData = newSheetCellData
+
+  return newState
+}
+
+export default ADD_COMMENT

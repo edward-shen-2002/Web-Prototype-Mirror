@@ -1,14 +1,10 @@
 import React, { useCallback, useEffect } from 'react'
 
-import {
-  closeUserDialog
-} from '../../../store/actions/DialogsStore'
+import { closeUserDialog } from '../../../store/actions/DialogsStore'
 
 import SelectableTableDialog from './SelectableTableDialog'
 
-import { 
-  getUsersRequest
-} from '../../../store/thunks/user'
+import { getUsersRequest } from '../../../store/thunks/user'
 
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 import { useMemo } from 'react'
@@ -16,49 +12,32 @@ import { useMemo } from 'react'
 const UserDialog = ({ handleChange }) => {
   const dispatch = useDispatch()
 
-  const {
-    isUserDialogOpen,
-    users
-  } = useSelector(
-    (
-      {
-        DialogsStore: {
-          isUserDialogOpen
-        },
-        UsersStore: {
-          response: {
-            Values
-          }
-        }
-      }
-    ) => (
-      {
-        isUserDialogOpen,
-        users: Values
-      }
-    ),
+  const { isUserDialogOpen, users } = useSelector(
+    ({
+      DialogsStore: { isUserDialogOpen },
+      UsersStore: {
+        response: { Values },
+      },
+    }) => ({
+      isUserDialogOpen,
+      users: Values,
+    }),
     shallowEqual
   )
 
-  const handleClose = useCallback(
-    () => dispatch(closeUserDialog()),
-    [ dispatch ]
-  )
+  const handleClose = useCallback(() => dispatch(closeUserDialog()), [dispatch])
 
   const handleSelect = useCallback(
     (data) => {
       handleChange(data._id)
       handleClose()
     },
-    [ dispatch ]
+    [dispatch]
   )
 
-  useEffect(
-    () => {
-      if(isUserDialogOpen && !users.length) dispatch(getUsersRequest())
-    },
-    [ dispatch, isUserDialogOpen ]
-  )
+  useEffect(() => {
+    if (isUserDialogOpen && !users.length) dispatch(getUsersRequest())
+  }, [dispatch, isUserDialogOpen])
 
   const columns = useMemo(
     () => [
@@ -68,8 +47,8 @@ const UserDialog = ({ handleChange }) => {
       },
       {
         title: 'Username',
-        field: 'username'
-      }
+        field: 'username',
+      },
     ],
     []
   )

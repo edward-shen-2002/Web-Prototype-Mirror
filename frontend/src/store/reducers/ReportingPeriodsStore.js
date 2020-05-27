@@ -1,4 +1,4 @@
-import { createReducer } from "../tools/setup"
+import { createReducer } from '../tools/setup'
 
 import REQUEST_REPORTING_PERIODS from './common/REQUEST'
 import RECEIVE_REPORTING_PERIODS from './common/RECEIVE'
@@ -15,15 +15,15 @@ const reducersMap = {
   CREATE_REPORTING_PERIOD,
   DELETE_REPORTING_PERIOD,
   UPDATE_REPORTING_PERIOD,
-  RESET_REPORTING_PERIODS
+  RESET_REPORTING_PERIODS,
 }
 
 const defaultState = {
   response: {
-    Values: []
+    Values: [],
   },
   error: null,
-  isCallInProgress: false
+  isCallInProgress: false,
 }
 
 const ReportingPeriodsStore = createReducer(defaultState, reducersMap)

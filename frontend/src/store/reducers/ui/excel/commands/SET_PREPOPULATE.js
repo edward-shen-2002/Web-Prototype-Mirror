@@ -1,43 +1,37 @@
-const SET_PREPOPULATE = (
-  state, 
-  { 
-    type, 
-    quarter, 
-    year 
-  }
-) => {
-  const {
-    activeCellPosition,
-    sheetCellData
-  } = state;
+const SET_PREPOPULATE = (state, { type, quarter, year }) => {
+  const { activeCellPosition, sheetCellData } = state
 
-  if(!type && !quarter && !year) {
-    console.error("No prepopulate parameters specified");
-    return state;
+  if (!type && !quarter && !year) {
+    console.error('No prepopulate parameters specified')
+    return state
   }
 
-  let prepopulateArray = [];
-  
-  if(type) prepopulateArray.push(`type=${type}`);
-  if(quarter) prepopulateArray.push(`quarter=${quarter}`);
-  if(year) prepopulateArray.push(`year=${year}`);
-  
-  let newState = { ...state };
+  let prepopulateArray = []
 
-  const prepopulateString = `|${prepopulateArray.join("&")}`;
+  if (type) prepopulateArray.push(`type=${type}`)
+  if (quarter) prepopulateArray.push(`quarter=${quarter}`)
+  if (year) prepopulateArray.push(`year=${year}`)
 
-  const { x, y } = activeCellPosition;
+  let newState = { ...state }
 
-  let newSheetCellData = { ...sheetCellData };
+  const prepopulateString = `|${prepopulateArray.join('&')}`
 
-  if(!newSheetCellData[y]) newSheetCellData[y] = {};
+  const { x, y } = activeCellPosition
 
-  newSheetCellData[y][x] = { ...newSheetCellData[x], value: prepopulateString, type: "prepopulate" };
+  let newSheetCellData = { ...sheetCellData }
 
-  newState.sheetCellData = newSheetCellData;
-  newState.activeCellDialog = "";
+  if (!newSheetCellData[y]) newSheetCellData[y] = {}
 
-  return newState;
-};
+  newSheetCellData[y][x] = {
+    ...newSheetCellData[x],
+    value: prepopulateString,
+    type: 'prepopulate',
+  }
 
-export default SET_PREPOPULATE;
+  newState.sheetCellData = newSheetCellData
+  newState.activeCellDialog = ''
+
+  return newState
+}
+
+export default SET_PREPOPULATE

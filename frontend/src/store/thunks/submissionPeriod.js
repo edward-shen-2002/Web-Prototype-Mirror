@@ -1,10 +1,10 @@
-import { 
-  requestSubmissionPeriods, 
-  failSubmissionPeriodsRequest, 
-  receiveSubmissionPeriods, 
-  createSubmissionPeriod, 
-  deleteSubmissionPeriod, 
-  updateSubmissionPeriod 
+import {
+  requestSubmissionPeriods,
+  failSubmissionPeriodsRequest,
+  receiveSubmissionPeriods,
+  createSubmissionPeriod,
+  deleteSubmissionPeriod,
+  updateSubmissionPeriod,
 } from '../actions/SubmissionPeriodsStore'
 
 import submissionPeriodController from '../../controllers/submissionPeriod'
@@ -12,7 +12,8 @@ import submissionPeriodController from '../../controllers/submissionPeriod'
 export const getSubmissionPeriodsRequest = (query) => (dispatch) => {
   dispatch(requestSubmissionPeriods())
 
-  submissionPeriodController.fetchSubmissionPeriods(query)
+  submissionPeriodController
+    .fetchSubmissionPeriods(query)
     .then((submissionPeriods) => {
       dispatch(receiveSubmissionPeriods({ Values: submissionPeriods }))
     })
@@ -21,10 +22,15 @@ export const getSubmissionPeriodsRequest = (query) => (dispatch) => {
     })
 }
 
-export const createSubmissionPeriodRequest = (submissionPeriod, resolve, reject) => (dispatch) => {
+export const createSubmissionPeriodRequest = (
+  submissionPeriod,
+  resolve,
+  reject
+) => (dispatch) => {
   dispatch(requestSubmissionPeriods())
-  
-  submissionPeriodController.createSubmissionPeriod(submissionPeriod)
+
+  submissionPeriodController
+    .createSubmissionPeriod(submissionPeriod)
     .then((submissionPeriod) => {
       dispatch(createSubmissionPeriod({ Value: submissionPeriod }))
       resolve()
@@ -35,10 +41,13 @@ export const createSubmissionPeriodRequest = (submissionPeriod, resolve, reject)
     })
 }
 
-export const deleteSubmissionPeriodRequest = (_id, resolve, reject) => (dispatch) => {
+export const deleteSubmissionPeriodRequest = (_id, resolve, reject) => (
+  dispatch
+) => {
   dispatch(requestSubmissionPeriods())
 
-  submissionPeriodController.deleteSubmissionPeriod(_id)
+  submissionPeriodController
+    .deleteSubmissionPeriod(_id)
     .then(() => {
       dispatch(deleteSubmissionPeriod({ Value: { _id } }))
       resolve()
@@ -49,10 +58,15 @@ export const deleteSubmissionPeriodRequest = (_id, resolve, reject) => (dispatch
     })
 }
 
-export const updateSubmissionPeriodRequest = (submissionPeriod, resolve, reject) => (dispatch) => {
+export const updateSubmissionPeriodRequest = (
+  submissionPeriod,
+  resolve,
+  reject
+) => (dispatch) => {
   dispatch(requestSubmissionPeriods())
 
-  submissionPeriodController.updateSubmissionPeriod(submissionPeriod)
+  submissionPeriodController
+    .updateSubmissionPeriod(submissionPeriod)
     .then(() => {
       dispatch(updateSubmissionPeriod({ Value: submissionPeriod }))
       resolve()

@@ -1,42 +1,48 @@
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo, useCallback } from 'react'
 
 import { useDispatch } from 'react-redux'
 
-import DeleteIcon from "@material-ui/icons/Delete";
-import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from '@material-ui/icons/Delete'
+import IconButton from '@material-ui/core/IconButton'
 
-import Fab from "@material-ui/core/Fab";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
+import Fab from '@material-ui/core/Fab'
+import AddCircleIcon from '@material-ui/icons/AddCircle'
 import Button from '@material-ui/core/Button'
 
-import { CustomEditor } from "@tools/slate";
+import { CustomEditor } from '@tools/slate'
 
 import {
   openSubmissionPeriodDialog,
   openStatusDialog,
   openUserDialog,
   openTemplateTypeDialog,
-  openReportingPeriodDialog
+  openReportingPeriodDialog,
 } from '../../store/actions/DialogsStore'
 
 import { cx, css } from 'emotion'
-import SubmissionPeriodDialog from "./dialogs/SubmissionPeriodDialog";
-import StatusDialog from "./dialogs/StatusDialog";
-import TemplateTypeDialog from "./dialogs/TemplateTypeDialog";
+import SubmissionPeriodDialog from './dialogs/SubmissionPeriodDialog'
+import StatusDialog from './dialogs/StatusDialog'
+import TemplateTypeDialog from './dialogs/TemplateTypeDialog'
 import ReportingPeriodDialog from './dialogs/ReportingPeriodDialog'
 
 export const DeleteButton = ({ handleDelete }) => (
   <IconButton onClick={handleDelete} aria-label="delete">
-    <DeleteIcon/>
+    <DeleteIcon />
   </IconButton>
-);
+)
 
 export const AddFabIconButton = ({ className, handleClick, title }) => (
-  <Fab className={className} color="primary" variant="extended" aria-label="add" onClick={handleClick}>
-    <AddCircleIcon/>
+  <Fab
+    className={className}
+    color="primary"
+    variant="extended"
+    aria-label="add"
+    onClick={handleClick}
+  >
+    <AddCircleIcon />
     {title}
   </Fab>
-); 
+)
 
 export const MarkIcon = ({ className, ...props }) => (
   <span
@@ -51,7 +57,7 @@ export const MarkIcon = ({ className, ...props }) => (
       `
     )}
   />
-);
+)
 
 const MarkToggler = ({ className, active, reversed, ...props }) => (
   <span
@@ -70,17 +76,13 @@ const MarkToggler = ({ className, active, reversed, ...props }) => (
       `
     )}
   />
-);
+)
 
-export const MarkButton = ({ 
-  format, 
-  icon,
-  editor
-}) => {
+export const MarkButton = ({ format, icon, editor }) => {
   const handleMouseDown = (event) => {
-    event.preventDefault();
-    CustomEditor.toggleMark(editor, format);
-  };
+    event.preventDefault()
+    CustomEditor.toggleMark(editor, format)
+  }
 
   return (
     <MarkToggler
@@ -95,21 +97,17 @@ export const MarkButton = ({
 export const SelectIdButton = ({ value, action, children }) => {
   const dispatch = useDispatch()
 
-  const text = useMemo(
-    () => value === undefined ? 'SELECT ID' : value,
-    [ value ]
-  )
+  const text = useMemo(() => (value === undefined ? 'SELECT ID' : value), [
+    value,
+  ])
 
-  const handleClick = useCallback(
-    () => {
-      dispatch(action())
-    },
-    [ dispatch ]
-  )
+  const handleClick = useCallback(() => {
+    dispatch(action())
+  }, [dispatch])
 
   return (
     <div>
-      <Button className="text-lowercase"  onClick={handleClick}>
+      <Button className="text-lowercase" onClick={handleClick}>
         {text}
       </Button>
       {children}
@@ -117,27 +115,27 @@ export const SelectIdButton = ({ value, action, children }) => {
   )
 }
 
-export const SubmissionPeriodIdButton = ({ value, onChange }) =>  (
+export const SubmissionPeriodIdButton = ({ value, onChange }) => (
   <SelectIdButton value={value} action={openSubmissionPeriodDialog}>
-    <SubmissionPeriodDialog handleChange={onChange}/>
+    <SubmissionPeriodDialog handleChange={onChange} />
   </SelectIdButton>
 )
 
-export const ReportingPeriodIdButton = ({ value, onChange }) =>  (
+export const ReportingPeriodIdButton = ({ value, onChange }) => (
   <SelectIdButton value={value} action={openReportingPeriodDialog}>
-    <ReportingPeriodDialog handleChange={onChange}/>
+    <ReportingPeriodDialog handleChange={onChange} />
   </SelectIdButton>
 )
 
 export const StatusIdButton = ({ value, onChange }) => (
   <SelectIdButton value={value} action={openStatusDialog}>
-    <StatusDialog handleChange={onChange}/>
+    <StatusDialog handleChange={onChange} />
   </SelectIdButton>
 )
 
 export const TemplateTypeIdButton = ({ value, onChange }) => (
   <SelectIdButton value={value} action={openTemplateTypeDialog}>
-    <TemplateTypeDialog handleChange={onChange}/>
+    <TemplateTypeDialog handleChange={onChange} />
   </SelectIdButton>
 )
 

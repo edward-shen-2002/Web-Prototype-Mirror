@@ -6,15 +6,16 @@ import {
   receiveTemplatePackages,
   createTemplatePackage,
   deleteTemplatePackage,
-  updateTemplatePackage
+  updateTemplatePackage,
 } from '../actions/TemplatePackagesStore'
 
-import templatePackageController from '../../controllers/templatePackage';
+import templatePackageController from '../../controllers/templatePackage'
 
 export const getTemplatePackagesRequest = (query) => (dispatch) => {
   dispatch(requestTemplatePackages())
 
-  templatePackageController.fetchTemplatePackages(query)
+  templatePackageController
+    .fetchTemplatePackages(query)
     .then((templatePackages) => {
       dispatch(receiveTemplatePackages({ Values: templatePackages }))
     })
@@ -23,10 +24,15 @@ export const getTemplatePackagesRequest = (query) => (dispatch) => {
     })
 }
 
-export const createTemplatePackageRequest = (templatePackage, resolve, reject) => (dispatch) => {
+export const createTemplatePackageRequest = (
+  templatePackage,
+  resolve,
+  reject
+) => (dispatch) => {
   dispatch(requestTemplatePackages())
-  
-  templatePackageController.createTemplatePackage(templatePackage)
+
+  templatePackageController
+    .createTemplatePackage(templatePackage)
     .then((templatePackage) => {
       dispatch(createTemplatePackage({ Value: templatePackage }))
       resolve()
@@ -37,10 +43,13 @@ export const createTemplatePackageRequest = (templatePackage, resolve, reject) =
     })
 }
 
-export const deleteTemplatePackageRequest = (_id, resolve, reject) => (dispatch) => {
+export const deleteTemplatePackageRequest = (_id, resolve, reject) => (
+  dispatch
+) => {
   dispatch(requestTemplatePackages())
 
-  templatePackageController.deleteTemplatePackage(_id)
+  templatePackageController
+    .deleteTemplatePackage(_id)
     .then(() => {
       dispatch(deleteTemplatePackage({ Value: { _id } }))
       resolve()
@@ -51,10 +60,15 @@ export const deleteTemplatePackageRequest = (_id, resolve, reject) => (dispatch)
     })
 }
 
-export const updateTemplatePackageRequest = (templatePackage, resolve, reject) => (dispatch) => {
+export const updateTemplatePackageRequest = (
+  templatePackage,
+  resolve,
+  reject
+) => (dispatch) => {
   dispatch(requestTemplatePackages())
 
-  templatePackageController.updateTemplatePackage(templatePackage)
+  templatePackageController
+    .updateTemplatePackage(templatePackage)
     .then(() => {
       dispatch(updateTemplatePackage({ Value: templatePackage }))
       resolve()

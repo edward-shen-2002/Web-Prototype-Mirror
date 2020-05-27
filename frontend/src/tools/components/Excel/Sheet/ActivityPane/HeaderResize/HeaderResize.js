@@ -1,23 +1,29 @@
-import React from "react";
+import React from 'react'
 
-import { useSelector, shallowEqual } from "react-redux";
+import { useSelector, shallowEqual } from 'react-redux'
 
-import { getNormalRowHeight, getNormalColumnWidth } from "@tools/excel";
+import { getNormalRowHeight, getNormalColumnWidth } from '@tools/excel'
 
-import { DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER, DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER } from "@constants/excel";
+import {
+  DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
+  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER,
+} from '@constants/excel'
 
-import topOffsetsSelector from "@selectors/ui/excel/topOffsets";
-import leftOffsetsSelector from "@selectors/ui/excel/leftOffsets";
+import topOffsetsSelector from '@selectors/ui/excel/topOffsets'
+import leftOffsetsSelector from '@selectors/ui/excel/leftOffsets'
 
-import "./HeaderResize.scss";
+import './HeaderResize.scss'
 
-export const RowHeaderIndicator = ({ isRelevantRowOffset, computeTopOffset }) => {
+export const RowHeaderIndicator = ({
+  isRelevantRowOffset,
+  computeTopOffset,
+}) => {
   const {
     isRowResizeMode,
     rowResizeData,
-    sheetRowHeights, 
+    sheetRowHeights,
     sheetFreezeRowCount,
-    topOffsets
+    topOffsets,
   } = useSelector(
     ({
       ui: {
@@ -25,41 +31,48 @@ export const RowHeaderIndicator = ({ isRelevantRowOffset, computeTopOffset }) =>
           present: {
             isRowResizeMode,
             rowResizeData,
-            sheetRowHeights, 
+            sheetRowHeights,
             sheetFreezeRowCount,
             sheetFreezeColumnCount,
-            sheetRowCount
-          }
-        }
-      }
+            sheetRowCount,
+          },
+        },
+      },
     }) => ({
       isRowResizeMode,
       rowResizeData,
-      sheetRowHeights, 
+      sheetRowHeights,
       sheetFreezeRowCount,
       sheetFreezeColumnCount,
-    
-      topOffsets: topOffsetsSelector({ sheetRowCount, sheetRowHeights })
+
+      topOffsets: topOffsetsSelector({ sheetRowCount, sheetRowHeights }),
     }),
     shallowEqual
-  );
+  )
 
-  if(!isRowResizeMode) return null;
+  if (!isRowResizeMode) return null
 
-  const freezeRowOffset = topOffsets[sheetFreezeRowCount] + getNormalRowHeight(sheetRowHeights[sheetFreezeRowCount]);
-  const { offset } = rowResizeData;
+  const freezeRowOffset =
+    topOffsets[sheetFreezeRowCount] +
+    getNormalRowHeight(sheetRowHeights[sheetFreezeRowCount])
+  const { offset } = rowResizeData
 
-  if(!isRelevantRowOffset(offset, freezeRowOffset)) return null;
+  if (!isRelevantRowOffset(offset, freezeRowOffset)) return null
 
   const indicatorStyle = {
     top: computeTopOffset ? computeTopOffset(offset, freezeRowOffset) : offset,
     left: 0,
     width: DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER,
-    height: 4 
-  };
+    height: 4,
+  }
 
-  return <div style={indicatorStyle} className="resizeHeader resizeHeader__headerIndicator"/>;
-};
+  return (
+    <div
+      style={indicatorStyle}
+      className="resizeHeader resizeHeader__headerIndicator"
+    />
+  )
+}
 
 export const ColumnHeaderIndicator = ({ isRelevantColumnOffset }) => {
   const {
@@ -67,8 +80,8 @@ export const ColumnHeaderIndicator = ({ isRelevantColumnOffset }) => {
     columnResizeData,
     sheetFreezeColumnCount,
     sheetColumnWidths,
-  
-    leftOffsets
+
+    leftOffsets,
   } = useSelector(
     ({
       ui: {
@@ -78,56 +91,49 @@ export const ColumnHeaderIndicator = ({ isRelevantColumnOffset }) => {
             columnResizeData,
             sheetFreezeColumnCount,
             sheetColumnWidths,
-            sheetColumnCount
-          }
-        }
-      }
+            sheetColumnCount,
+          },
+        },
+      },
     }) => ({
       isColumnResizeMode,
       columnResizeData,
       sheetFreezeColumnCount,
       sheetColumnWidths,
-    
-      leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths })
+
+      leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths }),
     }),
-    shallowEqual    
-  );
+    shallowEqual
+  )
 
-  if(!isColumnResizeMode) return null;
+  if (!isColumnResizeMode) return null
 
-  const freezeColumnOffset = leftOffsets[sheetFreezeColumnCount] + getNormalColumnWidth(sheetColumnWidths[sheetFreezeColumnCount]);
-  const { offset } = columnResizeData;
+  const freezeColumnOffset =
+    leftOffsets[sheetFreezeColumnCount] +
+    getNormalColumnWidth(sheetColumnWidths[sheetFreezeColumnCount])
+  const { offset } = columnResizeData
 
-  if(!isRelevantColumnOffset(offset, freezeColumnOffset)) return null;
+  if (!isRelevantColumnOffset(offset, freezeColumnOffset)) return null
 
   const indicatorStyle = {
     top: 0,
     left: offset,
     width: 4,
-    height: DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER
-  };
-
-  return <div style={indicatorStyle} className="resizeHeader resizeHeader__headerIndicator"/>;
-};
-
-export let RowContentIndicator = ({
-
-}) => {
+    height: DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
+  }
 
   return (
-    <div>
+    <div
+      style={indicatorStyle}
+      className="resizeHeader resizeHeader__headerIndicator"
+    />
+  )
+}
 
-    </div>
-  );
-};
+export let RowContentIndicator = ({}) => {
+  return <div></div>
+}
 
-export let ColumnContentIndicator = ({
-
-}) => {
-
-  return (
-    <div>
-
-    </div>
-  );
-};
+export let ColumnContentIndicator = ({}) => {
+  return <div></div>
+}

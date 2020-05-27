@@ -1,1 +1,1 @@
-export { default } from "./TextDialog";
+export { default } from './TextDialog'

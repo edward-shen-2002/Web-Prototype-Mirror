@@ -1,60 +1,79 @@
-import React from "react";
+import React from 'react'
 
-import { connect } from "react-redux";
+import { connect } from 'react-redux'
 
-import { Route, Redirect } from "react-router-dom";
+import { Route, Redirect } from 'react-router-dom'
 
-import { ROUTE_USER_PROFILE, ROUTE_PUBLIC_LOGIN } from "@constants/routes";
+import { ROUTE_USER_PROFILE, ROUTE_PUBLIC_LOGIN } from '@constants/routes'
 
-import { ROLE_LEVEL_NOT_APPLICABLE } from "@constants/roles";
+import { ROLE_LEVEL_NOT_APPLICABLE } from '@constants/roles'
 
-import { ONLINE, OFFLINE } from "@constants/states";
+import { ONLINE, OFFLINE } from '@constants/states'
 
 // ! Hardcoded isOnline and shouldReconnect for testing purposes
-const mapActivityStateToProps = ({ app: { isOnline, shouldReconnect } }) => ({ isOnline : true, shouldReconnect: false });
+const mapActivityStateToProps = ({ app: { isOnline, shouldReconnect } }) => ({
+  isOnline: true,
+  shouldReconnect: false,
+})
 
-export let ActivityRoute = ({ isOnline, requiredState, exact, path, Component }) => (
-  <Route 
+export let ActivityRoute = ({
+  isOnline,
+  requiredState,
+  exact,
+  path,
+  Component,
+}) => (
+  <Route
     exact={exact}
-    path={path} w
+    path={path}
+    w
     render={(props) => {
-      let RouteComponent;
+      let RouteComponent
 
       // Make username the parameter to determine if user is fetched for now...
-      if(isOnline && requiredState === OFFLINE){
-        RouteComponent = <Redirect to={ROUTE_USER_PROFILE}/>
-      } else if((!isOnline && requiredState === ONLINE)) {
-        RouteComponent = <Redirect to={ROUTE_PUBLIC_LOGIN}/>
+      if (isOnline && requiredState === OFFLINE) {
+        RouteComponent = <Redirect to={ROUTE_USER_PROFILE} />
+      } else if (!isOnline && requiredState === ONLINE) {
+        RouteComponent = <Redirect to={ROUTE_PUBLIC_LOGIN} />
       } else {
-        RouteComponent = <Component {...props}/>;
+        RouteComponent = <Component {...props} />
       }
 
-      return RouteComponent;
+      return RouteComponent
     }}
   />
-);
+)
 
-ActivityRoute = connect(mapActivityStateToProps)(ActivityRoute);
+ActivityRoute = connect(mapActivityStateToProps)(ActivityRoute)
 
-const mapRoleStateToProps = ({ domain: { account } }) => ({ account });
+const mapRoleStateToProps = ({ domain: { account } }) => ({ account })
 
-export let AdminRoleRoute = ({ account, requiredRole, exact, path, Component }) => (
-  <Route 
+export let AdminRoleRoute = ({
+  account,
+  requiredRole,
+  exact,
+  path,
+  Component,
+}) => (
+  <Route
     exact={exact}
     path={path}
     render={(props) => {
-      let RouteComponent;
+      let RouteComponent
 
       // Make username the parameter to determine if user is fetched for now...
-      if(account.username && account.roles[requiredRole].scope === ROLE_LEVEL_NOT_APPLICABLE){
-        RouteComponent = <Redirect to={ROUTE_USER_PROFILE}/>
+      if (
+        account.username &&
+        account.roles[requiredRole].scope === ROLE_LEVEL_NOT_APPLICABLE
+      ) {
+        RouteComponent = <Redirect to={ROUTE_USER_PROFILE} />
       } else {
-        RouteComponent = <Component {...props}/>;
+        RouteComponent = <Component {...props} />
       }
 
-      return RouteComponent;
+      return RouteComponent
     }}
   />
-);
+)
 
-AdminRoleRoute = connect(mapRoleStateToProps)(AdminRoleRoute);
+AdminRoleRoute = connect(mapRoleStateToProps)(AdminRoleRoute)

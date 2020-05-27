@@ -1,12 +1,10 @@
-
-
-export const getMainFontStylesStates = ({ 
+export const getMainFontStylesStates = ({
   fontWeight,
   fontStyle,
-  textDecoration
+  textDecoration,
 }) => ({
-  bold: fontWeight === "bold",
-  italic: fontStyle === "italic",
-  underline: textDecoration && textDecoration.includes("underline"),
-  strikethrough: textDecoration && textDecoration.includes("line-through")
-});
+  bold: fontWeight === 'bold',
+  italic: fontStyle === 'italic',
+  underline: textDecoration && textDecoration.includes('underline'),
+  strikethrough: textDecoration && textDecoration.includes('line-through'),
+})

@@ -1,1 +1,1 @@
-export { default } from "./AdminRouter";
+export { default } from './AdminRouter'

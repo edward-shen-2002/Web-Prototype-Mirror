@@ -1,26 +1,21 @@
-const ADD_SHEET = (
-  state,
-  {
+const ADD_SHEET = (state, { sheetName, sheetData }) => {
+  const { activeSheetName, sheetNames } = state
+
+  let newState = { ...state }
+
+  newState.inactiveSheets[sheetName] = sheetData
+
+  const activeSheetNameIndex = sheetNames.indexOf(activeSheetName)
+
+  newState.sheetNames = [
+    ...sheetNames.slice(0, activeSheetNameIndex + 1),
     sheetName,
-    sheetData
-  }
-) => {
-  const {
-    activeSheetName,
-    sheetNames
-  } = state;
+    ...sheetNames.slice(activeSheetNameIndex + 1),
+  ]
 
-  let newState = { ...state };
-  
-  newState.inactiveSheets[sheetName] = sheetData;
+  // TODO CHANGE SHEET HERE
 
-  const activeSheetNameIndex = sheetNames.indexOf(activeSheetName);
+  return newState
+}
 
-  newState.sheetNames = [ ...sheetNames.slice(0, activeSheetNameIndex + 1), sheetName, ...sheetNames.slice(activeSheetNameIndex + 1) ];
-
-  // TODO CHANGE SHEET HERE 
-
-  return newState;
-};
-
-export default ADD_SHEET;
+export default ADD_SHEET

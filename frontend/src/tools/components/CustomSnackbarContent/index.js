@@ -1,2 +1,2 @@
-export { default } from "./CustomSnackbarContent";
-export * from "./CustomSnackbarContent";
+export { default } from './CustomSnackbarContent'
+export * from './CustomSnackbarContent'

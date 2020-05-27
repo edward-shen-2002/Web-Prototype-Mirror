@@ -1,10 +1,10 @@
-import { 
-  requestSubmissions, 
-  failSubmissionsRequest, 
-  receiveSubmissions, 
-  createSubmission, 
-  deleteSubmission, 
-  updateSubmission 
+import {
+  requestSubmissions,
+  failSubmissionsRequest,
+  receiveSubmissions,
+  createSubmission,
+  deleteSubmission,
+  updateSubmission,
 } from '../actions/SubmissionsStore'
 
 import submissionController from '../../controllers/submission'
@@ -12,7 +12,8 @@ import submissionController from '../../controllers/submission'
 export const getSubmissionsRequest = (query) => (dispatch) => {
   dispatch(requestSubmissions())
 
-  submissionController.fetchSubmissions(query)
+  submissionController
+    .fetchSubmissions(query)
     .then((submissions) => {
       dispatch(receiveSubmissions({ Values: submissions }))
     })
@@ -21,10 +22,13 @@ export const getSubmissionsRequest = (query) => (dispatch) => {
     })
 }
 
-export const createSubmissionRequest = (submission, resolve, reject) => (dispatch) => {
+export const createSubmissionRequest = (submission, resolve, reject) => (
+  dispatch
+) => {
   dispatch(requestSubmissions())
-  
-  submissionController.createSubmission(submission)
+
+  submissionController
+    .createSubmission(submission)
     .then((submission) => {
       dispatch(createSubmission({ Value: submission }))
       resolve()
@@ -38,7 +42,8 @@ export const createSubmissionRequest = (submission, resolve, reject) => (dispatc
 export const deleteSubmissionRequest = (_id, resolve, reject) => (dispatch) => {
   dispatch(requestSubmissions())
 
-  submissionController.deleteSubmission(_id)
+  submissionController
+    .deleteSubmission(_id)
     .then(() => {
       dispatch(deleteSubmission({ Value: { _id } }))
       resolve()
@@ -49,10 +54,13 @@ export const deleteSubmissionRequest = (_id, resolve, reject) => (dispatch) => {
     })
 }
 
-export const updateSubmissionRequest = (submission, resolve, reject) => (dispatch) => {
+export const updateSubmissionRequest = (submission, resolve, reject) => (
+  dispatch
+) => {
   dispatch(requestSubmissions())
 
-  submissionController.updateSubmission(submission)
+  submissionController
+    .updateSubmission(submission)
     .then(() => {
       dispatch(updateSubmission({ Value: submission }))
       resolve()

@@ -1,24 +1,24 @@
-import { useCallback } from "react";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import { useCallback } from 'react'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
-import { 
-  selectEnd, 
-  resizeRow, 
+import {
+  selectEnd,
+  resizeRow,
   resizeColumn,
   resizeRowEnd,
-  resizeColumnEnd
-} from "@actions/ui/excel/mouse";
+  resizeColumnEnd,
+} from '@actions/ui/excel/mouse'
 
-import topOffsetsSelector from "@selectors/ui/excel/topOffsets";
-import leftOffsetsSelector from "@selectors/ui/excel/leftOffsets";
+import topOffsetsSelector from '@selectors/ui/excel/topOffsets'
+import leftOffsetsSelector from '@selectors/ui/excel/leftOffsets'
 
 const WindowListener = () => {
-  const { 
+  const {
     isColumnResizeMode,
     isRowResizeMode,
     topOffsets,
     leftOffsets,
-    isSelectionMode
+    isSelectionMode,
   } = useSelector(
     ({
       ui: {
@@ -30,66 +30,57 @@ const WindowListener = () => {
             sheetColumnCount,
             isRowResizeMode,
             isColumnResizeMode,
-            isSelectionMode
-          }
-        }
-      }
+            isSelectionMode,
+          },
+        },
+      },
     }) => ({
       topOffsets: topOffsetsSelector({ sheetRowCount, sheetRowHeights }),
       leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths }),
       isRowResizeMode,
       isColumnResizeMode,
-      isSelectionMode
+      isSelectionMode,
     }),
     shallowEqual
-  );
+  )
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   window.onmouseup = useCallback(
     ({ ctrlKey }) => {
-      if(isSelectionMode) {
-        dispatch(selectEnd({ ctrlKey }));
-      } else if(isColumnResizeMode) {
-        dispatch(resizeColumnEnd({ leftOffsets }));
-      } else if(isRowResizeMode) {
-        dispatch(resizeRowEnd({ topOffsets }));
+      if (isSelectionMode) {
+        dispatch(selectEnd({ ctrlKey }))
+      } else if (isColumnResizeMode) {
+        dispatch(resizeColumnEnd({ leftOffsets }))
+      } else if (isRowResizeMode) {
+        dispatch(resizeRowEnd({ topOffsets }))
       }
-    
+
       // dispatch(mouseUp({ ctrlKey, leftOffsets, topOffsets }));
     },
-    [ 
-      dispatch, 
-      leftOffsets, 
-      topOffsets, 
+    [
+      dispatch,
+      leftOffsets,
+      topOffsets,
       isSelectionMode,
       isColumnResizeMode,
-      isRowResizeMode
+      isRowResizeMode,
     ]
-  );
+  )
 
   // ! Handle scroll when outside sheet grid
   window.onmousemove = useCallback(
-    ({ 
-      clientX: xOffset, 
-      clientY: yOffset 
-    }) => {
-      if(isColumnResizeMode) {
-        dispatch(resizeColumn({ xOffset, leftOffsets }));
-      } else if(isRowResizeMode) {
-        dispatch(resizeRow({ yOffset, topOffsets }));
+    ({ clientX: xOffset, clientY: yOffset }) => {
+      if (isColumnResizeMode) {
+        dispatch(resizeColumn({ xOffset, leftOffsets }))
+      } else if (isRowResizeMode) {
+        dispatch(resizeRow({ yOffset, topOffsets }))
       }
     },
-    [ 
-      dispatch, 
-      isColumnResizeMode, 
-      isRowResizeMode,
-      topOffsets,
-      leftOffsets
-    ]
-  );
+    [dispatch, isColumnResizeMode, isRowResizeMode, topOffsets, leftOffsets]
+  )
 
-  return null;
-};
+  return null
+}
 
-export default WindowListener;
+export default WindowListener

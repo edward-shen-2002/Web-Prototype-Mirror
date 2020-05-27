@@ -1,4 +1,4 @@
-import { createReducer } from "../tools/setup"
+import { createReducer } from '../tools/setup'
 
 import REQUEST_COA_GROUPS from './common/REQUEST'
 import RECEIVE_COA_GROUPS from './common/RECEIVE'
@@ -15,15 +15,15 @@ const reducersMap = {
   CREATE_COA_GROUP,
   DELETE_COA_GROUP,
   UPDATE_COA_GROUP,
-  RESET_COA_GROUPS
+  RESET_COA_GROUPS,
 }
 
 const defaultState = {
   response: {
-    Values: []
+    Values: [],
   },
   error: null,
-  isCallInProgress: false
+  isCallInProgress: false,
 }
 
 const COAGroupsStore = createReducer(defaultState, reducersMap)

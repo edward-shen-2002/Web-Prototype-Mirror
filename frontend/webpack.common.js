@@ -1,62 +1,63 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 module.exports = {
-  entry: path.join(__dirname, "/src/index.js"),
+  entry: path.join(__dirname, '/src/index.js'),
   resolve: {
     alias: {
-      "@constants": path.join(__dirname, "/src/constants"),
-      "@styles": path.join(__dirname, "/src/styles"),
-      "@tools": path.join(__dirname, "/src/tools"),
-      "@images": path.join(__dirname, "/src/images"),
-      "@store": path.join(__dirname, "/src/store"),
-      "@selectors": path.join(__dirname, "/src/store/selectors"),
-      "@actions": path.join(__dirname, "/src/store/actions"),
-      "@actionCreators": path.join(__dirname, "/src/store/actions/actionCreators"),
-      "@controllers": path.join(__dirname, "/src/controllers"),
-      "@thunks": path.join(__dirname, "/src/store/thunks"),
+      '@constants': path.join(__dirname, '/src/constants'),
+      '@styles': path.join(__dirname, '/src/styles'),
+      '@tools': path.join(__dirname, '/src/tools'),
+      '@images': path.join(__dirname, '/src/images'),
+      '@store': path.join(__dirname, '/src/store'),
+      '@selectors': path.join(__dirname, '/src/store/selectors'),
+      '@actions': path.join(__dirname, '/src/store/actions'),
+      '@actionTypes': path.join(
+        __dirname,
+        '/src/store/actions/actionTypes'
+      ),
+      '@controllers': path.join(__dirname, '/src/controllers'),
+      '@thunks': path.join(__dirname, '/src/store/thunks'),
     },
-    extensions: ["*", ".js", ".jsx"]
+    extensions: ['*', '.js', '.jsx'],
   },
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: { loader: "babel-loader" }
+        use: { loader: 'babel-loader' },
       },
       {
         test: /\.(gif|png|jpe?g|svg)$/i,
         use: [
-          "file-loader",
+          'file-loader',
           {
-            loader: "image-webpack-loader",
+            loader: 'image-webpack-loader',
             options: {
               bypassOnDebug: true,
-              disable: true
-            }
-          }
-        ]
+              disable: true,
+            },
+          },
+        ],
       },
       {
         test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
-        use: [
-          "file-loader"
-        ]
-      }
-    ]
+        use: ['file-loader'],
+      },
+    ],
   },
   node: {
-    fs: "empty"
+    fs: 'empty',
   },
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "/public/index.html"),
-      filename: "index.html",
+      template: path.join(__dirname, '/public/index.html'),
+      filename: 'index.html',
       inject: true,
-      hash: true
-    })
-  ]
-};
+      hash: true,
+    }),
+  ],
+}

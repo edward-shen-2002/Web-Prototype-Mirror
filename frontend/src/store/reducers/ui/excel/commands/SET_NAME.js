@@ -1,11 +1,6 @@
-const SET_NAME = (
-  state,
-  {
-    name
-  }
-) => ({
+const SET_NAME = (state, { name }) => ({
   ...state,
-  name
-});
+  name,
+})
 
-export default SET_NAME;
+export default SET_NAME

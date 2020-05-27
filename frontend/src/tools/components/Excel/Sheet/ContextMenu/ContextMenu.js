@@ -1,90 +1,81 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo } from 'react'
 
-import { useDispatch } from "react-redux";
-import { ContextMenu, MenuItem, SubMenu } from "react-contextmenu";
-import uniqid from "uniqid";
+import { useDispatch } from 'react-redux'
+import { ContextMenu, MenuItem, SubMenu } from 'react-contextmenu'
+import uniqid from 'uniqid'
 
 import {
   insertRow,
   insertColumn,
-
   setActiveCellDialog,
-
   deleteCellsShiftUp,
   deleteCellsShiftLeft,
-
   setReadOnly,
-  unsetReadOnly
-} from "@actions/ui/excel/commands";
+  unsetReadOnly,
+} from '@actions/ui/excel/commands'
 
-import "./ContextMenu.scss";
-
+import './ContextMenu.scss'
 
 const MenuIcon = ({ icon, mdiIcon }) => (
-  <div className={`menuItem__icon ${mdiIcon ? mdiIcon : ""}`}>
+  <div className={`menuItem__icon ${mdiIcon ? mdiIcon : ''}`}>
     {!mdiIcon && icon}
   </div>
-);
+)
 
-const MenuTextContent = ({
-  text,
-  command
-}) => (
+const MenuTextContent = ({ text, command }) => (
   <div className="menuItem__textContent">
     <div>{text}</div>
     <div>{command}</div>
   </div>
-);
+)
 
 const SheetContextMenuItem = ({
   icon,
   mdiIcon,
   text,
   command,
-  handleClick
+  handleClick,
 }) => (
   <MenuItem className="menuItem" onClick={handleClick}>
-    <MenuIcon icon={icon} mdiIcon={mdiIcon}/>
-    <MenuTextContent text={text} command={command}/>
+    <MenuIcon icon={icon} mdiIcon={mdiIcon} />
+    <MenuTextContent text={text} command={command} />
   </MenuItem>
-);
+)
 
 const SubMenuContent = ({ item }) => (
   <SubMenu className="subMenu" title={item.text}>
-    <GeneratedContextMenu config={item.children}/>
+    <GeneratedContextMenu config={item.children} />
   </SubMenu>
-);
+)
 
 const SubMenuContainer = ({ item }) => (
   <div className="subMenuContainer">
-    <SubMenuContent item={item}/>
+    <SubMenuContent item={item} />
   </div>
-);
+)
 
-const GeneratedContextMenu = ({ config }) => config.map((item) => {
-  if(!item) return <hr key={uniqid()} className="menuDivider"/>;
+const GeneratedContextMenu = ({ config }) =>
+  config.map((item) => {
+    if (!item) return <hr key={uniqid()} className="menuDivider" />
 
-  return (
-    item.children
-      ? <SubMenuContainer key={uniqid()} item={item}/>
-      : <SheetContextMenuItem key={uniqid()} {...item}/>
-  );
-});
+    return item.children ? (
+      <SubMenuContainer key={uniqid()} item={item} />
+    ) : (
+      <SheetContextMenuItem key={uniqid()} {...item} />
+    )
+  })
 
 const ContextMenuContent = ({ config }) => (
-  <ContextMenu 
-    id="sheetWindowContainer" 
-    className="contextMenu"
-  >
-    <GeneratedContextMenu config={config}/>
+  <ContextMenu id="sheetWindowContainer" className="contextMenu">
+    <GeneratedContextMenu config={config} />
   </ContextMenu>
-);
+)
 
 const SheetContextMenu = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const config = useMemo(
-    () =>  [
+    () => [
       // {
       //   mdiIcon: "mdi mdi-content-cut",
       //   text: "Cut",
@@ -102,66 +93,75 @@ const SheetContextMenu = () => {
       // },
       // null,
       {
-        text: "Insert row",
-        handleClick: () => dispatch(insertRow())
+        text: 'Insert row',
+        handleClick: () => dispatch(insertRow()),
       },
       {
-        text: "Insert column",
-        handleClick: () => dispatch(insertColumn())
+        text: 'Insert column',
+        handleClick: () => dispatch(insertColumn()),
       },
       {
-        text: "Delete cells",
+        text: 'Delete cells',
         children: [
           {
-            text: "Shift up",
-            handleClick: () => dispatch(deleteCellsShiftUp())
+            text: 'Shift up',
+            handleClick: () => dispatch(deleteCellsShiftUp()),
           },
           {
-            text: "Shift left",
-            handleClick: () => dispatch(deleteCellsShiftLeft())
-          }
-        ]
+            text: 'Shift left',
+            handleClick: () => dispatch(deleteCellsShiftLeft()),
+          },
+        ],
       },
       null,
       {
-        mdiIcon: "mdi mdi-comment",
-        text: "Comment",
-        command: "Ctrl+Alt+M",
-        handleClick: () => dispatch(setActiveCellDialog({ dialog: "comment" }))
+        mdiIcon: 'mdi mdi-comment',
+        text: 'Comment',
+        command: 'Ctrl+Alt+M',
+        handleClick: () => dispatch(setActiveCellDialog({ dialog: 'comment' })),
       },
       null,
       {
-        text: "Set read-only",
-        handleClick: () => dispatch(setReadOnly())
+        text: 'Set read-only',
+        handleClick: () => dispatch(setReadOnly()),
       },
       {
-        text: "Unset read-only",
-        handleClick: () => dispatch(unsetReadOnly())
-      },
-      null,
-      {
-        text: "Set attribute",
-        handleClick: () => dispatch(setActiveCellDialog({ dialog: "concept", category: "attribute" }))
-      },
-      {
-        text: "Set category",
-        handleClick: () => dispatch(setActiveCellDialog({ dialog: "concept", category: "category" }))
-      },
-      {
-        text: "Set category group",
-        handleClick: () => dispatch(setActiveCellDialog({ dialog: "group", category: "category" }))
+        text: 'Unset read-only',
+        handleClick: () => dispatch(unsetReadOnly()),
       },
       null,
       {
-        text: "Set prepopulate",
-        handleClick: () => dispatch(setActiveCellDialog({ dialog: "prepopulate" }))
-      }
+        text: 'Set attribute',
+        handleClick: () =>
+          dispatch(
+            setActiveCellDialog({ dialog: 'concept', category: 'attribute' })
+          ),
+      },
+      {
+        text: 'Set category',
+        handleClick: () =>
+          dispatch(
+            setActiveCellDialog({ dialog: 'concept', category: 'category' })
+          ),
+      },
+      {
+        text: 'Set category group',
+        handleClick: () =>
+          dispatch(
+            setActiveCellDialog({ dialog: 'group', category: 'category' })
+          ),
+      },
+      null,
+      {
+        text: 'Set prepopulate',
+        handleClick: () =>
+          dispatch(setActiveCellDialog({ dialog: 'prepopulate' })),
+      },
     ],
-    [ dispatch ]
-  );
-       
+    [dispatch]
+  )
 
-  return <ContextMenuContent config={config}/>;
-};
+  return <ContextMenuContent config={config} />
+}
 
-export default SheetContextMenu;
+export default SheetContextMenu

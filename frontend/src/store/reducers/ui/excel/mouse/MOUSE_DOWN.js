@@ -1,99 +1,100 @@
-import { getWholeArea } from "../tools/merge";
-import { 
+import { getWholeArea } from '../tools/merge'
+import {
   updateActiveCellPosition,
-  saveActiveCellInputData
-} from "../tools/cell";
+  saveActiveCellInputData,
+} from '../tools/cell'
 
-const MOUSE_DOWN = (
-  state, 
-  { 
-    x1, 
-    y1, 
-    ctrlKey, 
-    shiftKey 
-  }) => {
-  const { 
-    sheetCellData,
-    activeCellPosition, 
-    stagnantSelectionAreas
-  } = state;
+const MOUSE_DOWN = (state, { x1, y1, ctrlKey, shiftKey }) => {
+  const { sheetCellData, activeCellPosition, stagnantSelectionAreas } = state
 
-  let newState = { ...state };
+  let newState = { ...state }
 
-  const { x, y } = activeCellPosition; 
+  const { x, y } = activeCellPosition
 
-  const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
-  
-  if((!ctrlKey && stagnantSelectionAreasLength) || shiftKey) newState.stagnantSelectionAreas = []; 
+  const stagnantSelectionAreasLength = stagnantSelectionAreas.length
 
-  newState = saveActiveCellInputData({ newState });
+  if ((!ctrlKey && stagnantSelectionAreasLength) || shiftKey)
+    newState.stagnantSelectionAreas = []
 
-  newState.isSelectionMode = true;
+  newState = saveActiveCellInputData({ newState })
 
-  if(ctrlKey || shiftKey) {
-    let x2;
-    let y2;
+  newState.isSelectionMode = true
 
-    if(shiftKey) {
-      let minY = Math.min(y1, y);
-      let minX = Math.min(x1, x);
-      let maxY = Math.max(y1, y);
-      let maxX = Math.max(x1, x);
+  if (ctrlKey || shiftKey) {
+    let x2
+    let y2
 
-      const newArea = getWholeArea({ minX, minY, maxX, maxY, sheetCellData });
+    if (shiftKey) {
+      let minY = Math.min(y1, y)
+      let minX = Math.min(x1, x)
+      let maxY = Math.max(y1, y)
+      let maxX = Math.max(x1, x)
 
-      x1 = newArea.x1;
-      y1 = newArea.y1;
-      x2 = newArea.x2;
-      y2 = newArea.y2;
+      const newArea = getWholeArea({ minX, minY, maxX, maxY, sheetCellData })
 
-      newState.newActiveCellSelectionAreaIndex = 0;
+      x1 = newArea.x1
+      y1 = newArea.y1
+      x2 = newArea.x2
+      y2 = newArea.y2
+
+      newState.newActiveCellSelectionAreaIndex = 0
     } else {
-      if(sheetCellData[y1] && sheetCellData[y1][x1] && sheetCellData[y1][x1].merged) {
-        const { x2: mergedX2, y2: mergedY2 } = sheetCellData[y1][x1].merged;
-        x2 = mergedX2;
-        y2 = mergedY2;
+      if (
+        sheetCellData[y1] &&
+        sheetCellData[y1][x1] &&
+        sheetCellData[y1][x1].merged
+      ) {
+        const { x2: mergedX2, y2: mergedY2 } = sheetCellData[y1][x1].merged
+        x2 = mergedX2
+        y2 = mergedY2
       } else {
-        y2 = y1;
-        x2 = x1;
+        y2 = y1
+        x2 = x1
       }
 
-      newState.newActiveCellSelectionAreaIndex = stagnantSelectionAreasLength + 1;
-      
-      if(!stagnantSelectionAreasLength && (x1 !== x || y1 !== y)) {
-        let oldX2;
-        let oldY2;
-        if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
-          const { x2: mergedX2, y2: mergedY2 } = sheetCellData[y][x].merged;
-          oldX2 = mergedX2;
-          oldY2 = mergedY2;
+      newState.newActiveCellSelectionAreaIndex =
+        stagnantSelectionAreasLength + 1
+
+      if (!stagnantSelectionAreasLength && (x1 !== x || y1 !== y)) {
+        let oldX2
+        let oldY2
+        if (
+          sheetCellData[y] &&
+          sheetCellData[y][x] &&
+          sheetCellData[y][x].merged
+        ) {
+          const { x2: mergedX2, y2: mergedY2 } = sheetCellData[y][x].merged
+          oldX2 = mergedX2
+          oldY2 = mergedY2
         } else {
-          oldY2 = y;
-          oldX2 = x;
+          oldY2 = y
+          oldX2 = x
         }
 
-        newState.stagnantSelectionAreas = [ { x1: x, y1: y, x2: oldX2, y2: oldY2 } ];
+        newState.stagnantSelectionAreas = [
+          { x1: x, y1: y, x2: oldX2, y2: oldY2 },
+        ]
       }
 
       newState = updateActiveCellPosition({
         newState,
-        newY: y1, 
-        newX: x1, 
-        shouldScroll: false
-      });
-    } 
+        newY: y1,
+        newX: x1,
+        shouldScroll: false,
+      })
+    }
 
-    newState.activeSelectionArea = { x1, y1, x2, y2 };
+    newState.activeSelectionArea = { x1, y1, x2, y2 }
   } else {
     newState = updateActiveCellPosition({
       newState,
       newX: x1,
       newY: y1,
-      shouldScroll: false
-    });
+      shouldScroll: false,
+    })
   }
-  
-  return newState;
-};
 
-export default MOUSE_DOWN;
+  return newState
+}
+
+export default MOUSE_DOWN

@@ -4,7 +4,7 @@ import {
   receiveCOAs,
   createCOA,
   deleteCOA,
-  updateCOA
+  updateCOA,
 } from '../actions/COAsStore'
 
 import COAController from '../../controllers/COA'
@@ -23,7 +23,7 @@ export const getCOAsRequest = (query) => (dispatch) => {
 
 export const createCOARequest = (COA, resolve, reject) => (dispatch) => {
   dispatch(requestCOAs())
-  
+
   COAController.createCOA(COA)
     .then((COA) => {
       dispatch(createCOA({ Value: COA }))

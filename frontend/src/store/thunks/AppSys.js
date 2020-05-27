@@ -4,7 +4,7 @@ import {
   receiveAppSyses,
   createAppSys,
   deleteAppSys,
-  updateAppSys
+  updateAppSys,
 } from '../actions/AppSysesStore'
 
 import AppSysController from '../../controllers/AppSys'

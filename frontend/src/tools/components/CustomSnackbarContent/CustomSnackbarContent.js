@@ -1,25 +1,25 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ErrorIcon from '@material-ui/icons/Error';
-import InfoIcon from '@material-ui/icons/Info';
-import CloseIcon from '@material-ui/icons/Close';
-import green from '@material-ui/core/colors/green';
-import amber from '@material-ui/core/colors/amber';
-import IconButton from '@material-ui/core/IconButton';
-import SnackbarContent from '@material-ui/core/SnackbarContent';
-import WarningIcon from '@material-ui/icons/Warning';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react'
+import PropTypes from 'prop-types'
+import classNames from 'classnames'
+import CheckCircleIcon from '@material-ui/icons/CheckCircle'
+import ErrorIcon from '@material-ui/icons/Error'
+import InfoIcon from '@material-ui/icons/Info'
+import CloseIcon from '@material-ui/icons/Close'
+import green from '@material-ui/core/colors/green'
+import amber from '@material-ui/core/colors/amber'
+import IconButton from '@material-ui/core/IconButton'
+import SnackbarContent from '@material-ui/core/SnackbarContent'
+import WarningIcon from '@material-ui/icons/Warning'
+import { withStyles } from '@material-ui/core/styles'
 
 const variantIcon = {
   success: CheckCircleIcon,
   warning: WarningIcon,
   error: ErrorIcon,
   info: InfoIcon,
-};
+}
 
-const styles1 = theme => ({
+const styles1 = (theme) => ({
   success: {
     backgroundColor: green[600],
   },
@@ -44,11 +44,11 @@ const styles1 = theme => ({
     alignItems: 'center',
     whiteSpace: 'pre-line',
   },
-});
+})
 
 function CustomSnackbarContent(props) {
-  const { classes, className, message, onClose, variant, ...other } = props;
-  const Icon = variantIcon[variant];
+  const { classes, className, message, onClose, variant, ...other } = props
+  const Icon = variantIcon[variant]
 
   return (
     <SnackbarContent
@@ -73,7 +73,7 @@ function CustomSnackbarContent(props) {
       ]}
       {...other}
     />
-  );
+  )
 }
 
 CustomSnackbarContent.propTypes = {
@@ -82,6 +82,6 @@ CustomSnackbarContent.propTypes = {
   message: PropTypes.node,
   onClose: PropTypes.func,
   variant: PropTypes.oneOf(['success', 'warning', 'error', 'info']).isRequired,
-};
+}
 
-export default withStyles(styles1)(CustomSnackbarContent);
+export default withStyles(styles1)(CustomSnackbarContent)

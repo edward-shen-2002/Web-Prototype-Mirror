@@ -1,51 +1,50 @@
-import { getLastArea } from "../tools/area";
+import { getLastArea } from '../tools/area'
 
 const DELETE_CELLS_SHIFT_UP = (state) => {
-  const { 
+  const { stagnantSelectionAreas, activeCellPosition, sheetCellData } = state
+
+  let newState = { ...state }
+
+  const { y1, y2, x1, x2 } = getLastArea(
     stagnantSelectionAreas,
-    activeCellPosition,
-    sheetCellData
-  } = state;
+    activeCellPosition
+  )
 
-  let newState = { ...state };
+  const shiftOffsetY = Math.abs(y1 - y2)
+  const shiftStartY = Math.min(y1, y2)
+  const shiftEndY = shiftStartY + shiftOffsetY + 1
 
-  const { y1, y2, x1, x2 } = getLastArea(stagnantSelectionAreas, activeCellPosition);
+  const columnStart = Math.min(x1, x2)
+  const columnEnd = Math.max(x1, x2)
 
-  const shiftOffsetY = Math.abs(y1 - y2);
-  const shiftStartY = Math.min(y1, y2);
-  const shiftEndY = shiftStartY + shiftOffsetY + 1;
+  let newSheetCellData = {}
 
-  const columnStart = Math.min(x1, x2);
-  const columnEnd = Math.max(x1, x2);
+  for (let row in sheetCellData) {
+    const columns = sheetCellData[row]
 
-  let newSheetCellData = {};
-
-  for(let row in sheetCellData) {
-    const columns = sheetCellData[row];
-
-    if(row < shiftStartY) {
-      newSheetCellData[row] = columns;
+    if (row < shiftStartY) {
+      newSheetCellData[row] = columns
     } else {
-      for(let column in columns) {
-        if(row >= shiftEndY && column >= columnStart && column <= columnEnd) {
-          const newRowOffset = row - shiftOffsetY - 1;
-          newSheetCellData[newRowOffset] = { 
+      for (let column in columns) {
+        if (row >= shiftEndY && column >= columnStart && column <= columnEnd) {
+          const newRowOffset = row - shiftOffsetY - 1
+          newSheetCellData[newRowOffset] = {
             ...sheetCellData[newRowOffset],
-            [column]: sheetCellData[row][column]
-          };
-        } else if(column < columnStart || column > columnEnd) {
-          newSheetCellData[row] = { 
+            [column]: sheetCellData[row][column],
+          }
+        } else if (column < columnStart || column > columnEnd) {
+          newSheetCellData[row] = {
             ...sheetCellData[row],
-            [column]: sheetCellData[row][column]
+            [column]: sheetCellData[row][column],
           }
         }
       }
-    } 
+    }
   }
 
-  newState.sheetCellData = newSheetCellData;
+  newState.sheetCellData = newSheetCellData
 
-  return newState;
-};
+  return newState
+}
 
-export default DELETE_CELLS_SHIFT_UP;
+export default DELETE_CELLS_SHIFT_UP

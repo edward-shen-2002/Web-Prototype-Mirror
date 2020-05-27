@@ -1,2 +1,2 @@
-export { default } from "./MenuItems";
-export * from "./MenuItems";
+export { default } from './MenuItems'
+export * from './MenuItems'

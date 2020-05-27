@@ -1,12 +1,7 @@
-const RECEIVE = (
-  _state,
-  {
-    response
-  }
-) => ({ 
+const RECEIVE = (_state, { response }) => ({
   response,
-  isCallInProgress: false, 
-  error: null
+  isCallInProgress: false,
+  error: null,
 })
 
 export default RECEIVE

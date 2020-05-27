@@ -1,4 +1,4 @@
-import { createReducer } from "../tools/setup"
+import { createReducer } from '../tools/setup'
 
 import REQUEST_COAS from './common/REQUEST'
 import RECEIVE_COAS from './common/RECEIVE'
@@ -15,16 +15,16 @@ const reducersMap = {
   CREATE_COA,
   DELETE_COA,
   UPDATE_COA,
-  RESET_COAS
+  RESET_COAS,
 }
 
 const defaultState = {
   response: {
-    Values: []
+    Values: [],
   },
   error: null,
   isCallInProgress: false,
-  isCOADialogOpen: false
+  isCOADialogOpen: false,
 }
 
 const COAsStore = createReducer(defaultState, reducersMap)

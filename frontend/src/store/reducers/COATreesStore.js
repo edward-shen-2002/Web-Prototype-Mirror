@@ -14,15 +14,15 @@ const reducersMap = {
   CREATE_COATREE,
   DELETE_COATREE,
   UPDATE_COATREE,
-  RESET_COATREES
+  RESET_COATREES,
 }
 
 const defaultState = {
   response: {
-    Values: []
+    Values: [],
   },
   error: null,
-  isCallInProgress: false
+  isCallInProgress: false,
 }
 
 const COATreeStore = createReducer(defaultState, reducersMap)

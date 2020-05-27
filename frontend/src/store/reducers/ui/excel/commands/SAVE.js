@@ -1,15 +1,10 @@
 // ! Does not update the state
 // ! Performance optimization. If this were used in sheet, it will listen to too many events?
 
-const SAVE = (
-  state,
-  {
-    handleSave
-  }
-) => {
+const SAVE = (state, { handleSave }) => {
   // Consider type of workbook then route properly
   handleSave(state)
-  return state;
-}; 
+  return state
+}
 
-export default SAVE;
+export default SAVE

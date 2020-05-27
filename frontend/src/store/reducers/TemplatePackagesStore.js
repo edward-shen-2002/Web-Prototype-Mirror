@@ -1,4 +1,4 @@
-import { createReducer } from "../tools/setup"
+import { createReducer } from '../tools/setup'
 
 import REQUEST_TEMPLATE_PACKAGES from './common/REQUEST'
 import RECEIVE_TEMPLATE_PACKAGES from './common/RECEIVE'
@@ -15,15 +15,15 @@ const reducersMap = {
   CREATE_TEMPLATE_PACKAGE,
   DELETE_TEMPLATE_PACKAGE,
   UPDATE_TEMPLATE_PACKAGE,
-  RESET_TEMPLATE_PACKAGES
+  RESET_TEMPLATE_PACKAGES,
 }
 
 const defaultState = {
   response: {
-    Values: []
+    Values: [],
   },
   error: null,
-  isCallInProgress: false
+  isCallInProgress: false,
 }
 
 const TemplatePackageStore = createReducer(defaultState, reducersMap)

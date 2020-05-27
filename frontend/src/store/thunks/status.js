@@ -4,7 +4,7 @@ import {
   receiveStatuses,
   createStatus,
   deleteStatus,
-  updateStatus
+  updateStatus,
 } from '../actions/StatusesStore'
 
 import statusController from '../../controllers/status'
@@ -12,7 +12,8 @@ import statusController from '../../controllers/status'
 export const getStatusesRequest = (query) => (dispatch) => {
   dispatch(requestStatuses())
 
-  statusController.fetchStatuses(query)
+  statusController
+    .fetchStatuses(query)
     .then((statuses) => {
       dispatch(receiveStatuses({ Values: statuses }))
     })
@@ -23,8 +24,9 @@ export const getStatusesRequest = (query) => (dispatch) => {
 
 export const createStatusRequest = (status, resolve, reject) => (dispatch) => {
   dispatch(requestStatuses())
-  
-  statusController.createStatus(status)
+
+  statusController
+    .createStatus(status)
     .then((status) => {
       dispatch(createStatus({ Value: status }))
       resolve()
@@ -38,7 +40,8 @@ export const createStatusRequest = (status, resolve, reject) => (dispatch) => {
 export const deleteStatusRequest = (_id, resolve, reject) => (dispatch) => {
   dispatch(requestStatuses())
 
-  statusController.deleteStatus(_id)
+  statusController
+    .deleteStatus(_id)
     .then(() => {
       dispatch(deleteStatus({ Value: { _id } }))
       resolve()
@@ -52,7 +55,8 @@ export const deleteStatusRequest = (_id, resolve, reject) => (dispatch) => {
 export const updateStatusRequest = (status, resolve, reject) => (dispatch) => {
   dispatch(requestStatuses())
 
-  statusController.updateStatus(status)
+  statusController
+    .updateStatus(status)
     .then(() => {
       dispatch(updateStatus({ Value: status }))
       resolve()

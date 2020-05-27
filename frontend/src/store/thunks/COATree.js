@@ -6,45 +6,43 @@ import {
   receiveCOATrees,
   createCOATree,
   deleteCOATree,
-  updateCOATree
+  updateCOATree,
 } from '../actions/COATreesStore'
 
 import {
   loadCOATreeUI,
   addRootCOATreeUI,
-  updateOriginalCOATreeUI
+  updateOriginalCOATreeUI,
 } from '../actions/COATreeStore'
 
-import {
-  closeCOAGroupDialog
-} from '../actions/DialogsStore'
+import { closeCOAGroupDialog } from '../actions/DialogsStore'
 
 import COATreeController from '../../controllers/COATree'
 
 const normalizeTrees = (denormalizedCOATrees) => {
-  let stack = [ ...denormalizedCOATrees ]
+  let stack = [...denormalizedCOATrees]
 
-  let normalizedTrees = denormalizedCOATrees.map(
-    (COATree) => ({ ...COATree.content, parentId: undefined, content: undefined }) 
-  )
+  let normalizedTrees = denormalizedCOATrees.map((COATree) => ({
+    ...COATree.content,
+    parentId: undefined,
+    content: undefined,
+  }))
 
-  while(stack.length) {
+  while (stack.length) {
     const node = stack.pop()
 
     const { children } = node
 
     const parentId = node.content._id
 
-    if(children) {
-      children.forEach(
-        (child) => {
-          const childContent = child.content
+    if (children) {
+      children.forEach((child) => {
+        const childContent = child.content
 
-          normalizedTrees.push({ ...childContent, parentId, content: undefined })
-          
-          stack.push(child)
-        }
-      )
+        normalizedTrees.push({ ...childContent, parentId, content: undefined })
+
+        stack.push(child)
+      })
     }
   }
 
@@ -68,12 +66,10 @@ export const getCOATreesRequest = (query) => (dispatch) => {
 
   COATreeController.fetchCOATrees(query)
     .then((COATrees) => {
-      batch(
-        () => {
-          dispatch(receiveCOATrees({ Values: COATrees }))
-          dispatch(loadCOATreeUI(COATrees))
-        }
-      )
+      batch(() => {
+        dispatch(receiveCOATrees({ Values: COATrees }))
+        dispatch(loadCOATreeUI(COATrees))
+      })
     })
     .catch((error) => {
       dispatch(failCOATreesRequest(error))
@@ -83,20 +79,18 @@ export const getCOATreesRequest = (query) => (dispatch) => {
 export const createCOATreeRequest = (COAGroup, sheetNameId) => (dispatch) => {
   const COATree = {
     sheetNameId,
-    COAGroupId: COAGroup._id
+    COAGroupId: COAGroup._id,
   }
 
   dispatch(requestCOATrees())
 
   COATreeController.createCOATree(COATree)
     .then((COATree) => {
-      batch(
-        () => {
-          dispatch(createCOATree({ Value: COATree }))
-          dispatch(addRootCOATreeUI(COATree))
-          dispatch(closeCOAGroupDialog())
-        }
-      )
+      batch(() => {
+        dispatch(createCOATree({ Value: COATree }))
+        dispatch(addRootCOATreeUI(COATree))
+        dispatch(closeCOAGroupDialog())
+      })
     })
     .catch((error) => {
       dispatch(failCOATreesRequest(error))
@@ -115,7 +109,9 @@ export const deleteCOATreeRequest = (_id) => (dispatch) => {
     })
 }
 
-export const updateCOATreeRequest = (COATree, resolve, reject) => (dispatch) => {
+export const updateCOATreeRequest = (COATree, resolve, reject) => (
+  dispatch
+) => {
   dispatch(requestCOATrees())
 
   COATreeController.updateCOATree(COATree)
@@ -131,24 +127,18 @@ export const updateCOATreeRequest = (COATree, resolve, reject) => (dispatch) => 
 
 export const updateCOATreesRequest = (sheetNameId) => (dispatch, getState) => {
   const {
-    COATreeStore: {
-      localTree
-    }
+    COATreeStore: { localTree },
   } = getState()
-  
+
   dispatch(requestCOATrees())
 
   const normalizedTrees = normalizeTrees(localTree)
 
   COATreeController.updateCOATrees(normalizedTrees, sheetNameId)
-    .then(
-      (_COATrees) => {
-        dispatch(updateOriginalCOATreeUI())
-      }
-    )
-    .catch(
-      (error) => {
-        dispatch(failCOATreesRequest(error))
-      }
-    )
+    .then((_COATrees) => {
+      dispatch(updateOriginalCOATreeUI())
+    })
+    .catch((error) => {
+      dispatch(failCOATreesRequest(error))
+    })
 }

@@ -1,35 +1,40 @@
-const WorkerPlugin = require("worker-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
+const WorkerPlugin = require('worker-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 // const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
-const webpack = require("webpack");
+const webpack = require('webpack')
 
-const rewireAliases = require('react-app-rewire-aliases');
-const path = require('path');
+const rewireAliases = require('react-app-rewire-aliases')
+const path = require('path')
 
 module.exports = {
   webpack: function (config, env) {
     config = rewireAliases.aliasesOptions({
       // '@components': path.resolve(__dirname, `${paths.appSrc}/components/`)
-      "@constants": path.join(__dirname, "/src/constants"),
-      "@styles": path.join(__dirname, "/src/styles"),
-      "@tools": path.join(__dirname, "/src/tools"),
-      "@images": path.join(__dirname, "/src/images"),
-      "@store": path.join(__dirname, "/src/store"),
-      "@actions": path.join(__dirname, "/src/store/actions"),
-      "@selectors": path.join(__dirname, "/src/store/selectors"),
-      "@actionCreators": path.join(__dirname, "/src/store/actions/actionCreators")
-    })(config, env);
+      '@constants': path.join(__dirname, '/src/constants'),
+      '@styles': path.join(__dirname, '/src/styles'),
+      '@tools': path.join(__dirname, '/src/tools'),
+      '@images': path.join(__dirname, '/src/images'),
+      '@store': path.join(__dirname, '/src/store'),
+      '@actions': path.join(__dirname, '/src/store/actions'),
+      '@selectors': path.join(__dirname, '/src/store/selectors'),
+      '@actionTypes': path.join(
+        __dirname,
+        '/src/store/actions/actionTypes'
+      ),
+    })(config, env)
 
     config.stats = {
       reasons: true,
-    };
-    config.plugins.push(new WorkerPlugin());
-    config.plugins.push(new webpack.EnvironmentPlugin({
-      NODE_ENV: "development",
-      DEBUG: false,
-      SERVER_URL: "http://localhost:3000",
-      PUBLIC_URL: "http://localhost:3003",
-    }));
+    }
+    config.plugins.push(new WorkerPlugin())
+    config.plugins.push(
+      new webpack.EnvironmentPlugin({
+        NODE_ENV: 'development',
+        DEBUG: false,
+        SERVER_URL: 'http://localhost:3000',
+        PUBLIC_URL: 'http://localhost:3003',
+      })
+    )
     // if (process.env.NODE_ENV === "production") {
     //   config.plugins.push(new BundleAnalyzerPlugin({
     //     analyzerMode: "static",
@@ -38,7 +43,7 @@ module.exports = {
     //   }));
     // }
 
-    config.externals = ["child_process", "worker_threads"];
+    config.externals = ['child_process', 'worker_threads']
 
     config.optimization.minimizer[0] = new TerserPlugin({
       terserOptions: {
@@ -78,7 +83,7 @@ module.exports = {
       // Enable file caching
       cache: true,
       sourceMap: true,
-    });
+    })
 
     // config.optimization.splitChunks.cacheGroups = {
     //   excel: {
@@ -87,10 +92,10 @@ module.exports = {
     //     chunks: "all",
     //   }
     // };
-    return config;
+    return config
   },
   jest: function (config) {
-    config.verbose = true;
-    return config;
+    config.verbose = true
+    return config
   },
-};
+}

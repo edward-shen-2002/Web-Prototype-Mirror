@@ -1,27 +1,20 @@
-const SET_SHEET_NAME = (
-  state,
-  {
-    sheetName, 
-    newSheetName
+const SET_SHEET_NAME = (state, { sheetName, newSheetName }) => {
+  const { activeSheetName, sheetNames } = state
+
+  if (activeSheetName === newSheetName) {
+    console.error(`Sheet name with name ${newSheetName} already exists`)
+    return state
   }
-) => {
-  const {
-    activeSheetName,
-    sheetNames
-  } = state;
 
-  if(activeSheetName === newSheetName) {
-    console.error(`Sheet name with name ${newSheetName} already exists`);
-    return state;
-  }
-  
-  let newState = { ...state };
+  let newState = { ...state }
 
-  newState.sheetNames = sheetNames.map((name) => name === sheetName ? newSheetName : name);
+  newState.sheetNames = sheetNames.map((name) =>
+    name === sheetName ? newSheetName : name
+  )
 
-  newState.activeSheetName = newSheetName;
+  newState.activeSheetName = newSheetName
 
-  return newState;
-};
+  return newState
+}
 
-export default SET_SHEET_NAME;
+export default SET_SHEET_NAME

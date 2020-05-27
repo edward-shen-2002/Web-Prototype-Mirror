@@ -1,51 +1,49 @@
-import React, { Fragment } from "react";
+import React, { Fragment } from 'react'
 
-import { connect } from "react-redux";
+import { connect } from 'react-redux'
 
-import { 
-  getNormalColumnWidth,
-  getNormalRowHeight
-} from "@tools/excel";
+import { getNormalColumnWidth, getNormalRowHeight } from '@tools/excel'
 
-import { 
-  DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER, 
-  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER
-} from "@constants/excel";
+import {
+  DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
+  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER,
+} from '@constants/excel'
 
-import topOffsetsSelector from "@selectors/ui/excel/topOffsets";
-import leftOffsetsSelector from "@selectors/ui/excel/leftOffsets";
+import topOffsetsSelector from '@selectors/ui/excel/topOffsets'
+import leftOffsetsSelector from '@selectors/ui/excel/leftOffsets'
 
-import "./HeaderSelection.scss";
+import './HeaderSelection.scss'
 
 const mergeSegments = (segments) => {
-  if(!segments.length) return [];
+  if (!segments.length) return []
 
-  segments.sort((segment1, segment2) => segment1[0] - segment2[0]);
+  segments.sort((segment1, segment2) => segment1[0] - segment2[0])
 
-  let merged = [ segments[0] ];
-  let lastIndex = 0;
+  let merged = [segments[0]]
+  let lastIndex = 0
 
-  const segmentsCount = segments.length;
+  const segmentsCount = segments.length
 
-  for(let segmentIndex = 1; segmentIndex < segmentsCount; segmentIndex++) {
-    let segment = segments[segmentIndex];
-    let currentSegmentStart = segment[0];
-    let previousSegmentEnd =  merged[lastIndex][1];
+  for (let segmentIndex = 1; segmentIndex < segmentsCount; segmentIndex++) {
+    let segment = segments[segmentIndex]
+    let currentSegmentStart = segment[0]
+    let previousSegmentEnd = merged[lastIndex][1]
 
     // Possible overlap case
-    if(currentSegmentStart <= previousSegmentEnd) {
-      let currentSegmentEnd = segment[1];
+    if (currentSegmentStart <= previousSegmentEnd) {
+      let currentSegmentEnd = segment[1]
 
       // Extend previous segment
-      if(currentSegmentEnd > previousSegmentEnd) merged[lastIndex][1] = currentSegmentEnd;
+      if (currentSegmentEnd > previousSegmentEnd)
+        merged[lastIndex][1] = currentSegmentEnd
     } else {
-      merged.push(segment);
-      lastIndex++;
+      merged.push(segment)
+      lastIndex++
     }
   }
 
-  return merged;
-};
+  return merged
+}
 
 const mapHeaderStateToProps = ({
   ui: {
@@ -60,10 +58,10 @@ const mapHeaderStateToProps = ({
         sheetRowCount,
         sheetColumnCount,
         sheetFreezeColumnCount,
-        sheetFreezeRowCount
-      }
-    }
-  }
+        sheetFreezeRowCount,
+      },
+    },
+  },
 }) => ({
   activeCellPosition,
   activeSelectionArea,
@@ -76,16 +74,21 @@ const mapHeaderStateToProps = ({
   sheetFreezeColumnCount,
   sheetFreezeRowCount,
   topOffsets: topOffsetsSelector({ sheetRowCount, sheetRowHeights }),
-  leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths })
-});
+  leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths }),
+})
 
-const HeaderSelectionComponents = ({ headerStyles }) => headerStyles.map((headerStyle, index) => (
-  <div key={`header-selection-${index}`} className="headerStyles" style={headerStyle}/>
-)); 
+const HeaderSelectionComponents = ({ headerStyles }) =>
+  headerStyles.map((headerStyle, index) => (
+    <div
+      key={`header-selection-${index}`}
+      className="headerStyles"
+      style={headerStyle}
+    />
+  ))
 
-export let HeaderSelection = ({ 
-  activeCellPosition, 
-  activeSelectionArea, 
+export let HeaderSelection = ({
+  activeCellPosition,
+  activeSelectionArea,
   stagnantSelectionAreas,
   sheetCellData,
   sheetColumnWidths,
@@ -93,88 +96,89 @@ export let HeaderSelection = ({
   sheetFreezeColumnCount,
   sheetFreezeRowCount,
   topOffsets,
-  leftOffsets
+  leftOffsets,
 }) => {
-  const { x, y } = activeCellPosition;
+  const { x, y } = activeCellPosition
 
-  let activeCellPositionArea;
-  
+  let activeCellPositionArea
+
   // Format active cell position
-  if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
-    activeCellPositionArea = sheetCellData[y][x].merged;
+  if (sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
+    activeCellPositionArea = sheetCellData[y][x].merged
   } else {
-    activeCellPositionArea = { x1: x, y1: y, x2: x, y2: y };
+    activeCellPositionArea = { x1: x, y1: y, x2: x, y2: y }
   }
 
-  let combinedAreas = [ activeCellPositionArea, ...stagnantSelectionAreas ];
+  let combinedAreas = [activeCellPositionArea, ...stagnantSelectionAreas]
 
-  if(activeSelectionArea) combinedAreas.push(activeSelectionArea);
+  if (activeSelectionArea) combinedAreas.push(activeSelectionArea)
 
-  let xSegments = [];
-  let ySegments = [];
+  let xSegments = []
+  let ySegments = []
 
   // Sort points in each segment
   combinedAreas.forEach(({ x1, y1, x2, y2 }) => {
-    let ySegment = [ Math.min(y1, y2), Math.max(y1, y2) ];
-    let xSegment = [ Math.min(x1, x2), Math.max(x1, x2) ];
+    let ySegment = [Math.min(y1, y2), Math.max(y1, y2)]
+    let xSegment = [Math.min(x1, x2), Math.max(x1, x2)]
 
-    if(ySegment[0] <= sheetFreezeRowCount) {
-      if(ySegment[1] > sheetFreezeRowCount) ySegment[1] = sheetFreezeRowCount;
-      ySegments.push(ySegment);
+    if (ySegment[0] <= sheetFreezeRowCount) {
+      if (ySegment[1] > sheetFreezeRowCount) ySegment[1] = sheetFreezeRowCount
+      ySegments.push(ySegment)
     }
 
-    if(xSegment[0] <= sheetFreezeColumnCount) {
-      if(xSegment[1] > sheetFreezeColumnCount) xSegment[1] = sheetFreezeColumnCount;
-      xSegments.push(xSegment);
+    if (xSegment[0] <= sheetFreezeColumnCount) {
+      if (xSegment[1] > sheetFreezeColumnCount)
+        xSegment[1] = sheetFreezeColumnCount
+      xSegments.push(xSegment)
     }
-  });
+  })
 
-  const yElementarySegments = mergeSegments(ySegments);
-  const xElementarySegments = mergeSegments(xSegments);
+  const yElementarySegments = mergeSegments(ySegments)
+  const xElementarySegments = mergeSegments(xSegments)
 
-  if(!yElementarySegments.length && !xElementarySegments.length) return null;
+  if (!yElementarySegments.length && !xElementarySegments.length) return null
 
-  const rowHeaderStyles = yElementarySegments.map(([ start, end ]) => {
-    const topStart = topOffsets[start];
-    const width = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER;
+  const rowHeaderStyles = yElementarySegments.map(([start, end]) => {
+    const topStart = topOffsets[start]
+    const width = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER
 
-    const topEnd = topOffsets[end];
+    const topEnd = topOffsets[end]
 
-    const heightEnd = getNormalRowHeight(sheetRowHeights[end]);
+    const heightEnd = getNormalRowHeight(sheetRowHeights[end])
 
-    return ({
+    return {
       top: topStart,
       left: 0,
       height: topEnd + heightEnd - topStart,
-      width
-    });
-  });
+      width,
+    }
+  })
 
-  const columnHeaderStyles = xElementarySegments.map(([ start, end ]) => {
-    const leftStart = leftOffsets[start];
-    const height = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER;
+  const columnHeaderStyles = xElementarySegments.map(([start, end]) => {
+    const leftStart = leftOffsets[start]
+    const height = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER
 
-    const leftEnd = leftOffsets[end];
-    
-    const widthEnd = getNormalColumnWidth(sheetColumnWidths[end]);
+    const leftEnd = leftOffsets[end]
 
-    return ({
+    const widthEnd = getNormalColumnWidth(sheetColumnWidths[end])
+
+    return {
       top: 0,
       left: leftStart,
       height,
-      width: leftEnd + widthEnd - leftStart
-    });
-  });
+      width: leftEnd + widthEnd - leftStart,
+    }
+  })
 
   return (
     <Fragment>
-      <HeaderSelectionComponents headerStyles={rowHeaderStyles}/>
-      <HeaderSelectionComponents headerStyles={columnHeaderStyles}/>
+      <HeaderSelectionComponents headerStyles={rowHeaderStyles} />
+      <HeaderSelectionComponents headerStyles={columnHeaderStyles} />
     </Fragment>
-  );
-};
+  )
+}
 
-HeaderSelection = connect(mapHeaderStateToProps)(HeaderSelection);
+HeaderSelection = connect(mapHeaderStateToProps)(HeaderSelection)
 
 const mapColumnHeaderStateToProps = ({
   ui: {
@@ -186,10 +190,10 @@ const mapColumnHeaderStateToProps = ({
         sheetCellData,
         sheetColumnWidths,
         sheetColumnCount,
-        sheetFreezeColumnCount
-      }
-    }
-  }
+        sheetFreezeColumnCount,
+      },
+    },
+  },
 }) => ({
   activeCellPosition,
   activeSelectionArea,
@@ -198,71 +202,74 @@ const mapColumnHeaderStateToProps = ({
   sheetColumnWidths,
   sheetColumnCount,
   sheetFreezeColumnCount,
-  leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths })
-});
+  leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths }),
+})
 
 export let ColumnHeaderSelection = ({
-  activeCellPosition, 
-  activeSelectionArea, 
+  activeCellPosition,
+  activeSelectionArea,
   stagnantSelectionAreas,
   sheetCellData,
   sheetColumnWidths,
   sheetFreezeColumnCount,
-  leftOffsets
+  leftOffsets,
 }) => {
-  const { y, x } = activeCellPosition;
+  const { y, x } = activeCellPosition
 
-  let activeCellPositionArea;
-  
+  let activeCellPositionArea
+
   // Format active cell position
-  if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
-    const { merged: { x1, x2 } } = sheetCellData[y][x];
-    activeCellPositionArea = { x1, x2 };
+  if (sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
+    const {
+      merged: { x1, x2 },
+    } = sheetCellData[y][x]
+    activeCellPositionArea = { x1, x2 }
   } else {
-    activeCellPositionArea = { x1: x, x2: x };
+    activeCellPositionArea = { x1: x, x2: x }
   }
 
-  let combinedAreas = [ activeCellPositionArea, ...stagnantSelectionAreas ];
+  let combinedAreas = [activeCellPositionArea, ...stagnantSelectionAreas]
 
-  if(activeSelectionArea) combinedAreas.push(activeSelectionArea);
+  if (activeSelectionArea) combinedAreas.push(activeSelectionArea)
 
-  let xSegments = [];
+  let xSegments = []
 
   // Sort points in each segment
   combinedAreas.forEach(({ x1, x2 }) => {
-    let xSegment = [ Math.min(x1, x2), Math.max(x1, x2) ];
+    let xSegment = [Math.min(x1, x2), Math.max(x1, x2)]
 
-    if(xSegment[1] > sheetFreezeColumnCount) {
-      if(xSegment[0] <= sheetFreezeColumnCount) xSegment[0] = sheetFreezeColumnCount + 1;
-      xSegments.push(xSegment);
+    if (xSegment[1] > sheetFreezeColumnCount) {
+      if (xSegment[0] <= sheetFreezeColumnCount)
+        xSegment[0] = sheetFreezeColumnCount + 1
+      xSegments.push(xSegment)
     }
-  });
+  })
 
-  const xElementarySegments = mergeSegments(xSegments);
+  const xElementarySegments = mergeSegments(xSegments)
 
-  if(!xElementarySegments.length) return null;
+  if (!xElementarySegments.length) return null
 
-  const columnHeaderStyles = xElementarySegments.map(([ start, end ]) => {
-    const leftStart = leftOffsets[start];
-    const height = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER;
-    
-    const leftEnd = leftOffsets[end];
-    const widthEnd = getNormalColumnWidth(sheetColumnWidths[end]);
+  const columnHeaderStyles = xElementarySegments.map(([start, end]) => {
+    const leftStart = leftOffsets[start]
+    const height = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER
 
-    return ({
+    const leftEnd = leftOffsets[end]
+    const widthEnd = getNormalColumnWidth(sheetColumnWidths[end])
+
+    return {
       top: 0,
       left: leftStart,
       height,
-      width: leftEnd + widthEnd - leftStart
-    });
-  });
+      width: leftEnd + widthEnd - leftStart,
+    }
+  })
 
-  return (
-    <HeaderSelectionComponents headerStyles={columnHeaderStyles}/>
-  );
-};
+  return <HeaderSelectionComponents headerStyles={columnHeaderStyles} />
+}
 
-ColumnHeaderSelection = connect(mapColumnHeaderStateToProps)(ColumnHeaderSelection);
+ColumnHeaderSelection = connect(mapColumnHeaderStateToProps)(
+  ColumnHeaderSelection
+)
 
 const mapRowHeaderStateToProps = ({
   ui: {
@@ -274,10 +281,10 @@ const mapRowHeaderStateToProps = ({
         sheetCellData,
         sheetRowHeights,
         sheetRowCount,
-        sheetFreezeRowCount
-      }
-    }
-  }
+        sheetFreezeRowCount,
+      },
+    },
+  },
 }) => ({
   activeCellPosition,
   activeSelectionArea,
@@ -287,71 +294,74 @@ const mapRowHeaderStateToProps = ({
   sheetRowCount,
   sheetFreezeRowCount,
 
-  topOffsets: topOffsetsSelector({ sheetRowCount, sheetRowHeights })
-});
+  topOffsets: topOffsetsSelector({ sheetRowCount, sheetRowHeights }),
+})
 
-export let RowHeaderSelection = ({ 
-  activeCellPosition, 
-  activeSelectionArea, 
+export let RowHeaderSelection = ({
+  activeCellPosition,
+  activeSelectionArea,
   stagnantSelectionAreas,
   sheetCellData,
   sheetRowHeights,
   sheetFreezeRowCount,
-  topOffsets
+  topOffsets,
 }) => {
-  const { y, x } = activeCellPosition;
+  const { y, x } = activeCellPosition
 
-  let activeCellPositionArea;
-  
+  let activeCellPositionArea
+
   // Format active cell position
-  if(sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
-    const { merged: { y1, y2 } } = sheetCellData[y][x];
-    activeCellPositionArea = { y1, y2 };
+  if (sheetCellData[y] && sheetCellData[y][x] && sheetCellData[y][x].merged) {
+    const {
+      merged: { y1, y2 },
+    } = sheetCellData[y][x]
+    activeCellPositionArea = { y1, y2 }
   } else {
-    activeCellPositionArea = { y1: y, y2: y };
+    activeCellPositionArea = { y1: y, y2: y }
   }
 
-  let combinedAreas = [ activeCellPositionArea, ...stagnantSelectionAreas ];
+  let combinedAreas = [activeCellPositionArea, ...stagnantSelectionAreas]
 
-  if(activeSelectionArea) combinedAreas.push(activeSelectionArea);
+  if (activeSelectionArea) combinedAreas.push(activeSelectionArea)
 
-  let ySegments = [];
+  let ySegments = []
 
   // Sort points in each segment
   combinedAreas.forEach(({ y1, y2 }) => {
-    let ySegment = [ Math.min(y1, y2), Math.max(y1, y2) ];
+    let ySegment = [Math.min(y1, y2), Math.max(y1, y2)]
 
-    if(ySegment[1] > sheetFreezeRowCount) {
-      if(ySegment[0] <= sheetFreezeRowCount) ySegment[0] = sheetFreezeRowCount + 1;
-      ySegments.push(ySegment);
+    if (ySegment[1] > sheetFreezeRowCount) {
+      if (ySegment[0] <= sheetFreezeRowCount)
+        ySegment[0] = sheetFreezeRowCount + 1
+      ySegments.push(ySegment)
     }
-  });
+  })
 
-  const yElementarySegments = mergeSegments(ySegments);
+  const yElementarySegments = mergeSegments(ySegments)
 
-  if(!yElementarySegments.length) return null;
+  if (!yElementarySegments.length) return null
 
-  const rowHeaderStyles = yElementarySegments.map(([ start, end ]) => {
-    const topStart = topOffsets[start];
-    const width = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER;
+  const rowHeaderStyles = yElementarySegments.map(([start, end]) => {
+    const topStart = topOffsets[start]
+    const width = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER
 
-    const topEnd = topOffsets[end];
-    const heightEnd = getNormalRowHeight(sheetRowHeights[end]);
+    const topEnd = topOffsets[end]
+    const heightEnd = getNormalRowHeight(sheetRowHeights[end])
 
-    const topFreeze = topOffsets[sheetFreezeRowCount];
-    const heightFreeze = getNormalRowHeight(sheetRowHeights[sheetFreezeRowCount]);
+    const topFreeze = topOffsets[sheetFreezeRowCount]
+    const heightFreeze = getNormalRowHeight(
+      sheetRowHeights[sheetFreezeRowCount]
+    )
 
-    return ({
+    return {
       top: topStart - topFreeze - heightFreeze,
       left: 0,
       height: topEnd + heightEnd - topStart,
-      width
-    });
-  });
+      width,
+    }
+  })
 
-  return (
-    <HeaderSelectionComponents headerStyles={rowHeaderStyles}/>
-  );
-};
+  return <HeaderSelectionComponents headerStyles={rowHeaderStyles} />
+}
 
-RowHeaderSelection = connect(mapRowHeaderStateToProps)(RowHeaderSelection);
+RowHeaderSelection = connect(mapRowHeaderStateToProps)(RowHeaderSelection)

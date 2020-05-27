@@ -1,57 +1,54 @@
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useCallback } from 'react'
 
-import { useDispatch } from "react-redux";
+import { useDispatch } from 'react-redux'
 
-import AppBar from "./AppBar";
-import ToolBar from "./ToolBar";
-import FormulaBar from "./FormulaBar";
-import Sheet from "./Sheet";
-import SheetNavigator from "./SheetNavigator";
+import AppBar from './AppBar'
+import ToolBar from './ToolBar'
+import FormulaBar from './FormulaBar'
+import Sheet from './Sheet'
+import SheetNavigator from './SheetNavigator'
 
-import { undo, redo } from "@actions/ui/excel/commands";
+import { undo, redo } from '@actions/ui/excel/commands'
 
-import "./Excel.scss";
+import './Excel.scss'
 
-const Divider = () => <hr className="divider"/>;
+const Divider = () => <hr className="divider" />
 
 const Excel = ({ type, returnLink, handleSave }) => {
-  const sheetContainerRef = useRef(null);
-  const sheetGridRef = useRef(null);
+  const sheetContainerRef = useRef(null)
+  const sheetGridRef = useRef(null)
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-  window.sheetGridRef = sheetGridRef;
-  window.sheetContainerRef = sheetContainerRef;
+  window.sheetGridRef = sheetGridRef
+  window.sheetContainerRef = sheetContainerRef
 
   const handleKeyDown = useCallback(
     ({ key, ctrlKey, metaKey }) => {
-      if(ctrlKey || metaKey) {
-        if(key === "y") {
-          dispatch(redo());
-        } else if(key === "z") {
-          dispatch(undo());
+      if (ctrlKey || metaKey) {
+        if (key === 'y') {
+          dispatch(redo())
+        } else if (key === 'z') {
+          dispatch(undo())
         }
       }
     },
-    [ dispatch ]
-  );
+    [dispatch]
+  )
 
   return (
-    <div 
-      className="excel"
-      onKeyDown={handleKeyDown}
-    >
-      <AppBar type={type} returnLink={returnLink} handleSave={handleSave}/>
-      <Divider/>
-      <ToolBar type={type}/>
-      <Divider/>
-      <FormulaBar/>
-      <Divider/>
-      <Sheet sheetGridRef={sheetGridRef} handleSave={handleSave}/>
-      <Divider/>
-      <SheetNavigator/>
+    <div className="excel" onKeyDown={handleKeyDown}>
+      <AppBar type={type} returnLink={returnLink} handleSave={handleSave} />
+      <Divider />
+      <ToolBar type={type} />
+      <Divider />
+      <FormulaBar />
+      <Divider />
+      <Sheet sheetGridRef={sheetGridRef} handleSave={handleSave} />
+      <Divider />
+      <SheetNavigator />
     </div>
-  );
-};
+  )
+}
 
-export default Excel;
+export default Excel

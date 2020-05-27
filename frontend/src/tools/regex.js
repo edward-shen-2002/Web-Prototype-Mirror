@@ -1,3 +1,3 @@
-export const sheetNameRegex = /^Sheet(\d+)$/;
+export const sheetNameRegex = /^Sheet(\d+)$/
 
-export const inputCharacterRegex = /^[ -~]$/;
+export const inputCharacterRegex = /^[ -~]$/

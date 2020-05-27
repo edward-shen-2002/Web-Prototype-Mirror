@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react'
 
-import { connect } from "react-redux";
+import { connect } from 'react-redux'
 
-import topOffsetsSelector from "@selectors/ui/excel/topOffsets";
-import leftOffsetsSelector from "@selectors/ui/excel/leftOffsets";
+import topOffsetsSelector from '@selectors/ui/excel/topOffsets'
+import leftOffsetsSelector from '@selectors/ui/excel/leftOffsets'
 
-import "./ActiveSelectionArea.scss";
+import './ActiveSelectionArea.scss'
 
 const mapStateToProps = ({
   ui: {
@@ -13,16 +13,16 @@ const mapStateToProps = ({
       present: {
         isSelectionMode,
         activeSelectionArea,
-  
+
         sheetFreezeColumnCount,
         sheetFreezeRowCount,
         sheetColumnWidths,
         sheetRowHeights,
         sheetColumnCount,
-        sheetRowCount
-      }
-    }
-  }
+        sheetRowCount,
+      },
+    },
+  },
 }) => ({
   isSelectionMode,
   activeSelectionArea,
@@ -34,10 +34,10 @@ const mapStateToProps = ({
   sheetColumnCount,
   sheetRowCount,
   topOffsets: topOffsetsSelector({ sheetRowCount, sheetRowHeights }),
-  leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths })
-});
+  leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths }),
+})
 
-let ActiveSelectionArea = ({ 
+let ActiveSelectionArea = ({
   computeSelectionAreaStyle,
   isRelevantArea,
 
@@ -51,33 +51,33 @@ let ActiveSelectionArea = ({
   sheetRowHeights,
 
   topOffsets,
-  leftOffsets
+  leftOffsets,
 }) => {
-  if(!isSelectionMode || !activeSelectionArea) return null;
+  if (!isSelectionMode || !activeSelectionArea) return null
 
-  const { x1, y1, x2, y2 } = activeSelectionArea;
+  const { x1, y1, x2, y2 } = activeSelectionArea
 
-  if(!isRelevantArea(x1, y1, x2, y2, sheetFreezeColumnCount, sheetFreezeRowCount)) return null;
+  if (
+    !isRelevantArea(x1, y1, x2, y2, sheetFreezeColumnCount, sheetFreezeRowCount)
+  )
+    return null
 
   const activeSelectionAreaStyle = computeSelectionAreaStyle(
-    sheetColumnWidths, 
-    leftOffsets, 
-    sheetRowHeights, 
+    sheetColumnWidths,
+    leftOffsets,
+    sheetRowHeights,
     topOffsets,
-    activeSelectionArea, 
-    sheetFreezeColumnCount, 
-    sheetFreezeRowCount, 
+    activeSelectionArea,
+    sheetFreezeColumnCount,
+    sheetFreezeRowCount,
     true
-  );
+  )
 
   return (
-    <div 
-      className="activeSelectionArea" 
-      style={activeSelectionAreaStyle}
-    />
-  );
-};
+    <div className="activeSelectionArea" style={activeSelectionAreaStyle} />
+  )
+}
 
-ActiveSelectionArea = connect(mapStateToProps)(ActiveSelectionArea);
+ActiveSelectionArea = connect(mapStateToProps)(ActiveSelectionArea)
 
-export default ActiveSelectionArea;
+export default ActiveSelectionArea

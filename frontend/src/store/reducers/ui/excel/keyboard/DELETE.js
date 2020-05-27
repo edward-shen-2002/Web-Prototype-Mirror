@@ -1,58 +1,56 @@
-import { getAllAreas } from "../tools/area";
-import { CustomEditor, createEmptyEditorValue } from "@tools/slate";
+import { getAllAreas } from '../tools/area'
+import { CustomEditor, createEmptyEditorValue } from '@tools/slate'
 
-const DELETE = (
-  state
-) => {
-  let { 
+const DELETE = (state) => {
+  let {
     isEditMode,
 
-    sheetCellData
-  } = state;
+    sheetCellData,
+  } = state
 
-  if(isEditMode) return state;
+  if (isEditMode) return state
 
-  let newState = { ...state };
+  let newState = { ...state }
 
-  let selectionAreaCoveredCells = getAllAreas(newState);
+  let selectionAreaCoveredCells = getAllAreas(newState)
 
-  let newSheetCellData = { ...sheetCellData };
+  let newSheetCellData = { ...sheetCellData }
 
-  for(let row in selectionAreaCoveredCells) {
-    let columns = Object.keys(selectionAreaCoveredCells[row]);
+  for (let row in selectionAreaCoveredCells) {
+    let columns = Object.keys(selectionAreaCoveredCells[row])
 
-    let rowData = { ...newSheetCellData[row] };
+    let rowData = { ...newSheetCellData[row] }
 
-    if(rowData) {
+    if (rowData) {
       columns.forEach((column) => {
         // ! Consider when everything is undefined -- do you remove it from sheet data?
         // ! Consider normal/rich text
 
-        if(rowData[column]) {
-          rowData[column] = { 
-            ...rowData[column], 
+        if (rowData[column]) {
+          rowData[column] = {
+            ...rowData[column],
             value: undefined,
-            type: "normal"            
-           };
+            type: 'normal',
+          }
         }
-      });
+      })
 
-      newSheetCellData[row] = rowData;
+      newSheetCellData[row] = rowData
     }
   }
 
-  newState.sheetCellData = newSheetCellData;
+  newState.sheetCellData = newSheetCellData
 
   CustomEditor.clearEditor(newState.activeCellInputData.formulaEditor)
-  CustomEditor.clearEditor(newState.activeCellInputData.cellEditor);
+  CustomEditor.clearEditor(newState.activeCellInputData.cellEditor)
 
-  newState.activeCellInputData = { 
+  newState.activeCellInputData = {
     ...newState.activeCellInputData,
     cellValue: createEmptyEditorValue(),
-    formulaValue: createEmptyEditorValue()
-  };
+    formulaValue: createEmptyEditorValue(),
+  }
 
-  return newState;
-};
+  return newState
+}
 
-export default DELETE;
+export default DELETE

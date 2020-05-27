@@ -4,8 +4,8 @@ import {
   REQUEST_COAS,
   CREATE_COA,
   DELETE_COA,
-  UPDATE_COA
-} from "./actionCreators"
+  UPDATE_COA,
+} from './actionTypes'
 
 export const failCOAsRequest = (error) => ({ type: FAIL_COAS_REQUEST, error })
 export const receiveCOAs = (response) => ({ type: RECEIVE_COAS, response })

@@ -1,35 +1,30 @@
-const SET_BUSINESS_CONCEPT = (
-  state,
-  {
-    category,
-    concept
-  }
-) => {
-  let newState = { ...state };
-  
-  const {
-    activeCellPosition,
-    sheetCellData
-  } = newState;
+const SET_BUSINESS_CONCEPT = (state, { category, concept }) => {
+  let newState = { ...state }
 
-  const { x, y } = activeCellPosition;
+  const { activeCellPosition, sheetCellData } = newState
 
-  let newSheetCellData = { ...sheetCellData };
+  const { x, y } = activeCellPosition
 
-  if(category === "attribute") {
-    if(!newSheetCellData[1]) newSheetCellData[1] = {};
+  let newSheetCellData = { ...sheetCellData }
 
-    newSheetCellData[1][x] = { value: concept, type: "normal" };
+  if (category === 'attribute') {
+    if (!newSheetCellData[1]) newSheetCellData[1] = {}
+
+    newSheetCellData[1][x] = { value: concept, type: 'normal' }
   } else {
-    if(!newSheetCellData[y]) newSheetCellData[y] = {};
+    if (!newSheetCellData[y]) newSheetCellData[y] = {}
 
     // ! Should we remove everything?
-    newSheetCellData[y][1] = { ...newSheetCellData[y][1], value: concept, type: "normal" };
+    newSheetCellData[y][1] = {
+      ...newSheetCellData[y][1],
+      value: concept,
+      type: 'normal',
+    }
   }
 
-  newState.sheetCellData = newSheetCellData;
+  newState.sheetCellData = newSheetCellData
 
-  return newState;
-};
+  return newState
+}
 
-export default SET_BUSINESS_CONCEPT;
+export default SET_BUSINESS_CONCEPT

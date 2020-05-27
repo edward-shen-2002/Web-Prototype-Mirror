@@ -1,4 +1,4 @@
-import { createReducer } from "../tools/setup"
+import { createReducer } from '../tools/setup'
 
 import REQUEST_APPSYSES from './common/REQUEST'
 import RECEIVE_APPSYSES from './common/RECEIVE'
@@ -15,15 +15,15 @@ const reducersMap = {
   CREATE_APPSYS,
   DELETE_APPSYS,
   UPDATE_APPSYS,
-  RESET_APPSYSES
+  RESET_APPSYSES,
 }
 
 const defaultState = {
   response: {
-    Values: []
+    Values: [],
   },
   error: null,
-  isCallInProgress: false
+  isCallInProgress: false,
 }
 
 const AppSysesStore = createReducer(defaultState, reducersMap)

@@ -1,4 +1,4 @@
-import { createReducer } from "../tools/setup"
+import { createReducer } from '../tools/setup'
 
 import REQUEST_SUBMISSIONS from './common/REQUEST'
 import RECEIVE_SUBMISSIONS from './common/RECEIVE'
@@ -15,15 +15,15 @@ const reducersMap = {
   CREATE_SUBMISSION,
   DELETE_SUBMISSION,
   UPDATE_SUBMISSION,
-  RESET_SUBMISSIONS
+  RESET_SUBMISSIONS,
 }
 
 const defaultState = {
   response: {
-    Values: []
+    Values: [],
   },
   error: null,
-  isCallInProgress: false
+  isCallInProgress: false,
 }
 
 const SubmissionPeriodsStore = createReducer(defaultState, reducersMap)

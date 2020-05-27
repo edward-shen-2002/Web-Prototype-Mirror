@@ -1,15 +1,13 @@
-const DOUBLE_CLICK_EDITABLE_CELL = (
-  state
-) => {
-  const { isSelectionMode } = state;
+const DOUBLE_CLICK_EDITABLE_CELL = (state) => {
+  const { isSelectionMode } = state
 
-  if(isSelectionMode) return state;
-  
-  let newState = { ...state };
-  
-  newState.isEditMode = true;
+  if (isSelectionMode) return state
 
-  return newState;
-};
+  let newState = { ...state }
 
-export default DOUBLE_CLICK_EDITABLE_CELL;
+  newState.isEditMode = true
+
+  return newState
+}
+
+export default DOUBLE_CLICK_EDITABLE_CELL

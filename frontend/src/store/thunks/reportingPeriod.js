@@ -1,10 +1,10 @@
-import { 
-  requestReportingPeriods, 
-  failReportingPeriodsRequest, 
-  receiveReportingPeriods, 
-  createReportingPeriod, 
-  deleteReportingPeriod, 
-  updateReportingPeriod 
+import {
+  requestReportingPeriods,
+  failReportingPeriodsRequest,
+  receiveReportingPeriods,
+  createReportingPeriod,
+  deleteReportingPeriod,
+  updateReportingPeriod,
 } from '../actions/ReportingPeriodsStore'
 
 import reportingPeriodController from '../../controllers/reportingPeriod'
@@ -12,7 +12,8 @@ import reportingPeriodController from '../../controllers/reportingPeriod'
 export const getReportingPeriodsRequest = (query) => (dispatch) => {
   dispatch(requestReportingPeriods())
 
-  reportingPeriodController.fetchReportingPeriods(query)
+  reportingPeriodController
+    .fetchReportingPeriods(query)
     .then((reportingPeriods) => {
       dispatch(receiveReportingPeriods({ Values: reportingPeriods }))
     })
@@ -21,10 +22,15 @@ export const getReportingPeriodsRequest = (query) => (dispatch) => {
     })
 }
 
-export const createReportingPeriodRequest = (reportingPeriod, resolve, reject) => (dispatch) => {
+export const createReportingPeriodRequest = (
+  reportingPeriod,
+  resolve,
+  reject
+) => (dispatch) => {
   dispatch(requestReportingPeriods())
-  
-  reportingPeriodController.createReportingPeriod(reportingPeriod)
+
+  reportingPeriodController
+    .createReportingPeriod(reportingPeriod)
     .then((reportingPeriod) => {
       dispatch(createReportingPeriod({ Value: reportingPeriod }))
       resolve()
@@ -35,10 +41,13 @@ export const createReportingPeriodRequest = (reportingPeriod, resolve, reject) =
     })
 }
 
-export const deleteReportingPeriodRequest = (_id, resolve, reject) => (dispatch) => {
+export const deleteReportingPeriodRequest = (_id, resolve, reject) => (
+  dispatch
+) => {
   dispatch(requestReportingPeriods())
 
-  reportingPeriodController.deleteReportingPeriod(_id)
+  reportingPeriodController
+    .deleteReportingPeriod(_id)
     .then(() => {
       dispatch(deleteReportingPeriod({ Value: { _id } }))
       resolve()
@@ -49,10 +58,15 @@ export const deleteReportingPeriodRequest = (_id, resolve, reject) => (dispatch)
     })
 }
 
-export const updateReportingPeriodRequest = (reportingPeriod, resolve, reject) => (dispatch) => {
+export const updateReportingPeriodRequest = (
+  reportingPeriod,
+  resolve,
+  reject
+) => (dispatch) => {
   dispatch(requestReportingPeriods())
 
-  reportingPeriodController.updateReportingPeriod(reportingPeriod)
+  reportingPeriodController
+    .updateReportingPeriod(reportingPeriod)
     .then(() => {
       dispatch(updateReportingPeriod({ Value: reportingPeriod }))
       resolve()

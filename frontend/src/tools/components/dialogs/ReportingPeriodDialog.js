@@ -1,14 +1,10 @@
 import React, { useCallback, useEffect } from 'react'
 
-import {
-  closeReportingPeriodDialog
-} from '../../../store/actions/DialogsStore'
+import { closeReportingPeriodDialog } from '../../../store/actions/DialogsStore'
 
 import SelectableTableDialog from './SelectableTableDialog'
 
-import { 
-  getReportingPeriodsRequest
-} from '../../../store/thunks/reportingPeriod'
+import { getReportingPeriodsRequest } from '../../../store/thunks/reportingPeriod'
 
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 import { useMemo } from 'react'
@@ -16,33 +12,22 @@ import { useMemo } from 'react'
 const ReportingPeriodDialog = ({ handleChange }) => {
   const dispatch = useDispatch()
 
-  const {
-    isReportingPeriodDialogOpen,
-    reportingPeriods
-  } = useSelector(
-    (
-      {
-        DialogsStore: {
-          isReportingPeriodDialogOpen
-        },
-        ReportingPeriodsStore: {
-          response: {
-            Values
-          }
-        }
-      }
-    ) => (
-      {
-        isReportingPeriodDialogOpen,
-        reportingPeriods: Values
-      }
-    ),
+  const { isReportingPeriodDialogOpen, reportingPeriods } = useSelector(
+    ({
+      DialogsStore: { isReportingPeriodDialogOpen },
+      ReportingPeriodsStore: {
+        response: { Values },
+      },
+    }) => ({
+      isReportingPeriodDialogOpen,
+      reportingPeriods: Values,
+    }),
     shallowEqual
   )
 
   const handleClose = useCallback(
     () => dispatch(closeReportingPeriodDialog()),
-    [ dispatch ]
+    [dispatch]
   )
 
   const handleSelect = useCallback(
@@ -50,15 +35,13 @@ const ReportingPeriodDialog = ({ handleChange }) => {
       handleChange(data._id)
       handleClose()
     },
-    [ dispatch ]
+    [dispatch]
   )
 
-  useEffect(
-    () => {
-      if(isReportingPeriodDialogOpen && !reportingPeriods.length) dispatch(getReportingPeriodsRequest())
-    },
-    [ dispatch, isReportingPeriodDialogOpen ]
-  )
+  useEffect(() => {
+    if (isReportingPeriodDialogOpen && !reportingPeriods.length)
+      dispatch(getReportingPeriodsRequest())
+  }, [dispatch, isReportingPeriodDialogOpen])
 
   const columns = useMemo(
     () => [
@@ -68,8 +51,8 @@ const ReportingPeriodDialog = ({ handleChange }) => {
       },
       {
         title: 'Name',
-        field: 'name'
-      }
+        field: 'name',
+      },
     ],
     []
   )

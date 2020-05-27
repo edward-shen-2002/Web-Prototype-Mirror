@@ -1,14 +1,14 @@
-import React, { Fragment } from "react";
+import React, { Fragment } from 'react'
 
-import ActiveCell from "./ActiveCell";
-import ActiveSelectionArea from "./ActiveSelectionArea";
-import StagnantSelectionAreas from "./StagnantSelectionAreas";
+import ActiveCell from './ActiveCell'
+import ActiveSelectionArea from './ActiveSelectionArea'
+import StagnantSelectionAreas from './StagnantSelectionAreas'
 
 const CommonActivityPane = ({
   isActiveCellInCorrectPane,
   isRelevantArea,
   computeActiveCellStyle,
-  computeSelectionAreaStyle
+  computeSelectionAreaStyle,
 }) => (
   <Fragment>
     <ActiveCell
@@ -24,6 +24,6 @@ const CommonActivityPane = ({
       computeSelectionAreaStyle={computeSelectionAreaStyle}
     />
   </Fragment>
-);
+)
 
-export default CommonActivityPane;
+export default CommonActivityPane

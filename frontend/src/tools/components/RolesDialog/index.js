@@ -1,1 +1,1 @@
-export { default } from "./RolesDialog";
+export { default } from './RolesDialog'

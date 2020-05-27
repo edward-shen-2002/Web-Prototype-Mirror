@@ -1,51 +1,50 @@
-import { 
-  getNormalRowHeight,
-  getExcelRowHeight
-} from "@tools/excel";
+import { getNormalRowHeight, getExcelRowHeight } from '@tools/excel'
 
-import { DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER } from "@constants/excel";
+import { DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER } from '@constants/excel'
 
+const RESIZE_ROW_END = (state, { topOffsets }) => {
+  let newState = { ...state }
 
-const RESIZE_ROW_END = (
-  state, 
-  { 
-    topOffsets
-  }
-) => {
-  let newState = { ...state };
-
-  const { 
+  const {
     rowResizeData,
     sheetFreezeRowCount,
 
     sheetRowHeights,
-    scrollData
-  } = newState;
+    scrollData,
+  } = newState
 
-  newState.cursorType = "default";
+  newState.cursorType = 'default'
 
-  const { row, offset } = rowResizeData;
-  const rowTopOffset = topOffsets[row];
-  const { scrollTop } = scrollData;
+  const { row, offset } = rowResizeData
+  const rowTopOffset = topOffsets[row]
+  const { scrollTop } = scrollData
 
-  const sheetFreezeRowEndOffset = topOffsets[sheetFreezeRowCount] + (sheetFreezeRowCount ? getNormalRowHeight(sheetRowHeights[sheetFreezeRowCount]) : DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER);
+  const sheetFreezeRowEndOffset =
+    topOffsets[sheetFreezeRowCount] +
+    (sheetFreezeRowCount
+      ? getNormalRowHeight(sheetRowHeights[sheetFreezeRowCount])
+      : DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER)
 
-  const rowHeight = getNormalRowHeight(sheetRowHeights[row]);
-  const currentOffset = rowTopOffset + rowHeight;
-  
-  let newRowHeight = offset - rowTopOffset;
+  const rowHeight = getNormalRowHeight(sheetRowHeights[row])
+  const currentOffset = rowTopOffset + rowHeight
 
-  if(row <= sheetFreezeRowCount && offset > sheetFreezeRowEndOffset) newRowHeight -= scrollTop;
+  let newRowHeight = offset - rowTopOffset
 
-  if(offset !== currentOffset) {
-    newState.sheetRowHeights = { ...sheetRowHeights, [row]: getExcelRowHeight(newRowHeight) };
-    window.sheetGridRef.current.resetAfterRowIndex(row);
-  } 
-  
-  newState.isRowResizeMode = false;
-  newState.rowResizeData = null;
+  if (row <= sheetFreezeRowCount && offset > sheetFreezeRowEndOffset)
+    newRowHeight -= scrollTop
 
-  return newState;
-};
+  if (offset !== currentOffset) {
+    newState.sheetRowHeights = {
+      ...sheetRowHeights,
+      [row]: getExcelRowHeight(newRowHeight),
+    }
+    window.sheetGridRef.current.resetAfterRowIndex(row)
+  }
 
-export default RESIZE_ROW_END;
+  newState.isRowResizeMode = false
+  newState.rowResizeData = null
+
+  return newState
+}
+
+export default RESIZE_ROW_END

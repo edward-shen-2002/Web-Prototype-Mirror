@@ -1,10 +1,10 @@
-import { 
-  requestCOAGroups, 
-  failCOAGroupsRequest, 
-  receiveCOAGroups, 
-  createCOAGroup, 
-  deleteCOAGroup, 
-  updateCOAGroup 
+import {
+  requestCOAGroups,
+  failCOAGroupsRequest,
+  receiveCOAGroups,
+  createCOAGroup,
+  deleteCOAGroup,
+  updateCOAGroup,
 } from '../actions/COAGroupsStore'
 
 import COAGroupController from '../../controllers/COAGroup'
@@ -21,9 +21,11 @@ export const getCOAGroupsRequest = (query) => (dispatch) => {
     })
 }
 
-export const createCOAGroupRequest = (COAGroup, resolve, reject) => (dispatch) => {
+export const createCOAGroupRequest = (COAGroup, resolve, reject) => (
+  dispatch
+) => {
   dispatch(requestCOAGroups())
-  
+
   COAGroupController.createCOAGroup(COAGroup)
     .then((COAGroup) => {
       dispatch(createCOAGroup({ Value: COAGroup }))
@@ -49,7 +51,9 @@ export const deleteCOAGroupRequest = (_id, resolve, reject) => (dispatch) => {
     })
 }
 
-export const updateCOAGroupRequest = (COAGroup, resolve, reject) => (dispatch) => {
+export const updateCOAGroupRequest = (COAGroup, resolve, reject) => (
+  dispatch
+) => {
   dispatch(requestCOAGroups())
 
   COAGroupController.updateCOAGroup(COAGroup)

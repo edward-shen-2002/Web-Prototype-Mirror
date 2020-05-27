@@ -1,2 +1,2 @@
-export { default } from "./EntitiesDialog";
-export * from "./EntitiesDialog";
+export { default } from './EntitiesDialog'
+export * from './EntitiesDialog'

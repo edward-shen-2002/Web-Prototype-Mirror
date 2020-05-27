@@ -1,19 +1,16 @@
-import {
-  createEmptyEditor,
-  createEmptyEditorValue
-} from "@tools/slate";
+import { createEmptyEditor, createEmptyEditorValue } from '@tools/slate'
 
 const RESET_EXCEL_DATA = () => ({
-  name: "",
-  type: "",
+  name: '',
+  type: '',
   activeCellInputData: {
     cellEditor: createEmptyEditor(),
     formulaEditor: createEmptyEditor(),
     cellValue: createEmptyEditorValue(),
-    formulaValue: createEmptyEditorValue()
+    formulaValue: createEmptyEditorValue(),
   },
   activeCellDialog: null,
-  activeSheetName: "Sheet1",
+  activeSheetName: 'Sheet1',
   activeSelectionArea: null,
   activeCellPosition: { x: 1, y: 1 },
   activeCellSelectionAreaIndex: -1,
@@ -27,13 +24,13 @@ const RESET_EXCEL_DATA = () => ({
   selectedColumns: {},
   sheetNames: [],
   scrollData: {
-    horizontalScrollDirection: "forward",
+    horizontalScrollDirection: 'forward',
     scrollLeft: 0,
     scrollTop: 0,
     scrollUpdateWasRequested: false,
-    verticalScrollDirection: "forward"
+    verticalScrollDirection: 'forward',
   },
-  cursorType: "default",
+  cursorType: 'default',
 
   isSelectionMode: false,
   isEditMode: false,
@@ -55,8 +52,8 @@ const RESET_EXCEL_DATA = () => ({
 
   contextMenuData: { isOpen: false, anchorPosition: null },
   isTemplatePublished: false,
-  templateId: "",
-  bundleId: ""
-});
+  templateId: '',
+  bundleId: '',
+})
 
-export default RESET_EXCEL_DATA;
+export default RESET_EXCEL_DATA

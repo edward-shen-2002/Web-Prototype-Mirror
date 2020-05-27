@@ -1,7 +1,7 @@
-const RESET = () => ({ 
+const RESET = () => ({
   response: { Values: [] },
-  isCallInProgress: false, 
-  error: null
+  isCallInProgress: false,
+  error: null,
 })
 
 export default RESET

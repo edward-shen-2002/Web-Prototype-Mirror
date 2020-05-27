@@ -1,114 +1,89 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect } from 'react'
 
-import { useSelector, shallowEqual, useDispatch } from "react-redux";
+import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 
-import Divider from "@material-ui/core/Divider";
+import Divider from '@material-ui/core/Divider'
 
-import { Editable, Slate, ReactEditor } from "slate-react";
+import { Editable, Slate, ReactEditor } from 'slate-react'
 
-import { Transforms, Editor } from "slate";
+import { Transforms, Editor } from 'slate'
 
-import { setActiveCellInputValue } from "@actions/ui/excel/commands";
+import { setActiveCellInputValue } from '@actions/ui/excel/commands'
 
-import {
-  disableSheetFocus
-} from '@actions/ui/excel/events'
+import { disableSheetFocus } from '@actions/ui/excel/events'
 
-import {
-  keyEnter,
-  keyTab,
-  keyEscape
-} from "@actions/ui/excel/keyboard";
+import { keyEnter, keyTab, keyEscape } from '@actions/ui/excel/keyboard'
 
-import "./FormulaBar.scss";
+import './FormulaBar.scss'
 
-const Leaf = ({ attributes, children }) =>  <span {...attributes}>{children}</span>;
+const Leaf = ({ attributes, children }) => (
+  <span {...attributes}>{children}</span>
+)
 
 // ! Only one element for now
-const Element = ({ attributes, children }) => (
-  <p {...attributes}>{children}</p>
-);
+const Element = ({ attributes, children }) => <p {...attributes}>{children}</p>
 
 const InputField = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-  const renderElement = useCallback((props) => <Element {...props}/>, []);
-  const renderLeaf = useCallback((props) => <Leaf {...props}/>, []);
+  const renderElement = useCallback((props) => <Element {...props} />, [])
+  const renderLeaf = useCallback((props) => <Leaf {...props} />, [])
 
   const handleKeyDown = useCallback(
     (event) => {
-      const { key } = event;
+      const { key } = event
 
-      if(key === "Enter") {
-        event.preventDefault();
-        dispatch(
-          keyEnter()
-        );
-      } else if(key === "Tab") {
-        event.preventDefault();
-        dispatch(
-          keyTab());
-      } else if(key === "Escape") {
-        dispatch(keyEscape());
+      if (key === 'Enter') {
+        event.preventDefault()
+        dispatch(keyEnter())
+      } else if (key === 'Tab') {
+        event.preventDefault()
+        dispatch(keyTab())
+      } else if (key === 'Escape') {
+        dispatch(keyEscape())
       } else {
-
       }
     },
-    [ dispatch ]
-  );
+    [dispatch]
+  )
 
-  const {
-    formulaEditor,
-    formulaValue,
-    isSheetFocused
-  } = useSelector(
+  const { formulaEditor, formulaValue, isSheetFocused } = useSelector(
     ({
       ui: {
         excel: {
           present: {
-            activeCellInputData: {
-              formulaEditor,
-              formulaValue
-            },
-            isSheetFocused
-          }
-        }
-      }
-    }) => (
-      {
-        formulaEditor,
-        formulaValue,
-        isSheetFocused
-      }
-    ),
+            activeCellInputData: { formulaEditor, formulaValue },
+            isSheetFocused,
+          },
+        },
+      },
+    }) => ({
+      formulaEditor,
+      formulaValue,
+      isSheetFocused,
+    }),
     shallowEqual
-  );
+  )
 
   const handleInputChange = useCallback(
     (value) => {
-      if(!isSheetFocused) dispatch(setActiveCellInputValue({ value, input: "formula" }))
+      if (!isSheetFocused)
+        dispatch(setActiveCellInputValue({ value, input: 'formula' }))
     },
-    [ dispatch, isSheetFocused ]
-  );
-
-  useEffect(
-    () => {
-      if(!isSheetFocused) {
-        ReactEditor.focus(formulaEditor);
-        Transforms.select(formulaEditor, Editor.end(formulaEditor, []));
-      }
-    },
-    [ dispatch, isSheetFocused ]
+    [dispatch, isSheetFocused]
   )
 
-  const handleClick = useCallback(
-    () => {
-      dispatch(disableSheetFocus())
-      
-    },
-    [ dispatch ]
-  )
-  
+  useEffect(() => {
+    if (!isSheetFocused) {
+      ReactEditor.focus(formulaEditor)
+      Transforms.select(formulaEditor, Editor.end(formulaEditor, []))
+    }
+  }, [dispatch, isSheetFocused])
+
+  const handleClick = useCallback(() => {
+    dispatch(disableSheetFocus())
+  }, [dispatch])
+
   return (
     <Slate
       editor={formulaEditor}
@@ -124,15 +99,15 @@ const InputField = () => {
         onFocus={handleClick}
       />
     </Slate>
-  );
-};
+  )
+}
 
 const FormulaBar = () => (
   <div className="formulaBar">
     <div className="formulaBar__icon">fx</div>
-    <Divider orientation="vertical" light/>
-    <InputField/>
+    <Divider orientation="vertical" light />
+    <InputField />
   </div>
-);
+)
 
-export default FormulaBar;
+export default FormulaBar

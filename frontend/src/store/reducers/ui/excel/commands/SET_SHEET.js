@@ -1,92 +1,87 @@
-  // ! TODO : Add parameters here for hyperlinks?
-  const SET_SHEET = (
-    state,
-    {
-      sheetName
-    }
-  ) => {
-    let newState = { ...state };
+// ! TODO : Add parameters here for hyperlinks?
+const SET_SHEET = (state, { sheetName }) => {
+  let newState = { ...state }
 
-    const {
-      activeCellPosition,
-      activeCellInputData,
-      activeCellSelectionAreaIndex,
-      activeSheetName,
-      sheetCellData,
-      sheetColumnCount,
-      sheetColumnWidths,
-      sheetFreezeColumnCount,
-      sheetRowCount,
-      sheetFreezeRowCount,
-      sheetRowHeights,
-      sheetHiddenColumns,
-      sheetHiddenRows,
-      stagnantSelectionAreas,
-      inactiveSheets
-    } = newState;
+  const {
+    activeCellPosition,
+    activeCellInputData,
+    activeCellSelectionAreaIndex,
+    activeSheetName,
+    sheetCellData,
+    sheetColumnCount,
+    sheetColumnWidths,
+    sheetFreezeColumnCount,
+    sheetRowCount,
+    sheetFreezeRowCount,
+    sheetRowHeights,
+    sheetHiddenColumns,
+    sheetHiddenRows,
+    stagnantSelectionAreas,
+    inactiveSheets,
+  } = newState
 
-    let currentSheetData = {
-      activeCellPosition,
-      sheetCellData,
-      sheetColumnCount,
-      sheetColumnWidths,
-      sheetFreezeColumnCount,
-      sheetRowCount,
-      sheetFreezeRowCount,
-      sheetRowHeights,
-      sheetHiddenColumns,
-      sheetHiddenRows,
-      stagnantSelectionAreas,
-      activeCellSelectionAreaIndex
-    };
-    
-    let newActiveSheetData = newState.inactiveSheets[sheetName];
+  let currentSheetData = {
+    activeCellPosition,
+    sheetCellData,
+    sheetColumnCount,
+    sheetColumnWidths,
+    sheetFreezeColumnCount,
+    sheetRowCount,
+    sheetFreezeRowCount,
+    sheetRowHeights,
+    sheetHiddenColumns,
+    sheetHiddenRows,
+    stagnantSelectionAreas,
+    activeCellSelectionAreaIndex,
+  }
 
-    newState.inactiveSheets = {
-      ...inactiveSheets,
-      [activeSheetName]: currentSheetData,
-      [sheetName]: undefined
-    }
-    
-    // ! Need to updae active cell input data!
-    newState = {
-      ...newState,
-      ...newActiveSheetData,
-      activeSheetName: sheetName,
+  let newActiveSheetData = newState.inactiveSheets[sheetName]
 
-      // ! Update this for the new sheet!!
-      activeCellInputData,
+  newState.inactiveSheets = {
+    ...inactiveSheets,
+    [activeSheetName]: currentSheetData,
+    [sheetName]: undefined,
+  }
 
-      activeCellDialog: null,
-      activeSelectionArea: null,
-      isSheetFocused: true,
+  // ! Need to updae active cell input data!
+  newState = {
+    ...newState,
+    ...newActiveSheetData,
+    activeSheetName: sheetName,
 
-      rowResizeData: null,
-      columnResizeData: null,
-      freezeRowResizeData: null,
-      freezeColumnResizeData: null,
+    // ! Update this for the new sheet!!
+    activeCellInputData,
 
-      scrollData: {
-        horizontalScrollDirection: "forward",
-        scrollLeft: 0,
-        scrollTop: 0,
-        scrollUpdateWasRequested: false,
-        verticalScrollDirection: "forward"
-      },
+    activeCellDialog: null,
+    activeSelectionArea: null,
+    isSheetFocused: true,
 
-      cursorType: "default",
-    
-      isSelectionMode: false,
-      isEditMode: false,
-      isColumnResizeMode: false,
-      isFreezeColumnResizeMode: false,
-      isRowResizeMode: false,
-      isFreezeRowResizeMode: false,
-    };
+    rowResizeData: null,
+    columnResizeData: null,
+    freezeRowResizeData: null,
+    freezeColumnResizeData: null,
 
-    window.sheetGridRef.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
+    scrollData: {
+      horizontalScrollDirection: 'forward',
+      scrollLeft: 0,
+      scrollTop: 0,
+      scrollUpdateWasRequested: false,
+      verticalScrollDirection: 'forward',
+    },
 
-    return newState;
-  };
+    cursorType: 'default',
 
-  export default SET_SHEET;
+    isSelectionMode: false,
+    isEditMode: false,
+    isColumnResizeMode: false,
+    isFreezeColumnResizeMode: false,
+    isRowResizeMode: false,
+    isFreezeRowResizeMode: false,
+  }
+
+  window.sheetGridRef.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 })
+
+  return newState
+}
+
+export default SET_SHEET

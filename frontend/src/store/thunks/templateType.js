@@ -1,10 +1,10 @@
-import { 
-  requestTemplateTypes, 
-  failTemplateTypesRequest, 
-  receiveTemplateTypes, 
-  createTemplateType, 
-  deleteTemplateType, 
-  updateTemplateType 
+import {
+  requestTemplateTypes,
+  failTemplateTypesRequest,
+  receiveTemplateTypes,
+  createTemplateType,
+  deleteTemplateType,
+  updateTemplateType,
 } from '../actions/TemplateTypesStore'
 
 import templateTypeController from '../../controllers/templateType'
@@ -12,7 +12,8 @@ import templateTypeController from '../../controllers/templateType'
 export const getTemplateTypesRequest = (query) => (dispatch) => {
   dispatch(requestTemplateTypes())
 
-  templateTypeController.fetchTemplateTypes(query)
+  templateTypeController
+    .fetchTemplateTypes(query)
     .then((templateTypes) => {
       dispatch(receiveTemplateTypes({ Values: templateTypes }))
     })
@@ -21,10 +22,13 @@ export const getTemplateTypesRequest = (query) => (dispatch) => {
     })
 }
 
-export const createTemplateTypeRequest = (templateType, resolve, reject) => (dispatch) => {
+export const createTemplateTypeRequest = (templateType, resolve, reject) => (
+  dispatch
+) => {
   dispatch(requestTemplateTypes())
-  
-  templateTypeController.createTemplateType(templateType)
+
+  templateTypeController
+    .createTemplateType(templateType)
     .then((templateType) => {
       dispatch(createTemplateType({ Value: templateType }))
       resolve()
@@ -35,10 +39,13 @@ export const createTemplateTypeRequest = (templateType, resolve, reject) => (dis
     })
 }
 
-export const deleteTemplateTypeRequest = (_id, resolve, reject) => (dispatch) => {
+export const deleteTemplateTypeRequest = (_id, resolve, reject) => (
+  dispatch
+) => {
   dispatch(requestTemplateTypes())
 
-  templateTypeController.deleteTemplateType(_id)
+  templateTypeController
+    .deleteTemplateType(_id)
     .then(() => {
       dispatch(deleteTemplateType({ Value: { _id } }))
       resolve()
@@ -49,10 +56,13 @@ export const deleteTemplateTypeRequest = (_id, resolve, reject) => (dispatch) =>
     })
 }
 
-export const updateTemplateTypeRequest = (templateType, resolve, reject) => (dispatch) => {
+export const updateTemplateTypeRequest = (templateType, resolve, reject) => (
+  dispatch
+) => {
   dispatch(requestTemplateTypes())
 
-  templateTypeController.updateTemplateType(templateType)
+  templateTypeController
+    .updateTemplateType(templateType)
     .then(() => {
       dispatch(updateTemplateType({ Value: templateType }))
       resolve()

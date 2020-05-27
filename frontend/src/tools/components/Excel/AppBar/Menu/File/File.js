@@ -1,52 +1,49 @@
-import React, { useMemo } from "react";
+import React, { useMemo } from 'react'
 
-import { useDispatch } from "react-redux";
+import { useDispatch } from 'react-redux'
 
-import MenuItems from "@tools/components/Excel/commonComponents/MenuItems";
+import MenuItems from '@tools/components/Excel/commonComponents/MenuItems'
 
-import SaveIcon from "@material-ui/icons/Save";
+import SaveIcon from '@material-ui/icons/Save'
 
-import GetAppIcon from "@material-ui/icons/GetApp";
+import GetAppIcon from '@material-ui/icons/GetApp'
 
-import {
-  save,
-  download
-} from "@actions/ui/excel/commands";
+import { save, download } from '@actions/ui/excel/commands'
 
-const File = ({ 
-  openedMenuName, 
+const File = ({
+  openedMenuName,
 
-  handleClickMenu, 
+  handleClickMenu,
   handleHoverMenu,
-  handleSave
+  handleSave,
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const options = useMemo(
-    () => [ 
+    () => [
       {
-        icon: <SaveIcon/>,
-        label: "Save",
-        handleClick: handleSave
+        icon: <SaveIcon />,
+        label: 'Save',
+        handleClick: handleSave,
       },
       {
-        icon: <GetAppIcon/>,
-        label: "Download",
-        handleClick: () => dispatch(download())
-      }
+        icon: <GetAppIcon />,
+        label: 'Download',
+        handleClick: () => dispatch(download()),
+      },
     ],
-    [ dispatch ]
-  );
+    [dispatch]
+  )
 
   return (
-    <MenuItems 
+    <MenuItems
       openedMenuName={openedMenuName}
       label="File"
       options={options}
       handleClickMenu={handleClickMenu}
       handleHoverMenu={handleHoverMenu}
     />
-  );
-};
+  )
+}
 
-export default File;
+export default File

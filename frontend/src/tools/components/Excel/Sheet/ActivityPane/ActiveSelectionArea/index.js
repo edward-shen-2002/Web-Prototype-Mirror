@@ -1,1 +1,1 @@
-export { default } from "./ActiveSelectionArea";
+export { default } from './ActiveSelectionArea'

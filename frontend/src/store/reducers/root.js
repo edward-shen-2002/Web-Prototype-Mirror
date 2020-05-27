@@ -1,8 +1,8 @@
-import { combineReducers } from "redux";
+import { combineReducers } from 'redux'
 
-import domain from "./domain";
-import app from "./app";
-import ui from "./ui";
+import domain from './domain'
+import app from './app'
+import ui from './ui'
 import TemplatesStore from './TemplatesStore'
 import TemplateTypesStore from './TemplateTypesStore'
 import StatusesStore from './StatusesStore'
@@ -33,15 +33,15 @@ export const root = combineReducers({
   SheetNamesStore,
   AppSysesStore,
   DialogsStore,
-  
+
   SubmissionPeriodsStore,
   SubmissionsStore,
-  
+
   ReportingPeriodsStore,
 
   app,
   domain,
-  ui
-});
+  ui,
+})
 
-export default root;  
+export default root

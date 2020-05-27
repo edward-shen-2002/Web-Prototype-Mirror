@@ -1,75 +1,66 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo } from 'react'
 
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
-import { VariableSizeGrid } from "react-window";
+import { VariableSizeGrid } from 'react-window'
 
-import { ContextMenuTrigger } from "react-contextmenu";
+import { ContextMenuTrigger } from 'react-contextmenu'
 
-import AutoSizer from "react-virtualized-auto-sizer";
+import AutoSizer from 'react-virtualized-auto-sizer'
 
-import memoize from "memoize-one";
+import memoize from 'memoize-one'
 
 import isHotkey from 'is-hotkey'
 
-import { inputCharacterRegex } from "@tools/regex";
+import { inputCharacterRegex } from '@tools/regex'
 
-import { 
-  getNormalRowHeight, 
-  getNormalColumnWidth
-} from "@tools/excel";
+import { getNormalRowHeight, getNormalColumnWidth } from '@tools/excel'
 
-import ContextMenu from "./ContextMenu";
+import ContextMenu from './ContextMenu'
 
-import WindowListener from "./WindowListener";
+import WindowListener from './WindowListener'
 
-import Cell from "./Cell";
+import Cell from './Cell'
 
-import TopLeftActivityPane from "./ActivityPane/TopLeftActivityPane";
-import TopRightActivityPane from "./ActivityPane/TopRightActivityPane";
-import BottomLeftActivityPane from "./ActivityPane/BottomLeftActivityPane";
-import BottomRightActivityPane from "./ActivityPane/BottomRightActivityPane";
-
-import { 
-  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER, 
-  DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
-  EXCEL_WINDOW_OVERSCAN_COLUMN_COUNT,
-  EXCEL_WINDOW_OVERSCAN_ROW_COUNT
-} from "@constants/excel";
+import TopLeftActivityPane from './ActivityPane/TopLeftActivityPane'
+import TopRightActivityPane from './ActivityPane/TopRightActivityPane'
+import BottomLeftActivityPane from './ActivityPane/BottomLeftActivityPane'
+import BottomRightActivityPane from './ActivityPane/BottomRightActivityPane'
 
 import {
-  HOTKEYS
-} from "@constants/input";
+  DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER,
+  DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
+  EXCEL_WINDOW_OVERSCAN_COLUMN_COUNT,
+  EXCEL_WINDOW_OVERSCAN_ROW_COUNT,
+} from '@constants/excel'
 
-import { 
+import { HOTKEYS } from '@constants/input'
+
+import {
   setScrollData,
   enableEditMode,
-  enableSheetFocus
-} from "@actions/ui/excel/events";
+  enableSheetFocus,
+} from '@actions/ui/excel/events'
 import {
   keyArrowDown,
   keyArrowUp,
   keyArrowLeft,
   keyArrowRight,
-
   keyEscape,
   keyTab,
   keyEnter,
-  keyDelete
-} from "@actions/ui/excel/keyboard";
+  keyDelete,
+} from '@actions/ui/excel/keyboard'
 
-import {
-  selectAll,
-  save
-} from "@actions/ui/excel/commands";
+import { selectAll, save } from '@actions/ui/excel/commands'
 
-import "./Sheet.scss";
+import './Sheet.scss'
 
 // !Change this to spread instead of object?
-const createItemData = memoize((itemData) => (itemData));
+const createItemData = memoize((itemData) => itemData)
 
 const SheetWindow = ({ sheetGridRef }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const {
     sheetCellData,
@@ -78,7 +69,7 @@ const SheetWindow = ({ sheetGridRef }) => {
     sheetColumnCount,
     sheetRowCount,
     sheetColumnWidths,
-    sheetRowHeights
+    sheetRowHeights,
   } = useSelector(
     ({
       ui: {
@@ -90,10 +81,10 @@ const SheetWindow = ({ sheetGridRef }) => {
             sheetColumnCount,
             sheetRowCount,
             sheetColumnWidths,
-            sheetRowHeights
-          }
-        }
-      }
+            sheetRowHeights,
+          },
+        },
+      },
     }) => ({
       sheetCellData,
       sheetFreezeRowCount,
@@ -101,43 +92,50 @@ const SheetWindow = ({ sheetGridRef }) => {
       sheetColumnCount,
       sheetRowCount,
       sheetColumnWidths,
-      sheetRowHeights
+      sheetRowHeights,
     }),
     shallowEqual
-  );
+  )
 
-  const tableFreezeRowCount = useMemo(() => sheetFreezeRowCount + 1, [ sheetFreezeRowCount ]);
-  const tableFreezeColumnCount = useMemo(() => sheetFreezeColumnCount + 1, [ sheetFreezeColumnCount ]);
+  const tableFreezeRowCount = useMemo(() => sheetFreezeRowCount + 1, [
+    sheetFreezeRowCount,
+  ])
+  const tableFreezeColumnCount = useMemo(() => sheetFreezeColumnCount + 1, [
+    sheetFreezeColumnCount,
+  ])
 
   const rowHeight = useCallback(
-    (index) => index ? getNormalRowHeight(sheetRowHeights[index]) : DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
-    [ sheetRowHeights ]
-  );
+    (index) =>
+      index
+        ? getNormalRowHeight(sheetRowHeights[index])
+        : DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
+    [sheetRowHeights]
+  )
 
   const columnWidth = useCallback(
-    (index) => index ? getNormalColumnWidth(sheetColumnWidths[index]) : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER,
-    [ sheetColumnWidths ]
-  );
+    (index) =>
+      index
+        ? getNormalColumnWidth(sheetColumnWidths[index])
+        : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER,
+    [sheetColumnWidths]
+  )
 
   const handleScroll = useCallback(
-    (scrollData) => dispatch(setScrollData(scrollData)), 
-    [ dispatch ]
-  );
+    (scrollData) => dispatch(setScrollData(scrollData)),
+    [dispatch]
+  )
 
   const itemData = createItemData({
-    sheetCellData, 
-    
+    sheetCellData,
+
     sheetColumnCount,
-    sheetRowCount
-  });
+    sheetRowCount,
+  })
 
   return (
     <AutoSizer>
       {({ height, width }) => (
-        <ContextMenuTrigger 
-          id="sheetWindowContainer"
-          holdToDisplay={1000}
-        >
+        <ContextMenuTrigger id="sheetWindowContainer" holdToDisplay={1000}>
           <VariableSizeGrid
             ref={sheetGridRef}
             freezeColumnCount={tableFreezeColumnCount}
@@ -152,21 +150,29 @@ const SheetWindow = ({ sheetGridRef }) => {
             overscanColumnCount={EXCEL_WINDOW_OVERSCAN_COLUMN_COUNT}
             overscanRowCount={EXCEL_WINDOW_OVERSCAN_ROW_COUNT}
             onScroll={handleScroll}
-            extraTopLeftElement={<TopLeftActivityPane key="top-left-selection-pane"/>}
-            extraTopRightElement={<TopRightActivityPane key="top-right-activity-pane"/>}
-            extraBottomLeftElement={<BottomLeftActivityPane key="bottom-left-activity-pane"/>}
-            extraBottomRightElement={<BottomRightActivityPane key="bottom-right-activity-pane"/>}
+            extraTopLeftElement={
+              <TopLeftActivityPane key="top-left-selection-pane" />
+            }
+            extraTopRightElement={
+              <TopRightActivityPane key="top-right-activity-pane" />
+            }
+            extraBottomLeftElement={
+              <BottomLeftActivityPane key="bottom-left-activity-pane" />
+            }
+            extraBottomRightElement={
+              <BottomRightActivityPane key="bottom-right-activity-pane" />
+            }
           >
             {Cell}
           </VariableSizeGrid>
         </ContextMenuTrigger>
       )}
     </AutoSizer>
-  );
-};
+  )
+}
 
 let Sheet = ({ sheetGridRef, handleSave }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const {
     cursorType,
@@ -177,7 +183,7 @@ let Sheet = ({ sheetGridRef, handleSave }) => {
     sheetColumnCount,
     sheetRowCount,
     sheetColumnWidths,
-    sheetRowHeights
+    sheetRowHeights,
   } = useSelector(
     ({
       ui: {
@@ -191,10 +197,10 @@ let Sheet = ({ sheetGridRef, handleSave }) => {
             sheetColumnCount,
             sheetRowCount,
             sheetColumnWidths,
-            sheetRowHeights
-          }
-        }
-      }
+            sheetRowHeights,
+          },
+        },
+      },
     }) => ({
       cursorType,
       isEditMode,
@@ -204,53 +210,46 @@ let Sheet = ({ sheetGridRef, handleSave }) => {
       sheetColumnCount,
       sheetRowCount,
       sheetColumnWidths,
-      sheetRowHeights
+      sheetRowHeights,
     }),
     shallowEqual
-  );
+  )
 
   const handleKeyDown = useCallback(
     (event) => {
-      const { 
-        key, 
-        shiftKey, 
-        ctrlKey, 
-        altKey,
-        metaKey
-      } = event;
+      const { key, shiftKey, ctrlKey, altKey, metaKey } = event
 
-      let action;
-  
-      if(key === "ArrowUp") {
-        action = keyArrowUp({ shiftKey });
-      } else if(key === "ArrowDown") {
-        action = keyArrowDown({ shiftKey });
-      } else if(key === "ArrowLeft") {
-        action = keyArrowLeft({ shiftKey });
-      } else if(key === "ArrowRight") {
-        action = keyArrowRight({ shiftKey });
-      } else if(key === "Tab") {
-        event.preventDefault();
-        action = keyTab({ shiftKey });
-      } else if(key === "Enter" && !(ctrlKey || metaKey) && !altKey) {
-        action = keyEnter({ shiftKey });
-      } else if(key === "Delete" || key === "Backspace") {
-        action = keyDelete();
-      } else if(key === "Escape") {
-        action = keyEscape({});
-      } else if(key === "s" && (ctrlKey || metaKey)) {
+      let action
+
+      if (key === 'ArrowUp') {
+        action = keyArrowUp({ shiftKey })
+      } else if (key === 'ArrowDown') {
+        action = keyArrowDown({ shiftKey })
+      } else if (key === 'ArrowLeft') {
+        action = keyArrowLeft({ shiftKey })
+      } else if (key === 'ArrowRight') {
+        action = keyArrowRight({ shiftKey })
+      } else if (key === 'Tab') {
+        event.preventDefault()
+        action = keyTab({ shiftKey })
+      } else if (key === 'Enter' && !(ctrlKey || metaKey) && !altKey) {
+        action = keyEnter({ shiftKey })
+      } else if (key === 'Delete' || key === 'Backspace') {
+        action = keyDelete()
+      } else if (key === 'Escape') {
+        action = keyEscape({})
+      } else if (key === 's' && (ctrlKey || metaKey)) {
         // ! save
         handleSave()
         // action = save(handleSave);
-      } else if(key === "a" && (ctrlKey || metaKey)) {
-        event.preventDefault();
-        action = selectAll();
-      } else if((ctrlKey || metaKey)) {
-        
-      } else if(inputCharacterRegex.test(key)) {
-        action = enableEditMode();
-      } 
-  
+      } else if (key === 'a' && (ctrlKey || metaKey)) {
+        event.preventDefault()
+        action = selectAll()
+      } else if (ctrlKey || metaKey) {
+      } else if (inputCharacterRegex.test(key)) {
+        action = enableEditMode()
+      }
+
       // for(let hotkey in HOTKEYS) {
       //   if(isHotkey(hotkey, event)) {
       //     action = applyTextStyle(HOTKEYS[hotkey]);
@@ -258,59 +257,57 @@ let Sheet = ({ sheetGridRef, handleSave }) => {
       //   }
       // }
 
-      if(action) dispatch(action);
+      if (action) dispatch(action)
     },
-    [ dispatch ]
-  );
-
+    [dispatch]
+  )
 
   const handleKeyDownCapture = (event) => {
-    const { key, shiftKey, ctrlKey, metaKey, altKey } = event;
+    const { key, shiftKey, ctrlKey, metaKey, altKey } = event
 
-    if(key === "s" && (ctrlKey || metaKey)) {
-      event.preventDefault();
+    if (key === 's' && (ctrlKey || metaKey)) {
+      event.preventDefault()
     }
-  };
+  }
 
   // https://stackoverflow.com/questions/3169786/clear-text-selection-with-javascript
   const handleDragStart = (event) => {
-    let selection = window.getSelection ? window.getSelection() : document.selection;
+    let selection = window.getSelection
+      ? window.getSelection()
+      : document.selection
 
     if (selection) {
       if (selection.removeAllRanges) {
-        selection.removeAllRanges();
+        selection.removeAllRanges()
       } else if (selection.empty) {
-        selection.empty();
+        selection.empty()
       }
-      
-      event.preventDefault();
+
+      event.preventDefault()
     }
-  };
+  }
 
   // TODO
   const handlePaste = ({ clipboardData }) => {
-    let paste = (clipboardData || window.clipboardData).getData("text/html");
+    let paste = (clipboardData || window.clipboardData).getData('text/html')
 
     // console.log(paste);
-  };
+  }
 
-  const handleClick = useCallback(
-    () => {
-      dispatch(enableSheetFocus())
-    },
-    [ dispatch ]
-  );
+  const handleClick = useCallback(() => {
+    dispatch(enableSheetFocus())
+  }, [dispatch])
 
-  let style = {};
+  let style = {}
 
-  if(cursorType !== "default") style.cursor = cursorType;
+  if (cursorType !== 'default') style.cursor = cursorType
 
   return (
-    <div 
-      ref={sheetContainerRef} 
-      className="sheet" 
+    <div
+      ref={sheetContainerRef}
+      className="sheet"
       style={style}
-      tabIndex="0" 
+      tabIndex="0"
       onKeyDown={handleKeyDown}
       onKeyDownCapture={handleKeyDownCapture}
       onDragStart={handleDragStart}
@@ -320,7 +317,6 @@ let Sheet = ({ sheetGridRef, handleSave }) => {
       <SheetWindow
         sheetGridRef={sheetGridRef}
         isEditMode={isEditMode}
-
         sheetCellData={sheetCellData}
         sheetFreezeRowCount={sheetFreezeRowCount}
         sheetFreezeColumnCount={sheetFreezeColumnCount}
@@ -329,10 +325,10 @@ let Sheet = ({ sheetGridRef, handleSave }) => {
         sheetColumnWidths={sheetColumnWidths}
         sheetRowHeights={sheetRowHeights}
       />
-      <ContextMenu/>
-      <WindowListener/>
+      <ContextMenu />
+      <WindowListener />
     </div>
-  );
-};
+  )
+}
 
-export default Sheet;
+export default Sheet

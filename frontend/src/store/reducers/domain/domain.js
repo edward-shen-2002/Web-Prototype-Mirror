@@ -1,11 +1,11 @@
-import { combineReducers } from "redux";
+import { combineReducers } from 'redux'
 
-import account from "./account";
+import account from './account'
 import templates from './templates'
 
-const appReducer = combineReducers({ 
+const appReducer = combineReducers({
   account,
-  templates
-});
+  templates,
+})
 
-export default appReducer;
+export default appReducer

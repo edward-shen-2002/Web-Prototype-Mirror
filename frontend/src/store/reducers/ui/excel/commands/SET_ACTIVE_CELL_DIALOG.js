@@ -1,15 +1,9 @@
-const SET_ACTIVE_CELL_DIALOG = (
-  state,
-  { 
-    dialog,
-    category
-  }
-) => ({
+const SET_ACTIVE_CELL_DIALOG = (state, { dialog, category }) => ({
   ...state,
   activeCellDialog: {
     dialog,
-    category
-  }
-});
+    category,
+  },
+})
 
-export default SET_ACTIVE_CELL_DIALOG;
+export default SET_ACTIVE_CELL_DIALOG

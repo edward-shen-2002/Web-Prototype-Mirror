@@ -1,4 +1,4 @@
-import { createReducer } from "../tools/setup"
+import { createReducer } from '../tools/setup'
 
 import REQUEST_STATUSES from './common/REQUEST'
 import RECEIVE_STATUSES from './common/RECEIVE'
@@ -15,15 +15,15 @@ const reducersMap = {
   CREATE_STATUS,
   DELETE_STATUS,
   UPDATE_STATUS,
-  RESET_STATUSES
+  RESET_STATUSES,
 }
 
 const defaultState = {
   response: {
-    Values: []
+    Values: [],
   },
   error: null,
-  isCallInProgress: false
+  isCallInProgress: false,
 }
 
 const StatusStore = createReducer(defaultState, reducersMap)

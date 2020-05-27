@@ -1,101 +1,88 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect, useCallback } from 'react'
+import { useDispatch } from 'react-redux'
 
-import { publicAxios } from "@tools/rest";
+import { publicAxios } from '@tools/rest'
 
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import Button from "@material-ui/core/Button";
-import Icon from "@material-ui/core/Icon";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import Button from '@material-ui/core/Button'
+import Icon from '@material-ui/core/Icon'
+import TextField from '@material-ui/core/TextField'
+import Typography from '@material-ui/core/Typography'
 
-import { REST_PUBLIC_DATA } from "@constants/rest";
+import { REST_PUBLIC_DATA } from '@constants/rest'
 
-import { filterString } from "./utils";
+import { filterString } from './utils'
 
-import { DialogActions } from "./components";
+import { DialogActions } from './components'
 
-import { resetActiveCellDialog, setGroups } from "@actions/ui/excel/commands";
+import { resetActiveCellDialog, setGroups } from '@actions/ui/excel/commands'
 
-import "./GroupPopup.scss";
+import './GroupPopup.scss'
 
-const LinkIcon = ({
-  handleClick
-}) => (
-  <Button
-    variant="contained"
-    color="primary"
-    onClick={handleClick}
-  >
+const LinkIcon = ({ handleClick }) => (
+  <Button variant="contained" color="primary" onClick={handleClick}>
     <Icon>send</Icon>
   </Button>
-);
+)
 
 const GroupLink = ({
   index,
   groupId,
   group,
   handleRemoveLink,
-  handleUpdateGroupPointer
+  handleUpdateGroupPointer,
 }) => {
   const handleClickLink = () => {
-    handleRemoveLink(index);
+    handleRemoveLink(index)
   }
-  const handleClickGroup = () => handleUpdateGroupPointer(index);
+  const handleClickGroup = () => handleUpdateGroupPointer(index)
 
   return (
     <div className="groups__groupLinksItem">
-      <LinkIcon
-        handleClick={handleClickLink}
-      />
-      <Button
-        onClick={handleClickGroup}
-        fullWidth
-      >
-        {groupId !== null && group !== null ? `${groupId} - ${group}` : "EMPTY"}
-        
+      <LinkIcon handleClick={handleClickLink} />
+      <Button onClick={handleClickGroup} fullWidth>
+        {groupId !== null && group !== null ? `${groupId} - ${group}` : 'EMPTY'}
       </Button>
     </div>
-  );
-};
+  )
+}
 
-const GroupLinkListItems = ({ 
+const GroupLinkListItems = ({
   groups,
   handleRemoveLink,
-  handleUpdateGroupPointer
-}) => groups.map(({ id, value }, index) => {
-
-  return (
-    <GroupLink
-      key={`group-link-${index}`}
-      index={index}
-      groupId={id}
-      group={value}
-      handleRemoveLink={handleRemoveLink}
-      handleUpdateGroupPointer={handleUpdateGroupPointer}
-    />
-  );
-});
+  handleUpdateGroupPointer,
+}) =>
+  groups.map(({ id, value }, index) => {
+    return (
+      <GroupLink
+        key={`group-link-${index}`}
+        index={index}
+        groupId={id}
+        group={value}
+        handleRemoveLink={handleRemoveLink}
+        handleUpdateGroupPointer={handleUpdateGroupPointer}
+      />
+    )
+  })
 
 const GroupLinkList = ({
   groups,
   handleAddNewLink,
   handleRemoveLink,
-  handleUpdateGroupPointer
+  handleUpdateGroupPointer,
 }) => {
-
   return (
     <div className="groups__groupLinks">
       <Typography variant="h6">Group Links</Typography>
-      <GroupLinkListItems 
+      <GroupLinkListItems
         groups={groups}
         handleUpdateGroupPointer={handleUpdateGroupPointer}
         handleRemoveLink={handleRemoveLink}
       />
-      <Button 
-        className="groups__button" 
+      <Button
+        className="groups__button"
         variant="contained"
         color="primary"
         onClick={handleAddNewLink}
@@ -103,38 +90,32 @@ const GroupLinkList = ({
         Add New Group
       </Button>
     </div>
-  );
-};
+  )
+}
 
-const GroupItems = ({
-  groups,
-  selectedGroup,
-  handleSelectGroup
-}) => groups.map(({ id, value }, index) => {
-  const handleClickGroup = () => handleSelectGroup({ id, value });
-  return (
-    <ListItem
-      key={`groups-group-${index}`}
-      className={`${selectedGroup === id ? "groups__groupItem" : ""}`}
-      onClick={handleClickGroup}
-      button
-    >
-      <ListItemText primary={`${id} - ${value}`}/>
-    </ListItem>
-  );
-});
+const GroupItems = ({ groups, selectedGroup, handleSelectGroup }) =>
+  groups.map(({ id, value }, index) => {
+    const handleClickGroup = () => handleSelectGroup({ id, value })
+    return (
+      <ListItem
+        key={`groups-group-${index}`}
+        className={`${selectedGroup === id ? 'groups__groupItem' : ''}`}
+        onClick={handleClickGroup}
+        button
+      >
+        <ListItemText primary={`${id} - ${value}`} />
+      </ListItem>
+    )
+  })
 
 const GroupList = ({
   groups,
   selectedGroup,
-  
-  handleSelectGroup
-}) => {
 
+  handleSelectGroup,
+}) => {
   return (
-    <List
-      className="groups__groupList"
-    >
+    <List className="groups__groupList">
       <Typography variant="h6">Groups</Typography>
       <GroupItems
         groups={groups}
@@ -142,8 +123,8 @@ const GroupList = ({
         handleSelectGroup={handleSelectGroup}
       />
     </List>
-  );
-};
+  )
+}
 
 const GroupSectionContent = ({
   groups,
@@ -152,7 +133,7 @@ const GroupSectionContent = ({
   handleRemoveLink,
   handleUpdateGroupPointer,
   handleSelectGroup,
-  handleAddNewLink
+  handleAddNewLink,
 }) => (
   <div className="groups__groupSectionContent">
     <GroupLinkList
@@ -161,17 +142,15 @@ const GroupSectionContent = ({
       handleRemoveLink={handleRemoveLink}
       handleAddNewLink={handleAddNewLink}
     />
-    {
-      groups.length 
-      ? <GroupList
-          groups={definedGroups}
-          selectedGroup={selectedGroup}
-          handleSelectGroup={handleSelectGroup}
-        />
-      : null
-    }
+    {groups.length ? (
+      <GroupList
+        groups={definedGroups}
+        selectedGroup={selectedGroup}
+        handleSelectGroup={handleSelectGroup}
+      />
+    ) : null}
   </div>
-); 
+)
 
 const GroupSection = ({
   type,
@@ -181,7 +160,7 @@ const GroupSection = ({
   handleRemoveLink,
   handleUpdateGroupPointer,
   handleSelectGroup,
-  handleAddNewLink
+  handleAddNewLink,
 }) => (
   <div className="groups__groupSection">
     <GroupSectionContent
@@ -194,72 +173,82 @@ const GroupSection = ({
       handleAddNewLink={handleAddNewLink}
     />
   </div>
-);
+)
 
 const isGroupsValid = (groups) => {
-  if(!groups.length) return true;
+  if (!groups.length) return true
 
-  for(let element of groups) {
-    const { id } = element;
+  for (let element of groups) {
+    const { id } = element
 
-    if(id === null) return false;
+    if (id === null) return false
   }
 
-  return true;
-};
+  return true
+}
 
 const GroupPopup = ({ type }) => {
-  const [ currentGroups, setCurrentGroups ] = useState([]);
-  const [ isDataFetched, setIsDataFetched ] = useState(false);
-  const [ newGroups, setNewGroups ] = useState([]);
-  const [ groupPointer, setGroupPointer ] = useState(currentGroups && currentGroups.length ? currentGroups.length - 1 : -1 );
-  const [ selectedGroup, setSelectedGroup ] = useState();
+  const [currentGroups, setCurrentGroups] = useState([])
+  const [isDataFetched, setIsDataFetched] = useState(false)
+  const [newGroups, setNewGroups] = useState([])
+  const [groupPointer, setGroupPointer] = useState(
+    currentGroups && currentGroups.length ? currentGroups.length - 1 : -1
+  )
+  const [selectedGroup, setSelectedGroup] = useState()
   // const [ filterString, setFilterString ] = useState("");
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    if(!isDataFetched) {
-      setIsDataFetched(true);
-      publicAxios.get(`${REST_PUBLIC_DATA}/groups`)
-        .then(({ data: { data: { groups } } }) => {
-          setCurrentGroups(groups);  
-        })
-        .catch((error) => console.error(error));
+    if (!isDataFetched) {
+      setIsDataFetched(true)
+      publicAxios
+        .get(`${REST_PUBLIC_DATA}/groups`)
+        .then(
+          ({
+            data: {
+              data: { groups },
+            },
+          }) => {
+            setCurrentGroups(groups)
+          }
+        )
+        .catch((error) => console.error(error))
     }
-  }, [ isDataFetched ]);
+  }, [isDataFetched])
 
   const handleAdd = useCallback(
     () => dispatch(setGroups({ category: type, newGroups })),
-    [ dispatch, newGroups ]
-  );
+    [dispatch, newGroups]
+  )
 
-  const handleCancel = useCallback(
-    () => dispatch(resetActiveCellDialog()),
-    [ dispatch ]
-  );
+  const handleCancel = useCallback(() => dispatch(resetActiveCellDialog()), [
+    dispatch,
+  ])
 
-  const handleUpdateGroupPointer = (index) => setGroupPointer(index);
+  const handleUpdateGroupPointer = (index) => setGroupPointer(index)
   const handleRemoveLink = (index) => {
-    setNewGroups(newGroups.slice(0, index));
-    setGroupPointer(index - 1);
-  };
+    setNewGroups(newGroups.slice(0, index))
+    setGroupPointer(index - 1)
+  }
   const handleSelectGroup = ({ id, value }) => {
-    setNewGroups([  ...newGroups.slice(0, groupPointer), { id, value }, ...newGroups.slice(groupPointer + 1) ]);
-    setSelectedGroup(id);
-  };
+    setNewGroups([
+      ...newGroups.slice(0, groupPointer),
+      { id, value },
+      ...newGroups.slice(groupPointer + 1),
+    ])
+    setSelectedGroup(id)
+  }
 
   const handleAddNewLink = () => {
-    setNewGroups([ ...newGroups, { id: null, value: null } ]);
-    setGroupPointer(groupPointer + 1);
-  };
+    setNewGroups([...newGroups, { id: null, value: null }])
+    setGroupPointer(groupPointer + 1)
+  }
 
   // const filteredGroups = groups.filter(({ id, value }) => filterString(filter, value) || filterString(filter, id));
 
   return (
-    <div 
-      className="dialog groups"
-    >
+    <div className="dialog groups">
       <Typography variant="h6">Set {type} group</Typography>
       <GroupSection
         type={type}
@@ -271,12 +260,9 @@ const GroupPopup = ({ type }) => {
         handleSelectGroup={handleSelectGroup}
         handleAddNewLink={handleAddNewLink}
       />
-      <DialogActions
-        handleAdd={handleAdd}
-        handleCancel={handleCancel}
-      />
+      <DialogActions handleAdd={handleAdd} handleCancel={handleCancel} />
     </div>
-  );
-};
+  )
+}
 
-export default GroupPopup;
+export default GroupPopup

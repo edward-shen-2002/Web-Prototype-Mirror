@@ -7,9 +7,7 @@ const saveFile = (handleSave) => (dispatch, getState) => {
     .then(() => {
       dispatch(finishSaveExcel())
     })
-    .catch(
-      (error) => {
-        dispatch(failSaveExcel(error))
-      }
-    )
+    .catch((error) => {
+      dispatch(failSaveExcel(error))
+    })
 }
