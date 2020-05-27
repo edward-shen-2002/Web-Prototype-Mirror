@@ -22,6 +22,7 @@ import COATreeController from './controllers/COATree'
 import COAGroupController from './controllers/COAGroup'
 import SheetNameController from './controllers/SheetName'
 import AppSysController from './controllers/AppSys'
+import AppSysRoleController from './controllers/AppSysRole'
 import SubmissionController from './controllers/Submission'
 
 // https://www.digitalocean.com/community/tutorials/how-to-use-winston-to-log-node-js-applications
@@ -66,5 +67,6 @@ app.use('/COA_manager', Container.get(COATreeController))
 app.use('/COA_manager', Container.get(COAGroupController))
 
 app.use('/appsys_manager', Container.get(AppSysController))
+app.use('/appsysrole_manager', Container.get(AppSysRoleController))
 
 export default app
