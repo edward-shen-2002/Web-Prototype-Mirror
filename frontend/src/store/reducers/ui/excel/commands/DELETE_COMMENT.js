@@ -1,4 +1,4 @@
-import { isObjectEmpty } from '@tools/misc'
+import { isObjectEmpty } from '../../../../../tools/misc' 
 
 const DELETE_COMMENT = (state, { commentId, _accountId }) => {
   let newState = { ...state }

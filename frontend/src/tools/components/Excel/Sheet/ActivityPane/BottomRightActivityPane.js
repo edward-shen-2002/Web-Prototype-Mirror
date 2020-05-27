@@ -2,14 +2,14 @@ import React, { Fragment } from 'react'
 
 import CommonActivityPane from './CommonActivityPane'
 
-import { getNormalRowHeight, getNormalColumnWidth } from '@tools/excel'
+import { getNormalRowHeight, getNormalColumnWidth } from '../../../../excel' 
 
 import {
   STYLE_SELECTION_BORDER_COLOR,
   STYLE_SELECTION_BORDER_WIDTH,
   STYLE_ACTIVE_SELECTION_BORDER_STYLE,
   STYLE_STAGNANT_SELECTION_BORDER_STYLE,
-} from '@constants/styles'
+} from '../../../../../constants/styles'
 
 const computeSelectionAreaStyle = (
   columnWidths,

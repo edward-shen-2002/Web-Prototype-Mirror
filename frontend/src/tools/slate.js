@@ -2,7 +2,7 @@ import { Editable, withReact, useSlate, Slate } from 'slate-react'
 import { Editor, Transforms, createEditor } from 'slate'
 import { withHistory } from 'slate-history'
 
-import { richTextToEditorMap, editorToRichTextMap } from '@constants/styles'
+import { richTextToEditorMap, editorToRichTextMap } from '../constants/styles' 
 
 export const convertTextToEditorValue = (text) => [
   {

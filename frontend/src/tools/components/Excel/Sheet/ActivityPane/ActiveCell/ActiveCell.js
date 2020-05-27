@@ -8,23 +8,23 @@ import {
   isPrepopulateString,
   parsePrepopulateString,
   getAreaDimensions,
-} from '@tools/excel'
+} from '../../../../../../tools/excel'
 
-import { resetActiveCellDialog } from '@actions/ui/excel/commands'
+import { resetActiveCellDialog } from '../../../../../../store/actions/ui/excel/commands'
 
 import CellEditor from './CellEditor'
 
 import Popover, { ArrowContainer } from 'react-tiny-popover'
 
-import topOffsetsSelector from '@selectors/ui/excel/topOffsets'
-import leftOffsetsSelector from '@selectors/ui/excel/leftOffsets'
+import topOffsetsSelector from '../../../../../../store/selectors/ui/excel/topOffsets'
+import leftOffsetsSelector from '../../../../../../store/selectors/ui/excel/leftOffsets'
 
 import BusinessConceptPopup from './BusinessConceptPopup'
 import PrepopulatePopup from './PrepopulatePopup'
 import CommentPopup from './CommentPopup'
 import GroupPopup from './GroupPopup'
 
-import { getBlockStyle } from '@tools/excel'
+import { getBlockStyle } from '../../../../../../tools/excel'
 
 import './ActiveCell.scss'
 

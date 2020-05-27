@@ -1,6 +1,6 @@
-import { getScrollbarSize, getNormalColumnWidth } from '@tools/excel'
+import { getScrollbarSize, getNormalColumnWidth } from '../../../../../tools/excel' 
 
-import { DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER } from '@constants/excel'
+import { DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER } from '../../../../../constants/excel'
 
 const RESIZE_COLUMN = (state, { xOffset, leftOffsets }) => {
   let newState = { ...state }

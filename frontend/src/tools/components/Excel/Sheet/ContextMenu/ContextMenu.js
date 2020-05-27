@@ -12,7 +12,7 @@ import {
   deleteCellsShiftLeft,
   setReadOnly,
   unsetReadOnly,
-} from '@actions/ui/excel/commands'
+} from '../../../../../store/actions/ui/excel/commands'
 
 import './ContextMenu.scss'
 

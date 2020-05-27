@@ -1,4 +1,4 @@
-import { createReducer } from '@store/tools/setup'
+import { createReducer } from '../../tools/setup' 
 
 const defaultTemplates = []
 

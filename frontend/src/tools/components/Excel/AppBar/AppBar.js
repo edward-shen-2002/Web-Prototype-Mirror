@@ -4,7 +4,7 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import { Link } from 'react-router-dom'
 
-import { toggleTemplatePublish } from '@actions/ui/excel/commands'
+import { toggleTemplatePublish } from '../../../../store/actions/ui/excel/commands' 
 
 import Button from '@material-ui/core/Button'
 

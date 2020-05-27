@@ -4,7 +4,7 @@ import {
   EXCEL_DISABLE_EDIT_MODE,
   EXCEL_ENABLE_SHEET_FOCUS,
   EXCEL_DISABLE_SHEET_FOCUS,
-} from '@actionTypes'
+} from '../../actionTypes'
 
 export const setScrollData = (scrollData) => ({
   type: EXCEL_SET_SCROLL_DATA,

@@ -2,13 +2,13 @@ import React, { useMemo } from 'react'
 
 import { useDispatch } from 'react-redux'
 
-import MenuItems from '@tools/components/Excel/commonComponents/MenuItems'
+import MenuItems from '../../../../../../tools/components/Excel/commonComponents/MenuItems'
 
 import SaveIcon from '@material-ui/icons/Save'
 
 import GetAppIcon from '@material-ui/icons/GetApp'
 
-import { save, download } from '@actions/ui/excel/commands'
+import { save, download } from '../../../../../../store/actions/ui/excel/commands'
 
 const File = ({
   openedMenuName,

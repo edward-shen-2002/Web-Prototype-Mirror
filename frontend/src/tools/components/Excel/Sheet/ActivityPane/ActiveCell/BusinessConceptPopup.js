@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { publicAxios } from '@tools/rest'
+import { publicAxios } from '../../../../../rest'
 
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 
-import { REST_PUBLIC_DATA } from '@constants/rest'
+import { REST_PUBLIC_DATA } from '../../../../../../constants/rest' 
 
 import { filterString } from './utils'
 

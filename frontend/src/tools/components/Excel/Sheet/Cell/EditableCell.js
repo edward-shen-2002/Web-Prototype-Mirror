@@ -8,17 +8,17 @@ import {
   getCellInlineStyle,
   getBlockStyle,
   getAreaDimensions,
-} from '@tools/excel'
+} from '../../../../excel'
 
 import {
   mouseDown,
   doubleClickEditableCell,
   selectOver,
   rightClickCell,
-} from '@actions/ui/excel/mouse'
+} from '../../../../../store/actions/ui/excel/mouse'
 
-import topOffsetsSelector from '@selectors/ui/excel/topOffsets'
-import leftOffsetsSelector from '@selectors/ui/excel/leftOffsets'
+import topOffsetsSelector from '../../../../../store/selectors/ui/excel/topOffsets' 
+import leftOffsetsSelector from '../../../../../store/selectors/ui/excel/leftOffsets'
 
 const RichTextCellContent = (richText) =>
   richText.map(({ styles, text }) => (

@@ -17,7 +17,7 @@ import {
   addComment,
   deleteComment,
   resetActiveCellDialog,
-} from '@actions/ui/excel/commands'
+} from '../../../../../../store/actions/ui/excel/commands'
 
 import './ActiveCell.scss'
 

@@ -1,6 +1,5 @@
-import { getNormalColumnWidth, getExcelColumnWidth } from '@tools/excel'
-
-import { DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER } from '@constants/excel'
+import { getNormalColumnWidth, getExcelColumnWidth } from '../../../../../tools/excel' 
+import { DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER } from '../../../../../constants/excel' 
 
 const RESIZE_COLUMN_END = (state, { leftOffsets }) => {
   let newState = { ...state }

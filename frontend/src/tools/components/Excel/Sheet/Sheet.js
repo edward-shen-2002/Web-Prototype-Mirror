@@ -12,9 +12,9 @@ import memoize from 'memoize-one'
 
 import isHotkey from 'is-hotkey'
 
-import { inputCharacterRegex } from '@tools/regex'
+import { inputCharacterRegex } from '../../../../tools/regex'
 
-import { getNormalRowHeight, getNormalColumnWidth } from '@tools/excel'
+import { getNormalRowHeight, getNormalColumnWidth } from '../../../../tools/excel'
 
 import ContextMenu from './ContextMenu'
 
@@ -32,15 +32,15 @@ import {
   DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
   EXCEL_WINDOW_OVERSCAN_COLUMN_COUNT,
   EXCEL_WINDOW_OVERSCAN_ROW_COUNT,
-} from '@constants/excel'
+} from '../../../../constants/excel' 
 
-import { HOTKEYS } from '@constants/input'
+import { HOTKEYS } from '../../../../constants/input'
 
 import {
   setScrollData,
   enableEditMode,
   enableSheetFocus,
-} from '@actions/ui/excel/events'
+} from '../../../../store/actions/ui/excel/events'
 import {
   keyArrowDown,
   keyArrowUp,
@@ -50,9 +50,9 @@ import {
   keyTab,
   keyEnter,
   keyDelete,
-} from '@actions/ui/excel/keyboard'
+} from '../../../../store/actions/ui/excel/keyboard'
 
-import { selectAll, save } from '@actions/ui/excel/commands'
+import { selectAll, save } from '../../../../store/actions/ui/excel/commands'
 
 import './Sheet.scss'
 

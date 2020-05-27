@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
 
-import { getLeftOffsets } from '@tools/excel'
+import { getLeftOffsets } from '../../../../tools/excel'
 
 const getColumnWidths = ({ sheetColumnWidths }) => sheetColumnWidths
 const getColumnCount = ({ sheetColumnCount }) => sheetColumnCount

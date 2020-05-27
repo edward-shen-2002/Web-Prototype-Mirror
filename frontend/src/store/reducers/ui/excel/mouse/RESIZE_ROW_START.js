@@ -1,4 +1,4 @@
-import { getNormalRowHeight } from '@tools/excel'
+import { getNormalRowHeight } from '../../../../../tools/excel' 
 
 const RESIZE_ROW_START = (state, { row, topOffsets }) => {
   let newState = { ...state }

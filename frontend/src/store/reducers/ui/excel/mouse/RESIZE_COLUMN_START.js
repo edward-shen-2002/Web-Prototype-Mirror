@@ -1,4 +1,4 @@
-import { getNormalColumnWidth } from '@tools/excel'
+import { getNormalColumnWidth } from '../../../../../tools/excel' 
 
 const RESIZE_COLUMN_START = (state, { column, leftOffsets }) => {
   let newState = { ...state }

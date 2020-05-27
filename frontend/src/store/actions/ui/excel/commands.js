@@ -25,7 +25,7 @@ import {
   EXCEL_DELETE_COMMENT,
   EXCEL_MERGE_CELLS,
   EXCEL_UNMERGE_CELLS,
-} from '@actionTypes'
+} from '../../actionTypes'
 
 export const selectAll = (props) => ({ type: EXCEL_SELECT_ALL, ...props })
 

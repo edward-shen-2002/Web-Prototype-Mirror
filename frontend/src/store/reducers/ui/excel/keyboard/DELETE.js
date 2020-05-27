@@ -1,5 +1,5 @@
 import { getAllAreas } from '../tools/area'
-import { CustomEditor, createEmptyEditorValue } from '@tools/slate'
+import { CustomEditor, createEmptyEditorValue } from '../../../../../tools/slate' 
 
 const DELETE = (state) => {
   let {

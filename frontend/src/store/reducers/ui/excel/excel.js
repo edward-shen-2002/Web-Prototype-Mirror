@@ -1,8 +1,8 @@
 import { undox } from 'undox'
 
-import { createReducer } from '@store/tools/setup'
+import { createReducer } from '../../../tools/setup' 
 
-import { createEmptyEditor, createEmptyEditorValue } from '@tools/slate'
+import { createEmptyEditor, createEmptyEditorValue } from '../../../../tools/slate' 
 
 // import EXCEL_START_SELECTION from "/START_SELECTION";
 // import EXCEL_MOVE_SELECTION from "/MOVE_SELECTION";

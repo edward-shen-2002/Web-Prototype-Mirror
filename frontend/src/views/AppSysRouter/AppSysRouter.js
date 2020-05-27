@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Switch, Route } from 'react-router-dom'
 
-import NotFound from '@tools/components/NotFound'
+import NotFound from '../../tools/components/NotFound' 
 import AppSyses from './AppSyses'
 
 const TemplateRouter = () => (

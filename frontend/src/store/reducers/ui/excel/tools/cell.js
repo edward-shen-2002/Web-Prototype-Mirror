@@ -5,11 +5,11 @@ import {
   convertEditorValueToRichText,
   createEmptyEditorValue,
   CustomEditor,
-} from '@tools/slate'
+} from '../../../../../tools/slate' 
 
-import { getCellData } from '@tools/excel'
+import { getCellData } from '../../../../../tools/excel'
 
-import { isObjectEmpty } from '@tools/misc'
+import { isObjectEmpty } from '../../../../../tools/misc'
 
 import { scrollTo } from './scroll'
 

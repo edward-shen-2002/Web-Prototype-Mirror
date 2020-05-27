@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
-import { setName } from '@actions/ui/excel/commands'
+import { setName } from '../../../../../store/actions/ui/excel/commands'
 
 import InputBase from '@material-ui/core/InputBase'
 

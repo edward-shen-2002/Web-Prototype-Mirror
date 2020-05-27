@@ -1,4 +1,4 @@
-import { isObjectEmpty } from '@tools/misc'
+import { isObjectEmpty } from '../../../../../tools/misc'
 
 export const offsetObjectAtIndex = (data, start, offset) => {
   let newData = {}

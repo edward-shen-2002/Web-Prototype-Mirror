@@ -12,7 +12,7 @@ import {
   EXCEL_SELECT_END,
   EXCEL_RESIZE_ROW_END,
   EXCEL_RESIZE_COLUMN_END,
-} from '@actionTypes'
+} from '../../actionTypes'
 
 export const resizeColumnStart = (props) => ({
   type: EXCEL_RESIZE_COLUMN_START,

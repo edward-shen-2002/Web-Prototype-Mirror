@@ -8,14 +8,14 @@ import Button from '@material-ui/core/Button'
 import AddIcon from '@material-ui/icons/Add'
 import InputBase from '@material-ui/core/InputBase'
 
-import {} from '@actions/ui/excel/commands'
+import {} from '../../../../store/actions/ui/excel/commands'
 
-import { enableEditMode, disableEditMode } from '@actions/ui/excel/events'
+import { enableEditMode, disableEditMode } from '../../../../store/actions/ui/excel/events'
 
-import { setSheet } from '@actions/ui/excel/commands'
+import { setSheet } from '../../../../store/actions/ui/excel/commands'
 
-import { DnDReorder } from '@tools/misc'
-import { generateNewSheetName, createBlankSheet } from '@tools/excel'
+import { DnDReorder } from '../../../misc'
+import { generateNewSheetName, createBlankSheet } from '../../../excel'
 
 import './SheetNavigator.scss'
 

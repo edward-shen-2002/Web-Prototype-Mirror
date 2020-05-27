@@ -1,6 +1,6 @@
-import { getNormalRowHeight, getExcelRowHeight } from '@tools/excel'
+import { getNormalRowHeight, getExcelRowHeight } from '../../../../../tools/excel' 
 
-import { DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER } from '@constants/excel'
+import { DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER } from '../../../../../constants/excel'
 
 const RESIZE_ROW_END = (state, { topOffsets }) => {
   let newState = { ...state }

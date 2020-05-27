@@ -5,21 +5,6 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 module.exports = {
   entry: path.join(__dirname, '/src/index.js'),
   resolve: {
-    alias: {
-      '@constants': path.join(__dirname, '/src/constants'),
-      '@styles': path.join(__dirname, '/src/styles'),
-      '@tools': path.join(__dirname, '/src/tools'),
-      '@images': path.join(__dirname, '/src/images'),
-      '@store': path.join(__dirname, '/src/store'),
-      '@selectors': path.join(__dirname, '/src/store/selectors'),
-      '@actions': path.join(__dirname, '/src/store/actions'),
-      '@actionTypes': path.join(
-        __dirname,
-        '/src/store/actions/actionTypes'
-      ),
-      '@controllers': path.join(__dirname, '/src/controllers'),
-      '@thunks': path.join(__dirname, '/src/store/thunks'),
-    },
     extensions: ['*', '.js', '.jsx'],
   },
   module: {

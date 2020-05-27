@@ -1,6 +1,6 @@
 import { getWholeArea } from '../tools/merge'
 import { scrollTo } from '../tools/scroll'
-import { isPositionEqualArea } from '@tools/excel'
+import { isPositionEqualArea } from '../../../../../tools/excel' 
 import { updateActiveCellPosition } from '../tools/cell'
 
 const ARROW_LEFT = (state, { shiftKey }) => {

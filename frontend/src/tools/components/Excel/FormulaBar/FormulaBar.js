@@ -8,11 +8,11 @@ import { Editable, Slate, ReactEditor } from 'slate-react'
 
 import { Transforms, Editor } from 'slate'
 
-import { setActiveCellInputValue } from '@actions/ui/excel/commands'
+import { setActiveCellInputValue } from '../../../../store/actions/ui/excel/commands'
 
-import { disableSheetFocus } from '@actions/ui/excel/events'
+import { disableSheetFocus } from '../../../../store/actions/ui/excel/events'
 
-import { keyEnter, keyTab, keyEscape } from '@actions/ui/excel/keyboard'
+import { keyEnter, keyTab, keyEscape } from '../../../../store/actions/ui/excel/keyboard'
 
 import './FormulaBar.scss'
 

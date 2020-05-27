@@ -1,12 +1,12 @@
-import { deleteAxiosToken, setAxiosToken } from '@tools/rest'
-import { deleteToken, saveToken } from '@tools/storage'
+import { deleteAxiosToken, setAxiosToken } from '../tools/rest'
+import { deleteToken, saveToken } from '../tools/storage'
 
-import { setOnline, setOffline } from '@actions/app/isOnline'
-import { updateAccount, resetAccount } from '@actions/domain/account'
+import { setOnline, setOffline } from '../store/actions/app/isOnline' 
+import { updateAccount, resetAccount } from '../store/actions/domain/account'
 import {
   showAppNavigation,
   hideAppNavigation,
-} from '@actions/ui/isAppNavigationOpen'
+} from '../store/actions/ui/isAppNavigationOpen'
 
 export const loadUserState = (dispatch, { user, token }) => {
   if (token) {

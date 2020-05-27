@@ -4,9 +4,9 @@ import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 import { Editable, Slate, ReactEditor } from 'slate-react'
 import { Transforms, Editor } from 'slate'
 
-import { setActiveCellInputValue } from '@actions/ui/excel/commands'
+import { setActiveCellInputValue } from '../../../../../../store/actions/ui/excel/commands'
 
-import { enableSheetFocus } from '@actions/ui/excel/events'
+import { enableSheetFocus } from '../../../../../../store/actions/ui/excel/events'
 
 const Leaf = ({ attributes, children, leaf }) => {
   if (leaf.bold) children = <strong>{children}</strong>

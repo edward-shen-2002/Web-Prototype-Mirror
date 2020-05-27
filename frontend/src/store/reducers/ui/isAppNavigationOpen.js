@@ -1,6 +1,6 @@
-import { createReducer } from '@store/tools/setup'
+import { createReducer } from '../../tools/setup' 
 
-import { isTokenSaved } from '@tools/storage'
+import { isTokenSaved } from '../../../tools/storage' 
 
 const defaultIsAppNavigationOpen = isTokenSaved()
 

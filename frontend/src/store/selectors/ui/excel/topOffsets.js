@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
 
-import { getTopOffsets } from '@tools/excel'
+import { getTopOffsets } from '../../../../tools/excel'
 
 const getRowHeights = ({ sheetRowHeights }) => sheetRowHeights
 const getRowCount = ({ sheetRowCount }) => sheetRowCount

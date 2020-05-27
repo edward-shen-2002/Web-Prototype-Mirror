@@ -9,7 +9,7 @@ import Fab from '@material-ui/core/Fab'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import Button from '@material-ui/core/Button'
 
-import { CustomEditor } from '@tools/slate'
+import { CustomEditor } from '../../tools/slate'
 
 import {
   openSubmissionPeriodDialog,

@@ -7,9 +7,8 @@ import {
   convertRichTextToEditorValue,
   createEmptyEditor,
   createEmptyEditorValue,
-} from '@tools/slate'
-
-import { isObjectEmpty } from '@tools/misc'
+} from '../tools/slate' 
+import { isObjectEmpty } from '../tools/misc' 
 
 import pako from 'pako'
 
@@ -19,7 +18,7 @@ import {
   themes,
   borderFragmentMap,
   completeBorderStyleMap,
-} from '@constants/styles'
+} from '../constants/styles'
 
 import { Parser } from 'hot-formula-parser'
 
@@ -36,7 +35,7 @@ import {
   DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER,
   DEFAULT_EXCEL_SHEET_FREEZE_ROW_COUNT,
   DEFAULT_EXCEL_SHEET_FREEZE_COLUMN_COUNT,
-} from '@constants/excel'
+} from '../constants/excel'
 
 import uniqid from 'uniqid'
 

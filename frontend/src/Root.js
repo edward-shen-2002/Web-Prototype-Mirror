@@ -4,7 +4,7 @@ import { BrowserRouter, Route } from 'react-router-dom'
 
 // import App from "./App";
 
-import { ROUTE_ROOT } from '@constants/routes'
+import { ROUTE_ROOT } from './constants/routes'
 
 import App from './App'
 

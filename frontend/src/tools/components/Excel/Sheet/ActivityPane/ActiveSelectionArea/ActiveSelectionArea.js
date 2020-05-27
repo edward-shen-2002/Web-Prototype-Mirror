@@ -2,8 +2,8 @@ import React from 'react'
 
 import { connect } from 'react-redux'
 
-import topOffsetsSelector from '@selectors/ui/excel/topOffsets'
-import leftOffsetsSelector from '@selectors/ui/excel/leftOffsets'
+import topOffsetsSelector from '../../../../../../store/selectors/ui/excel/topOffsets'
+import leftOffsetsSelector from '../../../../../../store/selectors/ui/excel/leftOffsets'
 
 import './ActiveSelectionArea.scss'
 

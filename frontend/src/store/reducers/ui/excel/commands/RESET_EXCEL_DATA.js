@@ -1,4 +1,4 @@
-import { createEmptyEditor, createEmptyEditorValue } from '@tools/slate'
+import { createEmptyEditor, createEmptyEditorValue } from '../../../../../tools/slate' 
 
 const RESET_EXCEL_DATA = () => ({
   name: '',

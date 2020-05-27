@@ -1,4 +1,4 @@
-import { UPDATE_ACCOUNT, RESET_ACCOUNT } from '@actionTypes'
+import { UPDATE_ACCOUNT, RESET_ACCOUNT } from '../actionTypes'
 
 export const updateAccount = (account) => ({ type: UPDATE_ACCOUNT, account })
 

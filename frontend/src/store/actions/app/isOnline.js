@@ -1,4 +1,4 @@
-import { SET_ONLINE, SET_OFFLINE } from '@actionTypes'
+import { SET_ONLINE, SET_OFFLINE } from '../actionTypes'
 
 export const setOnline = () => ({ type: SET_ONLINE })
 

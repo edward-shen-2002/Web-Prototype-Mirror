@@ -8,7 +8,7 @@ import FormulaBar from './FormulaBar'
 import Sheet from './Sheet'
 import SheetNavigator from './SheetNavigator'
 
-import { undo, redo } from '@actions/ui/excel/commands'
+import { undo, redo } from '../../../store/actions/ui/excel/commands' 
 
 import './Excel.scss'
 

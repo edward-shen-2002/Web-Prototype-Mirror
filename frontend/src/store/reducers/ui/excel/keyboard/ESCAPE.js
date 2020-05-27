@@ -2,7 +2,7 @@ import {
   convertTextToEditorValue,
   convertRichTextToEditorValue,
   CustomEditor,
-} from '@tools/slate'
+} from '../../../../../tools/slate' 
 
 const ESCAPE = (state) => {
   const {

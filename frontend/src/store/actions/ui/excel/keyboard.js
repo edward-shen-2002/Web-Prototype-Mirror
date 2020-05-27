@@ -7,7 +7,7 @@ import {
   EXCEL_TAB,
   EXCEL_ESCAPE,
   EXCEL_DELETE,
-} from '@actionTypes'
+} from '../../actionTypes'
 
 export const keyArrowDown = (props) => ({ type: EXCEL_ARROW_DOWN, ...props })
 export const keyArrowUp = (props) => ({ type: EXCEL_ARROW_UP, ...props })

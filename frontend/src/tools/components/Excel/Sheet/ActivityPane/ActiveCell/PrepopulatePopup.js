@@ -9,7 +9,7 @@ import { DialogActions } from './components'
 import {
   setPrepopulate,
   resetActiveCellDialog,
-} from '@actions/ui/excel/commands'
+} from '../../../../../../store/actions/ui/excel/commands'
 
 const PrepopulatePopup = ({ type, quarter, year }) => {
   const dispatch = useDispatch()

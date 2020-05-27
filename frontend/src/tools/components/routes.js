@@ -4,11 +4,11 @@ import { connect } from 'react-redux'
 
 import { Route, Redirect } from 'react-router-dom'
 
-import { ROUTE_USER_PROFILE, ROUTE_PUBLIC_LOGIN } from '@constants/routes'
+import { ROUTE_USER_PROFILE, ROUTE_PUBLIC_LOGIN } from '../../constants/routes'
 
-import { ROLE_LEVEL_NOT_APPLICABLE } from '@constants/roles'
+import { ROLE_LEVEL_NOT_APPLICABLE } from '../../constants/roles'
 
-import { ONLINE, OFFLINE } from '@constants/states'
+import { ONLINE, OFFLINE } from '../../constants/states'
 
 // ! Hardcoded isOnline and shouldReconnect for testing purposes
 const mapActivityStateToProps = ({ app: { isOnline, shouldReconnect } }) => ({

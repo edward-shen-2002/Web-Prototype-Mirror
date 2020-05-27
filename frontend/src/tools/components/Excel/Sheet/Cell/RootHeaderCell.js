@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 
 import { useDispatch } from 'react-redux'
 
-import { selectAll } from '@actions/ui/excel/commands'
+import { selectAll } from '../../../../../store/actions/ui/excel/commands'
 
 // Contains draggable borders for freeze row/columns
 const RootHeaderCell = ({ style }) => {

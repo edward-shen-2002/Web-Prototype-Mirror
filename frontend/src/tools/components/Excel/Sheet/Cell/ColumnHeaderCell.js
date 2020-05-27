@@ -4,9 +4,9 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 
 import { columnNumberToName } from 'xlsx-populate/lib/addressConverter'
 
-import { resizeColumnStart, selectColumn } from '@actions/ui/excel/mouse'
+import { resizeColumnStart, selectColumn } from '../../../../../store/actions/ui/excel/mouse'
 
-import leftOffsetsSelector from '@selectors/ui/excel/leftOffsets'
+import leftOffsetsSelector from '../../../../../store/selectors/ui/excel/leftOffsets'
 
 const ColumnDragger = ({ column }) => {
   const [isIndicatorActive, setIsIndicatorActive] = useState(false)

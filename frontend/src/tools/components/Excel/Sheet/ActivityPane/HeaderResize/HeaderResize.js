@@ -2,15 +2,15 @@ import React from 'react'
 
 import { useSelector, shallowEqual } from 'react-redux'
 
-import { getNormalRowHeight, getNormalColumnWidth } from '@tools/excel'
+import { getNormalRowHeight, getNormalColumnWidth } from '../../../../../../tools/excel'
 
 import {
   DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
   DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER,
-} from '@constants/excel'
+} from '../../../../../../constants/excel'
 
-import topOffsetsSelector from '@selectors/ui/excel/topOffsets'
-import leftOffsetsSelector from '@selectors/ui/excel/leftOffsets'
+import topOffsetsSelector from '../../../../../../store/selectors/ui/excel/topOffsets'
+import leftOffsetsSelector from '../../../../../../store/selectors/ui/excel/leftOffsets'
 
 import './HeaderResize.scss'
 

@@ -1,6 +1,6 @@
-import { getScrollbarSize, getNormalRowHeight } from '@tools/excel'
+import { getScrollbarSize, getNormalRowHeight } from '../../../../../tools/excel'
 
-import { DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER } from '@constants/excel'
+import { DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER } from '../../../../../constants/excel' 
 
 const RESIZE_ROW = (state, { yOffset, topOffsets }) => {
   let newState = { ...state }
