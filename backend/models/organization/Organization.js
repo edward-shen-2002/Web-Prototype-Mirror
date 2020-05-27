@@ -4,17 +4,16 @@ const ObjectId = Schema.Types.ObjectId;
 
 let organizationSchema = new Schema({
   name: { type: String, required: true },
-  code: { type: String, required: true, unique: true },
+  id: { type: String, required: true, unique: true },
   address: { type: String, default: "" },
-  sector: {
-    sectorId: { type: ObjectId, ref: "Sector" },
-    name: { type: String }
-  },
-  organizationGroup: { type: String },
-  users: [ { type: ObjectId, ref: "User" } ], 
-  managers: [ { type: ObjectId, ref: "User" } ],
-  contact: {
-    userId: { type: ObjectId, ref: "User" },
+  // sector: {
+  //   sectorId: { type: ObjectId, ref: "Sector" },
+  //   name: { type: String }
+  // },
+  organizationGroupId: [ {type: ObjectId, ref: "OrganizationGroup"}],
+  programId: [ {type: ObjectId, ref: "Program"}],
+  users: [ { type: ObjectId, ref: "User" } ],
+  authorizedPerson: {
     name: { type: String, default: "" },
     telephone: { type: String, default: "" },
     email: { type: String, default: ""}
@@ -22,4 +21,4 @@ let organizationSchema = new Schema({
   locationName: { type: String, default: "" }
 }, { minimize: false });
 
-export default model("Organization", organizationSchema);
+export default model("Organization", organizationSchema, "Organization");

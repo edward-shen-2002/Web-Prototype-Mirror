@@ -5,6 +5,7 @@ import { DATABASE_KEY } from "../config/database";
 import { 
   ADMIN_ROLES
 } from "../constants/roles";
+import TemplateType from "../models/templateType/TemplateType";
 
 /**
  * MongoDB set up.
@@ -19,7 +20,10 @@ import {
 const setupMongoose = async (options, { 
   UserModel, 
   SectorModel, 
-  OrganizationModel, 
+  OrganizationModel,
+  OrganizationGroupModel,
+  AppSysModel,
+  TemplateTypeModel,
   TemplateModel, 
   RegistrationModel, 
   RegisterVerificationModel, 
@@ -33,15 +37,18 @@ const setupMongoose = async (options, {
     try {
 
       await UserModel.createCollection();
-      await RegistrationModel.createCollection();
-      await RegisterVerificationModel.createCollection();
+      // await RegistrationModel.createCollection();
+      // await RegisterVerificationModel.createCollection();
       await OrganizationModel.createCollection();
-      await SectorModel.createCollection();
-      await TemplateModel.createCollection();
-      await BusinessConceptModel.createCollection();
-      await BundleModel.createCollection();
-      await OrganizationBundleModel.createCollection();
-      await MasterValueModel.createCollection();
+      await OrganizationGroupModel.createCollection();
+      await AppSysModel.createCollection();
+      await TemplateTypeModel.createCollection();
+      // await SectorModel.createCollection();
+      // await TemplateModel.createCollection();
+      // await BusinessConceptModel.createCollection();
+      // await BundleModel.createCollection();
+      // await OrganizationBundleModel.createCollection();
+      // await MasterValueModel.createCollection();
       
       console.log("MongoDB: Successfully created collections");
     } catch(error) {
@@ -65,54 +72,54 @@ const setupMongoose = async (options, {
   // TODO: Create dummy data
   // Create or overwrite sample data in the database. The database must be already set up.
   const handleCreateDummyUser = async () => {
-    try {
-      console.log("MongoDB: Creating dummy data");
-
-      const sampleSectorData = {
-        name: "Health"
-      };
-
-      let sampleSector = await SectorModel.findOneAndUpdate({ name: sampleSectorData.name }, sampleSectorData, { new: true, upsert: true });;
-
-      const sampleOrganizationData = {
-        name: "MOH",
-        code: "888",
-        address: "5700 Yonge St, North York, ON",
-        sector: { sectorId: sampleSector._id, name: sampleSector.name }
-      };
-
-      let sampleOrganization = await OrganizationModel.findOneAndUpdate({ code: sampleOrganizationData.code }, sampleOrganizationData, { new: true, upsert: true });
-
-      let userOrganizations = {};
-
-      userOrganizations[sampleOrganization._id] = {
-        name: sampleOrganization.name,
-        code: sampleOrganization.code
-      };
-    
-      const sampleUserData = { 
-        username: "sampleuser", 
-        firstName: "Alfred", 
-        lastName: "Lemon", 
-        phoneNumber: "(999)-888-7777", 
-        email: "sampleuser@hotmail.com", 
-        password: "password123@", 
-        organizations: userOrganizations,
-        roles: ADMIN_ROLES 
-      };
-
-      let sampleUser = await UserModel.findOne({ username: "sampleuser" });
-
-      if(!sampleUser) sampleUser = await UserModel.register({ ...sampleUserData, password: undefined }, sampleUserData.password);
-
-      sampleOrganization.users.push(sampleUser._id);
-      sampleOrganization.contact = { userId: sampleUser._id, name: sampleUser.firstName, telephone: sampleUser.phoneNumber }
-      await sampleOrganization.save();
-
-      console.log("MongoDB: Successfully created dummy data");
-    } catch(error) {
-      console.error("MongoDB: Failed to create dummy data", error);
-    }
+    // try {
+    //   console.log("MongoDB: Creating dummy data");
+    //
+    //   const sampleSectorData = {
+    //     name: "Health"
+    //   };
+    //
+    //   let sampleSector = await SectorModel.findOneAndUpdate({ name: sampleSectorData.name }, sampleSectorData, { new: true, upsert: true });;
+    //
+    //   const sampleOrganizationData = {
+    //     name: "MOH",
+    //     code: "888",
+    //     address: "5700 Yonge St, North York, ON",
+    //     sector: { sectorId: sampleSector._id, name: sampleSector.name }
+    //   };
+    //
+    //   let sampleOrganization = await OrganizationModel.findOneAndUpdate({ code: sampleOrganizationData.code }, sampleOrganizationData, { new: true, upsert: true });
+    //
+    //   let userOrganizations = {};
+    //
+    //   userOrganizations[sampleOrganization._id] = {
+    //     name: sampleOrganization.name,
+    //     code: sampleOrganization.code
+    //   };
+    //
+    //   const sampleUserData = {
+    //     username: "sampleuser",
+    //     firstName: "Alfred",
+    //     lastName: "Lemon",
+    //     phoneNumber: "(999)-888-7777",
+    //     email: "sampleuser@hotmail.com",
+    //     password: "password123@",
+    //     organizations: userOrganizations,
+    //     roles: ADMIN_ROLES
+    //   };
+    //
+    //   let sampleUser = await UserModel.findOne({ username: "sampleuser" });
+    //
+    //   if(!sampleUser) sampleUser = await UserModel.register({ ...sampleUserData, password: undefined }, sampleUserData.password);
+    //
+    //   sampleOrganization.users.push(sampleUser._id);
+    //   sampleOrganization.contact = { userId: sampleUser._id, name: sampleUser.firstName, telephone: sampleUser.phoneNumber }
+    //   await sampleOrganization.save();
+    //
+    //   console.log("MongoDB: Successfully created dummy data");
+    // } catch(error) {
+    //   console.error("MongoDB: Failed to create dummy data", error);
+    // }
   };
 
   const init = async ({ createDatabase, wipeDatabase, createDummyUser }) => {
@@ -125,7 +132,7 @@ const setupMongoose = async (options, {
       // Options
       if(wipeDatabase) await handleWipeDatabase();
       if(createDatabase) await handleCreateDatabase();
-      if(createDummyUser) await handleCreateDummyUser();
+  //    if(createDummyUser) await handleCreateDummyUser();
 
       console.log("MongoDB: Successfully set up database");
     } catch(error) {

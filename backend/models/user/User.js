@@ -56,4 +56,4 @@ let userSchema = new Schema({
 
 userSchema.plugin(passportLocalMongoose, { usernameUnique: false, findByUsername, passwordValidator });
 
-export default model("User", userSchema);
+export default model("User", userSchema, "User");

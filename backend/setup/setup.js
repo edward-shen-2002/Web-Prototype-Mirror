@@ -16,17 +16,20 @@ import TemplateModel from "../models/template/Template";
 import BusinessConceptModel from "../models/template/BusinessConcept";
 import BundleModel from "../models/bundle/Bundle";
 import OrganizationBundleModel from "../models/bundle/OrganizationBundle";
-import SubmissionModel from "../models/submission/Submission";
+import TemplateTypeModel from "../models/templateType/TemplateType";
 import OrganizationGroupModel from "../models/organizationGroup/OrganizationGroup";
 import ProgramModel from "../models/program/Program";
 import MasterValueModel from "../models/masterValue/MasterValue";
+import AppSysModel from "../models/appSys/AppSys";
 
 const serverSetup = async (app, passport, options = {}) => {
   const helpers = { 
     app, 
     passport, 
     UserModel, 
-    OrganizationModel, 
+    OrganizationModel,
+    OrganizationGroupModel,
+    AppSysModel,
     RegistrationModel, 
     RegisterVerificationModel, 
     SectorModel, 
@@ -35,8 +38,7 @@ const serverSetup = async (app, passport, options = {}) => {
     BundleModel,
     OrganizationBundleModel,
     MasterValueModel,
-    SubmissionModel,
-    OrganizationGroupModel,
+    TemplateTypeModel,
     ProgramModel
   };
   

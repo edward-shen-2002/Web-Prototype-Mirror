@@ -9,12 +9,11 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 
 let hash = require("object-hash");
-
-
+const cloneDeep = require('clone-deep')
 
 let RegisterController = (props) => {
 
-  const [ registrationData, setRegistrationData ] = useState({
+  let registrationData= {
     title: "Mr.",
     username: "Haonan",
     email: "sampleUser@ontario.ca",
@@ -24,15 +23,17 @@ let RegisterController = (props) => {
     password: "123qweASD",
     passwordConfirm: "123qweASD",
     ext: "111",
-    organizations: {},
-    programs: [],
-    permissions: []
-  });
-  const [activeStep, setActiveStep] = useState(0);
+    IsActive: false,
+    startDate: new Date(),
+    endDate: new Date(),
+    sysRole: []
+  };
+  const [ activeStep, setActiveStep] = useState(0);
   const [ organizationGroup, setOrganizationGroup] = useState([]);
   const [ helperState, setHelperState] = useState(true);
   const [ isSnackbarOpen, setIsSnackbarOpen] = useState(false);
-//  const [ organizationGroupOptions, setOrganizationGroupOptions ] = useState([]);
+  const [ appSysOptions, setAppSysOptions] = useState([]);
+  const [ organizationGroupOptions, setOrganizationGroupOptions ] = useState([]);
   const [ organizationOptions, setOrganizationOptions ] = useState([]);
   const [ programOptions, setProgramOptions ] = useState([]);
   const [ userOrganizations, setUserOrganizations ] = useState([]);
@@ -42,46 +43,67 @@ let RegisterController = (props) => {
   const [ userPermissions, setUserPermissionList] = useState([]);
   const [ ableToComplete, setAbleToComplete] = useState(false);
   const [ searchKey, setSearchKey] = useState("");
+  const [ userAppSys, setUserAppSys] = useState("");
   const [ reference, setReference] = useState("");
-  const {orgChange, programChange, submissionChange, searchOrg, getOrg, sendRegistrationData}=new RegisterService();
+  const {getProgram, getTemplateType, submissionChange, searchOrg, getAppSys, getOrg, getOrgGroup, sendRegistrationData, handleInputSysRole}=new RegisterService();
 
   const getSteps = () => {
     return ['Step1', 'Step2', 'Step3'];
   };
 
-  const organizationGroupOptions = [
-    {label: "Health Service Providers", value: "Health Service Providers"},
-    {label: "Local Health Integration Network", value: "Local Health Integration Network"},
-    {label: "Ontario Government", value: "Ontario Government"},
-    {label: "Other User Groups", value: "Other User Groups"}
-  ]
 
-  const handleOrgChange = (event) => {
-    setUserOrganizations(event.value);
-    orgChange(event.value)
-      .then(orgOptions => {
-        setProgramOptions(orgOptions);
-        console.log(orgOptions)
+  // const organizationGroupOptions = [
+  //   {label: "Health Service Providers", value: "Health Service Providers"},
+  //   {label: "Local Health Integration Network", value: "Local Health Integration Network"},
+  //   {label: "Ontario Government", value: "Ontario Government"},
+  //   {label: "Other User Groups", value: "Other User Groups"}
+  // ]
+
+
+
+  const handleOrgChange = (selectedOrganization) => {
+    let userOrg = [];
+    let programs = [];
+    selectedOrganization.forEach(org => {
+      userOrg.push(org.information);
+      org.information.programId.forEach(programId => {
+        programs.push({org: {name: org.information.name, id: org.information.id,
+          authorizedPerson: org.information.authorizedPerson}, id: programId})
+      })
+    })
+    setUserOrganizations(userOrg);
+    getProgram(programs)
+      .then(programOptions => {
+        setProgramOptions(programOptions);
       });
 
   };
 
-  const handleProgramChange = (selectedPrograms, userOrganizations) => {
-    setUserPrograms(selectedPrograms);
-    programChange(selectedPrograms, userOrganizations)
-      .then(submissionList=>{setUserSubmissionList(submissionList);})
+  const handleProgramChange = (selectedPrograms) => {
+
+    let userPrograms = [];
+    selectedPrograms.forEach(program => {
+      userPrograms.push(program.information);
+    })
+    setUserPrograms(userPrograms);
+
+    getTemplateType(userPrograms)
+      .then(templateTypeList=>{
+        setUserSubmissionList(templateTypeList);
+        console.log(templateTypeList);
+      })
   }
 
   const handleSubmissionChange = () => {
     setAbleToComplete(true);
     const permissionList = submissionChange(userSubmissions);
     setUserPermissionList(permissionList);
-    setUserSubmissionList([]);
+
   }
 
   const handleOrgGroupChange = (event) => {
-    setOrganizationGroup(event.value);
-    getOrg(event.value)
+    setOrganizationGroup(event.value.name);
+    getOrg(event.value._id)
       .then(orgOptions => {
         setOrganizationOptions(orgOptions);
       });
@@ -91,28 +113,40 @@ let RegisterController = (props) => {
     setSearchKey(event.value);
   }
 
+  const handleAppSysChange = (event) => {
+    setUserAppSys(event.value)
+  }
+
   const handleReferenceChange = (event) => {
     const {target: {name, value}} = event;
     setReference(value);
   }
+
   const handleChangePermission = (rowData, permission) => {
     let submissions = userSubmissions;
-    console.log(rowData[permission]);
     const instruction = !rowData[permission]
     submissions[rowData.index][permission] = !rowData[permission];
     rowData[permission] = instruction;
-    console.log(rowData[permission]);
-    console.log(!rowData[permission]);
     setUserSubmissionList(submissions);
-    setHelperState(!helperState)
+    setHelperState(!helperState);
   }
+
   const handleSearchOrg = () => {
     const orgOptions = searchOrg(searchKey, reference, organizationOptions);
     setOrganizationOptions(orgOptions);
   }
 
   const handleNext = () => {
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
+
+    getAppSys()
+      .then(appSys => {
+        setAppSysOptions(appSys);
+        getOrgGroup()
+          .then(orgGroupOptions => {
+            setOrganizationGroupOptions(orgGroupOptions);
+            setActiveStep(prevActiveStep => prevActiveStep + 1);
+          });
+      });
 
   };
 
@@ -120,11 +154,24 @@ let RegisterController = (props) => {
     setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
 
-  const handleSubmit = () => {
-    sendRegistrationData(sendRegistrationData);
-  };
 
-  console.log(organizationOptions);
+  const handleSubmit = () => {
+    let userData = registrationData;
+    userData.password = hash(userData.password);
+    userData.passwordConfirm = hash(userData.passwordConfirm);
+    userSubmissions.forEach(submission => {
+
+      handleInputSysRole(userData, "approve", submission, userAppSys);
+      handleInputSysRole(userData, "review", submission, userAppSys);
+      handleInputSysRole(userData, "input", submission, userAppSys);
+      handleInputSysRole(userData, "submit", submission, userAppSys);
+      handleInputSysRole(userData, "view", submission, userAppSys);
+      handleInputSysRole(userData, "viewCognos", submission, userAppSys);
+    })
+
+    console.log(userData);
+    sendRegistrationData(userData);
+  };
 
   return (
     <>
@@ -150,6 +197,8 @@ let RegisterController = (props) => {
         userPermissions={userPermissions}
         setUserSubmissionList={setUserSubmissionList}
         setUserPermissionList={setUserPermissionList}
+        appSysOptions={appSysOptions}
+        handleAppSysChange={handleAppSysChange}
         organizationGroupOptions={organizationGroupOptions}
         organizationOptions={organizationOptions}
         programOptions={programOptions}

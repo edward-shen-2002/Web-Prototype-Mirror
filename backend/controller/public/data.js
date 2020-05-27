@@ -13,7 +13,8 @@ const data = ({
   router, 
   OrganizationModel,
   OrganizationGroupModel,
-  SubmissionModel,
+  AppSysModel,
+  TemplateTypeModel,
   ProgramModel,
   BusinessConceptModel,
   SectorModel,
@@ -23,11 +24,6 @@ const data = ({
     OrganizationModel.find({})
       .select("_id code name address")
       .then((organizations) => {
-        fs.writeFile("getOrg.txt", organizations, function(err) {
-          if (err) {
-            console.log(err);
-          }
-        });
         res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { organizations } });
       })
       .catch(next);
@@ -35,66 +31,82 @@ const data = ({
 
   router.get(`${ROUTE_DATA}/organizations/:organizationGroup`, (_req, res, next) => {
 
-    const { organizationGroup } = _req.params
 
-    OrganizationModel.find({organizationGroup})
-      .select("_id code name address contact organizationGroup")
-      .then((organizations) => {
-        fs.writeFile("getOrg.txt", organizations, function(err) {
-          if (err) {
-            console.log(err);
-          }
-        });
-        res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { organizations } });
-      })
-      .catch(next);
-  });
-
-  router.get(`${ROUTE_DATA}/organizations/information/:code`, (_req, res, next) => {
-
-    const { code } = _req.params
-    console.log(code);
-
-    OrganizationModel.find({code})
-      .select("_id name address contact organizationGroup")
+    const { organizationGroup } = _req.params;
+    OrganizationModel.find({organizationGroupId: organizationGroup})
+      .select("_id id name programId authorizedPerson")
       .then((organizations) => {
         res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { organizations } });
       })
       .catch(next);
-  });
+  //   OrganizationModel.find({organizationGroupId: organizationGroup})
+  //     .select("_id id name programId authorizedPerson")
+  //     .then((organizations) => {
+  //       console.log(organizations);
+  //       res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { organizations } });
+  //     })
+  //     .catch(next);
+   });
 
-  router.get(`${ROUTE_DATA}/programs/:organization`, (_req, res, next) => {
+  // router.get(`${ROUTE_DATA}/organizations/information/:code`, (_req, res, next) => {
+  //
+  //   const { code } = _req.params
+  //
+  //   OrganizationModel.find({code})
+  //     .select("_id name address contact organizationGroup")
+  //     .then((organizations) => {
+  //       res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { organizations } });
+  //     })
+  //     .catch(next);
+  // });
 
-    const { organization } = _req.params
-    ProgramModel.find({organization})
-      .select("name submission shortName")
+  // router.get(`${ROUTE_DATA}/programs/:organization`, (_req, res, next) => {
+  //
+  //   const { organization } = _req.params
+  //   ProgramModel.find({organization})
+  //     .select("name submission shortName")
+  //     .then((programs) => {
+  //       fs.writeFile("orgChange(get program).txt", programs, function(err) {
+  //         if (err) {
+  //           console.log(err);
+  //         }
+  //       });
+  //       res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { programs } });
+  //     })
+  //     .catch(next);
+  // });
+
+  router.post(`${ROUTE_DATA}/programs/`, (_req, res, next) => {
+
+    const { programId } = _req.body;
+    console.log(programId);
+    ProgramModel.find({_id: {$in: programId}}, {isActive: true})
+      .select("_id name code")
       .then((programs) => {
-        fs.writeFile("orgChange(get program).txt", programs, function(err) {
-          if (err) {
-            console.log(err);
-          }
-        });
         res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { programs } });
       })
       .catch(next);
   });
 
-  router.post(`${ROUTE_DATA}/submissions/`, (_req, res, next) => {
+  router.post(`${ROUTE_DATA}/templateType/`, (_req, res, next) => {
 
     const { programList } = _req.body;
-    console.log(programList);
-    SubmissionModel.find({program: {$in: programList}})
-      .select("shortName program ApproveAvailable ReviewAvailable SubmitAvailable InputAvailable ViewAvailable ViewCognosAvailable")
-      .then((submissions) => {
-        fs.writeFile("programChange(get submissions).txt", submissions, function(err) {
-          if (err) {
-            console.log(err);
-          }
-        });
-        res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { submissions } });
+    TemplateTypeModel.find({programId: {$in: programList}})
+      .select("_id name programId isApprovable isReviewable isSubmittable isInputtable isViweable isReportable")
+      .then((templateTypes) => {
+        res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { templateTypes } });
       })
       .catch(next);
 
+  });
+
+  router.post(`${ROUTE_DATA}/registration/`, (_req, res, next) => {
+    const { registerData } = _req.body;
+    fs.writeFile("registrationData.txt", registerData, function(err) {
+      if (err) {
+        console.log(err);
+      }
+    });
   });
 
   router.get(`${ROUTE_DATA}/sectors`, (_req, res, next) => {
@@ -120,6 +132,24 @@ const data = ({
       .select("id value")
       .then((businessConcepts) => {
         res.json({ message: MESSAGE_SUCCESS_BUSINESS_CONCEPTS, data: { businessConcepts } });
+      })
+      .catch(next);
+  });
+
+  router.get(`${ROUTE_DATA}/organizationGroups`, (_req, res, next) => {
+    OrganizationGroupModel.find({isActive: true})
+      .select("_id name")
+      .then((organizationGroups) => {
+        res.json({ message: MESSAGE_SUCCESS_BUSINESS_CONCEPTS, data: { organizationGroups } });
+      })
+      .catch(next);
+  });
+
+  router.get(`${ROUTE_DATA}/appSys`, (_req, res, next) => {
+    AppSysModel.find({})
+      .select("_id code name")
+      .then((appSys) => {
+        res.json({ message: MESSAGE_SUCCESS_BUSINESS_CONCEPTS, data: { appSys } });
       })
       .catch(next);
   });

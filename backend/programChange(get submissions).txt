@@ -1,0 +1,31 @@
+{
+  program: [ 'Program1' ],
+  _id: 5e6fb7e430323715b41587ca,
+  shortName: 'S1',
+  ApproveAvailable: true,
+  ReviewAvailable: true,
+  SubmitAvailable: true,
+  InputAvailable: true,
+  ViewAvailable: true,
+  ViewCognosAvailable: true
+},{
+  program: [ 'Program1' ],
+  _id: 5e6fb7e430323715b41587cb,
+  shortName: 'S2',
+  ApproveAvailable: true,
+  ReviewAvailable: true,
+  SubmitAvailable: true,
+  InputAvailable: true,
+  ViewAvailable: true,
+  ViewCognosAvailable: true
+},{
+  program: [ 'Program2' ],
+  _id: 5e6fb7e430323715b41587cc,
+  shortName: 'S3',
+  ApproveAvailable: true,
+  ReviewAvailable: true,
+  SubmitAvailable: true,
+  InputAvailable: true,
+  ViewAvailable: true,
+  ViewCognosAvailable: true
+}

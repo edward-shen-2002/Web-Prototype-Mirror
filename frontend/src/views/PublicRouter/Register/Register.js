@@ -29,7 +29,7 @@ import {createProgram} from "typescript";
 const MaterialTable = lazy(() => import("material-table"));
 
 function getSteps() {
-  return ['Step1', 'Step2', 'Step3'];
+  return ['Step1', 'Step2'];
 }
 const steps = getSteps();
 
@@ -43,13 +43,13 @@ const titleOptions = [
 
 
 const columns = [
-  { title: "Organization", field: "organization" },
-  { title: "Program", field: "program" },
-  { title: "Submission", field: "submission" },
+  { title: "Organization", field: "organization.name" },
+  { title: "Program", field: "program.code" },
+  { title: "Submission", field: "submission.name" },
   { title: "Permission", field: "permission" },
-  { title: "Authoritative Person Name", field: "authoritativePersonName" },
-  { title: "Authoritative Person's Phone Number", field: "authoritativePersonPhoneNumber" },
-  { title: "Authoritative Person's Email", field: "authoritativePersonEmail" }
+  { title: "Authoritative Person Name", field: "organization.authorizedPerson.name" },
+  { title: "Authoritative Person's Phone Number", field: "organization.authorizedPerson.phone" },
+  { title: "Authoritative Person's Email", field: "organization.authorizedPerson.email" }
 ];
 
 const searchKeyOptions = [
@@ -135,7 +135,7 @@ const Header = () => (
 );
 
 
-const ButtonBox = ({activeStep, handleBack, handleNext, ableToComplete}) => (
+const ButtonBox = ({activeStep, handleBack, handleNext, ableToComplete, handleSubmit}) => (
   <Box border={1} color="primary" className="register__buttonBox" justifyContent="center">
     <Button disabled={activeStep === 0} variant="outlined" color="primary" className="register__buttonBack" onClick={handleBack} >
       Back
@@ -145,11 +145,11 @@ const ButtonBox = ({activeStep, handleBack, handleNext, ableToComplete}) => (
       Cancel
     </Button>
 
-    <Button disabled={activeStep == 2} variant="outlined" color="primary" className="register__button"  onClick={handleNext} >
+    <Button disabled={activeStep == 1} variant="outlined" color="primary" className="register__button"  onClick={handleNext} >
       Next
     </Button>
 
-    <Button disabled={!ableToComplete || activeStep !== 2} variant="outlined" color="primary" className="register__button"  onClick={handleNext} >
+    <Button disabled={!ableToComplete || activeStep !== 1} variant="outlined" color="primary" className="register__button"  onClick={handleSubmit} >
       COMPLETE REGISTRATION
     </Button>
     <Typography className="register__inputTitle">
@@ -158,15 +158,26 @@ const ButtonBox = ({activeStep, handleBack, handleNext, ableToComplete}) => (
 
   </Box>
 );
-
-const selectOrgProgram = (searchKey, reference, setSearchKey, setReference, organizationGroup, organizationOptions, handleOrgChange, organizationGroupOptions, handleOrgGroupChange, setOrganizationOptions,
-                          handleProgramChange,programOptions, selectedPrograms, handleSearchOrg, handleSearchKeyChange, handleReferenceChange) => {
+const test = (userSubmissions) => {console.log(userSubmissions)};
+const selectOrgProgram = (searchKey, reference, setSearchKey, setReference, organizationGroup, organizationOptions, handleOrgChange, organizationGroupOptions, handleOrgGroupChange, appSysOptions, handleAppSysChange, setOrganizationOptions,
+                          handleProgramChange,programOptions, handleSearchOrg, handleSearchKeyChange, handleReferenceChange) => {
 
 
 //  if (organizationGroup !== "Health Service Providers") {
-    console.log(organizationOptions);
+    let selectedPrograms = [];
+    let selectedOrganizations = [];
+    console.log(appSysOptions);
     return (
       <>
+
+        <Typography className="register__inputTitle"> *AppSys </Typography>
+        <Select
+          name="appSys"
+          options={appSysOptions}
+          onChange={handleAppSysChange}
+          className="register__select"
+        />
+
         <Typography className="register__inputTitle"> *OrganizationsGroups </Typography>
         <Select
           name="organizations"
@@ -174,13 +185,30 @@ const selectOrgProgram = (searchKey, reference, setSearchKey, setReference, orga
           onChange={handleOrgGroupChange}
           className="register__select"
         />
+
         <Typography className="register__inputTitle"> *Organizations </Typography>
-        <Select
-          name="organizations"
-          options={organizationOptions}
+        {/*<Select*/}
+        {/*  name="organizations"*/}
+        {/*  options={organizationOptions}*/}
+        {/*  onChange={handleOrgChange}*/}
+        {/*  className="register__select"*/}
+        {/*/>*/}
+        <FilteredMultiSelect
           onChange={handleOrgChange}
-          className="register__select"
+          options={organizationOptions}
+          selectedOptions={selectedOrganizations}
+          textProp="label"
+          valueProp="value"
+          buttonText="Add Organization"
+          className="register__filteredMultiSelect"
+          showFilter={false}
+          classNames={{
+            button: "register__step3Button",
+            select: "register__multiSelect",
+          }}
         />
+
+
         <Typography className="register__inputTitle"> *Program </Typography>
 
         <FilteredMultiSelect
@@ -260,14 +288,14 @@ const selectOrgProgram = (searchKey, reference, setSearchKey, setReference, orga
 }
 
 const getStepContent = (activeStep, searchKey, reference, setSearchKey, setReference, organizationGroup, handleOrgGroupChange, isSnackbarOpen, setIsSnackbarOpen, handleBack, handleNext, handleSubmit,
-                        userOrganizations, userPrograms, userSubmissions, userPermissions, setUserSubmissionList, setUserPermissionList, organizationGroupOptions, organizationOptions, programOptions,
+                        userOrganizations, userPrograms, userSubmissions, userPermissions, setUserSubmissionList, setUserPermissionList, appSysOptions, handleAppSysChange, organizationGroupOptions, organizationOptions, programOptions,
                          setOrganizationOptions, handleOrgChange, handleProgramChange, handleSubmissionChange,handleChangePermission, ableToComplete, setAbleToComplete, handleSearchOrg, handleSearchKeyChange, handleReferenceChange, props) => {
 
   const { values, handleChange, touched, handleBlur, errors, setFieldValue, setFieldTouched} = props;
   const checkBoxColumns = [
-    { title: "Organization", field: "organization" },
-    { title: "Program", field: "program" },
-    { title: "Submission", field: "submission"},
+    { title: "Organization", field: "organization.name" },
+    { title: "Program", field: "program.code" },
+    { title: "Submission", field: "submission.name"},
     { title: "Approve*", field: "approve" ,render: rowData =>
         <Checkbox
           checked={rowData.approve}
@@ -324,18 +352,36 @@ const getStepContent = (activeStep, searchKey, reference, setSearchKey, setRefer
       return (
         <>
           <form className="register__form">
-            <FormLabel className="register__title" component="legend">Step2: Enter User Information</FormLabel>
+            {/*<FormLabel className="register__title" component="legend">Step2: Enter User Information</FormLabel>*/}
+            <br/>
             <div className="register__label">
               <Typography className="register__inputTitle"> *Title </Typography>
             </div>
             <div className="register__informationField">
-              <MySelect
-                name = "title"
-                options = {titleOptions}
+              {/*<MySelect*/}
+              {/*  name = "title"*/}
+              {/*  options = {titleOptions}*/}
+              {/*  value={values.title}*/}
+              {/*  onChange={setFieldValue}*/}
+              {/*  className="register__selectTitle"*/}
+              {/*  onBlur={setFieldTouched}*/}
+              {/*/>*/}
+              <TextField
+                variant="outlined"
+                className="register__field"
+                id="title"
+                name="title"
+                type="text"
                 value={values.title}
-                onChange={setFieldValue}
-                className="register__selectTitle"
-                onBlur={setFieldTouched}
+                onChange={handleChange}
+                error={touched.title && !!errors.title}
+                helperText={touched.title && errors.title}
+                onBlur={handleBlur}
+                InputProps={{
+                  style:{
+                    height: 30
+                  }
+                }}
               />
             </div>
             <div className="register__label">
@@ -519,20 +565,19 @@ const getStepContent = (activeStep, searchKey, reference, setSearchKey, setRefer
               />
             </div>
             <br/>
-            <ButtonBox activeStep = {activeStep} handleBack = {handleBack} handleNext = {handleNext} ableToComplete = {ableToComplete} />
+            <ButtonBox activeStep = {activeStep} handleBack = {handleBack} handleNext = {handleNext} ableToComplete = {ableToComplete} handleSubmit={handleSubmit}/>
           </form>
         </>
       );
     case 1:
-      const selectedPrograms = [];
       console.log(organizationOptions)
 
       return (
         <div className="register__form">
-          {selectOrgProgram(searchKey, reference, setSearchKey, setReference, organizationGroup, organizationOptions, handleOrgChange, organizationGroupOptions, handleOrgGroupChange,
-            setOrganizationOptions, handleProgramChange,programOptions, selectedPrograms, handleSearchOrg, handleSearchKeyChange, handleReferenceChange)}
+          {selectOrgProgram(searchKey, reference, setSearchKey, setReference, organizationGroup, organizationOptions, handleOrgChange, organizationGroupOptions, handleOrgGroupChange, appSysOptions, handleAppSysChange,
+            setOrganizationOptions, handleProgramChange,programOptions, handleSearchOrg, handleSearchKeyChange, handleReferenceChange)}
 
-          <div className="register__tableContainer">
+            <div className="register__tableContainer">
               <MaterialTable
                 className="register__table"
                 columns={checkBoxColumns}
@@ -550,6 +595,7 @@ const getStepContent = (activeStep, searchKey, reference, setSearchKey, setRefer
                 // editable={editable} options={options}
               />
           </div>
+          {test(userSubmissions)}
           <Button variant="outlined" color="primary" className="register__step3Button"  onClick={handleSubmissionChange} >
             Add Submission
           </Button>
@@ -572,11 +618,9 @@ const getStepContent = (activeStep, searchKey, reference, setSearchKey, setRefer
                   icon: 'delete',
                   tooltip: 'Delete Permission',
                   onClick: (event, rowData) => {
-                    console.log(rowData.tableData.id);
-                    console.log(rowData);
-                    let editedPermission = userPermissions.splice(rowData.tableData.id - 1, 1);
+                    let editedPermission = userPermissions;
+                    editedPermission.splice(rowData.tableData.id, 1);
                     setUserPermissionList(editedPermission);
-
                   }
                 }
               ]}
@@ -596,7 +640,7 @@ const getStepContent = (activeStep, searchKey, reference, setSearchKey, setRefer
               data={userPermissions}
               // editable={editable} options={options}
             />
-            <ButtonBox activeStep = {activeStep} handleBack = {handleBack} handleNext = {handleNext} ableToComplete = {ableToComplete} />
+            <ButtonBox activeStep = {activeStep} handleBack = {handleBack} handleNext = {handleNext} ableToComplete = {ableToComplete} handleSubmit={handleSubmit}/>
           </div>
 
         </div>
@@ -613,7 +657,7 @@ const Register_container = (props) => {
 
   console.log(props);
   const {activeStep, searchKey, reference, setSearchKey, setReference, organizationGroup, handleOrgGroupChange, isSnackbarOpen, setIsSnackbarOpen, handleBack, handleNext, handleSubmit,
-    userOrganizations, userPrograms, userSubmissions, userPermissions, setUserSubmissionList, setUserPermissionList, organizationGroupOptions, organizationOptions, programOptions, handleChangePermission,
+    userOrganizations, userPrograms, userSubmissions, userPermissions, setUserSubmissionList, setUserPermissionList, appSysOptions, handleAppSysChange, organizationGroupOptions, organizationOptions, programOptions, handleChangePermission,
     setOrganizationOptions, handleOrgChange, handleProgramChange, handleSubmissionChange, ableToComplete, setAbleToComplete, handleSearchOrg, handleSearchKeyChange, handleReferenceChange} = props;
 
   return (
@@ -638,7 +682,7 @@ const Register_container = (props) => {
         ) : (
           <div>
             {getStepContent(activeStep, searchKey, reference, setSearchKey, setReference, organizationGroup, handleOrgGroupChange, isSnackbarOpen, setIsSnackbarOpen, handleBack, handleNext, handleSubmit,
-              userOrganizations, userPrograms, userSubmissions, userPermissions, setUserSubmissionList, setUserPermissionList,organizationGroupOptions, organizationOptions, programOptions,
+              userOrganizations, userPrograms, userSubmissions, userPermissions, setUserSubmissionList, setUserPermissionList, appSysOptions, handleAppSysChange, organizationGroupOptions, organizationOptions, programOptions,
               setOrganizationOptions, handleOrgChange, handleProgramChange, handleSubmissionChange,handleChangePermission, ableToComplete, setAbleToComplete, handleSearchOrg, handleSearchKeyChange, handleReferenceChange, props)}
           </div>
         )}
