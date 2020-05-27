@@ -13,7 +13,7 @@ import {
   selectedCOATreeIdSelector,
 } from '../../../store/selectors/COATreeStore'
 
-import SelectableTableDialog from '../../../tools/components/dialogs/SelectableTableDialog'
+import SelectableTableDialog from '../../..//components/dialogs/SelectableTableDialog'
 
 const COAGroupDialog = () => {
   const dispatch = useDispatch()

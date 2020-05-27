@@ -8,7 +8,7 @@ import { getCOAGroupsRequest } from '../../../store/thunks/COAGroup'
 
 import { createCOATreeRequest } from '../../../store/thunks/COATree'
 
-import SelectableTableDialog from '../../../tools/components/dialogs/SelectableTableDialog'
+import SelectableTableDialog from '../../..//components/dialogs/SelectableTableDialog'
 
 const COAGroupDialog = ({ sheetNameId }) => {
   const dispatch = useDispatch()

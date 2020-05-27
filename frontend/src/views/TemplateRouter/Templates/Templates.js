@@ -17,7 +17,7 @@ import Typography from '@material-ui/core/Typography'
 import {
   StatusIdButton,
   TemplateTypeIdButton,
-} from '../../../tools/components/buttons'
+} from '../../..//components/buttons'
 
 import './Templates.scss'
 

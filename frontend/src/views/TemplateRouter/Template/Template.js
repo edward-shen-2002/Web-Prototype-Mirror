@@ -6,13 +6,13 @@ import {
   showAppNavigation,
   hideAppNavigation,
 } from '../../../store/actions/ui/isAppNavigationOpen'
-import Loading from '../../../tools/components/Loading/Loading'
+import Loading from '../../../components/Loading/Loading'
 
 import {
   updateTemplateExcelRequest,
   getTemplateRequest,
 } from '../../../store/thunks/templates'
-import { Excel } from '../../../tools/components/Excel'
+import { Excel } from '../../../components/Excel'
 
 import './Template.scss'
 

@@ -18,7 +18,7 @@ import {
   UserIdButton,
   StatusIdButton,
   SubmissionPeriodIdButton,
-} from '../../../tools/components/buttons'
+} from '../../..//components/buttons'
 
 import './TemplatePackages.scss'
 
