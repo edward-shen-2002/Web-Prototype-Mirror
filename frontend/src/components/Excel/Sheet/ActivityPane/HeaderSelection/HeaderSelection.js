@@ -2,7 +2,10 @@ import React, { Fragment } from 'react'
 
 import { connect } from 'react-redux'
 
-import { getNormalColumnWidth, getNormalRowHeight } from '../../../../..//tools/excel'
+import {
+  getNormalColumnWidth,
+  getNormalRowHeight,
+} from '../../../../..//tools/excel'
 
 import {
   DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,

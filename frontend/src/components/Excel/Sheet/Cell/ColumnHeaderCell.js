@@ -4,7 +4,10 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 
 import { columnNumberToName } from 'xlsx-populate/lib/addressConverter'
 
-import { resizeColumnStart, selectColumn } from '../../../../store/actions/ui/excel/mouse'
+import {
+  resizeColumnStart,
+  selectColumn,
+} from '../../../../store/actions/ui/excel/mouse'
 
 import leftOffsetsSelector from '../../../../store/selectors/ui/excel/leftOffsets'
 

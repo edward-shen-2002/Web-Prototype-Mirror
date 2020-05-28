@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 
 import { useDispatch } from 'react-redux'
 
-import MenuItems from '../../../commonComponents/MenuItems' 
+import MenuItems from '../../../commonComponents/MenuItems'
 
 import SaveIcon from '@material-ui/icons/Save'
 

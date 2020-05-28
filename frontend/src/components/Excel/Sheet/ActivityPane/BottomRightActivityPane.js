@@ -2,7 +2,10 @@ import React, { Fragment } from 'react'
 
 import CommonActivityPane from './CommonActivityPane'
 
-import { getNormalRowHeight, getNormalColumnWidth } from '../../../../tools/excel' 
+import {
+  getNormalRowHeight,
+  getNormalColumnWidth,
+} from '../../../../tools/excel'
 
 import {
   STYLE_SELECTION_BORDER_COLOR,

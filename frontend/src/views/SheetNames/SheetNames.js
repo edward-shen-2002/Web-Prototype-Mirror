@@ -14,6 +14,8 @@ import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 
 import './SheetNames.scss'
+import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
+import { selectSheetNamesStore } from '../../store/SheetNamesStore'
 
 const SheetNameHeader = () => {
   return (
@@ -28,14 +30,9 @@ const SheetNamesTable = () => {
   const dispatch = useDispatch()
 
   const { sheetNames } = useSelector(
-    ({
-      SheetNamesStore: {
-        response: { Values },
-      },
-    }) => ({
-      sheetNames: Values,
-    }),
-    shallowEqual
+    (state) => ({
+      sheetNames: selectFactoryRESTResponseTableValues(selectSheetNamesStore)(state),
+    })
   )
 
   const columns = useMemo(

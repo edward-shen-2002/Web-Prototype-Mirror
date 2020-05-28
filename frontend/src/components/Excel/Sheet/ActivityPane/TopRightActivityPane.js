@@ -4,7 +4,10 @@ import CommonActivityPane from './CommonActivityPane'
 
 import { ColumnHeaderSelection } from './HeaderSelection'
 
-import { getNormalRowHeight, getNormalColumnWidth } from '../../../../tools/excel'
+import {
+  getNormalRowHeight,
+  getNormalColumnWidth,
+} from '../../../../tools/excel'
 
 import { ColumnHeaderIndicator } from './HeaderResize'
 

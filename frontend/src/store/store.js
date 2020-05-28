@@ -1,41 +1,42 @@
-import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
+import { configureStore } from '@reduxjs/toolkit'
 
-import rootReducer from './reducers'
+import rootReducer from './reducer'
 
-const composeEnhancers =
-  typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
-        // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
-        actionSanitizer: (action) => {
-          switch (action.type) {
-            case 'EXCEL_SET_EXCEL_DATA':
-              return {
-                ...action,
-                excelData: {
-                  ...action.excelData,
-                  inactiveSheets: '<<LONG_BLOB>>',
-                },
-              }
-            default:
-              return action
-          }
-        },
-        stateSanitizer: (state) => ({
-          ...state,
-          ui: {
-            ...state.ui,
-            excel: {
-              ...state.ui.excel,
-              inactiveSheets: '<<LONG_BLOB>>',
-            },
+const devTools = {
+  // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
+  actionSanitizer: (action) => {
+    switch (action.type) {
+      case 'EXCEL_SET_EXCEL_DATA':
+        return {
+          ...action,
+          excelData: {
+            ...action.excelData,
+            inactiveSheets: '<<LONG_BLOB>>',
           },
-        }),
-      })
-    : compose
+        }
+      default:
+        return action
+    }
+  },
+  stateSanitizer: (state) => ({
+    ...state,
+    ui: {
+      ...state.ui,
+      excel: {
+        ...state.ui.excel,
+        inactiveSheets: '<<LONG_BLOB>>',
+      },
+    },
+  }),
+}
 
-const enhancer = composeEnhancers(applyMiddleware(thunk))
-
-const store = createStore(rootReducer, enhancer)
+const store = configureStore(
+  {
+    reducer: rootReducer,
+    middleware: [ thunk ],
+    devTools
+  }
+)
 
 export default store

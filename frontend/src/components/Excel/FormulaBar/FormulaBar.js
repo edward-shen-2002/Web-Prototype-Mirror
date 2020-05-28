@@ -12,7 +12,11 @@ import { setActiveCellInputValue } from '../../../store/actions/ui/excel/command
 
 import { disableSheetFocus } from '../../../store/actions/ui/excel/events'
 
-import { keyEnter, keyTab, keyEscape } from '../../../store/actions/ui/excel/keyboard'
+import {
+  keyEnter,
+  keyTab,
+  keyEscape,
+} from '../../../store/actions/ui/excel/keyboard'
 
 import './FormulaBar.scss'
 

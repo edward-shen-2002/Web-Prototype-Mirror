@@ -1,6 +1,6 @@
 import React from 'react'
 
-import MenuItems from '../../../commonComponents/MenuItems' 
+import MenuItems from '../../../commonComponents/MenuItems'
 
 import AcUnitIcon from '@material-ui/icons/AcUnit'
 

@@ -20,7 +20,10 @@ import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight'
 import { getMainFontStylesStates } from '../../../tools/styles'
 import { getMainFontStyleEditorStates } from '../../../tools/slate'
 
-import { mergeCells, unmergeCells } from '../../../store/actions/ui/excel/commands'
+import {
+  mergeCells,
+  unmergeCells,
+} from '../../../store/actions/ui/excel/commands'
 
 import './ToolBar.scss'
 

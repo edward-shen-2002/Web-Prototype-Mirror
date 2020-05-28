@@ -17,10 +17,7 @@ module.exports = {
       '@store': path.join(__dirname, '/src/store'),
       '@actions': path.join(__dirname, '/src/store/actions'),
       '@selectors': path.join(__dirname, '/src/store/selectors'),
-      '@actionTypes': path.join(
-        __dirname,
-        '/src/store/actions/actionTypes'
-      ),
+      '@actionTypes': path.join(__dirname, '/src/store/actions/actionTypes'),
     })(config, env)
 
     config.stats = {

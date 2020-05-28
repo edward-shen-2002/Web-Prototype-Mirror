@@ -32,7 +32,7 @@ import {
   DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
   EXCEL_WINDOW_OVERSCAN_COLUMN_COUNT,
   EXCEL_WINDOW_OVERSCAN_ROW_COUNT,
-} from '../../../constants/excel' 
+} from '../../../constants/excel'
 
 import { HOTKEYS } from '../../../constants/input'
 

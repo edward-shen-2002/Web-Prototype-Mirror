@@ -8,7 +8,7 @@ import ListItem from '@material-ui/core/ListItem'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 
-import { REST_PUBLIC_DATA } from '../../../../../constants/rest' 
+import { REST_PUBLIC_DATA } from '../../../../../constants/rest'
 
 import { filterString } from './utils'
 

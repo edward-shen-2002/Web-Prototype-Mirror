@@ -17,7 +17,7 @@ import {
   rightClickCell,
 } from '../../../../store/actions/ui/excel/mouse'
 
-import topOffsetsSelector from '../../../../store/selectors/ui/excel/topOffsets' 
+import topOffsetsSelector from '../../../../store/selectors/ui/excel/topOffsets'
 import leftOffsetsSelector from '../../../../store/selectors/ui/excel/leftOffsets'
 
 const RichTextCellContent = (richText) =>

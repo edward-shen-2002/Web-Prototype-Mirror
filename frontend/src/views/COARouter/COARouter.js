@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Switch, Route } from 'react-router-dom'
 
-import NotFound from '../..//components/NotFound' 
+import NotFound from '../..//components/NotFound'
 import COATrees from './COATrees'
 import COATree from './COATree'
 import COAGroups from './COAGroups'

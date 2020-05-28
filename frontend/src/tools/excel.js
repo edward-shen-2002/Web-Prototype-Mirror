@@ -7,8 +7,8 @@ import {
   convertRichTextToEditorValue,
   createEmptyEditor,
   createEmptyEditorValue,
-} from '../tools/slate' 
-import { isObjectEmpty } from '../tools/misc' 
+} from '../tools/slate'
+import { isObjectEmpty } from '../tools/misc'
 
 import pako from 'pako'
 

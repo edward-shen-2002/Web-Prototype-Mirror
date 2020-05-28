@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { publicAxios } from '../../../../../tools/rest' 
+import { publicAxios } from '../../../../../tools/rest'
 
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -17,7 +17,10 @@ import { filterString } from './utils'
 
 import { DialogActions } from './components'
 
-import { resetActiveCellDialog, setGroups } from '../../../../../store/actions/ui/excel/commands'
+import {
+  resetActiveCellDialog,
+  setGroups,
+} from '../../../../../store/actions/ui/excel/commands'
 
 import './GroupPopup.scss'
 

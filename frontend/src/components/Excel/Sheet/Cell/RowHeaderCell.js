@@ -2,7 +2,10 @@ import React, { useState, useCallback } from 'react'
 
 import { connect, useDispatch, useSelector, shallowEqual } from 'react-redux'
 
-import { resizeRowStart, selectRow } from '../../../../store/actions/ui/excel/mouse'
+import {
+  resizeRowStart,
+  selectRow,
+} from '../../../../store/actions/ui/excel/mouse'
 import topOffsetsSelector from '../../../../store/selectors/ui/excel/topOffsets'
 
 const RowDragger = ({ row }) => {

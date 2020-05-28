@@ -1,7 +1,7 @@
 import { deleteAxiosToken, setAxiosToken } from '../tools/rest'
 import { deleteToken, saveToken } from '../tools/storage'
 
-import { setOnline, setOffline } from '../store/actions/app/isOnline' 
+import { setOnline, setOffline } from '../store/actions/app/isOnline'
 import { updateAccount, resetAccount } from '../store/actions/domain/account'
 import {
   showAppNavigation,

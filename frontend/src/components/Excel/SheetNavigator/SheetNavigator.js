@@ -10,7 +10,10 @@ import InputBase from '@material-ui/core/InputBase'
 
 import {} from '../../../store/actions/ui/excel/commands'
 
-import { enableEditMode, disableEditMode } from '../../../store/actions/ui/excel/events'
+import {
+  enableEditMode,
+  disableEditMode,
+} from '../../../store/actions/ui/excel/events'
 
 import { setSheet } from '../../../store/actions/ui/excel/commands'
 
