@@ -8,6 +8,8 @@ import LaunchIcon from '@material-ui/icons/Launch'
 import Paper from '@material-ui/core/Paper'
 
 import Typography from '@material-ui/core/Typography'
+import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors'
+import { selectSheetNamesStore } from '../../../store/SheetNamesStore'
 
 // import './COATrees.scss'
 
@@ -24,12 +26,8 @@ const COATreesTable = ({ history }) => {
   const dispatch = useDispatch()
 
   const { sheetNames } = useSelector(
-    ({
-      SheetNamesStore: {
-        response: { Values },
-      },
-    }) => ({
-      sheetNames: Values,
+    (state) => ({
+      sheetNames: selectFactoryRESTResponseTableValues(selectSheetNamesStore)(state),
     }),
     shallowEqual
   )
