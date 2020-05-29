@@ -14,20 +14,13 @@ Currently, the script commands are only set for [yarn](https://yarnpkg.com/lang/
 
 #### Installing Dependencies
 
-Before installing the dependencies, you need to put the following on the same folder as the application:
-
-- [Slate Fork](https://github.com/greylemon/slate)
-- [Undox Fork](https://github.com/greylemon/undox)
-
-Slate is a monorepo. You need to run the script ```yarn build``` to build the packages.
-
-Run the command `yarn deps`. This will install the root, frontend, and backend dependencies. If you're on windows, you could also install the dependencies by running the executable (shortcut) ```windows-run-deps```.
+On the terminal, Run the command `yarn`. This will install slate, the application root, frontend, and backend dependencies..
 
 #### Starting the Application
 
-The backend is set to port 3000 and the frontend is set to port 3003. If you have any conflicts in port, adjust the ports in the [backend](/backend/app.js) or [frontend](/frontend/webpack.dev.js).
+The backend is set to port 3000 and the frontend is set to port 3003. If you have any conflicts in port, adjust the ports in the [backend](/gdct-app/backend/app.js) or [frontend](/gdct-app/frontend/webpack.dev.js).
 
-Run the command `yarn dev`. Both the frontend and backend will be started. Open the application on your browser [here](http://localhost:3003). If you're on windows, you could also run locally by running the executable ```windows-run-local-dev```.
+Run the command `yarn start`. Both the frontend and backend will be started. Open the application on your browser [here](http://localhost:3003).
 
 ##### Admin Access
 
