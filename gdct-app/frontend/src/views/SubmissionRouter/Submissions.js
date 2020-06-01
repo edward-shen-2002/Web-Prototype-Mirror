@@ -14,6 +14,9 @@ import Button from '@material-ui/core/Button'
 
 import Typography from '@material-ui/core/Typography'
 import { useHistory } from 'react-router-dom'
+import { selectSubmissionsStore } from '../../store/SubmissionsStore/selectors'
+import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
+import { TemplateIdButton } from '../../components/buttons'
 
 const HeaderActions = () => {
   const history = useHistory()
@@ -46,12 +49,8 @@ const Submission = () => {
   const dispatch = useDispatch()
 
   const { submissions } = useSelector(
-    ({
-      SubmissionsStore: {
-        response: { Values },
-      },
-    }) => ({
-      submissions: Values,
+    (state) => ({
+      submissions: selectFactoryRESTResponseTableValues(selectSubmissionsStore)(state),
     }),
     shallowEqual
   )
@@ -60,9 +59,8 @@ const Submission = () => {
     () => [
       { title: '_id', field: '_id' },
       { title: 'Name', field: 'name' },
-      { title: 'Start Date', type: 'date', field: 'startDate' },
-      { title: 'End Date', type: 'date', field: 'endDate' },
-      { title: 'ReportingId', field: 'reportingId' },
+      { title: 'Template Id', field: 'templateId', editComponent: TemplateIdButton },
+      { title: 'Submitted Date', type: 'date', field: 'submittedDate' }
     ],
     []
   )

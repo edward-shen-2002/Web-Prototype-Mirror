@@ -30,7 +30,10 @@ export const selectIsReportingPeriodDialogOpen = createSelector(
   [selectDialogsStore],
   (dialogsStore) => dialogsStore.isReportingPeriodDialogOpen
 )
-
+export const selectIsTemplateDialogOpen = createSelector(
+  [selectDialogsStore],
+  (dialogsStore) => dialogsStore.isTemplateDialogOpen
+)
 // isCOADialogOpen: false,
 // isCOAGroupDialogOpen: false,
 // isUserDialogOpen: false,

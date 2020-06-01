@@ -11,7 +11,7 @@ module.exports = merge(common, {
     contentBase: '.',
     hot: true,
     port: 3003,
-    // open: true,
+    open: true,
     historyApiFallback: true,
   },
   module: {

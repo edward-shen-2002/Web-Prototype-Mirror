@@ -12,6 +12,7 @@ import FormatStrikeThroguhIcon from '@material-ui/icons/StrikethroughS'
 import FormatColorFillIcon from '@material-ui/icons/FormatColorFill'
 import FormatColorTextIcon from '@material-ui/icons/FormatColorText'
 import MergeTypeIcon from '@material-ui/icons/MergeType'
+import PublishIcon from '@material-ui/icons/Publish';
 
 import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft'
 import FormatAlignCenterIcon from '@material-ui/icons/FormatAlignLeft'
@@ -23,9 +24,11 @@ import { getMainFontStyleEditorStates } from '../../../tools/slate'
 import {
   mergeCells,
   unmergeCells,
+  setExcelData,
 } from '../../../store/actions/ui/excel/commands'
 
 import './ToolBar.scss'
+import { convertExcelFileToState, convertStateToReactState } from '../../../tools/excel'
 
 const ToolBarButton = ({
   id,
@@ -106,6 +109,42 @@ const StrikethroughButton = (props) => (
     <FormatStrikeThroguhIcon />
   </ToolBarButton>
 )
+
+const FileUpload = () => {
+  const dispatch = useDispatch()
+  const handleChange = useCallback(
+    async ({ target }) => {
+      const fileData = target.files[0]
+
+      const name = fileData.name;
+  
+      const extension = name.split(".").pop();
+
+      if(extension === "xlsx") {
+        // !unoptimized function... since straight conversion to react state doesn't exist at the moment. 
+        // ! TODO: implement straight conversion from file to react state
+        let fileStates = await convertExcelFileToState(fileData);
+        const excelReactState = convertStateToReactState(fileStates)
+
+        dispatch(setExcelData(excelReactState))
+      }
+    },
+    [dispatch]
+  )
+
+  return (
+    <Button
+      component="label"
+    >
+      <PublishIcon/>
+      <input
+        type="file"
+        style={{ display: "none" }}
+        onChange={handleChange}
+      />
+    </Button>
+  )
+}
 
 const CellStyles = ({ isMergeButtonEnabled, isCellMergeable }) => {
   const dispatch = useDispatch()
@@ -214,6 +253,8 @@ const ToolBar = () => {
         isMergeButtonEnabled={isMergeButtonEnabled}
         isCellMergeable={isCellMergeable}
       />
+      <Divider orientation="vertical" />
+      <FileUpload/>
     </div>
   )
 }

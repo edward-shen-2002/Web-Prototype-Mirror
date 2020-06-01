@@ -11,7 +11,7 @@ import Loading from '../../../components/Loading/Loading'
 import {
   updateTemplateExcelRequest,
   getTemplateRequest,
-} from '../../../store/thunks/templates'
+} from '../../../store/thunks/template'
 import { Excel } from '../../../components/Excel'
 
 import './Template.scss'

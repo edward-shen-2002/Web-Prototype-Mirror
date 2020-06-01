@@ -100,10 +100,4 @@ export default class TemplateRepository extends BaseRepository<TemplateEntity>
         templates.map((template) => new TemplateEntity(template.toObject()))
       )
   }
-
-  public async delete(id: IId): Promise<TemplateEntity> {
-    return TemplateModel.findByIdAndDelete(id).then(
-      (template) => new TemplateEntity(template)
-    )
-  }
 }

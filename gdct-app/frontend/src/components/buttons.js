@@ -17,6 +17,7 @@ import StatusDialog from './dialogs/StatusDialog'
 import TemplateTypeDialog from './dialogs/TemplateTypeDialog'
 import ReportingPeriodDialog from './dialogs/ReportingPeriodDialog'
 import DialogsStore from '../store/DialogsStore/store'
+import TemplateDialog from './dialogs/TemplateDialog'
 
 export const DeleteButton = ({ handleDelete }) => (
   <IconButton onClick={handleDelete} aria-label="delete">
@@ -123,6 +124,12 @@ export const ReportingPeriodIdButton = ({ value, onChange }) => (
 export const StatusIdButton = ({ value, onChange }) => (
   <SelectIdButton value={value} action={DialogsStore.actions.OPEN_STATUS_DIALOG}>
     <StatusDialog handleChange={onChange} />
+  </SelectIdButton>
+)
+
+export const TemplateIdButton = ({ value, onChange }) => (
+  <SelectIdButton value={value} action={DialogsStore.actions.OPEN_TEMPLATE_DIALOG}>
+    <TemplateDialog handleChange={onChange} />
   </SelectIdButton>
 )
 

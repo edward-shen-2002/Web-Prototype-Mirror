@@ -5,29 +5,26 @@ import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 import { getCOAsRequest } from '../../../store/thunks/COA'
 
 import {
-  selectedCOAIdsSelector,
-  selectedCOATreeIdSelector,
+  selectSelectedCOAIdsMap,
+  selectSelectedCOATreeId,
 } from '../../../store/COATreeStore/selectors'
 
-import SelectableTableDialog from '../../..//components/dialogs/SelectableTableDialog'
+import SelectableTableDialog from '../../../components/dialogs/SelectableTableDialog'
 import COATreeStore from '../../../store/COATreeStore/store'
 import DialogsStore from '../../../store/DialogsStore/store'
+import { selectFactoryRESTResponseValues } from '../../../store/common/REST/selectors'
+import { selectCOAsStore } from '../../../store/COAsStore/selectors'
+import { selectIsCOADialogOpen } from '../../../store/DialogsStore/selectors'
 
-const COAGroupDialog = () => {
+const COADialog = () => {
   const dispatch = useDispatch()
 
   const { COAs, selectedCOAIds, isCOADialogOpen, COATreeId } = useSelector(
-    ({
-      COAsStore: {
-        response: { Values },
-      },
-      COATreeStore,
-      DialogsStore: { isCOADialogOpen },
-    }) => ({
-      selectedCOAIds: selectedCOAIdsSelector(COATreeStore),
-      COATreeId: selectedCOATreeIdSelector(COATreeStore),
-      COAs: Values,
-      isCOADialogOpen,
+    (state) => ({
+      selectedCOAIds: selectSelectedCOAIdsMap(state),
+      COATreeId: selectSelectedCOATreeId(state),
+      COAs: selectFactoryRESTResponseValues(selectCOAsStore)(state),
+      isCOADialogOpen: selectIsCOADialogOpen(state),
     }),
     shallowEqual
   )
@@ -69,4 +66,4 @@ const COAGroupDialog = () => {
   )
 }
 
-export default COAGroupDialog
+export default COADialog

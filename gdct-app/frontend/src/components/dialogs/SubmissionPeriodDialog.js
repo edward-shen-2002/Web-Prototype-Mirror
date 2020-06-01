@@ -9,6 +9,7 @@ import { useMemo } from 'react'
 import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
 import { selectIsSubmissionPeriodDialogOpen } from '../../store/DialogsStore/selectors'
 import DialogsStore from '../../store/DialogsStore/store'
+import { selectSubmissionPeriodsStore } from '../../store/SubmissionPeriodsStore/selectors'
 
 const SubmissionPeriodDialog = ({ handleChange }) => {
   const dispatch = useDispatch()
@@ -16,7 +17,7 @@ const SubmissionPeriodDialog = ({ handleChange }) => {
   const { isSubmissionPeriodDialogOpen, submissionPeriods } = useSelector(
     (state) => ({
       isSubmissionPeriodDialogOpen: selectIsSubmissionPeriodDialogOpen(state),
-      submissionPeriods: selectFactoryRESTResponseTableValues()(status),
+      submissionPeriods: selectFactoryRESTResponseTableValues(selectSubmissionPeriodsStore)(state),
     }),
     shallowEqual
   )

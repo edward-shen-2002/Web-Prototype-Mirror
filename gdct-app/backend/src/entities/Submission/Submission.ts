@@ -1,5 +1,6 @@
 import { IId } from "../../models/interface";
 import ISubmissionEntity from "./interface";
+import { ICompressedExcelState } from "../../@types/excel/state";
 
 export default class SubmissionEntity {
   public _id?: IId
@@ -7,7 +8,7 @@ export default class SubmissionEntity {
   public organizationId?: IId
   public templateId?: IId
   public programId?: IId
-  public workbookData?: object
+  public workbookData?: ICompressedExcelState
   public phase?: string
   public status?: string
   public isPublished?: boolean

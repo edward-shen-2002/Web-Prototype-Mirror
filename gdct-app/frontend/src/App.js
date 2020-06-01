@@ -3,7 +3,7 @@ import React from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
 import { useSelector, shallowEqual } from 'react-redux'
 
-import { ActivityRoute } from './/components/routes'
+import { ActivityRoute } from './components/routes'
 import TemplateRouter from './views/TemplateRouter'
 import COARouter from './views/COARouter'
 import AuthPage from './components/AuthPage'

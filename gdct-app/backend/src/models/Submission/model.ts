@@ -21,7 +21,7 @@ const SubmissionModel = model<ISubmissionDocument>(
     },
     { minimize: false, timestamps: true }
   ),
-  'Submisssion'
+  'Submission'
 )
 
 export default SubmissionModel

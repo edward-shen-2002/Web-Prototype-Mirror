@@ -18,11 +18,12 @@ import {
   UserIdButton,
   StatusIdButton,
   SubmissionPeriodIdButton,
-} from '../../..//components/buttons'
+} from '../../../components/buttons'
 
 import './TemplatePackages.scss'
 import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors'
 import { selectTemplatePackagesStore } from '../../../store/TemplatePackagesStore/selectors'
+import DialogsStore from '../../../store/DialogsStore/store'
 
 const TemplatePackageHeader = () => {
   return (
@@ -41,6 +42,17 @@ const TemplatePackage = () => {
       templatePackages: selectFactoryRESTResponseTableValues(selectTemplatePackagesStore)(state),
     }),
     shallowEqual
+  )
+
+  const actions = useMemo(
+    () => [
+      {
+        icon: LaunchIcon,
+        tooltip: 'Open Templates',
+        onClick: () => dispatch(DialogsStore.actions.OPEN_COA_DIALOG())
+      },
+    ],
+    [dispatch]
   )
 
   const columns = useMemo(
@@ -111,7 +123,9 @@ const TemplatePackage = () => {
         data={templatePackages}
         editable={editable}
         options={options}
+        actions={actions}
       />
+      
     </div>
   )
 }

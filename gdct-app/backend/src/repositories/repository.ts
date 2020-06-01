@@ -8,14 +8,9 @@ export default abstract class BaseRepository<T> implements IRepository<T> {
   constructor(model: Model<Document>) {
     this._model = model
   }
-  delete(id: IId): Promise<T> {
-    throw new Error('Method not implemented.')
-  }
+
   find(item: T): Promise<T[]> {
-    throw new Error('Method not implemented.')
-  }
-  findOne(id: IId): Promise<T> {
-    throw new Error('Method not implemented.')
+    throw new Error("Method not implemented.")
   }
 
   create(item: T): Promise<T> {
@@ -25,6 +20,23 @@ export default abstract class BaseRepository<T> implements IRepository<T> {
   update(id: IId, item: T): Promise<T> {
     throw new Error('Method not implemented.')
   }
+
+  public async delete(id: IId): Promise<T> {
+    return this._model.findByIdAndDelete(id)
+      .then((result) => {
+        if(!result) throw new Error('_id does not exist')
+        return result.toObject() as T
+      })
+  }
+
+  public async findById(id: IId): Promise<T> {
+    return this._model.findById(id)
+      .then((result) => {
+        if(!result) throw new Error('_id does not exist')
+        return result.toObject() as T
+      })
+  }
+
   public async validate(id: IId): Promise<void> {
     return this._model.findById(id).then((document) => {
       if (!document) throw `${this._model.collection.name} not found`

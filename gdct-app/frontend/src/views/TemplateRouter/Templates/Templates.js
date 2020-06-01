@@ -6,7 +6,7 @@ import {
   createTemplateRequest,
   deleteTemplateRequest,
   updateTemplateRequest,
-} from '../../../store/thunks/templates'
+} from '../../../store/thunks/template'
 
 import MaterialTable from 'material-table'
 import LaunchIcon from '@material-ui/icons/Launch'
@@ -17,7 +17,7 @@ import Typography from '@material-ui/core/Typography'
 import {
   StatusIdButton,
   TemplateTypeIdButton,
-} from '../../..//components/buttons'
+} from '../../../components/buttons'
 
 import './Templates.scss'
 import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors'

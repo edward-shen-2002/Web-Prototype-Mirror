@@ -39,6 +39,16 @@ const CLOSE_REPORTING_PERIOD_DIALOG = (state) => ({
   ...state,
   isReportingPeriodDialogOpen: false,
 })
+
+const OPEN_TEMPLATE_DIALOG = (state) => ({
+  ...state,
+  isTemplateDialogOpen: true,
+})
+const CLOSE_TEMPLATE_DIALOG = (state) => ({
+  ...state,
+  isTemplateDialogOpen: false,
+})
+
 const reducers = {
   OPEN_COA_GROUP_DIALOG,
   CLOSE_COA_GROUP_DIALOG,
@@ -55,6 +65,8 @@ const reducers = {
   CLOSE_TEMPLATE_TYPE_DIALOG,
   OPEN_REPORTING_PERIOD_DIALOG,
   CLOSE_REPORTING_PERIOD_DIALOG,
+  OPEN_TEMPLATE_DIALOG,
+  CLOSE_TEMPLATE_DIALOG
 }
 
 const initialState = {
@@ -65,6 +77,7 @@ const initialState = {
   isSubmissionPeriodDialogOpen: false,
   isTemplateTypeDialogOpen: false,
   isReportingPeriodDialogOpen: false,
+  isTemplateDialogOpen: false
 }
 
 const DialogsStore = createSlice(

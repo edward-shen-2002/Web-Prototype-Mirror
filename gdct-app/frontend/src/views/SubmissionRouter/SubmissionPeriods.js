@@ -13,7 +13,7 @@ import Paper from '@material-ui/core/Paper'
 
 import Typography from '@material-ui/core/Typography'
 
-import { ReportingPeriodIdButton } from '../..//components/buttons'
+import { ReportingPeriodIdButton } from '../../components/buttons'
 import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
 import { selectSubmissionPeriodsStore } from '../../store/SubmissionPeriodsStore/selectors'
 

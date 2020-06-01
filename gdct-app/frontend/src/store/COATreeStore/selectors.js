@@ -1,11 +1,30 @@
 import { createSelector } from 'reselect'
 
-const getCOANode = ({ selectedNodeProps: { node } }) =>
-  node ? node : { content: { COAIds: [] } }
+const selectCOATreeStore = (state) => state.COATreeStore
 
-export const selectedCOAIdsSelector = createSelector(
-  [getCOANode],
-  ({ content: { COAIds } }) => {
+const selectSelectedNodeProps = createSelector(
+  [selectCOATreeStore],
+  (COATreeStore) => COATreeStore.selectedNodeProps
+)
+
+const selectSelectedNode = createSelector(
+  [selectSelectedNodeProps],
+  (selectedNodeProps) => selectedNodeProps.node
+)
+
+const selectSelectedNodeContent = createSelector(
+  [selectSelectedNode],
+  (selectedNode) => selectedNode ? selectedNode.content : undefined
+)
+
+const selectSelectedNodeCOAIds = createSelector(
+  [selectSelectedNodeContent],
+  (selectedNodeContent) => selectedNodeContent ? selectedNodeContent.COAIds : []
+)
+
+export const selectSelectedCOAIdsMap = createSelector(
+  [selectSelectedNodeCOAIds],
+  (COAIds) => {
     let selectedCOAIds = {}
 
     COAIds.forEach((COAId) => (selectedCOAIds[COAId] = true))
@@ -14,7 +33,7 @@ export const selectedCOAIdsSelector = createSelector(
   }
 )
 
-export const selectedCOATreeIdSelector = createSelector(
-  [getCOANode],
-  ({ content: { _id } }) => _id
+export const selectSelectedCOATreeId = createSelector(
+  [selectSelectedNodeContent],
+  (selectedNodeContent) => selectedNodeContent ? selectedNodeContent._id : undefined
 )

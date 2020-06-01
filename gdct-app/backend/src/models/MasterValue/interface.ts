@@ -3,8 +3,8 @@ import { IId } from '../interface'
 
 export interface IMasterValue {
   submissionId: IId
-  chartOfAccountsTreeId: IId
-  chartOfAccountsId: IId
+  COATreeId: IId
+  COAId: IId
   columnNameId: IId
   value: string
 }

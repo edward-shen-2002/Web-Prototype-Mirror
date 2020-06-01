@@ -71,7 +71,7 @@ export const updateTemplateExcelRequest = () => (dispatch, getState) => {
   }
 
   templateController
-    .updateTemplate(newTemplate)
+    .update(newTemplate)
     .then(() => {
       dispatch(TemplatesStore.actions.UPDATE(newTemplate))
     })

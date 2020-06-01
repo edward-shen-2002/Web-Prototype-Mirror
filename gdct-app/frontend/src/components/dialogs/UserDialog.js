@@ -17,7 +17,7 @@ const UserDialog = ({ handleChange }) => {
 
   const { isUserDialogOpen, users } = useSelector(
     (state) => ({
-      isUserDialogOpen: selectIsUserDialogOpen(),
+      isUserDialogOpen: selectIsUserDialogOpen(state),
       users: selectFactoryRESTResponseTableValues(selectUsersStore)(state),
     }),
     shallowEqual

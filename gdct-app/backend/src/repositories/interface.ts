@@ -9,7 +9,7 @@ interface IWrite<T> {
 
 interface IRead<T> {
   find(item: T): Promise<T[]>
-  findOne(id: IId): Promise<T>
+  findById(id: IId): Promise<T>
 }
 
 interface IValidation<T> {
