@@ -1,16 +1,18 @@
-import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import Paper from '@material-ui/core/Paper'
+import React, { useState, useEffect, useCallback } from 'react'
 
-const WorkflowStates = (
-  {
+import { useDispatch, useSelector } from 'react-redux'
 
-  }
-) => (
-  <div>
+import {
+  showAppNavigation,
+  hideAppNavigation,
+} from '../../store/actions/ui/isAppNavigationOpen'
+import Loading from '../../components/Loading/Loading'
 
-  </div>
-)
+import {
+  updateSubmissionExcelRequest,
+  getSubmissionRequest,
+} from '../../store/thunks/submission'
+import { Excel } from '../../components/Excel'
 
 const Submission = ({
   match: {
@@ -19,15 +21,32 @@ const Submission = ({
 }) => {
   const dispatch = useDispatch()
 
+  const isCallInProgress = useSelector(
+    ({ SubmissionsStore: { isCallInProgress } }) => isCallInProgress
+  )
+
+  const handleSaveSubmission = useCallback(() => {
+    dispatch(updateSubmissionExcelRequest())
+  }, [])
+
   useEffect(() => {
-    if (_id) console.log(_id)
-    // dispatch()
-  }, [dispatch])
+    // If fetch fails, push back to /tempaltes
+    dispatch(getSubmissionRequest(_id))
+    dispatch(hideAppNavigation())
 
-  return (
-    <Paper>
+    return () => {
+      dispatch(showAppNavigation())
+    }
+  }, [])
 
-    </Paper>
+  return isCallInProgress ? (
+    <Loading />
+  ) : (
+    <Excel
+      type="submission"
+      returnLink="/submission_manager/submissions"
+      handleSave={handleSaveSubmission}
+    />
   )
 }
 

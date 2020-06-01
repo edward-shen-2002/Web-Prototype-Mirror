@@ -6,17 +6,26 @@ import SubmissionRepository from '../../repositories/Submission'
 import { extractCOAData, extractColumnNameIds, extractWorkbookMasterValues } from '../../utils/excel/COA'
 import { IRows, ICompressedExcelState } from '../../@types/excel/state'
 import Pako from 'pako'
+import TemplateRepository from '../../repositories/Template'
 
 @Service()
 export default class SubmissionService implements ISubmissionService {
   private submissionRepository: SubmissionRepository
+  private templateRepository: TemplateRepository
 
   constructor() {
     this.submissionRepository = Container.get(SubmissionRepository)
+    this.templateRepository = Container.get(TemplateRepository)
   }
 
   public async createSubmission(submission: Submission) {
-    return this.submissionRepository.create(submission)
+    // Clone the tempalte's workbook data to be used by the user
+
+    return this.templateRepository.findById(submission.templateId)
+      .then((template) => {
+        submission.workbookData = template.templateData
+        return this.submissionRepository.create(submission)
+      })
   }
   
   public async findByIdSubmission(id: IId) {

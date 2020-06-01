@@ -9,9 +9,9 @@ const SubmissionModel = model<ISubmissionDocument>(
     {
       name: { type: String },
 
-      organizationID: { type: ObjectId, ref: 'Organization' },
-      templateID: { type: ObjectId, ref: 'Template' },
-      programID: { type: ObjectId, ref: 'Program' },
+      organizationId: { type: ObjectId, ref: 'Organization' },
+      templateId: { type: ObjectId, ref: 'Template' },
+      programId: { type: ObjectId, ref: 'Program' },
 
       workbookData: { type: Object },
       phase: { type: String, default: 'edit' },

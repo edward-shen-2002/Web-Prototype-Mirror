@@ -11,6 +11,7 @@ import {
 import MaterialTable from 'material-table'
 import Paper from '@material-ui/core/Paper'
 import Button from '@material-ui/core/Button'
+import LaunchIcon from '@material-ui/icons/Launch'
 
 import Typography from '@material-ui/core/Typography'
 import { useHistory } from 'react-router-dom'
@@ -45,7 +46,7 @@ const SubmissionHeader = () => (
   </Paper>
 )
 
-const Submission = () => {
+const Submission = ({ history }) => {
   const dispatch = useDispatch()
 
   const { submissions } = useSelector(
@@ -68,6 +69,18 @@ const Submission = () => {
   const options = useMemo(
     () => ({ actionsColumnIndex: -1, search: false, showTitle: false }),
     []
+  )
+
+  const actions = useMemo(
+    () => [
+      {
+        icon: LaunchIcon,
+        tooltip: 'Open Workbook',
+        onClick: (_event, submission) =>
+          history.push(`/submission_manager/submissions/${submission._id}`),
+      },
+    ],
+    [history]
   )
 
   const editable = useMemo(
@@ -100,6 +113,7 @@ const Submission = () => {
         data={submissions}
         editable={editable}
         options={options}
+        actions={actions}
       />
     </div>
   )

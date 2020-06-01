@@ -1,9 +1,10 @@
 import { Schema, Document } from 'mongoose'
 import { IId } from '../interface'
+import { ICompressedExcelState } from '../../@types/excel/state'
 
 export interface ITemplate {
   name?: string
-  templateData?: object
+  templateData?: ICompressedExcelState
   templateTypeId?: IId
   userCreatorId?: IId
   creationDate?: Date

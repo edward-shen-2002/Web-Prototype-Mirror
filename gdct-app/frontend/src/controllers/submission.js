@@ -5,6 +5,8 @@ const submissionController = (() => {
     baseURL: 'http://localhost:3000/submission_manager/submissions',
   })
   return {
+    fetchSubmission: async (_id) =>
+      submissionAxios.get(`/${_id}`).then((res) => res.data.submission),
     fetch: async (query) =>
       submissionAxios.get('').then((res) => res.data.submissions),
     create: async (submission) =>

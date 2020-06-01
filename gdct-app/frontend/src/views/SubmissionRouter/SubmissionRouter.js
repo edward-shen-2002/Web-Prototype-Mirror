@@ -19,13 +19,12 @@ const SubmissionRouter = () => (
       exact
       path="/submission_manager/submissions"
       component={Submissions}
-    />
-    {/* 
+    /> 
     <Route
       exact
       path="/submission_manager/submissions/:_id"
       component={Submission}
-    /> */}
+    />
     <Route exact path="/submission_manager/submission" component={Submission} />
 
     <Route component={NotFound} />
