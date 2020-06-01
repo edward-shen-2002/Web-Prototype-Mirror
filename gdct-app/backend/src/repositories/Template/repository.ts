@@ -96,6 +96,7 @@ export default class TemplateRepository extends BaseRepository<TemplateEntity>
     }
 
     return TemplateModel.find(realQuery)
+      .select("-templateData")
       .then((templates) =>
         templates.map((template) => new TemplateEntity(template.toObject()))
       )

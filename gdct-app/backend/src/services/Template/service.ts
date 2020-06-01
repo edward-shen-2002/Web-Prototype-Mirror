@@ -27,4 +27,8 @@ export default class TemplateService implements ITemplateService {
   public async findTemplate(template: Template) {
     return this.templateRepository.find(template)
   }
+
+  public async findTemplateById(id: IId) {
+    return this.templateRepository.findById(id)
+  }
 }

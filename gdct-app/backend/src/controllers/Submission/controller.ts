@@ -28,7 +28,7 @@ const SubmissionController = Service(
             const { _id } = req.params
 
             service
-              .findByIdSubmission(_id)
+              .findSubmissionById(_id)
               .then((submission) => res.json({ submission }))
               .catch(next)
           }
@@ -49,7 +49,6 @@ const SubmissionController = Service(
           (req: Request, res: Response, next: NextFunction) => {
             const { _id } = req.params
             const { submission } = req.body
-
 
             service
               .updateSubmission(_id, submission)

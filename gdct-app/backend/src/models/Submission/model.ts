@@ -14,8 +14,8 @@ const SubmissionModel = model<ISubmissionDocument>(
       programId: { type: ObjectId, ref: 'Program' },
 
       workbookData: { type: Object },
-      phase: { type: String, default: 'edit' },
-      status: { type: String, default: 'TBD' },
+      // phase: { type: String, default: 'edit' },
+      statusId: { type: ObjectId, ref: 'Status' },
 
       isPublished: { type: Boolean, default: false }
     },

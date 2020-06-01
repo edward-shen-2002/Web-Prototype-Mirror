@@ -17,7 +17,7 @@ import Typography from '@material-ui/core/Typography'
 import { useHistory } from 'react-router-dom'
 import { selectSubmissionsStore } from '../../store/SubmissionsStore/selectors'
 import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
-import { TemplateIdButton } from '../../components/buttons'
+import { TemplateIdButton, StatusIdButton } from '../../components/buttons'
 
 const HeaderActions = () => {
   const history = useHistory()
@@ -61,7 +61,8 @@ const Submission = ({ history }) => {
       { title: '_id', field: '_id' },
       { title: 'Name', field: 'name' },
       { title: 'Template Id', field: 'templateId', editComponent: TemplateIdButton },
-      { title: 'Submitted Date', type: 'date', field: 'submittedDate' }
+      { title: 'Submitted Date', type: 'date', field: 'submittedDate' },
+      { title: 'StatusId', field: 'statusId', editComponent: StatusIdButton },
     ],
     []
   )

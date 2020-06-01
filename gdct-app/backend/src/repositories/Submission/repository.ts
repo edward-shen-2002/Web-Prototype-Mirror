@@ -33,7 +33,7 @@ export default class SubmissionRepository extends BaseRepository<SubmissionEntit
         if (query[key]) realQuery[key] = query[key]
       }
   
-      return SubmissionModel.find(realQuery).then((submissions) =>
+      return SubmissionModel.find(realQuery).select('-workbookData').then((submissions) =>
         submissions.map((submission) => new SubmissionEntity(submission.toObject()))
       )
     }

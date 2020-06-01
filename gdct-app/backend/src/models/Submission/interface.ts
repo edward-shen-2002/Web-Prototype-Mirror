@@ -8,8 +8,7 @@ export interface ISubmission {
   templateId: IId
   programId: IId
   workbookData: ICompressedExcelState
-  phase: string
-  status: string
+  statusId: IId
   isPublished: boolean
 }
 

@@ -7,15 +7,21 @@ import { extractCOAData, extractColumnNameIds, extractWorkbookMasterValues } fro
 import { IRows, ICompressedExcelState } from '../../@types/excel/state'
 import Pako from 'pako'
 import TemplateRepository from '../../repositories/Template'
+import StatusRepository from '../../repositories/Status'
+import MasterValueRepository from '../../repositories/MasterValue'
 
 @Service()
 export default class SubmissionService implements ISubmissionService {
   private submissionRepository: SubmissionRepository
   private templateRepository: TemplateRepository
+  private statusRepository: StatusRepository
+  private masterValueRepository: MasterValueRepository
 
   constructor() {
     this.submissionRepository = Container.get(SubmissionRepository)
     this.templateRepository = Container.get(TemplateRepository)
+    this.statusRepository = Container.get(StatusRepository)
+    this.masterValueRepository = Container.get(MasterValueRepository)
   }
 
   public async createSubmission(submission: Submission) {
@@ -28,18 +34,18 @@ export default class SubmissionService implements ISubmissionService {
       })
   }
   
-  public async findByIdSubmission(id: IId) {
+  public async findSubmissionById(id: IId) {
     return this.submissionRepository.findById(id)
   }
 
-  public async phaseSubmission(id: IId, phaseId: IId) {
-    return this.findByIdSubmission(id)
+  public async phaseSubmission(id: IId) {
+    return this.findSubmissionById(id)
       .then((submission) => {
         if(!submission) throw 'Submission id does not exist'
 
         const masterValues = extractWorkbookMasterValues(submission.workbookData as ICompressedExcelState, submission._id)
-        
-        console.log(masterValues)
+
+        return this.masterValueRepository.bulkUpdate(id, masterValues)        
       })
 
   }
@@ -49,7 +55,16 @@ export default class SubmissionService implements ISubmissionService {
   }
 
   public async updateSubmission(id: IId, submission: Submission) {
-    return this.submissionRepository.update(id, submission)
+    return this.submissionRepository.findById(id)
+      .then(async (oldSubmission) => {
+        return this.statusRepository.findById(submission.statusId)
+          .then((status) => ({ oldSubmission, status }))
+      })
+      .then(({ oldSubmission, status }) => {
+        if(status.name === "Approved") return this.phaseSubmission(id)
+      })
+      .then(() => this.submissionRepository.update(id, submission))
+      .catch((error) => console.error(error))
   }
 
   public async findSubmission(submission: Submission) {

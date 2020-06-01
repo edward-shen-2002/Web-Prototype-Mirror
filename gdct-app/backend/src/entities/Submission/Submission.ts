@@ -9,8 +9,7 @@ export default class SubmissionEntity {
   public templateId?: IId
   public programId?: IId
   public workbookData?: ICompressedExcelState
-  public phase?: string
-  public status?: string
+  public statusId?: IId
   public isPublished?: boolean
 
   constructor(
@@ -21,8 +20,7 @@ export default class SubmissionEntity {
       templateId,
       programId,
       workbookData,
-      phase,
-      status,
+      statusId,
       isPublished
     }: ISubmissionEntity
   ) {
@@ -32,8 +30,7 @@ export default class SubmissionEntity {
     this.templateId = templateId 
     this.programId = programId 
     this.workbookData = workbookData 
-    this.phase = phase 
-    this.status = status 
+    this.statusId = statusId 
     this.isPublished = isPublished
   }
 }

@@ -38,9 +38,14 @@ const MasterValueModel = model<IMasterValueDocument>(
   new Schema(
     {
       submissionId: { type: ObjectId, ref: "Submission" },
-      chartOfAccountsTreeId: { type: ObjectId, ref: "ChartOfAccountsTree" },
-      chartOfAccountsId: { type: ObjectId, ref: "ChartOfAccounts" },
-      columnNameId: { type: ObjectId, ref: "ColumnName" },
+      // COATreeId: { type: ObjectId, ref: "COATree" },
+      // COAId: { type: ObjectId, ref: "COA" },
+      // columnNameId: { type: ObjectId, ref: "ColumnName" },
+
+      COATreeId: { type: String },
+      COAId: { type: String },
+      columnNameId: { type: String },
+
       value: { type: String }
     },
     { minimize: false }

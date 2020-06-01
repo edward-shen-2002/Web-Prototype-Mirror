@@ -87,8 +87,9 @@ export const extractCOAColumnPairs = (sheetData: IRows) => {
 export const extractWorkbookMasterValues = (workbookData: ICompressedExcelState, submissionId: IId) => {
   const masterValues = []
 
-  for(let sheetName in workbookData) {
-    const sheetData = JSON.parse(pako.inflate(workbookData[sheetName], { to: "string" })).sheetCellData;
+  for(let sheetName in workbookData.workbookData) {
+    
+    const sheetData = JSON.parse(pako.inflate(workbookData.workbookData[sheetName], { to: "string" })).sheetCellData;
   
     const columns = extractColumnNameIds(sheetData)
     const COAs = extractCOAData(sheetData)
@@ -100,7 +101,7 @@ export const extractWorkbookMasterValues = (workbookData: ICompressedExcelState,
         masterValues.push(
           {
             submissionId,
-            columnId: columns[column],
+            columnNameId: columns[column],
             ...COAs[row],
             value: cellData ? cellData.value : undefined
           }

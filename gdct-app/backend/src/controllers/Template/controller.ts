@@ -28,8 +28,8 @@ const TemplateController = Service(
               // Get query from middleware -- auth handler
 
               service
-                .findTemplate(new Template({  _id: req.params._id }))
-                .then(([ template ]) => res.json({ template }))
+                .findTemplateById(req.params._id)
+                .then((template) => res.json({ template }))
                 .catch(next)
             }
           )
