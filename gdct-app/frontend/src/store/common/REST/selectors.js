@@ -1,27 +1,30 @@
 import { createSelector } from "reselect";
 import cloneDeep from "clone-deep";
+import { memoizeFunction } from "../../../tools/misc";
 
-export const selectFactoryRESTError = (storeSelector) => (state) => createSelector(
-  [storeSelector(state)],
+export const selectFactoryRESTError = memoizeFunction((storeSelector) => createSelector(
+  [storeSelector],
   (restStore) => restStore.error
-)(state)
+))
 
-export const selectFactoryRESTIsCallInProgress = (storeSelector) => (state) => createSelector(
-  [storeSelector(state)],
+export const selectFactoryRESTIsCallInProgress = memoizeFunction((storeSelector) => createSelector(
+  [storeSelector],
   (restStore) => restStore.isCallInProgress
+))
+
+export const selectFactoryRESTResponse = memoizeFunction(
+  (storeSelector) => createSelector(
+    [storeSelector],
+    (restStore) => restStore.response
+  )
 )
 
-export const selectFactoryRESTResponse = (storeSelector) => (state) => createSelector(
-  [storeSelector],
-  (restStore) => restStore.response
-)(state)
-
-export const selectFactoryRESTResponseValues = (storeSelector) => (state) => createSelector(
+export const selectFactoryRESTResponseValues = memoizeFunction((storeSelector) => createSelector(
   [selectFactoryRESTResponse(storeSelector)],
   (response) => response.Values
-)(state)
+))
 
-export const selectFactoryRESTResponseTableValues = (storeSelector) => (state) => createSelector(
+export const selectFactoryRESTResponseTableValues = memoizeFunction((storeSelector) => createSelector(
   [selectFactoryRESTResponse(storeSelector)],
   (response) => cloneDeep(response.Values)
-)(state)
+))
