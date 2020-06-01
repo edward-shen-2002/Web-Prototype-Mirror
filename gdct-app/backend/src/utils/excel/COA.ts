@@ -43,8 +43,8 @@ export const extractCOAData = (sheetData: IRows) => {
     const rowNumber: number = +row
 
     if(rowNumber > 1) {
-      const COATreeIdData = getCellData(sheetData, rowNumber, 1)
-      const COAIdData = getCellData(sheetData, rowNumber, 2)
+      const COAIdData = getCellData(sheetData, rowNumber, 1)
+      const COATreeIdData = getCellData(sheetData, rowNumber, 2)
 
       // ? Could be possible that COATreeId is not needed, ie no grouping
       if(COAIdData && COAIdData.value) { 

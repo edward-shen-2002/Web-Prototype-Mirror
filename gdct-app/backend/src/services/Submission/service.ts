@@ -30,7 +30,18 @@ export default class SubmissionService implements ISubmissionService {
     return this.templateRepository.findById(submission.templateId)
       .then((template) => {
         submission.workbookData = template.templateData
+
         return this.submissionRepository.create(submission)
+      })
+      .then(async (submission) => {
+        return this.statusRepository.findById(submission.statusId)
+          .then((status) => ({ status,  submission }))
+      })
+      .then(({ status, submission }) => {
+        if(status.name === "Approved") return this.phaseSubmission(submission._id)
+          .then(() => submission)
+        
+        return submission
       })
   }
   
@@ -47,7 +58,6 @@ export default class SubmissionService implements ISubmissionService {
 
         return this.masterValueRepository.bulkUpdate(id, masterValues)        
       })
-
   }
 
   public async deleteSubmission(id: IId) {
@@ -55,16 +65,11 @@ export default class SubmissionService implements ISubmissionService {
   }
 
   public async updateSubmission(id: IId, submission: Submission) {
-    return this.submissionRepository.findById(id)
-      .then(async (oldSubmission) => {
-        return this.statusRepository.findById(submission.statusId)
-          .then((status) => ({ oldSubmission, status }))
-      })
-      .then(({ oldSubmission, status }) => {
+    return this.submissionRepository.update(id, submission)
+      .then(() => this.statusRepository.findById(submission.statusId))
+      .then((status) => {
         if(status.name === "Approved") return this.phaseSubmission(id)
       })
-      .then(() => this.submissionRepository.update(id, submission))
-      .catch((error) => console.error(error))
   }
 
   public async findSubmission(submission: Submission) {

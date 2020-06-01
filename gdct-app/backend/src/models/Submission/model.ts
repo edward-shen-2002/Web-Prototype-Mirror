@@ -13,6 +13,8 @@ const SubmissionModel = model<ISubmissionDocument>(
       templateId: { type: ObjectId, ref: 'Template' },
       programId: { type: ObjectId, ref: 'Program' },
 
+      submittedDate: { type: Date, default: Date.now },
+
       workbookData: { type: Object },
       // phase: { type: String, default: 'edit' },
       statusId: { type: ObjectId, ref: 'Status' },

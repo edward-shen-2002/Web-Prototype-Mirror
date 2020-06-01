@@ -42,7 +42,7 @@ export const getTemplateRequest = (_id) => (dispatch) => {
     .fetchTemplate(_id)
     .then((template) => {
       dispatch(setExcelData(convertStateToReactState(template.templateData)))
-      dispatch(TemplatesStore.actions.RECEIVE())
+      dispatch(TemplatesStore.actions.RECEIVE([template]))
       dispatch()
     })
     .catch((error) => {
