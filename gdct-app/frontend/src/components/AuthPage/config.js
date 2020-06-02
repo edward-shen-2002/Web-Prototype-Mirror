@@ -101,6 +101,34 @@ const createUserNavigation = () => {
       type: 'divider',
     },
     {
+      name: 'AppSyses',
+      icon: <AppsIcon />,
+      type: 'drawer',
+      children: [
+        {
+          name: 'AppSyses',
+          type: 'menu',
+          url: '/appsys_manager/AppSyses',
+          icon: <GroupWorkIcon />,
+        },
+        {
+          name: 'AppSysRoles',
+          type: 'menu',
+          url: '/appsys_manager/AppSysRoles',
+          icon: <GroupWorkIcon />,
+        },
+        {
+          name: 'AppRoles',
+          type: 'menu',
+          url: '/appsys_manager/AppRoles',
+          icon: <GroupWorkIcon />,
+        },
+      ],
+    },
+    {
+      type: 'divider',
+    },
+    {
       name: 'Sheet Names',
       type: 'menu',
       url: '/sheetNames',
@@ -111,12 +139,6 @@ const createUserNavigation = () => {
       type: 'menu',
       url: '/statuses',
       icon: <AllInclusiveIcon />,
-    },
-    {
-      name: 'AppSyses',
-      type: 'menu',
-      url: '/appsys_manager/AppSyses',
-      icon: <AppsIcon />,
     },
     {
       name: 'Reporting Periods',

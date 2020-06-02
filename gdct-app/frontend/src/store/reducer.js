@@ -9,7 +9,9 @@ import TemplateTypesStore from './TemplateTypesStore/store'
 import TemplatePackagesStore from './TemplatePackagesStore/store'
 import COAGroupsStore from './COAGroupsStore/store'
 import COAsStore from './COAsStore/store'
+import AppRolesStore from './AppRolesStore/store'
 import AppSysesStore from './AppSysesStore/store'
+import AppSysRolesStore from './AppSysRolesStore/store'
 import DialogsStore from './DialogsStore/store'
 import ReportingPeriodsStore from './ReportingPeriodsStore/store'
 
@@ -29,10 +31,12 @@ export const root = combineReducers({
   COATreesStore: COATreesStore.reducer,
   COAGroupsStore: COAGroupsStore.reducer,
   COAsStore: COAsStore.reducer,
+  AppRolesStore: AppRolesStore.reducer,
   AppSysesStore: AppSysesStore.reducer,
+  AppSysRolesStore: AppSysRolesStore.reducer,
   DialogsStore: DialogsStore.reducer,
   ReportingPeriodsStore: ReportingPeriodsStore.reducer,
-  
+
   COATreeStore: COATreeStore.reducer,
   SheetNamesStore: SheetNamesStore.reducer,
   SubmissionPeriodsStore: SubmissionPeriodsStore.reducer,

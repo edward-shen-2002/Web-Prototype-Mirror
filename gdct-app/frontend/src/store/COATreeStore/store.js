@@ -57,8 +57,8 @@ const createTreeBranch = (rootId, normalizedTreeMap, dependencyMap) => {
     title: generateTitle(content),
     children: children
       ? children.map((child) =>
-          createTreeBranch(child, normalizedTreeMap, dependencyMap)
-        )
+        createTreeBranch(child, normalizedTreeMap, dependencyMap)
+      )
       : undefined,
   }
 }
@@ -110,8 +110,8 @@ const SELECT_COA_COA_TREE_UI = (state, { payload }) => {
         ...state.selectedNodeProps.node.content,
         COAIds: state.selectedNodeProps.node.content.COAIds.includes(payload._id)
           ? state.selectedNodeProps.node.content.COAIds.filter(
-              (curCOAId) => curCOAId !== payload._id
-            )
+            (curCOAId) => curCOAId !== payload._id
+          )
           : [...state.selectedNodeProps.node.content.COAIds, payload._id],
       },
     },
