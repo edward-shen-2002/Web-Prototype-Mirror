@@ -135,7 +135,6 @@ const COAListItems = ({ COAIds, selectedCOAId, handleSelectCOAId }) =>
   COAIds.map((COAId) => {
     const handleClick = () => handleSelectCOAId(COAId)
 
-    console.log(COAId, selectedCOAId)
     return (
       <ListItem
         className={COAId === selectedCOAId ? 'groups__COA--selected' : ''}
@@ -288,7 +287,6 @@ const GroupPopup = ({ type }) => {
 
     if (groupPointer - 1 > -1) {
       const leafId = newGroups[groupPointer - 1]._id
-      console.log(leafId)
       definedGroups = COATrees.filter((COATree) => COATree.parentId === leafId)
     } else {
       definedGroups = COATrees
