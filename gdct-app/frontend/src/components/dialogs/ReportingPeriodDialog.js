@@ -17,7 +17,9 @@ const ReportingPeriodDialog = ({ handleChange }) => {
   const { isReportingPeriodDialogOpen, reportingPeriods } = useSelector(
     (state) => ({
       isReportingPeriodDialogOpen: selectIsReportingPeriodDialogOpen(state),
-      reportingPeriods: selectFactoryRESTResponseTableValues(selectReportingPeriodsStore)(state),
+      reportingPeriods: selectFactoryRESTResponseTableValues(
+        selectReportingPeriodsStore
+      )(state),
     }),
     shallowEqual
   )

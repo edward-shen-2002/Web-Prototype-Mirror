@@ -11,8 +11,7 @@ const submissionPeriodController = (() => {
       submissionPeriodAxios
         .post('', { submissionPeriod })
         .then((res) => res.data.submissionPeriod),
-    delete: async (_id) =>
-      submissionPeriodAxios.delete(`/${_id}`),
+    delete: async (_id) => submissionPeriodAxios.delete(`/${_id}`),
     update: async (submissionPeriod) =>
       submissionPeriodAxios.put(`/${submissionPeriod._id}`, {
         submissionPeriod,

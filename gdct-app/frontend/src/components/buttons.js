@@ -110,31 +110,46 @@ export const SelectIdButton = ({ value, action, children }) => {
 }
 
 export const SubmissionPeriodIdButton = ({ value, onChange }) => (
-  <SelectIdButton value={value} action={DialogsStore.actions.OPEN_SUBMISSION_PERIOD_DIALOG}>
+  <SelectIdButton
+    value={value}
+    action={DialogsStore.actions.OPEN_SUBMISSION_PERIOD_DIALOG}
+  >
     <SubmissionPeriodDialog handleChange={onChange} />
   </SelectIdButton>
 )
 
 export const ReportingPeriodIdButton = ({ value, onChange }) => (
-  <SelectIdButton value={value} action={DialogsStore.actions.OPEN_REPORTING_PERIOD_DIALOG}>
+  <SelectIdButton
+    value={value}
+    action={DialogsStore.actions.OPEN_REPORTING_PERIOD_DIALOG}
+  >
     <ReportingPeriodDialog handleChange={onChange} />
   </SelectIdButton>
 )
 
 export const StatusIdButton = ({ value, onChange }) => (
-  <SelectIdButton value={value} action={DialogsStore.actions.OPEN_STATUS_DIALOG}>
+  <SelectIdButton
+    value={value}
+    action={DialogsStore.actions.OPEN_STATUS_DIALOG}
+  >
     <StatusDialog handleChange={onChange} />
   </SelectIdButton>
 )
 
 export const TemplateIdButton = ({ value, onChange }) => (
-  <SelectIdButton value={value} action={DialogsStore.actions.OPEN_TEMPLATE_DIALOG}>
+  <SelectIdButton
+    value={value}
+    action={DialogsStore.actions.OPEN_TEMPLATE_DIALOG}
+  >
     <TemplateDialog handleChange={onChange} />
   </SelectIdButton>
 )
 
 export const TemplateTypeIdButton = ({ value, onChange }) => (
-  <SelectIdButton value={value} action={DialogsStore.actions.OPEN_TEMPLATE_TYPE_DIALOG}>
+  <SelectIdButton
+    value={value}
+    action={DialogsStore.actions.OPEN_TEMPLATE_TYPE_DIALOG}
+  >
     <TemplateTypeDialog handleChange={onChange} />
   </SelectIdButton>
 )

@@ -30,7 +30,9 @@ const AppRolesTable = () => {
   const dispatch = useDispatch()
   const { appRoles } = useSelector(
     (state) => ({
-      appRoles: selectFactoryRESTResponseTableValues(selectAppRolesStore)(state),
+      appRoles: selectFactoryRESTResponseTableValues(selectAppRolesStore)(
+        state
+      ),
     }),
     shallowEqual
   )
@@ -82,7 +84,7 @@ const AppRolesTable = () => {
 }
 
 const AppRoles = (props) => {
-  console.log("why not: ", props);
+  console.log('why not: ', props)
   return (
     <div className="AppSyses">
       <AppRolesHeader />

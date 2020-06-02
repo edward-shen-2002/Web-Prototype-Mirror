@@ -11,8 +11,7 @@ const reportingPeriodController = (() => {
       reportingPeriodAxios
         .post('', { reportingPeriod })
         .then((res) => res.data.reportingPeriod),
-    delete: async (_id) =>
-      reportingPeriodAxios.delete(`/${_id}`),
+    delete: async (_id) => reportingPeriodAxios.delete(`/${_id}`),
     update: async (reportingPeriod) =>
       reportingPeriodAxios.put(`/${reportingPeriod._id}`, { reportingPeriod }),
   }

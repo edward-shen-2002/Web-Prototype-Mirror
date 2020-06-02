@@ -98,11 +98,16 @@ const COATreeTreeStructure = ({ sheetNameId }) => {
 
   const nodeProps = useCallback(
     (nodeProps) => {
-      const handleDelete = () => dispatch(COATreeStore.actions.DELETE_COA_TREE_UI({ path: nodeProps.path }))
+      const handleDelete = () =>
+        dispatch(
+          COATreeStore.actions.DELETE_COA_TREE_UI({ path: nodeProps.path })
+        )
       const handleOpenCOADialog = () => {
         batch(() => {
           dispatch(DialogsStore.actions.OPEN_COA_DIALOG())
-          dispatch(COATreeStore.actions.UPDATE_SELECTED_NODE_COA_TREE_UI({ nodeProps }))
+          dispatch(
+            COATreeStore.actions.UPDATE_SELECTED_NODE_COA_TREE_UI({ nodeProps })
+          )
         })
       }
 

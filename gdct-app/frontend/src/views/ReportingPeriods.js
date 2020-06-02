@@ -29,7 +29,9 @@ const ReportingPeriodsTable = () => {
 
   const { reportingPeriods } = useSelector(
     (state) => ({
-      reportingPeriods: selectFactoryRESTResponseTableValues(selectReportingPeriodsStore)(state),
+      reportingPeriods: selectFactoryRESTResponseTableValues(
+        selectReportingPeriodsStore
+      )(state),
     }),
     shallowEqual
   )

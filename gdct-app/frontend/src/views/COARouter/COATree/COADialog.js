@@ -42,7 +42,10 @@ const COADialog = () => {
     if (isCOADialogOpen) dispatch(getCOAsRequest())
   }, [dispatch, isCOADialogOpen])
 
-  const handleClose = useCallback(() => dispatch(DialogsStore.actions.CLOSE_COA_DIALOG()), [dispatch])
+  const handleClose = useCallback(
+    () => dispatch(DialogsStore.actions.CLOSE_COA_DIALOG()),
+    [dispatch]
+  )
 
   const columns = useMemo(
     () => [

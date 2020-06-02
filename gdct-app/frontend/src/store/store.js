@@ -31,12 +31,10 @@ const devTools = {
   }),
 }
 
-const store = configureStore(
-  {
-    reducer: rootReducer,
-    middleware: [ thunk ],
-    devTools
-  }
-)
+const store = configureStore({
+  reducer: rootReducer,
+  middleware: [thunk],
+  devTools,
+})
 
 export default store

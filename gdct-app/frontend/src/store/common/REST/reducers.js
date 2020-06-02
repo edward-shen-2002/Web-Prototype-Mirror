@@ -10,9 +10,7 @@ export const CREATE = (state, { payload }) => ({
 export const DELETE = (state, { payload }) => ({
   response: {
     ...state.response,
-    Values: state.response.Values.filter(
-      (value) => value._id != payload
-    ),
+    Values: state.response.Values.filter((value) => value._id != payload),
   },
   isCallInProgress: false,
   error: null,
@@ -60,5 +58,5 @@ export const REST_REDUCERS = {
   RECEIVE,
   REQUEST,
   RESET,
-  UPDATE
+  UPDATE,
 }

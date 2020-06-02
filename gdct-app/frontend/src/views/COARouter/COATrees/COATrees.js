@@ -27,7 +27,9 @@ const COATreesTable = ({ history }) => {
 
   const { sheetNames } = useSelector(
     (state) => ({
-      sheetNames: selectFactoryRESTResponseTableValues(selectSheetNamesStore)(state),
+      sheetNames: selectFactoryRESTResponseTableValues(selectSheetNamesStore)(
+        state
+      ),
     }),
     shallowEqual
   )

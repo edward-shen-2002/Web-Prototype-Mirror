@@ -3,7 +3,8 @@ import cloneDeep from 'clone-deep'
 import { removeNode, changeNodeAtPath } from 'react-sortable-tree'
 import { createSlice } from '@reduxjs/toolkit'
 
-const generateTitle = ({ _id, COAGroupId }) => `${COAGroupId ? `(${COAGroupId.name})` : ""} ${_id}`
+const generateTitle = ({ _id, COAGroupId }) =>
+  `${COAGroupId ? `(${COAGroupId.name})` : ''} ${_id}`
 
 const getNodeKey = ({ treeIndex }) => treeIndex
 
@@ -57,8 +58,8 @@ const createTreeBranch = (rootId, normalizedTreeMap, dependencyMap) => {
     title: generateTitle(content),
     children: children
       ? children.map((child) =>
-        createTreeBranch(child, normalizedTreeMap, dependencyMap)
-      )
+          createTreeBranch(child, normalizedTreeMap, dependencyMap)
+        )
       : undefined,
   }
 }
@@ -74,7 +75,10 @@ const REVERT_COA_TREE_UI = () => ({
 })
 
 const ADD_ROOT_COA_TREE_UI = (state, { payload }) => {
-  const newRootNode = { content: payload.tree, title: generateTitle(payload.tree) }
+  const newRootNode = {
+    content: payload.tree,
+    title: generateTitle(payload.tree),
+  }
 
   return {
     ...state,
@@ -108,10 +112,12 @@ const SELECT_COA_COA_TREE_UI = (state, { payload }) => {
       ...state.selectedNodeProps.node,
       content: {
         ...state.selectedNodeProps.node.content,
-        COAIds: state.selectedNodeProps.node.content.COAIds.includes(payload._id)
+        COAIds: state.selectedNodeProps.node.content.COAIds.includes(
+          payload._id
+        )
           ? state.selectedNodeProps.node.content.COAIds.filter(
-            (curCOAId) => curCOAId !== payload._id
-          )
+              (curCOAId) => curCOAId !== payload._id
+            )
           : [...state.selectedNodeProps.node.content.COAIds, payload._id],
       },
     },
@@ -151,12 +157,10 @@ const initialState = {
   selectedNodeProps: {},
 }
 
-export const COATreeStore = createSlice(
-  {
-    name: "COA_TREE",
-    initialState,
-    reducers
-  }
-)
+export const COATreeStore = createSlice({
+  name: 'COA_TREE',
+  initialState,
+  reducers,
+})
 
 export default COATreeStore

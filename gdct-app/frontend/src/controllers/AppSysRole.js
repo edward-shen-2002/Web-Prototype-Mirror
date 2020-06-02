@@ -10,7 +10,9 @@ const AppSysRoleController = (() => {
     fetch: async (_) =>
       AppSysRoleAxios.get('').then((res) => res.data.AppSysRoles),
     create: async (AppSysRole) =>
-      AppSysRoleAxios.post('', { AppSysRole }).then((res) => res.data.AppSysRole),
+      AppSysRoleAxios.post('', { AppSysRole }).then(
+        (res) => res.data.AppSysRole
+      ),
     delete: async (_id) => AppSysRoleAxios.delete(`/${_id}`),
     update: async (AppSysRole) =>
       AppSysRoleAxios.put(`/${AppSysRole._id}`, { AppSysRole }),

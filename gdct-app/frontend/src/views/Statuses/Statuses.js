@@ -31,7 +31,9 @@ const StatusesTable = () => {
 
   const { statuses } = useSelector(
     (state) => ({
-      statuses: selectFactoryRESTResponseTableValues(selectStatusesStore)(state),
+      statuses: selectFactoryRESTResponseTableValues(selectStatusesStore)(
+        state
+      ),
     }),
     shallowEqual
   )

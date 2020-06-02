@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { publicAxios } from '../../../../../tools/rest'
 
@@ -7,17 +7,31 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
 
 import { REST_PUBLIC_DATA } from '../../../../../constants/rest'
 
 import { filterString } from './utils'
+import {
+  setActiveCellDialog,
+  setGroups,
+} from '../../../../../store/actions/ui/excel/commands'
+import { getColumnNamesRequest } from '../../../../../store/thunks/columnName'
+import { selectFactoryRESTResponseValues } from '../../../../../store/common/REST/selectors'
+import { selectColumnNamesStore } from '../../../../../store/ColumnNameStore/selectors'
+
+const DialogActions = ({ handleClick }) => (
+  <Button fullWidth onClick={handleClick}>
+    Cancel
+  </Button>
+)
 
 const BusinessConceptsItems = ({ businessConcepts, type }) =>
-  businessConcepts.map(({ _id, id, value }) => {
+  businessConcepts.map(({ _id, ID, name }) => {
     const dispatch = useDispatch()
 
     const handleClick = useCallback(
-      () => dispatch(setBusinessConcept({ category: type, id })),
+      () => dispatch(setGroups({ category: type, id: _id, columnName: name })),
       [dispatch]
     )
 
@@ -29,8 +43,8 @@ const BusinessConceptsItems = ({ businessConcepts, type }) =>
         button
         onClick={handleClick}
       >
-        <div className="businessConcepts__id">{id}</div>
-        <div className="businessConcepts__value">{value}</div>
+        <div className="businessConcepts__id">{ID}</div>
+        <div className="businessConcepts__value">{name}</div>
       </ListItem>
     )
   })
@@ -42,28 +56,19 @@ const BusinessConceptsList = ({ businessConcepts, type }) => (
 )
 
 const BusinessConceptDialog = ({ type }) => {
-  const [businessConcepts, setBusinessConcepts] = useState([])
   const [filter, setFilter] = useState('')
 
-  const [isDataFetched, setIsDataFetched] = useState(false)
+  const dispatch = useDispatch()
+
+  const { columnNames } = useSelector((state) => ({
+    columnNames: selectFactoryRESTResponseValues(selectColumnNamesStore)(state),
+  }))
+
+  console.log(columnNames)
 
   useEffect(() => {
-    if (!isDataFetched) {
-      publicAxios
-        .get(`${REST_PUBLIC_DATA}/business_concepts`)
-        .then(
-          ({
-            data: {
-              data: { businessConcepts },
-            },
-          }) => {
-            setBusinessConcepts(businessConcepts)
-            setIsDataFetched(true)
-          }
-        )
-        .catch((error) => console.error(error))
-    }
-  }, [isDataFetched])
+    dispatch(getColumnNamesRequest())
+  }, [dispatch])
 
   const textFieldRef = useRef()
 
@@ -71,12 +76,10 @@ const BusinessConceptDialog = ({ type }) => {
     textFieldRef.current.focus()
   }, [textFieldRef])
 
-  const filteredBusinessConcepts = businessConcepts.filter(
-    ({ id, value }) => filterString(filter, value) || filterString(filter, id)
-  )
-
   const handleChangeFilter = ({ target: { value } }) => setFilter(value)
   const handleClick = () => textFieldRef.current.focus()
+
+  const handleCloseDialog = () => dispatch(setActiveCellDialog(''))
 
   return (
     <div className="dialog" onClick={handleClick}>
@@ -86,11 +89,8 @@ const BusinessConceptDialog = ({ type }) => {
         inputRef={textFieldRef}
         onChange={handleChangeFilter}
       />
-      <BusinessConceptsList
-        type={type}
-        businessConcepts={filteredBusinessConcepts}
-      />
-      {/* <DialogActions/> */}
+      <BusinessConceptsList type={type} businessConcepts={columnNames} />
+      <DialogActions handleClick={handleCloseDialog} />
     </div>
   )
 }

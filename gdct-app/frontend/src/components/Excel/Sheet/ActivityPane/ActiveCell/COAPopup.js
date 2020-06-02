@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
-import { publicAxios } from '../../../../../tools/rest'
-
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -10,8 +8,6 @@ import Button from '@material-ui/core/Button'
 import Icon from '@material-ui/core/Icon'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
-
-import { REST_PUBLIC_DATA } from '../../../../../constants/rest'
 
 import { filterString } from './utils'
 
@@ -101,7 +97,8 @@ const GroupLinkList = ({
 
 const GroupItems = ({ groups, selectedGroup, handleSelectGroup }) =>
   groups.map(({ _id, COAGroupId }, index) => {
-    const handleClickGroup = () => handleSelectGroup({ _id, value: COAGroupId ? COAGroupId.name : "" })
+    const handleClickGroup = () =>
+      handleSelectGroup({ _id, value: COAGroupId ? COAGroupId.name : '' })
     return (
       <ListItem
         key={`groups-group-${index}`}
@@ -109,7 +106,9 @@ const GroupItems = ({ groups, selectedGroup, handleSelectGroup }) =>
         onClick={handleClickGroup}
         button
       >
-        <ListItemText primary={`${_id} - ${COAGroupId ? COAGroupId.name : ""}`} />
+        <ListItemText
+          primary={`${_id} - ${COAGroupId ? COAGroupId.name : ''}`}
+        />
       </ListItem>
     )
   })
@@ -132,14 +131,45 @@ const GroupList = ({
   )
 }
 
+const COAListItems = ({ COAIds, selectedCOAId, handleSelectCOAId }) =>
+  COAIds.map((COAId) => {
+    const handleClick = () => handleSelectCOAId(COAId)
+
+    console.log(COAId, selectedCOAId)
+    return (
+      <ListItem
+        className={COAId === selectedCOAId ? 'groups__COA--selected' : ''}
+        key={COAId}
+        onClick={handleClick}
+        button
+      >
+        <ListItemText primary={COAId} />
+      </ListItem>
+    )
+  })
+
+const COAList = ({ COAIds = [], selectedCOAId, handleSelectCOAId }) => (
+  <List>
+    <Typography variant="h6">COAs</Typography>
+    <COAListItems
+      COAIds={COAIds}
+      selectedCOAId={selectedCOAId}
+      handleSelectCOAId={handleSelectCOAId}
+    />
+  </List>
+)
+
 const GroupSectionContent = ({
   groups,
   definedGroups,
   selectedGroup,
+  COAIds,
+  selectedCOAId,
   handleRemoveLink,
   handleUpdateGroupPointer,
   handleSelectGroup,
   handleAddNewLink,
+  handleSelectCOAId,
 }) => (
   <div className="groups__groupSectionContent">
     <GroupLinkList
@@ -155,6 +185,11 @@ const GroupSectionContent = ({
         handleSelectGroup={handleSelectGroup}
       />
     ) : null}
+    <COAList
+      COAIds={COAIds}
+      selectedCOAId={selectedCOAId}
+      handleSelectCOAId={handleSelectCOAId}
+    />
   </div>
 )
 
@@ -162,53 +197,41 @@ const GroupSection = ({
   type,
   groups,
   definedGroups,
+  COAIds,
   selectedGroup,
+  selectedCOAId,
   handleRemoveLink,
   handleUpdateGroupPointer,
   handleSelectGroup,
   handleAddNewLink,
+  handleSelectCOAId,
 }) => (
   <div className="groups__groupSection">
     <GroupSectionContent
       groups={groups}
+      COAIds={COAIds}
       definedGroups={definedGroups}
       selectedGroup={selectedGroup}
+      selectedCOAId={selectedCOAId}
       handleRemoveLink={handleRemoveLink}
       handleUpdateGroupPointer={handleUpdateGroupPointer}
       handleSelectGroup={handleSelectGroup}
       handleAddNewLink={handleAddNewLink}
+      handleSelectCOAId={handleSelectCOAId}
     />
   </div>
 )
 
-const isGroupsValid = (groups) => {
-  if (!groups.length) return true
-
-  for (let element of groups) {
-    const { _id } = element
-
-    if (_id === null) return false
-  }
-
-  return true
-}
-
 const GroupPopup = ({ type }) => {
-  const [currentGroups, setCurrentGroups] = useState([])
-  const [isDataFetched, setIsDataFetched] = useState(false)
   const [newGroups, setNewGroups] = useState([])
-  const [groupPointer, setGroupPointer] = useState(
-    currentGroups && currentGroups.length ? currentGroups.length - 1 : -1
-  )
+  const [groupPointer, setGroupPointer] = useState(-1)
   const [selectedGroup, setSelectedGroup] = useState()
-  // const [ filterString, setFilterString ] = useState("");
+  const [selectedCOAId, setSelectedCOAId] = useState()
 
   const { COATrees } = useSelector(
-    (state) => (
-      {
-        COATrees: selectFactoryRESTResponseValues(selectCOATreesStore)(state)
-      }
-    ),
+    (state) => ({
+      COATrees: selectFactoryRESTResponseValues(selectCOATreesStore)(state),
+    }),
     shallowEqual
   )
 
@@ -219,21 +242,27 @@ const GroupPopup = ({ type }) => {
   }, [dispatch])
 
   const handleAdd = useCallback(
-    () => dispatch(setGroups({ category: type, newGroups })),
-    [dispatch, newGroups]
+    () => dispatch(setGroups({ category: type, newGroups, selectedCOAId })),
+    [dispatch, newGroups, selectedCOAId]
   )
 
   const handleCancel = useCallback(() => dispatch(resetActiveCellDialog()), [
     dispatch,
   ])
 
-  const handleUpdateGroupPointer = (index) => setGroupPointer(index)
+  const handleUpdateGroupPointer = (index) => {
+    if (index < groupPointer) {
+      handleRemoveLink(index + 1)
+    } else {
+      setGroupPointer(index)
+    }
+  }
   const handleRemoveLink = (index) => {
     setNewGroups(newGroups.slice(0, index))
     setGroupPointer(index - 1)
+    setSelectedCOAId()
   }
   const handleSelectGroup = ({ _id, value }) => {
-    console.log(_id)
     setNewGroups([
       ...newGroups.slice(0, groupPointer),
       { _id, value },
@@ -244,43 +273,57 @@ const GroupPopup = ({ type }) => {
 
   const handleAddNewLink = () => {
     // Only add groups if there are no set groups or there's at least a consecutive group link
-    if(newGroups.length && newGroups[newGroups.length - 1]._id || !newGroups.length) {
+    if (
+      (newGroups.length && newGroups[newGroups.length - 1]._id) ||
+      !newGroups.length
+    ) {
       setNewGroups([...newGroups, { _id: null, value: null }])
       setGroupPointer(groupPointer + 1)
     }
   }
 
-  // const filteredGroups = groups.filter(({ id, value }) => filterString(filter, value) || filterString(filter, id));
+  // The child nodes of the parent
+  const definedGroups = useMemo(() => {
+    let definedGroups
 
-  const definedGroups = useMemo(
-    () => {
-      let definedGroups
+    if (groupPointer - 1 > -1) {
+      const leafId = newGroups[groupPointer - 1]._id
+      console.log(leafId)
+      definedGroups = COATrees.filter((COATree) => COATree.parentId === leafId)
+    } else {
+      definedGroups = COATrees
+    }
 
-      if(groupPointer - 1 > -1) {
-        const leafId = newGroups[groupPointer - 1]._id
-        console.log(leafId)
-        definedGroups = COATrees.filter((COATree) => COATree.parentId === leafId)
-      } else {
-        definedGroups = COATrees
-      }
+    return definedGroups
+  }, [COATrees, selectedGroup, newGroups, groupPointer])
 
-      return definedGroups
-    },
-    [COATrees, selectedGroup, newGroups, groupPointer]
-  )
+  // The COA Ids of the leaf node
+  const COAIds = useMemo(() => {
+    if (!newGroups.length) return []
+
+    const groupId = newGroups[newGroups.length - 1]._id
+    const foundGroup = COATrees.find((group) => group._id === groupId)
+
+    return foundGroup ? foundGroup.COAIds : []
+  }, [newGroups, COATrees])
+
+  const handleSelectCOAId = (id) => setSelectedCOAId(id)
 
   return (
     <div className="dialog groups">
-      <Typography variant="h6">Set {type} group</Typography>
+      <Typography variant="h6">Set COA group</Typography>
       <GroupSection
         type={type}
         groups={newGroups}
         definedGroups={definedGroups}
+        COAIds={COAIds}
         selectedGroup={selectedGroup}
+        selectedCOAId={selectedCOAId}
         handleRemoveLink={handleRemoveLink}
         handleUpdateGroupPointer={handleUpdateGroupPointer}
         handleSelectGroup={handleSelectGroup}
         handleAddNewLink={handleAddNewLink}
+        handleSelectCOAId={handleSelectCOAId}
       />
       <DialogActions handleAdd={handleAdd} handleCancel={handleCancel} />
     </div>

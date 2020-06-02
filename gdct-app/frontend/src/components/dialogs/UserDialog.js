@@ -23,7 +23,10 @@ const UserDialog = ({ handleChange }) => {
     shallowEqual
   )
 
-  const handleClose = useCallback(() => dispatch(DialogsStore.actions.CLOSE_USER_DIALOG()), [dispatch])
+  const handleClose = useCallback(
+    () => dispatch(DialogsStore.actions.CLOSE_USER_DIALOG()),
+    [dispatch]
+  )
 
   const handleSelect = useCallback(
     (data) => {

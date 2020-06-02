@@ -14,8 +14,7 @@ const COATreeController = (() => {
     create: async (COATree) =>
       COATreeAxios.post('', { COATree }).then((res) => res.data.COATree),
     delete: async (_id) => COATreeAxios.delete(`/${_id}`),
-    update: async (COATree) =>
-      COATreeAxios.put(`/${COATree._id}`, { COATree }),
+    update: async (COATree) => COATreeAxios.put(`/${COATree._id}`, { COATree }),
     updateBySheetName: async (COATrees, sheetNameId) =>
       COATreeAxios.put(`/sheetName/${sheetNameId}`, { COATrees }),
   }

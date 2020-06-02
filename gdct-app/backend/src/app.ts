@@ -25,6 +25,7 @@ import AppSysController from './controllers/AppSys'
 import AppRoleController from './controllers/AppRole'
 import AppSysRoleController from './controllers/AppSysRole'
 import SubmissionController from './controllers/Submission'
+import ColumnNameController from './controllers/ColumnName'
 
 // https://www.digitalocean.com/community/tutorials/how-to-use-winston-to-log-node-js-applications
 const logger = require('morgan')
@@ -62,6 +63,7 @@ app.use('/submission_manager', Container.get(SubmissionPeriodController))
 app.use('/submission_manager', Container.get(SubmissionController))
 
 app.use('/', Container.get(SheetNameController))
+app.use('/', Container.get(ColumnNameController))
 
 app.use('/COA_manager', Container.get(COAController))
 app.use('/COA_manager', Container.get(COATreeController))

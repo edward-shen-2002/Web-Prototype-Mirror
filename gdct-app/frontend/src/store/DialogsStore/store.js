@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice } from '@reduxjs/toolkit'
 
 const OPEN_COA_GROUP_DIALOG = (state) => ({
   ...state,
@@ -66,7 +66,7 @@ const reducers = {
   OPEN_REPORTING_PERIOD_DIALOG,
   CLOSE_REPORTING_PERIOD_DIALOG,
   OPEN_TEMPLATE_DIALOG,
-  CLOSE_TEMPLATE_DIALOG
+  CLOSE_TEMPLATE_DIALOG,
 }
 
 const initialState = {
@@ -77,15 +77,13 @@ const initialState = {
   isSubmissionPeriodDialogOpen: false,
   isTemplateTypeDialogOpen: false,
   isReportingPeriodDialogOpen: false,
-  isTemplateDialogOpen: false
+  isTemplateDialogOpen: false,
 }
 
-const DialogsStore = createSlice(
-  {
-    name: "DIALOGS",
-    initialState,
-    reducers
-  }
-)
+const DialogsStore = createSlice({
+  name: 'DIALOGS',
+  initialState,
+  reducers,
+})
 
 export default DialogsStore

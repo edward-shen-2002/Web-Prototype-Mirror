@@ -17,14 +17,17 @@ const TemplateTypeDialog = ({ handleChange }) => {
   const { isTemplateTypeDialogOpen, templateTypes } = useSelector(
     (state) => ({
       isTemplateTypeDialogOpen: selectIsTemplateTypeDialogOpen(state),
-      templateTypes: selectFactoryRESTResponseTableValues(selectTemplateTypesStore)(state),
+      templateTypes: selectFactoryRESTResponseTableValues(
+        selectTemplateTypesStore
+      )(state),
     }),
     shallowEqual
   )
 
-  const handleClose = useCallback(() => dispatch(DialogsStore.actions.CLOSE_TEMPLATE_TYPE_DIALOG()), [
-    dispatch,
-  ])
+  const handleClose = useCallback(
+    () => dispatch(DialogsStore.actions.CLOSE_TEMPLATE_TYPE_DIALOG()),
+    [dispatch]
+  )
 
   const handleSelect = useCallback(
     (data) => {

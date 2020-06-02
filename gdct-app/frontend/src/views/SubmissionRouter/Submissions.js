@@ -51,7 +51,9 @@ const Submission = ({ history }) => {
 
   const { submissions } = useSelector(
     (state) => ({
-      submissions: selectFactoryRESTResponseTableValues(selectSubmissionsStore)(state),
+      submissions: selectFactoryRESTResponseTableValues(selectSubmissionsStore)(
+        state
+      ),
     }),
     shallowEqual
   )
@@ -60,7 +62,11 @@ const Submission = ({ history }) => {
     () => [
       { title: '_id', field: '_id' },
       { title: 'Name', field: 'name' },
-      { title: 'Template Id', field: 'templateId', editComponent: TemplateIdButton },
+      {
+        title: 'Template Id',
+        field: 'templateId',
+        editComponent: TemplateIdButton,
+      },
       { title: 'Submitted Date', type: 'date', field: 'submittedDate' },
       { title: 'StatusId', field: 'statusId', editComponent: StatusIdButton },
     ],

@@ -39,7 +39,9 @@ const TemplatePackage = () => {
 
   const { templatePackages } = useSelector(
     (state) => ({
-      templatePackages: selectFactoryRESTResponseTableValues(selectTemplatePackagesStore)(state),
+      templatePackages: selectFactoryRESTResponseTableValues(
+        selectTemplatePackagesStore
+      )(state),
     }),
     shallowEqual
   )
@@ -49,7 +51,7 @@ const TemplatePackage = () => {
       {
         icon: LaunchIcon,
         tooltip: 'Open Templates',
-        onClick: () => dispatch(DialogsStore.actions.OPEN_COA_DIALOG())
+        onClick: () => dispatch(DialogsStore.actions.OPEN_COA_DIALOG()),
       },
     ],
     [dispatch]
@@ -125,7 +127,6 @@ const TemplatePackage = () => {
         options={options}
         actions={actions}
       />
-      
     </div>
   )
 }

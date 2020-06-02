@@ -17,7 +17,9 @@ const SubmissionPeriodDialog = ({ handleChange }) => {
   const { isSubmissionPeriodDialogOpen, submissionPeriods } = useSelector(
     (state) => ({
       isSubmissionPeriodDialogOpen: selectIsSubmissionPeriodDialogOpen(state),
-      submissionPeriods: selectFactoryRESTResponseTableValues(selectSubmissionPeriodsStore)(state),
+      submissionPeriods: selectFactoryRESTResponseTableValues(
+        selectSubmissionPeriodsStore
+      )(state),
     }),
     shallowEqual
   )

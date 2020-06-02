@@ -40,7 +40,9 @@ const TemplatesTable = ({ history }) => {
 
   const { templates } = useSelector(
     (state) => ({
-      templates: selectFactoryRESTResponseTableValues(selectTemplatesStore)(state),
+      templates: selectFactoryRESTResponseTableValues(selectTemplatesStore)(
+        state
+      ),
     }),
     shallowEqual
   )

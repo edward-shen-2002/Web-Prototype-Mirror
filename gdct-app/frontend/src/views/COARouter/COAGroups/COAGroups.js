@@ -32,7 +32,9 @@ const COAGroupsTable = ({ history }) => {
 
   const { COAGroups } = useSelector(
     (state) => ({
-      COAGroups: selectFactoryRESTResponseTableValues(selectCOAGroupsStore)(state),
+      COAGroups: selectFactoryRESTResponseTableValues(selectCOAGroupsStore)(
+        state
+      ),
     }),
     shallowEqual
   )

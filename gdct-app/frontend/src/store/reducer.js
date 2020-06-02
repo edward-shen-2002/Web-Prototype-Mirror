@@ -21,6 +21,7 @@ import SubmissionsStore from './SubmissionsStore/store'
 import COATreeStore from './COATreeStore/store'
 import COATreesStore from './COATreesStore/store'
 import SheetNamesStore from './SheetNamesStore/store'
+import ColumnNamesStore from './ColumnNameStore/store'
 
 export const root = combineReducers({
   StatusesStore: StatusesStore.reducer,
@@ -42,6 +43,7 @@ export const root = combineReducers({
   SubmissionPeriodsStore: SubmissionPeriodsStore.reducer,
   SubmissionsStore: SubmissionsStore.reducer,
 
+  ColumnNamesStore: ColumnNamesStore.reducer,
 
   app,
   domain,

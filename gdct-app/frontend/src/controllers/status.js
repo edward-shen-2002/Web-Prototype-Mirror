@@ -10,8 +10,7 @@ const statusController = (() => {
     create: async (status) =>
       statusAxios.post('', { status }).then((res) => res.data.status),
     delete: async (_id) => statusAxios.delete(`/${_id}`),
-    update: async (status) =>
-      statusAxios.put(`/${status._id}`, { status }),
+    update: async (status) => statusAxios.put(`/${status._id}`, { status }),
   }
 })()
 

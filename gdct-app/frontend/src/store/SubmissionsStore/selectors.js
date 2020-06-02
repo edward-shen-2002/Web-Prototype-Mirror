@@ -1,1 +1,1 @@
-export const selectSubmissionsStore = (state) => state.SubmissionsStore 
+export const selectSubmissionsStore = (state) => state.SubmissionsStore

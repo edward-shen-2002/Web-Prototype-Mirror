@@ -30,7 +30,9 @@ const SubmissionPeriod = () => {
 
   const { submissionPeriods } = useSelector(
     (state) => ({
-      submissionPeriods: selectFactoryRESTResponseTableValues(selectSubmissionPeriodsStore)(state),
+      submissionPeriods: selectFactoryRESTResponseTableValues(
+        selectSubmissionPeriodsStore
+      )(state),
     }),
     shallowEqual
   )

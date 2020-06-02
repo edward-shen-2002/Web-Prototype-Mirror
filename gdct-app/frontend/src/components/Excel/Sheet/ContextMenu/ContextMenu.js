@@ -131,21 +131,14 @@ const SheetContextMenu = () => {
       },
       null,
       {
-        text: 'Set attribute',
+        text: 'Set column name',
         handleClick: () =>
           dispatch(
             setActiveCellDialog({ dialog: 'concept', category: 'attribute' })
           ),
       },
       {
-        text: 'Set category',
-        handleClick: () =>
-          dispatch(
-            setActiveCellDialog({ dialog: 'concept', category: 'category' })
-          ),
-      },
-      {
-        text: 'Set category group',
+        text: 'Set COA',
         handleClick: () =>
           dispatch(
             setActiveCellDialog({ dialog: 'group', category: 'category' })

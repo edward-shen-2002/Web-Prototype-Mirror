@@ -30,7 +30,9 @@ const AppSysRolesTable = () => {
   const dispatch = useDispatch()
   const { appSysRoles } = useSelector(
     (state) => ({
-      appSysRoles: selectFactoryRESTResponseTableValues(selectAppSysRolesStore)(state),
+      appSysRoles: selectFactoryRESTResponseTableValues(selectAppSysRolesStore)(
+        state
+      ),
     }),
     shallowEqual
   )

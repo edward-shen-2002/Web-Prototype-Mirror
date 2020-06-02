@@ -31,8 +31,8 @@ const AppPageRouter = () => {
             // <Redirect to="/template_manager/templates" />
             <Redirect to="/sheetNames" />
           ) : (
-              <Login {...props} />
-            )
+            <Login {...props} />
+          )
         }
       />
       <ActivityRoute

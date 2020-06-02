@@ -4,15 +4,28 @@ import templateController from '../../controllers/template'
 import {
   convertStateToReactState,
   extractReactAndWorkbookState,
-  createBlankReactState
+  createBlankReactState,
 } from '../../tools/excel'
 import TemplatesStore from '../TemplatesStore/store'
 
-import { getRequestFactory, deleteRequestFactory, updateRequestFactory } from './common/REST'
+import {
+  getRequestFactory,
+  deleteRequestFactory,
+  updateRequestFactory,
+} from './common/REST'
 
-export const getTemplatesRequest = getRequestFactory(TemplatesStore, templateController)
-export const deleteTemplateRequest = deleteRequestFactory(TemplatesStore, templateController)
-export const updateTemplateRequest = updateRequestFactory(TemplatesStore, templateController)
+export const getTemplatesRequest = getRequestFactory(
+  TemplatesStore,
+  templateController
+)
+export const deleteTemplateRequest = deleteRequestFactory(
+  TemplatesStore,
+  templateController
+)
+export const updateTemplateRequest = updateRequestFactory(
+  TemplatesStore,
+  templateController
+)
 
 export const createTemplateRequest = (template, resolve, reject) => (
   dispatch

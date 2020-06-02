@@ -17,14 +17,17 @@ const StatusDialog = ({ handleChange }) => {
   const { isStatusDialogOpen, statuses } = useSelector(
     (state) => ({
       isStatusDialogOpen: selectIsStatusDialogOpen(state),
-      statuses: selectFactoryRESTResponseTableValues(selectStatusesStore)(state),
+      statuses: selectFactoryRESTResponseTableValues(selectStatusesStore)(
+        state
+      ),
     }),
     shallowEqual
   )
 
-  const handleClose = useCallback(() => dispatch(DialogsStore.actions.CLOSE_STATUS_DIALOG()), [
-    dispatch,
-  ])
+  const handleClose = useCallback(
+    () => dispatch(DialogsStore.actions.CLOSE_STATUS_DIALOG()),
+    [dispatch]
+  )
 
   const handleSelect = useCallback(
     (data) => {
