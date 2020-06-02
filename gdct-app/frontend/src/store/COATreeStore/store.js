@@ -3,7 +3,7 @@ import cloneDeep from 'clone-deep'
 import { removeNode, changeNodeAtPath } from 'react-sortable-tree'
 import { createSlice } from '@reduxjs/toolkit'
 
-const generateTitle = ({ _id, COAGroupId }) => `(${COAGroupId}) ${_id}`
+const generateTitle = ({ _id, COAGroupId }) => `${COAGroupId ? `(${COAGroupId.name})` : ""} ${_id}`
 
 const getNodeKey = ({ treeIndex }) => treeIndex
 

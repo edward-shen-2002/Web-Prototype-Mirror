@@ -14,8 +14,8 @@ import AddIcon from '@material-ui/icons/Add'
 import { useParams } from 'react-router-dom'
 
 import {
-  updateCOATreesRequest,
-  getCOATreesRequest,
+  updateCOATreesBySheetNameRequest,
+  getCOATreesBySheetNameRequest,
 } from '../../../store/thunks/COATree'
 
 import GroupDialog from './COAGroupDialog'
@@ -45,7 +45,7 @@ const COATreeActions = ({ sheetNameId }) => {
   }, [dispatch])
 
   const handleSave = useCallback(
-    () => dispatch(updateCOATreesRequest(sheetNameId)),
+    () => dispatch(updateCOATreesBySheetNameRequest(sheetNameId, true)),
     [dispatch]
   )
 
@@ -117,7 +117,7 @@ const COATreeTreeStructure = ({ sheetNameId }) => {
   )
 
   useEffect(() => {
-    dispatch(getCOATreesRequest(sheetNameId))
+    dispatch(getCOATreesBySheetNameRequest(sheetNameId, true))
   }, [dispatch, sheetNameId])
 
   return (

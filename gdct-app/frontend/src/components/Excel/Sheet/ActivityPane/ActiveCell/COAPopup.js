@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import { publicAxios } from '../../../../../tools/rest'
 
@@ -23,6 +23,9 @@ import {
 } from '../../../../../store/actions/ui/excel/commands'
 
 import './GroupPopup.scss'
+import { getCOATreesRequest } from '../../../../../store/thunks/COATree'
+import { selectFactoryRESTResponseValues } from '../../../../../store/common/REST/selectors'
+import { selectCOATreesStore } from '../../../../../store/COATreesStore/selectors'
 
 const LinkIcon = ({ handleClick }) => (
   <Button variant="contained" color="primary" onClick={handleClick}>
@@ -57,12 +60,12 @@ const GroupLinkListItems = ({
   handleRemoveLink,
   handleUpdateGroupPointer,
 }) =>
-  groups.map(({ id, value }, index) => {
+  groups.map(({ _id, value }, index) => {
     return (
       <GroupLink
         key={`group-link-${index}`}
         index={index}
-        groupId={id}
+        groupId={_id}
         group={value}
         handleRemoveLink={handleRemoveLink}
         handleUpdateGroupPointer={handleUpdateGroupPointer}
@@ -97,16 +100,16 @@ const GroupLinkList = ({
 }
 
 const GroupItems = ({ groups, selectedGroup, handleSelectGroup }) =>
-  groups.map(({ id, value }, index) => {
-    const handleClickGroup = () => handleSelectGroup({ id, value })
+  groups.map(({ _id, COAGroupId }, index) => {
+    const handleClickGroup = () => handleSelectGroup({ _id, value: COAGroupId ? COAGroupId.name : "" })
     return (
       <ListItem
         key={`groups-group-${index}`}
-        className={`${selectedGroup === id ? 'groups__groupItem' : ''}`}
+        className={`${selectedGroup === _id ? 'groups__groupItem' : ''}`}
         onClick={handleClickGroup}
         button
       >
-        <ListItemText primary={`${id} - ${value}`} />
+        <ListItemText primary={`${_id} - ${COAGroupId ? COAGroupId.name : ""}`} />
       </ListItem>
     )
   })
@@ -182,9 +185,9 @@ const isGroupsValid = (groups) => {
   if (!groups.length) return true
 
   for (let element of groups) {
-    const { id } = element
+    const { _id } = element
 
-    if (id === null) return false
+    if (_id === null) return false
   }
 
   return true
@@ -200,25 +203,20 @@ const GroupPopup = ({ type }) => {
   const [selectedGroup, setSelectedGroup] = useState()
   // const [ filterString, setFilterString ] = useState("");
 
+  const { COATrees } = useSelector(
+    (state) => (
+      {
+        COATrees: selectFactoryRESTResponseValues(selectCOATreesStore)(state)
+      }
+    ),
+    shallowEqual
+  )
+
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (!isDataFetched) {
-      setIsDataFetched(true)
-      publicAxios
-        .get(`${REST_PUBLIC_DATA}/groups`)
-        .then(
-          ({
-            data: {
-              data: { groups },
-            },
-          }) => {
-            setCurrentGroups(groups)
-          }
-        )
-        .catch((error) => console.error(error))
-    }
-  }, [isDataFetched])
+    dispatch(getCOATreesRequest())
+  }, [dispatch])
 
   const handleAdd = useCallback(
     () => dispatch(setGroups({ category: type, newGroups })),
@@ -234,21 +232,42 @@ const GroupPopup = ({ type }) => {
     setNewGroups(newGroups.slice(0, index))
     setGroupPointer(index - 1)
   }
-  const handleSelectGroup = ({ id, value }) => {
+  const handleSelectGroup = ({ _id, value }) => {
+    console.log(_id)
     setNewGroups([
       ...newGroups.slice(0, groupPointer),
-      { id, value },
+      { _id, value },
       ...newGroups.slice(groupPointer + 1),
     ])
-    setSelectedGroup(id)
+    setSelectedGroup(_id)
   }
 
   const handleAddNewLink = () => {
-    setNewGroups([...newGroups, { id: null, value: null }])
-    setGroupPointer(groupPointer + 1)
+    // Only add groups if there are no set groups or there's at least a consecutive group link
+    if(newGroups.length && newGroups[newGroups.length - 1]._id || !newGroups.length) {
+      setNewGroups([...newGroups, { _id: null, value: null }])
+      setGroupPointer(groupPointer + 1)
+    }
   }
 
   // const filteredGroups = groups.filter(({ id, value }) => filterString(filter, value) || filterString(filter, id));
+
+  const definedGroups = useMemo(
+    () => {
+      let definedGroups
+
+      if(groupPointer - 1 > -1) {
+        const leafId = newGroups[groupPointer - 1]._id
+        console.log(leafId)
+        definedGroups = COATrees.filter((COATree) => COATree.parentId === leafId)
+      } else {
+        definedGroups = COATrees
+      }
+
+      return definedGroups
+    },
+    [COATrees, selectedGroup, newGroups, groupPointer]
+  )
 
   return (
     <div className="dialog groups">
@@ -256,7 +275,7 @@ const GroupPopup = ({ type }) => {
       <GroupSection
         type={type}
         groups={newGroups}
-        definedGroups={currentGroups}
+        definedGroups={definedGroups}
         selectedGroup={selectedGroup}
         handleRemoveLink={handleRemoveLink}
         handleUpdateGroupPointer={handleUpdateGroupPointer}

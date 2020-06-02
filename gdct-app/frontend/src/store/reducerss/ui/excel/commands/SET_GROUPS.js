@@ -11,12 +11,11 @@ const SET_GROUPS = (state, { category, newGroups }) => {
   // ! TODO
   if (category === 'attribute') {
   } else {
-    let groupIds = newGroups.map(({ id }) => id).join(' - ')
     let groupValues = newGroups.map(({ value }) => value).join(' - ')
 
     newSheetCellData[y] = { ...newSheetCellData[y] }
 
-    newSheetCellData[y][2] = { value: groupIds }
+    newSheetCellData[y][2] = { value: newGroups[newGroups.length - 1]._id }
     newSheetCellData[y][3] = { value: groupValues }
 
     newState.sheetCellData = newSheetCellData

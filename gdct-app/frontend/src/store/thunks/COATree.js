@@ -4,7 +4,7 @@ import COATreeController from '../../controllers/COATree'
 import COATreesStore from '../COATreesStore/store'
 import COATreeStore from '../COATreeStore/store'
 import DialogsStore from '../DialogsStore/store'
-import { deleteRequestFactory, updateRequestFactory } from './common/REST'
+import { deleteRequestFactory, updateRequestFactory, getRequestFactory } from './common/REST'
 
 const normalizeTrees = (denormalizedCOATrees) => {
   let stack = [...denormalizedCOATrees]
@@ -36,6 +36,7 @@ const normalizeTrees = (denormalizedCOATrees) => {
   return normalizedTrees
 }
 
+export const getCOATreesRequest = getRequestFactory(COATreesStore, COATreeController)
 export const deleteCOATreeRequest = deleteRequestFactory(COATreesStore, COATreeController)
 export const updateCOATreeRequest = updateRequestFactory(COATreesStore, COATreeController)
 
@@ -47,14 +48,14 @@ export const getCOATreeRequest = (_id) => (dispatch) => {
       dispatch(COATreeStore.actions.LOAD_COA_TREE_UI({ treeList: [ COATree ] }))
     })
     .catch((error) => {
-      dispatch(COATreesStore.actions.FAIL(error))
+      dispatch(COATreesStore.actions.FAIL_REQUEST(error))
     })
 }
 
-export const createCOATreeRequest = (COAGroup, sheetNameId) => (dispatch) => {
+export const createCOATreeRequest = (COAGroup, sheetNameId, isTreeComponent = false) => (dispatch) => {
   const COATree = {
     sheetNameId,
-    COAGroupId: COAGroup._id,
+    COAGroupId: COAGroup,
   }
 
   dispatch(COATreesStore.actions.REQUEST())
@@ -63,31 +64,33 @@ export const createCOATreeRequest = (COAGroup, sheetNameId) => (dispatch) => {
     .then((COATree) => {
       batch(() => {
         dispatch(COATreesStore.actions.CREATE(COATree))
-        dispatch(COATreeStore.actions.ADD_ROOT_COA_TREE_UI({ tree: COATree }))
-        dispatch(DialogsStore.actions.CLOSE_COA_GROUP_DIALOG())
+        if(isTreeComponent) {
+          dispatch(COATreeStore.actions.ADD_ROOT_COA_TREE_UI({ tree: COATree }))
+          dispatch(DialogsStore.actions.CLOSE_COA_GROUP_DIALOG())
+        }
       })
     })
     .catch((error) => {
-      dispatch(COATreesStore.actions.FAIL(error))
+      dispatch(COATreesStore.actions.FAIL_REQUEST(error))
     })
 }
 
-export const getCOATreesRequest = (query) => (dispatch) => {
+export const getCOATreesBySheetNameRequest = (sheetName, isTreeComponent = false) => (dispatch) => {
   dispatch(COATreesStore.actions.REQUEST())
 
-  COATreeController.fetch(query)
+  COATreeController.fetchBySheetName(sheetName)
     .then((COATrees) => {
       batch(() => {
         dispatch(COATreesStore.actions.RECEIVE(COATrees))
-        dispatch(COATreeStore.actions.LOAD_COA_TREE_UI({ treeList: COATrees }))
+        if(isTreeComponent) dispatch(COATreeStore.actions.LOAD_COA_TREE_UI({ treeList: COATrees }))
       })
     })
     .catch((error) => {
-      dispatch(COATreeStore.actions.FAIL(error))
+      dispatch(COATreesStore.actions.FAIL_REQUEST(error))
     })
 }
 
-export const updateCOATreesRequest = (sheetNameId) => (dispatch, getState) => {
+export const updateCOATreesBySheetNameRequest = (sheetNameId) => (dispatch, getState) => {
   const {
     COATreeStore: { localTree },
   } = getState()
@@ -96,11 +99,11 @@ export const updateCOATreesRequest = (sheetNameId) => (dispatch, getState) => {
 
   const normalizedTrees = normalizeTrees(localTree)
 
-  COATreeController.update(normalizedTrees, sheetNameId)
+  COATreeController.updateBySheetName(normalizedTrees, sheetNameId)
     .then((_COATrees) => {
       dispatch(COATreeStore.actions.UPDATE_ORIGINAL_COA_TREE_UI())
     })
     .catch((error) => {
-      dispatch(COATreesStore.actions.FAIL(error))
+      dispatch(COATreesStore.actions.FAIL_REQUEST(error))
     })
 }

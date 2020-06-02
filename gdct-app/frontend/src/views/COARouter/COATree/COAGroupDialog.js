@@ -31,7 +31,7 @@ const COAGroupDialog = ({ sheetNameId }) => {
 
   const handleSelect = useCallback(
     (COAGroup) => {
-      dispatch(createCOATreeRequest(COAGroup, sheetNameId))
+      dispatch(createCOATreeRequest(COAGroup, sheetNameId, true))
     },
     [dispatch]
   )

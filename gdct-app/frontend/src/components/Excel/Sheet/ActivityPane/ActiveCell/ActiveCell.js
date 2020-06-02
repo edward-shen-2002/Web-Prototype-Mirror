@@ -22,7 +22,7 @@ import leftOffsetsSelector from '../../../../../store/selectors/ui/excel/leftOff
 import BusinessConceptPopup from './BusinessConceptPopup'
 import PrepopulatePopup from './PrepopulatePopup'
 import CommentPopup from './CommentPopup'
-import GroupPopup from './GroupPopup'
+import COAPopup from './COAPopup'
 
 import { getBlockStyle } from '../../../../../tools/excel'
 
@@ -70,7 +70,7 @@ const ActiveCellDialog = ({
 
       Children = <PrepopulatePopup {...conceptParameters} />
     } else if (dialog === 'group') {
-      Children = <GroupPopup type={category} />
+      Children = <COAPopup type={category} />
     }
   }
 

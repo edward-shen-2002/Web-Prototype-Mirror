@@ -21,7 +21,8 @@ export default class ReportPeriodRepository extends BaseRepository<COATreeEntity
     }
   
     public async create(COATree: COATreeEntity): Promise<COATreeEntity> {
-      return COATreeModel.create(COATree).then((COATree) => new COATreeEntity(COATree.toObject()))
+      return COATreeModel.create(COATree).then((COATree) => COATree.populate('COAGroupId').execPopulate())
+      .then((COATree) => new COATreeEntity(COATree.toObject()))
     }
   
     public async update(id: IId, COATree: COATreeEntity): Promise<COATreeEntity> {
@@ -48,9 +49,10 @@ export default class ReportPeriodRepository extends BaseRepository<COATreeEntity
       for (const key in query) {
         if (query[key]) realQuery[key] = query[key]
       }
-  
-      return COATreeModel.find(realQuery).then((COATrees) =>
-        COATrees.map((COATree) => new COATreeEntity(COATree.toObject()))
+
+      return COATreeModel.find(realQuery).populate('COAGroupId').exec().then((COATrees) => {
+        return COATrees.map((COATree) => new COATreeEntity(COATree.toObject()))
+      }
       )
     }
 }
