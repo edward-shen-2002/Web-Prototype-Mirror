@@ -1,10 +1,13 @@
 // https://nodemailer.com/smtp/testing/
 
 export const mailConfig = {
-  host: "smtp.ethereal.email",
-  port: 587,
+  name: 'gmail.com',
+  host: "smtp.gmail.com",
+  port: 465,
+  secureConnection: true,
+  secure: true,
   auth: {
-    user: "julio32@ethereal.email",
-    pass: "qdjK2XgTyyHtR9zScz"
+    user: "carrsun96@gmail.com",
+    pass: "asdF177654"
   }
 };

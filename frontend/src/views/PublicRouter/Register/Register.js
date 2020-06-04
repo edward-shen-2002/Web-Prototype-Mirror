@@ -25,6 +25,9 @@ import "./Register.scss";
 import Box from "@material-ui/core/Box";
 import * as yup from "yup";
 import {createProgram} from "typescript";
+import Slide from "@material-ui/core/Slide";
+import Snackbar from "@material-ui/core/Snackbar";
+import CustomSnackbarContent from "../../../tools/components/CustomSnackbarContent/CustomSnackbarContent";
 
 const MaterialTable = lazy(() => import("material-table"));
 
@@ -135,7 +138,7 @@ const Header = () => (
 );
 
 
-const ButtonBox = ({activeStep, handleBack, handleNext, ableToComplete, handleSubmit}) => (
+const ButtonBox = ({activeStep, handleBack, handleNext, ableToComplete, handleSubmit, values, isValid}) => (
   <Box border={1} color="primary" className="register__buttonBox" justifyContent="center">
     <Button disabled={activeStep === 0} variant="outlined" color="primary" className="register__buttonBack" onClick={handleBack} >
       Back
@@ -145,7 +148,7 @@ const ButtonBox = ({activeStep, handleBack, handleNext, ableToComplete, handleSu
       Cancel
     </Button>
 
-    <Button disabled={activeStep == 1} variant="outlined" color="primary" className="register__button"  onClick={handleNext} >
+    <Button disabled={activeStep == 1 || !isValid} variant="outlined" color="primary" className="register__button"  onClick={() => handleNext(values)} >
       Next
     </Button>
 
@@ -158,7 +161,23 @@ const ButtonBox = ({activeStep, handleBack, handleNext, ableToComplete, handleSu
 
   </Box>
 );
+
+const EmailVerification = ({ registrationData: { email }, visible, handleReturnToRegister, handleReturnToLogin }) => (
+  <Slide direction="left" in={visible} mountOnEnter unmountOnExit>
+    <Paper className="emailVerification">
+      <p>An email has been sent to {email}</p>
+      <Button variant="outlined" color="primary" className="register__buttonBack" onClick={handleBack} >
+      </Button>
+
+      <Button variant="outlined" color="primary" className="register__button"  href={ROUTE_PUBLIC_LOGIN} >
+
+      </Button>
+    </Paper>
+  </Slide>
+);
+
 const test = (userSubmissions) => {console.log(userSubmissions)};
+
 const selectOrgProgram = (searchKey, reference, setSearchKey, setReference, organizationGroup, organizationOptions, handleOrgChange, organizationGroupOptions, handleOrgGroupChange, appSysOptions, handleAppSysChange, setOrganizationOptions,
                           handleProgramChange,programOptions, handleSearchOrg, handleSearchKeyChange, handleReferenceChange) => {
 
@@ -185,7 +204,7 @@ const selectOrgProgram = (searchKey, reference, setSearchKey, setReference, orga
           onChange={handleOrgGroupChange}
           className="register__select"
         />
-
+        <br/>
         <Typography className="register__inputTitle"> *Organizations </Typography>
         {/*<Select*/}
         {/*  name="organizations"*/}
@@ -287,11 +306,11 @@ const selectOrgProgram = (searchKey, reference, setSearchKey, setReference, orga
   // }
 }
 
-const getStepContent = (activeStep, searchKey, reference, setSearchKey, setReference, organizationGroup, handleOrgGroupChange, isSnackbarOpen, setIsSnackbarOpen, handleBack, handleNext, handleSubmit,
+const getStepContent = (activeStep, searchKey, reference, setSearchKey, setReference, organizationGroup, handleOrgGroupChange, isSnackbarOpen, handleSnackbarClose, setIsSnackbarOpen, snackbarMessage, handleBack, handleNext, handleSubmit,
                         userOrganizations, userPrograms, userSubmissions, userPermissions, setUserSubmissionList, setUserPermissionList, appSysOptions, handleAppSysChange, organizationGroupOptions, organizationOptions, programOptions,
                          setOrganizationOptions, handleOrgChange, handleProgramChange, handleSubmissionChange,handleChangePermission, ableToComplete, setAbleToComplete, handleSearchOrg, handleSearchKeyChange, handleReferenceChange, props) => {
 
-  const { values, handleChange, touched, handleBlur, errors, setFieldValue, setFieldTouched} = props;
+  const { values, handleChange, touched, handleBlur, errors, setFieldValue, setFieldTouched, isValid} = props;
   const checkBoxColumns = [
     { title: "Organization", field: "organization.name" },
     { title: "Program", field: "program.code" },
@@ -352,7 +371,6 @@ const getStepContent = (activeStep, searchKey, reference, setSearchKey, setRefer
       return (
         <>
           <form className="register__form">
-            {/*<FormLabel className="register__title" component="legend">Step2: Enter User Information</FormLabel>*/}
             <br/>
             <div className="register__label">
               <Typography className="register__inputTitle"> *Title </Typography>
@@ -565,12 +583,28 @@ const getStepContent = (activeStep, searchKey, reference, setSearchKey, setRefer
               />
             </div>
             <br/>
-            <ButtonBox activeStep = {activeStep} handleBack = {handleBack} handleNext = {handleNext} ableToComplete = {ableToComplete} handleSubmit={handleSubmit}/>
+            <ButtonBox activeStep = {activeStep} handleBack = {handleBack} handleNext = {handleNext} ableToComplete = {ableToComplete} handleSubmit={handleSubmit} values={values} isValid={isValid}/>
+            {/*<Snackbar*/}
+            {/*  anchorOrigin={{*/}
+            {/*    vertical: 'bottom',*/}
+            {/*    horizontal: 'left',*/}
+            {/*  }}*/}
+            {/*  open={isSnackbarOpen}*/}
+            {/*  autoHideDuration={6000}*/}
+            {/*  color="primary"*/}
+            {/*  onClose={handleSnackbarClose}*/}
+            {/*>*/}
+            {/*  <CustomSnackbarContent*/}
+            {/*    onClose={handleSnackbarClose}*/}
+            {/*    variant="error"*/}
+            {/*    message="snackbarMessage"*/}
+            {/*  />*/}
+            {/*</Snackbar>*/}
           </form>
         </>
       );
     case 1:
-      console.log(organizationOptions)
+      console.log(organizationOptions);
 
       return (
         <div className="register__form">
@@ -614,33 +648,33 @@ const getStepContent = (activeStep, searchKey, reference, setSearchKey, setRefer
                 backgroundColor: "#f2f5f7"
               }}
               actions={[
-                {
-                  icon: 'delete',
-                  tooltip: 'Delete Permission',
-                  onClick: (event, rowData) => {
-                    let editedPermission = userPermissions;
-                    editedPermission.splice(rowData.tableData.id, 1);
-                    setUserPermissionList(editedPermission);
-                  }
-                }
+                // {
+                //   icon: 'delete',
+                //   tooltip: 'Delete Permission',
+                //   onClick: (event, rowData) => {
+                //     let editedPermission = userPermissions;
+                //     editedPermission.splice(rowData.tableData.id, 1);
+                //     setUserPermissionList(editedPermission);
+                //   }
+                // }
               ]}
               components={{
-                Action: props => (
-                  <Button
-                    onClick={(event) => props.action.onClick(event, props.data)}
-                    color="primary"
-                    variant="outlined"
-                    style={{textTransform: 'none'}}
-                    size="small"
-                  >
-                    Delete
-                  </Button>
-                )
+                // Action: props => (
+                //   <Button
+                //     onClick={(event) => props.action.onClick(event, props.data)}
+                //     color="primary"
+                //     variant="outlined"
+                //     style={{textTransform: 'none'}}
+                //     size="small"
+                //   >
+                //     Delete
+                //   </Button>
+                // )
               }}
               data={userPermissions}
               // editable={editable} options={options}
             />
-            <ButtonBox activeStep = {activeStep} handleBack = {handleBack} handleNext = {handleNext} ableToComplete = {ableToComplete} handleSubmit={handleSubmit}/>
+            <ButtonBox activeStep = {activeStep} handleBack = {handleBack} handleNext = {handleNext} ableToComplete = {ableToComplete} handleSubmit={handleSubmit} values={values} isValid={isValid}/>
           </div>
 
         </div>
@@ -655,8 +689,7 @@ const getStepContent = (activeStep, searchKey, reference, setSearchKey, setRefer
 
 const Register_container = (props) => {
 
-  console.log(props);
-  const {activeStep, searchKey, reference, setSearchKey, setReference, organizationGroup, handleOrgGroupChange, isSnackbarOpen, setIsSnackbarOpen, handleBack, handleNext, handleSubmit,
+  const {activeStep, searchKey, reference, setSearchKey, setReference, organizationGroup, handleOrgGroupChange, isSnackbarOpen, handleSnackbarClose, setIsSnackbarOpen, snackbarMessage, handleBack, handleNext, handleSubmit,
     userOrganizations, userPrograms, userSubmissions, userPermissions, setUserSubmissionList, setUserPermissionList, appSysOptions, handleAppSysChange, organizationGroupOptions, organizationOptions, programOptions, handleChangePermission,
     setOrganizationOptions, handleOrgChange, handleProgramChange, handleSubmissionChange, ableToComplete, setAbleToComplete, handleSearchOrg, handleSearchKeyChange, handleReferenceChange} = props;
 
@@ -681,7 +714,7 @@ const Register_container = (props) => {
           </div>
         ) : (
           <div>
-            {getStepContent(activeStep, searchKey, reference, setSearchKey, setReference, organizationGroup, handleOrgGroupChange, isSnackbarOpen, setIsSnackbarOpen, handleBack, handleNext, handleSubmit,
+            {getStepContent(activeStep, searchKey, reference, setSearchKey, setReference, organizationGroup, handleOrgGroupChange, isSnackbarOpen, handleSnackbarClose, setIsSnackbarOpen, snackbarMessage, handleBack, handleNext, handleSubmit,
               userOrganizations, userPrograms, userSubmissions, userPermissions, setUserSubmissionList, setUserPermissionList, appSysOptions, handleAppSysChange, organizationGroupOptions, organizationOptions, programOptions,
               setOrganizationOptions, handleOrgChange, handleProgramChange, handleSubmissionChange,handleChangePermission, ableToComplete, setAbleToComplete, handleSearchOrg, handleSearchKeyChange, handleReferenceChange, props)}
           </div>
@@ -696,7 +729,7 @@ export default class RegisterUI extends React.Component {
     super(props);
   }
   render() {
-    const {registrationData, handleRegister} = this.props
+    const {registrationData, handleSubmit} = this.props
     console.log(this.props);
     return (
       <>
@@ -708,7 +741,7 @@ export default class RegisterUI extends React.Component {
             <Formik
               validationSchema={registerSchema}
               initialValues={registrationData}
-              onSubmit={handleRegister}
+              onSubmit={handleSubmit}
               render={formikProps =>
                  <Register_container {...formikProps} {...this.props}/>
               }

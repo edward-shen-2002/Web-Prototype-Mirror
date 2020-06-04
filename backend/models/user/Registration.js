@@ -7,7 +7,7 @@ let registrationSchema = new Schema({
   password: { type: String, required: true },
   title: { type: String, required: true },
 
-  email: { type: String, unique: true, required: true },
+  email: { type: String, required: true },
 
   firstName: { type: String, default: "" },
   lastName: { type: String, default: "" },

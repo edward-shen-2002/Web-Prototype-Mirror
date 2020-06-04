@@ -15,11 +15,12 @@ const handleInputTemplate = (templateSet, submission) => {
     templateCode: "",
   }
   let templateSelected = templateSet.find(function(element){
-    return element.templateCode == submission.submission;
+    return element.templateTypeId == submission.submission._id;
   });
 
   if (templateSelected == undefined) {
-    templateType.templateCode = submission.submission;
+    templateType.templateCode = submission.submission.name;
+    templateType.templateTypeId = submission.submission._id;
     templateSelected = templateType;
 
     templateSet.push(templateSelected);
@@ -32,11 +33,12 @@ const handleInputProgram = (programSet, submission) => {
     template: [],
   }
   let programSelected = programSet.find(function(element){
-    return element.programCode == submission.program;
+    return element.programId == submission.program.code;
   });
 
   if (programSelected == undefined) {
-    program.programCode = submission.program;
+    program.programCode = submission.program.code;
+    program.programId = submission.program._id;
     programSelected = program;
 
     programSet.push(programSelected);
@@ -52,10 +54,13 @@ const handleInputOrg = (organization, submission) => {
   };
 
   let organizationSelected = organization.find(function(element){
-    return element.orgId == submission.organization;
+    return element.orgId == submission.organization.id;
   });
   if (organizationSelected == undefined) {
-    org.orgId = submission.organization;
+    org.IsActive = false;
+    org.orgId = submission.organization.id;
+    org.name = submission.organization.name;
+    org.authorizedPerson = submission.organization.authorizedPerson;
     organizationSelected = org;
 
     organization.push(organizationSelected);
@@ -65,12 +70,14 @@ const handleInputOrg = (organization, submission) => {
 }
 
 const checkPerission = (submission) => {
-  if(submission.approve) return "approve";
-  else if(submission.review) return "review";
-  else if(submission.submit) return "submit";
-  else if(submission.input) return "input";
-  else if(submission.view) return "view";
-  else if(submission.viewCongos) return "viewCongos";
+  let permission = [];
+  if(submission.approve) permission.push("approve");
+  if(submission.review) permission.push("review");
+  if(submission.submit) permission.push("submit");
+  if(submission.input) permission.push("input");
+  if(submission.view) permission.push("view");
+  if(submission.viewCongos) permission.push("viewCongos");
+  return permission;
 }
 
 
@@ -102,7 +109,6 @@ export default class RegisterService {
   getAppSys() {
     return publicAxios.get(`${REST_PUBLIC_DATA}/AppSys`)
       .then(({data: {data: {appSys}}}) => {
-        console.log(appSys);
         let options = [];
         appSys.forEach(appSysOptions => {
           options.push({label: appSysOptions.name, value: {name: appSysOptions.name, _id: appSysOptions._id}});
@@ -231,9 +237,9 @@ export default class RegisterService {
       .catch((error) => console.error(error));
   }
 
-  sendRegistrationData   (registerData) {
+  sendRegistrationData(registerData) {
     console.log(registerData)
-    return publicAxios.post(`${REST_PUBLIC_DATA}/registration`,{ registerData })
+    return publicAxios.post(`${REST_PUBLIC_REGISTER}`,{ registerData })
       .catch((error) => console.error(error));
   }
 
@@ -241,18 +247,21 @@ export default class RegisterService {
     let permissionList = [];
     userSubmissions.forEach(submission => {
       const permission = checkPerission(submission);
-      permissionList.push({
-        organization: submission.organization,
-        program: submission.program,
-        submission: submission.submission,
-        permission: permission,
-        approve: submission.approve,
-        review: submission.review,
-        submit: submission.submit,
-        view: submission.view,
-        viewCongos: submission.viewCongos,
-        input: submission.input,
+      permission.forEach(permission=> {
+        permissionList.push({
+          organization: submission.organization,
+          program: submission.program,
+          submission: submission.submission,
+          permission: permission,
+          approve: submission.approve,
+          review: submission.review,
+          submit: submission.submit,
+          view: submission.view,
+          viewCongos: submission.viewCongos,
+          input: submission.input,
+        })
       })
+
     });
     return permissionList;
   }
@@ -271,13 +280,28 @@ export default class RegisterService {
       if (sysRoleSelected == undefined) {
         sysRoleSelected = sysRole;
         sysRoleSelected.role = permission;
-        sysRoleSelected.appSys = userAppSys;
+        sysRoleSelected.appSys = userAppSys.code;
         data.sysRole.push(sysRoleSelected);
       }
       console.log(submission);
       handleInputOrg(sysRoleSelected.org, submission);
     }
   }
+
+  // checkUserInfo (registerData) {
+  //   const userAndEmail = {username: registerData.username, email: registerData.email}
+  //   return publicAxios.post(`${REST_PUBLIC_DATA}/checkUserDup`, {userAndEmail})
+  //     .then(({data: {data: {user}}}) => {
+  //       let msg = {dup: false, type: ""};
+  //       if (user.username == registerData.username) {
+  //         msg = {dup: true, type: "username"}
+  //       } else if (user.email == registerData.email) {
+  //         msg = {dup: true, type: "email"}
+  //       }
+  //       return msg;
+  //     })
+  //     .catch((error) => console.error(error));
+  // }
 
 
 }

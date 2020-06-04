@@ -1,11 +1,11 @@
-import { ROUTE_DATA } from "../../constants/rest";
-import { 
-  MESSAGE_SUCCESS_ORGANIZATIONS, 
-  MESSAGE_SUCCESS_SECTORS, 
-  MESSAGE_SUCCESS_TEMPLATES, 
-  MESSAGE_SUCCESS_BUSINESS_CONCEPTS
+import {ROUTE_DATA, ROUTE_REGISTER, ROUTE_VERFICATION} from "../../constants/rest";
+import {
+  MESSAGE_SUCCESS_ORGANIZATIONS,
+  MESSAGE_SUCCESS_SECTORS,
+  MESSAGE_SUCCESS_TEMPLATES,
+  MESSAGE_SUCCESS_BUSINESS_CONCEPTS, MESSAGE_SUCCESS_VERIFICATION
 } from "../../constants/messages";
-const fs = require('fs');
+import {sendUserActiveEmail, sendUserRejectEmail} from "../../setup/mail";
 
 // Public data available for all registered users/
 // ! These data do not contain sensitive information. Content is filtered.
@@ -18,20 +18,71 @@ const data = ({
   ProgramModel,
   BusinessConceptModel,
   SectorModel,
+  UserModel,
   TemplateModel
 }) => {
-  router.get(`${ROUTE_DATA}/organizations`, (_req, res, next) => {
-    OrganizationModel.find({})
-      .select("_id code name address")
-      .then((organizations) => {
-        res.json({ message: MESSAGE_SUCCESS_ORGANIZATIONS, data: { organizations } });
-      })
-      .catch(next);
+  router.get(`${ROUTE_VERFICATION}/admin`, async (req, res, next) => {
+    const { approve, _id, hashedUsername, orgId } = req.query;
+    console.log(approve);
+    let checkActive = true;
+    try {
+      await UserModel.findOne({ _id})
+        .then((user) => {
+          console.log(approve);
+          if(approve == "true"){
+            console.log(approve);
+            user.sysRole.forEach(sysRole => {
+              sysRole.org.forEach(org =>{
+                if(org.orgId == orgId) org.IsActive = true;
+                checkActive = checkActive&&org.IsActive;
+              })
+              console.log(sysRole);
+            })
+            if(checkActive) {
+              sendUserActiveEmail(user)
+                .catch(next);
+            }
+            UserModel.findOneAndUpdate({_id}, {sysRole: user.sysRole})
+              .then((model) => {
+                console.log(model.sysRole[0].org);
+              })
+              .catch(next);
+            res.json({ message: "You have approved the user. The user will active the account by email."});
+          }
+          else{
+            sendUserRejectEmail(user)
+              .catch(next);
+            res.json({ message: "You have rejected the user. The user will be notified by email."});
+          }
+
+        })
+        .catch(next);
+    } catch(error) {
+      next(error);
+    }
+  });
+
+  router.get(`${ROUTE_VERFICATION}/user`, async (req, res, next) => {
+    const { _id, hashedUsername} = req.query;
+    console.log(_id);
+    try {
+      await UserModel.findOne({ _id})
+        .then((model) => {
+          console.log(model);
+        })
+        .catch(next);
+      await UserModel.findOneAndUpdate({ _id}, {IsActive: true})
+        .then((model) => {
+          console.log(model);
+          res.json({ message: "The account active"});
+        })
+        .catch(next);
+    } catch(error) {
+      next(error);
+    }
   });
 
   router.get(`${ROUTE_DATA}/organizations/:organizationGroup`, (_req, res, next) => {
-
-
     const { organizationGroup } = _req.params;
     OrganizationModel.find({organizationGroupId: organizationGroup})
       .select("_id id name programId authorizedPerson")
@@ -79,7 +130,6 @@ const data = ({
   router.post(`${ROUTE_DATA}/programs/`, (_req, res, next) => {
 
     const { programId } = _req.body;
-    console.log(programId);
     ProgramModel.find({_id: {$in: programId}}, {isActive: true})
       .select("_id name code")
       .then((programs) => {
@@ -100,14 +150,14 @@ const data = ({
 
   });
 
-  router.post(`${ROUTE_DATA}/registration/`, (_req, res, next) => {
-    const { registerData } = _req.body;
-    fs.writeFile("registrationData.txt", registerData, function(err) {
-      if (err) {
-        console.log(err);
-      }
-    });
-  });
+  router.post(`${ROUTE_DATA}/checkUserDup}`,(_req, res, next) => {
+
+    const { userAndEmail } = _req.body;
+    UserModel.find({ $or: [ { username: userAndEmail.username }, { email: userAndEmail.email}]})
+      .then((user) => {
+         res.json({ data: {user}})
+      })
+  })
 
   router.get(`${ROUTE_DATA}/sectors`, (_req, res, next) => {
     SectorModel.find({})

@@ -37,10 +37,10 @@ const defaultRoleControlConfig = { scope: ROLE_LEVEL_NOT_APPLICABLE, sectors: []
 const registerSchema = yup.object().shape({
   title: yup.string()
     .required("Please select one title"),
-  username: yup.string()
+  userName: yup.string()
     .min(6, "Username must be 6 to 20 characters long")
     .max(20, "Username must be 6 to 20 characters long")
-    .required("Please enter a username"),
+    .required("Please enter a user name"),
   password: yup.string()
     .min(8, "Password must be between 8 and 25 characters long")
     .max(25, "Password must be between 8 and 25 characters long")
@@ -103,13 +103,13 @@ const RegisterForm = ({values, errors, touched, handleSubmit, handleChange, hand
       variant="outlined"
       className="register__field"
       label="*User Id"
-      id="username"
-      name="username"
-      type="username"
-      value={values.username}
+      id="userName"
+      name="userName"
+      type="userName"
+      value={values.userName}
       onChange={handleChange}
-      error={touched.username && !!errors.username}
-      helperText={touched.username && errors.username}
+      error={touched.userName && !!errors.userName}
+      helperText={touched.userName && errors.userName}
       onBlur={handleBlur}
       InputProps={{
         style:{

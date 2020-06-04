@@ -13,10 +13,10 @@ const cloneDeep = require('clone-deep')
 
 let RegisterController = (props) => {
 
-  let registrationData= {
+  const [registrationData, setRegistrationData]= useState({
     title: "Mr.",
     username: "Haonan",
-    email: "sampleUser@ontario.ca",
+    email: "",
     firstName: "Haonan",
     lastName: "Sun",
     phoneNumber: "1234567890",
@@ -27,7 +27,9 @@ let RegisterController = (props) => {
     startDate: new Date(),
     endDate: new Date(),
     sysRole: []
-  };
+  });
+
+  const [ snackbarMessage, setSnackbarMessage] = useState ("");
   const [ activeStep, setActiveStep] = useState(0);
   const [ organizationGroup, setOrganizationGroup] = useState([]);
   const [ helperState, setHelperState] = useState(true);
@@ -45,7 +47,7 @@ let RegisterController = (props) => {
   const [ searchKey, setSearchKey] = useState("");
   const [ userAppSys, setUserAppSys] = useState("");
   const [ reference, setReference] = useState("");
-  const {getProgram, getTemplateType, submissionChange, searchOrg, getAppSys, getOrg, getOrgGroup, sendRegistrationData, handleInputSysRole}=new RegisterService();
+  const { getProgram, getTemplateType, submissionChange, searchOrg, getAppSys, getOrg, getOrgGroup, sendRegistrationData, handleInputSysRole, checkUserInfo}=new RegisterService();
 
   const getSteps = () => {
     return ['Step1', 'Step2', 'Step3'];
@@ -90,7 +92,6 @@ let RegisterController = (props) => {
     getTemplateType(userPrograms)
       .then(templateTypeList=>{
         setUserSubmissionList(templateTypeList);
-        console.log(templateTypeList);
       })
   }
 
@@ -124,7 +125,7 @@ let RegisterController = (props) => {
 
   const handleChangePermission = (rowData, permission) => {
     let submissions = userSubmissions;
-    const instruction = !rowData[permission]
+    const instruction = !rowData[permission];
     submissions[rowData.index][permission] = !rowData[permission];
     rowData[permission] = instruction;
     setUserSubmissionList(submissions);
@@ -136,8 +137,8 @@ let RegisterController = (props) => {
     setOrganizationOptions(orgOptions);
   }
 
-  const handleNext = () => {
-
+  const handleNext = (values) => {
+    setRegistrationData(values);
     getAppSys()
       .then(appSys => {
         setAppSysOptions(appSys);
@@ -147,8 +148,20 @@ let RegisterController = (props) => {
             setActiveStep(prevActiveStep => prevActiveStep + 1);
           });
       });
+    // checkUserInfo(values)
+    //   .then(msg => {
+    //     if(!msg.dup)
 
+      //   else {
+      //     setIsSnackbarOpen(true);
+      //     setSnackbarMessage("{msg.type} is used, you need to change one")
+      //   }
+      // })
   };
+  const handleSnackbarClose = () => {
+    setIsSnackbarOpen(false);
+    setSnackbarMessage("");
+  }
 
   const handleBack = () => {
     setActiveStep(prevActiveStep => prevActiveStep - 1);
@@ -157,8 +170,9 @@ let RegisterController = (props) => {
 
   const handleSubmit = () => {
     let userData = registrationData;
+    userData.hashedUsername = hash(userData.username)
     userData.password = hash(userData.password);
-    userData.passwordConfirm = hash(userData.passwordConfirm);
+    delete userData.passwordConfirm;
     userSubmissions.forEach(submission => {
 
       handleInputSysRole(userData, "approve", submission, userAppSys);
@@ -169,9 +183,10 @@ let RegisterController = (props) => {
       handleInputSysRole(userData, "viewCognos", submission, userAppSys);
     })
 
-    console.log(userData);
     sendRegistrationData(userData);
   };
+
+
 
   return (
     <>
@@ -187,6 +202,8 @@ let RegisterController = (props) => {
         handleOrgGroupChange={handleOrgGroupChange}
         isSnackbarOpen={isSnackbarOpen}
         setIsSnackbarOpen={setIsSnackbarOpen}
+        handleSnackbarClose={handleSnackbarClose}
+        snackbarMessage={snackbarMessage}
         handleBack={handleBack}
         handleNext={handleNext}
         handleSubmit={handleSubmit}

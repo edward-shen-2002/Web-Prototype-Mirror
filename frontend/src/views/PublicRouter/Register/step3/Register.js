@@ -272,7 +272,7 @@ const mapStateToProps = ({ app: { isOnline } }) => ({ isOnline });
 let Register = ({ isOnline, history }) => {
   const [ registerView, setRegisterView ] = useState(true);
   const [ registrationData, setRegistrationData ] = useState({ 
-    username: "sampleuser", 
+    userName: "sampleuser",
     email: "e@ontario.ca", 
     firstName: "", 
     lastName: "", 
