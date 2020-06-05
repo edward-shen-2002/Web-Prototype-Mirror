@@ -1,15 +1,12 @@
-import React, {lazy, useState} from "react";
+import React, {useState} from "react";
 
 import RegisterService from "../service";
 import RegisterUI from "../views/PublicRouter/Register"
 
 import {createProgram} from "typescript";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
 
 let hash = require("object-hash");
-const cloneDeep = require('clone-deep')
+const cloneDeep = require('clone-deep');
 
 let RegisterController = (props) => {
 
@@ -47,7 +44,7 @@ let RegisterController = (props) => {
   const [ searchKey, setSearchKey] = useState("");
   const [ userAppSys, setUserAppSys] = useState("");
   const [ reference, setReference] = useState("");
-  const { getProgram, getTemplateType, submissionChange, searchOrg, getAppSys, getOrg, getOrgGroup, sendRegistrationData, handleInputSysRole, checkUserInfo}=new RegisterService();
+  const { getProgram, getTemplateType, submissionChange, searchOrg, getAppSys, getOrg, getOrgGroup, sendRegistrationData, handleInputSysRole, checkUserInfo}= new RegisterService();
 
   const getSteps = () => {
     return ['Step1', 'Step2', 'Step3'];
@@ -181,8 +178,9 @@ let RegisterController = (props) => {
       handleInputSysRole(userData, "submit", submission, userAppSys);
       handleInputSysRole(userData, "view", submission, userAppSys);
       handleInputSysRole(userData, "viewCognos", submission, userAppSys);
-    })
 
+    })
+    console.log(userData);
     sendRegistrationData(userData);
   };
 

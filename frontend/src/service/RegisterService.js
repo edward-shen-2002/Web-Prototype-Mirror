@@ -1,13 +1,7 @@
-import React, {lazy, useState} from "react";
+import React from "react";
+import RegisterDAL from "../DataAccessLayer";
 
-
-import { publicAxios } from "../tools/rest";
-
-
-import { REST_PUBLIC_REGISTER, REST_PUBLIC_DATA } from "../constants/rest";
-import {element} from "prop-types";
-
-let hash = require("object-hash");
+const {getAllAppSys, getAllOrgGroup, getOrgByOrgGroup, getProgramById, getTemplateTypeByProgramIds, createUser}= new RegisterDAL();
 
 const handleInputTemplate = (templateSet, submission) => {
   let templateType= {
@@ -22,10 +16,10 @@ const handleInputTemplate = (templateSet, submission) => {
     templateType.templateCode = submission.submission.name;
     templateType.templateTypeId = submission.submission._id;
     templateSelected = templateType;
-
     templateSet.push(templateSelected);
   }
 }
+
 const handleInputProgram = (programSet, submission) => {
   let program= {
     programId: "",
@@ -40,7 +34,6 @@ const handleInputProgram = (programSet, submission) => {
     program.programCode = submission.program.code;
     program.programId = submission.program._id;
     programSelected = program;
-
     programSet.push(programSelected);
   }
 
@@ -83,46 +76,24 @@ const checkPerission = (submission) => {
 
 export default class RegisterService {
 
-  // searchOrgBySearckKey(searchKey, reference) {
-  //   publicAxios.get(`${REST_PUBLIC_DATA}/organizations/${searchKey}/${reference}`)
-  //     .then(({data: {data: {organizations}}}) => {
-  //       let options = []
-  //       organizations.forEach(org => {
-  //         options.push({label: "(" + org.code + ")" + org.name, value: org.code});
-  //       });
-  //       return options;
-  //     })
-  //     .catch((error) => console.error(error));
-  //   if (searchKey == "OrgGroup") {
-  //     publicAxios.get(`${REST_PUBLIC_DATA}/organizations/${reference}`)
-  //       .then(({data: {data: {organizations}}}) => {
-  //         let options = []
-  //         organizations.forEach(org => {
-  //           options.push({label: "(" + org.code + ")" + org.name, value: org.code});
-  //         });
-  //         return options;
-  //       })
-  //       .catch((error) => console.error(error));
-  //   }
-  // }
-
   getAppSys() {
-    return publicAxios.get(`${REST_PUBLIC_DATA}/AppSys`)
-      .then(({data: {data: {appSys}}}) => {
-        let options = [];
-        appSys.forEach(appSysOptions => {
-          options.push({label: appSysOptions.name, value: {name: appSysOptions.name, _id: appSysOptions._id}});
-        });
+    return(
+      getAllAppSys()
+        .then(({data: {data: {appSys}}}) => {
+          let options = [];
+          appSys.forEach(appSysOptions => {
+            options.push({label: appSysOptions.name, value: {name: appSysOptions.name, _id: appSysOptions._id}});
+          });
 
-        return options;
-      })
-      .catch((error) => console.error(error));
+          return options;
+        })
+        .catch((error) => console.error(error))
+      )
   }
 
   getOrgGroup() {
-    return publicAxios.get(`${REST_PUBLIC_DATA}/organizationGroups`)
+    return(getAllOrgGroup()
       .then(({data: {data: {organizationGroups}}}) => {
-        console.log(organizationGroups);
         let options = [];
         organizationGroups.forEach(orgGroup => {
           options.push({label: orgGroup.name, value: {name: orgGroup.name, _id: orgGroup._id}});
@@ -130,12 +101,13 @@ export default class RegisterService {
 
         return options;
       })
-      .catch((error) => console.error(error));
+      .catch((error) => console.error(error))
+    )
   }
 
   getOrg(orgGroup) {
-    console.log(orgGroup)
-    return publicAxios.get(`${REST_PUBLIC_DATA}/organizations/${orgGroup}`)
+
+    return(getOrgByOrgGroup(orgGroup)
       .then(({data: {data: {organizations}}}) => {
         let options = []
         organizations.forEach(org => {
@@ -143,35 +115,24 @@ export default class RegisterService {
             value: org.id, information: {_id: org._id, name: org.name,  id: org.id, orgGroupId: orgGroup,
               programId: org.programId, authorizedPerson: org.authorizedPerson}});
         });
-
         return options;
       })
-      .catch((error) => console.error(error));
+      .catch((error) => console.error(error))
+    )
   }
-
-  // handleSearchKeyChange (event) {
-  //   setSearchKey(event.value);
-  // }
-  // handleReferenceChange (event) {
-  //   const { target: { name, value } } = event;
-  //   setReference(value);
-  // }
 
   searchOrg (searchKey, reference, options) {
     return options[searchKey]==reference;
-    // const orgOptions = this.searchOrgBySearckKey(searchKey, reference);
-    // setOrganizationOptions(options);
   }
 
 
   getProgram(programInfo) {
-
     let programId = [];
     programInfo.forEach(program => {
       programId.push(program.id)
     })
 
-    return publicAxios.post(`${REST_PUBLIC_DATA}/programs` ,{ programId })
+    return(getProgramById(programId)
       .then(({data: {data: {programs}}}) => {
         let options = [];
         programs.forEach(program => {
@@ -182,29 +143,16 @@ export default class RegisterService {
 
         return options;
       })
-      .catch((error) => console.error(error));
+      .catch((error) => console.error(error))
+    )
   }
-
-    // publicAxios.get(`${REST_PUBLIC_DATA}/organizations/code/${event.value}`)
-    //   .then(({data: {data: {organizations}}}) => {
-    //     console.log(organizations);
-    //     let orgInformation = {name: organizations[0].name, authorizedName: organizations[0].contact.name, phone: organizations[0].contact.telephone, email: organizations[0].contact.email};
-    //     setUserOrgInformation(orgInformation);
-    //   })
-    //   .catch((error) => console.error(error));
-
-
-  // handleTitleChange  (event)  {props.values.title = event.target.value;}
-  //
-  // handleOrgGroupChange (event)  {setOrganizationGroup(event.target.value);}
 
   getTemplateType (userPrograms) {
     let programList = [];
     userPrograms.forEach(userProgram => {
       programList.push(userProgram._id);
     })
-    console.log(programList);
-    return publicAxios.post(`${REST_PUBLIC_DATA}/templateType`,{ programList })
+    return(getTemplateTypeByProgramIds(programList)
       .then(({data: {data: {templateTypes}}}) => {
         let submissionList = [];
         let index = 0;
@@ -234,13 +182,14 @@ export default class RegisterService {
         });
         return submissionList;
       })
-      .catch((error) => console.error(error));
+      .catch((error) => console.error(error))
+    )
   }
 
   sendRegistrationData(registerData) {
-    console.log(registerData)
-    return publicAxios.post(`${REST_PUBLIC_REGISTER}`,{ registerData })
-      .catch((error) => console.error(error));
+    return(createUser(registerData)
+      .catch((error) => console.error(error))
+    )
   }
 
   submissionChange (userSubmissions) {
@@ -283,7 +232,6 @@ export default class RegisterService {
         sysRoleSelected.appSys = userAppSys.code;
         data.sysRole.push(sysRoleSelected);
       }
-      console.log(submission);
       handleInputOrg(sysRoleSelected.org, submission);
     }
   }

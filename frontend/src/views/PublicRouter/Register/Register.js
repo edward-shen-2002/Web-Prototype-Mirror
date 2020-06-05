@@ -3,9 +3,9 @@ import React, {lazy} from "react";
 
 import { Formik } from "formik";
 
-
 import logo from "@images/brand/ON_POS_LOGO_WHITE.svg";
 import SRIBar from "@images/brand/SRI.jpg";
+import SRIHeader from "../../../SRI_Header"
 
 import { ROUTE_PUBLIC_LOGIN, ROUTE_USER_PROFILE } from "@constants/routes";
 
@@ -733,7 +733,7 @@ export default class RegisterUI extends React.Component {
     console.log(this.props);
     return (
       <>
-        <Header/>
+        <SRIHeader/>
         <div className="register">
 
           <br/>

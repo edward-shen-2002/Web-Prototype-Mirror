@@ -1,0 +1,30 @@
+.header {
+
+  &__container {
+    position: relative;
+    min-width: 240px;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__bgnd {
+    background-image: url(../images/brand/HEADER_BGND.png);
+    text-align: center;
+    background-size: contain;
+    min-height: 53px;
+  }
+
+  &__logo {
+    width: 12%;
+    min-height: 53px;
+    max-width: 160px;
+    float: left;
+  }
+
+  &__logoBar {
+    width: 62%;
+    min-height: 53px;
+    max-width: 394px;
+    padding-right: 5%;
+  }
+}
