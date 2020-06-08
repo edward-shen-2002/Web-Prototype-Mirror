@@ -22,10 +22,6 @@ The backend is set to port 3000 and the frontend is set to port 3003. If you hav
 
 Run the command `yarn start`. Both the frontend and backend will be started. Open the application on your browser [here](http://localhost:3003).
 
-##### Admin Access
-
-A dummy admin is automatically created, with the ```username: sampleuser``` and  ```password: password123@```.
-
 ##### Account Email verification
 
 A test email from ```Ethereal``` is used to accept all incoming email messages.
@@ -36,16 +32,3 @@ Login with ```email: julio32@ethereal.email``` and ```password: qdjK2XgTyyHtR9zS
 
 [Jest](https://jestjs.io/docs/en/tutorial-react)
 
-## Issues
-
-### Libraries
-
-#### Xlsx-Populate
-
-There are many functions of Excel that has not been implemented in Xlsx-populate, ranging from commonly to rarely used functions.
-
-## Resources
-
-[Todos](docs/TODOS.md), [Bugs](docs/BUGS.md), [Redo/Undo](docs/HISTORY.md), [Notes](docs/NOTES.md), [Optimizations](docs/OPTIMIZATIONS.md)
-
-[Documents](https://drive.google.com/drive/folders/1I6qYLaF09vQbc-BvzwttG26WZ3t2yZSQ?usp=sharing)
