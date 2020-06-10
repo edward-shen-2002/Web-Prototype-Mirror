@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "install": "yarn --cwd backend && yarn --cwd frontend",
-    "start": "concurrently \"yarn --cwd backendJs start\" \"yarn --cwd frontend start\"",
+    "start": "concurrently \"yarn --cwd backend start\" \"yarn --cwd frontend start\"",
     "start:cra": "concurrently \"yarn --cwd backend start\" \"yarn --cwd frontend start:cra\"",
     "start:frontend": "yarn --cwd frontend start",
     "build:frontend": "yarn --cwd frontend build",
