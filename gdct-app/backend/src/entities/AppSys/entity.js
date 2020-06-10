@@ -3,10 +3,12 @@ export default class AppSysEntity {
     {
       _id,
       name,
-      code
+      code,
+      isActive = true,
     }) {
     this._id = _id
     this.name = name
-    this.code = code
+    this.code = code,
+    this.isActive = isActive;
   }
 }

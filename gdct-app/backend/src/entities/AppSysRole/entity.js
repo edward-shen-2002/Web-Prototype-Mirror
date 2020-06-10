@@ -4,10 +4,12 @@ export default class AppSysRoleEntity {
     {
       _id,
       appSys,
-      role
+      role,
+      isActive = true,
     }) {
     this._id = _id
     this.appSys = appSys
     this.role = role
+    this.isActive = isActive;
   }
 }

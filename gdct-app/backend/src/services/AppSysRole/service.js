@@ -2,7 +2,7 @@ import Container, { Service } from 'typedi'
 import AppSysRoleRepository from '../../repositories/AppSysRole'
 
 // @Service()
-export default class AppSysRoleService {
+export default class AppSysRoleService  {
   constructor() {
     this.AppSysRoleRepository = Container.get(AppSysRoleRepository)
   }

@@ -1,15 +1,16 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model } from "mongoose";
 
 const AppSysRoleModel = model(
-  'AppSysRole',
+  "AppSysRole",
   new Schema(
     {
       appSys: { type: String },
-      role: { type: String }
+      role: { type: String },
+      isActive: { type: Boolean },
     },
-    { minimize: false }
+    { minimize: false },
   ),
-  'AppSysRole'
-)
+  "AppSysRole",
+);
 
-export default AppSysRoleModel
+export default AppSysRoleModel;

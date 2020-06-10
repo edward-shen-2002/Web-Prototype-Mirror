@@ -1,17 +1,16 @@
-import { Schema, model } from 'mongoose'
-
-const ObjectId = Schema.Types.ObjectId
+import { Schema, model } from "mongoose";
 
 const AppRoleModel = model(
-  'AppRole',
+  "AppRole",
   new Schema(
     {
       code: { type: String },
-      name: { type: String }
+      name: { type: String },
+      isActive: { type: Boolean },
     },
-    { minimize: false, autoIndex: true }
+    { minimize: false, autoIndex: true },
   ),
-  'AppRole'
-)
+  "AppRole",
+);
 
-export default AppRoleModel
+export default AppRoleModel;

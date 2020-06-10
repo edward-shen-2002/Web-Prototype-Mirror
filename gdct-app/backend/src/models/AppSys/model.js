@@ -1,15 +1,16 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model } from "mongoose";
 
 const AppSysModel = model(
-  'AppSys',
+  "AppSys",
   new Schema(
     {
       code: { type: String },
-      name: { type: String }
+      name: { type: String },
+      isActive: { type: Boolean },
     },
-    { minimize: false }
+    { minimize: false },
   ),
-  'AppSys'
-)
+  "AppSys",
+);
 
-export default AppSysModel
+export default AppSysModel;

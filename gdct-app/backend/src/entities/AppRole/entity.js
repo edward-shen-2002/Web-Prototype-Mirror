@@ -4,10 +4,12 @@ export default class AppRoleEntity {
     {
       _id,
       code,
-      name
+      name,
+      isActive = true,
     }) {
     this._id = _id
     this.code = code
     this.name = name
+    this.isActive = isActive;
   }
 }
