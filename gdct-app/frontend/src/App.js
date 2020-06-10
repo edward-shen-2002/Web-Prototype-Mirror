@@ -14,6 +14,8 @@ import ReportingPeriods from './views/ReportingPeriods'
 
 import './App.scss'
 import Login from './views/Login'
+import { ROUTE_WORKFLOW } from './constants/routes'
+import WorkflowRouter from './views/WorkflowRouter/WorkflowRouter'
 
 const AppPageRouter = () => {
   // ! For testing purposes
@@ -33,6 +35,7 @@ const AppPageRouter = () => {
           )
         }
       />
+      <Route path={ROUTE_WORKFLOW} component={WorkflowRouter} />
       <Route path="/template_manager" component={TemplateRouter} />
       <Route path="/COA_manager" component={COARouter} />
       <Route path="/appsys_manager" component={AppSysRouter} />
@@ -40,7 +43,7 @@ const AppPageRouter = () => {
       <Route path="/submission_manager" component={SubmissionRouter} />
       <Route path="/reportingPeriods" component={ReportingPeriods} />
       <Route path="/sheetNames" component={SheetNames} />
-      <Route path="/login" component={Login} />
+      {/* <Route path="/login" component={Login} /> */}
     </Switch>
   )
 }
