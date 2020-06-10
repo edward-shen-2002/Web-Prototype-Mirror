@@ -1,5 +1,3 @@
-// TODO : CHANGE THIS TO COMPOSITIONAL ROUTING!!!
-
 export const ROUTE_ROOT = '/'
 
 export const ROUTE_PUBLIC = `${ROUTE_ROOT}public`

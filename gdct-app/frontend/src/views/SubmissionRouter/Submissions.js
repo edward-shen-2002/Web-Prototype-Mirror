@@ -18,6 +18,7 @@ import { useHistory } from 'react-router-dom'
 import { selectSubmissionsStore } from '../../store/SubmissionsStore/selectors'
 import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
 import { TemplateIdButton, StatusIdButton } from '../../components/buttons'
+import AuthPage from '../../components/AuthPage'
 
 const HeaderActions = () => {
   const history = useHistory()
@@ -113,16 +114,18 @@ const Submission = ({ history }) => {
   }, [dispatch])
 
   return (
-    <div className="submissions">
-      <SubmissionHeader />
-      <MaterialTable
-        columns={columns}
-        data={submissions}
-        editable={editable}
-        options={options}
-        actions={actions}
-      />
-    </div>
+    <AuthPage>
+      <div className="submissions">
+        <SubmissionHeader />
+        <MaterialTable
+          columns={columns}
+          data={submissions}
+          editable={editable}
+          options={options}
+          actions={actions}
+        />
+      </div>
+    </AuthPage>
   )
 }
 
