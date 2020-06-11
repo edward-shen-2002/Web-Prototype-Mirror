@@ -15,7 +15,6 @@ import {
   ROUTE_PUBLIC_RECOVERY,
   ROUTE_USER_PROFILE,
 } from '../constants/routes'
-import AuthPage from '../components/AuthPage'
 
 const RegisterButton = () => (
   <Link to={ROUTE_PUBLIC_PREREGISTER}>
