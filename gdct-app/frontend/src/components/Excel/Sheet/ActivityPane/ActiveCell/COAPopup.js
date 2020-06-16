@@ -280,7 +280,10 @@ const GroupPopup = ({ type }) => {
       { _id, value },
       ...newGroups.slice(groupPointer + 1),
     ])
-    setSelectedGroup(_id)
+    if(_id !== selectedGroup) {
+      setSelectedGroup(_id)
+      setSelectedCOAIds({})
+    }
     if(groupPointer < 1) handleUpdateGroupPointer(0)
   }
 
