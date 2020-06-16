@@ -1,6 +1,6 @@
 const SET_GROUPS = (
   state,
-  { id, columnName, category, newGroups, selectedCOAId }
+  { id, columnName, category, newGroups, selectedCOAIds }
 ) => {
   let {
     sheetCellData,
@@ -21,7 +21,13 @@ const SET_GROUPS = (
 
     newSheetCellData[y] = { ...newSheetCellData[y] }
 
-    newSheetCellData[y][1] = { value: selectedCOAId }
+    // if(selectedCOAIds.length) {
+    //   selectedCOAIds.forEach((id, index) => {
+
+    //   })
+    // }
+
+    // newSheetCellData[y][1] = { value: selectedCOAId }
     newSheetCellData[y][2] = { value: newGroups[newGroups.length - 1]._id }
     newSheetCellData[y][3] = { value: groupValues }
   }
