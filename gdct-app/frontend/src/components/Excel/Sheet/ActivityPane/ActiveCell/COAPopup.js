@@ -253,10 +253,7 @@ const GroupPopup = ({ type }) => {
     dispatch(getCOAsRequest())
   }, [dispatch])
 
-  const handleAdd = useCallback(
-    () => dispatch(setGroups({ category: type, newGroups, selectedCOAIds })),
-    [dispatch, newGroups, selectedCOAIds]
-  )
+
 
   const handleCancel = useCallback(() => dispatch(resetActiveCellDialog()), [
     dispatch,
@@ -334,6 +331,11 @@ const GroupPopup = ({ type }) => {
 
     return ids
   }, [newGroups, COATrees, AllCOAIds])
+
+  const handleAdd = useCallback(
+    () => dispatch(setGroups({ category: type, newGroups, selectedCOAIds, COAIds })),
+    [dispatch, newGroups, selectedCOAIds, COAIds]
+  )
 
   const handleSelectCOAId = (id) => setSelectedCOAIds({ ...selectedCOAIds, [id]: !selectedCOAIds[id] })
 
