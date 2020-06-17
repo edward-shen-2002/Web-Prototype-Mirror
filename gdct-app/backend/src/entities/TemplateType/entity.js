@@ -11,7 +11,8 @@ export default class TemplateTypeEntity {
     isSubmittable,
     isInputtable,
     isViewable,
-    isReportable
+    isReportable,
+    isActive
   }) {
     this._id = _id
     this.name = name
@@ -23,5 +24,6 @@ export default class TemplateTypeEntity {
     this.isInputtable = isInputtable
     this.isViewable = isViewable
     this.isReportable = isReportable
+    this.isActive = isActive
   }
 }

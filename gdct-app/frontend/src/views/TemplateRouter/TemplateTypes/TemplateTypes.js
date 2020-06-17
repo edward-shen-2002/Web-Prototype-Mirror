@@ -41,7 +41,7 @@ const TemplateTypesTable = ({ history }) => {
 
   const columns = useMemo(
     () => [
-      { title: '_id', field: '_id', editable: 'never' },
+      //{ title: '_id', field: '_id', editable: 'never' },
       { title: 'Name', field: 'name' },
       { title: 'Description', field: 'description' },
       { title: 'Approvable', type: 'boolean', field: 'isApprovable' },
@@ -50,6 +50,7 @@ const TemplateTypesTable = ({ history }) => {
       { title: 'Inputtable', type: 'boolean', field: 'isInputtable' },
       { title: 'Viewable', type: 'boolean', field: 'isViewable' },
       { title: 'Reportable', type: 'boolean', field: 'isReportable' },
+      { title: 'Active', type: 'boolean', field: 'isActive'}
     ],
     []
   )
