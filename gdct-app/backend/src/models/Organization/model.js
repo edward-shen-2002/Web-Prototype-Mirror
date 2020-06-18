@@ -2,27 +2,38 @@ import { Schema, model } from 'mongoose'
 
 const ObjectId = Schema.Types.ObjectId
 
-const OrganizationModel = model(
+const OrgModel = model(
   'Organization',
   new Schema(
     {
+
+      id: { type: Number, required: true },
+      IFISNum: { type: String, required: true, unique: true },
+      code: { type: String, default: '' },
       name: { type: String, required: true },
-      code: { type: String, required: true, unique: true },
+      legalName: { type: String, default: '' },
       address: { type: String, default: '' },
+      province: { type: String, default: '' },
+      city: { type: String, default: '' },
+      postalCode: { type: String, default: '' },
+      location: [{ type: String, default: '' }],
 
       organizationGroupId: { type: ObjectId, ref: 'OrganizationGroup' },
+
+      active: { type: Boolean, default: true },
 
       managerUserIds: [{ type: ObjectId, ref: 'User' }],
       contactUserId: { type: ObjectId, ref: 'User' },
       authorizedUserId: { type: ObjectId, ref: 'User' },
 
-      location: { type: String, default: '' },
-
-      programIds: [{ type: ObjectId, ref: 'Program' }]
+      programId: [{ type: ObjectId, ref: 'Program' }],
+      
+      effectiveDate: { type: Date, required: true },
+      expiryDate: { type: Date, default: null }
     },
     { minimize: false }
   ),
   'Organization'
 )
 
-export default OrganizationModel
+export default OrgModel

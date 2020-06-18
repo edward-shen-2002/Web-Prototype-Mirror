@@ -5,6 +5,7 @@ import { useSelector, shallowEqual } from 'react-redux'
 
 import TemplateRouter from './views/TemplateRouter'
 import COARouter from './views/COARouter'
+import OrgRouter from './views/OrganizationRouter'
 import AuthPage from './components/AuthPage'
 import Statuses from './views/Statuses'
 import SheetNames from './views/SheetNames'
@@ -40,6 +41,7 @@ const AppPageRouter = () => {
       <Route path="/submission_manager" component={SubmissionRouter} />
       <Route path="/reportingPeriods" component={ReportingPeriods} />
       <Route path="/sheetNames" component={SheetNames} />
+      <Route path="/organizations" component={OrgRouter} />
       <Route path="/login" component={Login} />
     </Switch>
   )
