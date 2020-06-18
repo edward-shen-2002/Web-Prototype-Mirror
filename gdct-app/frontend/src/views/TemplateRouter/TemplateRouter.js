@@ -18,6 +18,7 @@ const TemplateRouter = () => (
       path="/template_manager/templateTypes"
       component={TemplateTypes}
     />
+    {/*<Route exact path="/template_manager/templateTypes/:_id" component={TemplateType} />*/}
     <Route
       exact
       path="/template_manager/templatePackages"
