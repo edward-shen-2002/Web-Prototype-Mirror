@@ -29,21 +29,17 @@ const EditOrganization = ({ match: { params: { _id } } }) => {
 
     const accept = result => {
         // redirect to list of orgs if added to db successfully
-        console.log('AC',result);
         redirect();
     }
 
     const reject = error => {
         // reflect error message on form somehow o.O
-        console.log('IE', error);
     }
 
     const submit = (newObject) => {
         // we need to preserve _id property of old object
-        console.log("SUBMITTING OBJECT: ");
         const temp = Object.assign({}, object, newObject);
         delete temp.tableData;
-        console.log(temp);
         dispatch(updateOrgsRequest(temp, accept, reject));
     }
 
@@ -55,6 +51,7 @@ const EditOrganization = ({ match: { params: { _id } } }) => {
     return (
         <div>
             { object && <ModifyOrganization 
+                title={"Edit Organization"}
                 object={object}
                 submit={submit}
                 cancel={cancel}

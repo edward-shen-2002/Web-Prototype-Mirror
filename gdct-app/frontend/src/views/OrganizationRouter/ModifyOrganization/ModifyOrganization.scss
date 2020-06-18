@@ -4,22 +4,23 @@
     justify-content: space-between;
 }
 
-.tableWrapper {
+.tableContainer {
     display: flex;
     width: 100%;
     padding: 0.5%;
     justify-content: space-between;
 }
 
-MaterialTable {
-    margin: 0.5%;
-    border: 0.5%;
+.tableWrapper {
+    width: 50%;
+    padding: 0.5%;
 }
 
-form {
+.formBody {
     padding: 1%;
 }
 
-input {
-    width: 100%;
+.formActions {
+    display: flex;
+    justify-content: space-between;
 }

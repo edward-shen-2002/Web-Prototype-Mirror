@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ModifyOrganization from '../ModifyOrganization';
+import ModifyOrganization, { currentTime } from '../ModifyOrganization';
 import OrgEntity from '../../../../../backend/src/entities/Organization/entity';
 import { createOrgsRequest } from '../../../store/thunks/organization';
 import { useDispatch } from 'react-redux';
@@ -9,8 +9,25 @@ import { useHistory } from 'react-router-dom';
 const CreateOrganization = () => {
 
     const history = useHistory();
-    const initialState = new OrgEntity();
     const dispatch = useDispatch();
+
+    // all fields on form must have value or else (un)controlled input warning will occur
+    const initialState = new OrgEntity({ 
+        id: 0,
+        IFISNum: '',
+        code: '',
+        name: '',
+        legalName: '',
+        address: '',
+        province: '',
+        city: '',
+        postalCode: '',
+        location: '',
+        active: true,
+        programId: [],
+        effectiveDate: currentTime(),
+        expiryDate: null
+    });
 
     const redirect = () => {
         history.push('/organizations');
@@ -18,13 +35,11 @@ const CreateOrganization = () => {
 
     const accept = result => {
         // redirect to list of orgs if added to db successfully
-        console.log('AC',result);
         redirect();
     }
 
     const reject = error => {
-        // log error message somehow o.O
-        console.log('IE', error);
+        // reflect error message on form somehow o.O
     }
 
     const submit = (newObject) => {
@@ -39,7 +54,8 @@ const CreateOrganization = () => {
 
     return (
         <div>
-            <ModifyOrganization 
+            <ModifyOrganization
+                title={'Create Organization'}
                 object={initialState} 
                 submit={submit}
                 cancel={cancel}

@@ -1,43 +1,37 @@
 import React, { useMemo, useEffect, useState } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
-import OrgEntity from '../../../../../backend/src/entities/Organization/entity'
 
 import {
-  getOrgsRequest,
-  createOrgsRequest,
-  deleteOrgsRequest,
-  updateOrgsRequest,
-} from '../../../store/thunks/organization'
+  getProgramsRequest,
+  createProgramsRequest,
+  deleteProgramsRequest,
+  updateProgramsRequest,
+} from '../../../store/thunks/Program'
 
 import MaterialTable from 'material-table'
 import Paper from '@material-ui/core/Paper'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
+import AppBar from '@material-ui/core/AppBar'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
 
 import Typography from '@material-ui/core/Typography'
 
 import './ModifyOrganization.scss'
 import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors'
-import { selectOrgsStore } from '../../../store/OrganizationsStore/selectors'
+import { selectProgramsStore } from '../../../store/ProgramsStore/selectors'
 
-const OrganizationHeader = () => {
+const OrganizationHeader = ({ title }) => {
   return (
     <Paper className="header">
-      <Typography variant="h5">Modify Organization</Typography>
+      <Typography variant="h5">{title}</Typography>
       {/* <HeaderActions/> */}
     </Paper>
   )
 }
-
-const FormNav = (props) => {
-    return (
-        <div>
-            <button onClick={props.gotoInfo}>Organization Info</button>
-            <button onClick={props.gotoList}>Program List</button>
-        </div>
-    )
-};
 
 const TextGroup = ({ object, attribute, text, handleChanges }) => (
     <div className="TextGroup">
@@ -46,17 +40,16 @@ const TextGroup = ({ object, attribute, text, handleChanges }) => (
             name={attribute}
             type="text"
             placeholder={`Enter ${text}`}
-            value={object[attribute]}
+            value={object[attribute] || ''}
             onChange={handleChanges}
             disabled={!object.active}
         />
     </div>    
 );
 
-
 const ButtonGroup = ({ object, attribute, text, handleChanges }) => (
     <div>
-        <label htmlFor={attribute}>{text}</label>
+        <label htmlFor={attribute}>{text}</label> <br/>
         <input
             name={attribute}
             type="checkbox"
@@ -148,42 +141,47 @@ const OrgInfo = ({ object, handleChanges }) => (
                 text={'Postal Code'}
                 handleChanges={handleChanges}
             />
+            <TextGroup
+                object={object}
+                attribute={'location'}
+                text={'Location'}
+                handleChanges={handleChanges}
+            />
         </span>
 
         <span className="formRow" id="userInfo">
             <TextGroup
                 object={object}
-                attribute={'address'}
-                text={'Organization Address'}
+                attribute={'authorizedUserId'}
+                text={'Authorized User'}
                 handleChanges={handleChanges}
             />
         </span>
-        
     </div>
 );
 
 const ProgList = ({ object, updateState }) => {
-    // need to somehow get list of programs
     
     const dispatch = useDispatch();
 
     const programId = object.programId;
 
     const { programList } = useSelector(state => ({
-        programList: ([/*get list of all progs from redux store*/])
+        programList: selectFactoryRESTResponseTableValues(selectProgramsStore)(state)
     }));
 
     useEffect(() => {
-        // dispatch request to redux store
-        // dispatch(getProgsRequest())
-    }, [dispatch]);
+        dispatch(getProgramsRequest());
+    }, []);
 
-    const OrgProgs = programList.filter(elem => programId.includes(elem._id));
-    const nonOrgProgs = programList.filter(elem => !programId.includes(elem._id));
-    
+    const OrgProgs = () => programList.filter(elem => programId.includes(elem._id));
+    const nonOrgProgs = () => programList.filter(elem => !programId.includes(elem._id));
+
     const columns = useMemo(
         () => [
             { title: 'Name', field: 'name' },
+            { title: 'Code', field: 'code' },
+            { title: 'Active', type: 'boolean', field: 'isActive' }
         ]
     );
 
@@ -195,10 +193,10 @@ const ProgList = ({ object, updateState }) => {
     const left_actions = useMemo(
         () => [
             {
-                icon: AddIcon,
-                tooltip: 'Remove Program from Organization',
+                icon: DeleteIcon,
+                tooltip: 'Remove from Organization',
                 onClick: (_event, prog) => 
-                    updateState('programId', object.programId.filter(elem => !elem==prog._id))
+                    updateState('programId', object.programId.filter(elem => elem!==prog._id))
             }
         ]
     );
@@ -206,87 +204,125 @@ const ProgList = ({ object, updateState }) => {
     const right_actions = useMemo(
         () => [
             {
-                icon: DeleteIcon,
-                tooltip: 'Add Program to Organization',
+                icon: AddIcon,
+                tooltip: 'Add to Organization',
                 onClick: (_event, prog) =>
-                    updateState('programId', object.programId.concat(prog))
+                    updateState('programId', object.programId.concat(prog._id))
             }
         ]
     );
 
     return (
-        <div className="tableWrapper">
-            <MaterialTable
-                title="Remove from Organization"
-                columns={columns}
-                data={OrgProgs}
-                options={options}
-                actions={left_actions}
-            />
-            <MaterialTable
-                title="Add to Organization"
-                columns={columns}
-                data={nonOrgProgs}
-                options={options}
-                actions={right_actions}
-            />
+        <div className="tableContainer">
+            <div className="tableWrapper">
+                <MaterialTable
+                    title="Organization Programs"
+                    columns={columns}
+                    data={OrgProgs()}
+                    options={options}
+                    actions={left_actions}
+                />
+            </div>
+            <div className="tableWrapper">
+                <MaterialTable
+                    title="Other Programs"
+                    columns={columns}
+                    data={nonOrgProgs()}
+                    options={options}
+                    actions={right_actions}
+                />
+            </div>
         </div>
     );
 };
 
-const OrganizationForm = ({ object, submit, cancel, handleChanges, updateState }) => {
-    
-    const [visiblePage, updateVisiblePage] = useState(0);
-
-    const gotoInfo = (e) => {
-        e.preventDefault();
-        updateVisiblePage(0);
-    };
-    const gotoList = (e) => {
-        e.preventDefault();
-        updateVisiblePage(1);
-    };
+const TabPanel = (props) => {
+    const { children, value, index, ...other } = props;
 
     return (
-        <Paper className="body">
-            <form onSubmit={()=>false}>
-                <FormNav gotoInfo={gotoInfo} gotoList={gotoList} />
-                {visiblePage == 0 && <OrgInfo object={object} handleChanges={handleChanges} />}
-                {visiblePage == 1 && <ProgList object={object} updateState={updateState} />}
-                <br/>
+        <div
+            role="tabpanel"
+            hidden={value!==index}
+            id={`tabpanel-${index}`}
+            aria-labelledby={`tab-${index}`}
+            display={value===index? 'inline':'none'}
+            {...other}
+        >
+            {children}
+        </div>
+    );
+}
 
-                <Button
-                    type="button"
-                    color="primary"
-                    variant="contained"
-                    size="large"
-                    onClick={() => cancel()}
-                >Cancel</Button>
-                <Button
-                    type="button"
-                    color="primary"
-                    variant="contained"
-                    size="large"
-                    onClick={() => submit(object)}
-                >Submit</Button>
-                
+const makeIdentifier = (index) => ({
+    id: `tab-${index}`,
+    'aria-controls': `tabpanel-${index}`
+});
+
+const OrganizationForm = (props) => {
+
+    const [current, setCurrent] = useState(0);
+
+    const handleChange = (event, value) => setCurrent(value);
+
+    return (
+        <Paper className="formBody">
+            <form onSubmit={() => false}>
+                <AppBar position="static">
+                    <Tabs value={current} onChange={handleChange} aria-label="form navigation">
+                        <Tab label="Organization Info" {...makeIdentifier(0)}/>
+                        <Tab label="Program List" {...makeIdentifier(1)}/>
+                    </Tabs>
+                </AppBar>
+
+                <TabPanel value={current} index={0}>
+                    <OrgInfo {...props} />
+                </TabPanel>
+                <TabPanel value={current} index={1}>
+                    <ProgList {...props} />
+                </TabPanel>
+
+                <div className="formActions">
+                    <Button
+                        type="button"
+                        color="primary"
+                        variant="contained"
+                        size="large"
+                        onClick={() => props.cancel()}
+                    >Cancel</Button>
+                    <Button
+                        type="button"
+                        color="primary"
+                        variant="contained"
+                        size="large"
+                        onClick={() => props.submit()}
+                    >Submit</Button>
+                </div>
             </form>
         </Paper>
     );
+};
+
+const currentTime = () => {
+    const now = new Date();
+    return now.toISOString();
 }
 
 // pass in empty object to create, pass in existing object to view/modify
 class ModifyOrganization extends React.Component {
+
     state = {};
+
     constructor(props){
         super(props);
         const temp = Object.assign({}, props.object);
         delete temp._id;
         this.state = temp;
     }
+
     updateState = (name, value) => {
         this.setState(state => Object.assign({},state,{ [name]: value }));
     }
+
     handleChanges = (e) => {
         const {name, value, checked, type} = e.target;
         let updateValue;
@@ -301,20 +337,35 @@ class ModifyOrganization extends React.Component {
             default:
                 updateValue = value;
         }
+
+        if (name === "active") {
+            if (updateValue) {
+                this.updateState('expiryDate', null);
+            }
+            else{
+                // "delete" or expire org
+                this.updateState('expiryDate', currentTime());
+            }
+        }
+
         this.updateState(name, updateValue);
     };
+
     render = () => (
-        <div className="create">
-            <OrganizationHeader />
-            <OrganizationForm 
+        <div>
+            <OrganizationHeader
+                title={this.props.title}
+            />
+            <OrganizationForm
                 object={this.state}
-                submit={this.props.submit}
+                submit={() => this.props.submit(this.state)}
                 cancel={this.props.cancel}
                 handleChanges={this.handleChanges}
                 updateState={this.updateState}
             />
         </div>
     );
+
 };
 
-export default ModifyOrganization;
+export { currentTime, ModifyOrganization as default };

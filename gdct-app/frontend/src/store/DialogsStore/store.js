@@ -1,5 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+const OPEN_ORGANIZATION_DIALOG = (state) => ({
+  ...state,
+  isOrganizationDialogOpen: true
+})
+const CLOSE_ORGANIZATION_DIALOG = (state) => ({
+  ...state,
+  isOrganizationDialogOpen: false
+})
+
 const OPEN_COA_GROUP_DIALOG = (state) => ({
   ...state,
   isCOAGroupDialogOpen: true,
@@ -56,7 +65,8 @@ const reducers = {
   CLOSE_COA_GROUP_DIALOG,
   OPEN_COA_DIALOG,
   CLOSE_COA_DIALOG,
-
+  OPEN_ORGANIZATION_DIALOG,
+  CLOSE_ORGANIZATION_DIALOG,
   CLOSE_USER_DIALOG,
   OPEN_USER_DIALOG,
   OPEN_STATUS_DIALOG,
@@ -74,6 +84,7 @@ const reducers = {
 }
 
 const initialState = {
+  isOrganizationDialogOpen: false,
   isCOADialogOpen: false,
   isCOAGroupDialogOpen: false,
   isUserDialogOpen: false,
