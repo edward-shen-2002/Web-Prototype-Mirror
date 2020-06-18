@@ -1,56 +1,60 @@
 import { Service } from 'typedi'
 import { Router } from 'express'
-import ColumnNameService from '../../services/ColumnName'
+import ProgramService from '../../services/Program'
 
-const ColumnNameController = Service(
-  [ColumnNameService],
+const ProgramController = Service(
+  [ProgramService],
   (service) => {
     const router = Router()
     return (
       () => {
         router.get(
-          '/columnNames',
+          '/programs',
           (req, res, next) => {
             // Get query from middleware -- auth handler
 
             service
-              .findColumnName({})
-              .then((columnNames) => res.json({ columnNames }))
+              .findProgram({})
+              .then((programs) => res.json({ programs }))
               .catch(next)
           }
         )
 
         router.post(
-          '/columnNames',
+          '/programs',
           (req, res, next) => {
             service
-              .createColumnName(req.body.columnName)
-              .then((columnName) => res.json({ columnName }))
+              .createProgram(req.body.program)
+              .then((program) => res.json({ program }))
+              .catch((error) => {
+                console.error(error)
+                throw error
+              })
               .catch(next)
           }
         )
 
         router.put(
-          '/columnNames/:_id',
+          '/programs/:_id',
           (req, res, next) => {
             const { _id } = req.params
-            const { columnName } = req.body
+            const { program } = req.body
 
 
             service
-              .updateColumnName(_id, columnName)
+              .updateProgram(_id, program)
               .then(() => res.end())
               .catch(next)
           }
         )
 
         router.delete(
-          '/columnNames/:_id',
+          '/programs/:_id',
           (req, res, next) => {
             const { _id } = req.params
 
             service
-              .deleteColumnName(_id)
+              .deleteProgram(_id)
               .then(() => res.end())
               .catch(next)
           }
@@ -62,4 +66,4 @@ const ColumnNameController = Service(
   }
 )
 
-export default ColumnNameController
+export default ProgramController
