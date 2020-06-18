@@ -8,6 +8,7 @@ import COARouter from './views/COARouter'
 import OrgRouter from './views/OrganizationRouter'
 import AuthPage from './components/AuthPage'
 import Statuses from './views/Statuses'
+import Programs from './views/Programs'
 import SheetNames from './views/SheetNames'
 import AppSysRouter from './views/AppSysRouter'
 import SubmissionRouter from './views/SubmissionRouter'
@@ -38,6 +39,7 @@ const AppPageRouter = () => {
       <Route path="/COA_manager" component={COARouter} />
       <Route path="/appsys_manager" component={AppSysRouter} />
       <Route path="/statuses" component={Statuses} />
+      <Route path="/programs" component={Programs} />
       <Route path="/submission_manager" component={SubmissionRouter} />
       <Route path="/reportingPeriods" component={ReportingPeriods} />
       <Route path="/sheetNames" component={SheetNames} />

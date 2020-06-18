@@ -12,6 +12,7 @@ import SendIcon from '@material-ui/icons/Send'
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
 import GridOnIcon from '@material-ui/icons/GridOn'
 import AllInclusiveIcon from '@material-ui/icons/AllInclusive'
+import SpaIcon from '@material-ui/icons/Spa'
 import AppsIcon from '@material-ui/icons/Apps'
 
 const createUserNavigation = () => {
@@ -139,6 +140,12 @@ const createUserNavigation = () => {
       type: 'menu',
       url: '/statuses',
       icon: <AllInclusiveIcon />,
+    },
+    {
+      name: 'Programs',
+      type: 'menu',
+      url: '/programs',
+      icon: <SpaIcon />,
     },
     {
       name: 'Reporting Periods',

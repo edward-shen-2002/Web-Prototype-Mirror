@@ -18,6 +18,10 @@ export const selectIsStatusDialogOpen = createSelector(
   [selectDialogsStore],
   (dialogsStore) => dialogsStore.isStatusDialogOpen
 )
+export const selectIsProgramDialogOpen = createSelector(
+  [selectDialogsStore],
+  (dialogsStore) => dialogsStore.isProgramDialogOpen
+)
 export const selectIsSubmissionPeriodDialogOpen = createSelector(
   [selectDialogsStore],
   (dialogsStore) => dialogsStore.isSubmissionPeriodDialogOpen

@@ -14,6 +14,7 @@ import Database from './loaders/database'
 
 import TemplateController from './controllers/Template'
 import StatusController from './controllers/Status'
+import ProgramController from './controllers/Program'
 import TemplateTypeController from './controllers/TemplateType'
 import TemplatePackageController from './controllers/TemplatePackage'
 import SubmissionPeriodController from './controllers/SubmissionPeriod'
@@ -57,6 +58,8 @@ dbUtil.connect()
 app.use('/template_manager', Container.get(TemplateController))
 app.use('/template_manager', Container.get(TemplatePackageController))
 app.use('/template_manager', Container.get(TemplateTypeController))
+
+app.use('/', Container.get(ProgramController))
 
 app.use('/designer', Container.get(StatusController))
 app.use('/', Container.get(ReportingPeriodController))

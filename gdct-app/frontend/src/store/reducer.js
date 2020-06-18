@@ -16,6 +16,7 @@ import DialogsStore from './DialogsStore/store'
 import ReportingPeriodsStore from './ReportingPeriodsStore/store'
 
 import StatusesStore from './StatusesStore/store'
+import ProgramsStore from './ProgramsStore/store'
 import SubmissionPeriodsStore from './SubmissionPeriodsStore/store'
 import SubmissionsStore from './SubmissionsStore/store'
 import COATreeStore from './COATreeStore/store'
@@ -26,7 +27,7 @@ import OrgsStore from './OrganizationsStore/store'
 
 export const root = combineReducers({
   StatusesStore: StatusesStore.reducer,
-
+  ProgramsStore: ProgramsStore.reducer,
   TemplatesStore: TemplatesStore.reducer,
   TemplateTypesStore: TemplateTypesStore.reducer,
   TemplatePackagesStore: TemplatePackagesStore.reducer,
