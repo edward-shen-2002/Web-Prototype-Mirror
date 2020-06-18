@@ -7,6 +7,7 @@ import NotFound from '../../components/NotFound'
 import Template from './Template/Template'
 import Templates from './Templates/Templates'
 import TemplateTypes from './TemplateTypes'
+import TemplateType from './TemplateType'
 import TemplatePackages from './TemplatePackages'
 
 const TemplateRouter = () => (
@@ -18,7 +19,7 @@ const TemplateRouter = () => (
       path="/template_manager/templateTypes"
       component={TemplateTypes}
     />
-    {/*<Route exact path="/template_manager/templateTypes/:_id" component={TemplateType} />*/}
+    <Route exact path="/template_manager/templateTypes/:_id" component={TemplateType} />
     <Route
       exact
       path="/template_manager/templatePackages"
