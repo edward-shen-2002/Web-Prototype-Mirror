@@ -27,10 +27,14 @@ import navigationConfig from './config'
 import { useCallback } from 'react'
 
 const drawerWidth = 240
+const marginTop = 55
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
+    width: '100vw',
+    height: '100vh',
+    overflow: 'auto'
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -91,7 +95,10 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(5),
-    marginTop: 55,
+    // margin: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    height: `100% - ${marginTop}px`,
+    marginTop: marginTop,
   },
 }))
 

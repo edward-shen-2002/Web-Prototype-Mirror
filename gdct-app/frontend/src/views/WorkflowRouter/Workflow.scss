@@ -1,0 +1,27 @@
+.workflow {
+  overflow: hidden !important;
+  height: 100%;
+
+  display: flex;
+
+
+}
+
+.workflowPicker {
+  margin-left: 20px;
+  width: 400px;
+  border: 2px solid lightgray;
+  border-radius: 5px;
+
+  &__search {
+    width: 100%;
+    padding: 0 20px !important;
+  }
+}
+
+.status {
+  &:hover {
+    background-color: lightgray;
+    cursor: grab;
+  }
+}

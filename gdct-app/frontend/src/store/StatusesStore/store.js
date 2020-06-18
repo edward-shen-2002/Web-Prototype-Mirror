@@ -8,4 +8,6 @@ export const StatusesStore = createSlice({
   reducers: REST_REDUCERS,
 })
 
+export const StatusesStoreActions = StatusesStore.actions
+
 export default StatusesStore

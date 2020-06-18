@@ -1,4 +1,4 @@
-import WorkflowStore from '../WorkflowStore/store'
+import WorkflowStore from '../WorkflowsStore/store'
 import workflowController from '../../controllers/workflow'
 
 export const loadWorkflow = () => (dispatch) => {

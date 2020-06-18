@@ -1,5 +1,6 @@
-@import "~font-awesome/css/font-awesome.min.css";
-@import "~bootstrap/dist/css/bootstrap.min.css";
+@use "~font-awesome/css/font-awesome.min.css";
+@use "~bootstrap/dist/css/bootstrap.min.css";
+@import './styles/styles.scss';
 
 .appContainer {
   min-height: fit-content;
