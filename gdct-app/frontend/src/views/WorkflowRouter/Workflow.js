@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react'
-import { FlowChart, actions,  } from '@mrblenny/react-flow-chart';
+import { FlowChart, actions, REACT_FLOW_CHART,  } from '@mrblenny/react-flow-chart';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import { selectFactoryRESTResponseValues } from '../../store/common/REST/selectors';
 import { selectStatusesStore } from '../../store/StatusesStore/selectors';
@@ -16,11 +16,39 @@ import { selectWorkflowChart } from '../../store/WorkflowStore/selectors'
 import { WorkflowStoreActions } from '../../store/WorkflowStore/store';
 
 const StatusItems = ({ statuses }) => (
-  <List>
+  <List className="statuses">
     {
       statuses.map(
         ({ _id, name }) => (
-          <Listitem className="status" key={_id} button>{name}</Listitem>
+          <Listitem 
+            className="statuses__status" 
+            key={_id} 
+            button
+            draggable={true}
+            onDragStart={(event) => {
+              event.dataTransfer.setData(
+                REACT_FLOW_CHART, 
+                JSON.stringify({ 
+                  type: name, 
+                  ports: {
+                    port1: {
+                      id: 'port1',
+                      type: 'input',
+                    },
+                    port2: {
+                      id: 'port2',
+                      type: 'output',
+                    },
+                  }, 
+                  properties: {
+                    label: 'example link label',
+                  },
+                })
+              )
+            }}
+          >
+            {name}
+          </Listitem>
         )
       )
     }
@@ -31,6 +59,13 @@ const WorkflowSideBar = ({ stateActions }) => {
   const dispatch = useDispatch()
   const statuses = useSelector(
     (state) => selectFactoryRESTResponseValues(selectStatusesStore)(state),
+    shallowEqual
+  )
+
+  const chart = useSelector(
+    (state) => (
+      selectWorkflowChart(state)
+    ),
     shallowEqual
   )
 

@@ -1,13 +1,13 @@
+@import '../../styles/mixins/shadows';
+
 .workflow {
-  overflow: hidden !important;
   height: 100%;
 
   display: flex;
-
-
 }
 
 .workflowPicker {
+  @include shadow;
   margin-left: 20px;
   width: 400px;
   border: 1px solid lightgray;
@@ -16,6 +16,7 @@
 
   color: white;
   background-color: rgb(14, 71, 194);
+  overflow: auto;
 
   &__search {
     width: 100%;
@@ -33,14 +34,17 @@
   }
 }
 
-.status {
-  // box-sizing: content-box;
-  font-size: 20px;
-  border-radius: 4px;
-  border: 2px solid transparent !important;
-  &:hover {
-    // color: black;
-    background-color: rgb(22, 57, 139) !important;
-    border: 2px solid white;
+.statuses {
+  // max-height: 100px;
+  overflow: auto;
+  &__status {
+    font-size: 20px;
+    border-radius: 4px;
+    border: 2px solid transparent !important;
+  
+    &:hover {
+      background-color: rgb(22, 57, 139) !important;
+      border: 2px solid white;
+    }
   }
 }
