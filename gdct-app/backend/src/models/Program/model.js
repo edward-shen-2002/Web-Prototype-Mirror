@@ -4,10 +4,11 @@ const ProgramModel = model(
   'Program',
   new Schema(
     {
-      name: { type: String, required: true, unique: true },
-      code: String
+      name: { type: String, required: true },
+      code: { type: String },
+      isActive: { type: Boolean }
     },
-    { minimize: false }
+    { minimize: false, timestamps: true }
   ),
   'Program'
 )
