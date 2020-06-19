@@ -305,7 +305,7 @@ const GroupPopup = ({ type }) => {
       definedGroups = COATrees.filter((COATree) => COATree.parentId === leafId)
     } else {
       definedGroups = COATrees.filter((COATree) => COATree.parentId === undefined)
-    } 
+    }  
 
     return definedGroups
   }, [COATrees, selectedGroup, newGroups, groupPointer])
@@ -355,7 +355,7 @@ const GroupPopup = ({ type }) => {
         handleAddNewLink={handleAddNewLink}
         handleSelectCOAId={handleSelectCOAId}
       />
-      <DialogActions handleAdd={handleAdd} handleCancel={handleCancel} />
+      <DialogActions addText="Apply" cancelText="Finish" handleAdd={handleAdd} handleCancel={handleCancel} />
     </div>
   )
 }

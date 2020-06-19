@@ -114,18 +114,16 @@ const Submission = ({ history }) => {
   }, [dispatch])
 
   return (
-    <AuthPage>
-      <div className="submissions">
-        <SubmissionHeader />
-        <MaterialTable
-          columns={columns}
-          data={submissions}
-          editable={editable}
-          options={options}
-          actions={actions}
-        />
-      </div>
-    </AuthPage>
+    <div className="submissions">
+      <SubmissionHeader />
+      <MaterialTable
+        columns={columns}
+        data={submissions}
+        editable={editable}
+        options={options}
+        actions={actions}
+      />
+    </div>
   )
 }
 

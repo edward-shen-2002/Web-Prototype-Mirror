@@ -37,7 +37,6 @@ const SET_GROUPS = (
   }
 
   newState.sheetCellData = newSheetCellData
-  newState.activeCellDialog = ''
 
   return newState
 }
