@@ -63,7 +63,8 @@ const Organizations = ({ history }) => {
       { title: 'Name', field: 'name' },
       { title: 'Legal Name', field: 'legalName' },
       { title: 'Organization ID', field: 'id' },
-      { title: 'IFIS Number', field: 'IFISNum'}
+      { title: 'IFIS Number', field: 'IFISNum'},
+      { title: 'Active', type: 'boolean', field: 'active' }
     ],
     []
   )

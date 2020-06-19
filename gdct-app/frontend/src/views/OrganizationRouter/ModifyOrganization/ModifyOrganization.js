@@ -2,10 +2,7 @@ import React, { useMemo, useEffect, useState } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import {
-  getProgramsRequest,
-  createProgramsRequest,
-  deleteProgramsRequest,
-  updateProgramsRequest,
+  getProgramsRequest
 } from '../../../store/thunks/Program'
 
 import MaterialTable from 'material-table'
@@ -17,12 +14,15 @@ import TextField from '@material-ui/core/TextField'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
+import Checkbox from '@material-ui/core/Checkbox'
 
 import Typography from '@material-ui/core/Typography'
 
 import './ModifyOrganization.scss'
 import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors'
 import { selectProgramsStore } from '../../../store/ProgramsStore/selectors'
+import PropTypes from 'prop-types'
+import { userIdButton } from '../../../components/buttons'
 
 const OrganizationHeader = ({ title }) => {
   return (
@@ -33,130 +33,158 @@ const OrganizationHeader = ({ title }) => {
   )
 }
 
-const TextGroup = ({ object, attribute, text, handleChanges }) => (
-    <div className="TextGroup">
-        <label htmlFor={attribute}>{text}</label> <br/>
-        <input
-            name={attribute}
-            type="text"
-            placeholder={`Enter ${text}`}
-            value={object[attribute] || ''}
-            onChange={handleChanges}
-            disabled={!object.active}
+const Label = ({ attribute, text }) => (
+    <label htmlFor={attribute}>
+        <Typography variant="subtitle2">
+            {text}
+        </Typography>
+    </label>
+);
+
+const getValue = (object, attribute) => {
+    let value;
+    switch(typeof object[attribute]) {
+        case 'undefined':
+            value = '';
+            break;
+        default:
+            value = object[attribute];
+    }
+    switch(attribute) {
+        case 'effectiveDate':
+            const tmp = new Date(value);
+            value = tmp.toString();
+    }
+    return { value };
+}
+
+const Input = ({ object, attribute, text, handleChanges, type, cannotEdit }) => (
+    <TextField
+        name={attribute}
+        type={type}
+        placeholder={`Enter ${text}`}
+        {...getValue(object, attribute)}
+        variant="outlined"
+        onChange={handleChanges}
+        fullWidth={true}
+        disabled={!object.active || cannotEdit}
+    />
+);
+
+const TextGroup = (props) => (
+    <div className="InputGroup" style={{width: props.fullWidth? '100%' : '23%'}}>
+        <Label {...props} />
+        <br/>
+        <Input {...props} type={"text"} />
+    </div>    
+);
+
+// NOT a generic button group, DO NOT REUSE for other purposes
+const ButtonGroup = (props) => (
+    <div className="InputGroup">
+        <Label {...props} />
+        <Checkbox
+            color="primary"
+            name={props.attribute}
+            checked={!props.object[props.attribute]}
+            onChange={props.handleChanges}
         />
     </div>    
 );
 
-const ButtonGroup = ({ object, attribute, text, handleChanges }) => (
+const NumberGroup = (props) => (
+    <div className="InputGroup" style={{width: '23%'}}>
+        <Label {...props} />
+        <br/>
+        <Input {...props} type="number" />
+    </div>    
+);
+
+const OrgInfo = (props) => (
     <div>
-        <label htmlFor={attribute}>{text}</label> <br/>
-        <input
-            name={attribute}
-            type="checkbox"
-            placeholder={`Enter ${text}`}
-            checked={object[attribute]}
-            onChange={handleChanges}
-        />
-    </div>    
-);
-
-const NumberGroup = ({ object, attribute, text, handleChanges }) => (
-    <div className="NumberGroup">
-        <label htmlFor={attribute}>{text}</label> <br/>
-        <input
-            name={attribute}
-            type="number"
-            placeholder={`Enter ${text}`}
-            value={object[attribute]}
-            onChange={handleChanges}
-            disabled={!object.active}
-        />
-    </div>    
-);
-
-const OrgInfo = ({ object, handleChanges }) => (
-    <div>
-        <ButtonGroup
-            object={object}
-            attribute={'active'}
-            text={"Active"}
-            handleChanges={handleChanges}
-        />
-
-        <div className="formRow" id="basicInfo">
-            <TextGroup
-                object={object}
-                attribute={'name'}
-                text={"Organization Name"}
-                handleChanges={handleChanges}
-            />
-            <TextGroup
-                object={object}
-                attribute={'legalName'}
-                text={'Legal Name'}
-                handleChanges={handleChanges}
-            />
-            <NumberGroup
-                object={object}
-                attribute={'id'}
-                text={'Organization ID'}
-                handleChanges={handleChanges}
-            />
-            <TextGroup
-                object={object}
-                attribute={'code'}
-                text={"Organization Code"}
-                handleChanges={handleChanges}
-            />
-            <TextGroup
-                object={object}
-                attribute={'IFISNum'}
-                text={"IFIS Number"}
-                handleChanges={handleChanges}
+        <div align="right">
+            <ButtonGroup
+                {...props}
+                attribute={'active'}
+                text={"Expire Organization"}
             />
         </div>
 
-        <span className="formRow" id="locationInfo">
+        <TextGroup
+            {...props}
+            attribute={'name'}
+            text={"Organization Name*"}
+            fullWidth={true}
+        />
+        <TextGroup
+            {...props}
+            attribute={'legalName'}
+            text={'Legal Name'}
+            fullWidth={true}
+        />
+
+        <div className="formRow" id="basicInfo">
+            <NumberGroup
+                {...props}
+                attribute={'id'}
+                text={'Organization ID*'}
+            />
             <TextGroup
-                object={object}
+                {...props}
+                attribute={'code'}
+                text={"Organization Code"}
+            />
+            <TextGroup
+                {...props}
+                attribute={'IFISNum'}
+                text={"IFIS Number*"}
+            />
+            <TextGroup
+                {...props}
+                attribute={'effectiveDate'}
+                text={"Effective Date"}
+                cannotEdit={true}
+            />
+        </div>
+
+        <div className="formRow" id="locationInfo">
+            <TextGroup
+                {...props}
                 attribute={'address'}
                 text={'Address'}
-                handleChanges={handleChanges}
             />
             <TextGroup
-                object={object}
+                {...props}
                 attribute={'city'}
                 text={'City'}
-                handleChanges={handleChanges}
             />
             <TextGroup
-                object={object}
+                {...props}
                 attribute={'province'}
                 text={'Province'}
-                handleChanges={handleChanges}
             />
             <TextGroup
-                object={object}
+                {...props}
                 attribute={'postalCode'}
                 text={'Postal Code'}
-                handleChanges={handleChanges}
             />
-            <TextGroup
-                object={object}
-                attribute={'location'}
-                text={'Location'}
-                handleChanges={handleChanges}
-            />
-        </span>
+        </div>
 
-        <span className="formRow" id="userInfo">
+        <div className="formRow" id="userInfo">
             <TextGroup
-                object={object}
+                {...props}
                 attribute={'authorizedUserId'}
                 text={'Authorized User'}
-                handleChanges={handleChanges}
             />
-        </span>
+            {/*
+                <userIdButton onChange={props.handleChanges}/>
+            */}
+            <TextGroup
+                {...props}
+                attribute={'contactUserId'}
+                text={'Contact User'}
+            />
+        </div>
     </div>
 );
 
@@ -220,7 +248,7 @@ const ProgList = ({ object, updateState }) => {
                     columns={columns}
                     data={OrgProgs()}
                     options={options}
-                    actions={left_actions}
+                    actions={object.active? left_actions : null}
                 />
             </div>
             <div className="tableWrapper">
@@ -229,7 +257,7 @@ const ProgList = ({ object, updateState }) => {
                     columns={columns}
                     data={nonOrgProgs()}
                     options={options}
-                    actions={right_actions}
+                    actions={object.active? right_actions : null}
                 />
             </div>
         </div>
@@ -242,6 +270,7 @@ const TabPanel = (props) => {
     return (
         <div
             role="tabpanel"
+            className="tabpanel"
             hidden={value!==index}
             id={`tabpanel-${index}`}
             aria-labelledby={`tab-${index}`}
@@ -265,37 +294,39 @@ const OrganizationForm = (props) => {
     const handleChange = (event, value) => setCurrent(value);
 
     return (
-        <Paper className="formBody">
+        <Paper>
             <form onSubmit={() => false}>
-                <AppBar position="static">
-                    <Tabs value={current} onChange={handleChange} aria-label="form navigation">
+                <AppBar position="static" color="transparent" style={{background: 'transparent',boxShadow: 'none'}}>
+                    <Tabs value={current} onChange={handleChange} aria-label="form navigation" indicatorColor="primary">
                         <Tab label="Organization Info" {...makeIdentifier(0)}/>
                         <Tab label="Program List" {...makeIdentifier(1)}/>
                     </Tabs>
                 </AppBar>
 
-                <TabPanel value={current} index={0}>
-                    <OrgInfo {...props} />
-                </TabPanel>
-                <TabPanel value={current} index={1}>
-                    <ProgList {...props} />
-                </TabPanel>
+                <div className='formBody'>
+                    <TabPanel value={current} index={0}>
+                        <OrgInfo {...props} />
+                    </TabPanel>
+                    <TabPanel value={current} index={1}>
+                        <ProgList {...props} />
+                    </TabPanel>
 
-                <div className="formActions">
-                    <Button
-                        type="button"
-                        color="primary"
-                        variant="contained"
-                        size="large"
-                        onClick={() => props.cancel()}
-                    >Cancel</Button>
-                    <Button
-                        type="button"
-                        color="primary"
-                        variant="contained"
-                        size="large"
-                        onClick={() => props.submit()}
-                    >Submit</Button>
+                    <div className="formActions">
+                        <Button
+                            type="button"
+                            color="primary"
+                            variant="contained"
+                            size="large"
+                            onClick={() => props.cancel()}
+                        >Cancel</Button>
+                        <Button
+                            type="button"
+                            color="primary"
+                            variant="contained"
+                            size="large"
+                            onClick={() => props.submit()}
+                        >Save</Button>
+                    </div>
                 </div>
             </form>
         </Paper>
@@ -307,7 +338,6 @@ const currentTime = () => {
     return now.toISOString();
 }
 
-// pass in empty object to create, pass in existing object to view/modify
 class ModifyOrganization extends React.Component {
 
     state = {};
@@ -329,7 +359,7 @@ class ModifyOrganization extends React.Component {
 
         switch (type) {
             case "checkbox":
-                updateValue = checked ? true : false;
+                updateValue = checked ? false : true;
                 break;
             case "number":
                 updateValue = parseInt(value);
@@ -343,7 +373,6 @@ class ModifyOrganization extends React.Component {
                 this.updateState('expiryDate', null);
             }
             else{
-                // "delete" or expire org
                 this.updateState('expiryDate', currentTime());
             }
         }
@@ -366,6 +395,14 @@ class ModifyOrganization extends React.Component {
         </div>
     );
 
+};
+
+// createOrg passes in empty object, editOrg passes in pre-existing object
+ModifyOrganization.propTypes = {
+    object: PropTypes.object,
+    title: PropTypes.string,
+    submit: PropTypes.func,
+    cancel: PropTypes.func
 };
 
 export { currentTime, ModifyOrganization as default };

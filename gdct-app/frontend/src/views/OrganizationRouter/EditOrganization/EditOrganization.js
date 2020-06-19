@@ -6,6 +6,7 @@ import { selectOrgsStore } from '../../../store/OrganizationsStore/selectors';
 import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { jssPreset } from '@material-ui/core';
 
 
 const EditOrganization = ({ match: { params: { _id } } }) => {
@@ -28,23 +29,23 @@ const EditOrganization = ({ match: { params: { _id } } }) => {
     }
 
     const accept = result => {
-        // redirect to list of orgs if added to db successfully
         redirect();
     }
 
     const reject = error => {
         // reflect error message on form somehow o.O
+        alert('Missing or invalid parameters')
     }
 
     const submit = (newObject) => {
         // we need to preserve _id property of old object
         const temp = Object.assign({}, object, newObject);
+        // material-table appends .tableData property to object, we have to get rid of it
         delete temp.tableData;
         dispatch(updateOrgsRequest(temp, accept, reject));
     }
 
     const cancel = () => {
-        // redirect to list of orgs
         redirect();
     }
 

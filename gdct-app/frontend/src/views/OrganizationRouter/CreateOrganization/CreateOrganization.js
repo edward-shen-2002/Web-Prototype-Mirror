@@ -11,18 +11,8 @@ const CreateOrganization = () => {
     const history = useHistory();
     const dispatch = useDispatch();
 
-    // all fields on form must have value or else (un)controlled input warning will occur
+    // all fields on form must have value or else uncontrolled input warning will occur
     const initialState = new OrgEntity({ 
-        id: 0,
-        IFISNum: '',
-        code: '',
-        name: '',
-        legalName: '',
-        address: '',
-        province: '',
-        city: '',
-        postalCode: '',
-        location: '',
         active: true,
         programId: [],
         effectiveDate: currentTime(),
@@ -34,21 +24,19 @@ const CreateOrganization = () => {
     }
 
     const accept = result => {
-        // redirect to list of orgs if added to db successfully
         redirect();
     }
 
     const reject = error => {
         // reflect error message on form somehow o.O
+        alert('Missing or invalid parameters')
     }
 
     const submit = (newObject) => {
-        // (try to) add to db
         dispatch(createOrgsRequest(newObject, accept, reject));
     }
 
     const cancel = () => {
-        // redirect to list of orgs
         redirect();
     }
 

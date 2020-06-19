@@ -7,7 +7,7 @@ const OrgModel = model(
   new Schema(
     {
 
-      id: { type: Number, required: true },
+      id: { type: Number, required: true, min: 0 },
       IFISNum: { type: String, required: true, unique: true },
       code: { type: String, default: '' },
       name: { type: String, required: true },
@@ -18,7 +18,7 @@ const OrgModel = model(
       postalCode: { type: String, default: '' },
       location: [{ type: String, default: '' }],
 
-      organizationGroupId: { type: ObjectId, ref: 'OrganizationGroup' },
+      organizationGroupId: [{ type: ObjectId, ref: 'OrganizationGroup' }],
 
       active: { type: Boolean, default: true },
 
