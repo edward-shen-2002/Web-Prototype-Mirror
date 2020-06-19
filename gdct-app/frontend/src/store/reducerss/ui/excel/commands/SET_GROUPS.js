@@ -28,6 +28,7 @@ const SET_GROUPS = (
 
 
       if(isSelected) {
+        newSheetCellData[row] = { ...newSheetCellData[row] }
         newSheetCellData[row][1] = { value: _id }
         newSheetCellData[row][2] = { value: group._id }
         newSheetCellData[row][3] = { value: name } 

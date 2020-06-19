@@ -267,9 +267,11 @@ const GroupPopup = ({ type }) => {
     }
   }
   const handleRemoveLink = (index) => {
-    setNewGroups(newGroups.slice(0, index))
+    const changedGroups = newGroups.slice(0, index)
+    setNewGroups(changedGroups)
     setGroupPointer(index - 1)
     setSelectedCOAIds({})
+    setSelectedGroup(changedGroups.length ? changedGroups[changedGroups.length - 1]._id : undefined)
   }
   const handleSelectGroup = ({ _id, value }) => {
     setNewGroups([
