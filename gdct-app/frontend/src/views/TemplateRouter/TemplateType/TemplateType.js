@@ -3,12 +3,17 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import {
     getTemplateTypesRequest,
-    updateTemplateTypesRequest
+    createTemplateTypeRequest,
+    deleteTemplateTypeRequest,
+    updateTemplateTypeRequest
 } from '../../../store/thunks/templateType'
 import Loading from '../../../components/Loading/Loading'
 
 import {
-    getProgramsRequest
+    getProgramsRequest,
+    createProgramsRequest,
+    deleteProgramsRequest,
+    updateProgramsRequest,
 } from '../../../store/thunks/Program'
 
 import MaterialTable from 'material-table'
@@ -85,9 +90,13 @@ const TemplateTypeTable = ({
 
 const LinkProgramsTable = ({history, match:{params:{_id}}}) => {
     const dispatch = useDispatch()
-    const isCallInProgress = useSelector(
-        ({ TemplatesStore: { isCallInProgress } }) => isCallInProgress
+    const isTemplateTypesCallInProgress = useSelector(
+        ({ TemplateTypesStore: { isCallInProgress } }) => isCallInProgress
     )
+    const isProgramsCallInProgress = useSelector(
+        ({ ProgramsStore: {isCallInProgress} }) => isCallInProgress
+    )
+    const isCallInProgress = isTemplateTypesCallInProgress && isProgramsCallInProgress;
     const { templateType, programs } = useSelector(
         (state) => ({
           templateType: ( selectFactoryRESTResponseTableValues(
@@ -101,16 +110,50 @@ const LinkProgramsTable = ({history, match:{params:{_id}}}) => {
     )
     const columns = useMemo(
         () => [
-            {title: 'Program Id', field: 'programIds'}
+            {title: 'Program Id', field: 'programId'},
+            {title: 'Program Name', field: 'programName', editable: 'never'},
+            {title: 'Active', type: 'boolean', field: 'isActive', editable: 'never'},
         ],[]
     )
+    const editable = useMemo(
+        () => ({
+            onRowAdd: (program) =>
+                new Promise((resolve, reject) => {
+                    templateType.programIds.push(program.programId);
+                    dispatch(updateTemplateTypeRequest(templateType, resolve, reject));
+                }),
+            onRowDelete: (program) =>
+                new Promise((resolve, reject) => {
+                    templateType.programIds = templateType.programIds.filter(elem => elem != program.programId);
+                    dispatch(updateTemplateTypeRequest(templateType, resolve, reject));
+                })
+        }),
+        [dispatch, templateType]
+    )
+    const options = useMemo(
+        () => ({actionsColumnIndex: -1}),
+        []
+    )
+    
+    useEffect(
+        () => {
+            dispatch(getTemplateTypesRequest())
+            dispatch(getProgramsRequest())
+        },
+        [dispatch]
+    )
+        
     // convert programIds into data array
     let data = [];
-    if(templateType) {
+    if(!isCallInProgress && templateType && programs) {
         for(let i = 0; i < templateType.programIds.length; i++) {
+            let curProgramId = templateType.programIds[i];
+            let curProgram = ( programs.filter(elem => elem._id == curProgramId) || [{}] )[0];
             data.push(
                 {
-                    programIds: templateType.programIds[i]
+                    programId: curProgramId,
+                    programName: curProgram ? curProgram.name : '',
+                    isActive: curProgram ? curProgram.isActive : 'false'
                 }
             );
         }
@@ -122,6 +165,8 @@ const LinkProgramsTable = ({history, match:{params:{_id}}}) => {
             title = 'Linked Programs'
             data = {data}
             columns = {columns}
+            editable = {editable}
+            options = {options}
         />
     )
 }

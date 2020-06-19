@@ -67,7 +67,7 @@ const TemplateTypesTable = ({ history }) => {
   )
 
   const options = useMemo(
-    () => ({ actionsColumnIndex: -1, search: false, showTitle: false }),
+    () => ({ actionsColumnIndex: -1, search: true, showTitle: false }),
     []
   )
 
