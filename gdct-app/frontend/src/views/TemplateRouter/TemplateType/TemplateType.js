@@ -88,23 +88,17 @@ const LinkProgramsTable = ({history, match:{params:{_id}}}) => {
     const isCallInProgress = useSelector(
         ({ TemplatesStore: { isCallInProgress } }) => isCallInProgress
     )
-    const { templateType } = useSelector(
+    const { templateType, programs } = useSelector(
         (state) => ({
           templateType: ( selectFactoryRESTResponseTableValues(
             selectTemplateTypesStore
           )(state).filter(elem => elem._id == _id) || [{}] )[0],
+          programs: selectFactoryRESTResponseTableValues(selectProgramsStore)(
+            state
+          ),
         }),
         shallowEqual
     )
-    const { programs } = useSelector(
-        (state) => ({
-            programs: selectFactoryRESTResponseTableValues(selectProgramsStore)(
-                state
-            ),
-        }),
-        shallowEqual
-    )
-
     const columns = useMemo(
         () => [
             {title: 'Program Id', field: 'programIds'}
