@@ -47,8 +47,8 @@ const WorkflowSideBar = ({ stateActions }) => {
 
   return (
     <div className="workflowPicker">
-      <Typography>Statuses</Typography>
-      <TextField className="workflowPicker__search" variant="outlined" size="small"/>
+      <Typography className="workflowPicker__title" variant="h5">Statuses</Typography>
+      <TextField className="workflowPicker__search" variant="outlined" size="small" placeholder="Search statuses..." />
       <StatusItems statuses={statuses}/>
     </div>
   )
