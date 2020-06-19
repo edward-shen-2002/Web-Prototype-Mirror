@@ -7,9 +7,9 @@ import {
 } from '../../../store/thunks/templateType'
 import Loading from '../../../components/Loading/Loading'
 
-// import {
-//     getProgramsRequest
-// } from '../../../store/thunks/Program'
+import {
+    getProgramsRequest
+} from '../../../store/thunks/Program'
 
 import MaterialTable from 'material-table'
 import LaunchIcon from '@material-ui/icons/Launch'
@@ -20,7 +20,7 @@ import Typography from '@material-ui/core/Typography'
 import './TemplateType.scss'
 import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors'
 import { selectTemplateTypesStore } from '../../../store/TemplateTypesStore/selectors'
-// import { selectProgramsStore } from '../../store/ProgramsStore/selectors'
+import { selectProgramsStore } from '../../../store/ProgramsStore/selectors'
 
 const TemplateTypeHeader = () => {
     return (
@@ -96,6 +96,15 @@ const LinkProgramsTable = ({history, match:{params:{_id}}}) => {
         }),
         shallowEqual
     )
+    const { programs } = useSelector(
+        (state) => ({
+            programs: selectFactoryRESTResponseTableValues(selectProgramsStore)(
+                state
+            ),
+        }),
+        shallowEqual
+    )
+
     const columns = useMemo(
         () => [
             {title: 'Program Id', field: 'programIds'}
