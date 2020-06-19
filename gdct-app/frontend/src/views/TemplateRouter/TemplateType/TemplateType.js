@@ -5,6 +5,7 @@ import {
     getTemplateTypesRequest,
     updateTemplateTypesRequest
 } from '../../../store/thunks/templateType'
+import Loading from '../../../components/Loading/Loading'
 
 // import {
 //     getProgramsRequest
@@ -74,7 +75,7 @@ const TemplateTypeTable = ({
   
     return (
       <MaterialTable
-        title = 'Current Template'
+        title = 'Current Template Type'
         columns={columns}
         data={templateType}
         options={options}
@@ -82,10 +83,42 @@ const TemplateTypeTable = ({
     )
 }
 
-const LinkProgramsTable = ({history}) => {
-    return (
+const LinkProgramsTable = ({history, match:{params:{_id}}}) => {
+    const dispatch = useDispatch()
+    const isCallInProgress = useSelector(
+        ({ TemplatesStore: { isCallInProgress } }) => isCallInProgress
+    )
+    const { templateType } = useSelector(
+        (state) => ({
+          templateType: ( selectFactoryRESTResponseTableValues(
+            selectTemplateTypesStore
+          )(state).filter(elem => elem._id == _id) || [{}] )[0],
+        }),
+        shallowEqual
+    )
+    const columns = useMemo(
+        () => [
+            {title: 'Program Id', field: 'programIds'}
+        ],[]
+    )
+    // convert programIds into data array
+    let data = [];
+    if(templateType) {
+        for(let i = 0; i < templateType.programIds.length; i++) {
+            data.push(
+                {
+                    programIds: templateType.programIds[i]
+                }
+            );
+        }
+    }
+    return isCallInProgress ? (
+        <Loading />
+    ) : (
         <MaterialTable
             title = 'Linked Programs'
+            data = {data}
+            columns = {columns}
         />
     )
 }
@@ -95,6 +128,7 @@ const TemplateType = (props) => (
       <TemplateTypeHeader />
       {/* <FileDropzone/> */}
       <TemplateTypeTable {...props} />
+      <LinkProgramsTable {...props} />
     </div>
 )
 
