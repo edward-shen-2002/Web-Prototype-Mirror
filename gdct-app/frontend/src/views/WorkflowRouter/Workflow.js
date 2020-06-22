@@ -12,7 +12,7 @@ import { mapValues } from 'lodash'
 
 import './Workflow.scss'
 import { Typography, Button } from '@material-ui/core';
-import { selectWorkflowChart, selectSelectedNodeId, selectSelectedNodeType, selectWorkflowFilter } from '../../store/WorkflowStore/selectors'
+import { selectWorkflowChart, selectSelectedNodeId, selectSelectedNodeValue, selectWorkflowFilter } from '../../store/WorkflowStore/selectors'
 import { WorkflowStoreActions } from '../../store/WorkflowStore/store';
 
 const createNodeDragData = (name) => JSON.stringify({ 
@@ -57,25 +57,25 @@ const StatusItems = ({ statuses }) => (
   </List>
 )
 
-const SelectedNodeActions = ({ type, stateActions }) => (
+const SelectedNodeActions = ({ value, stateActions }) => (
   <div className="sections">
-    <Typography gutterBottom>Selected node: {type}</Typography>
+    <Typography gutterBottom>{value}</Typography>
     <Button onClick={() => stateActions.onDeleteKey({})} color="secondary" variant="contained" fullWidth>Delete</Button>
   </div>
 )
 
 const SelectedNode = ({ stateActions }) => {
-  const { selectedNodeId, selectedNodeType } = useSelector(
+  const { selectedNodeId, selectedNodeValue } = useSelector(
     (state) => ({
       selectedNodeId: selectSelectedNodeId(state),
-      selectedNodeType: selectSelectedNodeType(state)
+      selectedNodeValue: selectSelectedNodeValue(state)
     }), 
     shallowEqual
   )
 
   if(!selectedNodeId) return null
 
-  return selectedNodeId && <SelectedNodeActions stateActions={stateActions} type={selectedNodeType}/>
+  return selectedNodeId && <SelectedNodeActions stateActions={stateActions} value={selectedNodeValue}/>
 }
 
 const WorkflowStatuses = () => {
@@ -139,7 +139,7 @@ const WorkflowPane = ({ stateActions }) => {
       callbacks={stateActions}
     />
   )
-}
+} 
 
 const WorkflowHeader = () => {
   const dispatch = useDispatch()

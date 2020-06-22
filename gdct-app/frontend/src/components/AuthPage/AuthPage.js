@@ -97,9 +97,8 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(5),
-    // margin: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    height: `100% - ${headerHeight}px`,
+    height: `calc(100% - ${headerHeight}px) !important`,
     marginTop: headerHeight,
     overflow: 'auto'
   },
