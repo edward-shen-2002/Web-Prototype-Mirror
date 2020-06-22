@@ -17,7 +17,6 @@ export default class UserRepository extends BaseRepository {
   async findById(_id) {
     return UserModel.findOne({_id})
       .then((user) => {
-        if(!result) throw new Error('_id does not exist')
         return new UserEntity(user.toObject())
       })
   }
