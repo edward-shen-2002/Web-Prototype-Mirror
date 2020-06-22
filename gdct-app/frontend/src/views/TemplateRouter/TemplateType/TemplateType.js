@@ -108,19 +108,33 @@ const LinkProgramsTable = ({history, match:{params:{_id}}}) => {
         }),
         shallowEqual
     )
+    const lookupPrograms = programs.reduce(function(acc, program) {
+        acc[program._id] = program.name;
+        return acc;
+    }, {});
     const columns = useMemo(
         () => [
-            {title: 'Program Id', field: 'programId'},
-            {title: 'Program Name', field: 'programName', editable: 'never'},
+            {title: 'Program Id', field: 'programId', editable: 'never'},
+            {title: 'Program Name', field: 'programName', lookup: lookupPrograms},
+            {title: 'Program Code', field: 'programCode', editable: 'never'},
             {title: 'Active', type: 'boolean', field: 'isActive', editable: 'never'},
-        ],[]
+        ],[lookupPrograms]
     )
     const editable = useMemo(
         () => ({
             onRowAdd: (program) =>
                 new Promise((resolve, reject) => {
-                    templateType.programIds.push(program.programId);
-                    dispatch(updateTemplateTypeRequest(templateType, resolve, reject));
+                    let isRepeat = false;
+                    for(let i = 0; i < templateType.programIds.length; i++)
+                        if(program.programName == templateType.programIds[i]) isRepeat = true;
+                    if(isRepeat) {
+                        alert('This program is already linked.');
+                        reject();
+                    }
+                    else {
+                        templateType.programIds.push(program.programName);
+                        dispatch(updateTemplateTypeRequest(templateType, resolve, reject));
+                    }
                 }),
             onRowDelete: (program) =>
                 new Promise((resolve, reject) => {
@@ -128,7 +142,7 @@ const LinkProgramsTable = ({history, match:{params:{_id}}}) => {
                     dispatch(updateTemplateTypeRequest(templateType, resolve, reject));
                 })
         }),
-        [dispatch, templateType]
+        [dispatch, templateType, lookupPrograms]
     )
     const options = useMemo(
         () => ({actionsColumnIndex: -1}),
@@ -152,7 +166,8 @@ const LinkProgramsTable = ({history, match:{params:{_id}}}) => {
             data.push(
                 {
                     programId: curProgramId,
-                    programName: curProgram ? curProgram.name : '',
+                    programName: curProgram ? curProgramId : '',
+                    programCode: curProgram ? curProgram.code ? curProgram.code : '' : '',
                     isActive: curProgram ? curProgram.isActive : 'false'
                 }
             );
