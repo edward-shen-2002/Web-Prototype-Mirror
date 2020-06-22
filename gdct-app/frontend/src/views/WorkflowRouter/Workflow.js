@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useCallback } from 'react'
 import { FlowChart, actions, REACT_FLOW_CHART,  } from '@mrblenny/react-flow-chart';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import { selectFactoryRESTResponseValues } from '../../store/common/REST/selectors';
@@ -11,9 +11,26 @@ import Listitem from '@material-ui/core/ListItem'
 import { mapValues } from 'lodash'
 
 import './Workflow.scss'
-import { Typography } from '@material-ui/core';
-import { selectWorkflowChart } from '../../store/WorkflowStore/selectors'
+import { Typography, Button } from '@material-ui/core';
+import { selectWorkflowChart, selectSelectedNodeId, selectSelectedNodeType, selectWorkflowFilter } from '../../store/WorkflowStore/selectors'
 import { WorkflowStoreActions } from '../../store/WorkflowStore/store';
+
+const createNodeDragData = (name) => JSON.stringify({ 
+  type: name, 
+  ports: {
+    port1: {
+      id: 'port1',
+      type: 'input',
+    },
+    port2: {
+      id: 'port2',
+      type: 'output',
+    },
+  }, 
+  properties: {
+    label: 'example link label',
+  },
+})
 
 const StatusItems = ({ statuses }) => (
   <List className="statuses">
@@ -28,22 +45,7 @@ const StatusItems = ({ statuses }) => (
             onDragStart={(event) => {
               event.dataTransfer.setData(
                 REACT_FLOW_CHART, 
-                JSON.stringify({ 
-                  type: name, 
-                  ports: {
-                    port1: {
-                      id: 'port1',
-                      type: 'input',
-                    },
-                    port2: {
-                      id: 'port2',
-                      type: 'output',
-                    },
-                  }, 
-                  properties: {
-                    label: 'example link label',
-                  },
-                })
+                createNodeDragData(name)
               )
             }}
           >
@@ -55,18 +57,40 @@ const StatusItems = ({ statuses }) => (
   </List>
 )
 
-const WorkflowSideBar = ({ stateActions }) => {
-  const dispatch = useDispatch()
-  const statuses = useSelector(
-    (state) => selectFactoryRESTResponseValues(selectStatusesStore)(state),
+const SelectedNodeActions = ({ type, stateActions }) => (
+  <div className="sections">
+    <Typography gutterBottom>Selected node: {type}</Typography>
+    <Button onClick={() => stateActions.onDeleteKey({})} color="secondary" variant="contained" fullWidth>Delete</Button>
+  </div>
+)
+
+const SelectedNode = ({ stateActions }) => {
+  const { selectedNodeId, selectedNodeType } = useSelector(
+    (state) => ({
+      selectedNodeId: selectSelectedNodeId(state),
+      selectedNodeType: selectSelectedNodeType(state)
+    }), 
     shallowEqual
   )
 
-  const chart = useSelector(
-    (state) => (
-      selectWorkflowChart(state)
-    ),
+  if(!selectedNodeId) return null
+
+  return selectedNodeId && <SelectedNodeActions stateActions={stateActions} type={selectedNodeType}/>
+}
+
+const WorkflowStatuses = () => {
+  const dispatch = useDispatch()
+  let { statuses, workflowFilter } = useSelector(
+    (state) => ({
+      statuses: selectFactoryRESTResponseValues(selectStatusesStore)(state),
+      workflowFilter: selectWorkflowFilter(state)
+    }), 
     shallowEqual
+  )
+
+  statuses = useMemo(
+    () => statuses.filter(({ name }) => name.toLowerCase().includes(workflowFilter.toLowerCase())),
+    [statuses, workflowFilter]
   )
 
   useEffect(
@@ -80,14 +104,26 @@ const WorkflowSideBar = ({ stateActions }) => {
     []
   )
 
+  const handleChangeFilter = useCallback(
+    ({ target: { value } }) => dispatch(WorkflowStoreActions.UPDATE_WORKFLOW_FILTER(value)),
+    [dispatch]
+  )
+
   return (
-    <div className="workflowPicker">
-      <Typography className="workflowPicker__title" variant="h5">Statuses</Typography>
-      <TextField className="workflowPicker__search" variant="outlined" size="small" placeholder="Search statuses..." />
+    <div className="sections">
+      <Typography className="workflowPicker__title" variant="h5" >Status Picker</Typography>
+      <TextField className="workflowPicker__search" variant="outlined" size="small" placeholder="Search statuses..." onChange={handleChangeFilter}/>
       <StatusItems statuses={statuses}/>
     </div>
   )
 }
+
+const WorkflowSideBar = ({ stateActions }) => (
+  <div className="workflowPicker">
+    <WorkflowStatuses/>
+    <SelectedNode stateActions={stateActions}/>
+  </div>
+)
 
 const WorkflowPane = ({ stateActions }) => {
   const chart = useSelector(
@@ -121,5 +157,12 @@ const Workflow = () => {
     </div>
   )
 }
+
+const WorkflowContainer = () => (
+  <div>
+
+  </div>
+)
+
 
 export default Workflow

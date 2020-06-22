@@ -6,23 +6,33 @@
   display: flex;
 }
 
-.workflowPicker {
+.sections {
   @include shadow;
-  margin-left: 20px;
-  width: 400px;
   border: 1px solid lightgray;
   border-radius: 4px;
-  padding: 17px;
 
-  color: white;
-  background-color: rgb(14, 71, 194);
+  padding: 15px;
+}
+
+.workflowPicker {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+
+  margin-left: 20px;
+  width: 400px;
+
+  padding: 5px;
+
+  // color: white;
+  // background-color: rgb(14, 71, 194);
   overflow: auto;
 
   &__search {
     width: 100%;
-    padding: 0 8px !important;
+    margin: 8px 0 !important;
     & input {
-      background-color: white !important;
+      // background-color: white !important;
 
       border-radius: 3px;
     } 
@@ -38,12 +48,12 @@
   // max-height: 100px;
   overflow: auto;
   &__status {
-    font-size: 20px;
+    font-size: 15px;
     border-radius: 4px;
     border: 2px solid transparent !important;
   
     &:hover {
-      background-color: rgb(22, 57, 139) !important;
+      background-color: lightgray !important;
       border: 2px solid white;
     }
   }

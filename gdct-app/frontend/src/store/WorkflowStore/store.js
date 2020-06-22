@@ -13,7 +13,8 @@ const sampleChart = {
 }
 
 const initialState = {
-  chart: sampleChart
+  chart: sampleChart,
+  filter: ''
 }
 
 const UPDATE_WORKFLOW_CHART = (state, action) => {
@@ -24,8 +25,14 @@ const UPDATE_WORKFLOW_CHART = (state, action) => {
   return state
 }
 
+const UPDATE_WORKFLOW_FILTER = (state, action) => {
+  state.filter = action.payload
+  return state
+}
+
 const reducers = {
-  UPDATE_WORKFLOW_CHART
+  UPDATE_WORKFLOW_CHART,
+  UPDATE_WORKFLOW_FILTER
 }
 
 export const WorkflowStore = createSlice(
