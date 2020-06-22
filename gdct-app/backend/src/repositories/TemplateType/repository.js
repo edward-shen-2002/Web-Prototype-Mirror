@@ -14,9 +14,7 @@ export default class TemplateTypeRepository extends BaseRepository {
   async create({
     name,
     description,
-
     programIds,
-
     isApprovable,
     isReviewable,
     isSubmittable,
@@ -42,6 +40,11 @@ export default class TemplateTypeRepository extends BaseRepository {
         })
       )
       .then((templateType) => new TemplateTypeEntity(templateType))
+  }
+
+  async findByProgramIds(programIds) {
+    return TemplateTypeModel.find({programId: {$in: programIds}})
+      .then((templateTypes) => new TemplateTypeEntity(templateTypes.toObject()))
   }
 
   async update(

@@ -58,6 +58,19 @@ const TemplateTypeController = Service(
           }
         )
 
+        router.post(
+          '/templateTypes/searchTemplateTypeByProgramIds',
+          (req, res, next) => {
+            const { programIds } = req.body;
+
+            service
+              .findTemplateTypeByProgramIds(programIds)
+              .then((templateTypes) => {
+                res.json({templateTypes});
+              })
+          }
+        )
+
         return router
       }
     )()

@@ -28,6 +28,10 @@ export default class AppSysService {
     return this.AppSysRepository.find(AppSys);
   }
 
+  async findAllAppSys(){
+    return this.AppSysRepository.findAll();
+  }
+
   async isRefered(id) {
     const appSys = await this.AppSysRepository.findById(id);
     console.log("code:", appSys.code);

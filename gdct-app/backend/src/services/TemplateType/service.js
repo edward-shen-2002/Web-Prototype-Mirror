@@ -22,4 +22,8 @@ export default class TemplateTypeService {
   async findTemplateType(templateType) {
     return this.templateTypeRepository.find(templateType)
   }
+
+  async findTemplateTypeByProgramIds(programIds) {
+    return this.templateTypeRepository.findByProgramIds(programIds)
+  }
 }
