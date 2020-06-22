@@ -4,6 +4,10 @@ import OrgEntity from '../../entities/Organization';
 
 export default class OrgRepository extends BaseRepository {
 
+    constructor() {
+        super(OrgModel);
+    }
+
     async delete(id) {
         return OrgModel.findByIdAndDelete(id).then(
             (Org) => new OrgEntity(Org.toObject())
@@ -31,4 +35,11 @@ export default class OrgRepository extends BaseRepository {
             (Orgs) => Orgs.map((Org) => new OrgEntity(Org.toObject()))
         );
     }
+
+    async findByOrgGroupId(orgGroupId) {
+        return OrgModel.find(orgGroupId).then(
+            (organizations) => new OrgEntity(organizations.toObject())
+        )
+    }
+
 }

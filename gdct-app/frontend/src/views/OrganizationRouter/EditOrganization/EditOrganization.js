@@ -6,8 +6,6 @@ import { selectOrgsStore } from '../../../store/OrganizationsStore/selectors';
 import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { jssPreset } from '@material-ui/core';
-
 
 const EditOrganization = ({ match: { params: { _id } } }) => {
 

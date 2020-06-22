@@ -6,6 +6,7 @@ export default class ReportPeriodRepository extends BaseRepository {
   constructor() {
     super(AppSysModel)
   }
+
   async delete(id) {
     const appSys = await AppSysModel.findById(id);
     appSys.isActive = false;

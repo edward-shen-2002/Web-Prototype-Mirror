@@ -6,7 +6,6 @@ const OrgModel = model(
   'Organization',
   new Schema(
     {
-
       id: { type: Number, required: true, min: 0 },
       IFISNum: { type: String, required: true, unique: true },
       code: { type: String, default: '' },

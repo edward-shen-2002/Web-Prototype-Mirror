@@ -47,9 +47,19 @@ const OrgController = Service(
                 }
             );
 
+            router.get(
+              `/appSyses/searchOrganizationsByOrgGroupId/:orgGroupId`,
+              (req, res, next) => {
+                const { orgGroupId } = req.params;
+                service
+                  .findOrgByOrgGroupId(orgGroupId)
+                  .then((organizations) => {
+                    res.json({organizations});
+                  })
+              }
+            )
+
             return router;
         })();
     }
 );
-
-export default OrgController;

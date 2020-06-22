@@ -1,4 +1,4 @@
-import Container from 'typedi';
+import Container, { Service } from 'typedi';
 import OrgRepository from '../../repositories/Organization';
 
 class OrgService {
@@ -20,6 +20,10 @@ class OrgService {
 
     async findOrg(Org) {
         return this.OrgRepository.find(Org);
+    }
+
+    async findOrgByOrgGroupId(OrgGroupId) {
+        return this.OrgRepository.findByOrgGroupId(OrgGroupId);
     }
 }
 

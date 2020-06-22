@@ -244,7 +244,7 @@ const ProgList = ({ object, updateState }) => {
         <div className="tableContainer">
             <div className="tableWrapper">
                 <MaterialTable
-                    title="Organization Programs"
+                    title="Linked Programs"
                     columns={columns}
                     data={OrgProgs()}
                     options={options}

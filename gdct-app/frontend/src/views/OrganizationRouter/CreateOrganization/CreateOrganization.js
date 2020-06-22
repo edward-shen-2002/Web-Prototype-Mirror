@@ -11,7 +11,6 @@ const CreateOrganization = () => {
     const history = useHistory();
     const dispatch = useDispatch();
 
-    // all fields on form must have value or else uncontrolled input warning will occur
     const initialState = new OrgEntity({ 
         active: true,
         programId: [],
