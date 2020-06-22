@@ -1,5 +1,23 @@
 @import '../../styles/mixins/shadows';
 
+.workflowContainer {
+  height: 100%;
+  max-height: 100% !important;
+
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.workflowHeader {
+  @include shadow;
+  width: 100%;
+  margin: 10px 0;
+
+  border-radius: 3px;
+  padding: 10px 20px;
+  box-sizing: content-box;
+}
+
 .workflow {
   height: 100%;
 

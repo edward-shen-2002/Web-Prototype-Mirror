@@ -26,13 +26,18 @@ export const selectSelectedNodeId = createSelector(
   (workflowNode) => workflowNode ? workflowNode.id : undefined
 )
 
-export const selectWorkflowNode = createSelector(
+export const selectWorkflowNodes = createSelector(
   [selectWorkflowChart],
   (workflowChart) => workflowChart.nodes
 )
 
+export const selectWorkflowLinks = createSelector(
+  [selectWorkflowChart],
+  (workflowChart) => workflowChart.links
+)
+
 export const selectSelectedWorkflowNodeContent = createSelector(
-  [selectWorkflowNode, selectSelectedNodeId],
+  [selectWorkflowNodes, selectSelectedNodeId],
   (workflowNodes, selectedNodeId) => workflowNodes[selectedNodeId]
 )
 

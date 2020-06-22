@@ -141,6 +141,21 @@ const WorkflowPane = ({ stateActions }) => {
   )
 }
 
+const WorkflowHeader = () => {
+  const dispatch = useDispatch()
+
+  const handleChangeName = useCallback(
+    ({ target: { value } }) => dispatch(WorkflowStoreActions.UPDATE_WORKFLOW_NAME(value)),
+    [dispatch]
+  )
+
+  return (
+    <div className="workflowHeader">
+      <TextField variant="outlined" size="small" placeholder="Name" onChange={handleChangeName}/>
+    </div>
+  )
+}
+
 const Workflow = () => {
   const dispatch = useDispatch()
 
@@ -159,10 +174,11 @@ const Workflow = () => {
 }
 
 const WorkflowContainer = () => (
-  <div>
-
+  <div className="workflowContainer">
+    <WorkflowHeader/>
+    <Workflow/>
   </div>
 )
 
 
-export default Workflow
+export default WorkflowContainer
