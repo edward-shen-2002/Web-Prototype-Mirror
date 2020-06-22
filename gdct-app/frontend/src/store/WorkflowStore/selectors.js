@@ -54,7 +54,6 @@ export const selectSelectedWorkflowNodeContent = createSelector(
 export const selectedLinkConnection = createSelector(
   [selectSelectedWorkflowLink, selectWorkflowNodes],
   (link, nodes) => {
-    console.log(link)
     if(link) {
       const { from, to } = link
 
@@ -70,7 +69,6 @@ export const selectSelectedNodeValue = createSelector(
   [selectSelectedNodetype, selectSelectedWorkflowNodeContent, selectedLinkConnection],
   (type, selectedNode, selectedLinkString) => {
     if(selectSelectedNodetype) {
-      console.log('type', type)
       let value = 'Selected '
       if(type === 'node') {
         value += `node: ${selectedNode.type}`

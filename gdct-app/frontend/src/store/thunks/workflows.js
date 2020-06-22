@@ -9,6 +9,20 @@ export const loadWorkflow = () => (dispatch) => {
     .catch((error) => dispatch(WorkflowStore.actions.FAIL_REQUEST(error)))
 }
 
+const dfsWorkflow = (startingNode, linkMapSet, visited) => {
+  console.log(startingNode, linkMapSet, visited)
+  visited.add(startingNode)
+  const adjacentNodes = linkMapSet[startingNode]
+
+  if(adjacentNodes) {
+    adjacentNodes.forEach(
+      (adjacentNode) => {
+        if(!visited.has(adjacentNode)) dfsWorkflow(adjacentNode, linkMapSet, visited)
+      }
+    )
+  }
+}
+
 export const submitWorkflow = () => (dispatch, getState) => {
   const state = getState()
   
@@ -16,10 +30,52 @@ export const submitWorkflow = () => (dispatch, getState) => {
   const workflowLinks = selectWorkflowLinks(state)
 
   const linkMapSet = {}
+  const endNodes = new Set()
+  const startNodes = new Set()
 
-  for(let link of workflowLinks) {
+  for(let link in workflowLinks) {
     const { from, to } = workflowLinks[link]
+    const fromId = from.nodeId
+    const toId = to.nodeId
 
-    
+    if(!linkMapSet[fromId]) linkMapSet[fromId] = new Set()
+
+    linkMapSet[fromId].add(toId)
+    endNodes.add(toId)
+    startNodes.add(fromId)
+  }
+
+  let initialNode = null
+  let isInitialNodePresent = true
+  startNodes.forEach((node) => {
+    if(!endNodes.has(node)) {
+      if(initialNode) {
+        isInitialNodePresent = false
+      } else {
+        initialNode = node
+      }
+    }
+  })
+
+  if(!isInitialNodePresent) {
+    console.error('no initial node')
+  } else {
+    let visited = new Set()
+
+    dfsWorkflow(initialNode, linkMapSet, visited)
+
+    let isGraphConnected = true
+    for(let node in workflowNodes) {
+      if(!visited.has(node)) {
+        isGraphConnected = false
+        break
+      }
+    }
+
+    if(isGraphConnected) {
+      console.log('connected graph')
+    } else {
+      console.error('isolated graphs')
+    }
   }
 }

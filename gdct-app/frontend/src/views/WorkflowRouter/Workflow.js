@@ -11,9 +11,10 @@ import Listitem from '@material-ui/core/ListItem'
 import { mapValues } from 'lodash'
 
 import './Workflow.scss'
-import { Typography, Button } from '@material-ui/core';
+import { Typography, Button, ButtonGroup } from '@material-ui/core';
 import { selectWorkflowChart, selectSelectedNodeId, selectSelectedNodeValue, selectWorkflowFilter } from '../../store/WorkflowStore/selectors'
 import { WorkflowStoreActions } from '../../store/WorkflowStore/store';
+import { submitWorkflow } from '../../store/thunks/workflows';
 
 const createNodeDragData = (name) => JSON.stringify({ 
   type: name, 
@@ -141,6 +142,24 @@ const WorkflowPane = ({ stateActions }) => {
   )
 } 
 
+const WorkflowHeaderActions = () => {
+  const dispatch = useDispatch()
+  // submitWorkflow
+
+  const handleSave = useCallback(
+    () => {
+      dispatch(submitWorkflow())
+    },
+    [dispatch]
+  )
+
+  return (
+    <div>
+      <Button color="primary" variant="contained" onClick={handleSave}>Save</Button>
+    </div>
+  )
+}
+
 const WorkflowHeader = () => {
   const dispatch = useDispatch()
 
@@ -152,6 +171,7 @@ const WorkflowHeader = () => {
   return (
     <div className="workflowHeader">
       <TextField variant="outlined" size="small" placeholder="Name" onChange={handleChangeName}/>
+      <WorkflowHeaderActions/>
     </div>
   )
 }
