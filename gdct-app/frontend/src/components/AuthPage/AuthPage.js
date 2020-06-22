@@ -27,7 +27,7 @@ import navigationConfig from './config'
 import { useCallback } from 'react'
 
 const drawerWidth = 240
-const marginTop = 55
+const headerHeight = 55
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'auto'
   },
   appBar: {
+    height: headerHeight,
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
@@ -97,8 +98,9 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(5),
     // margin: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    height: `100% - ${marginTop}px`,
-    marginTop: marginTop,
+    height: `100% - ${headerHeight}px`,
+    marginTop: headerHeight,
+    overflow: 'auto'
   },
 }))
 
