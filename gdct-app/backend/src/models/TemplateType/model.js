@@ -16,7 +16,8 @@ const TemplateTypeModel = model(
       isSubmittable: { type: Boolean },
       isInputtable: { type: Boolean },
       isViewable: { type: Boolean },
-      isReportable: { type: Boolean }
+      isReportable: { type: Boolean },
+      isActive: { type: Boolean }
     },
     { minimize: false, timestamps: true }
   ),

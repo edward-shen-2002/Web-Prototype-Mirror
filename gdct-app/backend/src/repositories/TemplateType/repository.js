@@ -20,7 +20,8 @@ export default class TemplateTypeRepository extends BaseRepository {
     isSubmittable,
     isInputtable,
     isViewable,
-    isReportable
+    isReportable,
+    isActive
   }) {
     return this.programRepository
       .validateMany(programIds)
@@ -36,7 +37,8 @@ export default class TemplateTypeRepository extends BaseRepository {
           isSubmittable,
           isInputtable,
           isViewable,
-          isReportable
+          isReportable,
+          isActive
         })
       )
       .then((templateType) => new TemplateTypeEntity(templateType))
@@ -60,7 +62,8 @@ export default class TemplateTypeRepository extends BaseRepository {
       isSubmittable,
       isInputtable,
       isViewable,
-      isReportable
+      isReportable,
+      isActive
     }
   ) {
     return (
@@ -79,7 +82,8 @@ export default class TemplateTypeRepository extends BaseRepository {
               isSubmittable,
               isInputtable,
               isViewable,
-              isReportable
+              isReportable,
+              isActive
             }
           )
         )
