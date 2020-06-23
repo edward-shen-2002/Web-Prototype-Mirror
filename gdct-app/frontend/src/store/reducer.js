@@ -16,7 +16,6 @@ import DialogsStore from './DialogsStore/store'
 import ReportingPeriodsStore from './ReportingPeriodsStore/store'
 
 import StatusesStore from './StatusesStore/store'
-import ProgramsStore from './ProgramsStore/store'
 import SubmissionPeriodsStore from './SubmissionPeriodsStore/store'
 import ProgramsStore from './ProgramsStore/store'
 import SubmissionsStore from './SubmissionsStore/store'

@@ -23,6 +23,7 @@ import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST
 import { selectProgramsStore } from '../../../store/ProgramsStore/selectors'
 import PropTypes from 'prop-types'
 import { userIdButton } from '../../../components/buttons'
+import Loading from '../../../components/Loading/Loading'
 
 const OrganizationHeader = ({ title }) => {
   return (
@@ -198,6 +199,10 @@ const ProgList = ({ object, updateState }) => {
         programList: selectFactoryRESTResponseTableValues(selectProgramsStore)(state)
     }));
 
+    const { isProgramsCallInProgress } = useSelector(state => ({
+        isProgramsCallInProgress: state.ProgramsStore.isCallInProgress
+    }));
+
     useEffect(() => {
         dispatch(getProgramsRequest());
     }, []);
@@ -240,7 +245,7 @@ const ProgList = ({ object, updateState }) => {
         ]
     );
 
-    return (
+    return isProgramsCallInProgress? <Loading /> : (
         <div className="tableContainer">
             <div className="tableWrapper">
                 <MaterialTable

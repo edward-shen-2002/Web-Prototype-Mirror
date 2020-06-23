@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import ModifyOrganization from '../ModifyOrganization';
-import OrgEntity from '../../../../../backend/src/entities/Organization/entity';
 import { updateOrgsRequest, getOrgsRequest } from '../../../store/thunks/organization';
 import { selectOrgsStore } from '../../../store/OrganizationsStore/selectors';
 import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import Loading from '../../../components/Loading/Loading'
 
 const EditOrganization = ({ match: { params: { _id } } }) => {
 
@@ -20,6 +20,10 @@ const EditOrganization = ({ match: { params: { _id } } }) => {
 
     const { object } = useSelector(state => ({
         object: ( selectFactoryRESTResponseTableValues(selectOrgsStore)(state).filter(elem => elem._id == _id) || [{}] )[0]
+    }));
+
+    const { isOrgsCallInProgress } = useSelector(state => ({
+        isOrgsCallInProgress: state.OrgsStore.isCallInProgress
     }));
 
     const redirect = () => {
@@ -47,14 +51,14 @@ const EditOrganization = ({ match: { params: { _id } } }) => {
         redirect();
     }
 
-    return (
+    return isOrgsCallInProgress? <Loading /> : (
         <div>
-            { object && <ModifyOrganization 
+            <ModifyOrganization 
                 title={"Edit Organization"}
                 object={object}
                 submit={submit}
                 cancel={cancel}
-            /> }
+            />
         </div>
     );
 };
