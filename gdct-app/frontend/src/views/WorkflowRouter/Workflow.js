@@ -138,6 +138,13 @@ const WorkflowPane = ({ stateActions }) => {
     <FlowChart
       chart={chart}
       callbacks={stateActions}
+      config={{
+        validateLink: ({ linkId, fromNodeId, fromPortId, toNodeId, toPortId, chart }) => {
+          // no links between same type nodes
+          if (chart.nodes[fromNodeId].type === chart.nodes[toNodeId].type) return false
+          return true
+        },
+      }}
     />
   )
 } 

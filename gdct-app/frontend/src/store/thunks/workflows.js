@@ -9,7 +9,7 @@ export const loadWorkflow = () => (dispatch) => {
     .catch((error) => dispatch(WorkflowStore.actions.FAIL_REQUEST(error)))
 }
 
-const dfsWorkflow = (startingNode, linkMapSet, visited) => {
+const markVisitableNodes = (startingNode, linkMapSet, visited) => {
   console.log(startingNode, linkMapSet, visited)
   visited.add(startingNode)
   const adjacentNodes = linkMapSet[startingNode]
@@ -17,7 +17,7 @@ const dfsWorkflow = (startingNode, linkMapSet, visited) => {
   if(adjacentNodes) {
     adjacentNodes.forEach(
       (adjacentNode) => {
-        if(!visited.has(adjacentNode)) dfsWorkflow(adjacentNode, linkMapSet, visited)
+        if(!visited.has(adjacentNode)) markVisitableNodes(adjacentNode, linkMapSet, visited)
       }
     )
   }
@@ -57,12 +57,10 @@ export const submitWorkflow = () => (dispatch, getState) => {
     }
   })
 
-  if(!isInitialNodePresent) {
-    console.error('no initial node')
-  } else {
+  if(isInitialNodePresent) {
     let visited = new Set()
 
-    dfsWorkflow(initialNode, linkMapSet, visited)
+    markVisitableNodes(initialNode, linkMapSet, visited)
 
     let isGraphConnected = true
     for(let node in workflowNodes) {
@@ -77,5 +75,7 @@ export const submitWorkflow = () => (dispatch, getState) => {
     } else {
       console.error('isolated graphs')
     }
+  } else {
+    console.error('no initial node')
   }
 }
