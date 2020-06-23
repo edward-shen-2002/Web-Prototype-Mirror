@@ -19,11 +19,9 @@ import Checkbox from '@material-ui/core/Checkbox'
 import Typography from '@material-ui/core/Typography'
 
 import './ModifyOrganization.scss'
-import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors'
-import { selectProgramsStore } from '../../../store/ProgramsStore/selectors'
-import PropTypes from 'prop-types'
+import PropTypes, { object } from 'prop-types'
 import { userIdButton } from '../../../components/buttons'
-import Loading from '../../../components/Loading/Loading'
+import ProgList from '../ProgramList'
 
 const OrganizationHeader = ({ title }) => {
   return (
@@ -189,86 +187,6 @@ const OrgInfo = (props) => (
     </div>
 );
 
-const ProgList = ({ object, updateState }) => {
-    
-    const dispatch = useDispatch();
-
-    const programId = object.programId;
-
-    const { programList } = useSelector(state => ({
-        programList: selectFactoryRESTResponseTableValues(selectProgramsStore)(state)
-    }));
-
-    const { isProgramsCallInProgress } = useSelector(state => ({
-        isProgramsCallInProgress: state.ProgramsStore.isCallInProgress
-    }));
-
-    useEffect(() => {
-        dispatch(getProgramsRequest());
-    }, []);
-
-    const OrgProgs = () => programList.filter(elem => programId.includes(elem._id));
-    const nonOrgProgs = () => programList.filter(elem => !programId.includes(elem._id));
-
-    const columns = useMemo(
-        () => [
-            { title: 'Name', field: 'name' },
-            { title: 'Code', field: 'code' },
-            { title: 'Active', type: 'boolean', field: 'isActive' }
-        ]
-    );
-
-    const options = useMemo(
-        () => ({ actionsColumnIndex: -1, search: false, showTitle: true }),
-        []
-    );
-
-    const left_actions = useMemo(
-        () => [
-            {
-                icon: DeleteIcon,
-                tooltip: 'Remove from Organization',
-                onClick: (_event, prog) => 
-                    updateState('programId', object.programId.filter(elem => elem!==prog._id))
-            }
-        ]
-    );
-
-    const right_actions = useMemo(
-        () => [
-            {
-                icon: AddIcon,
-                tooltip: 'Add to Organization',
-                onClick: (_event, prog) =>
-                    updateState('programId', object.programId.concat(prog._id))
-            }
-        ]
-    );
-
-    return isProgramsCallInProgress? <Loading /> : (
-        <div className="tableContainer">
-            <div className="tableWrapper">
-                <MaterialTable
-                    title="Linked Programs"
-                    columns={columns}
-                    data={OrgProgs()}
-                    options={options}
-                    actions={object.active? left_actions : null}
-                />
-            </div>
-            <div className="tableWrapper">
-                <MaterialTable
-                    title="Other Programs"
-                    columns={columns}
-                    data={nonOrgProgs()}
-                    options={options}
-                    actions={object.active? right_actions : null}
-                />
-            </div>
-        </div>
-    );
-};
-
 const TabPanel = (props) => {
     const { children, value, index, ...other } = props;
 
@@ -295,8 +213,15 @@ const makeIdentifier = (index) => ({
 const OrganizationForm = (props) => {
 
     const [current, setCurrent] = useState(0);
-
     const handleChange = (event, value) => setCurrent(value);
+
+    const onClickAdd = (_event, program) => {
+        props.updateState('programId', props.object.programId.concat(program._id));
+    }
+
+    const onClickDelete = (_event, program) => {
+        props.updateState('programId', props.object.programId.filter(elem => elem!==program._id));
+    }
 
     return (
         <Paper>
@@ -313,7 +238,12 @@ const OrganizationForm = (props) => {
                         <OrgInfo {...props} />
                     </TabPanel>
                     <TabPanel value={current} index={1}>
-                        <ProgList {...props} />
+                        <ProgList 
+                            programIds={props.object.programId}
+                            isEditable={props.object.active}
+                            onClickAdd={onClickAdd}
+                            onClickDelete={onClickDelete}
+                        />
                     </TabPanel>
 
                     <div className="formActions">
