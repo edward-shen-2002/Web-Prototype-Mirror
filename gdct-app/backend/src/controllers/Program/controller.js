@@ -57,8 +57,21 @@ const ProgramController = Service(
               .deleteProgram(_id)
               .then(() => res.end())
               .catch(next)
-          }
-        )
+          })
+
+        router.post(
+          '/programs/searchProgramsByIds',
+          (req, res, next) => {
+            const { ids } = req.body;
+
+            service
+              .findProgramByIds(ids)
+              .then((programs) => {
+                res.json({programs});
+              })
+            })
+          
+
 
         return router
       }

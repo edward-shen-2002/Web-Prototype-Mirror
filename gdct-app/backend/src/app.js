@@ -22,6 +22,7 @@ import ReportingPeriodController from './controllers/ReportingPeriod'
 import COAController from './controllers/COA'
 import COATreeController from './controllers/COATree'
 import COAGroupController from './controllers/COAGroup'
+import OrgController from './controllers/Organization'
 import SheetNameController from './controllers/SheetName'
 import AppSysController from './controllers/AppSys'
 import AppRoleController from './controllers/AppRole'
@@ -76,5 +77,7 @@ app.use('/COA_manager', Container.get(COAGroupController))
 app.use('/appsys_manager', Container.get(AppSysController))
 app.use('/approle_manager', Container.get(AppRoleController))
 app.use('/appsysrole_manager', Container.get(AppSysRoleController))
+
+app.use('/', Container.get(OrgController));
 
 export default app

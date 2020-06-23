@@ -4,7 +4,9 @@ const OrganizationGroupModel = model(
   'OrganizationGroup',
   new Schema(
     {
-      name: { type: String, required: true, unique: true }
+      id : {type: String, required: true, unique: true },
+      name: { type: String},
+      isActive: {type: Boolean}
     },
     { minimize: false }
   ),

@@ -1,5 +1,4 @@
 import { Service } from 'typedi'
-
 import { Router } from 'express'
 import ColumnNameService from '../../services/ColumnName'
 

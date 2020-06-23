@@ -1,7 +1,9 @@
 import ProgramEntity from '../../entities/Program'
 import BaseRepository from '../repository'
 import ProgramModel from '../../models/Program'
-import OrganizationModel from '../../models/Organization'
+
+import OrgModel from '../../models/Organization'
+
 import TemplateTypeModel from '../../models/TemplateType'
 
 export default class ProgramRepository extends BaseRepository {
@@ -12,7 +14,9 @@ export default class ProgramRepository extends BaseRepository {
   async delete(id) {
     var mongoose = require('mongoose')
     var temp = mongoose.Types.ObjectId(id)
-    OrganizationModel.find({ 'programId': temp }, function (err, program1) {
+
+    OrgModel.find({ 'programId': temp }, function (err, program1) {
+
       TemplateTypeModel.find({ 'programId': temp }, function (err, program2) {
         if (program1.length > 0 || program2.length > 0) {
           return ProgramModel;
@@ -39,4 +43,10 @@ export default class ProgramRepository extends BaseRepository {
     }
     return ProgramModel.find(realQuery);
   }
+  
+  async findByIds(ids) {
+    return ProgramModel.find({_id: {$in: ids}}, {isActive: true})
+      .then((programs) => new ProgramEntity(programs.toObject()))
+  }
+
 }

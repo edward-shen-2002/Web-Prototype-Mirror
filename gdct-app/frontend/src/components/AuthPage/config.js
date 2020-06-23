@@ -14,6 +14,8 @@ import GridOnIcon from '@material-ui/icons/GridOn'
 import AllInclusiveIcon from '@material-ui/icons/AllInclusive'
 import SpaIcon from '@material-ui/icons/Spa'
 import AppsIcon from '@material-ui/icons/Apps'
+import AccountBalance from '@material-ui/icons/AccountBalance'
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 
 const createUserNavigation = () => {
   return [
@@ -22,6 +24,31 @@ const createUserNavigation = () => {
       button: false,
       type: 'title',
       icon: <PeopleAltIcon />,
+    },
+    {
+      type: 'divider'
+    },
+    {
+      name: 'Organization',
+      type: 'drawer',
+      icon: <AccountBalance />,
+      children: [
+        {
+          name: 'Organizations',
+          type: 'menu',
+          url: '/organizations',
+          icon: <AccountBalance />
+        },
+        {
+          name: 'Create Organization',
+          type: 'menu',
+          url: '/organizations/create',
+          icon: <AddCircleOutlineIcon />
+        }
+      ]
+    },
+    {
+      type: 'divider'
     },
     {
       name: 'Template',

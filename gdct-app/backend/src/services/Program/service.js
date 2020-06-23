@@ -1,4 +1,6 @@
-import Container from 'typedi'
+
+import Container, { Service } from 'typedi'
+
 import ProgramRepository from '../../repositories/Program'
 
 export default class ProgramService {
@@ -21,4 +23,10 @@ export default class ProgramService {
   async findProgram(program) {
     return this.programRepository.find(program)
   }
+
+
+  async findProgramByIds(ids) {
+    return this.ProgramRepository.findByIds(ids);
+  }
+
 }

@@ -19,6 +19,7 @@ import TemplateTypeDialog from './dialogs/TemplateTypeDialog'
 import ReportingPeriodDialog from './dialogs/ReportingPeriodDialog'
 import DialogsStore from '../store/DialogsStore/store'
 import TemplateDialog from './dialogs/TemplateDialog'
+import OrganizationDialog from './dialogs/OrganizationDialog'
 
 export const DeleteButton = ({ handleDelete }) => (
   <IconButton onClick={handleDelete} aria-label="delete">
@@ -109,6 +110,15 @@ export const SelectIdButton = ({ value, action, children }) => {
     </div>
   )
 }
+
+export const OrganizationIdButton = ({ value, onChange }) => (
+  <SelectIdButton
+    value={value}
+    action={DialogsStore.actions.OPEN_ORGANIZATION_DIALOG}
+    >
+      <OrganizationDialog handleChange={onChange} />
+  </SelectIdButton>
+)
 
 export const SubmissionPeriodIdButton = ({ value, onChange }) => (
   <SelectIdButton

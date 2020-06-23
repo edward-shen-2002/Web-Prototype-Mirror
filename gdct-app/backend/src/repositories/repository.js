@@ -16,6 +16,14 @@ export default class BaseRepository {
     throw new Error('Method not implemented.')
   }
 
+  async findAll() {
+    return this._model.find()
+      .then((result) => {
+        if(!result) throw new Error('_id does not exist')
+        return result.toObject()
+      })
+  }
+
   async delete(id) {
     return this._model.findByIdAndDelete(id)
       .then((result) => {
