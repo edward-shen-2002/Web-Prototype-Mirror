@@ -3,7 +3,7 @@ import { REST_REDUCERS } from '../common/REST/reducers';
 import { REST_STATE } from '../common/REST/state';
 
 const OrgsStore = createSlice({
-    name: 'ORGANIZATION_NAMES',
+    name: 'ORGANIZATIONS',
     initialState: REST_STATE,
     reducers: REST_REDUCERS
 });

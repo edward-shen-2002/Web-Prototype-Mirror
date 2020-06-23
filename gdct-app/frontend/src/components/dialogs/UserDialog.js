@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect } from 'react'
 
-import { closeUserDialog } from '../../store/actions/DialogsStore'
-
 import SelectableTableDialog from './SelectableTableDialog'
 
 import { getUsersRequest } from '../../store/thunks/user'

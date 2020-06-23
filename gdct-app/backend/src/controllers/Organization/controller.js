@@ -63,3 +63,5 @@ const OrgController = Service(
         })();
     }
 );
+
+export default OrgController;

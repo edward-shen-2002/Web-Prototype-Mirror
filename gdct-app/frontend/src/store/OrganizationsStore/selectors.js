@@ -28,11 +28,14 @@ const selectFactoryRESTResponseTableValues = memoizeFunction(selector => (
 
 const selectOrgsStore = store => store.OrgsStore;
 
+const selectTemplatesStore = (state) => state.TemplatesStore
+
 export {
     selectFactoryRESTError,
     selectFactoryRESTIsCallInProgress,
     selectFactoryRESTResponse,
     selectFactoryRESTResponseTableValues,
     selectFactoryRESTResponseValues,
-    selectOrgsStore
+    selectOrgsStore,
+    selectTemplatesStore
 };
