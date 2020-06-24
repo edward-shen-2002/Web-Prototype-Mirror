@@ -10,14 +10,20 @@ import List from '@material-ui/core/List'
 import Listitem from '@material-ui/core/ListItem'
 import { mapValues } from 'lodash'
 
-import './Workflow.scss'
 import { Typography, Button, ButtonGroup } from '@material-ui/core';
 import { selectWorkflowChart, selectSelectedNodeId, selectSelectedNodeValue, selectWorkflowFilter } from '../../store/WorkflowStore/selectors'
 import { WorkflowStoreActions } from '../../store/WorkflowStore/store';
 import { submitWorkflow } from '../../store/thunks/workflows';
+import './Workflow.scss'
 
-const createNodeDragData = (name) => JSON.stringify({ 
-  type: name, 
+const NodeInnerCustom = ({ node, config }) => (
+  <div className="workflowNode">
+    {node.type.name}
+  </div>
+)
+
+const createNodeDragData = (_id, name) => JSON.stringify({ 
+  type: { _id, name }, 
   ports: {
     port1: {
       id: 'port1',
@@ -46,7 +52,7 @@ const StatusItems = ({ statuses }) => (
             onDragStart={(event) => {
               event.dataTransfer.setData(
                 REACT_FLOW_CHART, 
-                createNodeDragData(name)
+                createNodeDragData(_id, name)
               )
             }}
           >
@@ -144,6 +150,9 @@ const WorkflowPane = ({ stateActions }) => {
           if (chart.nodes[fromNodeId].type === chart.nodes[toNodeId].type) return false
           return true
         },
+      }}
+      Components={{
+        NodeInner: NodeInnerCustom,
       }}
     />
   )

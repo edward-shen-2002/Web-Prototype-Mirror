@@ -1,6 +1,7 @@
 import WorkflowStore from '../WorkflowsStore/store'
 import workflowController from '../../controllers/workflow'
-import { selectWorkflowLinks, selectWorkflowNodes } from '../WorkflowStore/selectors'
+import { selectWorkflowLinks, selectWorkflowNodes, selectWorkflowName } from '../WorkflowStore/selectors'
+import { WorkflowStoreActions } from '../WorkflowStore/store'
 
 export const loadWorkflow = () => (dispatch) => {
   workflowController
@@ -10,7 +11,6 @@ export const loadWorkflow = () => (dispatch) => {
 }
 
 const markVisitableNodes = (startingNode, linkMapSet, visited) => {
-  console.log(startingNode, linkMapSet, visited)
   visited.add(startingNode)
   const adjacentNodes = linkMapSet[startingNode]
 
@@ -28,6 +28,7 @@ export const submitWorkflow = () => (dispatch, getState) => {
   
   const workflowNodes = selectWorkflowNodes(state)
   const workflowLinks = selectWorkflowLinks(state)
+  const workflowName = selectWorkflowName(state)
 
   const linkMapSet = {}
   const endNodes = new Set()
@@ -56,26 +57,39 @@ export const submitWorkflow = () => (dispatch, getState) => {
       }
     }
   })
+  
+  if(!isInitialNodePresent || !Object.keys(workflowNodes).length) return dispatch(WorkflowStoreActions.UPDATE_WORKFLOW_ERROR('There must be a starting node'))
+  
+  let visited = new Set()
 
-  if(isInitialNodePresent) {
-    let visited = new Set()
+  markVisitableNodes(initialNode, linkMapSet, visited)
 
-    markVisitableNodes(initialNode, linkMapSet, visited)
-
-    let isGraphConnected = true
-    for(let node in workflowNodes) {
-      if(!visited.has(node)) {
-        isGraphConnected = false
-        break
-      }
+  let isGraphConnected = true
+  for(let node in workflowNodes) {
+    if(!visited.has(node)) {
+      isGraphConnected = false
+      break
     }
-
-    if(isGraphConnected) {
-      console.log('connected graph')
-    } else {
-      console.error('isolated graphs')
-    }
-  } else {
-    console.error('no initial node')
   }
+
+  if(!isGraphConnected) return dispatch(WorkflowStoreActions.UPDATE_WORKFLOW_ERROR('Graphs must be connected and have at least two nodes'))
+
+  // Create the data structure of workflow process
+
+  const workflow = { name: workflowName }
+  const workflowProcesses = []
+
+  for(let linkId in linkMapSet) {
+    workflowProcesses.push(
+      {
+        statusId: workflowNodes[linkId].type._id,
+        to: [...linkMapSet[linkId]].map(
+          (toId) => workflowNodes[toId].type._id
+        )
+      }
+    )
+  }
+
+  workflowController.createWorkflow({ workflow, workflowProcesses })
+    .catch((error) => dispatch(WorkflowStoreActions.UPDATE_WORKFLOW_ERROR(error)))
 }

@@ -8,6 +8,12 @@
   flex-flow: column nowrap;
 }
 
+.workflowNode {
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+}
+
 .workflowHeader {
   @include shadow;
   display: flex;

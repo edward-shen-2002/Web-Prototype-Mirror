@@ -14,6 +14,16 @@ export const selectWorkflowFilter = createSelector(
   (workflowStore) => workflowStore.filter
 )
 
+export const selectWorkflowError = createSelector(
+  [selectWorkflowStore],
+  (workflowStore) => workflowStore.error
+)
+
+export const selectWorkflowName = createSelector(
+  [selectWorkflowStore],
+  (workflowStore) => workflowStore.name
+)
+
 // CHART FILTER
 
 export const selectSelectedWorkflowNode = createSelector(
@@ -57,8 +67,8 @@ export const selectedLinkConnection = createSelector(
     if(link) {
       const { from, to } = link
 
-      const fromValue = nodes[from.nodeId].type
-      const toValue = nodes[to.nodeId].type
+      const fromValue = nodes[from.nodeId].type.name
+      const toValue = nodes[to.nodeId].type.name
 
       return `${fromValue} -> ${toValue}`
     }
@@ -71,7 +81,7 @@ export const selectSelectedNodeValue = createSelector(
     if(selectSelectedNodetype) {
       let value = 'Selected '
       if(type === 'node') {
-        value += `node: ${selectedNode.type}`
+        value += `node: ${selectedNode.type.name}`
       } else {
         value += `link: ${selectedLinkString}`
       }
