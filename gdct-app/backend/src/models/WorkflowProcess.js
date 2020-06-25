@@ -1,6 +1,6 @@
-import { Schema, model, Types } from 'mongoose'
+import { Schema, model } from 'mongoose'
 
-const ObjectId = Types.ObjectId
+const ObjectId = Schema.Types.ObjectId
 
 const WorkflowProcessModel = model(
   'WorkflowProcess',

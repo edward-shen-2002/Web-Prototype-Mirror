@@ -47,18 +47,18 @@ export const submitWorkflow = () => (dispatch, getState) => {
   }
 
   let initialNode = null
-  let isInitialNodePresent = true
+  let isSingleInitialNode = true
   startNodes.forEach((node) => {
     if(!endNodes.has(node)) {
       if(initialNode) {
-        isInitialNodePresent = false
+        isSingleInitialNode = false
       } else {
         initialNode = node
       }
     }
   })
   
-  if(!isInitialNodePresent || !Object.keys(workflowNodes).length) return dispatch(WorkflowStoreActions.UPDATE_WORKFLOW_ERROR('There must be a starting node'))
+  if(!isSingleInitialNode || !Object.keys(workflowNodes).length) return dispatch(WorkflowStoreActions.UPDATE_WORKFLOW_ERROR('There must be only one starting node'))
   
   let visited = new Set()
 
@@ -77,19 +77,31 @@ export const submitWorkflow = () => (dispatch, getState) => {
   // Create the data structure of workflow process
 
   const workflow = { name: workflowName }
-  const workflowProcesses = []
+  const workflowProcessesData = []
+  const statusData = []
+
+  for(let nodeId in workflowNodes) {
+    const { type: { _id: statusId } } = workflowNodes[nodeId]
+    statusData.push({ id: nodeId, statusId })
+  }
 
   for(let linkId in linkMapSet) {
-    workflowProcesses.push(
+    workflowProcessesData.push(
       {
+        id: linkId,
         statusId: workflowNodes[linkId].type._id,
         to: [...linkMapSet[linkId]].map(
-          (toId) => workflowNodes[toId].type._id
+          (toId) => (
+            {
+              id: toId,
+              statusId: workflowNodes[toId].type._id
+            }
+          )
         )
       }
     )
   }
 
-  workflowController.createWorkflow({ workflow, workflowProcesses })
+  return workflowController.createWorkflow({ workflow, workflowProcessesData, statusData })
     .catch((error) => dispatch(WorkflowStoreActions.UPDATE_WORKFLOW_ERROR(error)))
 }

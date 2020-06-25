@@ -1,10 +1,14 @@
 import WorkflowProcessEntity from '../entities/WorkflowProcess'
 import BaseRepository from './repository'
 import WorkflowProcessModel from '../models/WorkflowProcess'
+import Container from 'typedi'
+import StatusRepository from './Status'
 
 export default class WorkflowProcessRepository extends BaseRepository {
     constructor() {
       super(WorkflowProcessModel)
+
+      this.statusRepository = Container.get(StatusRepository)
     }
 
     async delete(id) {
@@ -14,10 +18,15 @@ export default class WorkflowProcessRepository extends BaseRepository {
     }
   
     async create(workflowProcess) {
-      return WorkflowProcessModel.create(workflowProcess)
-        .then((workflowProcess) => {
-          return new WorkflowProcessEntity(workflowProcess.toObject())
-        })
+      return this.statusRepository.validate(workflowProcess.statusId)
+        .then(() => WorkflowProcessModel.create(workflowProcess))
+        .then((workflowProcess) => new WorkflowProcessEntity(workflowProcess.toObject()))
+    }
+
+    async createMany(workflowProcesses) {
+      return this.statusRepository.validateMany(workflowProcesses.map(({ statusId }) => statusId))
+        .then(() => WorkflowProcessModel.create(workflowProcesses))
+        .then((workflowProcesses) => workflowProcesses.map((workflowProcess) => new WorkflowProcessEntity(workflowProcess.toObject())))
     }
   
     async update(id, workflowProcess) {
