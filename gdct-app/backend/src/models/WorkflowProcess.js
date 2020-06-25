@@ -8,7 +8,14 @@ const WorkflowProcessModel = model(
     {
       workflowId: { type: ObjectId, ref: 'Workflow' },
       statusId: { type: ObjectId, ref: 'Status' },
-      to: [{ type: ObjectId, ref: 'WorkflowProcess' }]
+      to: [{ type: ObjectId, ref: 'WorkflowProcess' }],
+      position: {
+        type: Object,
+        default: {
+          x: 100,
+          y: 100
+        }
+      }
     },
     { minimize: false, autoIndex: true }
   ),

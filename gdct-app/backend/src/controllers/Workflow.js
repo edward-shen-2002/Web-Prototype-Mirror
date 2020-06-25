@@ -17,7 +17,7 @@ const WorkflowController = Service(
 
             service
               .findWorkflow({})
-              .then((workflows) => res.json({ workflows }))
+              .then((workflows) => res.json({ data: workflows }))
               .catch(next)
           }
         )
@@ -29,7 +29,7 @@ const WorkflowController = Service(
 
             service
               .findWorkflowById(_id)
-              .then((workflow) => res.json({ workflow }))
+              .then((workflow) => res.json({ data: workflow }))
               .catch(next)
           }
         )

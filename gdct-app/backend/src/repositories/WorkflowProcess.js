@@ -42,7 +42,7 @@ export default class WorkflowProcessRepository extends BaseRepository {
         if (query[key]) realQuery[key] = query[key]
       }
   
-      return WorkflowProcessModel.find(realQuery).then((workflowProcesss) =>
+      return WorkflowProcessModel.find(realQuery).populate('statusId').then((workflowProcesss) =>
         workflowProcesss.map((workflowProcess) => new WorkflowProcessEntity(workflowProcess.toObject()))
       )
     }

@@ -1,13 +1,89 @@
-import WorkflowStore from '../WorkflowsStore/store'
+import WorkflowsStore from '../WorkflowsStore/store'
 import workflowController from '../../controllers/workflow'
 import { selectWorkflowLinks, selectWorkflowNodes, selectWorkflowName } from '../WorkflowStore/selectors'
 import { WorkflowStoreActions } from '../WorkflowStore/store'
+import { initialWorkflowState } from '../WorkflowStore/store'
+import {
+  getRequestFactory,
+  deleteRequestFactory,
+  updateRequestFactory,
+} from './common/REST'
+import { cloneDeep } from 'lodash'
+import uniqid from 'uniqid'
 
-export const loadWorkflow = () => (dispatch) => {
+export const getWorkflowsRequest = getRequestFactory(
+  WorkflowsStore,
   workflowController
-    .fetchWorkflow()
-    .then((workflow) => dispatch(WorkflowStore.actions.LOAD_WORKFLOW(workflow)))
-    .catch((error) => dispatch(WorkflowStore.actions.FAIL_REQUEST(error)))
+)
+
+export const deleteWorkflowRequest = deleteRequestFactory(
+  WorkflowsStore,
+  workflowController
+)
+export const updateWorkflowRequest = updateRequestFactory(
+  WorkflowsStore,
+  workflowController
+)
+
+export const updateWorkflow = () => (dispatch) => {
+
+}
+
+export const loadWorkflow = (workflowId) => (dispatch) => {
+  workflowController
+    .fetchById(workflowId)
+    .then(({ workflow, workflowProcesses }) => {
+      const workflowState = cloneDeep(initialWorkflowState)
+      workflowState.name = workflow.name
+
+      for(let workflowProcess of workflowProcesses) {
+        const { _id, to, statusId: { _id: statusId, name }, position } = workflowProcess
+
+        workflowState.chart.nodes[_id] = {
+          id: _id,
+          position,
+          orientation: 0,
+          type: {
+            _id: statusId,
+            name
+          },
+          ports: {
+            port1: {
+              id: "port1",
+              type: "input",
+              position: { x: 100, y: 0 }
+            },
+            port2: {
+              id: "port2",
+              type: "output",
+              position: { x: 100, y: 100 }
+            },
+          },
+          properties: {
+            label: 'example link label'
+          },
+          size: { width: 200, height: 100 }
+        }
+
+        for(let connectionId of to) {
+          const linkId = uniqid()
+          workflowState.chart.links[linkId] = {
+            id: linkId,
+            from: {
+              nodeId: _id,
+              portId: "port2"
+            },
+            to: {
+              nodeId: connectionId,
+              portId: "port1"
+            }
+          }
+        }
+        
+      }
+
+      dispatch(WorkflowStoreActions.UPDATE(workflowState))
+    })
 }
 
 const markVisitableNodes = (startingNode, linkMapSet, visited) => {
@@ -86,10 +162,11 @@ export const submitWorkflow = () => (dispatch, getState) => {
   }
 
   for(let linkId in linkMapSet) {
+    const node = workflowNodes[linkId]
     workflowProcessesData.push(
       {
         id: linkId,
-        statusId: workflowNodes[linkId].type._id,
+        statusId: node.type._id,
         to: [...linkMapSet[linkId]].map(
           (toId) => (
             {
@@ -97,11 +174,12 @@ export const submitWorkflow = () => (dispatch, getState) => {
               statusId: workflowNodes[toId].type._id
             }
           )
-        )
+        ),
+        position: node.position
       }
     )
   }
 
-  return workflowController.createWorkflow({ workflow, workflowProcessesData, statusData })
+  return workflowController.create({ workflow, workflowProcessesData, statusData })
     .catch((error) => dispatch(WorkflowStoreActions.UPDATE_WORKFLOW_ERROR(error)))
 }

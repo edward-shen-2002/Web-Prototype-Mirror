@@ -11,10 +11,11 @@ import Listitem from '@material-ui/core/ListItem'
 import { mapValues } from 'lodash'
 
 import { Typography, Button, ButtonGroup } from '@material-ui/core';
-import { selectWorkflowChart, selectSelectedNodeId, selectSelectedNodeValue, selectWorkflowFilter } from '../../store/WorkflowStore/selectors'
+import { selectWorkflowChart, selectSelectedNodeId, selectSelectedNodeValue, selectWorkflowFilter, selectWorkflowName } from '../../store/WorkflowStore/selectors'
 import { WorkflowStoreActions } from '../../store/WorkflowStore/store';
-import { submitWorkflow } from '../../store/thunks/workflows';
+import { submitWorkflow, updateWorkflow, loadWorkflow } from '../../store/thunks/workflow';
 import './Workflow.scss'
+import { useRouteMatch } from 'react-router-dom';
 
 const NodeInnerCustom = ({ node, config }) => (
   <div className="workflowNode">
@@ -90,7 +91,8 @@ const WorkflowStatuses = () => {
   let { statuses, workflowFilter } = useSelector(
     (state) => ({
       statuses: selectFactoryRESTResponseValues(selectStatusesStore)(state),
-      workflowFilter: selectWorkflowFilter(state)
+      workflowFilter: selectWorkflowFilter(state),
+      name: selectWorkflowName
     }), 
     shallowEqual
   )
@@ -147,8 +149,7 @@ const WorkflowPane = ({ stateActions }) => {
       config={{
         validateLink: ({ linkId, fromNodeId, fromPortId, toNodeId, toPortId, chart }) => {
           // no links between same type nodes
-          if (chart.nodes[fromNodeId].type === chart.nodes[toNodeId].type) return false
-          return true
+          return chart.nodes[fromNodeId].type !== chart.nodes[toNodeId].type
         },
       }}
       Components={{
@@ -158,13 +159,13 @@ const WorkflowPane = ({ stateActions }) => {
   )
 } 
 
-const WorkflowHeaderActions = () => {
+const WorkflowHeaderActions = ({ type }) => {
   const dispatch = useDispatch()
   // submitWorkflow
 
   const handleSave = useCallback(
     () => {
-      dispatch(submitWorkflow())
+      dispatch(type === 'create' ? submitWorkflow() : updateWorkflow())
     },
     [dispatch]
   )
@@ -176,8 +177,13 @@ const WorkflowHeaderActions = () => {
   )
 }
 
-const WorkflowHeader = () => {
+const WorkflowHeader = ({ type }) => {
   const dispatch = useDispatch()
+
+  const name = useSelector(
+    (state) => selectWorkflowName(state),
+    shallowEqual
+  )
 
   const handleChangeName = useCallback(
     ({ target: { value } }) => dispatch(WorkflowStoreActions.UPDATE_WORKFLOW_NAME(value)),
@@ -186,8 +192,8 @@ const WorkflowHeader = () => {
 
   return (
     <div className="workflowHeader">
-      <TextField variant="outlined" size="small" placeholder="Name" onChange={handleChangeName}/>
-      <WorkflowHeaderActions/>
+      <TextField variant="outlined" size="small" placeholder="Name" value={name} onChange={handleChangeName}/>
+      <WorkflowHeaderActions type={type}/>
     </div>
   )
 }
@@ -209,12 +215,26 @@ const Workflow = () => {
   )
 }
 
-const WorkflowContainer = () => (
-  <div className="workflowContainer">
-    <WorkflowHeader/>
-    <Workflow/>
-  </div>
-)
+const WorkflowContainer = ({ type }) => {
+  const dispatch = useDispatch()
+  const { params: { _id } } = useRouteMatch()
+
+  useEffect(
+    () => {
+      if(_id) dispatch(loadWorkflow(_id))
+
+      return () => dispatch(WorkflowStoreActions.RESET())
+    },
+    [dispatch]
+  )
+
+  return (
+    <div className="workflowContainer">
+      <WorkflowHeader type={type}/>
+      <Workflow type={type}/>
+    </div>
+  )
+}
 
 
 export default WorkflowContainer

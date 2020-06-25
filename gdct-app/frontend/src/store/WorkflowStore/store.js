@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const sampleChart = {
+export const defaultChart = {
   offset: {
     x: 0,
     y: 0,
@@ -12,8 +12,8 @@ const sampleChart = {
   hovered: {},
 }
 
-const initialState = {
-  chart: sampleChart,
+export const initialWorkflowState = {
+  chart: defaultChart,
   filter: '',
   name: '',
   error: null
@@ -42,18 +42,23 @@ const UPDATE_WORKFLOW_ERROR = (state, action) => {
   return state
 }
 
+const UPDATE = (_state, action) => action.payload
+const RESET = () => initialWorkflowState
+
 const reducers = {
   UPDATE_WORKFLOW_CHART,
   UPDATE_WORKFLOW_FILTER,
   UPDATE_WORKFLOW_NAME,
-  UPDATE_WORKFLOW_ERROR
+  UPDATE_WORKFLOW_ERROR,
+  UPDATE,
+  RESET
 }
 
 export const WorkflowStore = createSlice(
   {
     name: 'WORKFLOW',
     reducers,
-    initialState
+    initialState: initialWorkflowState
   }
 )
 

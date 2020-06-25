@@ -1,32 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { REST_REDUCERS } from '../common/REST/reducers'
+import { REST_STATE } from '../common/REST/state'
 
-import { REQUEST, FAIL_REQUEST } from '../common/REST/reducers'
-
-const LOAD = (_state, { payload }) => ({
-  ...state,
-  isCallInProgress: false,
-  workflow: payload,
-})
-
-const CLEAR = () => initialState
-
-const reducers = {
-  REQUEST,
-  LOAD,
-  CLEAR,
-  FAIL_REQUEST,
-}
-
-const initialState = {
-  workflow: undefined,
-  isCallInProgress: false,
-  error: undefined,
-}
-
-const WorkflowStore = createSlice({
+export const WorkflowsStore = createSlice({
   name: 'WORKFLOW',
-  initialState,
-  reducers,
+  initialState: REST_STATE,
+  reducers: REST_REDUCERS,
 })
 
-export default WorkflowStore
+export default WorkflowsStore

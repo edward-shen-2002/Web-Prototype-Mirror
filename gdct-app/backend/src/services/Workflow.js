@@ -31,7 +31,7 @@ export default class WorkflowService {
     const workflowProcessesMap = {}
 
     if(statusData.length < 2) throw 'There must be at least two node'
-    if(!workflowProcesses.length) throw 'There must be at least one link'
+    if(!workflowProcessesData.length) throw 'There must be at least one link'
 
     workflow._id = objectId()
 
@@ -49,16 +49,27 @@ export default class WorkflowService {
 
     // Link the workflow processes
     for(let item of workflowProcessesData) {
-      const { id, to } = item
+      const { id, to, position } = item
       workflowProcessesMap[id].to = to.map(
         ({ id }) => workflowProcessesMap[id]._id 
       )
+
+      workflowProcessesMap[id].position = position
     }
     
     const workflowProcesses = Object.values(workflowProcessesMap)
 
     return this.workflowRepository.create(workflow)
       .then(() => this.workflowProcessesRepository.createMany(workflowProcesses))
+  }
+
+  async findWorkflowById(id) {
+    return this.workflowRepository.findById(id)
+      .then(async (workflow) => {
+
+        return this.workflowProcessesRepository.find({ workflowId: id })
+          .then((workflowProcesses) => ({ workflow, workflowProcesses }))
+      })
   }
 
   async deleteWorkflow(id) {

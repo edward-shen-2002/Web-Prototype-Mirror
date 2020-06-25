@@ -46,8 +46,12 @@ export default class BaseRepository {
         }
       })
       .then((documents) => {
-        if (documents.length !== ids.length)
-          throw `${this._model.collection.name}(s) not found`
+        const idSet = new Set(ids)
+
+        for(let document of documents) {
+          if(!idSet.has(document._id.toString())) 
+            throw `${this._model.collection.name}(s) not found`
+        }
       })
   }
 }
