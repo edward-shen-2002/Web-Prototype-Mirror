@@ -64,10 +64,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignInSide({ setLoggedIn }) {
   const classes = useStyles()
-  const [email, setEmail] = useState()
-  const [password, setPassword] = useState()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
-  const handleChange = (name, value) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target
     switch (name) {
       case 'password':
         setPassword(value)

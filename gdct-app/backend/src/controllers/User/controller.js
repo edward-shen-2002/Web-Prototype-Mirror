@@ -24,13 +24,6 @@ const UserController = Service([UserService], (service) => {
     };
     if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
     res.cookie('jwt', token, cookieOptions);
-    // res.header("Access-Control-Allow-Origin", ["http://localhost:3003"]);
-    // res.header("Access-Control-Allow-Methods", "POST, PUT, GET, DELETE");
-    // res.header(
-    // "Access-Control-Allow-Headers",
-    // "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With",
-    // );
-    // res.header("Access-Control-Allow-Credentials", true);
     user.password = undefined;
     res.status(code).json({
       status: 'success',

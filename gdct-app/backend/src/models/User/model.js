@@ -39,48 +39,84 @@ const findByUsername = (model, queryParameters) =>
 
 const User = new Schema(
   {
-    username: { type: String, unique: true, required: true },
-    hashedUsername: { type: String, default: '' },
-    title: { type: String, default: '' },
-    ext: { type: String, default: '' },
+    username: { type: String, lowercase: true, required: true },
+
     email: { type: String, required: true },
 
+    title: { type: String, default: '' },
     firstName: { type: String, default: '' },
     lastName: { type: String, default: '' },
 
     phoneNumber: { type: String, default: '' },
+
+    password: { type: String, required: true, select: false },
     sysRole: [
       {
-        appSys: { type: String, default: '' },
-        role: { type: String, default: '' },
-        org: [
-          {
-            orgId: { type: String, default: '' },
-            orgName: { type: String, default: '' },
-            IsActive: { type: Boolean },
-            program: [
-              {
-                programId: { type: ObjectId, ref: 'program' },
-                programCode: { type: String, default: '' },
-                template: [
-                  {
-                    templateTypeId: { type: ObjectId, ref: 'templateType' },
-                    templateCode: { type: String, default: '' },
-                  },
-                ],
-              },
-            ],
-          },
-        ],
+        type: Schema.ObjectId,
+        ref: 'AppSysRole',
       },
     ],
 
-    startDate: { type: Date, default: Date.now, required: true },
-    endDate: { type: Date, default: Date.now, required: true },
-    IsActive: { type: Boolean, required: true, default: true },
+    isActive: {
+      type: Boolean,
+      default: true,
+      select: false,
+    },
+    isEmailVerified: { type: Boolean, required: true, default: false },
+
+    creationDate: { type: Date, default: Date.now, required: true },
+    approvedDate: { type: Date, default: Date.now, required: true },
+
+    startDate: { type: Date },
+    endDate: { type: Date },
   },
   { minimize: false }
 );
+// TODO: Hoanan
+// const User = new Schema(
+//   {
+//     username: { type: String, unique: true, required: true },
+//     hashedUsername: { type: String, default: '' },
+//     title: { type: String, default: '' },
+//     ext: { type: String, default: '' },
+//     email: { type: String, required: true },
+
+//     firstName: { type: String, default: '' },
+//     lastName: { type: String, default: '' },
+
+//     phoneNumber: { type: String, default: '' },
+//     sysRole: [
+//       {
+//         appSys: { type: String, default: '' },
+//         role: { type: String, default: '' },
+//         org: [
+//           {
+//             orgId: { type: String, default: '' },
+//             orgName: { type: String, default: '' },
+//             IsActive: { type: Boolean },
+//             program: [
+//               {
+//                 programId: { type: ObjectId, ref: 'program' },
+//                 programCode: { type: String, default: '' },
+//                 template: [
+//                   {
+//                     templateTypeId: { type: ObjectId, ref: 'templateType' },
+//                     templateCode: { type: String, default: '' },
+//                   },
+//                 ],
+//               },
+//             ],
+//           },
+//         ],
+//       },
+//     ],
+
+//     startDate: { type: Date, default: Date.now, required: true },
+//     endDate: { type: Date, default: Date.now, required: true },
+//     IsActive: { type: Boolean, required: true, default: true },
+//   },
+//   { minimize: false }
+// );
 
 User.pre('save', async function (next) {
   const salt = await bcrypt.genSalt(12);

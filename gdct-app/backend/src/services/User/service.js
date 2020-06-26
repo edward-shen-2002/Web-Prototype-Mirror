@@ -1,13 +1,12 @@
-import User from '../../entities/User';
 import UserRepository from '../../repositories/User';
 import AppSysRoleRepository from '../../repositories/AppSysRole';
 import Container, { Service } from 'typedi';
-import {
-  sendUserVerficationEmail,
-  sendAdminVerficationEmail,
-  sendUserActiveEmail,
-  sendUserRejectEmail,
-} from '../../loader/mail';
+// import {
+//   sendUserVerficationEmail,
+//   sendAdminVerficationEmail,
+//   sendUserActiveEmail,
+//   sendUserRejectEmail,
+// } from '../../loader/mail';
 import ErrorGDCT from '../../utils/errorGDCT';
 
 // @Service()
