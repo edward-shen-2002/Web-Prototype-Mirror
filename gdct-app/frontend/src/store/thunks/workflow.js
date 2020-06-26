@@ -20,6 +20,7 @@ export const deleteWorkflowRequest = deleteRequestFactory(
   WorkflowsStore,
   workflowController
 )
+
 export const updateWorkflowRequest = updateRequestFactory(
   WorkflowsStore,
   workflowController

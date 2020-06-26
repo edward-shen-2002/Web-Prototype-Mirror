@@ -72,8 +72,9 @@ export default class WorkflowService {
       })
   }
 
-  async deleteWorkflow(id) {
-    return this.workflowRepository.delete(id)
+  async deleteWorkflow(workflowId) {
+    return this.workflowRepository.delete(workflowId)
+      .then(() => this.workflowProcessesRepository.deleteMany(workflowId))
   }
 
   async updateWorkflow(id, workflow) {

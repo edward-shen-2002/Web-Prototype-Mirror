@@ -9,7 +9,7 @@ const workflowController = (() => {
     //   workflowAxios.get('').then((res) => res.data.workflows),
     create: async (workflowData) =>
       workflowAxios.post('', { data: workflowData }).then((res) => res.data.workflow),
-    // deleteWorkflow: async (_id) => workflowAxios.delete(`/${_id}`),
+    delete: async (_id) => workflowAxios.delete(`/${_id}`),
     // updateWorkflow: async (workflow) =>
     //   workflowAxios.put(`/${workflow._id}`, { workflow }),
     fetch: async () =>
