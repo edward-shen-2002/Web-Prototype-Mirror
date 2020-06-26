@@ -81,32 +81,32 @@ app.use('/COA_manager', Container.get(COAGroupController));
 
 app.use(
   '/role_manager',
-  Container.get(Auth).authenticated,
-  Container.get(Auth).authorized,
+  // Container.get(Auth).authenticated,
+  // Container.get(Auth).authorized,
   Container.get(AppSysController)
 );
 app.use(
   '/role_manager',
-  Container.get(Auth).authenticated,
-  Container.get(Auth).authorized,
+  // Container.get(Auth).authenticated,
+  // Container.get(Auth).authorized,
   Container.get(AppRoleController)
 );
 app.use(
   '/role_manager',
-  Container.get(Auth).authenticated,
-  Container.get(Auth).authorized,
+  // Container.get(Auth).authenticated,
+  // Container.get(Auth).authorized,
   Container.get(AppSysRoleController)
 );
 app.use(
   '/role_manager',
-  Container.get(Auth).authenticated,
-  Container.get(Auth).authorized,
+  // Container.get(Auth).authenticated,
+  // Container.get(Auth).authorized,
   Container.get(AppRoleResourceController)
 );
 app.use(
   '/role_manager',
-  Container.get(Auth).authenticated,
-  Container.get(Auth).authorized,
+  // Container.get(Auth).authenticated,
+  // Container.get(Auth).authorized,
   Container.get(AppResourceController)
 );
 
