@@ -1,16 +1,16 @@
 import BaseRepository from '../repository'
-import OrganizationGroupModel from '../../models/OrganizationGroup'
-import OrganizationGroupEntity from "../../entities/OrganizationGroup";
+import OrgGroupModel from '../../models/OrganizationGroup'
+import OrgGroupEntity from "../../entities/OrganizationGroup";
 
-export default class OrganizationGroupRepository extends BaseRepository {
+export default class OrgGroupRepository extends BaseRepository {
 
   constructor() {
-    super(OrganizationGroupModel)
+    super(OrgGroupModel)
   }
 
   async findAll() {
-    return OrganizationGroupModel.find().then(
-      (organizationGroups) => new OrganizationGroupEntity(organizationGroups.toObject())
+    return OrgGroupModel.find().then(
+      (organizationGroups) => new OrgGroupEntity(organizationGroups.toObject())
     )
   }
 }

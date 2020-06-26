@@ -1,9 +1,9 @@
 import { Service } from 'typedi'
 import { Router } from 'express'
-import OrganizationService from '../../services/Organization'
+import OrgService from '../../services/Organization'
 
-const OrganizationController = Service(
-  [OrganizationService],
+const OrgController = Service(
+  [OrgService],
   (service) => {
     const router = Router()
     return (
@@ -27,4 +27,4 @@ const OrganizationController = Service(
   }
 )
 
-export default OrganizationController
+export default OrgController

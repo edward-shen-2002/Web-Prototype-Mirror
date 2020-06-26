@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose'
 
-const OrganizationGroupModel = model(
+const OrgGroupModel = model(
   'OrganizationGroup',
   new Schema(
     {
@@ -13,4 +13,4 @@ const OrganizationGroupModel = model(
   'OrganizationGroup'
 )
 
-export default OrganizationGroupModel
+export default OrgGroupModel

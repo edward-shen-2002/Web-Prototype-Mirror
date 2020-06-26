@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose'
 
 const ObjectId = Schema.Types.ObjectId
 
-const OrganizationModel = model(
+const OrgModel = model(
   'Organization',
   new Schema(
     {
@@ -24,4 +24,4 @@ const OrganizationModel = model(
   'Organization'
 )
 
-export default OrganizationModel
+export default OrgModel
