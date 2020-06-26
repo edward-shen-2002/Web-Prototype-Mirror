@@ -101,26 +101,38 @@ const createUserNavigation = () => {
       type: 'divider',
     },
     {
-      name: 'AppSyses',
+      name: 'Resource & Role',
       icon: <AppsIcon />,
       type: 'drawer',
       children: [
         {
           name: 'AppSyses',
           type: 'menu',
-          url: '/appsys_manager/AppSyses',
+          url: '/role_manager/AppSyses',
           icon: <GroupWorkIcon />,
         },
         {
           name: 'AppSysRoles',
           type: 'menu',
-          url: '/appsys_manager/AppSysRoles',
+          url: '/role_manager/AppSysRoles',
           icon: <GroupWorkIcon />,
         },
         {
           name: 'AppRoles',
           type: 'menu',
-          url: '/appsys_manager/AppRoles',
+          url: '/role_manager/AppRoles',
+          icon: <GroupWorkIcon />,
+        },
+        {
+          name: 'AppResources',
+          type: 'menu',
+          url: '/role_manager/AppResources',
+          icon: <GroupWorkIcon />,
+        },
+        {
+          name: 'AppRoleResources',
+          type: 'menu',
+          url: '/role_manager/AppRoleResources',
           icon: <GroupWorkIcon />,
         },
       ],

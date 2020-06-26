@@ -1,4 +1,3 @@
-  
 import React, { useMemo, useEffect } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
@@ -9,13 +8,9 @@ import {
   updateAppSysRoleRequest,
 } from "../../../store/thunks/AppSysRole";
 
-import {
-  getAppRolesRequest,
-} from "../../../store/thunks/AppRole";
+import { getAppRolesRequest } from "../../../store/thunks/AppRole";
 
-import {
-  getAppSysesRequest,
-} from "../../../store/thunks/AppSys";
+import { getAppSysesRequest } from "../../../store/thunks/AppSys";
 
 import MaterialTable from "material-table";
 import Paper from "@material-ui/core/Paper";
@@ -61,15 +56,8 @@ const AppSysRolesTable = (props) => {
     acc[appRole.code] = appRole.name;
     return acc;
   }, {});
-  const lookup1 = {
-    BC: "Bundle Care",
-    SRI: "Self Reporting Initiative",
-    OHFS: "Ontario Healthcare Financial System",
-    RE: "Reporting Entities",
-  };
   const columns = useMemo(
     () => [
-      { title: "_id", field: "_id", editable: "never" },
       {
         title: "AppSys",
         field: "appSys",

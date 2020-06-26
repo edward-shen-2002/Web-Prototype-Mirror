@@ -39,7 +39,6 @@ const AppSysesTable = () => {
 
   const columns = useMemo(
     () => [
-      { title: '_id', field: '_id', editable: 'naver' },
       { title: 'Code', field: 'code' },
       { title: 'Name', field: 'name' },
     ],
