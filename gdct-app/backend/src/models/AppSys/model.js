@@ -1,15 +1,23 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model } from 'mongoose';
 
-const AppSysModel = model(
-  'AppSys',
-  new Schema(
-    {
-      code: { type: String },
-      name: { type: String }
+const AppSys = new Schema(
+  {
+    code: { type: String },
+    name: { type: String },
+    isActive: {
+      type: Boolean,
+      default: true,
+      select: false,
     },
-    { minimize: false }
-  ),
-  'AppSys'
-)
+  },
+  { minimize: false }
+);
 
-export default AppSysModel
+AppSys.pre(/^find/, function (next) {
+  this.find({ isActive: { $ne: false } });
+  next();
+});
+
+const AppSysModel = model('AppSys', AppSys, 'AppSys');
+
+export default AppSysModel;

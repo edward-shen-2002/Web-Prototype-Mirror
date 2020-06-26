@@ -1,30 +1,16 @@
-import IOrganizationGroupRepository from './interface'
-import OrganizationGroupEntity from '../../entities/OrganizationGroup'
 import BaseRepository from '../repository'
+import OrgGroupModel from '../../models/OrganizationGroup'
+import OrgGroupEntity from "../../entities/OrganizationGroup";
 
-export default class OrganizationGroupRepository extends BaseRepository {
-  create(
-    item
-  ) {
-    throw new Error('Method not implemented.')
+export default class OrgGroupRepository extends BaseRepository {
+
+  constructor() {
+    super(OrgGroupModel)
   }
-  update(
-    id,
-    item
-  ) {
-    throw new Error('Method not implemented.')
-  }
-  delete(id) {
-    throw new Error('Method not implemented.')
-  }
-  find(
-    item
-  ) {
-    throw new Error('Method not implemented.')
-  }
-  findOne(
-    id
-  ) {
-    throw new Error('Method not implemented.')
+
+  async findAll() {
+    return OrgGroupModel.find().then(
+      (organizationGroups) => new OrgGroupEntity(organizationGroups.toObject())
+    )
   }
 }

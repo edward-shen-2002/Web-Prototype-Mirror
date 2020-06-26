@@ -18,7 +18,6 @@ import { useHistory } from 'react-router-dom'
 import { selectSubmissionsStore } from '../../store/SubmissionsStore/selectors'
 import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
 import { TemplateIdButton, StatusIdButton } from '../../components/buttons'
-import AuthPage from '../../components/AuthPage'
 
 const HeaderActions = () => {
   const history = useHistory()

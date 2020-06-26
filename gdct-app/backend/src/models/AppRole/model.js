@@ -1,17 +1,23 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model } from 'mongoose';
 
-const ObjectId = Schema.Types.ObjectId
-
-const AppRoleModel = model(
-  'AppRole',
-  new Schema(
-    {
-      code: { type: String },
-      name: { type: String }
+const AppRole = new Schema(
+  {
+    code: { type: String },
+    name: { type: String },
+    isActive: {
+      type: Boolean,
+      default: true,
+      select: false,
     },
-    { minimize: false, autoIndex: true }
-  ),
-  'AppRole'
-)
+  },
+  { minimize: false, autoIndex: true }
+);
 
-export default AppRoleModel
+AppRole.pre(/^find/, function (next) {
+  this.find({ isActive: { $ne: false } });
+  next();
+});
+
+const AppRoleModel = model('AppRole', AppRole, 'AppRole');
+
+export default AppRoleModel;
