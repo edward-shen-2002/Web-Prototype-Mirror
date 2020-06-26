@@ -16,7 +16,8 @@ export const initialWorkflowState = {
   chart: defaultChart,
   filter: '',
   name: '',
-  error: null
+  error: null,
+  _id: null,
 }
 
 const UPDATE_WORKFLOW_CHART = (state, action) => {

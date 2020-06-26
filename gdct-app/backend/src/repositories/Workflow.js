@@ -18,6 +18,8 @@ export default class WorkflowRepository extends BaseRepository {
     }
   
     async update(id, workflow) {
+      workflow = { ...workflow }
+      delete workflow._id
       return WorkflowModel.findByIdAndUpdate(id, workflow).then(
         (workflow) => new WorkflowEntity(workflow.toObject())
       )

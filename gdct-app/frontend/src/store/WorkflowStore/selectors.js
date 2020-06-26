@@ -24,6 +24,11 @@ export const selectWorkflowName = createSelector(
   (workflowStore) => workflowStore.name
 )
 
+export const selectWorkflowId = createSelector(
+  [selectWorkflowStore],
+  (workflowStore) => workflowStore._id
+)
+
 // CHART FILTER
 
 export const selectSelectedWorkflowNode = createSelector(

@@ -48,10 +48,9 @@ const WorkflowController = Service(
           '/workflows/:_id',
           (req, res, next) => {
             const { _id } = req.params
-            const { workflow } = req.body
 
             service
-              .updateWorkflow(_id, workflow)
+              .updateWorkflow(_id, req.body.data)
               .then(() => res.end())
               .catch(next)
           }

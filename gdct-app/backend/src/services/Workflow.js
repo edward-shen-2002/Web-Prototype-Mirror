@@ -18,6 +18,40 @@ const markVisitableNodes = (startingNode, linkMapSet, visited) => {
   }
 }
 
+const getWorkflowProcesses = (workflowData) => {
+  let { workflow, workflowProcessesData, statusData } = workflowData
+  const workflowProcessesMap = {}
+
+  if(statusData.length < 2) throw 'There must be at least two node'
+  if(!workflowProcessesData.length) throw 'There must be at least one link'
+
+  workflow._id = workflow._id ? workflow._id : objectId()
+
+  // Create a workflow process for each node
+  for(let item of statusData) {
+    const { id, statusId } = item
+
+    workflowProcessesMap[id] = {
+      _id: objectId(),
+      workflowId: workflow._id,
+      statusId,
+      to: []
+    }
+  }
+
+  // Link the workflow processes
+  for(let item of workflowProcessesData) {
+    const { id, to, position } = item
+    workflowProcessesMap[id].to = to.map(
+      ({ id }) => workflowProcessesMap[id]._id 
+    )
+
+    workflowProcessesMap[id].position = position
+  }
+  
+  return Object.values(workflowProcessesMap)
+}
+
 // TODO : Validate links - make sure there is only one starting node and connected graph
 // @Service()
 export default class WorkflowService {
@@ -27,39 +61,9 @@ export default class WorkflowService {
   }
 
   async createWorkflow(workflowData) {
-    let { workflow, workflowProcessesData, statusData } = workflowData
-    const workflowProcessesMap = {}
+    const workflowProcesses = getWorkflowProcesses(workflowData)
 
-    if(statusData.length < 2) throw 'There must be at least two node'
-    if(!workflowProcessesData.length) throw 'There must be at least one link'
-
-    workflow._id = objectId()
-
-    // Create a workflow process for each node
-    for(let item of statusData) {
-      const { id, statusId } = item
-
-      workflowProcessesMap[id] = {
-        _id: objectId(),
-        workflowId: workflow._id,
-        statusId,
-        to: []
-      }
-    }
-
-    // Link the workflow processes
-    for(let item of workflowProcessesData) {
-      const { id, to, position } = item
-      workflowProcessesMap[id].to = to.map(
-        ({ id }) => workflowProcessesMap[id]._id 
-      )
-
-      workflowProcessesMap[id].position = position
-    }
-    
-    const workflowProcesses = Object.values(workflowProcessesMap)
-
-    return this.workflowRepository.create(workflow)
+    return this.workflowRepository.create(workflowData.workflow)
       .then(() => this.workflowProcessesRepository.createMany(workflowProcesses))
   }
 
@@ -77,8 +81,11 @@ export default class WorkflowService {
       .then(() => this.workflowProcessesRepository.deleteMany(workflowId))
   }
 
-  async updateWorkflow(id, workflow) {
-    return this.workflowRepository.update(id, workflow)
+  async updateWorkflow(id, workflowData) {
+    const workflowProcesses = getWorkflowProcesses(workflowData)
+    return this.workflowProcessesRepository.deleteMany(id)
+      .then(() => this.workflowRepository.update(id, workflowData.workflow)) 
+      .then(() => this.workflowProcessesRepository.createMany(workflowProcesses))
   }
 
   async findWorkflow(workflow) {
