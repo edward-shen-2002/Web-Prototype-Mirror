@@ -8,6 +8,7 @@ import {
     updateTemplateTypeRequest
 } from '../../../store/thunks/templateType'
 import Loading from '../../../components/Loading/Loading'
+import ProgramList from '../../../views/OrganizationRouter/ProgramList'
 
 import {
     getProgramsRequest,
@@ -88,6 +89,7 @@ const TemplateTypeTable = ({
     )
 }
 
+// unused
 const LinkProgramsTable = ({history, match:{params:{_id}}}) => {
     const dispatch = useDispatch()
     const isTemplateTypesCallInProgress = useSelector(
@@ -186,12 +188,58 @@ const LinkProgramsTable = ({history, match:{params:{_id}}}) => {
     )
 }
 
+const LinkProgramTable = ({history, match:{params:{_id}}}) => {
+    const dispatch = useDispatch();
+    const { templateType } = useSelector(
+        (state) => ({
+          templateType: ( selectFactoryRESTResponseTableValues(
+            selectTemplateTypesStore
+          )(state).filter(elem => elem._id == _id) || [{}] )[0],
+        }),
+        shallowEqual
+    );
+    const isTemplateTypesCallInProgress = useSelector(
+        ({ TemplateTypesStore: { isCallInProgress } }) => isCallInProgress
+    )
+    const isProgramsCallInProgress = useSelector(
+        ({ ProgramsStore: {isCallInProgress} }) => isCallInProgress
+    )
+    const isCallInProgress = isTemplateTypesCallInProgress && isProgramsCallInProgress;
+    const accept = result => {
+        redirect();
+    }
+    const reject = error => {
+        // reflect error message on form somehow o.O
+        alert('Missing or invalid parameters')
+    }
+    const onClickAdd = (_event, program) => {
+        templateType.programIds.push(program._id);
+        dispatch(updateTemplateTypeRequest(templateType), accept, reject);
+    };
+    const onClickDelete = (_event, program) => {
+        templateType.programIds = templateType.programIds.filter(elem => elem != program._id);
+        dispatch(updateTemplateTypeRequest(templateType), accept, reject);
+    };
+    console.log(templateType);
+    return !templateType || isCallInProgress ? (
+        <Loading />
+    ) : (
+        <ProgramList
+            programIds = {templateType.programIds}
+            isEditable = {true}
+            onClickAdd = {onClickAdd}
+            onClickDelete = {onClickDelete}
+        />
+    )
+}
+
 const TemplateType = (props) => (
     <div className="templateTypePage">
       <TemplateTypeHeader />
       {/* <FileDropzone/> */}
       <TemplateTypeTable {...props} />
-      <LinkProgramsTable {...props} />
+      {/* <LinkProgramsTable {...props} />  OLD CODE WILL DELETE */}
+      <LinkProgramTable {...props} />
     </div>
 )
 
