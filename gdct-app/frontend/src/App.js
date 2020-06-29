@@ -22,18 +22,6 @@ import SignUp from './views/SignUp'
 const PrivateRouter = () => {
   return (
     <Switch>
-      <Route
-        exact
-        path="/"
-        component={(props) =>
-          isOnline ? (
-            // <Redirect to="/template_manager/templates" />
-            <Redirect to="/sheetNames" />
-          ) : (
-            <Login {...props} />
-          )
-        }
-      />
       <Route path={ROUTE_WORKFLOW} component={WorkflowRouter} />
       <Route path="/template_manager" component={TemplateRouter} />
       <Route path="/COA_manager" component={COARouter} />
@@ -70,7 +58,7 @@ const App = () => {
         setLoggedIn(false)
       })
   }, [])
-
+  
   return (
     <div className="appContainer">
       {isLoggedIn === null ? (
