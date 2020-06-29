@@ -13,7 +13,7 @@ import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
 import GridOnIcon from '@material-ui/icons/GridOn'
 import AllInclusiveIcon from '@material-ui/icons/AllInclusive'
 import AppsIcon from '@material-ui/icons/Apps'
-import { ROUTE_WORKFLOW_WORKFLOWS, ROUTE_WORKFLOW_WORKFLOWS_CREATE } from '../../constants/routes'
+import { ROUTE_WORKFLOW_WORKFLOWS, ROUTE_WORKFLOW_WORKFLOWS_CREATE, ROUTE_COLUMN_NAMES } from '../../constants/routes'
 
 const createUserNavigation = () => {
   return [
@@ -164,6 +164,12 @@ const createUserNavigation = () => {
       type: 'menu',
       url: ROUTE_WORKFLOW_WORKFLOWS,
       icon: <AllInclusiveIcon />,
+    },
+    {
+      name: 'Column Names',
+      type: 'menu',
+      url: ROUTE_COLUMN_NAMES,
+      icon: <GridOnIcon />,
     }
   ]
 }

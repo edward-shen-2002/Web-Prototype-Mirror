@@ -15,9 +15,10 @@ import UserController from './controllers/User'
 
 import './App.scss'
 import Login from './views/Login'
-import { ROUTE_WORKFLOW } from './constants/routes'
+import { ROUTE_WORKFLOW, ROUTE_COLUMN_NAMES } from './constants/routes'
 import WorkflowRouter from './views/WorkflowRouter/WorkflowRouter'
 import SignUp from './views/SignUp'
+import ColumnNames from './views/ColumnNames'
 
 const PrivateRouter = () => {
   return (
@@ -30,6 +31,7 @@ const PrivateRouter = () => {
       <Route path="/submission_manager" component={SubmissionRouter} />
       <Route path="/reportingPeriods" component={ReportingPeriods} />
       <Route path="/sheetNames" component={SheetNames} />
+      <Route path={ROUTE_COLUMN_NAMES} component={ColumnNames} />
       <Redirect from="*" to="/sheetNames" />
     </Switch>
   )
