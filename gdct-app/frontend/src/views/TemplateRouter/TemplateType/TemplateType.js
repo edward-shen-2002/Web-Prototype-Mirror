@@ -89,105 +89,6 @@ const TemplateTypeTable = ({
     )
 }
 
-// unused
-const LinkProgramsTable = ({history, match:{params:{_id}}}) => {
-    const dispatch = useDispatch()
-    const isTemplateTypesCallInProgress = useSelector(
-        ({ TemplateTypesStore: { isCallInProgress } }) => isCallInProgress
-    )
-    const isProgramsCallInProgress = useSelector(
-        ({ ProgramsStore: {isCallInProgress} }) => isCallInProgress
-    )
-    const isCallInProgress = isTemplateTypesCallInProgress && isProgramsCallInProgress;
-    const { templateType, programs } = useSelector(
-        (state) => ({
-          templateType: ( selectFactoryRESTResponseTableValues(
-            selectTemplateTypesStore
-          )(state).filter(elem => elem._id == _id) || [{}] )[0],
-          programs: selectFactoryRESTResponseTableValues(selectProgramsStore)(
-            state
-          ),
-        }),
-        shallowEqual
-    )
-    const lookupPrograms = programs.reduce(function(acc, program) {
-        acc[program._id] = program.name;
-        return acc;
-    }, {});
-    const columns = useMemo(
-        () => [
-            {title: 'Program Id', field: 'programId', editable: 'never'},
-            {title: 'Program Name', field: 'programName', lookup: lookupPrograms},
-            {title: 'Program Code', field: 'programCode', editable: 'never'},
-            {title: 'Active', type: 'boolean', field: 'isActive', editable: 'never'},
-        ],[lookupPrograms]
-    )
-    const editable = useMemo(
-        () => ({
-            onRowAdd: (program) =>
-                new Promise((resolve, reject) => {
-                    let isRepeat = false;
-                    for(let i = 0; i < templateType.programIds.length; i++)
-                        if(program.programName == templateType.programIds[i]) isRepeat = true;
-                    if(isRepeat) {
-                        alert('This program is already linked.');
-                        reject();
-                    }
-                    else {
-                        templateType.programIds.push(program.programName);
-                        dispatch(updateTemplateTypeRequest(templateType, resolve, reject));
-                    }
-                }),
-            onRowDelete: (program) =>
-                new Promise((resolve, reject) => {
-                    templateType.programIds = templateType.programIds.filter(elem => elem != program.programId);
-                    dispatch(updateTemplateTypeRequest(templateType, resolve, reject));
-                })
-        }),
-        [dispatch, templateType, lookupPrograms]
-    )
-    const options = useMemo(
-        () => ({actionsColumnIndex: -1}),
-        []
-    )
-    
-    useEffect(
-        () => {
-            dispatch(getTemplateTypesRequest())
-            dispatch(getProgramsRequest())
-        },
-        [dispatch]
-    )
-        
-    // convert programIds into data array
-    let data = [];
-    if(!isCallInProgress && templateType && programs) {
-        for(let i = 0; i < templateType.programIds.length; i++) {
-            let curProgramId = templateType.programIds[i];
-            let curProgram = ( programs.filter(elem => elem._id == curProgramId) || [{}] )[0];
-            data.push(
-                {
-                    programId: curProgramId,
-                    programName: curProgram ? curProgramId : '',
-                    programCode: curProgram ? curProgram.code ? curProgram.code : '' : '',
-                    isActive: curProgram ? curProgram.isActive : 'false'
-                }
-            );
-        }
-    }
-    return isCallInProgress ? (
-        <Loading />
-    ) : (
-        <MaterialTable
-            title = 'Linked Programs'
-            data = {data}
-            columns = {columns}
-            editable = {editable}
-            options = {options}
-        />
-    )
-}
-
 const LinkProgramTable = ({history, match:{params:{_id}}}) => {
     const dispatch = useDispatch();
     const { templateType } = useSelector(
@@ -238,7 +139,6 @@ const TemplateType = (props) => (
       <TemplateTypeHeader />
       {/* <FileDropzone/> */}
       <TemplateTypeTable {...props} />
-      {/* <LinkProgramsTable {...props} />  OLD CODE WILL DELETE */}
       <LinkProgramTable {...props} />
     </div>
 )
