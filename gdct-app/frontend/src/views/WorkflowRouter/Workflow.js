@@ -10,7 +10,7 @@ import List from '@material-ui/core/List'
 import Listitem from '@material-ui/core/ListItem'
 import { mapValues } from 'lodash'
 
-import { Typography, Button, ButtonGroup } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 import { selectWorkflowChart, selectSelectedNodeId, selectSelectedNodeValue, selectWorkflowFilter, selectWorkflowName } from '../../store/WorkflowStore/selectors'
 import { WorkflowStoreActions } from '../../store/WorkflowStore/store';
 import { submitWorkflow, updateWorkflow, loadWorkflow } from '../../store/thunks/workflow';

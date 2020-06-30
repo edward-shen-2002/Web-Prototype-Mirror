@@ -84,8 +84,9 @@ const _createWorkflow = (dispatch, getState) => {
   const statusData = []
 
   for(let nodeId in workflowNodes) {
+    const node = workflowNodes[nodeId]
     const { type: { _id: statusId } } = workflowNodes[nodeId]
-    statusData.push({ id: nodeId, statusId })
+    statusData.push({ id: nodeId, statusId, position: node.position })
   }
 
   for(let linkId in linkMapSet) {
@@ -102,7 +103,6 @@ const _createWorkflow = (dispatch, getState) => {
             }
           )
         ),
-        position: node.position
       }
     )
   }
