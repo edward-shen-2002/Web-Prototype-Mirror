@@ -1,14 +1,30 @@
-import Container, { Service } from "typedi";
-import OrgRepository from "../../repositories/Organization";
+import Container, { Service } from 'typedi';
+import OrgRepository from '../../repositories/Organization';
 
-// @Service()
-export default class OrgService {
-  constructor() {
-    this.OrgRepository = Container.get(OrgRepository);
-  }
+class OrgService {
+    constructor() {
+        this.OrgRepository = Container.get(OrgRepository);
+    }
 
+    async createOrg(Org) {
+        return this.OrgRepository.create(Org);
+    }
 
-  async findOrgByOrgGroupId(OrgGroupId) {
-    return this.OrgRepository.findByOrgGroupId(OrgGroupId);
-  }
+    async deleteOrg(id) {
+        return this.OrgRepository.delete(id);
+    }
+
+    async updateOrg(id, Org) {
+        return this.OrgRepository.update(id, Org);
+    }
+
+    async findOrg(Org) {
+        return this.OrgRepository.find(Org);
+    }
+
+    async findOrgByOrgGroupId(OrgGroupId) {
+        return this.OrgRepository.findByOrgGroupId(OrgGroupId);
+    }
 }
+
+export default OrgService;

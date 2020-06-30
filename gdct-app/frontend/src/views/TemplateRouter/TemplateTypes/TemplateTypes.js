@@ -41,7 +41,7 @@ const TemplateTypesTable = ({ history }) => {
 
   const columns = useMemo(
     () => [
-      { title: '_id', field: '_id', editable: 'never' },
+      //{ title: '_id', field: '_id', editable: 'never' },
       { title: 'Name', field: 'name' },
       { title: 'Description', field: 'description' },
       { title: 'Approvable', type: 'boolean', field: 'isApprovable' },
@@ -50,6 +50,7 @@ const TemplateTypesTable = ({ history }) => {
       { title: 'Inputtable', type: 'boolean', field: 'isInputtable' },
       { title: 'Viewable', type: 'boolean', field: 'isViewable' },
       { title: 'Reportable', type: 'boolean', field: 'isReportable' },
+      { title: 'Active', type: 'boolean', field: 'isActive'}
     ],
     []
   )
@@ -59,14 +60,14 @@ const TemplateTypesTable = ({ history }) => {
       {
         icon: LaunchIcon,
         tooltip: 'View Programs',
-        onClick: (_event, templateType) => {},
+        onClick: (_event, templateType) => {history.push(`/template_manager/templateTypes/${templateType._id}`)},
       },
     ],
     [history]
   )
 
   const options = useMemo(
-    () => ({ actionsColumnIndex: -1, search: false, showTitle: false }),
+    () => ({ actionsColumnIndex: -1, search: true, showTitle: false }),
     []
   )
 

@@ -5,8 +5,10 @@ import { Route, Switch, Redirect } from 'react-router-dom'
 import { CircularProgress, Grid } from '@material-ui/core'
 import TemplateRouter from './views/TemplateRouter'
 import COARouter from './views/COARouter'
+import OrgRouter from './views/OrganizationRouter'
 import AuthPage from './components/AuthPage'
 import Statuses from './views/Statuses'
+import Programs from './views/Programs'
 import SheetNames from './views/SheetNames'
 import RoleRouter from './views/RoleRouter'
 import SubmissionRouter from './views/SubmissionRouter'
@@ -28,10 +30,12 @@ const PrivateRouter = () => {
       <Route path="/COA_manager" component={COARouter} />
       <Route path="/role_manager" component={RoleRouter} />
       <Route path="/statuses" component={Statuses} />
+      <Route path="/programs" component={Programs} />
       <Route path="/submission_manager" component={SubmissionRouter} />
       <Route path="/reportingPeriods" component={ReportingPeriods} />
       <Route path="/sheetNames" component={SheetNames} />
       <Route path={ROUTE_COLUMN_NAMES} component={ColumnNames} />
+      <Route path="/organizations" component={OrgRouter} />
       <Redirect from="*" to="/sheetNames" />
     </Switch>
   )

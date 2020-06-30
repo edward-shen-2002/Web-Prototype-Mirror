@@ -12,8 +12,12 @@ import SendIcon from '@material-ui/icons/Send'
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
 import GridOnIcon from '@material-ui/icons/GridOn'
 import AllInclusiveIcon from '@material-ui/icons/AllInclusive'
+import SpaIcon from '@material-ui/icons/Spa'
 import AppsIcon from '@material-ui/icons/Apps'
-import { ROUTE_WORKFLOW_WORKFLOWS, ROUTE_WORKFLOW_WORKFLOWS_CREATE, ROUTE_COLUMN_NAMES } from '../../constants/routes'
+import AccountBalance from '@material-ui/icons/AccountBalance'
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
+import { ROUTE_WORKFLOW_WORKFLOWS, ROUTE_COLUMN_NAMES  } from '../../constants/routes'
+
 
 const createUserNavigation = () => {
   return [
@@ -22,6 +26,31 @@ const createUserNavigation = () => {
       button: false,
       type: 'title',
       icon: <PeopleAltIcon />,
+    },
+    {
+      type: 'divider'
+    },
+    {
+      name: 'Organization',
+      type: 'drawer',
+      icon: <AccountBalance />,
+      children: [
+        {
+          name: 'Organizations',
+          type: 'menu',
+          url: '/organizations',
+          icon: <AccountBalance />
+        },
+        {
+          name: 'Create Organization',
+          type: 'menu',
+          url: '/organizations/create',
+          icon: <AddCircleOutlineIcon />
+        }
+      ]
+    },
+    {
+      type: 'divider'
     },
     {
       name: 'Template',
@@ -152,6 +181,12 @@ const createUserNavigation = () => {
       type: 'menu',
       url: '/statuses',
       icon: <AllInclusiveIcon />,
+    },
+    {
+      name: 'Programs',
+      type: 'menu',
+      url: '/programs',
+      icon: <SpaIcon />,
     },
     {
       name: 'Reporting Periods',

@@ -1,33 +1,34 @@
-import express from 'express';
+import express from 'express'
 
-import 'reflect-metadata';
+import 'reflect-metadata'
 
-import { json, urlencoded } from 'body-parser';
-import cookieParser from 'cookie-parser';
+import { json, urlencoded } from 'body-parser'
 
-import cors from 'cors';
-import passport from 'passport';
-import compression from 'compression';
+import cors from 'cors'
+import passport from 'passport'
+import compression from 'compression'
 
-import { Container } from 'typedi';
-import { PORT } from './configs/host';
-import Database from './loaders/database';
+import { Container } from 'typedi'
+import { PORT } from './configs/host'
+import Database from './loaders/database'
 
-import TemplateController from './controllers/Template';
-import StatusController from './controllers/Status';
-import TemplateTypeController from './controllers/TemplateType';
-import TemplatePackageController from './controllers/TemplatePackage';
-import SubmissionPeriodController from './controllers/SubmissionPeriod';
-import ReportingPeriodController from './controllers/ReportingPeriod';
-import COAController from './controllers/COA';
-import COATreeController from './controllers/COATree';
-import COAGroupController from './controllers/COAGroup';
-import SheetNameController from './controllers/SheetName';
-import AppSysController from './controllers/AppSys';
-import AppRoleController from './controllers/AppRole';
-import AppSysRoleController from './controllers/AppSysRole';
-import SubmissionController from './controllers/Submission';
-import ColumnNameController from './controllers/ColumnName';
+import TemplateController from './controllers/Template'
+import StatusController from './controllers/Status'
+import ProgramController from './controllers/Program'
+import TemplateTypeController from './controllers/TemplateType'
+import TemplatePackageController from './controllers/TemplatePackage'
+import SubmissionPeriodController from './controllers/SubmissionPeriod'
+import ReportingPeriodController from './controllers/ReportingPeriod'
+import COAController from './controllers/COA'
+import COATreeController from './controllers/COATree'
+import COAGroupController from './controllers/COAGroup'
+import OrgController from './controllers/Organization'
+import SheetNameController from './controllers/SheetName'
+import AppSysController from './controllers/AppSys'
+import AppRoleController from './controllers/AppRole'
+import AppSysRoleController from './controllers/AppSysRole'
+import SubmissionController from './controllers/Submission'
+import ColumnNameController from './controllers/ColumnName'
 import UserController from './controllers/User';
 import ErrorController from './controllers/errorController';
 import Auth from './interceptors';
@@ -39,6 +40,7 @@ import WorkflowController from './controllers/Workflow'
 const logger = require('morgan');
 
 const app = express();
+const cookieParser = require('cookie-parser');
 
 app.set('port', process.env.PORT || PORT);
 
@@ -63,6 +65,8 @@ app.use('/template_manager', Container.get(TemplateController))
 app.use('/template_manager', Container.get(TemplatePackageController))
 app.use('/template_manager', Container.get(TemplateTypeController))
 
+app.use('/', Container.get(ProgramController))
+
 app.use('/designer', Container.get(StatusController))
 app.use('/', Container.get(ReportingPeriodController))
 
@@ -79,6 +83,8 @@ app.use('/COA_manager', Container.get(COAGroupController))
 app.use('/appsys_manager', Container.get(AppSysController))
 app.use('/approle_manager', Container.get(AppRoleController))
 app.use('/appsysrole_manager', Container.get(AppSysRoleController))
+
+app.use('/', Container.get(OrgController));
 
 app.use('/workflow_manager', Container.get(WorkflowController))
 

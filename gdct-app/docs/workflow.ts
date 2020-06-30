@@ -13,7 +13,6 @@ interface ISubmissionComments {
 }
 
 interface ISubmission {
-  workflowId: IWorkflowId
   currentWorkflowProcessId: IWorkflowProcessId
   workflowProcessIdHistory: Array<IWorkflowProcessId>
 }

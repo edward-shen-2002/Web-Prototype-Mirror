@@ -14,10 +14,12 @@ import { CustomEditor } from '../tools/slate'
 import { cx, css } from 'emotion'
 import SubmissionPeriodDialog from './dialogs/SubmissionPeriodDialog'
 import StatusDialog from './dialogs/StatusDialog'
+import ProgramDialog from './dialogs/ProgramDialog'
 import TemplateTypeDialog from './dialogs/TemplateTypeDialog'
 import ReportingPeriodDialog from './dialogs/ReportingPeriodDialog'
 import DialogsStore from '../store/DialogsStore/store'
 import TemplateDialog from './dialogs/TemplateDialog'
+import OrganizationDialog from './dialogs/OrganizationDialog'
 
 export const DeleteButton = ({ handleDelete }) => (
   <IconButton onClick={handleDelete} aria-label="delete">
@@ -109,6 +111,15 @@ export const SelectIdButton = ({ value, action, children }) => {
   )
 }
 
+export const OrganizationIdButton = ({ value, onChange }) => (
+  <SelectIdButton
+    value={value}
+    action={DialogsStore.actions.OPEN_ORGANIZATION_DIALOG}
+    >
+      <OrganizationDialog handleChange={onChange} />
+  </SelectIdButton>
+)
+
 export const SubmissionPeriodIdButton = ({ value, onChange }) => (
   <SelectIdButton
     value={value}
@@ -133,6 +144,15 @@ export const StatusIdButton = ({ value, onChange }) => (
     action={DialogsStore.actions.OPEN_STATUS_DIALOG}
   >
     <StatusDialog handleChange={onChange} />
+  </SelectIdButton>
+)
+
+export const ProgramIdButton = ({ value, onChange }) => (
+  <SelectIdButton
+    value={value}
+    action={DialogsStore.actions.OPEN_PROGRAM_DIALOG}
+  >
+    <ProgramDialog handleChange={onChange} />
   </SelectIdButton>
 )
 

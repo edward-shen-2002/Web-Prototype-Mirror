@@ -1,13 +1,18 @@
-import axios from 'axios'
+import axios from 'axios';
 
-const organizationController = (() => {
-  const organizationAxios = axios.create({
-    baseURL: 'http://localhost:3000/organization',
-  })
-  return {
-    fetchByOrgGroupId: async (_id) =>
-      organizationAxios.get(`/searchOrganization/${_id}`).then((res) => res.data.organization),
-  }
-})()
+const orgController = (() => {
+    const orgAxios = axios.create({
+        baseURL: 'http://localhost:3000/organizations'
+    });
+    return {
+        fetchOrg: async _id => orgAxios.get(`/${_id}`).then(res => res.data.Org),
+        fetch: async () => orgAxios.get('').then(res => res.data.Orgs),
+        create: async Org => orgAxios.post('', { Org }).then(res => res.data.Org),
+        delete: async _id => orgAxios.delete(`/${_id}`),
+        update: async Org => orgAxios.put(`/${Org._id}`, { Org }),
+        fetchByOrgGroupId: async (_id) =>
+          orgAxios.get(`/searchOrganization/${_id}`).then((res) => res.data.Org),
+    };
+})();
 
-export default organizationController
+export default orgController;

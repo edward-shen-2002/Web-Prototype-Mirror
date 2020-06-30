@@ -2,6 +2,11 @@ import { createSelector } from 'reselect'
 
 const selectDialogsStore = (store) => store.DialogsStore
 
+export const selectIsOrganizationDialogOpen = createSelector(
+  [selectDialogsStore],
+  (dialogsStore) => dialogsStore.isOrganizationDialogOpen
+)
+
 export const selectIsCOADialogOpen = createSelector(
   [selectDialogsStore],
   (dialogsStore) => dialogsStore.isCOADialogOpen
@@ -17,6 +22,10 @@ export const selectIsUserDialogOpen = createSelector(
 export const selectIsStatusDialogOpen = createSelector(
   [selectDialogsStore],
   (dialogsStore) => dialogsStore.isStatusDialogOpen
+)
+export const selectIsProgramDialogOpen = createSelector(
+  [selectDialogsStore],
+  (dialogsStore) => dialogsStore.isProgramDialogOpen
 )
 export const selectIsSubmissionPeriodDialogOpen = createSelector(
   [selectDialogsStore],

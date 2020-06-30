@@ -19,17 +19,22 @@ import ReportingPeriodsStore from './ReportingPeriodsStore/store'
 
 import StatusesStore from './StatusesStore/store'
 import SubmissionPeriodsStore from './SubmissionPeriodsStore/store'
+import ProgramsStore from './ProgramsStore/store'
 import SubmissionsStore from './SubmissionsStore/store'
 import COATreeStore from './COATreeStore/store'
 import COATreesStore from './COATreesStore/store'
 import SheetNamesStore from './SheetNamesStore/store'
+
 import ColumnNamesStore from './ColumnNamesStore/store'
+
+import OrgsStore from './OrganizationsStore/store'
+
 import WorkflowStore from './WorkflowStore/store'
 import WorkflowsStore from './WorkflowsStore/store'
 
 export const root = combineReducers({
   StatusesStore: StatusesStore.reducer,
-
+  ProgramsStore: ProgramsStore.reducer,
   TemplatesStore: TemplatesStore.reducer,
   TemplateTypesStore: TemplateTypesStore.reducer,
   TemplatePackagesStore: TemplatePackagesStore.reducer,
@@ -43,6 +48,7 @@ export const root = combineReducers({
   AppSysRolesStore: AppSysRolesStore.reducer,
   DialogsStore: DialogsStore.reducer,
   ReportingPeriodsStore: ReportingPeriodsStore.reducer,
+  OrgsStore: OrgsStore.reducer,
 
   COATreeStore: COATreeStore.reducer,
   SheetNamesStore: SheetNamesStore.reducer,
