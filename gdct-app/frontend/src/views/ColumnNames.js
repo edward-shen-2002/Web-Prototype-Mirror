@@ -15,11 +15,12 @@ import Typography from '@material-ui/core/Typography'
 
 import { selectFactoryRESTResponseTableValues } from '../store/common/REST/selectors'
 import { selectColumnNamesStore } from '../store/ColumnNamesStore/selectors'
+import { ColumnNamesActions } from '../store/ColumnNamesStore/store'
 
 const ColumnNameHeader = () => {
   return (
     <Paper className="header">
-      <Typography variant="h5">ColumnNames</Typography>
+      <Typography variant="h5">Column Names</Typography>
       {/* <HeaderActions/> */}
     </Paper>
   )
@@ -71,6 +72,10 @@ const ColumnNamesTable = () => {
 
   useEffect(() => {
     dispatch(getColumnNamesRequest())
+
+    return () => {
+      dispatch(ColumnNamesActions.RESET())
+    }
   }, [dispatch])
 
   return (
