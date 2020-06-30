@@ -27,12 +27,17 @@ import navigationConfig from './config'
 import { useCallback } from 'react'
 
 const drawerWidth = 240
+const headerHeight = 55
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
+    width: '100vw',
+    height: '100vh',
+    overflow: 'auto'
   },
   appBar: {
+    height: headerHeight,
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
@@ -87,11 +92,15 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
+    minHeight: `${headerHeight}px !important`,
   },
   content: {
     flexGrow: 1,
     padding: theme.spacing(5),
-    marginTop: 55,
+    width: `calc(100% - ${drawerWidth}px)`,
+    height: `calc(100% - ${headerHeight}px) !important`,
+    marginTop: headerHeight,
+    overflow: 'auto'
   },
 }))
 

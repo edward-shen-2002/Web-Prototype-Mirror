@@ -9,6 +9,8 @@ import Root from './Root'
 
 import * as serviceWorker from './serviceWorker'
 
+import 'bootstrap/dist/css/bootstrap.css';
+
 ReactDOM.render(
   <Provider store={store}>
     <Root />

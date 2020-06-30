@@ -56,7 +56,6 @@ export const getTemplateRequest = (_id) => (dispatch) => {
     .then((template) => {
       dispatch(setExcelData(convertStateToReactState(template.templateData)))
       dispatch(TemplatesStore.actions.RECEIVE([template]))
-      dispatch()
     })
     .catch((error) => {
       dispatch(TemplatesStore.actions.FAIL_REQUEST(error))

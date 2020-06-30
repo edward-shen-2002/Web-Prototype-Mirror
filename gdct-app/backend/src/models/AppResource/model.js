@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model } from 'mongoose';
 
 const AppResourceModel = model(
   'AppResource',
@@ -7,11 +7,11 @@ const AppResourceModel = model(
       name: { type: String },
       path: { type: String },
       contextRoot: { type: String },
-      isProtected: { type: Boolean }
+      isProtected: { type: Boolean },
     },
     { minimize: false, autoIndex: true }
   ),
   'AppResource'
-)
+);
 
-export default AppResourceModel
+export default AppResourceModel;

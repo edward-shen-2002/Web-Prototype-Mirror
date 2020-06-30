@@ -28,9 +28,10 @@ module.exports = {
         ],
       },
       {
-        test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
-        use: ['file-loader'],
-      },
+        test: /\.(png|svg|jpg|jpeg|gif|ico)$/,
+        exclude: /node_modules/,
+        use: ['file-loader?name=[name].[ext]'] // ?name=[name].[ext] is only necessary to preserve the original file name
+      }
     ],
   },
   node: {
@@ -43,6 +44,8 @@ module.exports = {
       filename: 'index.html',
       inject: true,
       hash: true,
+      manifest: path.join(__dirname, '/public/manifest.json'),
+      favicon: path.join(__dirname, '/public/favicon.ico'),
     }),
   ],
 }

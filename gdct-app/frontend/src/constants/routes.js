@@ -40,3 +40,7 @@ export const ROUTE_ADMIN_LHIN_LHIN = `${ROUTE_ADMIN_LHIN}/LHINs`
 
 export const ROUTE_ADMIN_SECTOR = `${ROUTE_ADMIN_ROOT}/sector_manager`
 export const ROUTE_ADMIN_SECTOR_SECTORS = `${ROUTE_ADMIN_SECTOR}/sectors`
+
+export const ROUTE_WORKFLOW = `${ROUTE_ROOT}workflow_manager`
+export const ROUTE_WORKFLOW_WORKFLOWS = `${ROUTE_WORKFLOW}/workflows`
+export const ROUTE_WORKFLOW_WORKFLOWS_CREATE = `${ROUTE_WORKFLOW}/workflows/create`

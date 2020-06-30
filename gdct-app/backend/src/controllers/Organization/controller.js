@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import { Router } from 'express';
-import OrgService from '../../services/Organization/service';
+import OrgService from '../../services/Organization';
 
 const OrgController = Service(
     [OrgService],

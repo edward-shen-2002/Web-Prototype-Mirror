@@ -1,32 +1,68 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { REQUEST, FAIL_REQUEST } from '../common/REST/reducers'
+export const defaultChart = {
+  offset: {
+    x: 0,
+    y: 0,
+  },
+  scale: 1,
+  nodes: {},
+  links: {},
+  selected: {},
+  hovered: {},
+}
 
-const LOAD = (_state, { payload }) => ({
-  ...state,
-  isCallInProgress: false,
-  workflow: payload,
-})
+export const initialWorkflowState = {
+  chart: defaultChart,
+  filter: '',
+  name: '',
+  error: null,
+  _id: null,
+}
 
-const CLEAR = () => initialState
+const UPDATE_WORKFLOW_CHART = (state, action) => {
+  const chart = action.payload(state.chart)
+
+  state.chart = chart
+
+  return state
+}
+
+const UPDATE_WORKFLOW_FILTER = (state, action) => {
+  state.filter = action.payload
+  return state
+}
+
+const UPDATE_WORKFLOW_NAME = (state, action) => {
+  state.name = action.payload
+  return state
+}
+
+const UPDATE_WORKFLOW_ERROR = (state, action) => {
+  state.ERROR = action.payload
+  return state
+}
+
+const UPDATE = (_state, action) => action.payload
+const RESET = () => initialWorkflowState
 
 const reducers = {
-  REQUEST,
-  LOAD,
-  CLEAR,
-  FAIL_REQUEST,
+  UPDATE_WORKFLOW_CHART,
+  UPDATE_WORKFLOW_FILTER,
+  UPDATE_WORKFLOW_NAME,
+  UPDATE_WORKFLOW_ERROR,
+  UPDATE,
+  RESET
 }
 
-const initialState = {
-  workflow: undefined,
-  isCallInProgress: false,
-  error: undefined,
-}
+export const WorkflowStore = createSlice(
+  {
+    name: 'WORKFLOW',
+    reducers,
+    initialState: initialWorkflowState
+  }
+)
 
-const WorkflowStore = createSlice({
-  name: 'WORKFLOW',
-  initialState,
-  reducers,
-})
+export const WorkflowStoreActions = WorkflowStore.actions
 
 export default WorkflowStore

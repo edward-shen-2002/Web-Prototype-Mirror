@@ -26,10 +26,6 @@ const COAController = Service(
             service
               .createCOA(req.body.COA)
               .then((COA) => res.json({ COA }))
-              .catch((error) => {
-                console.error(error)
-                throw error
-              })
               .catch(next)
           }
         )

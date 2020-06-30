@@ -29,31 +29,36 @@ import AppRoleController from './controllers/AppRole'
 import AppSysRoleController from './controllers/AppSysRole'
 import SubmissionController from './controllers/Submission'
 import ColumnNameController from './controllers/ColumnName'
+import UserController from './controllers/User';
+import ErrorController from './controllers/errorController';
+import Auth from './interceptors';
+import AppRoleResourceController from './controllers/AppRoleResource/controller';
+import AppResourceController from './controllers/AppResource';
+import WorkflowController from './controllers/Workflow'
 
 // https://www.digitalocean.com/community/tutorials/how-to-use-winston-to-log-node-js-applications
-const logger = require('morgan')
+const logger = require('morgan');
 
-const app = express()
+const app = express();
 
-app.set('port', process.env.PORT || PORT)
+app.set('port', process.env.PORT || PORT);
 
-app.use(json({ limit: '50mb' }))
-app.use(urlencoded({ extended: true }))
+app.use(cookieParser());
+app.use(json({ limit: '50mb' }));
+app.use(urlencoded({ extended: true }));
 
-app.use(cors())
+// app.use(cors());
+app.use(cors({ credentials: true, origin: 'http://localhost:3003' }));
 
-app.use(compression())
+app.use(compression());
 
-app.use(logger('dev'))
+app.use(logger('dev'));
 
-app.use(passport.initialize())
+app.use(passport.initialize());
 
-export const dbUtil = new Database()
+export const dbUtil = new Database();
 
-dbUtil.connect()
-
-// ! No auth for now - Direct connection to router
-// ! Change these base routes 
+dbUtil.connect();
 
 app.use('/template_manager', Container.get(TemplateController))
 app.use('/template_manager', Container.get(TemplatePackageController))
@@ -80,4 +85,41 @@ app.use('/appsysrole_manager', Container.get(AppSysRoleController))
 
 app.use('/', Container.get(OrgController));
 
-export default app
+app.use('/workflow_manager', Container.get(WorkflowController))
+
+app.use('/public', Container.get(UserController));
+
+app.use(
+  '/role_manager',
+  // Container.get(Auth).authenticated,
+  // Container.get(Auth).authorized,
+  Container.get(AppSysController)
+);
+app.use(
+  '/role_manager',
+  // Container.get(Auth).authenticated,
+  // Container.get(Auth).authorized,
+  Container.get(AppRoleController)
+);
+app.use(
+  '/role_manager',
+  // Container.get(Auth).authenticated,
+  // Container.get(Auth).authorized,
+  Container.get(AppSysRoleController)
+);
+app.use(
+  '/role_manager',
+  // Container.get(Auth).authenticated,
+  // Container.get(Auth).authorized,
+  Container.get(AppRoleResourceController)
+);
+app.use(
+  '/role_manager',
+  // Container.get(Auth).authenticated,
+  // Container.get(Auth).authorized,
+  Container.get(AppResourceController)
+);
+
+app.use(Container.get(ErrorController).process);
+
+export default app;

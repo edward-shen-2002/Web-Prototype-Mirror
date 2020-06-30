@@ -1,14 +1,14 @@
 import Container, { Service } from "typedi";
-import OrganizationGroupRepository from "../../repositories/OrganizationGroup";
+import OrgGroupRepository from "../../repositories/OrganizationGroup";
 
 // @Service()
 export default class OrganizationGroupService {
   constructor() {
-    this.OrganizationGroupRepository = Container.get(OrganizationGroupRepository);
+    this.OrgGroupRepository = Container.get(OrgGroupRepository);
   }
 
 
   async findAllOrgGroup() {
-    return this.OrganizationGroupRepository.findAll();
+    return this.OrgGroupRepository.findAll();
   }
 }

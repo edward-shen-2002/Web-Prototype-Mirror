@@ -1,4 +1,4 @@
-export default class OrganizationGroupEntity {
+export default class OrgGroupEntity {
   constructor({
     _id,
     id,

@@ -87,7 +87,7 @@ export default class TemplateRepository extends BaseRepository {
     for (const key in query) {
       if (query[key]) realQuery[key] = query[key]
     }
-
+    
     return TemplateModel.find(realQuery)
       .select("-templateData")
       .then((templates) =>

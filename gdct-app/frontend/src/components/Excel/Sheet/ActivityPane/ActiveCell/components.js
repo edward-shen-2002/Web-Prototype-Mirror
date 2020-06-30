@@ -9,10 +9,10 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
 import IconButton from '@material-ui/core/IconButton'
 
-export const DialogActions = ({ handleAdd, handleCancel }) => (
+export const DialogActions = ({ addText="Add", cancelText="Cancel", handleAdd, handleCancel }) => (
   <ButtonGroup className="dialog__actions" fullWidth>
-    <Button onClick={handleAdd}>Add</Button>
-    <Button onClick={handleCancel}>Cancel</Button>
+    <Button onClick={handleAdd}>{addText}</Button>
+    <Button onClick={handleCancel}>{cancelText}</Button>
   </ButtonGroup>
 )
 
