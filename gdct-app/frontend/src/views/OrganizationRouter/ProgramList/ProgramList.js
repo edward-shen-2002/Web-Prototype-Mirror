@@ -3,7 +3,7 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import {
   getProgramsRequest
-} from '../../../store/thunks/Program'
+} from '../../../store/thunks/program'
 
 import MaterialTable from 'material-table'
 import AddIcon from '@material-ui/icons/Add'

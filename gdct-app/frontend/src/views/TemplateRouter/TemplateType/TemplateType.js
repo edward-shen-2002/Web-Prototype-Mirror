@@ -15,7 +15,7 @@ import {
     createProgramsRequest,
     deleteProgramsRequest,
     updateProgramsRequest,
-} from '../../../store/thunks/Program'
+} from '../../../store/thunks/program'
 
 import MaterialTable from 'material-table'
 import LaunchIcon from '@material-ui/icons/Launch'

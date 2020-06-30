@@ -6,7 +6,7 @@ import {
   createProgramsRequest,
   deleteProgramsRequest,
   updateProgramsRequest,
-} from '../../store/thunks/Program'
+} from '../../store/thunks/program'
 
 import MaterialTable from 'material-table'
 import Paper from '@material-ui/core/Paper'

@@ -1,10 +1,6 @@
 import React, { useMemo, useEffect, useState } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
-import {
-  getProgramsRequest
-} from '../../../store/thunks/Program'
-
 import MaterialTable from 'material-table'
 import Paper from '@material-ui/core/Paper'
 import AddIcon from '@material-ui/icons/Add'

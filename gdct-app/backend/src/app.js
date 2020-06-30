@@ -40,6 +40,7 @@ import WorkflowController from './controllers/Workflow'
 const logger = require('morgan');
 
 const app = express();
+const cookieParser = require('cookie-parser');
 
 app.set('port', process.env.PORT || PORT);
 

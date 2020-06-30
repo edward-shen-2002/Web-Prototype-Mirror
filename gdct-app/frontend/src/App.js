@@ -34,6 +34,7 @@ const PrivateRouter = () => {
       <Route path="/reportingPeriods" component={ReportingPeriods} />
       <Route path="/sheetNames" component={SheetNames} />
       <Route path="/organizations" component={OrgRouter} />
+      <Redirect from="*" to="/sheetNames" />
     </Switch>
   )
 }
