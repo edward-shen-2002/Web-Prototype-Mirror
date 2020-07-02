@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useCallback } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import {
@@ -6,7 +6,7 @@ import {
   createTemplatePackageRequest,
   deleteTemplatePackageRequest,
   updateTemplatePackageRequest,
-} from '../../../store/thunks/templatePackage'
+} from '../../store/thunks/templatePackage'
 
 import MaterialTable from 'material-table'
 import Paper from '@material-ui/core/Paper'
@@ -18,12 +18,12 @@ import {
   UserIdButton,
   StatusIdButton,
   SubmissionPeriodIdButton,
-} from '../../../components/buttons'
+} from '../../components/buttons'
 
-import './TemplatePackages.scss'
-import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors'
-import { selectTemplatePackagesStore } from '../../../store/TemplatePackagesStore/selectors'
-import DialogsStore from '../../../store/DialogsStore/store'
+import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
+import { selectTemplatePackagesStore } from '../../store/TemplatePackagesStore/selectors'
+import { useHistory } from 'react-router-dom'
+import { ROUTE_TEMPLATE_PCKGS_PCKGS } from '../../constants/routes'
 
 const TemplatePackageHeader = () => {
   return (
@@ -36,6 +36,7 @@ const TemplatePackageHeader = () => {
 
 const TemplatePackage = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
 
   const { templatePackages } = useSelector(
     (state) => ({
@@ -50,8 +51,8 @@ const TemplatePackage = () => {
     () => [
       {
         icon: LaunchIcon,
-        tooltip: 'Open Templates',
-        onClick: () => dispatch(DialogsStore.actions.OPEN_COA_DIALOG()),
+        tooltip: 'Open Package',
+        onClick: (_event, pckg) => history.push(`${ROUTE_TEMPLATE_PCKGS_PCKGS}${pckg._id}`),
       },
     ],
     [dispatch]
@@ -59,7 +60,6 @@ const TemplatePackage = () => {
 
   const columns = useMemo(
     () => [
-      { title: '_id', field: '_id', editable: 'never' },
       { title: 'Name', field: 'name' },
       {
         title: 'SubmissionPeriodId',

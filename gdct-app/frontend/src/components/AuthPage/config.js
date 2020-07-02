@@ -16,7 +16,7 @@ import SpaIcon from '@material-ui/icons/Spa'
 import AppsIcon from '@material-ui/icons/Apps'
 import AccountBalance from '@material-ui/icons/AccountBalance'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
-import { ROUTE_WORKFLOW_WORKFLOWS, ROUTE_COLUMN_NAMES  } from '../../constants/routes'
+import { ROUTE_WORKFLOW_WORKFLOWS, ROUTE_COLUMN_NAMES, ROUTE_TEMPLATE_PCKGS_PCKGS  } from '../../constants/routes'
 
 
 const createUserNavigation = () => {
@@ -72,7 +72,7 @@ const createUserNavigation = () => {
         {
           name: 'Template Packages',
           type: 'menu',
-          url: '/template_manager/templatePackages',
+          url: ROUTE_TEMPLATE_PCKGS_PCKGS,
           icon: <DashboardIcon />,
         },
       ],
