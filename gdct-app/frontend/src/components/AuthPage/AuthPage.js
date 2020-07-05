@@ -96,6 +96,13 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 'auto',
     margin: '0',
   },
+  title: {
+    color: 'white',
+    '&:hover': {
+      color: 'white',
+      textDecoration: 'none',
+    },
+  },
 }))
 
 const HeaderHandle = ({ open, classes, handleDrawerOpen, isTopMenu }) => {
@@ -142,7 +149,9 @@ const Header = ({
         handleDrawerOpen={handleDrawerOpen}
         isTopMenu={isTopMenu}
       />
-      <HeaderTitle title={title} />
+      <Link to="/" className={classes.title}>
+        <HeaderTitle title={title} />
+      </Link>
       {isTopMenu && <TopItemList config={config} classes={classes} />}
       <FormControlLabel
         className={classes.flexItem}
