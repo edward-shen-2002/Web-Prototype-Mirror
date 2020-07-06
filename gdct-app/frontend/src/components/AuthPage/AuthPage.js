@@ -127,52 +127,53 @@ const HeaderTitle = ({ title }) => (
   </Typography>
 )
 
-const Header = ({ title, classes, open, config, handleDrawerOpen }) => {
-  const [isTopMenu, setTopMenu] = useState(true)
-  const [isMobile, setMobile] = useState(
-    window.matchMedia('(max-width: 1000px)').matches
-  )
-
-  useEffect(() => {
-    const handler = (e) => setMobile(e.matches)
-    window.matchMedia('(max-width: 1000px)').addListener(handler)
-    setTopMenu(!isMobile)
-  }, [isMobile])
-  return (
-    <AppBar
-      position="fixed"
-      className={clsx(classes.appBar, {
-        [classes.appBarShift]: open,
-      })}
-    >
-      <Toolbar className={classes.flex}>
-        <HeaderHandle
-          open={open}
-          classes={classes}
-          handleDrawerOpen={handleDrawerOpen}
-          isTopMenu={isTopMenu}
-        />
-        <Link to="/" className={classes.title}>
-          <HeaderTitle title={title} />
-        </Link>
-        {isTopMenu && (
-          <TopItemList config={config} classes={classes} isMobile={isMobile} />
-        )}
-        <FormControlLabel
-          className={classes.flexItem}
-          control={
-            <Switch
-              checked={isTopMenu}
-              onChange={() => setTopMenu(!isTopMenu)}
-              aria-label="login switch"
-            />
-          }
-          label={isTopMenu ? 'Top' : 'Left'}
-        />
-      </Toolbar>
-    </AppBar>
-  )
-}
+const Header = ({
+  title,
+  classes,
+  config,
+  open,
+  setOpen,
+  handleDrawerOpen,
+  isTopMenu,
+  setTopMenu,
+  isMobile,
+}) => (
+  <AppBar
+    position="fixed"
+    className={clsx(classes.appBar, {
+      [classes.appBarShift]: open,
+    })}
+  >
+    <Toolbar className={classes.flex}>
+      <HeaderHandle
+        open={open}
+        classes={classes}
+        handleDrawerOpen={handleDrawerOpen}
+        isTopMenu={isTopMenu}
+      />
+      <Link to="/" className={classes.title}>
+        <HeaderTitle title={title} />
+      </Link>
+      {isTopMenu && (
+        <TopItemList config={config} classes={classes} isMobile={isMobile} />
+      )}
+      <FormControlLabel
+        className={classes.flexItem}
+        control={
+          <Switch
+            checked={isTopMenu}
+            onChange={() => {
+              setTopMenu(!isTopMenu)
+              setOpen(false)
+            }}
+            aria-label="login switch"
+          />
+        }
+        label={isTopMenu ? 'Top' : 'Left'}
+      />
+    </Toolbar>
+  </AppBar>
+)
 
 const DrawerHandle = ({ title, classes, handleDrawerClose, theme }) => (
   <div className={classes.toolbar}>
@@ -299,9 +300,18 @@ const AuthPage = ({
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = useState(false)
+  const [isTopMenu, setTopMenu] = useState(true)
+  const [isMobile, setMobile] = useState(
+    window.matchMedia('(max-width: 1000px)').matches
+  )
+
+  useEffect(() => {
+    const handler = (e) => setMobile(e.matches)
+    window.matchMedia('(max-width: 1000px)').addListener(handler)
+    setTopMenu(!isMobile)
+  }, [isMobile])
 
   const handleDrawerOpen = () => setOpen(true)
-
   const handleDrawerClose = () => setOpen(false)
 
   const style = open
@@ -314,8 +324,11 @@ const AuthPage = ({
         title={headerTitle}
         classes={classes}
         open={open}
+        setOpen={setOpen}
         handleDrawerOpen={handleDrawerOpen}
         config={config}
+        isTopMenu={isTopMenu}
+        setTopMenu={setTopMenu}
       />
       <NavigationDrawer
         title={drawerTitle}
