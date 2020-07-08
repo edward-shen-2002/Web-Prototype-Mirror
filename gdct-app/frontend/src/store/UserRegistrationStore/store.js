@@ -2,21 +2,21 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   registrationData: {
-    title: "Mr.",
-    username: "Haonan",
-    email: "",
-    firstName: "Haonan",
-    lastName: "Sun",
-    phoneNumber: "1234567890",
-    password: "123qweASD",
-    passwordConfirm: "123qweASD",
-    ext: "111",
+    title: 'Mr.',
+    username: 'Haonan',
+    email: '',
+    firstName: 'Haonan',
+    lastName: 'Sun',
+    phoneNumber: '1234567890',
+    password: '123qweASD',
+    passwordConfirm: '123qweASD',
+    ext: '111',
     IsActive: false,
     startDate: new Date(),
     endDate: new Date(),
-    sysRole: []
+    sysRole: [],
   },
-  snackbarMessage: "",
+  snackbarMessage: '',
   activeStep: 0,
   organizationGroup: [],
   helperState: true,
@@ -30,9 +30,9 @@ const initialState = {
   userSubmissions: [],
   userPermissions: [],
   ableToComplete: false,
-  searchKey: "",
-  userAppSys: "",
-  reference: "",
+  searchKey: '',
+  userAppSys: '',
+  reference: '',
 }
 
 const setRegistrationData = (state, { payload }) => ({
@@ -128,8 +128,7 @@ const reducers = {
   setAbleToComplete,
   setSearchKey,
   setUserAppSys,
-  setReference
-
+  setReference,
 }
 
 export const UserRegistrationStore = createSlice({

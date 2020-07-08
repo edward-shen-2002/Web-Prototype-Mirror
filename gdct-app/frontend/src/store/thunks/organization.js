@@ -1,19 +1,19 @@
-import orgController from '../../controllers/organization';
-import OrgsStore from '../OrganizationsStore/store';
+import orgController from '../../controllers/organization'
+import OrgsStore from '../OrganizationsStore/store'
 import columnNameController from '../../controllers/organization'
 import ColumnNamesStore from '../ColumnNamesStore/store'
 
 import {
-    getRequestFactory,
-    createRequestFactory,
-    deleteRequestFactory,
-    updateRequestFactory
+  getRequestFactory,
+  createRequestFactory,
+  deleteRequestFactory,
+  updateRequestFactory,
 } from './common/REST'
 
-const getOrgsRequest = getRequestFactory(OrgsStore, orgController);
-const createOrgsRequest = createRequestFactory(OrgsStore, orgController);
-const deleteOrgsRequest = deleteRequestFactory(OrgsStore, orgController);
-const updateOrgsRequest = updateRequestFactory(OrgsStore, orgController);
+const getOrgsRequest = getRequestFactory(OrgsStore, orgController)
+const createOrgsRequest = createRequestFactory(OrgsStore, orgController)
+const deleteOrgsRequest = deleteRequestFactory(OrgsStore, orgController)
+const updateOrgsRequest = updateRequestFactory(OrgsStore, orgController)
 
 const getColumnNamesRequest = getRequestFactory(
   ColumnNamesStore,
@@ -40,5 +40,5 @@ export {
   getColumnNamesRequest,
   createColumnNameRequest,
   deleteColumnNameRequest,
-  updateColumnNameRequest
-};
+  updateColumnNameRequest,
+}

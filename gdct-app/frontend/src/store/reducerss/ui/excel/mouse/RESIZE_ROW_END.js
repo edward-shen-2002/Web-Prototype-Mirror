@@ -6,7 +6,7 @@ import {
 import { DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER } from '../../../../../constants/excel'
 
 const RESIZE_ROW_END = (state, { topOffsets }) => {
-  let newState = { ...state }
+  const newState = { ...state }
 
   const {
     rowResizeData,

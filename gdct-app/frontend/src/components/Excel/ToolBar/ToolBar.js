@@ -46,8 +46,8 @@ const ToolBarButton = ({
     className={`toolBar__button ${
       state ? 'toolBar__button--active' : ''
     } ${className}`}
-    disableRipple={true}
-    disableFocusRipple={true}
+    disableRipple
+    disableFocusRipple
     onClick={handleClick}
     disabled={disabled}
   >
@@ -126,7 +126,7 @@ const FileUpload = () => {
       if (extension === 'xlsx') {
         // !unoptimized function... since straight conversion to react state doesn't exist at the moment.
         // ! TODO: implement straight conversion from file to react state
-        let fileStates = await convertExcelFileToState(fileData)
+        const fileStates = await convertExcelFileToState(fileData)
         const excelReactState = convertStateToReactState(fileStates)
 
         dispatch(setExcelData(excelReactState))
@@ -167,7 +167,7 @@ const MainFontStyles = ({
   isEditMode,
   handleTextStyle,
 }) => {
-  let { bold, italic, underline, strikethrough } = isEditMode
+  const { bold, italic, underline, strikethrough } = isEditMode
     ? getMainFontStyleEditorStates(cellEditor)
     : getMainFontStylesStates(cellStyles)
 

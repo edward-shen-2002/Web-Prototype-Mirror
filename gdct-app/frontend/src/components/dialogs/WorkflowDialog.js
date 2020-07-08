@@ -2,26 +2,26 @@ import React, { useCallback, useEffect } from 'react'
 
 import SelectableTableDialog from './SelectableTableDialog'
 
-import { getTemplatesRequest } from '../../store/thunks/template'
+import { getWorkflowsRequest } from '../../store/thunks/workflow'
 
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 import { useMemo } from 'react'
 import DialogsStore from '../../store/DialogsStore/store'
 import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
-import { selectTemplatesStore } from '../../store/TemplatesStore/selectors'
-import { selectIsTemplateDialogOpen } from '../../store/DialogsStore/selectors'
+import { selectWorkflowsStore } from '../../store/WorkflowsStore/selectors'
+import { selectIsWorkflowDialogOpen } from '../../store/DialogsStore/selectors'
 
-const TemplateDialog = ({
-  selectedTemplates,
+const WorkflowDialog = ({
+  selectedWorkflows,
   handleChange,
   shouldClose = true,
 }) => {
   const dispatch = useDispatch()
 
-  const { isTemplateDialogOpen, templates } = useSelector(
+  const { isWorkflowDialogOpen, workflows } = useSelector(
     (state) => ({
-      isTemplateDialogOpen: selectIsTemplateDialogOpen(state),
-      templates: selectFactoryRESTResponseTableValues(selectTemplatesStore)(
+      isWorkflowDialogOpen: selectIsWorkflowDialogOpen(state),
+      workflows: selectFactoryRESTResponseTableValues(selectWorkflowsStore)(
         state
       ),
     }),
@@ -29,7 +29,7 @@ const TemplateDialog = ({
   )
 
   const handleClose = useCallback(
-    () => dispatch(DialogsStore.actions.CLOSE_TEMPLATE_DIALOG()),
+    () => dispatch(DialogsStore.actions.CLOSE_WORKFLOW_DIALOG()),
     [dispatch]
   )
 
@@ -42,9 +42,9 @@ const TemplateDialog = ({
   )
 
   useEffect(() => {
-    if (isTemplateDialogOpen && !templates.length)
-      dispatch(getTemplatesRequest())
-  }, [dispatch, isTemplateDialogOpen])
+    // if (isWorkflowDialogOpen)
+    //   dispatch(getWorkflowsRequest())
+  }, [dispatch, isWorkflowDialogOpen])
 
   const columns = useMemo(
     () => [
@@ -56,20 +56,20 @@ const TemplateDialog = ({
     []
   )
 
-  const getKey = selectedTemplates ? (t) => t._id : undefined
+  const getKey = selectedWorkflows ? (t) => t._id : undefined
 
   return (
     <SelectableTableDialog
-      title="Template Type"
+      title="Workflow"
       columns={columns}
-      isOpen={isTemplateDialogOpen}
-      data={templates}
-      selectedKeys={selectedTemplates}
-      getKey={getKey}
+      isOpen={isWorkflowDialogOpen}
+      data={workflows}
+      // selectedKeys={selectedWorkflows}
+      // getKey={getKey}
       handleClose={handleClose}
       handleSelect={handleSelect}
     />
   )
 }
 
-export default TemplateDialog
+export default WorkflowDialog

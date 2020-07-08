@@ -108,9 +108,7 @@ const GroupItems = ({ groups, selectedGroup, handleSelectGroup }) =>
         onClick={handleClickGroup}
         button
       >
-        <ListItemText
-          primary={`${COAGroupId ? COAGroupId.name : ''}`}
-        />
+        <ListItemText primary={`${COAGroupId ? COAGroupId.name : ''}`} />
       </ListItem>
     )
   })
@@ -233,10 +231,8 @@ const GroupPopup = ({ type }) => {
   const [selectedGroup, setSelectedGroup] = useState()
   const [selectedCOAIds, setSelectedCOAIds] = useState({})
 
-  const AllCOAIds = useSelector(
-    (state) => (
-      selectFactoryRESTResponseValues(selectCOAsStore)(state)
-    )
+  const AllCOAIds = useSelector((state) =>
+    selectFactoryRESTResponseValues(selectCOAsStore)(state)
   )
 
   const { COATrees } = useSelector(
@@ -252,8 +248,6 @@ const GroupPopup = ({ type }) => {
     dispatch(getCOATreesRequest())
     dispatch(getCOAsRequest())
   }, [dispatch])
-
-
 
   const handleCancel = useCallback(() => dispatch(resetActiveCellDialog()), [
     dispatch,
@@ -271,7 +265,11 @@ const GroupPopup = ({ type }) => {
     setNewGroups(changedGroups)
     setGroupPointer(index - 1)
     setSelectedCOAIds({})
-    setSelectedGroup(changedGroups.length ? changedGroups[changedGroups.length - 1]._id : undefined)
+    setSelectedGroup(
+      changedGroups.length
+        ? changedGroups[changedGroups.length - 1]._id
+        : undefined
+    )
   }
   const handleSelectGroup = ({ _id, value }) => {
     setNewGroups([
@@ -279,11 +277,11 @@ const GroupPopup = ({ type }) => {
       { _id, value },
       ...newGroups.slice(groupPointer + 1),
     ])
-    if(_id !== selectedGroup) {
+    if (_id !== selectedGroup) {
       setSelectedGroup(_id)
       setSelectedCOAIds({})
     }
-    if(groupPointer < 1) handleUpdateGroupPointer(0)
+    if (groupPointer < 1) handleUpdateGroupPointer(0)
   }
 
   const handleAddNewLink = () => {
@@ -306,8 +304,10 @@ const GroupPopup = ({ type }) => {
       const leafId = newGroups[groupPointer - 1]._id
       definedGroups = COATrees.filter((COATree) => COATree.parentId === leafId)
     } else {
-      definedGroups = COATrees.filter((COATree) => COATree.parentId === undefined)
-    }  
+      definedGroups = COATrees.filter(
+        (COATree) => COATree.parentId === undefined
+      )
+    }
 
     return definedGroups
   }, [COATrees, selectedGroup, newGroups, groupPointer])
@@ -323,23 +323,25 @@ const GroupPopup = ({ type }) => {
 
     // TODO: Quadratic run time
 
-    if(foundGroup) {
+    if (foundGroup) {
       foundGroup.COAIds.forEach((_id) => groupMap.add(_id))
-  
-      ids = AllCOAIds.filter(
-        ({ _id }) => groupMap.has(_id)
-      )
+
+      ids = AllCOAIds.filter(({ _id }) => groupMap.has(_id))
     }
 
     return ids
   }, [newGroups, COATrees, AllCOAIds])
 
   const handleAdd = useCallback(
-    () => dispatch(setGroups({ category: type, newGroups, selectedCOAIds, COAIds })),
+    () =>
+      dispatch(
+        setGroups({ category: type, newGroups, selectedCOAIds, COAIds })
+      ),
     [dispatch, newGroups, selectedCOAIds, COAIds]
   )
 
-  const handleSelectCOAId = (id) => setSelectedCOAIds({ ...selectedCOAIds, [id]: !selectedCOAIds[id] })
+  const handleSelectCOAId = (id) =>
+    setSelectedCOAIds({ ...selectedCOAIds, [id]: !selectedCOAIds[id] })
 
   return (
     <div className="dialog groups">
@@ -357,7 +359,12 @@ const GroupPopup = ({ type }) => {
         handleAddNewLink={handleAddNewLink}
         handleSelectCOAId={handleSelectCOAId}
       />
-      <DialogActions addText="Apply" cancelText="Finish" handleAdd={handleAdd} handleCancel={handleCancel} />
+      <DialogActions
+        addText="Apply"
+        cancelText="Finish"
+        handleAdd={handleAdd}
+        handleCancel={handleCancel}
+      />
     </div>
   )
 }

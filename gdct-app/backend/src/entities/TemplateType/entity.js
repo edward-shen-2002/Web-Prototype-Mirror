@@ -4,6 +4,8 @@ export default class TemplateTypeEntity {
     name,
     description,
 
+    workflowId,
+
     programIds,
 
     isApprovable,
@@ -16,6 +18,7 @@ export default class TemplateTypeEntity {
   }) {
     this._id = _id
     this.name = name
+    this.workflowId = workflowId
     this.description = description
     this.programIds = programIds
     this.isApprovable = isApprovable

@@ -8,7 +8,7 @@ import InputBase from '@material-ui/core/InputBase'
 
 // TODO : Make input width contain text - react virtualized
 // TODO : Events handler: blur, key down (escape), ...
-let Title = () => {
+const Title = () => {
   const dispatch = useDispatch()
 
   const name = useSelector(

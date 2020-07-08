@@ -3,7 +3,7 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import {
   getWorkflowsRequest,
-  deleteWorkflowRequest
+  deleteWorkflowRequest,
 } from '../../store/thunks/workflow'
 
 import MaterialTable from 'material-table'
@@ -15,17 +15,22 @@ import Typography from '@material-ui/core/Typography'
 import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
 import { selectWorkflowsStore } from '../../store/WorkflowsStore/selectors'
 import { useHistory } from 'react-router-dom'
-import { ROUTE_WORKFLOW_WORKFLOWS_CREATE, ROUTE_WORKFLOW_WORKFLOWS } from '../../constants/routes'
+import {
+  ROUTE_WORKFLOW_WORKFLOWS_CREATE,
+  ROUTE_WORKFLOW_WORKFLOWS,
+} from '../../constants/routes'
 import { Button } from '@material-ui/core'
 
 const WorkflowHeader = () => {
   const history = useHistory()
   const handleCreate = () => history.push(ROUTE_WORKFLOW_WORKFLOWS_CREATE)
-  
+
   return (
     <Paper className="header">
       <Typography variant="h5">Workflows</Typography>
-      <Button variant="contained" color="primary" onClick={handleCreate}>Create</Button>
+      <Button variant="contained" color="primary" onClick={handleCreate}>
+        Create
+      </Button>
     </Paper>
   )
 }
@@ -35,19 +40,14 @@ const Workflows = () => {
   const history = useHistory()
   const { workflows } = useSelector(
     (state) => ({
-      workflows: selectFactoryRESTResponseTableValues(
-        selectWorkflowsStore
-      )(state),
+      workflows: selectFactoryRESTResponseTableValues(selectWorkflowsStore)(
+        state
+      ),
     }),
     shallowEqual
   )
 
-  const columns = useMemo(
-    () => [
-      { title: 'Name', field: 'name' },
-    ],
-    []
-  )
+  const columns = useMemo(() => [{ title: 'Name', field: 'name' }], [])
 
   const options = useMemo(
     () => ({ actionsColumnIndex: -1, search: false, showTitle: false }),
@@ -58,9 +58,7 @@ const Workflows = () => {
     () => ({
       onRowDelete: (workflow) =>
         new Promise((resolve, reject) => {
-          dispatch(
-            deleteWorkflowRequest(workflow._id, resolve, reject)
-          )
+          dispatch(deleteWorkflowRequest(workflow._id, resolve, reject))
         }),
     }),
     [dispatch]

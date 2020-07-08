@@ -8,11 +8,11 @@ import {
   updateTemplatePackageRequest,
 } from '../../store/thunks/templatePackage'
 
-import MaterialTable from 'material-table'
 import Paper from '@material-ui/core/Paper'
 import LaunchIcon from '@material-ui/icons/Launch'
 
 import Typography from '@material-ui/core/Typography'
+import MaterialTable from 'material-table'
 
 import {
   UserIdButton,
@@ -20,10 +20,15 @@ import {
   SubmissionPeriodIdButton,
 } from '../../components/buttons'
 
-import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
+import {
+  selectFactoryRESTResponseTableValues,
+  selectFactoryRESTIsCallInProgress,
+} from '../../store/common/REST/selectors'
 import { selectTemplatePackagesStore } from '../../store/TemplatePackagesStore/selectors'
 import { useHistory } from 'react-router-dom'
 import { ROUTE_TEMPLATE_PCKGS_PCKGS } from '../../constants/routes'
+import { TemplatePackagesStoreActions } from '../../store/TemplatePackagesStore/store'
+import Loading from '../../components/Loading'
 
 const TemplatePackageHeader = () => {
   return (
@@ -38,8 +43,11 @@ const TemplatePackage = () => {
   const dispatch = useDispatch()
   const history = useHistory()
 
-  const { templatePackages } = useSelector(
+  const { templatePackages, isCallInProgress } = useSelector(
     (state) => ({
+      isCallInProgress: selectFactoryRESTIsCallInProgress(
+        selectTemplatePackagesStore
+      )(state),
       templatePackages: selectFactoryRESTResponseTableValues(
         selectTemplatePackagesStore
       )(state),
@@ -52,7 +60,8 @@ const TemplatePackage = () => {
       {
         icon: LaunchIcon,
         tooltip: 'Open Package',
-        onClick: (_event, pckg) => history.push(`${ROUTE_TEMPLATE_PCKGS_PCKGS}${pckg._id}`),
+        onClick: (_event, pckg) =>
+          history.push(`${ROUTE_TEMPLATE_PCKGS_PCKGS}${pckg._id}`),
       },
     ],
     [dispatch]
@@ -115,9 +124,25 @@ const TemplatePackage = () => {
 
   useEffect(() => {
     dispatch(getTemplatePackagesRequest())
+
+    return () => {
+      dispatch(TemplatePackagesStoreActions.RESET())
+    }
   }, [dispatch])
 
-  return (
+  // HOTFIX
+  const isPopulated = useMemo(
+    () =>
+      templatePackages.length &&
+      typeof templatePackages[0].submissionPeriodId === 'object'
+        ? true
+        : false,
+    [templatePackages]
+  )
+
+  return isCallInProgress || isPopulated ? (
+    <Loading />
+  ) : (
     <div>
       <TemplatePackageHeader />
       <MaterialTable

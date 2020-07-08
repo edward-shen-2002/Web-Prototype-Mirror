@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     width: '100vw',
     height: '100vh',
-    overflow: 'auto'
+    overflow: 'auto',
   },
   appBar: {
     height: headerHeight,
@@ -100,7 +100,7 @@ const useStyles = makeStyles((theme) => ({
     width: `calc(100% - ${drawerWidth}px)`,
     height: `calc(100% - ${headerHeight}px) !important`,
     marginTop: headerHeight,
-    overflow: 'auto'
+    overflow: 'auto',
   },
 }))
 

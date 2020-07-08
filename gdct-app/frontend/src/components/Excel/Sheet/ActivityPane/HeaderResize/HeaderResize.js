@@ -133,10 +133,10 @@ export const ColumnHeaderIndicator = ({ isRelevantColumnOffset }) => {
   )
 }
 
-export let RowContentIndicator = ({}) => {
-  return <div></div>
+export const RowContentIndicator = ({}) => {
+  return <div />
 }
 
-export let ColumnContentIndicator = ({}) => {
-  return <div></div>
+export const ColumnContentIndicator = ({}) => {
+  return <div />
 }

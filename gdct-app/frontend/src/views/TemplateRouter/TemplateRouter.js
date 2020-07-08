@@ -9,7 +9,10 @@ import Templates from './Templates/Templates'
 import TemplateTypes from './TemplateTypes'
 import TemplateType from './TemplateType'
 import TemplatePackages from './TemplatePackages'
-import { ROUTE_TEMPLATE_PCKGS_PCKGS, ROUTE_TEMPLATE_PCKGS_PCKG } from '../../constants/routes'
+import {
+  ROUTE_TEMPLATE_PCKGS_PCKGS,
+  ROUTE_TEMPLATE_PCKGS_PCKG,
+} from '../../constants/routes'
 import TemplatePackage from './TemplatePackage'
 
 const TemplateRouter = () => (
@@ -21,17 +24,17 @@ const TemplateRouter = () => (
       path="/template_manager/templateTypes"
       component={TemplateTypes}
     />
-    <Route exact path="/template_manager/templateTypes/:_id" component={TemplateType} />
+    <Route
+      exact
+      path="/template_manager/templateTypes/:_id"
+      component={TemplateType}
+    />
     <Route
       exact
       path={ROUTE_TEMPLATE_PCKGS_PCKGS}
       component={TemplatePackages}
     />
-    <Route
-      exact
-      path={ROUTE_TEMPLATE_PCKGS_PCKG}
-      component={TemplatePackage}
-    />
+    <Route exact path={ROUTE_TEMPLATE_PCKGS_PCKG} component={TemplatePackage} />
     <Route component={NotFound} />
   </Switch>
 )

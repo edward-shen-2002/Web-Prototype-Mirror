@@ -16,8 +16,8 @@ const ProgramDialog = ({ handleChange }) => {
 
   const { isProgramDialogOpen, programs } = useSelector(
     (state) => ({
-        isProgramDialogOpen: selectIsProgramDialogOpen(state),
-        programs: selectFactoryRESTResponseTableValues(selectProgramsStore)(
+      isProgramDialogOpen: selectIsProgramDialogOpen(state),
+      programs: selectFactoryRESTResponseTableValues(selectProgramsStore)(
         state
       ),
     }),

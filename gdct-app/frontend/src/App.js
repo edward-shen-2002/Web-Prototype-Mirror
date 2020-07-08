@@ -64,7 +64,7 @@ const App = () => {
         setLoggedIn(false)
       })
   }, [])
-  
+
   return (
     <div className="appContainer">
       {isLoggedIn === null ? (

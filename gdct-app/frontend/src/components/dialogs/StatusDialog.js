@@ -31,7 +31,7 @@ const StatusDialog = ({ handleChange }) => {
 
   const handleSelect = useCallback(
     (data) => {
-      handleChange(data._id)
+      handleChange(data)
       handleClose()
     },
     [dispatch]
@@ -43,10 +43,6 @@ const StatusDialog = ({ handleChange }) => {
 
   const columns = useMemo(
     () => [
-      {
-        title: '_id',
-        field: '_id',
-      },
       {
         title: 'Name',
         field: 'name',

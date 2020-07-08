@@ -17,6 +17,7 @@ import Typography from '@material-ui/core/Typography'
 import './TemplateTypes.scss'
 import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors'
 import { selectTemplateTypesStore } from '../../../store/TemplateTypesStore/selectors'
+import { WorkflowIdButton, StatusIdButton } from '../../../components/buttons'
 
 const TemplateTypeHeader = () => {
   return (
@@ -41,16 +42,16 @@ const TemplateTypesTable = ({ history }) => {
 
   const columns = useMemo(
     () => [
-      //{ title: '_id', field: '_id', editable: 'never' },
       { title: 'Name', field: 'name' },
       { title: 'Description', field: 'description' },
+      { title: 'Workflow', field: 'workflowId', editComponent: StatusIdButton },
       { title: 'Approvable', type: 'boolean', field: 'isApprovable' },
       { title: 'Reviewable', type: 'boolean', field: 'isReviewable' },
       { title: 'Submittable', type: 'boolean', field: 'isSubmittable' },
       { title: 'Inputtable', type: 'boolean', field: 'isInputtable' },
       { title: 'Viewable', type: 'boolean', field: 'isViewable' },
       { title: 'Reportable', type: 'boolean', field: 'isReportable' },
-      { title: 'Active', type: 'boolean', field: 'isActive'}
+      { title: 'Active', type: 'boolean', field: 'isActive' },
     ],
     []
   )
@@ -60,7 +61,9 @@ const TemplateTypesTable = ({ history }) => {
       {
         icon: LaunchIcon,
         tooltip: 'View Programs',
-        onClick: (_event, templateType) => {history.push(`/template_manager/templateTypes/${templateType._id}`)},
+        onClick: (_event, templateType) => {
+          history.push(`/template_manager/templateTypes/${templateType._id}`)
+        },
       },
     ],
     [history]

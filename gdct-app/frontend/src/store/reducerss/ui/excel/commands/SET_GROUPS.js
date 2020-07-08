@@ -2,14 +2,14 @@ const SET_GROUPS = (
   state,
   { id, columnName, category, newGroups, selectedCOAIds, COAIds }
 ) => {
-  let {
+  const {
     sheetCellData,
     activeCellPosition: { y, x },
   } = state
 
-  let newState = { ...state }
+  const newState = { ...state }
 
-  let newSheetCellData = { ...sheetCellData }
+  const newSheetCellData = { ...sheetCellData }
 
   // ! TODO
   if (category === 'attribute') {
@@ -22,16 +22,15 @@ const SET_GROUPS = (
     newSheetCellData[y][3] = { value: group.value }
     let row = y + 1
 
-    for(let COAId of COAIds) {
+    for (const COAId of COAIds) {
       const { _id, name } = COAId
       const isSelected = selectedCOAIds[_id]
 
-
-      if(isSelected) {
+      if (isSelected) {
         newSheetCellData[row] = { ...newSheetCellData[row] }
         newSheetCellData[row][1] = { value: _id }
         newSheetCellData[row][2] = { value: group._id }
-        newSheetCellData[row][3] = { value: name } 
+        newSheetCellData[row][3] = { value: name }
         row++
       }
     }

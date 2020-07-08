@@ -1,11 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback } from 'react'
 
 import { useDispatch, useSelector } from 'react-redux'
 
-import {
-  showAppNavigation,
-  hideAppNavigation,
-} from '../../../store/actions/ui/isAppNavigationOpen'
 import Loading from '../../../components/Loading/Loading'
 
 import {
@@ -34,11 +30,6 @@ const Template = ({
   useEffect(() => {
     // If fetch fails, push back to /tempaltes
     dispatch(getTemplateRequest(_id))
-    dispatch(hideAppNavigation())
-
-    return () => {
-      dispatch(showAppNavigation())
-    }
   }, [])
 
   return isCallInProgress ? (

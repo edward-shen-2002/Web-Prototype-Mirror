@@ -86,7 +86,7 @@ const ENTER = (state, { shiftKey }) => {
   const startX = Math.min(x1, x2)
   const endX = Math.max(x1, x2)
 
-  let merged = getMergedData(sheetCellData, y, x)
+  const merged = getMergedData(sheetCellData, y, x)
 
   if (shiftKey) {
     if (merged) {
@@ -181,7 +181,7 @@ const ENTER = (state, { shiftKey }) => {
             : (activeCellSelectionAreaIndex = stagnantSelectionAreasLength - 1)
         }
 
-        let newSelectionArea =
+        const newSelectionArea =
           activeCellSelectionAreaIndex === stagnantSelectionAreasLength
             ? activeSelectionArea
             : stagnantSelectionAreas[activeCellSelectionAreaIndex]

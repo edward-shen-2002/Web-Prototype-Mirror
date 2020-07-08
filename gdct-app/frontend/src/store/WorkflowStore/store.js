@@ -52,16 +52,14 @@ const reducers = {
   UPDATE_WORKFLOW_NAME,
   UPDATE_WORKFLOW_ERROR,
   UPDATE,
-  RESET
+  RESET,
 }
 
-export const WorkflowStore = createSlice(
-  {
-    name: 'WORKFLOW',
-    reducers,
-    initialState: initialWorkflowState
-  }
-)
+export const WorkflowStore = createSlice({
+  name: 'WORKFLOW',
+  reducers,
+  initialState: initialWorkflowState,
+})
 
 export const WorkflowStoreActions = WorkflowStore.actions
 

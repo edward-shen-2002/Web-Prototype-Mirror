@@ -19,7 +19,7 @@ export const updateActiveCellPosition = ({
   newX,
   shouldScroll = true,
 }) => {
-  let {
+  const {
     activeCellInputData: { cellEditor, formulaEditor },
     sheetCellData,
   } = newState
@@ -29,7 +29,7 @@ export const updateActiveCellPosition = ({
       ? sheetCellData[newY][newX]
       : {}
 
-  let { type, value, formula } = cellData
+  const { type, value, formula } = cellData
 
   let cellValue
   let formulaValue
@@ -78,7 +78,7 @@ export const changeValue = ({ newState, row, column, newData }) => {
 
   const currentCellData = getCellData(sheetCellData, row, column)
 
-  let newSheetCellData = { ...sheetCellData }
+  const newSheetCellData = { ...sheetCellData }
 
   if (currentCellData) {
     if (currentCellData !== newValue || currentCellData.type !== newData.type) {
@@ -113,7 +113,7 @@ export const saveActiveCellInputData = ({ newState }) => {
     const children = cellValue[0].children
 
     // ! TODO : Determine type from plaintext
-    let plaintext = convertEditorValueToText(cellValue)
+    const plaintext = convertEditorValueToText(cellValue)
 
     // With a given type, even if the inputted value is rich-text, it will be converted to regular text
     // For example: Formulas, prepopulate strings, etc...

@@ -51,7 +51,7 @@ const DoubleArrowIconButton = ({ buttonStyle, text, handleClick }) => (
   </Button>
 )
 
-let TemplateOptions = () => {
+const TemplateOptions = () => {
   const dispatch = useDispatch()
 
   const isTemplatePublished = useSelector(

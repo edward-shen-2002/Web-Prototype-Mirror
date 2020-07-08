@@ -47,7 +47,7 @@ export const scrollTo = ({
     newX = 1
   }
 
-  let { scrollTop, scrollLeft } = scrollData
+  const { scrollTop, scrollLeft } = scrollData
 
   const topFreezeStart = topOffsets[sheetFreezeRowCount]
   const leftFreezeStart = leftOffsets[sheetFreezeColumnCount]

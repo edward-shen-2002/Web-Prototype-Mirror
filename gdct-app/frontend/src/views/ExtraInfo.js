@@ -190,10 +190,10 @@ export default function SignUp({ parentHandleChange }) {
                   appSysRoles.map((sysRole) => (
                     <MenuItem
                       key={sysRole._id}
-                      value={sysRole.appSys + '-' + sysRole.role}
+                      value={`${sysRole.appSys}-${sysRole.role}`}
                       style={getStyles(sysRole._id, sysRoles, theme)}
                     >
-                      {sysRole.appSys + '-' + sysRole.role}
+                      {`${sysRole.appSys}-${sysRole.role}`}
                     </MenuItem>
                   ))}
               </Select>

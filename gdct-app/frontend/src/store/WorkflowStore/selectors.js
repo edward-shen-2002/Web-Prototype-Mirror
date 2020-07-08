@@ -1,4 +1,4 @@
-import { createSelector } from "reselect"
+import { createSelector } from 'reselect'
 
 export const selectWorkflowStore = (state) => state.WorkflowStore
 
@@ -38,12 +38,12 @@ export const selectSelectedWorkflowNode = createSelector(
 
 export const selectSelectedNodeId = createSelector(
   [selectSelectedWorkflowNode],
-  (workflowNode) => workflowNode ? workflowNode.id : undefined
+  (workflowNode) => (workflowNode ? workflowNode.id : undefined)
 )
 
 export const selectSelectedNodetype = createSelector(
   [selectSelectedWorkflowNode],
-  (workflowNode) => workflowNode ? workflowNode.type : undefined
+  (workflowNode) => (workflowNode ? workflowNode.type : undefined)
 )
 
 export const selectWorkflowNodes = createSelector(
@@ -69,7 +69,7 @@ export const selectSelectedWorkflowNodeContent = createSelector(
 export const selectedLinkConnection = createSelector(
   [selectSelectedWorkflowLink, selectWorkflowNodes],
   (link, nodes) => {
-    if(link) {
+    if (link) {
       const { from, to } = link
 
       const fromValue = nodes[from.nodeId].type.name
@@ -81,11 +81,15 @@ export const selectedLinkConnection = createSelector(
 )
 
 export const selectSelectedNodeValue = createSelector(
-  [selectSelectedNodetype, selectSelectedWorkflowNodeContent, selectedLinkConnection],
+  [
+    selectSelectedNodetype,
+    selectSelectedWorkflowNodeContent,
+    selectedLinkConnection,
+  ],
   (type, selectedNode, selectedLinkString) => {
-    if(selectSelectedNodetype) {
+    if (selectSelectedNodetype) {
       let value = 'Selected '
-      if(type === 'node') {
+      if (type === 'node') {
         value += `node: ${selectedNode.type.name}`
       } else {
         value += `link: ${selectedLinkString}`

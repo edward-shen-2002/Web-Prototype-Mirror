@@ -23,8 +23,7 @@ import EditIcon from '@material-ui/icons/Edit'
 const HeaderActions = () => {
   const history = useHistory()
 
-  const handleCreateOrg = () =>
-    history.push('/organizations/create')
+  const handleCreateOrg = () => history.push('/organizations/create')
 
   return (
     <div>
@@ -53,9 +52,7 @@ const Organizations = ({ history }) => {
   const dispatch = useDispatch()
 
   const { Orgs } = useSelector((state) => ({
-    Orgs: selectFactoryRESTResponseTableValues(selectOrgsStore)(
-      state
-    )
+    Orgs: selectFactoryRESTResponseTableValues(selectOrgsStore)(state),
   }))
 
   const columns = useMemo(
@@ -63,8 +60,8 @@ const Organizations = ({ history }) => {
       { title: 'Name', field: 'name' },
       { title: 'Legal Name', field: 'legalName' },
       { title: 'Organization ID', field: 'id' },
-      { title: 'IFIS Number', field: 'IFISNum'},
-      { title: 'Active', type: 'boolean', field: 'active' }
+      { title: 'IFIS Number', field: 'IFISNum' },
+      { title: 'Active', type: 'boolean', field: 'active' },
     ],
     []
   )
@@ -79,11 +76,12 @@ const Organizations = ({ history }) => {
       {
         icon: EditIcon,
         tooltip: 'Edit Organization',
-        onClick: (_event, org) => history.push(`/organizations/edit/${org._id}`)
-      }
+        onClick: (_event, org) =>
+          history.push(`/organizations/edit/${org._id}`),
+      },
     ],
     [history]
-  );
+  )
 
   useEffect(() => {
     dispatch(getOrgsRequest())
@@ -99,8 +97,7 @@ const Organizations = ({ history }) => {
         options={options}
       />
     </div>
-  );
-
+  )
 }
 
-export default Organizations;
+export default Organizations
