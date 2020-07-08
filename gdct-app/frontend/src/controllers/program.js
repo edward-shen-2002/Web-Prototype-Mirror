@@ -8,7 +8,7 @@ const programController = (() => {
     fetch: async (query) =>
       programAxios.get('').then((res) => res.data.programs),
     create: async (program) =>
-      programAxios.post('', { program }).then((res) => res.data.program),
+    programAxios.post('', { program }).then((res) => res.data.program),
     delete: async (_id) => programAxios.delete(`/${_id}`),
     update: async (program) => programAxios.put(`/${program._id}`, { program }),
   }
