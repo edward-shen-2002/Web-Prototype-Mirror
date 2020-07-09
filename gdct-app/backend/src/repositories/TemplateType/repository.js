@@ -14,7 +14,8 @@ export default class TemplateTypeRepository extends BaseRepository {
   async create({
     name,
     description,
-    workflowId,
+    templateWorkflowId,
+    submissionWorkflowId,
     programIds,
     isApprovable,
     isReviewable,
@@ -30,7 +31,8 @@ export default class TemplateTypeRepository extends BaseRepository {
         TemplateTypeModel.create({
           name,
           description,
-          workflowId,
+          templateWorkflowId,
+          submissionWorkflowId,
           programIds,
 
           isApprovable,
@@ -55,7 +57,8 @@ export default class TemplateTypeRepository extends BaseRepository {
     {
       name,
       description,
-      workflowId,
+      templateWorkflowId,
+      submissionWorkflowId,
       programIds,
   
       isApprovable,
@@ -75,7 +78,8 @@ export default class TemplateTypeRepository extends BaseRepository {
             {
               name,
               description,
-              workflowId,
+              templateWorkflowId,
+              submissionWorkflowId,
               programIds,
           
               isApprovable,

@@ -94,13 +94,9 @@ export const MarkButton = ({ format, icon, editor }) => {
 export const SelectIdButton = ({ value, action, children }) => {
   const dispatch = useDispatch()
 
-  const text = useMemo(() => (value === undefined ? 'SELECT ID' : value), [
-    value,
-  ])
+  const text = value === undefined ? 'SELECT ID' : value
 
-  const handleClick = useCallback(() => {
-    dispatch(action())
-  }, [dispatch])
+  const handleClick = () => dispatch(action())
 
   return (
     <div>
@@ -144,7 +140,6 @@ export const ReportingPeriodIdButton = ({ value, onChange }) => (
 )
 
 export const StatusIdButton = (props) => {
-  console.log(props)
   const { value, onChange, isPopulated = false } = props
   return (
     <SelectIdButton

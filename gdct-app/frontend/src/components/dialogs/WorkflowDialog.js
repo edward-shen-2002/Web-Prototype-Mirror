@@ -33,17 +33,14 @@ const WorkflowDialog = ({
     [dispatch]
   )
 
-  const handleSelect = useCallback(
-    (data) => {
-      handleChange(data)
-      if (shouldClose) handleClose()
-    },
-    [dispatch, shouldClose, handleChange]
-  )
+  const handleSelect = (data) => {
+    handleChange(data)
+    if (shouldClose) handleClose()
+  }
 
   useEffect(() => {
-    // if (isWorkflowDialogOpen)
-    //   dispatch(getWorkflowsRequest())
+    if (isWorkflowDialogOpen)
+      dispatch(getWorkflowsRequest())
   }, [dispatch, isWorkflowDialogOpen])
 
   const columns = useMemo(
@@ -64,8 +61,8 @@ const WorkflowDialog = ({
       columns={columns}
       isOpen={isWorkflowDialogOpen}
       data={workflows}
-      // selectedKeys={selectedWorkflows}
-      // getKey={getKey}
+      selectedKeys={selectedWorkflows}
+      getKey={getKey}
       handleClose={handleClose}
       handleSelect={handleSelect}
     />

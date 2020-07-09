@@ -8,7 +8,8 @@ import SubmissionPeriods from './SubmissionPeriods'
 import Submissions from './Submissions'
 import Submission from './Submission'
 
-const SubmissionRouter = () => (
+const SubmissionRouter = () => {
+  return (
   <Switch>
     <Route
       exact
@@ -30,5 +31,6 @@ const SubmissionRouter = () => (
     <Route component={NotFound} />
   </Switch>
 )
+  }
 
 export default SubmissionRouter

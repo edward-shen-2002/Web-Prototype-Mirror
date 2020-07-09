@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useEffect } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import {
@@ -17,7 +17,7 @@ import Typography from '@material-ui/core/Typography'
 import './TemplateTypes.scss'
 import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors'
 import { selectTemplateTypesStore } from '../../../store/TemplateTypesStore/selectors'
-import { WorkflowIdButton, StatusIdButton } from '../../../components/buttons'
+import { WorkflowIdButton } from '../../../components/buttons'
 
 const TemplateTypeHeader = () => {
   return (
@@ -40,11 +40,11 @@ const TemplateTypesTable = ({ history }) => {
     shallowEqual
   )
 
-  const columns = useMemo(
-    () => [
+  const columns = [
       { title: 'Name', field: 'name' },
       { title: 'Description', field: 'description' },
-      { title: 'Workflow', field: 'workflowId', editComponent: StatusIdButton },
+      { title: 'Template Workflow', field: 'templateWorkflowId', editComponent: WorkflowIdButton },
+      // { title: 'Submission Workflow', field: 'submissionWorkflowId', editComponent: WorkflowIdButton },
       { title: 'Approvable', type: 'boolean', field: 'isApprovable' },
       { title: 'Reviewable', type: 'boolean', field: 'isReviewable' },
       { title: 'Submittable', type: 'boolean', field: 'isSubmittable' },
@@ -52,9 +52,8 @@ const TemplateTypesTable = ({ history }) => {
       { title: 'Viewable', type: 'boolean', field: 'isViewable' },
       { title: 'Reportable', type: 'boolean', field: 'isReportable' },
       { title: 'Active', type: 'boolean', field: 'isActive' },
-    ],
-    []
-  )
+    ]
+
 
   const actions = useMemo(
     () => [

@@ -5,6 +5,8 @@ export default class ErrorController {
     err.statusCode = err.statusCode || 500;
     err.status = err.status || 'error';
 
+    console.error(err.message)
+
     res.status(err.statusCode).json({
       status: err.status,
       error: err,

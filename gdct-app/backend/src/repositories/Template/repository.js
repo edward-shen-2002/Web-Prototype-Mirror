@@ -5,6 +5,7 @@ import UserRepository from '../User'
 import Container, { Service } from 'typedi'
 import TemplateTypeRepository from '../TemplateType'
 import BaseRepository from '../repository'
+import WorkflowProcessRepository from '../WorkflowProcess'
 
 // MongoDB implementation
 // @Service()
@@ -15,6 +16,7 @@ export default class TemplateRepository extends BaseRepository {
     this.statusRepository = Container.get(StatusRepository)
     this.userRepository = Container.get(UserRepository)
     this.templateTypeRepository = Container.get(TemplateTypeRepository)
+    this.workflowProcessRepository = Container.get(WorkflowProcessRepository)
   }
 
   async create({
@@ -24,6 +26,7 @@ export default class TemplateRepository extends BaseRepository {
     userCreatorId,
     creationDate,
     expirationDate,
+    workflowProcessId,
     statusId
   }) {
     return (
@@ -39,6 +42,7 @@ export default class TemplateRepository extends BaseRepository {
             userCreatorId,
             creationDate,
             expirationDate,
+            workflowProcessId,
             statusId
           })
         )
@@ -55,6 +59,7 @@ export default class TemplateRepository extends BaseRepository {
       userCreatorId,
       creationDate,
       expirationDate,
+      workflowProcessId,
       statusId
     }
   ) {
@@ -74,11 +79,18 @@ export default class TemplateRepository extends BaseRepository {
             userCreatorId,
             creationDate,
             expirationDate,
+            workflowProcessId,
             statusId
           })
         )
         .then((template) => new TemplateEntity(template.toObject()))
     )
+  }
+
+  async updateWorkflowProcess(_id, workflowProcessId) {
+    return this.workflowProcessRepository.validate(workflowProcessId)
+      .then(() => TemplateModel.findByIdAndUpdate(_id, { workflowProcessId }))
+      .then((template) => new TemplateEntity(template.toObject()))
   }
 
   async find(query) {

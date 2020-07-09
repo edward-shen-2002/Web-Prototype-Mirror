@@ -14,6 +14,8 @@ const templateController = (() => {
     delete: async (_id) => templateAxios.delete(`/${_id}`),
     update: async (template) =>
       templateAxios.put(`/${template._id}`, { template }),
+    updateTemplateWorkflowProcess: async (_id, workflowProcessId) => 
+      templateAxios.put(`/${_id}/workflowProcess/${workflowProcessId}`)
   }
 })()
 

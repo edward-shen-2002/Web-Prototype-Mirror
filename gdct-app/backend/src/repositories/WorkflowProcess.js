@@ -4,6 +4,18 @@ import WorkflowProcessModel from '../models/WorkflowProcess'
 import Container from 'typedi'
 import StatusRepository from './Status'
 
+const populateStatusId = {
+  path: 'statusId',
+  select: 'name'
+}
+
+const populateTo = {
+  path: 'to',
+  populate: {
+    path: 'statusId'
+  }
+}
+
 export default class WorkflowProcessRepository extends BaseRepository {
     constructor() {
       super(WorkflowProcessModel)
@@ -39,15 +51,25 @@ export default class WorkflowProcessRepository extends BaseRepository {
       return WorkflowProcessModel.deleteMany({ workflowId })
     }
   
-    async find(query) {
+    async find(query, isPopulated = false) {
       const realQuery = {}
   
       for (const key in query) {
         if (query[key]) realQuery[key] = query[key]
       }
   
-      return WorkflowProcessModel.find(realQuery).populate('statusId').then((workflowProcesss) =>
+      return WorkflowProcessModel.find(realQuery).populate(isPopulated ? populatedFields : 'statusId').then((workflowProcesss) =>
         workflowProcesss.map((workflowProcess) => new WorkflowProcessEntity(workflowProcess.toObject()))
+      )
+    }
+
+    async findMany(ids, isPopulated = false) {
+      return WorkflowProcessModel.find()
+        .populate(isPopulated ? populateTo : '')
+        .populate(isPopulated ? populateStatusId : '')
+        .where('_id').in(ids).then((workflowProcesss) =>{
+          return workflowProcesss.map((workflowProcess) => new WorkflowProcessEntity(workflowProcess.toObject()))
+        }
       )
     }
 }

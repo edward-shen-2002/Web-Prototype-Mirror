@@ -75,6 +75,14 @@ export default class WorkflowService {
       })
   }
 
+  async findOutwardProcessesPopulated(processId) {
+    const workflowProcess = await this.workflowProcessesRepository.findById(processId)
+
+    workflowProcess.to = await this.workflowProcessesRepository.findMany(workflowProcess.to, true)
+    
+    return workflowProcess
+  }
+
   async deleteWorkflow(workflowId) {
     return this.workflowRepository.delete(workflowId)
       .then(() => this.workflowProcessesRepository.deleteMany(workflowId))
