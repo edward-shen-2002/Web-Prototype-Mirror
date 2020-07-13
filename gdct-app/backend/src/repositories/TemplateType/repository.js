@@ -44,7 +44,6 @@ export default class TemplateTypeRepository extends BaseRepository {
 
   async findByProgramIds(programIds) {
     return TemplateTypeModel.find({programId: {$in: programIds}})
-      .then((templateTypes) => new TemplateTypeEntity(templateTypes.toObject()))
   }
 
   async update(

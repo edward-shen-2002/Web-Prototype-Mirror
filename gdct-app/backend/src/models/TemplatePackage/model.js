@@ -11,7 +11,8 @@ const TemplatePackageModel = model(
       statusId: { type: ObjectId, ref: "Status" },
       templateIds: [{ type: ObjectId, ref: "Template" }],
       creationDate: { type: Date, default: Date.now },
-      userCreatorId: { type: ObjectId, ref: "User" }
+      userCreatorId: { type: ObjectId, ref: "User" },
+      programId: [{ type: ObjectId, ref: "program" }],
     },
     { minimize: false, autoIndex: true }
   ),

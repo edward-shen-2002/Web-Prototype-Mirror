@@ -25,6 +25,7 @@ import AppSysController from './controllers/AppSys'
 import AppRoleController from './controllers/AppRole'
 import AppSysRoleController from './controllers/AppSysRole'
 import SubmissionController from './controllers/Submission'
+import SubmissionNoteController from './controllers/Sub'
 import ColumnNameController from './controllers/ColumnName'
 
 // https://www.digitalocean.com/community/tutorials/how-to-use-winston-to-log-node-js-applications
@@ -50,7 +51,7 @@ export const dbUtil = new Database()
 dbUtil.connect()
 
 // ! No auth for now - Direct connection to router
-// ! Change these base routes 
+// ! Change these base routes
 
 app.use('/template_manager', Container.get(TemplateController))
 app.use('/template_manager', Container.get(TemplatePackageController))
@@ -61,6 +62,7 @@ app.use('/', Container.get(ReportingPeriodController))
 
 app.use('/submission_manager', Container.get(SubmissionPeriodController))
 app.use('/submission_manager', Container.get(SubmissionController))
+app.use('/submission_manager', Container.get(SubmissionNoteController))
 
 app.use('/', Container.get(SheetNameController))
 app.use('/', Container.get(ColumnNameController))

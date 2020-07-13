@@ -10,13 +10,62 @@ const SubmissionController = Service(
     const router = Router()
     return (
       () => {
+
+        router.post(
+          '/submissions/findSubmissions',
+          (req, res, next) => {
+            // Get query from middleware -- auth handler
+            const {orgId, programIds} = req.body
+            service
+              .findSubmission(orgId, programIds)
+              .then((submissions) => {console.log(submissions); res.json({ submissions })})
+              .catch(next)
+          }
+        )
+
+        router.put(
+          '/submissions/updateSubmission',
+          (req, res, next) => {
+            // Get query from middleware -- auth handler
+            const {submission} = req.body
+            service
+              .updateSubmission(submission)
+              .then(() => res.end())
+              .catch(next)
+          }
+        )
+
+        router.put(
+          '/submissions/updateSubmissionStatus',
+          (req, res, next) => {
+            // Get query from middleware -- auth handler
+            const {submission, submissionNote, role} = req.body
+            service
+              .updateStatus(submission, submissionNote, role)
+              .then(() => res.end())
+              .catch(next)
+          }
+        )
+
+        router.post(
+          '/submissions/createSubmission',
+          (req, res, next) => {
+            const {submission, submissionNote} = req.body
+            console.log(submission, submissionNote)
+            service
+              .createSubmissionWithWorkbook(submission, submission.workbookData, submissionNote)
+              .then((submissions) => res.json({ submissions }))
+          }
+        )
+
+
         router.get(
           '/submissions',
           (req, res, next) => {
             // Get query from middleware -- auth handler
 
             service
-              .findSubmission({})
+              .findSubmission({}, "",[])
               .then((submissions) => res.json({ submissions }))
               .catch(next)
           }

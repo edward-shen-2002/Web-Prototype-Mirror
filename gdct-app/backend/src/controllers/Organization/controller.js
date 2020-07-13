@@ -10,7 +10,7 @@ const OrgController = Service(
       () => {
 
         router.get(
-          `/appSyses/searchOrganizationsByOrgGroupId/:orgGroupId`,
+          `/org/searchOrgByOrgGroupId/:orgGroupId`,
           (req, res, next) => {
             const { orgGroupId } = req.params;
             service

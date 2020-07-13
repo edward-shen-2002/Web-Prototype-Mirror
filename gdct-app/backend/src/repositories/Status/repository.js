@@ -23,6 +23,11 @@ export default class StatusRepository extends BaseRepository {
     )
   }
 
+  async findByName(name) {
+    return StatusModel.find({name: name})
+  }
+
+
   async find(query) {
     const realQuery = {}
 

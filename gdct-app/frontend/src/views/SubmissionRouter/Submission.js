@@ -27,6 +27,7 @@ const Submission = ({
 
   const handleSaveSubmission = useCallback(() => {
     dispatch(updateSubmissionExcelRequest())
+
   }, [])
 
   useEffect(() => {
@@ -44,7 +45,7 @@ const Submission = ({
   ) : (
     <Excel
       type="submission"
-      returnLink="/submission_manager/submissions"
+      returnLink="/submission_manager/dashboard"
       handleSave={handleSaveSubmission}
     />
   )

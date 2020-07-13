@@ -1,6 +1,8 @@
 import AppSysEntity from "../../entities/AppSys";
 import BaseRepository from "../repository";
 import AppSysModel from "../../models/AppSys";
+import OrgGroupModel from "../../models/OrganizationGroup";
+import OrgGroupEntity from "../../entities/OrganizationGroup";
 
 export default class ReportPeriodRepository extends BaseRepository {
   constructor() {
@@ -39,5 +41,9 @@ export default class ReportPeriodRepository extends BaseRepository {
         new AppSysEntity(AppSys.toObject())
       )
     );
+  }
+
+  async findAll() {
+    return AppSysModel.find()
   }
 }

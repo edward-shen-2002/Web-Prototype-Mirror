@@ -84,9 +84,9 @@ const createUserNavigation = () => {
       type: 'drawer',
       children: [
         {
-          name: 'Submissions',
+          name: 'Dashboard',
           type: 'menu',
-          url: '/submission_manager/submissions',
+          url: '/submission_manager/dashboard',
           icon: <SendIcon />,
         },
         {

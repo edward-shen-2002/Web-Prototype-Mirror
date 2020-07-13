@@ -87,6 +87,14 @@ export default class TemplatePackageRepository extends BaseRepository {
     )
   }
 
+  async findByProgramIds(programIds) {
+    return TemplatePackageModel.find({programId: {$in: programIds}})
+  }
+
+  async findByName(name) {
+    return TemplatePackageModel.find({name: name})
+  }
+
   async find(query) {
     const realQuery = {}
 

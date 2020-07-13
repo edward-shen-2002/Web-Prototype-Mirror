@@ -13,14 +13,36 @@ import {
 } from '../../tools/excel'
 import { setExcelData } from '../actions/ui/excel/commands'
 
-export const getSubmissionsRequest = getRequestFactory(
-  SubmissionsStore,
+export const getSubmissionsRequest = (orgId, programIds) => (dispatch) => {
+  dispatch(SubmissionsStore.actions.REQUEST())
+
   submissionController
-)
-export const createSubmissionRequest = createRequestFactory(
-  SubmissionsStore,
+    .fetchAndCreate(orgId, programIds)
+    .then((values) => {
+      dispatch(SubmissionsStore.actions.RECEIVE(values))
+    })
+    .catch((error) => {
+      dispatch(SubmissionsStore.actions.FAIL_REQUEST(error))
+    })
+}
+
+export const createSubmissionRequest = (submissionNote, workbookData, submission) => (dispatch) => {
+  dispatch(SubmissionsStore.actions.REQUEST())
+  console.log(submissionNote, submission)
   submissionController
-)
+    .create(submission, submissionNote)
+    .then((value) => {
+      dispatch(SubmissionsStore.actions.CREATE(value))
+    })
+    .catch((error) => {
+      dispatch(SubmissionsStore.actions.FAIL_REQUEST(error))
+    })
+}
+
+// export const createSubmissionRequest = createRequestFactory(
+//   SubmissionsStore,
+//   submissionController
+// )
 export const deleteSubmissionRequest = deleteRequestFactory(
   SubmissionsStore,
   submissionController
@@ -62,12 +84,40 @@ export const updateSubmissionExcelRequest = () => (dispatch, getState) => {
 
   const newSubmission = {
     ...submission,
-    name: present.name,
+ //   name: present.name,
+    isLatest: false,
     workbookData: extractReactAndWorkbookState(present, present.inactiveSheets),
   }
 
   submissionController
     .update(newSubmission)
+    .then(() => {
+      dispatch(SubmissionsStore.actions.UPDATE(newSubmission))
+    })
+    .catch((error) => {
+      dispatch(SubmissionsStore.actions.FAIL_REQUEST(error))
+    })
+}
+
+export const getSubmissionByIdRequest = (_id) => (dispatch) => {
+  submissionController
+    .fetchSubmission(_id)
+    .then((submission) => {
+      dispatch(SubmissionsStore.actions.RECEIVE(submission))
+    })
+    .catch((error) => {
+      dispatch(SubmissionsStore.actions.FAIL_REQUEST(error))
+    })
+}
+
+export const updateSubmissionStatusRequest = (submission, submissionNote, role) => (dispatch) => {
+  const newSubmission = {
+    ...submission,
+    //   name: present.name,
+    phase: role,
+  }
+  submissionController
+    .updateStatus(submission, submissionNote, role)
     .then(() => {
       dispatch(SubmissionsStore.actions.UPDATE(newSubmission))
     })

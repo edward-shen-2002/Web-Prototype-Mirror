@@ -43,7 +43,6 @@ const COATreeActions = ({ sheetNameId }) => {
   const handleOpenGroupDialog = useCallback(() => {
     dispatch(DialogsStore.actions.OPEN_COA_GROUP_DIALOG())
   }, [dispatch])
-
   const handleSave = useCallback(
     () => dispatch(updateCOATreesBySheetNameRequest(sheetNameId, true)),
     [dispatch]

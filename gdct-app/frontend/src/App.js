@@ -14,6 +14,8 @@ import ReportingPeriods from './views/ReportingPeriods'
 
 import './App.scss'
 import Login from './views/Login'
+import PreRegister from './views/UserRegistrationRouter/PreRegistration'
+import Register from './views/UserRegistrationRouter/'
 
 const AppPageRouter = () => {
   // ! For testing purposes
@@ -41,6 +43,8 @@ const AppPageRouter = () => {
       <Route path="/reportingPeriods" component={ReportingPeriods} />
       <Route path="/sheetNames" component={SheetNames} />
       <Route path="/login" component={Login} />
+      <Route path="/preregister" component={PreRegister} />
+      <Route path="/register" component={Register} />
     </Switch>
   )
 }
