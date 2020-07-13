@@ -15,7 +15,7 @@ const programController = (() => {
     programAxios.post('', { program }).then((res) => res.data.program),
     delete: async (_id) => programAxios.delete(`/${_id}`),
     update: async (program) => programAxios.put(`/${program._id}`, { program }),
-
+    t: {}
   }
 })()
 
