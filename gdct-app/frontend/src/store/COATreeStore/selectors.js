@@ -26,7 +26,7 @@ const selectSelectedNodeCOAIds = createSelector(
 export const selectSelectedCOAIdsMap = createSelector(
   [selectSelectedNodeCOAIds],
   (COAIds) => {
-    let selectedCOAIds = {}
+    const selectedCOAIds = {}
 
     COAIds.forEach((COAId) => (selectedCOAIds[COAId] = true))
 

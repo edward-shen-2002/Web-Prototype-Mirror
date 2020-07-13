@@ -7,9 +7,9 @@ import NotFound from '../../components/NotFound'
 import SubmissionPeriods from './SubmissionPeriods'
 import Submissions from './Submissions'
 import Submission from './Submission'
-import SubmissionDashboard from "./SubmissionDashboard";
-import CreateSubmission from "./CreateSubmission";
-import EditSubmission from "./EditSubmission"
+import SubmissionDashboard from './SubmissionDashboard'
+import CreateSubmission from './CreateSubmission'
+import EditSubmission from './EditSubmission'
 
 const SubmissionRouter = () => (
   <Switch>
@@ -42,11 +42,11 @@ const SubmissionRouter = () => (
       component={CreateSubmission}
     />
 
-      <Route
-        exact
-        path="/submission_manager/editSubmission/:id"
-        component={EditSubmission}
-      />
+    <Route
+      exact
+      path="/submission_manager/editSubmission/:id"
+      component={EditSubmission}
+    />
 
     <Route component={NotFound} />
   </Switch>

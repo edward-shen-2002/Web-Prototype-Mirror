@@ -6,7 +6,9 @@ const organizationController = (() => {
   })
   return {
     fetchByOrgGroupId: async (_id) =>
-      organizationAxios.get(`/searchOrganization/${_id}`).then((res) => res.data.organization),
+      organizationAxios
+        .get(`/searchOrganization/${_id}`)
+        .then((res) => res.data.organization),
   }
 })()
 

@@ -18,14 +18,14 @@ import ReportingPeriodsStore from './ReportingPeriodsStore/store'
 import StatusesStore from './StatusesStore/store'
 import SubmissionPeriodsStore from './SubmissionPeriodsStore/store'
 import SubmissionsStore from './SubmissionsStore/store'
-import SubmissionNoteStore from "./SubmissionNoteStore/store";
-import SubmissionNoteHistoryStore from "./SubmissionNoteHistoryStore/store";
+import SubmissionNoteStore from './SubmissionNoteStore/store'
+import SubmissionNoteHistoryStore from './SubmissionNoteHistoryStore/store'
 import COATreeStore from './COATreeStore/store'
 import COATreesStore from './COATreesStore/store'
 import SheetNamesStore from './SheetNamesStore/store'
 import ColumnNamesStore from './ColumnNameStore/store'
-import UserRegistrationStore from "./UserRegistrationStore/store";
-import SubmissionWorkbookStore from "./SubmissionWorkbookStore/store";
+import UserRegistrationStore from './UserRegistrationStore/store'
+import SubmissionWorkbookStore from './SubmissionWorkbookStore/store'
 
 export const root = combineReducers({
   StatusesStore: StatusesStore.reducer,

@@ -12,18 +12,16 @@ import MaterialTable from 'material-table'
 import Paper from '@material-ui/core/Paper'
 import Button from '@material-ui/core/Button'
 import LaunchIcon from '@material-ui/icons/Launch'
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel'
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
 import Typography from '@material-ui/core/Typography'
 import { useHistory } from 'react-router-dom'
 import { selectSubmissionsStore } from '../../store/SubmissionsStore/selectors'
 import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
 import { TemplateIdButton, StatusIdButton } from '../../components/buttons'
-
-
 
 const SubmissionHeader = () => (
   <Paper className="header">
@@ -50,17 +48,29 @@ const SubmissionDashboard = ({ history }) => {
   )
 
   console.log(submissions)
-  if(submissions[0] !== undefined)
+  if (submissions[0] !== undefined)
     submissions.forEach((submission) => {
-      if(submission !== undefined)
-      switch (submission.phase) {
-        case "Unsubmitted": unsubmittedSubmission.push(submission); break;
-        case "Submitted": submittedSubmission.push(submission); break;
-        case "Expired": expiredSubmission.push(submission); break;
-        case "Rejected": rejectedSubmission.push(submission); break;
-        case "Approved": approvedSubmission.push(submission); break;
-        case "Published": publishedSubmission.push(submission); break;
-      }
+      if (submission !== undefined)
+        switch (submission.phase) {
+          case 'Unsubmitted':
+            unsubmittedSubmission.push(submission)
+            break
+          case 'Submitted':
+            submittedSubmission.push(submission)
+            break
+          case 'Expired':
+            expiredSubmission.push(submission)
+            break
+          case 'Rejected':
+            rejectedSubmission.push(submission)
+            break
+          case 'Approved':
+            approvedSubmission.push(submission)
+            break
+          case 'Published':
+            publishedSubmission.push(submission)
+            break
+        }
     })
 
   console.log(unsubmittedSubmission)
@@ -68,18 +78,18 @@ const SubmissionDashboard = ({ history }) => {
 
   const checkBoxColumns = useMemo(
     () => [
-      { title: "Year", field: "year" },
-      { title: "Period", field: "period" },
-      { title: "Submission", field: "name"},
-      { title: "Program", field: "programName"},
-      { title: "Approver", field: "approver"},
-      { title: "Health Service Provider", field: "hsp"},
-      { title: "Status", field: "phase"},
-      { title: "Created On", field: "createdAt"},
-      { title: "Modified By", field: "updatedBy"},
-      { title: "Modified on", field: "updatedAt"},
-      { title: "version", field: "version"},
-      { title: "Template Name", field: "workbookData.name"}
+      { title: 'Year', field: 'year' },
+      { title: 'Period', field: 'period' },
+      { title: 'Submission', field: 'name' },
+      { title: 'Program', field: 'programName' },
+      { title: 'Approver', field: 'approver' },
+      { title: 'Health Service Provider', field: 'hsp' },
+      { title: 'Status', field: 'phase' },
+      { title: 'Created On', field: 'createdAt' },
+      { title: 'Modified By', field: 'updatedBy' },
+      { title: 'Modified on', field: 'updatedAt' },
+      { title: 'version', field: 'version' },
+      { title: 'Template Name', field: 'workbookData.name' },
     ],
     []
   )
@@ -96,27 +106,30 @@ const SubmissionDashboard = ({ history }) => {
         tooltip: 'Create Submission',
         onClick: (_event, submission) =>
           history.push({
-            pathname:`/submission_manager/createSubmission/${submission._id}`,
-            state: {detail: submission}
-          })
+            pathname: `/submission_manager/createSubmission/${submission._id}`,
+            state: { detail: submission },
+          }),
       },
       {
         icon: LaunchIcon,
         tooltip: 'Edit Submission',
         onClick: (_event, submission) =>
-
           history.push({
-            pathname:`/submission_manager/editSubmission/${submission._id}`,
-            state: {detail: submission}
-          })
+            pathname: `/submission_manager/editSubmission/${submission._id}`,
+            state: { detail: submission },
+          }),
       },
     ],
     [history]
   )
 
-
   useEffect(() => {
-    dispatch(getSubmissionsRequest(739, ["5eadbe676a04912f04e389c9","5eac9e579a8fe3217fe81fc2"]))
+    dispatch(
+      getSubmissionsRequest(739, [
+        '5eadbe676a04912f04e389c9',
+        '5eac9e579a8fe3217fe81fc2',
+      ])
+    )
   }, [dispatch])
 
   return (
@@ -124,9 +137,8 @@ const SubmissionDashboard = ({ history }) => {
       <SubmissionHeader />
 
       <ExpansionPanel>
-
         <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon/>}
+          expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
@@ -144,7 +156,7 @@ const SubmissionDashboard = ({ history }) => {
 
       <ExpansionPanel>
         <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon/>}
+          expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
@@ -162,7 +174,7 @@ const SubmissionDashboard = ({ history }) => {
 
       <ExpansionPanel>
         <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon/>}
+          expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
@@ -180,7 +192,7 @@ const SubmissionDashboard = ({ history }) => {
 
       <ExpansionPanel>
         <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon/>}
+          expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
@@ -198,7 +210,7 @@ const SubmissionDashboard = ({ history }) => {
 
       <ExpansionPanel>
         <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon/>}
+          expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
@@ -216,7 +228,7 @@ const SubmissionDashboard = ({ history }) => {
 
       <ExpansionPanel>
         <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon/>}
+          expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
@@ -230,7 +242,6 @@ const SubmissionDashboard = ({ history }) => {
             actions={actions}
           />
         </ExpansionPanelDetails>
-
       </ExpansionPanel>
     </div>
   )

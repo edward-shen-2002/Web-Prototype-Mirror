@@ -1,79 +1,94 @@
 import React, { lazy, useCallback, useMemo, useEffect } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
-import { Formik } from "formik";
+import { Formik } from 'formik'
 
 // import SRIHeader from "../../../SRI_Header"
 
-import { ROUTE_PUBLIC_LOGIN, ROUTE_USER_PROFILE } from "../../constants/routes";
+import { ROUTE_PUBLIC_LOGIN, ROUTE_USER_PROFILE } from '../../constants/routes'
 
 import {
-  orgGroupChange, snackbarClose, stepBack, stepNext, submit,
-  appSysChange, orgChange, programChange, changeSubmission,
-  changePermission, searchOrganization, searchKeyChange, referenceChange,
-
+  orgGroupChange,
+  snackbarClose,
+  stepBack,
+  stepNext,
+  submit,
+  appSysChange,
+  orgChange,
+  programChange,
+  changeSubmission,
+  changePermission,
+  searchOrganization,
+  searchKeyChange,
+  referenceChange,
 } from '../../store/thunks/userRegistration'
 
-import Paper from "@material-ui/core/Paper";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Select from "react-select";
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
-import Typography from '@material-ui/core/Typography';
-import Checkbox from '@material-ui/core/Checkbox';
+import Paper from '@material-ui/core/Paper'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
+import Select from 'react-select'
+import Stepper from '@material-ui/core/Stepper'
+import Step from '@material-ui/core/Step'
+import StepLabel from '@material-ui/core/StepLabel'
+import Typography from '@material-ui/core/Typography'
+import Checkbox from '@material-ui/core/Checkbox'
 import FilteredMultiSelect from 'react-filtered-multiselect'
 
-import "./Register.scss";
-import Box from "@material-ui/core/Box";
-import * as yup from "yup";
-import { selectFactoryRESTResponseTableValues } from "../../store/common/REST/selectors";
-import { selectUserRegistrationStore } from "../../store/UserRegistrationStore/selectors";
+import './Register.scss'
+import Box from '@material-ui/core/Box'
+import * as yup from 'yup'
+import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
+import { selectUserRegistrationStore } from '../../store/UserRegistrationStore/selectors'
 import UserRegistrationStore from '../../store/UserRegistrationStore/store'
 
-const MaterialTable = lazy(() => import("material-table"));
+const MaterialTable = lazy(() => import('material-table'))
 
 function getSteps() {
-  return ['Step1', 'Step2'];
+  return ['Step1', 'Step2']
 }
-const steps = getSteps();
+const steps = getSteps()
 
 const titleOptions = [
-  {label: "Mr.", value: "Mr."},
-  {label: "Mrs.", value: "Mrs."},
-  {label: "Ms.", value: "Ms."},
-  {label: "Dr.", value: "Dr."}
+  { label: 'Mr.', value: 'Mr.' },
+  { label: 'Mrs.', value: 'Mrs.' },
+  { label: 'Ms.', value: 'Ms.' },
+  { label: 'Dr.', value: 'Dr.' },
 ]
 
 const columns = [
-  { title: "Organization", field: "organization.name" },
-  { title: "Program", field: "program.code" },
-  { title: "Submission", field: "submission.name" },
-  { title: "Permission", field: "permission" },
-  { title: "Authoritative Person Name", field: "organization.authorizedPerson.name" },
-  { title: "Authoritative Person's Phone Number", field: "organization.authorizedPerson.phone" },
-  { title: "Authoritative Person's Email", field: "organization.authorizedPerson.email" }
-];
+  { title: 'Organization', field: 'organization.name' },
+  { title: 'Program', field: 'program.code' },
+  { title: 'Submission', field: 'submission.name' },
+  { title: 'Permission', field: 'permission' },
+  {
+    title: 'Authoritative Person Name',
+    field: 'organization.authorizedPerson.name',
+  },
+  {
+    title: "Authoritative Person's Phone Number",
+    field: 'organization.authorizedPerson.phone',
+  },
+  {
+    title: "Authoritative Person's Email",
+    field: 'organization.authorizedPerson.email',
+  },
+]
 
 const searchKeyOptions = [
-  {label: "Organization Code", value: "code"},
-  {label: "Organization Name", value: "name"},
-  {label: "Location Name", value: "LocationName"},
-];
-
-
+  { label: 'Organization Code', value: 'code' },
+  { label: 'Organization Name', value: 'name' },
+  { label: 'Location Name', value: 'LocationName' },
+]
 
 class MySelect extends React.Component {
-  handleChange = value => {
+  handleChange = (value) => {
     // this is going to call setFieldValue and manually update values.topcis
-    this.props.onChange(this.props.name, value);
-
-  };
+    this.props.onChange(this.props.name, value)
+  }
 
   handleBlur = () => {
     // this is going to call setFieldTouched and manually update touched.topcis
-    this.props.onBlur(this.props.name, true);
-  };
+    this.props.onBlur(this.props.name, true)
+  }
 
   render() {
     return (
@@ -87,85 +102,145 @@ class MySelect extends React.Component {
           name={this.props.name}
           variant="outlined"
         />
-        {!!this.props.error &&
-        this.props.touched && (
-          <div style={{ color: 'red', marginTop: '.5rem' }}>{this.props.error}</div>
+        {!!this.props.error && this.props.touched && (
+          <div style={{ color: 'red', marginTop: '.5rem' }}>
+            {this.props.error}
+          </div>
         )}
       </div>
-    );
+    )
   }
 }
 
-
 const registerSchema = yup.object().shape({
-  title: yup.string()
-    .required("Please select one title"),
-  username: yup.string()
-    .min(6, "Username must be 6 to 20 characters long")
-    .max(20, "Username must be 6 to 20 characters long")
-    .required("Please enter a username"),
-  password: yup.string()
-    .min(8, "The given password is too short. Password must be at least 8 character(s) long")
-    .matches(/[{0-9}]/, "Password has too few numeric characters (0-9). The password must have at least 1 numeric character(s)")
-    .matches(/[{a-z}{A-Z}}]/, "Password has too few alphabetic characters (A-Z, a-z). The password must have at least 2 alphabetic character(s)")
-    .required("Please enter a password"),
-  passwordConfirm: yup.string()
-    .oneOf([yup.ref("password"), null], "Password should match with Verify Password")
-    .required("Please confirm your password"),
-  firstName: yup.string()
-    .required("Please enter first name")
-    .max(100, "Name is too long, please enter an alias or nickname instead"),
-  lastName: yup.string()
-    .required("Please enter last name")
-    .max(100, "Name is too long, please enter an alias or nickname instead"),
-  phoneNumber: yup.string()
-    .length(10,"Please enter valid phone number")
-    .matches(/^[0-9]+$/, "Please enter valid phone number")
-    .required("Please enter phone number"),
-  email: yup.string()
-    .email("Please enter a valid email")
-    .max(254, "Email is too long")
-    .required("Please enter your email"),
-  ext: yup.string()
-    .max(100, "Ext is too long"),
-});
+  title: yup.string().required('Please select one title'),
+  username: yup
+    .string()
+    .min(6, 'Username must be 6 to 20 characters long')
+    .max(20, 'Username must be 6 to 20 characters long')
+    .required('Please enter a username'),
+  password: yup
+    .string()
+    .min(
+      8,
+      'The given password is too short. Password must be at least 8 character(s) long'
+    )
+    .matches(
+      /[{0-9}]/,
+      'Password has too few numeric characters (0-9). The password must have at least 1 numeric character(s)'
+    )
+    .matches(
+      /[{a-z}{A-Z}}]/,
+      'Password has too few alphabetic characters (A-Z, a-z). The password must have at least 2 alphabetic character(s)'
+    )
+    .required('Please enter a password'),
+  passwordConfirm: yup
+    .string()
+    .oneOf(
+      [yup.ref('password'), null],
+      'Password should match with Verify Password'
+    )
+    .required('Please confirm your password'),
+  firstName: yup
+    .string()
+    .required('Please enter first name')
+    .max(100, 'Name is too long, please enter an alias or nickname instead'),
+  lastName: yup
+    .string()
+    .required('Please enter last name')
+    .max(100, 'Name is too long, please enter an alias or nickname instead'),
+  phoneNumber: yup
+    .string()
+    .length(10, 'Please enter valid phone number')
+    .matches(/^[0-9]+$/, 'Please enter valid phone number')
+    .required('Please enter phone number'),
+  email: yup
+    .string()
+    .email('Please enter a valid email')
+    .max(254, 'Email is too long')
+    .required('Please enter your email'),
+  ext: yup.string().max(100, 'Ext is too long'),
+})
 
-const ButtonBox = ({activeStep, ableToComplete, values, isValid, handleBack, handleNext, handleSubmit}) => (
-  <Box border={1} color="primary" className="register__buttonBox" justifyContent="center">
-    <Button disabled={activeStep === 0} variant="outlined" color="primary" className="register__buttonBack" onClick={handleBack} >
+const ButtonBox = ({
+  activeStep,
+  ableToComplete,
+  values,
+  isValid,
+  handleBack,
+  handleNext,
+  handleSubmit,
+}) => (
+  <Box
+    border={1}
+    color="primary"
+    className="register__buttonBox"
+    justifyContent="center"
+  >
+    <Button
+      disabled={activeStep === 0}
+      variant="outlined"
+      color="primary"
+      className="register__buttonBack"
+      onClick={handleBack}
+    >
       Back
     </Button>
 
-    <Button variant="outlined" color="primary" className="register__button"  href={ROUTE_PUBLIC_LOGIN} >
+    <Button
+      variant="outlined"
+      color="primary"
+      className="register__button"
+      href={ROUTE_PUBLIC_LOGIN}
+    >
       Cancel
     </Button>
 
-    <Button disabled={activeStep == 1 || !isValid} variant="outlined" color="primary" className="register__button"  onClick={() => handleNext(values)} >
+    <Button
+      disabled={activeStep == 1 || !isValid}
+      variant="outlined"
+      color="primary"
+      className="register__button"
+      onClick={() => handleNext(values)}
+    >
       Next
     </Button>
 
-    <Button disabled={!ableToComplete || activeStep !== 1} variant="outlined" color="primary" className="register__button"  onClick={handleSubmit} >
+    <Button
+      disabled={!ableToComplete || activeStep !== 1}
+      variant="outlined"
+      color="primary"
+      className="register__button"
+      onClick={handleSubmit}
+    >
       COMPLETE REGISTRATION
     </Button>
     <Typography className="register__inputTitle">
-      To navigate from one page to the next for registration, please use the button provided on the page. Do not use your browsers's Back and Forward buttons.
+      To navigate from one page to the next for registration, please use the
+      button provided on the page. Do not use your browsers's Back and Forward
+      buttons.
     </Typography>
-
   </Box>
-);
+)
 
-
-const selectOrgProgram = (searchKey, reference, organizationGroup, organizationOptions, organizationGroupOptions, appSysOptions, programOptions,
-                          handleOrgGroupChange, handleOrgChange, handleProgramChange) => {
-
-
-//  if (organizationGroup !== "Health Service Providers") {
-  let selectedPrograms = [];
-  let selectedOrganizations = [];
-  console.log(appSysOptions);
+const selectOrgProgram = (
+  searchKey,
+  reference,
+  organizationGroup,
+  organizationOptions,
+  organizationGroupOptions,
+  appSysOptions,
+  programOptions,
+  handleOrgGroupChange,
+  handleOrgChange,
+  handleProgramChange
+) => {
+  //  if (organizationGroup !== "Health Service Providers") {
+  const selectedPrograms = []
+  const selectedOrganizations = []
+  console.log(appSysOptions)
   return (
     <>
-
       <Typography className="register__inputTitle"> *AppSys </Typography>
       <Select
         name="appSys"
@@ -174,21 +249,24 @@ const selectOrgProgram = (searchKey, reference, organizationGroup, organizationO
         className="register__select"
       />
 
-      <Typography className="register__inputTitle"> *OrganizationsGroups </Typography>
+      <Typography className="register__inputTitle">
+        {' '}
+        *OrganizationsGroups{' '}
+      </Typography>
       <Select
         name="organizations"
         options={organizationGroupOptions}
         onChange={handleOrgGroupChange}
         className="register__select"
       />
-      <br/>
+      <br />
       <Typography className="register__inputTitle"> *Organizations </Typography>
-      {/*<Select*/}
+      {/* <Select*/}
       {/*  name="organizations"*/}
       {/*  options={organizationOptions}*/}
       {/*  onChange={handleOrgChange}*/}
       {/*  className="register__select"*/}
-      {/*/>*/}
+      {/* />*/}
       <FilteredMultiSelect
         onChange={handleOrgChange}
         options={organizationOptions}
@@ -199,11 +277,10 @@ const selectOrgProgram = (searchKey, reference, organizationGroup, organizationO
         className="register__filteredMultiSelect"
         showFilter={false}
         classNames={{
-          button: "register__step3Button",
-          select: "register__multiSelect",
+          button: 'register__step3Button',
+          select: 'register__multiSelect',
         }}
       />
-
 
       <Typography className="register__inputTitle"> *Program </Typography>
 
@@ -217,95 +294,138 @@ const selectOrgProgram = (searchKey, reference, organizationGroup, organizationO
         className="register__filteredMultiSelect"
         showFilter={false}
         classNames={{
-          button: "register__step3Button",
-          select: "register__multiSelect",
+          button: 'register__step3Button',
+          select: 'register__multiSelect',
         }}
       />
     </>
   )
 }
 
-
-const getStepContent = (snackbarMessage, activeStep, searchKey, reference, organizationGroup, isSnackbarOpen,
-                        userOrganizations, userPrograms, userSubmissions, userPermissions, appSysOptions, organizationGroupOptions,
-                        organizationOptions, programOptions, ableToComplete, handleOrgGroupChange, handleBack, handleNext,
-                        handleSubmit, handleAppSysChange, handleOrgChange, handleProgramChange, handleChangeSubmission,
-                        handleChangePermission, props) => {
-
-  const { values, handleChange, touched, handleBlur, errors, isValid} = props;
+const getStepContent = (
+  snackbarMessage,
+  activeStep,
+  searchKey,
+  reference,
+  organizationGroup,
+  isSnackbarOpen,
+  userOrganizations,
+  userPrograms,
+  userSubmissions,
+  userPermissions,
+  appSysOptions,
+  organizationGroupOptions,
+  organizationOptions,
+  programOptions,
+  ableToComplete,
+  handleOrgGroupChange,
+  handleBack,
+  handleNext,
+  handleSubmit,
+  handleAppSysChange,
+  handleOrgChange,
+  handleProgramChange,
+  handleChangeSubmission,
+  handleChangePermission,
+  props
+) => {
+  const { values, handleChange, touched, handleBlur, errors, isValid } = props
   const checkBoxColumns = [
-    { title: "Organization", field: "organization.name" },
-    { title: "Program", field: "program.code" },
-    { title: "Submission", field: "submission.name"},
-    { title: "Approve*", field: "approve" ,render: rowData =>
+    { title: 'Organization', field: 'organization.name' },
+    { title: 'Program', field: 'program.code' },
+    { title: 'Submission', field: 'submission.name' },
+    {
+      title: 'Approve*',
+      field: 'approve',
+      render: (rowData) => (
         <Checkbox
           checked={rowData.approve}
           disabled={!rowData.approveAvailable}
-          onChange={handleChangePermission.bind(this, rowData, "approve")}
+          onChange={handleChangePermission.bind(this, rowData, 'approve')}
           color="primary"
         />
+      ),
     },
-    { title: "Review**", field: "review" ,render: rowData =>
+    {
+      title: 'Review**',
+      field: 'review',
+      render: (rowData) => (
         <Checkbox
           checked={rowData.review}
           disabled={!rowData.reviewAvailable}
-          onChange={handleChangePermission.bind(this, rowData, "review")}
+          onChange={handleChangePermission.bind(this, rowData, 'review')}
           color="primary"
         />
+      ),
     },
-    { title: "Submit***", field: "submit" ,render: rowData =>
+    {
+      title: 'Submit***',
+      field: 'submit',
+      render: (rowData) => (
         <Checkbox
           checked={rowData.submit}
           disabled={!rowData.submitAvailable}
-          onChange={handleChangePermission.bind(this, rowData, "submit")}
+          onChange={handleChangePermission.bind(this, rowData, 'submit')}
           color="primary"
         />
+      ),
     },
-    { title: "Input****", field: "input" ,render: rowData =>
+    {
+      title: 'Input****',
+      field: 'input',
+      render: (rowData) => (
         <Checkbox
           checked={rowData.input}
           disabled={!rowData.inputAvailable}
-          onChange={handleChangePermission.bind(this, rowData, "input")}
+          onChange={handleChangePermission.bind(this, rowData, 'input')}
           color="primary"
         />
+      ),
     },
-    { title: "View*****", field: "view" ,render: rowData =>
+    {
+      title: 'View*****',
+      field: 'view',
+      render: (rowData) => (
         <Checkbox
           checked={rowData.view}
           disabled={!rowData.viewAvailable}
-          onChange={handleChangePermission.bind(this, rowData, "view")}
+          onChange={handleChangePermission.bind(this, rowData, 'view')}
           color="primary"
         />
+      ),
     },
-    { title: "View Cognos******", field: "viewCognos" ,render: rowData =>
+    {
+      title: 'View Cognos******',
+      field: 'viewCognos',
+      render: (rowData) => (
         <Checkbox
           checked={rowData.viewCognos}
           disabled={!rowData.viewCognosAvailable}
-          onChange={handleChangePermission.bind(this, rowData, "viewCongos")}
+          onChange={handleChangePermission.bind(this, rowData, 'viewCongos')}
           color="primary"
         />
+      ),
     },
   ]
 
   switch (activeStep) {
-
     case 0:
       return (
         <>
           <form className="register__form">
-            <br/>
+            <br />
             <div className="register__label">
               <Typography className="register__inputTitle"> *Title </Typography>
             </div>
             <div className="register__informationField">
-              {/*<MySelect*/}
+              {/* <MySelect*/}
               {/*  name = "title"*/}
               {/*  options = {titleOptions}*/}
               {/*  value={values.title}*/}
               {/*  onChange={setFieldValue}*/}
               {/*  className="register__selectTitle"*/}
               {/*  onBlur={setFieldTouched}*/}
-              {/*/>*/}
+              {/* />*/}
               <TextField
                 variant="outlined"
                 className="register__field"
@@ -318,14 +438,17 @@ const getStepContent = (snackbarMessage, activeStep, searchKey, reference, organ
                 helperText={touched.title && errors.title}
                 onBlur={handleBlur}
                 InputProps={{
-                  style:{
-                    height: 30
-                  }
+                  style: {
+                    height: 30,
+                  },
                 }}
               />
             </div>
             <div className="register__label">
-              <Typography className="register__inputTitle"> *Last Name </Typography>
+              <Typography className="register__inputTitle">
+                {' '}
+                *Last Name{' '}
+              </Typography>
             </div>
             <div className="register__informationField">
               <TextField
@@ -340,14 +463,17 @@ const getStepContent = (snackbarMessage, activeStep, searchKey, reference, organ
                 helperText={touched.lastName && errors.lastName}
                 onBlur={handleBlur}
                 InputProps={{
-                  style:{
-                    height: 30
-                  }
+                  style: {
+                    height: 30,
+                  },
                 }}
               />
             </div>
             <div className="register__label">
-              <Typography className="register__inputTitle"> *First Name </Typography>
+              <Typography className="register__inputTitle">
+                {' '}
+                *First Name{' '}
+              </Typography>
             </div>
             <div className="register__informationField">
               <TextField
@@ -362,16 +488,19 @@ const getStepContent = (snackbarMessage, activeStep, searchKey, reference, organ
                 helperText={touched.firstName && errors.firstName}
                 onBlur={handleBlur}
                 InputProps={{
-                  style:{
-                    height: 30
-                  }
+                  style: {
+                    height: 30,
+                  },
                 }}
               />
             </div>
 
-            <br/>
+            <br />
             <div className="register__label">
-              <Typography className="register__inputTitle"> *Phone Number </Typography>
+              <Typography className="register__inputTitle">
+                {' '}
+                *Phone Number{' '}
+              </Typography>
             </div>
             <div className="register__informationField">
               <TextField
@@ -386,9 +515,9 @@ const getStepContent = (snackbarMessage, activeStep, searchKey, reference, organ
                 helperText={touched.phoneNumber && errors.phoneNumber}
                 onBlur={handleBlur}
                 InputProps={{
-                  style:{
-                    height: 30
-                  }
+                  style: {
+                    height: 30,
+                  },
                 }}
               />
             </div>
@@ -406,13 +535,13 @@ const getStepContent = (snackbarMessage, activeStep, searchKey, reference, organ
                 onChange={handleChange}
                 onBlur={handleBlur}
                 InputProps={{
-                  style:{
-                    height: 30
-                  }
+                  style: {
+                    height: 30,
+                  },
                 }}
               />
             </div>
-            <br/>
+            <br />
             <div className="register__label">
               <Typography className="register__inputTitle"> *Email </Typography>
             </div>
@@ -429,15 +558,18 @@ const getStepContent = (snackbarMessage, activeStep, searchKey, reference, organ
                 helperText={touched.email && errors.email}
                 onBlur={handleBlur}
                 InputProps={{
-                  style:{
-                    height: 30
-                  }
+                  style: {
+                    height: 30,
+                  },
                 }}
               />
             </div>
-            <br/>
+            <br />
             <div className="register__label">
-              <Typography className="register__inputTitle"> *User ID </Typography>
+              <Typography className="register__inputTitle">
+                {' '}
+                *User ID{' '}
+              </Typography>
             </div>
             <div className="register__informationField">
               <TextField
@@ -452,15 +584,18 @@ const getStepContent = (snackbarMessage, activeStep, searchKey, reference, organ
                 helperText={touched.username && errors.username}
                 onBlur={handleBlur}
                 InputProps={{
-                  style:{
-                    height: 30
-                  }
+                  style: {
+                    height: 30,
+                  },
                 }}
               />
             </div>
-            <br/>
+            <br />
             <div className="register__label">
-              <Typography className="register__inputTitle"> *Password </Typography>
+              <Typography className="register__inputTitle">
+                {' '}
+                *Password{' '}
+              </Typography>
             </div>
             <div className="register__informationField">
               <TextField
@@ -475,15 +610,18 @@ const getStepContent = (snackbarMessage, activeStep, searchKey, reference, organ
                 helperText={touched.password && errors.password}
                 onBlur={handleBlur}
                 InputProps={{
-                  style:{
-                    height: 30
-                  }
+                  style: {
+                    height: 30,
+                  },
                 }}
               />
             </div>
-            <br/>
+            <br />
             <div className="register__label">
-              <Typography className="register__inputTitle"> *Confirm Password </Typography>
+              <Typography className="register__inputTitle">
+                {' '}
+                *Confirm Password{' '}
+              </Typography>
             </div>
             <div className="register__informationField">
               <TextField
@@ -498,45 +636,63 @@ const getStepContent = (snackbarMessage, activeStep, searchKey, reference, organ
                 helperText={touched.passwordConfirm && errors.passwordConfirm}
                 onBlur={handleBlur}
                 InputProps={{
-                  style:{
-                    height: 30
-                  }
+                  style: {
+                    height: 30,
+                  },
                 }}
               />
             </div>
-            <br/>
-            <ButtonBox activeStep = {activeStep} ableToComplete = {ableToComplete} values={values} isValid={isValid}
-                       handleSubmit={handleSubmit} handleBack={handleBack} handleNext={handleNext}/>
-
+            <br />
+            <ButtonBox
+              activeStep={activeStep}
+              ableToComplete={ableToComplete}
+              values={values}
+              isValid={isValid}
+              handleSubmit={handleSubmit}
+              handleBack={handleBack}
+              handleNext={handleNext}
+            />
           </form>
         </>
-      );
+      )
     case 1:
-
       return (
         <div className="register__form">
-          {selectOrgProgram(searchKey, reference, organizationGroup, organizationOptions, organizationGroupOptions, appSysOptions, programOptions)}
+          {selectOrgProgram(
+            searchKey,
+            reference,
+            organizationGroup,
+            organizationOptions,
+            organizationGroupOptions,
+            appSysOptions,
+            programOptions
+          )}
 
           <div className="register__tableContainer">
             <MaterialTable
               className="register__table"
               columns={checkBoxColumns}
               options={{
-                toolbar : false,
+                toolbar: false,
                 showTitle: false,
                 headerStyle: {
-                  backgroundColor: "#f2f5f7"
-                }
+                  backgroundColor: '#f2f5f7',
+                },
               }}
               style={{
-                backgroundColor: "#f2f5f7"
+                backgroundColor: '#f2f5f7',
               }}
               data={userSubmissions}
               // editable={editable} options={options}
             />
           </div>
 
-          <Button variant="outlined" color="primary" className="register__step3Button"  onClick={handleChangeSubmission} >
+          <Button
+            variant="outlined"
+            color="primary"
+            className="register__step3Button"
+            onClick={handleChangeSubmission}
+          >
             Add Submission
           </Button>
           <div className="register__tableContainer">
@@ -544,79 +700,133 @@ const getStepContent = (snackbarMessage, activeStep, searchKey, reference, organ
               className="register__table"
               columns={columns}
               options={{
-                toolbar : false,
+                toolbar: false,
                 showTitle: false,
                 headerStyle: {
-                  backgroundColor: "#f2f5f7"
-                }
+                  backgroundColor: '#f2f5f7',
+                },
               }}
               style={{
-                backgroundColor: "#f2f5f7"
+                backgroundColor: '#f2f5f7',
               }}
-              actions={[
-                // {
-                //   icon: 'delete',
-                //   tooltip: 'Delete Permission',
-                //   onClick: (event, rowData) => {
-                //     let editedPermission = userPermissions;
-                //     editedPermission.splice(rowData.tableData.id, 1);
-                //     setUserPermissionList(editedPermission);
-                //   }
-                // }
-              ]}
-              components={{
-                // Action: props => (
-                //   <Button
-                //     onClick={(event) => props.action.onClick(event, props.data)}
-                //     color="primary"
-                //     variant="outlined"
-                //     style={{textTransform: 'none'}}
-                //     size="small"
-                //   >
-                //     Delete
-                //   </Button>
-                // )
-              }}
+              actions={
+                [
+                  // {
+                  //   icon: 'delete',
+                  //   tooltip: 'Delete Permission',
+                  //   onClick: (event, rowData) => {
+                  //     let editedPermission = userPermissions;
+                  //     editedPermission.splice(rowData.tableData.id, 1);
+                  //     setUserPermissionList(editedPermission);
+                  //   }
+                  // }
+                ]
+              }
+              components={
+                {
+                  // Action: props => (
+                  //   <Button
+                  //     onClick={(event) => props.action.onClick(event, props.data)}
+                  //     color="primary"
+                  //     variant="outlined"
+                  //     style={{textTransform: 'none'}}
+                  //     size="small"
+                  //   >
+                  //     Delete
+                  //   </Button>
+                  // )
+                }
+              }
               data={userPermissions}
               // editable={editable} options={options}
             />
-            <ButtonBox activeStep = {activeStep} handleBack = {handleBack} handleNext = {handleNext} ableToComplete = {ableToComplete} handleSubmit={handleSubmit} values={values} isValid={isValid}/>
+            <ButtonBox
+              activeStep={activeStep}
+              handleBack={handleBack}
+              handleNext={handleNext}
+              ableToComplete={ableToComplete}
+              handleSubmit={handleSubmit}
+              values={values}
+              isValid={isValid}
+            />
           </div>
-
         </div>
-      );
+      )
     default:
-      return (
-        <Typography >
-          Select campaign settings...
-        </Typography>);
+      return <Typography>Select campaign settings...</Typography>
   }
 }
 
 const Register_container = (props) => {
-
   const dispatch = useDispatch()
-  const handleOrgGroupChange = (event) => dispatch(orgGroupChange(event));
-  const handleSnackbarClose = () => dispatch(snackbarClose());
-  const handleBack = () => dispatch(stepBack());
-  const handleNext = (values) => {dispatch(stepNext(values)); console.log("ap")}
-  const handleSubmit = () => dispatch(submit());
-  const handleAppSysChange = (event) => dispatch(appSysChange(event));
-  const handleOrgChange = (selectedOrganization) => dispatch(orgChange(selectedOrganization));
-  const handleProgramChange = (selectedPrograms) => dispatch(programChange(selectedPrograms));
-  const handleChangeSubmission = () => dispatch(changeSubmission());
-  const handleChangePermission = (rowData, permission) => dispatch(changePermission(rowData, permission));
+  const handleOrgGroupChange = (event) => dispatch(orgGroupChange(event))
+  const handleSnackbarClose = () => dispatch(snackbarClose())
+  const handleBack = () => dispatch(stepBack())
+  const handleNext = (values) => {
+    dispatch(stepNext(values))
+    console.log('ap')
+  }
+  const handleSubmit = () => dispatch(submit())
+  const handleAppSysChange = (event) => dispatch(appSysChange(event))
+  const handleOrgChange = (selectedOrganization) =>
+    dispatch(orgChange(selectedOrganization))
+  const handleProgramChange = (selectedPrograms) =>
+    dispatch(programChange(selectedPrograms))
+  const handleChangeSubmission = () => dispatch(changeSubmission())
+  const handleChangePermission = (rowData, permission) =>
+    dispatch(changePermission(rowData, permission))
 
-  const { snackbarMessage, activeStep, searchKey, reference, organizationGroup, isSnackbarOpen,
-    userOrganizations, userPrograms, userSubmissions, userPermissions, appSysOptions, organizationGroupOptions,
-    organizationOptions, programOptions, ableToComplete } = useSelector(
-    ({ UserRegistrationStore: {
-      snackbarMessage, activeStep, searchKey, reference, organizationGroup, isSnackbarOpen,
-      userOrganizations, userPrograms, userSubmissions, userPermissions, appSysOptions,
-      organizationGroupOptions, organizationOptions, programOptions, ableToComplete } }) => ({
-      snackbarMessage, activeStep, searchKey, reference, organizationGroup, isSnackbarOpen,
-      userOrganizations, userPrograms, userSubmissions, userPermissions, appSysOptions,
-      organizationGroupOptions, organizationOptions, programOptions, ableToComplete,
+  const {
+    snackbarMessage,
+    activeStep,
+    searchKey,
+    reference,
+    organizationGroup,
+    isSnackbarOpen,
+    userOrganizations,
+    userPrograms,
+    userSubmissions,
+    userPermissions,
+    appSysOptions,
+    organizationGroupOptions,
+    organizationOptions,
+    programOptions,
+    ableToComplete,
+  } = useSelector(
+    ({
+      UserRegistrationStore: {
+        snackbarMessage,
+        activeStep,
+        searchKey,
+        reference,
+        organizationGroup,
+        isSnackbarOpen,
+        userOrganizations,
+        userPrograms,
+        userSubmissions,
+        userPermissions,
+        appSysOptions,
+        organizationGroupOptions,
+        organizationOptions,
+        programOptions,
+        ableToComplete,
+      },
+    }) => ({
+      snackbarMessage,
+      activeStep,
+      searchKey,
+      reference,
+      organizationGroup,
+      isSnackbarOpen,
+      userOrganizations,
+      userPrograms,
+      userSubmissions,
+      userPermissions,
+      appSysOptions,
+      organizationGroupOptions,
+      organizationOptions,
+      programOptions,
+      ableToComplete,
     }),
     shallowEqual
   )
@@ -625,63 +835,79 @@ const Register_container = (props) => {
     <div>
       <Stepper className="register__stepper" activeStep={activeStep}>
         {steps.map((label, index) => {
-
           return (
-            <Step key={label} >
-              <StepLabel >{label}</StepLabel>
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
             </Step>
-          );
+          )
         })}
       </Stepper>
       <div>
         {activeStep === steps.length ? (
           <div>
-            <Typography >
-              All steps completed - you&apos;re finished
-            </Typography>
+            <Typography>All steps completed - you&apos;re finished</Typography>
           </div>
         ) : (
           <div>
-            {getStepContent(snackbarMessage, activeStep, searchKey, reference, organizationGroup, isSnackbarOpen,
-              userOrganizations, userPrograms, userSubmissions, userPermissions, appSysOptions, organizationGroupOptions,
-              organizationOptions, programOptions, ableToComplete, handleOrgGroupChange, handleBack, handleNext,
-              handleSubmit, handleAppSysChange, handleOrgChange, handleProgramChange, handleChangeSubmission, handleChangePermission, props)}
+            {getStepContent(
+              snackbarMessage,
+              activeStep,
+              searchKey,
+              reference,
+              organizationGroup,
+              isSnackbarOpen,
+              userOrganizations,
+              userPrograms,
+              userSubmissions,
+              userPermissions,
+              appSysOptions,
+              organizationGroupOptions,
+              organizationOptions,
+              programOptions,
+              ableToComplete,
+              handleOrgGroupChange,
+              handleBack,
+              handleNext,
+              handleSubmit,
+              handleAppSysChange,
+              handleOrgChange,
+              handleProgramChange,
+              handleChangeSubmission,
+              handleChangePermission,
+              props
+            )}
           </div>
         )}
       </div>
     </div>
-  );
+  )
 }
 
 const Register = () => {
-
   const handleSubmit = () => {}
 
-  const { registrationData} = useSelector(
-    ({UserRegistrationStore: {registrationData } }) =>  ({
-        registrationData,
+  const { registrationData } = useSelector(
+    ({ UserRegistrationStore: { registrationData } }) => ({
+      registrationData,
     }),
     shallowEqual
   )
 
   return (
     <>
-      {/*<SRIHeader/>*/}
+      {/* <SRIHeader/>*/}
       <div className="register">
-
-        <br/>
-        <Paper className="register__container" >
+        <br />
+        <Paper className="register__container">
           <Formik
             validationSchema={registerSchema}
             initialValues={registrationData}
             onSubmit={handleSubmit}
-            render={formikProps =>
-              <Register_container {...formikProps}/>
-            }
+            render={(formikProps) => <Register_container {...formikProps} />}
           />
         </Paper>
       </div>
     </>
-  );
+  )
 }
 export default Register

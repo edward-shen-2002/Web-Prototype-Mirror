@@ -47,7 +47,7 @@ const ColumnDragger = ({ column }) => {
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
-    ></div>
+    />
   )
 }
 

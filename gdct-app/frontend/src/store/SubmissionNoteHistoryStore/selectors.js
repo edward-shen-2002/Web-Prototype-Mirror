@@ -1,1 +1,2 @@
-export const selectSubmissionNoteHistoryStore = (state) => state.SubmissionNoteHistoryStore
+export const selectSubmissionNoteHistoryStore = (state) =>
+  state.SubmissionNoteHistoryStore

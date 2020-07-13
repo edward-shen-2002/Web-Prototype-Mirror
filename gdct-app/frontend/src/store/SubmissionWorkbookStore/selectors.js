@@ -1,1 +1,2 @@
-export const selectSubmissionWorkbookStore = (state) => state.SubmissionWorkbookStore
+export const selectSubmissionWorkbookStore = (state) =>
+  state.SubmissionWorkbookStore

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
-import {REST_STATE} from "../common/REST/state";
-import {REST_REDUCERS} from "../common/REST/reducers";
+import { REST_STATE } from '../common/REST/state'
+import { REST_REDUCERS } from '../common/REST/reducers'
 
 export const SubmissionNoteHistoryStore = createSlice({
   name: 'SUBMISSIONNOTEHISTORY',

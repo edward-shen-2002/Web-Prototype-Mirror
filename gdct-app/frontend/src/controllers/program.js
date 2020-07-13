@@ -6,7 +6,9 @@ const programController = (() => {
   })
   return {
     fetchByIds: async (_ids) =>
-      programAxios.post(`/searchProgram`, {_ids}).then((res) => res.data.program),
+      programAxios
+        .post(`/searchProgram`, { _ids })
+        .then((res) => res.data.program),
   }
 })()
 

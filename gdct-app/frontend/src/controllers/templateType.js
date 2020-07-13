@@ -8,7 +8,9 @@ const templateTypeController = (() => {
     fetch: async (query) =>
       templateTypeAxios.get('').then((res) => res.data.templateTypes),
     fetchByProgramIds: async (programIds) =>
-      templateTypeAxios.post(``,{programIds}).then((res) => res.data.templateTypes),
+      templateTypeAxios
+        .post(``, { programIds })
+        .then((res) => res.data.templateTypes),
     create: async (templateType) =>
       templateTypeAxios
         .post('', {

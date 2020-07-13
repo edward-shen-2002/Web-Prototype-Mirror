@@ -1,1 +1,1 @@
-export { default } from "./Preregister";
+export { default } from './Preregister'

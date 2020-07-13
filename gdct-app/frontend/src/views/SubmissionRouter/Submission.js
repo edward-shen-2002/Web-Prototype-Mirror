@@ -27,7 +27,6 @@ const Submission = ({
 
   const handleSaveSubmission = useCallback(() => {
     dispatch(updateSubmissionExcelRequest())
-
   }, [])
 
   useEffect(() => {

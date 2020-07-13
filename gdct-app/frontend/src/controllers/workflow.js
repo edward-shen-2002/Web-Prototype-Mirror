@@ -12,7 +12,7 @@ const workflowController = (() => {
         currentState: undefined,
         stateHistory: [],
         statesIdMap: {
-          '101': { name: 'Presubmit', to: '102' /**, appSysRoles: [] */ },
+          '101': { name: 'Presubmit', to: '102' /** , appSysRoles: [] */ },
           '102': { name: 'Submit', to: '103' },
           '103': { name: 'Review', to: ['102', '104'] },
           '104': { name: 'Approved' },

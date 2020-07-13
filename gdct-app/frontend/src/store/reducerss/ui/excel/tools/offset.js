@@ -1,12 +1,12 @@
 import { isObjectEmpty } from '../../../../../tools/misc'
 
 export const offsetObjectAtIndex = (data, start, offset) => {
-  let newData = {}
-  let startData = data[start]
+  const newData = {}
+  const startData = data[start]
 
   const end = start + offset
 
-  for (let offsetParam in data) {
+  for (const offsetParam in data) {
     const paramData = data[offsetParam]
     if (offsetParam >= start && paramData) {
       const newOffsetParam = Number(offsetParam) + offset
@@ -24,13 +24,13 @@ export const offsetObjectAtIndex = (data, start, offset) => {
 }
 
 export const offsetSheetCellRowDataAtIndex = (sheetCellData, start, offset) => {
-  let newData = {}
-  let startData = sheetCellData[start]
-  let template = {}
+  const newData = {}
+  const startData = sheetCellData[start]
+  const template = {}
 
   const end = start + offset
 
-  for (let column in startData) {
+  for (const column in startData) {
     if (startData[column] && startData[column].styles)
       template[column] = {
         type: 'normal',
@@ -39,7 +39,7 @@ export const offsetSheetCellRowDataAtIndex = (sheetCellData, start, offset) => {
   }
 
   // Offset data downwards
-  for (let row in sheetCellData) {
+  for (const row in sheetCellData) {
     const rowData = sheetCellData[row]
     if (start <= row && rowData) {
       const newRowOffset = Number(row) + offset
@@ -62,18 +62,18 @@ export const offsetSheetCellColumnDataAtIndex = (
   offset
 ) => {
   // Get the template column data to apply to inserted columns
-  let template = {}
-  let newData = {}
+  const template = {}
+  const newData = {}
 
   const end = start + offset
 
   // Offset data rightwards
-  for (let row in sheetCellData) {
+  for (const row in sheetCellData) {
     const columns = sheetCellData[row]
 
     if (newData[row] === undefined) newData[row] = {}
 
-    for (let column in columns) {
+    for (const column in columns) {
       const columnData = columns[column]
       if (start <= column && columnData) {
         if (start == column && columnData.styles)
@@ -88,7 +88,7 @@ export const offsetSheetCellColumnDataAtIndex = (
   }
 
   if (!isObjectEmpty(template)) {
-    for (let row in newData) {
+    for (const row in newData) {
       for (let i = start; i < end; i++) newData[row][i] = template[row]
     }
   }

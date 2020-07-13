@@ -6,7 +6,7 @@ import {
 import { DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER } from '../../../../../constants/excel'
 
 const RESIZE_ROW = (state, { yOffset, topOffsets }) => {
-  let newState = { ...state }
+  const newState = { ...state }
 
   const {
     scrollData: { scrollTop },
@@ -29,7 +29,7 @@ const RESIZE_ROW = (state, { yOffset, topOffsets }) => {
   const scrollbarSize = getScrollbarSize()
 
   // ! Do not consider scroll offset when freeze .. not sure what I did here!!!
-  let adjustedScrollOffset = row <= sheetFreezeRowCount ? 0 : scrollTop
+  const adjustedScrollOffset = row <= sheetFreezeRowCount ? 0 : scrollTop
 
   const minScrollOffset = adjustedScrollOffset
   const maxScrollOffset = adjustedScrollOffset + clientHeight - scrollbarSize

@@ -26,7 +26,11 @@ export const getSubmissionsRequest = (orgId, programIds) => (dispatch) => {
     })
 }
 
-export const createSubmissionRequest = (submissionNote, workbookData, submission) => (dispatch) => {
+export const createSubmissionRequest = (
+  submissionNote,
+  workbookData,
+  submission
+) => (dispatch) => {
   dispatch(SubmissionsStore.actions.REQUEST())
   console.log(submissionNote, submission)
   submissionController
@@ -84,7 +88,7 @@ export const updateSubmissionExcelRequest = () => (dispatch, getState) => {
 
   const newSubmission = {
     ...submission,
- //   name: present.name,
+    //   name: present.name,
     isLatest: false,
     workbookData: extractReactAndWorkbookState(present, present.inactiveSheets),
   }
@@ -110,7 +114,11 @@ export const getSubmissionByIdRequest = (_id) => (dispatch) => {
     })
 }
 
-export const updateSubmissionStatusRequest = (submission, submissionNote, role) => (dispatch) => {
+export const updateSubmissionStatusRequest = (
+  submission,
+  submissionNote,
+  role
+) => (dispatch) => {
   const newSubmission = {
     ...submission,
     //   name: present.name,

@@ -7,7 +7,7 @@ const rewireAliases = require('react-app-rewire-aliases')
 const path = require('path')
 
 module.exports = {
-  webpack: function (config, env) {
+  webpack(config, env) {
     config = rewireAliases.aliasesOptions({
       // '@components': path.resolve(__dirname, `${paths.appSrc}/components/`)
       '@constants': path.join(__dirname, '/src/constants'),
@@ -91,7 +91,7 @@ module.exports = {
     // };
     return config
   },
-  jest: function (config) {
+  jest(config) {
     config.verbose = true
     return config
   },
