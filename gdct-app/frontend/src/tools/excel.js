@@ -357,7 +357,6 @@ export const getWorkbookInstance = async (activeSheetName, sheets) => {
 }
 
 export const downloadWorkbook = async (fileName, activeSheetName, sheets) => {
-  console.log(fileName, activeSheetName, sheets)
   const xlsxInstance = await getWorkbookInstance(activeSheetName, sheets)
 
   const blob = await xlsxInstance.outputAsync()

@@ -8,6 +8,56 @@ const ProgramController = Service(
     const router = Router()
     return (
       () => {
+        router.get(
+          '/programs',
+          (req, res, next) => {
+            // Get query from middleware -- auth handler
+
+            service
+              .findProgram({})
+              .then((programs) => res.json({ programs }))
+              .catch(next)
+          }
+        )
+
+        router.post(
+          '/programs',
+          (req, res, next) => {
+            service
+              .createProgram(req.body.program)
+              .then((program) => res.json({ program }))
+              .catch((error) => {
+                console.error(error)
+                throw error
+              })
+              .catch(next)
+          }
+        )
+
+        router.put(
+          '/programs/:_id',
+          (req, res, next) => {
+            const { _id } = req.params
+            const { program } = req.body
+
+
+            service
+              .updateProgram(_id, program)
+              .then(() => res.end())
+              .catch(next)
+          }
+        )
+
+        router.delete(
+          '/programs/:_id',
+          (req, res, next) => {
+            const { _id } = req.params
+
+            service
+              .deleteProgram(_id)
+              .then(() => res.end())
+              .catch(next)
+          })
 
         router.post(
           '/programs/searchProgramsByIds',
@@ -19,8 +69,9 @@ const ProgramController = Service(
               .then((programs) => {
                 res.json({programs});
               })
-          }
-        )
+            })
+          
+
 
         return router
       }

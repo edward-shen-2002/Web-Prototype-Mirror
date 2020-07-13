@@ -1,14 +1,48 @@
 import Container, { Service, Inject } from 'typedi'
 import TemplateRepository from '../../repositories/Template'
+import TemplateTypeRepository from '../../repositories/TemplateType'
+import WorkflowProcessRepository from '../../repositories/WorkflowProcess'
 
 // @Service()
 export default class TemplateService {
   constructor() {
     this.templateRepository = Container.get(TemplateRepository)
+    this.templateTypeRepository = Container.get(TemplateTypeRepository)
+    this.workflowProcessRepository = Container.get(WorkflowProcessRepository)
   }
 
   async createTemplate(template) {
-    return this.templateRepository.create(template)
+    const templateType = await this.templateTypeRepository.findById(template.templateTypeId)
+
+    const workflowProcesses = await this.workflowProcessRepository.find({ workflowId: templateType.templateWorkflowId })
+
+    const nodes = new Set()
+
+    const visitedNodes = new Set()
+
+    workflowProcesses.forEach(
+      ({ _id, to }) => {
+        nodes.add(_id.toString())
+        to.forEach((outNodeIds) => {
+          visitedNodes.add(outNodeIds.toString())
+          nodes.add(outNodeIds.toString())
+        })
+      }
+    )
+
+    let initialNode = null
+
+    nodes.forEach(
+      (node) => {
+        if (!visitedNodes.has(node)) {
+          initialNode = node
+        }
+      }
+    )
+
+    template.workflowProcessId = initialNode
+
+    return await this.templateRepository.create(template)
   }
 
   async deleteTemplate(id) {
@@ -17,6 +51,10 @@ export default class TemplateService {
 
   async updateTemplate(id, template) {
     return this.templateRepository.update(id, template)
+  }
+
+  async updateTemplateWorkflowProcess(id, workflowProcess) {
+    return this.templateRepository.updateWorkflowProcess(id, workflowProcess)
   }
 
   async findTemplate(template) {

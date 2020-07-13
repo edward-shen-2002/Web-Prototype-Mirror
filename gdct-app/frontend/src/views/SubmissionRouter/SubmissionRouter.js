@@ -11,7 +11,8 @@ import SubmissionDashboard from './SubmissionDashboard'
 import CreateSubmission from './CreateSubmission'
 import EditSubmission from './EditSubmission'
 
-const SubmissionRouter = () => (
+const SubmissionRouter = () => {
+  return (
   <Switch>
     <Route
       exact
@@ -51,5 +52,6 @@ const SubmissionRouter = () => (
     <Route component={NotFound} />
   </Switch>
 )
+  }
 
 export default SubmissionRouter

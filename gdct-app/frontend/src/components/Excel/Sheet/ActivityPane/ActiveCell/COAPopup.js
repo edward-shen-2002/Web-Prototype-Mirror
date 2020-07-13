@@ -22,6 +22,8 @@ import './GroupPopup.scss'
 import { getCOATreesRequest } from '../../../../../store/thunks/COATree'
 import { selectFactoryRESTResponseValues } from '../../../../../store/common/REST/selectors'
 import { selectCOATreesStore } from '../../../../../store/COATreesStore/selectors'
+import { selectCOAsStore } from '../../../../../store/COAsStore/selectors'
+import { getCOAsRequest } from '../../../../../store/thunks/COA'
 
 const LinkIcon = ({ handleClick }) => (
   <Button variant="contained" color="primary" onClick={handleClick}>
@@ -45,7 +47,7 @@ const GroupLink = ({
     <div className="groups__groupLinksItem">
       <LinkIcon handleClick={handleClickLink} />
       <Button onClick={handleClickGroup} fullWidth>
-        {groupId !== null && group !== null ? `${groupId} - ${group}` : 'EMPTY'}
+        {groupId !== null && group !== null ? `${group}` : 'EMPTY'}
       </Button>
     </div>
   )
@@ -106,9 +108,7 @@ const GroupItems = ({ groups, selectedGroup, handleSelectGroup }) =>
         onClick={handleClickGroup}
         button
       >
-        <ListItemText
-          primary={`${_id} - ${COAGroupId ? COAGroupId.name : ''}`}
-        />
+        <ListItemText primary={`${COAGroupId ? COAGroupId.name : ''}`} />
       </ListItem>
     )
   })
@@ -120,42 +120,46 @@ const GroupList = ({
   handleSelectGroup,
 }) => {
   return (
-    <List className="groups__groupList">
-      <Typography variant="h6">Groups</Typography>
-      <GroupItems
-        groups={groups}
-        selectedGroup={selectedGroup}
-        handleSelectGroup={handleSelectGroup}
-      />
-    </List>
+    <div className="groups__groupListContainer">
+      <Typography variant="h6">Select Group Nodes</Typography>
+      <List className="groups__groupList">
+        <GroupItems
+          groups={groups}
+          selectedGroup={selectedGroup}
+          handleSelectGroup={handleSelectGroup}
+        />
+      </List>
+    </div>
   )
 }
 
-const COAListItems = ({ COAIds, selectedCOAId, handleSelectCOAId }) =>
-  COAIds.map((COAId) => {
-    const handleClick = () => handleSelectCOAId(COAId)
+const COAListItems = ({ COAIds, selectedCOAIds, handleSelectCOAId }) =>
+  COAIds.map(({ _id, COA, name }) => {
+    const handleClick = () => handleSelectCOAId(_id)
 
     return (
       <ListItem
-        className={COAId === selectedCOAId ? 'groups__COA--selected' : ''}
-        key={COAId}
+        className={selectedCOAIds[_id] ? 'groups__COA--selected' : ''}
+        key={_id}
         onClick={handleClick}
         button
       >
-        <ListItemText primary={COAId} />
+        <ListItemText primary={`${COA ? `${COA} : ` : ''}${name} `} />
       </ListItem>
     )
   })
 
-const COAList = ({ COAIds = [], selectedCOAId, handleSelectCOAId }) => (
-  <List>
+const COAList = ({ COAIds = [], selectedCOAIds, handleSelectCOAId }) => (
+  <div className="groups__COAContainer">
     <Typography variant="h6">COAs</Typography>
-    <COAListItems
-      COAIds={COAIds}
-      selectedCOAId={selectedCOAId}
-      handleSelectCOAId={handleSelectCOAId}
-    />
-  </List>
+    <List className="groups__COA">
+      <COAListItems
+        COAIds={COAIds}
+        selectedCOAIds={selectedCOAIds}
+        handleSelectCOAId={handleSelectCOAId}
+      />
+    </List>
+  </div>
 )
 
 const GroupSectionContent = ({
@@ -163,7 +167,7 @@ const GroupSectionContent = ({
   definedGroups,
   selectedGroup,
   COAIds,
-  selectedCOAId,
+  selectedCOAIds,
   handleRemoveLink,
   handleUpdateGroupPointer,
   handleSelectGroup,
@@ -177,28 +181,25 @@ const GroupSectionContent = ({
       handleRemoveLink={handleRemoveLink}
       handleAddNewLink={handleAddNewLink}
     />
-    {groups.length ? (
-      <GroupList
-        groups={definedGroups}
-        selectedGroup={selectedGroup}
-        handleSelectGroup={handleSelectGroup}
-      />
-    ) : null}
+    <GroupList
+      groups={definedGroups}
+      selectedGroup={selectedGroup}
+      handleSelectGroup={handleSelectGroup}
+    />
     <COAList
       COAIds={COAIds}
-      selectedCOAId={selectedCOAId}
+      selectedCOAIds={selectedCOAIds}
       handleSelectCOAId={handleSelectCOAId}
     />
   </div>
 )
 
 const GroupSection = ({
-  type,
   groups,
   definedGroups,
   COAIds,
   selectedGroup,
-  selectedCOAId,
+  selectedCOAIds,
   handleRemoveLink,
   handleUpdateGroupPointer,
   handleSelectGroup,
@@ -211,7 +212,7 @@ const GroupSection = ({
       COAIds={COAIds}
       definedGroups={definedGroups}
       selectedGroup={selectedGroup}
-      selectedCOAId={selectedCOAId}
+      selectedCOAIds={selectedCOAIds}
       handleRemoveLink={handleRemoveLink}
       handleUpdateGroupPointer={handleUpdateGroupPointer}
       handleSelectGroup={handleSelectGroup}
@@ -221,11 +222,18 @@ const GroupSection = ({
   </div>
 )
 
+// ! There is no need for a group pointer now
+// ! TODO: Remove group pointer and just use newGroups.length
+// ! TODO: Convert this to redux -- however, the excel is being reworked so might be wasted effort.
 const GroupPopup = ({ type }) => {
   const [newGroups, setNewGroups] = useState([])
   const [groupPointer, setGroupPointer] = useState(-1)
   const [selectedGroup, setSelectedGroup] = useState()
-  const [selectedCOAId, setSelectedCOAId] = useState()
+  const [selectedCOAIds, setSelectedCOAIds] = useState({})
+
+  const AllCOAIds = useSelector((state) =>
+    selectFactoryRESTResponseValues(selectCOAsStore)(state)
+  )
 
   const { COATrees } = useSelector(
     (state) => ({
@@ -238,12 +246,8 @@ const GroupPopup = ({ type }) => {
 
   useEffect(() => {
     dispatch(getCOATreesRequest())
+    dispatch(getCOAsRequest())
   }, [dispatch])
-
-  const handleAdd = useCallback(
-    () => dispatch(setGroups({ category: type, newGroups, selectedCOAId })),
-    [dispatch, newGroups, selectedCOAId]
-  )
 
   const handleCancel = useCallback(() => dispatch(resetActiveCellDialog()), [
     dispatch,
@@ -257,9 +261,15 @@ const GroupPopup = ({ type }) => {
     }
   }
   const handleRemoveLink = (index) => {
-    setNewGroups(newGroups.slice(0, index))
+    const changedGroups = newGroups.slice(0, index)
+    setNewGroups(changedGroups)
     setGroupPointer(index - 1)
-    setSelectedCOAId()
+    setSelectedCOAIds({})
+    setSelectedGroup(
+      changedGroups.length
+        ? changedGroups[changedGroups.length - 1]._id
+        : undefined
+    )
   }
   const handleSelectGroup = ({ _id, value }) => {
     setNewGroups([
@@ -267,17 +277,22 @@ const GroupPopup = ({ type }) => {
       { _id, value },
       ...newGroups.slice(groupPointer + 1),
     ])
-    setSelectedGroup(_id)
+    if (_id !== selectedGroup) {
+      setSelectedGroup(_id)
+      setSelectedCOAIds({})
+    }
+    if (groupPointer < 1) handleUpdateGroupPointer(0)
   }
 
   const handleAddNewLink = () => {
     // Only add groups if there are no set groups or there's at least a consecutive group link
+    // ! TODO : Add group only when possible
     if (
       (newGroups.length && newGroups[newGroups.length - 1]._id) ||
       !newGroups.length
     ) {
       setNewGroups([...newGroups, { _id: null, value: null }])
-      setGroupPointer(groupPointer + 1)
+      setGroupPointer(newGroups.length)
     }
   }
 
@@ -289,7 +304,9 @@ const GroupPopup = ({ type }) => {
       const leafId = newGroups[groupPointer - 1]._id
       definedGroups = COATrees.filter((COATree) => COATree.parentId === leafId)
     } else {
-      definedGroups = COATrees
+      definedGroups = COATrees.filter(
+        (COATree) => COATree.parentId === undefined
+      )
     }
 
     return definedGroups
@@ -297,15 +314,34 @@ const GroupPopup = ({ type }) => {
 
   // The COA Ids of the leaf node
   const COAIds = useMemo(() => {
-    if (!newGroups.length) return []
+    let ids = []
+    if (!newGroups.length) return ids
 
     const groupId = newGroups[newGroups.length - 1]._id
     const foundGroup = COATrees.find((group) => group._id === groupId)
+    const groupMap = new Set()
 
-    return foundGroup ? foundGroup.COAIds : []
-  }, [newGroups, COATrees])
+    // TODO: Quadratic run time
 
-  const handleSelectCOAId = (id) => setSelectedCOAId(id)
+    if (foundGroup) {
+      foundGroup.COAIds.forEach((_id) => groupMap.add(_id))
+
+      ids = AllCOAIds.filter(({ _id }) => groupMap.has(_id))
+    }
+
+    return ids
+  }, [newGroups, COATrees, AllCOAIds])
+
+  const handleAdd = useCallback(
+    () =>
+      dispatch(
+        setGroups({ category: type, newGroups, selectedCOAIds, COAIds })
+      ),
+    [dispatch, newGroups, selectedCOAIds, COAIds]
+  )
+
+  const handleSelectCOAId = (id) =>
+    setSelectedCOAIds({ ...selectedCOAIds, [id]: !selectedCOAIds[id] })
 
   return (
     <div className="dialog groups">
@@ -316,14 +352,19 @@ const GroupPopup = ({ type }) => {
         definedGroups={definedGroups}
         COAIds={COAIds}
         selectedGroup={selectedGroup}
-        selectedCOAId={selectedCOAId}
+        selectedCOAIds={selectedCOAIds}
         handleRemoveLink={handleRemoveLink}
         handleUpdateGroupPointer={handleUpdateGroupPointer}
         handleSelectGroup={handleSelectGroup}
         handleAddNewLink={handleAddNewLink}
         handleSelectCOAId={handleSelectCOAId}
       />
-      <DialogActions handleAdd={handleAdd} handleCancel={handleCancel} />
+      <DialogActions
+        addText="Apply"
+        cancelText="Finish"
+        handleAdd={handleAdd}
+        handleCancel={handleCancel}
+      />
     </div>
   )
 }

@@ -13,6 +13,9 @@ import {
   deleteRequestFactory,
   updateRequestFactory,
 } from './common/REST'
+import { selectFactoryValueById } from '../common/REST/selectors'
+import { selectTemplatesStore } from '../TemplatesStore/selectors'
+import cloneDeep from 'clone-deep'
 
 export const getTemplatesRequest = getRequestFactory(
   TemplatesStore,
@@ -56,7 +59,6 @@ export const getTemplateRequest = (_id) => (dispatch) => {
     .then((template) => {
       dispatch(setExcelData(convertStateToReactState(template.templateData)))
       dispatch(TemplatesStore.actions.RECEIVE([template]))
-      dispatch()
     })
     .catch((error) => {
       dispatch(TemplatesStore.actions.FAIL_REQUEST(error))
@@ -87,6 +89,20 @@ export const updateTemplateExcelRequest = () => (dispatch, getState) => {
     .update(newTemplate)
     .then(() => {
       dispatch(TemplatesStore.actions.UPDATE(newTemplate))
+    })
+    .catch((error) => {
+      dispatch(TemplatesStore.actions.FAIL_REQUEST(error))
+    })
+}
+
+export const updateTemplateWorkflowProcess = (_id, workflowProcessId) => (dispatch, getState) => {
+  const template = cloneDeep(selectFactoryValueById(selectTemplatesStore)(_id)(getState()))
+
+  template.workflowProcessId = workflowProcessId
+
+  templateController.updateTemplateWorkflowProcess(_id, workflowProcessId)
+    .then(() => {
+      dispatch(TemplatesStore.actions.UPDATE(template))
     })
     .catch((error) => {
       dispatch(TemplatesStore.actions.FAIL_REQUEST(error))

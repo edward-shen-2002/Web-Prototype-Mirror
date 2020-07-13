@@ -11,7 +11,11 @@ import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/se
 import { selectTemplatesStore } from '../../store/TemplatesStore/selectors'
 import { selectIsTemplateDialogOpen } from '../../store/DialogsStore/selectors'
 
-const TemplateDialog = ({ handleChange }) => {
+const TemplateDialog = ({
+  selectedTemplates,
+  handleChange,
+  shouldClose = true,
+}) => {
   const dispatch = useDispatch()
 
   const { isTemplateDialogOpen, templates } = useSelector(
@@ -31,10 +35,10 @@ const TemplateDialog = ({ handleChange }) => {
 
   const handleSelect = useCallback(
     (data) => {
-      handleChange(data._id)
-      handleClose()
+      handleChange(data)
+      if (shouldClose) handleClose()
     },
-    [dispatch]
+    [dispatch, shouldClose, handleChange]
   )
 
   useEffect(() => {
@@ -45,10 +49,6 @@ const TemplateDialog = ({ handleChange }) => {
   const columns = useMemo(
     () => [
       {
-        title: '_id',
-        field: '_id',
-      },
-      {
         title: 'Name',
         field: 'name',
       },
@@ -56,12 +56,16 @@ const TemplateDialog = ({ handleChange }) => {
     []
   )
 
+  const getKey = selectedTemplates ? (t) => t._id : undefined
+
   return (
     <SelectableTableDialog
       title="Template Type"
       columns={columns}
       isOpen={isTemplateDialogOpen}
       data={templates}
+      selectedKeys={selectedTemplates}
+      getKey={getKey}
       handleClose={handleClose}
       handleSelect={handleSelect}
     />

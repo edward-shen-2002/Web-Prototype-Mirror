@@ -31,7 +31,7 @@ const SubmissionPeriodDialog = ({ handleChange }) => {
 
   const handleSelect = useCallback(
     (data) => {
-      handleChange(data._id)
+      handleChange(data)
       handleClose()
     },
     [dispatch]
@@ -44,10 +44,6 @@ const SubmissionPeriodDialog = ({ handleChange }) => {
 
   const columns = useMemo(
     () => [
-      {
-        title: '_id',
-        field: '_id',
-      },
       {
         title: 'Name',
         field: 'name',

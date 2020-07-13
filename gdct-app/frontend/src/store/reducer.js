@@ -1,7 +1,5 @@
 import { combineReducers } from 'redux'
 
-import domain from './reducerss/domain'
-import app from './reducerss/app'
 import ui from './reducerss/ui'
 
 import TemplatesStore from './TemplatesStore/store'
@@ -10,6 +8,8 @@ import TemplatePackagesStore from './TemplatePackagesStore/store'
 import COAGroupsStore from './COAGroupsStore/store'
 import COAsStore from './COAsStore/store'
 import AppRolesStore from './AppRolesStore/store'
+import AppResourcesStore from './AppResourcesStore/store'
+import AppRoleResourcesStore from './AppRoleResourcesStore/store'
 import AppSysesStore from './AppSysesStore/store'
 import AppSysRolesStore from './AppSysRolesStore/store'
 import DialogsStore from './DialogsStore/store'
@@ -17,19 +17,25 @@ import ReportingPeriodsStore from './ReportingPeriodsStore/store'
 
 import StatusesStore from './StatusesStore/store'
 import SubmissionPeriodsStore from './SubmissionPeriodsStore/store'
+import ProgramsStore from './ProgramsStore/store'
 import SubmissionsStore from './SubmissionsStore/store'
 import SubmissionNoteStore from './SubmissionNoteStore/store'
 import SubmissionNoteHistoryStore from './SubmissionNoteHistoryStore/store'
 import COATreeStore from './COATreeStore/store'
 import COATreesStore from './COATreesStore/store'
 import SheetNamesStore from './SheetNamesStore/store'
-import ColumnNamesStore from './ColumnNameStore/store'
+import ColumnNamesStore from './ColumnNamesStore/store'
 import UserRegistrationStore from './UserRegistrationStore/store'
 import SubmissionWorkbookStore from './SubmissionWorkbookStore/store'
 
+import OrgsStore from './OrganizationsStore/store'
+
+import WorkflowStore from './WorkflowStore/store'
+import WorkflowsStore from './WorkflowsStore/store'
+
 export const root = combineReducers({
   StatusesStore: StatusesStore.reducer,
-
+  ProgramsStore: ProgramsStore.reducer,
   TemplatesStore: TemplatesStore.reducer,
   TemplateTypesStore: TemplateTypesStore.reducer,
   TemplatePackagesStore: TemplatePackagesStore.reducer,
@@ -37,10 +43,13 @@ export const root = combineReducers({
   COAGroupsStore: COAGroupsStore.reducer,
   COAsStore: COAsStore.reducer,
   AppRolesStore: AppRolesStore.reducer,
+  AppResourcesStore: AppResourcesStore.reducer,
+  AppRoleResourcesStore: AppRoleResourcesStore.reducer,
   AppSysesStore: AppSysesStore.reducer,
   AppSysRolesStore: AppSysRolesStore.reducer,
   DialogsStore: DialogsStore.reducer,
   ReportingPeriodsStore: ReportingPeriodsStore.reducer,
+  OrgsStore: OrgsStore.reducer,
 
   COATreeStore: COATreeStore.reducer,
   SheetNamesStore: SheetNamesStore.reducer,
@@ -53,8 +62,9 @@ export const root = combineReducers({
   ColumnNamesStore: ColumnNamesStore.reducer,
   UserRegistrationStore: UserRegistrationStore.reducer,
 
-  app,
-  domain,
+  WorkflowStore: WorkflowStore.reducer,
+  WorkflowsStore: WorkflowsStore.reducer,
+
   ui,
 })
 

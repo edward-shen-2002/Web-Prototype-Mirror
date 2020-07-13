@@ -7,6 +7,8 @@ import TemplatePackageModel from '../../models/TemplatePackage'
 import TemplatePackageEntity from '../../entities/TemplatePackage'
 import StatusRepository from '../Status'
 
+const populatedParams = 'submissionPeriodId templateIds statusId'
+
 // MongoDB implementation
 // @Service()
 export default class TemplatePackageRepository extends BaseRepository {
@@ -57,16 +59,14 @@ export default class TemplatePackageRepository extends BaseRepository {
       statusId,
       creationDate,
       userCreatorId
-    }
+    },
+    isPopulated
   ) {
     return (
       (statusId
         ? this.statusRepository.validate(statusId)
         : new Promise((resolve) => resolve())
       )
-        // .then(() => {
-        //   if (userCreatorId) return this.userRepository.validate(userCreatorId)
-        // })
         .then(() => {
           if(templateIds) return this.templateRepository.validateMany(templateIds)
         })
@@ -81,11 +81,15 @@ export default class TemplatePackageRepository extends BaseRepository {
             statusId,
             creationDate,
             userCreatorId
-          })
+          }, {upsert: true, new: true}).populate(isPopulated ? populatedParams : '')
         )
-        .then((templatePackage) => new TemplatePackageEntity(templatePackage.toObject()))
+        .then((templatePackage) => {
+          console.log(templatePackage, isPopulated)
+          return new TemplatePackageEntity(templatePackage.toObject())
+        })
     )
   }
+
 
   async findByProgramIds(programIds) {
     return TemplatePackageModel.find({programId: {$in: programIds}})
@@ -95,17 +99,17 @@ export default class TemplatePackageRepository extends BaseRepository {
     return TemplatePackageModel.find({name: name})
   }
 
-  async find(query) {
+  async find(query, isPopulated) {
+
     const realQuery = {}
 
     for (const key in query) {
       if (query[key]) realQuery[key] = query[key]
     }
 
-    return TemplatePackageModel.find(realQuery)
-      .then((templatePackages) =>
-        templatePackages.map((templatePackage) => new TemplatePackageEntity(templatePackage.toObject()))
-      )
+    let templatePackages = await TemplatePackageModel.find(realQuery).populate(isPopulated ? populatedParams  : '')
+
+    return templatePackages.map((templatePackage) => new TemplatePackageEntity(templatePackage.toObject()))
   }
 
   async delete(id) {

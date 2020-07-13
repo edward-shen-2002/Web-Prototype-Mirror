@@ -65,9 +65,9 @@ const AppSysController = Service(
 
             service
               .findAllAppSys()
-              .then((appSyses) => {
-                console.log(appSyses);
-                res.json(appSyses);
+              .then((AppSyses) => {
+                console.log(AppSyses);
+                res.json({ AppSyses });
               })
               .catch(next)
           }

@@ -4,44 +4,38 @@ import AppSysModel from "../../models/AppSys";
 import OrgGroupModel from "../../models/OrganizationGroup";
 import OrgGroupEntity from "../../entities/OrganizationGroup";
 
-export default class ReportPeriodRepository extends BaseRepository {
+export default class AppSysRepository extends BaseRepository {
   constructor() {
-    super(AppSysModel)
+    super(AppSysModel);
   }
 
   async delete(id) {
     const appSys = await AppSysModel.findById(id);
-    appSys.isActive = false;
+    if (appSys) {
+      appSys.isActive = false;
+    }
     return this.update(id, appSys);
   }
 
   async create(AppSys) {
     AppSys.isActive = true;
-    return AppSysModel.create(AppSys).then((AppSys) =>
-      new AppSysEntity(AppSys.toObject())
+    return AppSysModel.create(AppSys).then(
+      (AppSys) => new AppSysEntity(AppSys.toObject())
     );
   }
 
   async update(id, AppSys) {
     return AppSysModel.findByIdAndUpdate(id, AppSys).then(
-      (AppSys) => new AppSysEntity(AppSys.toObject()),
+      (AppSys) => new AppSysEntity(AppSys.toObject())
     );
   }
 
   async find(query) {
-    const realQuery = { isActive: true };
-
-    for (const key in query) {
-      if (query[key]) realQuery[key] = query[key];
-    }
-
-    //TODO: filter to be active
-    return AppSysModel.find(realQuery).then((AppSyses) =>
-      AppSyses.filter((AppSys) => AppSys).map((AppSys) =>
-        new AppSysEntity(AppSys.toObject())
-      )
+    return AppSysModel.find(query).then((AppSyses) =>
+      AppSyses.map((AppSys) => new AppSysEntity(AppSys.toObject()))
     );
   }
+
 
   async findAll() {
     return AppSysModel.find()

@@ -20,7 +20,7 @@ import { selectSheetNamesStore } from '../../store/SheetNamesStore/selectors'
 const SheetNameHeader = () => {
   return (
     <Paper className="header">
-      <Typography variant="h5">SheetNames</Typography>
+      <Typography variant="h5">Sheet Names</Typography>
       {/* <HeaderActions/> */}
     </Paper>
   )

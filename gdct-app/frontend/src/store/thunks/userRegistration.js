@@ -1,12 +1,13 @@
 import organizationController from '../../controllers/organization'
 import AppSysController from '../../controllers/AppSys'
 import organizationGroupController from '../../controllers/organizationGroup'
-import programController from '../../controllers/program'
+import programController from '../../controllers/Program'
 import templateTypeController from '../../controllers/templateType'
-import userController from '../../controllers/user'
-import userRegistrationStore from '../userRegistrationStore/store'
+import userController from '../../controllers/User'
+import userRegistrationStore from '../UserRegistrationStore/store'
 
 const hash = require('object-hash')
+import COATreesStore from '../COATreesStore/store'
 
 const handleInputTemplate = (templateSet, submission) => {
   const templateType = {

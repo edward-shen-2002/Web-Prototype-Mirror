@@ -14,13 +14,16 @@ export default class TemplateTypeRepository extends BaseRepository {
   async create({
     name,
     description,
+    templateWorkflowId,
+    submissionWorkflowId,
     programIds,
     isApprovable,
     isReviewable,
     isSubmittable,
     isInputtable,
     isViewable,
-    isReportable
+    isReportable,
+    isActive
   }) {
     return this.programRepository
       .validateMany(programIds)
@@ -28,7 +31,8 @@ export default class TemplateTypeRepository extends BaseRepository {
         TemplateTypeModel.create({
           name,
           description,
-
+          templateWorkflowId,
+          submissionWorkflowId,
           programIds,
 
           isApprovable,
@@ -36,7 +40,8 @@ export default class TemplateTypeRepository extends BaseRepository {
           isSubmittable,
           isInputtable,
           isViewable,
-          isReportable
+          isReportable,
+          isActive
         })
       )
       .then((templateType) => new TemplateTypeEntity(templateType))
@@ -51,7 +56,8 @@ export default class TemplateTypeRepository extends BaseRepository {
     {
       name,
       description,
-  
+      templateWorkflowId,
+      submissionWorkflowId,
       programIds,
   
       isApprovable,
@@ -59,7 +65,8 @@ export default class TemplateTypeRepository extends BaseRepository {
       isSubmittable,
       isInputtable,
       isViewable,
-      isReportable
+      isReportable,
+      isActive
     }
   ) {
     return (
@@ -70,7 +77,8 @@ export default class TemplateTypeRepository extends BaseRepository {
             {
               name,
               description,
-          
+              templateWorkflowId,
+              submissionWorkflowId,
               programIds,
           
               isApprovable,
@@ -78,7 +86,8 @@ export default class TemplateTypeRepository extends BaseRepository {
               isSubmittable,
               isInputtable,
               isViewable,
-              isReportable
+              isReportable,
+              isActive
             }
           )
         )

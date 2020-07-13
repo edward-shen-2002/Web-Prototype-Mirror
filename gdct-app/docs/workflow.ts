@@ -4,9 +4,15 @@ type IWorkflowId = number
 type IStatusId = number
 type IAppSysId = number
 type IWorkflowPhaseId = number
+type IWorkflowProcessAuthorizationId = number
+
+interface ISubmissionComments {
+  submissionId: ISubmissionId
+  workflowProcessId: IWorkflowProcessId
+  value: string // or comment id if this table acts as a bridge instead
+}
 
 interface ISubmission {
-  workflowId: IWorkflowId
   currentWorkflowProcessId: IWorkflowProcessId
   workflowProcessIdHistory: Array<IWorkflowProcessId>
 }
@@ -19,14 +25,17 @@ interface IWorkflowPhase {
 // workflow and workflowProcess represents the entire workflow structure
 // They're separated to normalize data
 interface IWorkflow {
-  initialWorkflowProcessId: IWorkflowProcessId,
-  finalWorkflowProcessIds: Array<IWorkflowProcessId> 
+  name: string
 }
 
 // Workflow phase transitions
 interface IWorkflowProcess {
-  workflowId: IWorkflowId
-  workflowPhaseId: IWorkflowPhaseId,
-  to: Array<IWorkflowProcessId>,
-  appSysRoleId: IAppSysId
+  workflowId: IWorkflowId           
+  workflowPhaseId: IWorkflowPhaseId, 
+  to: Array<IWorkflowProcessId>,     // Next potential states
+}
+
+interface IWorkflowProcessAuthorization  {
+  workflowProcessId: IWorkflowProcess
+  appSysRoleId: IAppSysId            // Permissions - required to access this phase
 }

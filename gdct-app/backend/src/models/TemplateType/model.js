@@ -8,6 +8,8 @@ const TemplateTypeModel = model(
     {
       name: { type: String },
       description: { type: String },
+      templateWorkflowId: { type: ObjectId, ref: 'Workflow' },
+      submissionWorkflowId: { type: ObjectId, ref: 'Workflow' },
 
       programIds: [{ type: ObjectId, ref: 'Program' }],
 
@@ -16,7 +18,8 @@ const TemplateTypeModel = model(
       isSubmittable: { type: Boolean },
       isInputtable: { type: Boolean },
       isViewable: { type: Boolean },
-      isReportable: { type: Boolean }
+      isReportable: { type: Boolean },
+      isActive: { type: Boolean }
     },
     { minimize: false, timestamps: true }
   ),

@@ -32,6 +32,18 @@ const TemplatePackageController = Service(
           }
         )
 
+        router.get(
+          '/templatePackages/populated/:_id',
+          (req, res, next) => {
+            // Get query from middleware -- auth handler
+
+            service
+              .findTemplatePackage(new TemplatePackage({  _id: req.params._id }), true)
+              .then(([ templatePackage ]) => res.json({ templatePackage }))
+              .catch(next)
+          }
+        )
+
         router.post(
           '/templatePackages',
           (req, res, next) => {
@@ -51,6 +63,20 @@ const TemplatePackageController = Service(
             service
               .updateTemplatePackage(_id, templatePackage)
               .then(() => res.end())
+              .catch((error) => console.error(error))
+              .catch(next)
+          }
+        )
+
+        router.put(
+          '/templatePackages/populated/:_id',
+          (req, res, next) => {
+            const { _id } = req.params
+            const { templatePackage } = req.body
+
+            service
+              .updateTemplatePackage(_id, templatePackage, true)
+              .then((templatePackage) => res.json({ templatePackage }))
               .catch((error) => console.error(error))
               .catch(next)
           }

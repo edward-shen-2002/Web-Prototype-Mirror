@@ -31,17 +31,11 @@ const CustomListItems = ({
   handleSelect,
 }) =>
   data.map((item) => {
-    const handleClick = useCallback(() => handleSelect(item), [handleSelect])
+    const handleClick = () => handleSelect(item)
 
-    const isSelected = useMemo(() => getKey && selectedKeys[getKey(item)], [
-      selectedKeys,
-      getKey,
-    ])
+    const isSelected = getKey && selectedKeys[getKey(item)]
 
-    const key = useMemo(() => (getKey ? getKey(item) : uniqid()), [
-      getKey,
-      item,
-    ])
+    const key = getKey ? getKey(item) : uniqid()
 
     return (
       <TableRow
