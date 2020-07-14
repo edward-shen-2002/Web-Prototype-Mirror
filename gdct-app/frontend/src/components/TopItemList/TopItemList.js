@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import DrawerItem from '../DrawerItem/DrawerItem'
 import IconItem from '../IconItem/IconItem'
 

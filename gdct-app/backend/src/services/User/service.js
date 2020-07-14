@@ -106,21 +106,6 @@ export default class UserService {
   }
 
   changePassword() {}
-  async processSignUp(user) {
-    if (user.sysRole) {
-      user.sysRole.forEach(async (id) => {
-        await this.AppSysRoleReposiotry.findById(id);
-      });
-    }
-    return this.UserRepository.create(user);
-  }
-
-  async processLogIn({ email, password }) {
-    if (!email || !password) {
-      throw new ErrorGDCT('Please provide email and password!', 400);
-    }
-    return this.UserRepository.checkAuthenticate(email, password);
-  }
 
   async findById(id) {
     return this.UserRepository.findById(id);

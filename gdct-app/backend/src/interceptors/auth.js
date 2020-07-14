@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken';
 import { promisify } from 'util';
 import ErrorGDCT from '../utils/errorGDCT';
 import UserService from '../services/User';
@@ -31,8 +30,9 @@ export default class Auth {
 
   authenticated = async (req, res, next) => {
     let token;
-    console.log('cookie-jwt:', req.cookies.jwt);
-    console.log('token', req.headers.authorization);
+    console.log('cookie:', req.cookies);
+    console.log('authorization:', req.headers.authorization);
+    console.log('user:', req.user);
     if (
       req.headers.authorization &&
       req.headers.authorization.startsWith('Bearer')
@@ -42,24 +42,24 @@ export default class Auth {
       token = req.cookies.jwt;
     }
 
-    if (!token) {
+    if (!req.user) {
       return next(
         new ErrorGDCT('You are not logged in! Please log into get access.', 401)
       );
     }
 
-    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    // const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-    const currentUser = await this.userService.findById(decoded.id);
-    if (!currentUser) {
-      return next(
-        new ErrorGDCT(
-          'The user belonging to this token does no longer exist.',
-          401
-        )
-      );
-    }
-    req.user = currentUser;
+    // const currentUser = await this.userService.findById(decoded.id);
+    // if (!req.user) {
+    //   return next(
+    //     new ErrorGDCT(
+    //       'The user belonging to this token does no longer exist.',
+    //       401
+    //     )
+    //   );
+    // }
+    // req.user = currentUser;
     next();
   };
 

@@ -21,8 +21,9 @@ import { ROUTE_WORKFLOW } from './constants/routes'
 import WorkflowRouter from './views/WorkflowRouter/WorkflowRouter'
 import SignUp from './views/SignUp'
 import GDCTMenu from './views/GDCTMenu'
+import Logout from './views/Logout'
 
-const PrivateRouter = () => {
+const PrivateRouter = ({ setLoggedIn }) => {
   return (
     <Switch>
       <Route path={ROUTE_WORKFLOW} component={WorkflowRouter} />
@@ -36,6 +37,10 @@ const PrivateRouter = () => {
       <Route exact path="/reportingPeriods" component={ReportingPeriods} />
       <Route exact path="/sheetNames" component={SheetNames} />
       <Route exact path="/organizations" component={OrgRouter} />
+      <Route
+        path="/logout"
+        render={(props) => <Logout {...props} setLoggedIn={setLoggedIn} />}
+      />
       <Redirect from="*" to="/" />
     </Switch>
   )
@@ -80,7 +85,7 @@ const App = () => {
         </Grid>
       ) : isLoggedIn ? (
         <AuthPage>
-          <PrivateRouter />
+          <PrivateRouter setLoggedIn={setLoggedIn} />
         </AuthPage>
       ) : (
         <PublicRouter setLoggedIn={setLoggedIn} />
