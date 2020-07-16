@@ -6,14 +6,14 @@ import PassportLocalMongoose from 'passport-local-mongoose';
 import bcrypt from 'bcrypt-nodejs';
 import jwt from 'jsonwebtoken';
 
-const ObjectId = Schema.Types.ObjectId;
+const { ObjectId } = Schema.Types;
 
 // TODO : Replace with https://github.com/dropbox/zxcvbn
 const passwordValidator = (password, cb) => {
   // Symbols by ASCII ranges (http://www.asciitable.com/)
   const isGreaterThanMinLength = password.length > 7;
   const isLessThanMaxLength = password.length < 26;
-  const containsSymbolRegex = /[$-/:-@{-~!'^_`\[\]]/;
+  const containsSymbolRegex = /[$-/:-@{-~!'^_`[\]]/;
   const containsCapitalRegex = /[A-Z]/;
 
   let error;
@@ -42,7 +42,7 @@ const findByUsername = (model, queryParameters) =>
 
 const User = new Schema(
   {
-    username: { type: String /*unique: true */ },
+    username: { type: String /* unique: true */ },
     password: { type: String, required: true },
     hashedUsername: { type: String, default: '' },
     title: { type: String, default: '' },
@@ -92,7 +92,7 @@ const User = new Schema(
     endDate: { type: Date, default: Date.now },
     IsActive: { type: Boolean, default: true },
   },
-  { minimize: false }
+  { minimize: false },
 );
 
 User.plugin(PassportLocalMongoose, {
@@ -101,7 +101,7 @@ User.plugin(PassportLocalMongoose, {
   passwordValidator,
 });
 
-User.methods.generateHash = (password) => {
+User.methods.generateHash = password => {
   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
@@ -109,7 +109,7 @@ User.methods.validPassword = (password1, password2) => {
   return bcrypt.compareSync(password1, password2);
 };
 
-User.methods.generateAuthToken = async (user) => {
+User.methods.generateAuthToken = async user => {
   const token = jwt.sign({ _id: user._id.toString() }, 'authenticationsecret');
   user.token = token;
   await user.save();

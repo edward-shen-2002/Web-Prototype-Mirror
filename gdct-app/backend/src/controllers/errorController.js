@@ -1,5 +1,5 @@
 export default class ErrorController {
-  process = (err, req, res, next) => {
+  process(err, req, res) {
     // console.log(err.stack);
 
     err.statusCode = err.statusCode || 500;
@@ -11,5 +11,5 @@ export default class ErrorController {
       message: err.message,
       stack: err.stack,
     });
-  };
+  }
 }

@@ -59,6 +59,7 @@ const validEmailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 const validateForm = (errors) => {
   let valid = true
   Object.values(errors).forEach((val) => val.length > 0 && (valid = false))
+  console.log('valid:', valid)
   return valid
 }
 
@@ -98,14 +99,14 @@ export default function Login({ setLoggedIn }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      if (validateForm(errors)) {
-        window.location.replace(
-          `http://localhost:3000/auth/local/callback?email=${email}&password=${password}`
-        )
-        // await AuthController.login({ email, password })
+      if (email && validateForm(errors)) {
+        // window.location.replace(
+        //   `http://localhost:3000/auth/local?email=${email}&password=${password}`
+        // )
+        await AuthController.login({ email, password })
+        setLoggedIn(true)
       }
       // TODO: decide if it is logged in
-      setLoggedIn(true)
     } catch (err) {
       console.log(err)
       setLoggedIn(false)

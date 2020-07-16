@@ -1,7 +1,8 @@
 import passportLocal from 'passport-local';
-import UserModel from '../../models/User/model';
 import passport from 'passport';
-var LocalStrategy = passportLocal.Strategy;
+import UserModel from '../../models/User/model';
+
+const LocalStrategy = passportLocal.Strategy;
 
 module.exports = () => {
   passport.use(
@@ -15,19 +16,18 @@ module.exports = () => {
       function (req, email, password, done) {
         if (email) email = email.toLowerCase();
         process.nextTick(function () {
-          UserModel.findOne({ email: email }, function (err, user) {
+          UserModel.findOne({ email }, function (err, user) {
             if (err) return done(err);
             if (!user) return done(null, false);
             if (!user.validPassword(password, user.password)) {
               return done(null, false);
-            } else {
-              user.generateAuthToken(user);
-              req.session.user = user;
-              return done(null, user);
             }
+            user.generateAuthToken(user);
+            req.session.user = user;
+            return done(null, user);
           });
         });
-      }
-    )
+      },
+    ),
   );
 };

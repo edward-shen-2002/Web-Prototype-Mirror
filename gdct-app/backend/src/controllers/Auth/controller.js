@@ -2,7 +2,7 @@ import { Service } from 'typedi';
 import { Router } from 'express';
 import AuthService from '../../services/Auth';
 
-const AuthController = Service([AuthService], (service) => {
+const AuthController = Service([AuthService], service => {
   const router = Router();
   return (() => {
     router.get('/logout', service.logout);

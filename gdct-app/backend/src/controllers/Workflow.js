@@ -1,77 +1,55 @@
-import { Service } from 'typedi'
+import { Service } from 'typedi';
+import { Router } from 'express';
+import WorkflowService from '../services/Workflow';
 
-import Workflow from '../entities/Workflow'
-import { Router } from 'express'
-import WorkflowService from '../services/Workflow'
+const WorkflowController = Service([WorkflowService], service => {
+  const router = Router();
+  return (() => {
+    router.get('/workflows', (req, res, next) => {
+      // Get query from middleware -- auth handler
 
-const WorkflowController = Service(
-  [WorkflowService],
-  (service) => {
-    const router = Router()
-    return (
-      () => {
-        router.get(
-          '/workflows',
-          (req, res, next) => {
-            // Get query from middleware -- auth handler
+      service
+        .findWorkflow({})
+        .then(workflows => res.json({ data: workflows }))
+        .catch(next);
+    });
 
-            service
-              .findWorkflow({})
-              .then((workflows) => res.json({ data: workflows }))
-              .catch(next)
-          }
-        )
+    router.get('/workflows/:_id', (req, res, next) => {
+      const { _id } = req.params;
 
-        router.get(
-          '/workflows/:_id',
-          (req, res, next) => {
-            const { _id } = req.params
+      service
+        .findWorkflowById(_id)
+        .then(workflow => res.json({ data: workflow }))
+        .catch(next);
+    });
 
-            service
-              .findWorkflowById(_id)
-              .then((workflow) => res.json({ data: workflow }))
-              .catch(next)
-          }
-        )
+    router.post('/workflows', (req, res, next) => {
+      service
+        .createWorkflow(req.body.data)
+        .then(workflow => res.json({ workflow }))
+        .catch(next);
+    });
 
-        router.post(
-          '/workflows',
-          (req, res, next) => {
-            service
-              .createWorkflow(req.body.data)
-              .then((workflow) => res.json({ workflow }))
-              .catch(next)
-          }
-        )
+    router.put('/workflows/:_id', (req, res, next) => {
+      const { _id } = req.params;
 
-        router.put(
-          '/workflows/:_id',
-          (req, res, next) => {
-            const { _id } = req.params
+      service
+        .updateWorkflow(_id, req.body.data)
+        .then(() => res.end())
+        .catch(next);
+    });
 
-            service
-              .updateWorkflow(_id, req.body.data)
-              .then(() => res.end())
-              .catch(next)
-          }
-        )
+    router.delete('/workflows/:_id', (req, res, next) => {
+      const { _id } = req.params;
 
-        router.delete(
-          '/workflows/:_id',
-          (req, res, next) => {
-            const { _id } = req.params
+      service
+        .deleteWorkflow(_id)
+        .then(() => res.end())
+        .catch(next);
+    });
 
-            service
-              .deleteWorkflow(_id)
-              .then(() => res.end())
-              .catch(next)
-          }
-        )
+    return router;
+  })();
+});
 
-        return router
-      }
-    )()
-  }
-)
-
-export default WorkflowController
+export default WorkflowController;

@@ -13,6 +13,17 @@
     "lint:prettier": "prettier --list-different \"**/*.{css,md,js,json,ts}\"",
     "test": "jest --detectOpenHandles --forceExit --silent --verbose"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "./src/**/*.js": [
+      "yarn lint:eslint",
+      "yarn lint:prettier"
+    ]
+  },
   "dependencies": {
     "@types/compression": "^1.7.0",
     "@types/cors": "^2.8.6",
@@ -52,11 +63,14 @@
     "babel-eslint": "^10.0.3",
     "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.2.0",
     "eslint-config-prettier": "^6.7.0",
-    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-prettier": "^3.1.1",
     "esm": "^3.2.25",
+    "husky": "^4.2.5",
     "jest": "^25.4.0",
+    "lint-staged": "^10.2.11",
     "nodemon": "^2.0.3",
     "prettier": "2.0.4",
     "supertest": "^4.0.2",

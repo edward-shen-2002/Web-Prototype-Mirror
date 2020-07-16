@@ -1,38 +1,38 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
-import { DATABASE_KEY } from '../../configs/database'
+import { DATABASE_KEY } from '../../configs/database';
 
-const logTag = '[DB][MongoDB]: '
+const logTag = '[DB][MongoDB]: ';
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // TODO: DO NOT LOAD REPOSITORIES HERE - Singleton database connection
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 export default class Database {
   connect() {
-    console.log(logTag, 'Initializing...')
+    console.log(logTag, 'Initializing...');
 
-    this.initializeMongoose()
+    this.initializeMongoose();
 
-    console.log(logTag, 'Initialize successful')
+    console.log(logTag, 'Initialize successful');
   }
 
   disconnect() {
-    mongoose.disconnect()
+    mongoose.disconnect();
   }
 
   /**
    * Connects to and creates the configuration for the database
    */
   initializeMongoose() {
-    console.log(logTag, 'Connecting...')
+    console.log(logTag, 'Connecting...');
 
     mongoose.connect(DATABASE_KEY, {
       useNewUrlParser: true,
       useCreateIndex: true,
       useFindAndModify: false,
-      useUnifiedTopology: true
-    })
+      useUnifiedTopology: true,
+    });
 
-    console.log(logTag, 'Connection successful')
+    console.log(logTag, 'Connection successful');
   }
 }

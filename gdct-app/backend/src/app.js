@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-dotenv.config();
 
 import express from 'express';
 
@@ -38,10 +37,12 @@ import ColumnNameController from './controllers/ColumnName';
 import UserController from './controllers/User';
 import AuthController from './controllers/Auth';
 import ErrorController from './controllers/errorController';
-import Auth from './interceptors';
+// import Auth from './interceptors';
 import AppRoleResourceController from './controllers/AppRoleResource/controller';
 import AppResourceController from './controllers/AppResource';
 import WorkflowController from './controllers/Workflow';
+
+dotenv.config();
 
 // https://www.digitalocean.com/community/tutorials/how-to-use-winston-to-log-node-js-applications
 const logger = require('morgan');
@@ -76,7 +77,7 @@ app.use(
     saveUninitialized: false,
     cookie: { maxAge: 3600000 },
     store: new CookieStore({ mongooseConnection: mongoose.connection }),
-  })
+  }),
 );
 app.use(passport.initialize());
 app.use(passport.session());
@@ -118,31 +119,31 @@ app.use(
   '/role_manager',
   // Container.get(Auth).authenticated,
   // Container.get(Auth).authorized,
-  Container.get(AppSysController)
+  Container.get(AppSysController),
 );
 app.use(
   '/role_manager',
   // Container.get(Auth).authenticated,
   // Container.get(Auth).authorized,
-  Container.get(AppRoleController)
+  Container.get(AppRoleController),
 );
 app.use(
   '/role_manager',
   // Container.get(Auth).authenticated,
   // Container.get(Auth).authorized,
-  Container.get(AppSysRoleController)
+  Container.get(AppSysRoleController),
 );
 app.use(
   '/role_manager',
   // Container.get(Auth).authenticated,
   // Container.get(Auth).authorized,
-  Container.get(AppRoleResourceController)
+  Container.get(AppRoleResourceController),
 );
 app.use(
   '/role_manager',
   // Container.get(Auth).authenticated,
   // Container.get(Auth).authorized,
-  Container.get(AppResourceController)
+  Container.get(AppResourceController),
 );
 
 app.use(Container.get(ErrorController).process);
