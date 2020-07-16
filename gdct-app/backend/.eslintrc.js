@@ -4,6 +4,7 @@ module.exports = {
     node: true,
   },
   extends: 'eslint:recommended',
+  // extends: ['airbnb-base', 'plugin:prettier/recommended'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
