@@ -1,33 +1,41 @@
-import UserRepository from '../../repositories/User';
-import AppSysRoleRepository from '../../repositories/AppSysRole';
-import Container, { Service } from 'typedi';
-import ErrorGDCT from '../../utils/errorGDCT';
+import passport from 'passport';
+import UserModel from '../../models/User/model';
+import mongoose from 'mongoose';
+import os from 'os';
 
-// @Service()
-export default class AuthService {
-  constructor() {
-    this.UserRepository = Container.get(UserRepository);
-    this.AppSysRoleReposiotry = Container.get(AppSysRoleRepository);
-  }
+export default class ProgramService {
+  authenticate = (req, res) => {
+    var method = req.params.method;
+    passport.authenticate(method, { scope: 'email' })(req, res);
+  };
 
-  async processSignUp(user) {
-    if (user.sysRole) {
-      user.sysRole.forEach(async (id) => {
-        await this.AppSysRoleReposiotry.findById(id);
-      });
-    }
-    return this.UserRepository.create(user);
-  }
+  authenticateCallback = (req, res) => {
+    var method = req.params.method;
+    passport.authenticate(method, {
+      successRedirect: 'http://localhost:3003/', //redirect to home page
+      failureRedirect: 'http://localhost:3003/auth/error', //redirect to error page
+    })(req, res);
+  };
 
-  async processLogIn({ email, password }) {
-    if (!email || !password) {
-      throw new ErrorGDCT('Please provide email and password!', 400);
-    }
-    return this.UserRepository.checkAuthenticate(email, password);
-  }
+  logout = (req, res) => {
+    req.logout();
+    res.redirect('http://localhost:3003/'); //redirect to login page
+  };
 
-  async processAuto() {
+  auto = (req, res) => {
     var temp = mongoose.Types.ObjectId('5efb8b638464c20f646049a6');
-    return await this.UserRepository.find({ AppConfig: temp });
-  }
+    var uname = os.userInfo().username;
+    UserModel.find({ AppConfig: temp }, function (err, user1) {
+      var found = false;
+      user1.forEach((obj) => {
+        if (obj.username === uname) {
+          found = true;
+          res.send(true);
+        }
+      });
+      if (!found) {
+        res.send(false);
+      }
+    });
+  };
 }

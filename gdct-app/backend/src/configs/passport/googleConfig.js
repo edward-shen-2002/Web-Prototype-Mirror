@@ -1,9 +1,10 @@
-var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-var OauthUser = require('../../models/OauthUser/model');
-var User = require('../../models/User/model');
-var configAuth = require('./auth');
+import passportGoogle from 'passport-google-oauth';
+import UserModel from '../../models/User/model';
+import configAuth from './auth';
+import passport from 'passport';
+var GoogleStrategy = passportGoogle.OAuth2Strategy;
 
-module.exports = (passport) => {
+module.exports = () => {
   passport.use(
     new GoogleStrategy(
       {
@@ -14,7 +15,7 @@ module.exports = (passport) => {
       },
       function (req, token, refreshToken, profile, done) {
         process.nextTick(function () {
-          OauthUser.findOne(
+          UserModel.findOne(
             { email: profile.emails[0].value.toLowerCase() },
             function (err, user) {
               if (err) {
@@ -39,13 +40,8 @@ module.exports = (passport) => {
                     }
                   });
                 } else {
-                  User.findOne(
-                    { email: profile.emails[0].value.toLowerCase() },
-                    function (err, user1) {
-                      req.session.user = user1;
-                      req.session.token = token;
-                    }
-                  );
+                  req.session.user = user;
+                  req.session.token = token;
                   return done(null, user);
                 }
               } else {

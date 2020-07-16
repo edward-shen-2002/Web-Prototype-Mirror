@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -12,9 +12,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 
-import UserController from '../controllers/User'
 import { Container } from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
+import AuthController from '../controllers/Auth'
 
 function Copyright() {
   return (
@@ -55,29 +55,56 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+const validEmailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+const validateForm = (errors) => {
+  let valid = true
+  Object.values(errors).forEach((val) => val.length > 0 && (valid = false))
+  return valid
+}
+
 export default function Login({ setLoggedIn }) {
   const classes = useStyles()
   let history = useHistory()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [errors, setErrors] = useState({})
+
+  useEffect(() => {
+    AuthController.auto().then((auto) => {
+      if (auto) {
+        // TODO: not working yet
+        // setLoggedIn(false)
+      }
+    })
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target
+    let updatedErrors = { ...errors }
+
     switch (name) {
       case 'password':
         setPassword(value)
         break
       case 'email':
+        updatedErrors.email = !validEmailRegex.test(value)
+          ? 'Not a Valid Email'
+          : ''
         setEmail(value)
+        setErrors(updatedErrors)
         break
     }
   }
-  const handleClick = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const login = await UserController.login({ email, password })
-      const profile = await UserController.profile()
-      console.log(profile)
+      if (validateForm(errors)) {
+        window.location.replace(
+          `http://localhost:3000/auth/local/callback?email=${email}&password=${password}`
+        )
+        // await AuthController.login({ email, password })
+      }
+      // TODO: decide if it is logged in
       setLoggedIn(true)
     } catch (err) {
       console.log(err)
@@ -94,7 +121,7 @@ export default function Login({ setLoggedIn }) {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form onSubmit={handleSubmit} className={classes.form} noValidate>
           <TextField
             variant="outlined"
             margin="normal"
@@ -134,12 +161,10 @@ export default function Login({ setLoggedIn }) {
             style={{
               marginBottom: '24px',
             }}
-            onClick={handleClick}
           >
             Sign In
           </Button>
           <Button
-            type="submit"
             fullWidth
             variant="outlined"
             color="default"
@@ -149,9 +174,7 @@ export default function Login({ setLoggedIn }) {
               marginBottom: 0,
             }}
             onClick={() => {
-              UserController.google().then((res) => {
-                history.push('/')
-              })
+              window.location.href = 'http://localhost:3000/auth/google/'
             }}
           >
             <div>
@@ -164,15 +187,12 @@ export default function Login({ setLoggedIn }) {
             </div>
           </Button>
           <Button
-            type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
             onClick={() => {
-              UserController.facebook().then((res) => {
-                history.push('/')
-              })
+              window.location.href = 'http://localhost:3000/auth/facebook/'
             }}
           >
             <div>

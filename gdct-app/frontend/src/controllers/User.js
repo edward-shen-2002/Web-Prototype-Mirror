@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const UserController = (() => {
   const UserAxios = axios.create({
-    baseURL: 'http://localhost:3000/auth/',
+    baseURL: 'http://localhost:3000/public/',
     withCredentials: true,
   })
   return {

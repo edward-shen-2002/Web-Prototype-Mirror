@@ -13,15 +13,17 @@ import SheetNames from './views/SheetNames'
 import RoleRouter from './views/RoleRouter'
 import SubmissionRouter from './views/SubmissionRouter'
 import ReportingPeriods from './views/ReportingPeriods'
-import UserController from './controllers/User'
-
-import './App.scss'
+import Error from './views/authError'
+import Signup from './views/authSignup'
 import Login from './views/Login'
+// import SignUp from './views/SignUp'
+
 import { ROUTE_WORKFLOW } from './constants/routes'
 import WorkflowRouter from './views/WorkflowRouter/WorkflowRouter'
-import SignUp from './views/SignUp'
 import GDCTMenu from './views/GDCTMenu'
 import Logout from './views/Logout'
+import './App.scss'
+import UserController from './controllers/User'
 
 const PrivateRouter = ({ setLoggedIn }) => {
   return (
@@ -49,26 +51,33 @@ const PublicRouter = ({ setLoggedIn }) => {
   return (
     <Switch>
       <Route
-        path="/login"
+        exact
+        path="/auth/"
         render={(props) => <Login {...props} setLoggedIn={setLoggedIn} />}
       />
-      <Route path="/signup" component={SignUp} />
-      <Redirect from="*" to="/login" />
+      <Route exact path="/auth/error" component={Error} />
+      <Route exact path="/auth/signup" component={Signup} />
+      {/* <Route
+        path="/login"
+        render={(props) => <Login {...props} setLoggedIn={setLoggedIn} />}
+      /> */}
+      <Redirect from="*" to="/auth" />
     </Switch>
   )
 }
 
 const App = () => {
-  const [isLoggedIn, setLoggedIn] = useState(null)
-  useEffect(() => {
-    UserController.profile()
-      .then((res) => {
-        setLoggedIn(res.status === 'success')
-      })
-      .catch(() => {
-        setLoggedIn(false)
-      })
-  }, [])
+  // const [isLoggedIn, setLoggedIn] = useState(null)
+  // useEffect(() => {
+  //   UserController.profile()
+  //     .then((res) => {
+  //       setLoggedIn(res.status === 'success')
+  //     })
+  //     .catch(() => {
+  //       setLoggedIn(false)
+  //     })
+  // }, [])
+  const [isLoggedIn, setLoggedIn] = useState(false)
 
   return (
     <div className="appContainer">

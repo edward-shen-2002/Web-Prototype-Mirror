@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux'
 
-import domain from './reducerss/domain'
-import app from './reducerss/app'
-import ui from './reducerss/ui'
+import domain from './reducers/domain'
+import app from './reducers/app'
+import ui from './reducers/ui'
 
 import TemplatesStore from './TemplatesStore/store'
 import TemplateTypesStore from './TemplateTypesStore/store'
@@ -28,8 +28,10 @@ import ColumnNamesStore from './ColumnNameStore/store'
 import OrgsStore from './OrganizationsStore/store'
 import WorkflowStore from './WorkflowStore/store'
 import WorkflowsStore from './WorkflowsStore/store'
+import UserStore from './UserStore/store'
 
 export const root = combineReducers({
+  UserStore: UserStore.reducer,
   StatusesStore: StatusesStore.reducer,
   ProgramsStore: ProgramsStore.reducer,
   TemplatesStore: TemplatesStore.reducer,

@@ -1,19 +1,19 @@
-var OauthUser = require('../../models/OauthUser/model');
-var User = require('../../models/User/model');
+import UserModel from '../../models/User/model';
+import passport from 'passport';
 
-module.exports = function (passport) {
+module.exports = () => {
   passport.serializeUser(function (user, done) {
     done(null, user);
   });
 
   passport.deserializeUser(function (id, done) {
-    OauthUser.findById(id, function (err, user) {
+    UserModel.findById(id, function (err, user) {
       done(err, user);
     });
   });
 
-  require('./localConfig')(passport);
-  require('./signupConfig')(passport);
-  require('./facebookConfig')(passport);
-  require('./googleConfig')(passport);
+  require('./localConfig')();
+  require('./signupConfig')();
+  require('./facebookConfig')();
+  require('./googleConfig')();
 };

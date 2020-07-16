@@ -1,8 +1,9 @@
-var LocalStrategy = require('passport-local').Strategy;
-var OauthUser = require('../../models/OauthUser/model');
-var User = require('../../models/User/model');
+import passportLocal from 'passport-local';
+import UserModel from '../../models/User/model';
+import passport from 'passport';
+var LocalStrategy = passportLocal.Strategy;
 
-module.exports = (passport) => {
+module.exports = () => {
   passport.use(
     'signup',
     new LocalStrategy(
@@ -14,21 +15,20 @@ module.exports = (passport) => {
       function (req, email, password, done) {
         if (email) email = email.toLowerCase();
         process.nextTick(function () {
-          OauthUser.findOne({ email: email }, function (err, user) {
+          UserModel.findOne({ email: email }, function (err, user) {
             if (err) return done(err);
             if (user) {
               return done(null, false);
             } else {
-              var newUser = new OauthUser();
+              var newUser = new UserModel();
               newUser.email = email;
               newUser.password = newUser.generateHash(password);
               newUser.save(function (err) {
                 if (err) {
                   return done(err);
                 } else {
-                  User.findOne({ email: email }, function (err, user1) {
-                    req.session.user = user1;
-                  });
+                  newUser.generateAuthToken();
+                  req.session.user = user;
                   return done(null, newUser);
                 }
               });

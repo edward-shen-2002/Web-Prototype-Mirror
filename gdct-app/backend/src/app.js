@@ -66,18 +66,20 @@ app.use(compression());
 
 app.use(logger('dev'));
 
+require('./configs/passport')();
+
 const CookieStore = mongoStore(session);
 app.use(
   session({
     secret: process.env.COOKIE_SECRET,
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 3600000 },
     store: new CookieStore({ mongooseConnection: mongoose.connection }),
   })
 );
 app.use(passport.initialize());
 app.use(passport.session());
-import './configs/passport';
 
 app.use((req, res, next) => {
   console.log('my middlewares:', req.user, req.cookies.connect_sid);
@@ -90,8 +92,8 @@ app.use('/', Container.get(SheetNameController));
 app.use('/', Container.get(ColumnNameController));
 app.use('/', Container.get(OrgController));
 
+app.use('/', Container.get(AuthController));
 app.use('/public', Container.get(UserController));
-app.use('/auth', Container.get(AuthController));
 
 app.use('/template_manager', Container.get(TemplateController));
 app.use('/template_manager', Container.get(TemplatePackageController));

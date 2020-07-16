@@ -1,9 +1,10 @@
-var FacebookStrategy = require('passport-facebook').Strategy;
-var OauthUser = require('../../models/OauthUser/model');
-var User = require('../../models/User/model');
-var configAuth = require('./auth');
+import passportFacebook from 'passport-facebook';
+import UserModel from '../../models/User/model';
+import configAuth from './auth';
+import passport from 'passport';
+var FacebookStrategy = passportFacebook.Strategy;
 
-module.exports = (passport) => {
+module.exports = () => {
   var fbStrategy = configAuth.facebook;
   fbStrategy.passReqToCallback = true;
   passport.use(
@@ -15,7 +16,7 @@ module.exports = (passport) => {
       done
     ) {
       process.nextTick(function () {
-        OauthUser.findOne(
+        UserModel.findOne(
           { email: profile.emails[0].value.toLowerCase() },
           function (err, user) {
             if (err) return done(err);
@@ -38,13 +39,8 @@ module.exports = (passport) => {
                   }
                 });
               } else {
-                User.findOne(
-                  { email: profile.emails[0].value.toLowerCase() },
-                  function (err, user1) {
-                    req.session.user = user1;
-                    req.session.token = token;
-                  }
-                );
+                req.session.user = user;
+                req.session.token = token;
                 return done(null, user);
               }
             } else {
