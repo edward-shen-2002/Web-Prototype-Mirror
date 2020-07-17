@@ -1,8 +1,10 @@
 import axios from 'axios'
 
+import { host } from '../constants/domain'
+
 const userController = (() => {
   const userAxios = axios.create({
-    baseURL: 'http://localhost:3000/user',
+    baseURL: host + '/user',
   })
   return {
     create: async (user) =>

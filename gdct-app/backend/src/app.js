@@ -9,7 +9,7 @@ import passport from 'passport'
 import compression from 'compression'
 
 import { Container } from 'typedi'
-import { PORT } from './configs/host'
+// import { PORT } from './configs/host'
 import Database from './loaders/database'
 
 import TemplateController from './controllers/Template'
@@ -33,7 +33,7 @@ const logger = require('morgan')
 
 const app = express()
 
-app.set('port', process.env.PORT || PORT)
+app.set('port', process.env.PORT)
 
 app.use(json({ limit: '50mb' }))
 app.use(urlencoded({ extended: true }))

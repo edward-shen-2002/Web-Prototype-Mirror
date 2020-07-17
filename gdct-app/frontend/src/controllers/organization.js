@@ -1,8 +1,10 @@
 import axios from 'axios'
 
+import { host } from '../constants/domain'
+
 const organizationController = (() => {
   const organizationAxios = axios.create({
-    baseURL: 'http://localhost:3000/organization',
+    baseURL: host + '/organization',
   })
   return {
     fetchByOrgGroupId: async (_id) =>

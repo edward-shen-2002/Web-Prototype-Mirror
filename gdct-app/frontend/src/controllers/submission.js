@@ -1,8 +1,10 @@
 import axios from 'axios'
 
+import { host } from '../constants/domain'
+
 const submissionController = (() => {
   const submissionAxios = axios.create({
-    baseURL: 'http://localhost:3000/submission_manager/submissions',
+    baseURL: host + '/submission_manager/submissions',
   })
   return {
     fetchSubmission: async (_id) =>

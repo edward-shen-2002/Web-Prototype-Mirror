@@ -1,8 +1,10 @@
 import axios from 'axios'
 
+import { host } from '../constants/domain'
+
 const AppSysController = (() => {
   const AppSysAxios = axios.create({
-    baseURL: 'http://localhost:3000/appsys_manager/appsyses',
+    baseURL: host + '/appsys_manager/appsyses',
   })
   return {
     fetchAppSys: async (_id) =>

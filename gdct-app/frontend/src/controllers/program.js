@@ -1,8 +1,10 @@
 import axios from 'axios'
 
+import { host } from '../constants/domain'
+
 const programController = (() => {
   const programAxios = axios.create({
-    baseURL: 'http://localhost:3000/program',
+    baseURL: host + '/program',
   })
   return {
     fetchByIds: async (_ids) =>
