@@ -1,54 +1,23 @@
 // import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
 
-import PassportLocalMongoose from 'passport-local-mongoose';
-
 import bcrypt from 'bcrypt-nodejs';
 import jwt from 'jsonwebtoken';
 
-const { ObjectId } = Schema.Types;
-
-// TODO : Replace with https://github.com/dropbox/zxcvbn
-const passwordValidator = (password, cb) => {
-  // Symbols by ASCII ranges (http://www.asciitable.com/)
-  const isGreaterThanMinLength = password.length > 7;
-  const isLessThanMaxLength = password.length < 26;
-  const containsSymbolRegex = /[$-/:-@{-~!'^_`[\]]/;
-  const containsCapitalRegex = /[A-Z]/;
-
-  let error;
-
-  if (!isLessThanMaxLength) {
-    error = 'Password has to be at least 8 characters long';
-  } else if (!isGreaterThanMinLength) {
-    error = 'Password has to be no more than 28 characters long';
-  } else if (!containsSymbolRegex.test(password)) {
-    error = 'Password has to contain at least one symbol';
-  } else if (!containsCapitalRegex) {
-    error = 'Password has to contain at least one capital character';
-  }
-
-  return error ? cb(error) : cb();
-};
-
-// Conditions to check for when the user authenticates/logs in
-const findByUsername = (model, queryParameters) =>
-  model.findOne({
-    ...queryParameters,
-    isActive: true,
-    isEmailVerified: true,
-    isApproved: true,
-  });
-
 const User = new Schema(
   {
-    username: { type: String /* unique: true */ },
-    password: { type: String, required: true },
-    hashedUsername: { type: String, default: '' },
+    username: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     title: { type: String, default: '' },
-    ext: { type: String, default: '' },
-    email: { type: String, required: true },
-    token: { type: String },
+    firstName: { type: String, default: '' },
+    lastName: { type: String, default: '' },
+    phoneNumber: { type: String, default: '' },
+    sysRole: [
+      {
+        type: Schema.ObjectId,
+        ref: 'AppSysRole',
+      },
+    ],
     facebook: {
       id: String,
       token: String,
@@ -59,54 +28,29 @@ const User = new Schema(
       token: String,
       name: String,
     },
-    firstName: { type: String, default: '' },
-    lastName: { type: String, default: '' },
+    password: String,
+    isActive: {
+      type: Boolean,
+      default: true,
+      select: false,
+    },
+    isEmailVerified: { type: Boolean, required: true, default: false },
 
-    phoneNumber: { type: String, default: '' },
-    sysRole: [
-      {
-        appSys: { type: String, default: '' },
-        role: { type: String, default: '' },
-        org: [
-          {
-            orgId: { type: String, default: '' },
-            IsActive: { type: Boolean },
-            program: [
-              {
-                programId: { type: ObjectId, ref: 'program' },
-                programCode: { type: String, default: '' },
-                template: [
-                  {
-                    templateTypeId: { type: ObjectId, ref: 'templateType' },
-                    templateCode: { type: String, default: '' },
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    ],
+    creationDate: { type: Date, default: Date.now, required: true },
+    approvedDate: { type: Date, default: Date.now, required: true },
 
-    startDate: { type: Date, default: Date.now },
-    endDate: { type: Date, default: Date.now },
-    IsActive: { type: Boolean, default: true },
+    startDate: { type: Date },
+    endDate: { type: Date },
   },
-  { minimize: false },
+  { timestamp: true, minimize: false },
 );
 
-User.plugin(PassportLocalMongoose, {
-  usernameUnique: false,
-  findByUsername,
-  passwordValidator,
-});
-
-User.methods.generateHash = password => {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+User.methods.setHashedPassword = function (password) {
+  this.password = bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
-User.methods.validPassword = (password1, password2) => {
-  return bcrypt.compareSync(password1, password2);
+User.methods.validatePassword = function (password) {
+  return bcrypt.compareSync(password, this.password);
 };
 
 User.methods.generateAuthToken = async user => {
@@ -114,6 +58,29 @@ User.methods.generateAuthToken = async user => {
   user.token = token;
   await user.save();
   return token;
+};
+
+User.methods.generateJWT = function () {
+  const today = new Date();
+  const expirationDate = new Date(today);
+  expirationDate.setDate(today.getDate() + 60);
+
+  return jwt.sign(
+    {
+      email: this.email,
+      id: this._id,
+      exp: parseInt(expirationDate.getTime() / 1000, 10),
+    },
+    'secret',
+  );
+};
+
+User.methods.returnAuthUserJson = function () {
+  return {
+    _id: this._id,
+    email: this.email,
+    token: this.generateJWT(),
+  };
 };
 
 // var User = new Schema(

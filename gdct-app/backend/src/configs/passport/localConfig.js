@@ -16,16 +16,26 @@ module.exports = () => {
       function (req, email, password, done) {
         if (email) email = email.toLowerCase();
         process.nextTick(function () {
-          UserModel.findOne({ email }, function (err, user) {
-            if (err) return done(err);
-            if (!user) return done(null, false);
-            if (!user.validPassword(password, user.password)) {
-              return done(null, false);
-            }
-            user.generateAuthToken(user);
-            req.session.user = user;
-            return done(null, user);
-          });
+          // UserModel.findOne({ email }, function (err, user) {
+          //   if (err) return done(err);
+          //   if (!user) return done(null, false);
+          //   if (!user.validPassword(password, user.password)) {
+          //     return done(null, false);
+          //   }
+          //   user.generateAuthToken(user);
+          //   req.session.user = user;
+          //   return done(null, user);
+          // });
+          UserModel.findOne({ email })
+            .then(user => {
+              console.log('reachhhhhhhhhhhhh');
+              if (!user || !user.validatePassword(password)) {
+                return done(null, false, { errors: { 'email or password': 'is invalid' } });
+              }
+
+              return done(null, user);
+            })
+            .catch(done);
         });
       },
     ),

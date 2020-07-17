@@ -39,4 +39,79 @@ export default class ProgramService {
       }
     });
   }
+
+  createUser(req, res) {
+    const {
+      body: { username, email, password },
+    } = req;
+
+    if (!email) {
+      return res.status(422).json({
+        errors: {
+          email: 'is required',
+        },
+      });
+    }
+
+    if (!password) {
+      return res.status(422).json({
+        errors: {
+          password: 'is required',
+        },
+      });
+    }
+
+    const finalUser = new UserModel({
+      username,
+      email,
+      password,
+    });
+
+    finalUser.setHashedPassword(password);
+
+    return finalUser
+      .save()
+      .then(() => {
+        res.json({ user: finalUser.returnAuthUserJson() });
+      })
+      .catch(err => res.json({ error: err }));
+  }
+
+  processLogin(req, res, next) {
+    const {
+      body: { email, password },
+    } = req;
+
+    if (!email) {
+      return res.status(422).json({
+        errors: {
+          email: 'is required',
+        },
+      });
+    }
+
+    if (!password) {
+      return res.status(422).json({
+        errors: {
+          password: 'is required',
+        },
+      });
+    }
+
+    return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
+      console.log('info:', info);
+      if (err) {
+        return next(err);
+      }
+
+      if (passportUser) {
+        const authUser = passportUser;
+        authUser.token = passportUser.generateJWT();
+
+        return res.json({ user: authUser.returnAuthUserJson() });
+      }
+
+      return res.status(400).info;
+    })(req, res, next);
+  }
 }
