@@ -103,8 +103,11 @@ export default function Login({ setLoggedIn }) {
         // window.location.replace(
         //   `http://localhost:3000/auth/local?email=${email}&password=${password}`
         // )
-        await AuthController.login({ email, password })
-        setLoggedIn(true)
+        await AuthController.login({ email, password }).then((data) => {
+          if (data.token) {
+            setLoggedIn(true)
+          }
+        })
       }
       // TODO: decide if it is logged in
     } catch (err) {

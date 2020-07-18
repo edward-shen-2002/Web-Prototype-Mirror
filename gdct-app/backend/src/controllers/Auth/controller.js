@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 import { Router } from 'express';
 import AuthService from '../../services/Auth';
-import auth from '../../interceptors/passportAuth';
+import auth from '../../middlewares/passport/passportAuth';
 
 const AuthController = Service([AuthService], service => {
   const router = Router();
@@ -15,6 +15,11 @@ const AuthController = Service([AuthService], service => {
 
     // POST login route (optional, everyone has access)
     router.post('/login', auth.optional, service.processLogin);
+    router.get('/profile', auth.required, (req, res) => {
+      res.json({
+        status: 'success',
+      });
+    });
     return router;
   })();
 });

@@ -22,8 +22,8 @@ import { ROUTE_WORKFLOW } from './constants/routes'
 import WorkflowRouter from './views/WorkflowRouter/WorkflowRouter'
 import GDCTMenu from './views/GDCTMenu'
 import Logout from './views/Logout'
+import AuthController from './controllers/Auth'
 import './App.scss'
-import UserController from './controllers/User'
 
 const PrivateRouter = ({ setLoggedIn }) => {
   return (
@@ -67,17 +67,17 @@ const PublicRouter = ({ setLoggedIn }) => {
 }
 
 const App = () => {
-  // const [isLoggedIn, setLoggedIn] = useState(null)
-  // useEffect(() => {
-  //   UserController.profile()
-  //     .then((res) => {
-  //       setLoggedIn(res.status === 'success')
-  //     })
-  //     .catch(() => {
-  //       setLoggedIn(false)
-  //     })
-  // }, [])
-  const [isLoggedIn, setLoggedIn] = useState(false)
+  const [isLoggedIn, setLoggedIn] = useState(null)
+  useEffect(() => {
+    AuthController.profile()
+      .then((res) => {
+        console.log(res)
+        setLoggedIn(res.status === 'success')
+      })
+      .catch(() => {
+        setLoggedIn(false)
+      })
+  }, [])
 
   return (
     <div className="appContainer">

@@ -1,8 +1,11 @@
 // import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
 import { Schema, model } from 'mongoose';
 
 import bcrypt from 'bcrypt-nodejs';
 import jwt from 'jsonwebtoken';
+
+dotenv.config();
 
 const User = new Schema(
   {
@@ -53,13 +56,6 @@ User.methods.validatePassword = function (password) {
   return bcrypt.compareSync(password, this.password);
 };
 
-User.methods.generateAuthToken = async user => {
-  const token = jwt.sign({ _id: user._id.toString() }, 'authenticationsecret');
-  user.token = token;
-  await user.save();
-  return token;
-};
-
 User.methods.generateJWT = function () {
   const today = new Date();
   const expirationDate = new Date(today);
@@ -69,17 +65,19 @@ User.methods.generateJWT = function () {
     {
       email: this.email,
       id: this._id,
-      exp: parseInt(expirationDate.getTime() / 1000, 10),
     },
-    'secret',
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    },
   );
 };
 
-User.methods.returnAuthUserJson = function () {
+User.methods.returnAuthUserJson = function (token) {
   return {
     _id: this._id,
     email: this.email,
-    token: this.generateJWT(),
+    token,
   };
 };
 

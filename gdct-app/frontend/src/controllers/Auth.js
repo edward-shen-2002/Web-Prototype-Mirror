@@ -7,10 +7,11 @@ const AuthController = (() => {
   })
   return {
     login: async (data) =>
-      AuthAxios.get(
-        `/auth/local/callback?email=${data.email}&password=${data.password}`
-      ),
+      AuthAxios.post('/login', data)
+        .then((res) => res.data)
+        .catch((err) => console.log(err)),
     auto: async (data) => AuthAxios.get('/auto'),
+    profile: async () => AuthAxios.get('/profile').then((res) => res.data),
   }
 })()
 

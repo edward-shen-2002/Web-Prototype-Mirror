@@ -19,7 +19,6 @@ const UserController = (() => {
     google: async (data) => UserAxios.get('/google').then((res) => res.data),
     facebook: async (data) =>
       UserAxios.get('/facebook').then((res) => res.data),
-    profile: async () => UserAxios.get('/profile').then((res) => res.data),
   }
 })()
 

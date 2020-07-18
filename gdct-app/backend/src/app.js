@@ -14,7 +14,6 @@ import mongoStore from 'connect-mongo';
 import compression from 'compression';
 
 import { Container } from 'typedi';
-import { PORT } from './configs/host';
 import Database from './loaders/database';
 
 import TemplateController from './controllers/Template';
@@ -54,7 +53,7 @@ export const dbUtil = new Database();
 
 dbUtil.connect();
 
-app.set('port', process.env.PORT || PORT);
+app.set('port', process.env.PORT);
 
 app.use(cookieParser());
 app.use(json({ limit: '50mb' }));
@@ -67,7 +66,7 @@ app.use(compression());
 
 app.use(logger('dev'));
 
-require('./configs/passport')();
+require('./middlewares/passport')();
 
 const CookieStore = mongoStore(session);
 app.use(

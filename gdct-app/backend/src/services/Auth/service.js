@@ -2,6 +2,7 @@ import passport from 'passport';
 import mongoose from 'mongoose';
 import os from 'os';
 import UserModel from '../../models/User/model';
+import { addTokenToCookie } from '../../middlewares/shared';
 
 export default class ProgramService {
   authenticate(req, res) {
@@ -71,8 +72,10 @@ export default class ProgramService {
 
     return finalUser
       .save()
-      .then(() => {
-        res.json({ user: finalUser.returnAuthUserJson() });
+      .then(user => {
+        const token = user.generateJWT();
+        addTokenToCookie(res, token);
+        res.json({ user: user.returnAuthUserJson() });
       })
       .catch(err => res.json({ error: err }));
   }
@@ -81,7 +84,7 @@ export default class ProgramService {
     const {
       body: { email, password },
     } = req;
-
+    console.log(req.body);
     if (!email) {
       return res.status(422).json({
         errors: {
@@ -106,9 +109,9 @@ export default class ProgramService {
 
       if (passportUser) {
         const authUser = passportUser;
-        authUser.token = passportUser.generateJWT();
-
-        return res.json({ user: authUser.returnAuthUserJson() });
+        const token = passportUser.generateJWT();
+        addTokenToCookie(res, token);
+        return res.json({ user: authUser.returnAuthUserJson(token) });
       }
 
       return res.status(400).info;
