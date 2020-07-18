@@ -13,7 +13,6 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { Container } from '@material-ui/core'
-import { useHistory } from 'react-router-dom'
 import AuthController from '../controllers/Auth'
 
 function Copyright() {
@@ -64,7 +63,6 @@ const validateForm = (errors) => {
 
 export default function Login({ setLoggedIn }) {
   const classes = useStyles()
-  let history = useHistory()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({})

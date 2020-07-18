@@ -14,9 +14,9 @@ import RoleRouter from './views/RoleRouter'
 import SubmissionRouter from './views/SubmissionRouter'
 import ReportingPeriods from './views/ReportingPeriods'
 import Error from './views/authError'
-import Signup from './views/authSignup'
+// import Signup from './views/authSignup'
 import Login from './views/Login'
-// import SignUp from './views/SignUp'
+import SignUp from './views/SignUp'
 
 import { ROUTE_WORKFLOW } from './constants/routes'
 import WorkflowRouter from './views/WorkflowRouter/WorkflowRouter'
@@ -52,16 +52,16 @@ const PublicRouter = ({ setLoggedIn }) => {
     <Switch>
       <Route
         exact
-        path="/auth/"
+        path="/login"
         render={(props) => <Login {...props} setLoggedIn={setLoggedIn} />}
       />
+      <Route exact path="/signup" component={SignUp} />
       <Route exact path="/auth/error" component={Error} />
-      <Route exact path="/auth/signup" component={Signup} />
       {/* <Route
         path="/login"
         render={(props) => <Login {...props} setLoggedIn={setLoggedIn} />}
       /> */}
-      <Redirect from="*" to="/auth" />
+      <Redirect from="*" to="/login" />
     </Switch>
   )
 }

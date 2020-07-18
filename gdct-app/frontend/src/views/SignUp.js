@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
-import { Redirect } from 'react-router-dom'
 
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
@@ -20,6 +19,9 @@ import Review from './Review'
 import { getAppSysRolesRequest } from '../store/thunks/AppSysRole'
 import { selectFactoryRESTResponseTableValues } from '../store/common/REST/selectors'
 import { selectAppSysRolesStore } from '../store/AppSysRolesStore/selectors'
+
+import AuthController from '../controllers/Auth'
+import { useHistory } from 'react-router-dom'
 
 function Copyright() {
   return (
@@ -78,20 +80,52 @@ const useStyles = makeStyles((theme) => ({
 
 const steps = ['Mandatory step', 'Extra step', 'Review your info.']
 
-function getStepContent(step, parentHandleChange, data) {
+function getStepContent(
+  step,
+  parentHandleChange,
+  data,
+  activeStep,
+  handleNext,
+  handleBack
+) {
   switch (step) {
     case 0:
-      return <MandatoryInfo parentHandleChange={parentHandleChange} />
+      return (
+        <MandatoryInfo
+          parentHandleChange={parentHandleChange}
+          steps={steps}
+          activeStep={activeStep}
+          handleNext={handleNext}
+          handleBack={handleBack}
+        />
+      )
     case 1:
-      return <ExtraInfo parentHandleChange={parentHandleChange} />
+      return (
+        <ExtraInfo
+          parentHandleChange={parentHandleChange}
+          steps={steps}
+          activeStep={activeStep}
+          handleNext={handleNext}
+          handleBack={handleBack}
+        />
+      )
     case 2:
-      return <Review {...data} />
+      return (
+        <Review
+          {...data}
+          steps={steps}
+          activeStep={activeStep}
+          handleNext={handleNext}
+          handleBack={handleBack}
+        />
+      )
     default:
       throw new Error('Unknown step')
   }
 }
 
 export default function SignUp() {
+  const history = useHistory()
   const classes = useStyles()
   const [activeStep, setActiveStep] = React.useState(0)
   const [email, setEmail] = useState('')
@@ -113,25 +147,8 @@ export default function SignUp() {
     shallowEqual
   )
 
-  const isValid = () => {
-    console.log(
-      email.length !== 0,
-      password.length !== 0,
-      firstName.length !== 0,
-      lastName.length !== 0
-    )
-    return (
-      email.length !== 0 &&
-      password.length !== 0 &&
-      firstName.length !== 0 &&
-      lastName.length !== 0
-    )
-  }
-
   const handleNext = () => {
-    if (isValid()) {
-      setActiveStep(activeStep + 1)
-    }
+    setActiveStep(activeStep + 1)
   }
 
   const handleBack = () => {
@@ -139,6 +156,7 @@ export default function SignUp() {
   }
 
   const parentHandleChange = (name, value) => {
+    console.log('working', name, value, firstName, email)
     switch (name) {
       case 'firstName':
         setFirstName(value)
@@ -182,6 +200,24 @@ export default function SignUp() {
     dispatch(getAppSysRolesRequest())
   }, [dispatch])
 
+  console.log(firstName, lastName, email, password)
+  const processSignUp = () => {
+    AuthController.register({
+      email,
+      password,
+      firstName,
+      lastName,
+      username: `${firstName} ${lastName}`,
+      title,
+      phoneNumber,
+      ext,
+      sysRoles,
+    }).then((res) => {
+      setTimeout(() => {
+        history.push('/')
+      }, 1000)
+    })
+  }
   return (
     <main className={classes.layout}>
       <Paper className={classes.paper}>
@@ -208,36 +244,26 @@ export default function SignUp() {
                 You will be redirected to authorized pages. Please wait in 3
                 sec.
               </Typography>
-              {setTimeout((e) => {
-                window.location.href = '/login'
-              }, 3000)}
+              {processSignUp()}
             </React.Fragment>
           ) : (
             <React.Fragment>
-              {getStepContent(activeStep, parentHandleChange, {
-                firstName,
-                lastName,
-                email,
-                title,
-                phoneNumber,
-                ext,
-                sysRoles,
-              })}
-              <div className={classes.buttons}>
-                {activeStep !== 0 && (
-                  <Button onClick={handleBack} className={classes.button}>
-                    Back
-                  </Button>
-                )}
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleNext}
-                  className={classes.button}
-                >
-                  {activeStep === steps.length - 1 ? 'Confirm' : 'Next'}
-                </Button>
-              </div>
+              {getStepContent(
+                activeStep,
+                parentHandleChange,
+                {
+                  firstName,
+                  lastName,
+                  email,
+                  title,
+                  phoneNumber,
+                  ext,
+                  sysRoles,
+                },
+                activeStep,
+                handleNext,
+                handleBack
+              )}
             </React.Fragment>
           )}
         </React.Fragment>

@@ -34,7 +34,7 @@
     "draft-js": "^0.11.3",
     "emotion": "^10.0.27",
     "font-awesome": "^4.7.0",
-    "formik": "^1.5.4",
+    "formik": "^2.1.5",
     "hot-formula-parser": "^3.0.2",
     "is-hotkey": "^0.1.6",
     "jquery": "^3.4.1",
@@ -76,7 +76,7 @@
     "webpack-bundle-analyzer": "^3.6.0",
     "webpack-dev-server": "^3.11.0",
     "xlsx-populate": "https://github.com/greylemon/xlsx-populate",
-    "yup": "^0.27.0"
+    "yup": "^0.29.1"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",
