@@ -16,7 +16,6 @@ import compression from 'compression';
 import { Container } from 'typedi';
 import Database from './loaders/database';
 
-import auth from './middlewares/passport/passportAuth';
 import TemplateController from './controllers/Template';
 import StatusController from './controllers/Status';
 import ProgramController from './controllers/Program';
@@ -107,31 +106,31 @@ app.use('/workflow_manager', Container.get(WorkflowController));
 
 app.use(
   '/role_manager',
-  auth.required,
+  // auth.required,
   // Container.get(Auth).authorized,
   Container.get(AppSysController),
 );
 app.use(
   '/role_manager',
-  auth.required,
+  // auth.required,
   // Container.get(Auth).authorized,
   Container.get(AppRoleController),
 );
 app.use(
   '/role_manager',
-  auth.required,
+  // auth.required,
   // Container.get(Auth).authorized,
   Container.get(AppSysRoleController),
 );
 app.use(
   '/role_manager',
-  auth.required,
+  // auth.required,
   // Container.get(Auth).authorized,
   Container.get(AppRoleResourceController),
 );
 app.use(
   '/role_manager',
-  auth.required,
+  // auth.required,
   // Container.get(Auth).authorized,
   Container.get(AppResourceController),
 );
