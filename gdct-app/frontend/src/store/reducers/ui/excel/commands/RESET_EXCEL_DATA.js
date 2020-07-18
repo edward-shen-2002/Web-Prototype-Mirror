@@ -1,7 +1,4 @@
-import {
-  createEmptyEditor,
-  createEmptyEditorValue,
-} from '../../../../../tools/slate'
+import { createEmptyEditor, createEmptyEditorValue } from '../../../../../tools/slate';
 
 const RESET_EXCEL_DATA = () => ({
   name: '',
@@ -57,6 +54,6 @@ const RESET_EXCEL_DATA = () => ({
   isTemplatePublished: false,
   templateId: '',
   bundleId: '',
-})
+});
 
-export default RESET_EXCEL_DATA
+export default RESET_EXCEL_DATA;

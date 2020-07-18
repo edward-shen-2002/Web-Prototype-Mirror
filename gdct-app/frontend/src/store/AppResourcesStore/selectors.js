@@ -1,1 +1,1 @@
-export const selectAppResourcesStore = (state) => state.AppResourcesStore
+export const selectAppResourcesStore = state => state.AppResourcesStore;

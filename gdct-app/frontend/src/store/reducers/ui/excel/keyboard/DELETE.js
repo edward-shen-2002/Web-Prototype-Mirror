@@ -1,31 +1,28 @@
-import { getAllAreas } from '../tools/area'
-import {
-  CustomEditor,
-  createEmptyEditorValue,
-} from '../../../../../tools/slate'
+import { getAllAreas } from '../tools/area';
+import { CustomEditor, createEmptyEditorValue } from '../../../../../tools/slate';
 
-const DELETE = (state) => {
+const DELETE = state => {
   let {
     isEditMode,
 
     sheetCellData,
-  } = state
+  } = state;
 
-  if (isEditMode) return state
+  if (isEditMode) return state;
 
-  let newState = { ...state }
+  let newState = { ...state };
 
-  let selectionAreaCoveredCells = getAllAreas(newState)
+  let selectionAreaCoveredCells = getAllAreas(newState);
 
-  let newSheetCellData = { ...sheetCellData }
+  let newSheetCellData = { ...sheetCellData };
 
   for (let row in selectionAreaCoveredCells) {
-    let columns = Object.keys(selectionAreaCoveredCells[row])
+    let columns = Object.keys(selectionAreaCoveredCells[row]);
 
-    let rowData = { ...newSheetCellData[row] }
+    let rowData = { ...newSheetCellData[row] };
 
     if (rowData) {
-      columns.forEach((column) => {
+      columns.forEach(column => {
         // ! Consider when everything is undefined -- do you remove it from sheet data?
         // ! Consider normal/rich text
 
@@ -34,26 +31,26 @@ const DELETE = (state) => {
             ...rowData[column],
             value: undefined,
             type: 'normal',
-          }
+          };
         }
-      })
+      });
 
-      newSheetCellData[row] = rowData
+      newSheetCellData[row] = rowData;
     }
   }
 
-  newState.sheetCellData = newSheetCellData
+  newState.sheetCellData = newSheetCellData;
 
-  CustomEditor.clearEditor(newState.activeCellInputData.formulaEditor)
-  CustomEditor.clearEditor(newState.activeCellInputData.cellEditor)
+  CustomEditor.clearEditor(newState.activeCellInputData.formulaEditor);
+  CustomEditor.clearEditor(newState.activeCellInputData.cellEditor);
 
   newState.activeCellInputData = {
     ...newState.activeCellInputData,
     cellValue: createEmptyEditorValue(),
     formulaValue: createEmptyEditorValue(),
-  }
+  };
 
-  return newState
-}
+  return newState;
+};
 
-export default DELETE
+export default DELETE;

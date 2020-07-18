@@ -1,7 +1,7 @@
-import { saveActiveCellInputData } from '../tools/cell'
-import { getMergedData } from '../tools/merge'
-import { getShiftTabFreeSpot, getTabFreeSpot } from '../tools/merge'
-import { updateActiveCellPosition } from '../tools/cell'
+import { saveActiveCellInputData } from '../tools/cell';
+import { getMergedData } from '../tools/merge';
+import { getShiftTabFreeSpot, getTabFreeSpot } from '../tools/merge';
+import { updateActiveCellPosition } from '../tools/cell';
 
 const TAB = (state, { shiftKey }) => {
   let {
@@ -15,20 +15,20 @@ const TAB = (state, { shiftKey }) => {
     sheetCellData,
     sheetRowCount,
     sheetColumnCount,
-  } = state
+  } = state;
 
-  let newState = { ...state }
+  let newState = { ...state };
 
-  let { x, y } = activeCellPosition
+  let { x, y } = activeCellPosition;
 
-  if (isEditMode) newState = saveActiveCellInputData({ newState })
+  if (isEditMode) newState = saveActiveCellInputData({ newState });
 
-  window.sheetContainerRef.current.focus()
+  window.sheetContainerRef.current.focus();
 
-  let selectionArea
-  let isBounded
+  let selectionArea;
+  let isBounded;
 
-  const stagnantSelectionAreasLength = stagnantSelectionAreas.length
+  const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
 
   // Get the rectangular scope that an active selection area can go in
   // TODO : clean up later
@@ -39,74 +39,74 @@ const TAB = (state, { shiftKey }) => {
         // ! Make the first upper outer bound be the indicator that the active cell is in the acive selection area
         // ! When it's not out of bound, the cell is in a stagnant selection area
         if (stagnantSelectionAreasLength === activeCellSelectionAreaIndex) {
-          selectionArea = activeSelectionArea
+          selectionArea = activeSelectionArea;
         } else {
-          selectionArea = stagnantSelectionAreas[activeCellSelectionAreaIndex]
+          selectionArea = stagnantSelectionAreas[activeCellSelectionAreaIndex];
         }
       } else {
-        selectionArea = activeSelectionArea
+        selectionArea = activeSelectionArea;
       }
     } else {
-      selectionArea = stagnantSelectionAreas[activeCellSelectionAreaIndex]
+      selectionArea = stagnantSelectionAreas[activeCellSelectionAreaIndex];
     }
 
-    isBounded = false
+    isBounded = false;
   } else {
-    isBounded = true
+    isBounded = true;
 
     selectionArea = {
       x1: 1,
       y1: 1,
       x2: sheetColumnCount - 1,
       y2: sheetRowCount - 1,
-    }
+    };
   }
 
-  let { x1, y1, x2, y2 } = selectionArea
+  let { x1, y1, x2, y2 } = selectionArea;
 
-  const startX = Math.min(x1, x2)
-  const endX = Math.max(x1, x2)
-  const startY = Math.min(y1, y2)
-  const endY = Math.max(y1, y2)
+  const startX = Math.min(x1, x2);
+  const endX = Math.max(x1, x2);
+  const startY = Math.min(y1, y2);
+  const endY = Math.max(y1, y2);
 
-  let merged = getMergedData(sheetCellData, y, x)
+  let merged = getMergedData(sheetCellData, y, x);
 
   if (shiftKey) {
     if (merged) {
-      const { x1 } = merged
-      x = x1 - 1
+      const { x1 } = merged;
+      x = x1 - 1;
     } else {
-      x--
+      x--;
     }
   } else {
-    const rowData = sheetCellData[y]
+    const rowData = sheetCellData[y];
 
     if (stagnantSelectionAreas.length && rowData) {
       for (let column = x + 1; column <= endX; column++) {
-        const cellData = rowData[column]
+        const cellData = rowData[column];
 
         if (cellData && cellData.merged) {
-          const { x1: mergedX1, x2: mergedX2, y1: mergedY1 } = cellData.merged
+          const { x1: mergedX1, x2: mergedX2, y1: mergedY1 } = cellData.merged;
 
           if (mergedY1 === y && mergedX1 === column) {
-            x = column - 1
-            break
+            x = column - 1;
+            break;
           } else {
-            x = mergedX2
+            x = mergedX2;
           }
         } else {
-          x = column - 1
-          break
+          x = column - 1;
+          break;
         }
       }
 
-      x++
+      x++;
     } else {
       if (merged) {
-        const { x2 } = merged
-        x = x2 + 1
+        const { x2 } = merged;
+        x = x2 + 1;
       } else {
-        x++
+        x++;
       }
     }
   }
@@ -115,11 +115,11 @@ const TAB = (state, { shiftKey }) => {
   if (x < startX || x > endX) {
     if (!isBounded) {
       if (shiftKey) {
-        y--
+        y--;
 
         // Find max of the top free spaces (regular cell or top left of merge cell)
         if (y >= startY) {
-          const rowData = sheetCellData[y]
+          const rowData = sheetCellData[y];
 
           if (rowData) {
             const { maxX, maxY } = getShiftTabFreeSpot({
@@ -127,27 +127,27 @@ const TAB = (state, { shiftKey }) => {
               startX,
               endX,
               rowData,
-            })
+            });
 
-            x = maxX
-            y = maxY
+            x = maxX;
+            y = maxY;
           } else {
-            x = Math.max(x1, x2)
+            x = Math.max(x1, x2);
           }
         }
       } else {
-        y++
+        y++;
 
         if (y <= endY) {
-          const rowData = sheetCellData[y]
+          const rowData = sheetCellData[y];
 
           if (rowData) {
-            const { minX, minY } = getTabFreeSpot({ y, startX, endX, rowData })
+            const { minX, minY } = getTabFreeSpot({ y, startX, endX, rowData });
 
-            x = minX
-            y = minY
+            x = minX;
+            y = minY;
           } else {
-            x = Math.min(x1, x2)
+            x = Math.min(x1, x2);
           }
         }
         // Find max of the bottom free spaces (regular cell or top left of merge cell)
@@ -157,37 +157,33 @@ const TAB = (state, { shiftKey }) => {
       // Change selection areas
       if (y < startY || y > endY) {
         // Need to switch selection areas.
-        y < startY
-          ? activeCellSelectionAreaIndex--
-          : activeCellSelectionAreaIndex++
+        y < startY ? activeCellSelectionAreaIndex-- : activeCellSelectionAreaIndex++;
 
         // Fix out of bounds result
         if (
           (activeSelectionArea &&
-            activeCellSelectionAreaIndex ===
-              stagnantSelectionAreasLength + 1) ||
-          (!activeSelectionArea &&
-            activeCellSelectionAreaIndex === stagnantSelectionAreasLength)
+            activeCellSelectionAreaIndex === stagnantSelectionAreasLength + 1) ||
+          (!activeSelectionArea && activeCellSelectionAreaIndex === stagnantSelectionAreasLength)
         ) {
-          activeCellSelectionAreaIndex = 0
+          activeCellSelectionAreaIndex = 0;
         } else if (activeCellSelectionAreaIndex < 0) {
           activeSelectionArea
             ? (activeCellSelectionAreaIndex = stagnantSelectionAreasLength)
-            : (activeCellSelectionAreaIndex = stagnantSelectionAreasLength - 1)
+            : (activeCellSelectionAreaIndex = stagnantSelectionAreasLength - 1);
         }
 
         let newSelectionArea =
           activeCellSelectionAreaIndex === stagnantSelectionAreasLength
             ? activeSelectionArea
-            : stagnantSelectionAreas[activeCellSelectionAreaIndex]
+            : stagnantSelectionAreas[activeCellSelectionAreaIndex];
 
-        const { x1: newX1, y1: newY1, x2: newX2, y2: newY2 } = newSelectionArea
+        const { x1: newX1, y1: newY1, x2: newX2, y2: newY2 } = newSelectionArea;
 
         if (y < startY) {
-          x = Math.max(newX1, newX2)
-          y = Math.max(newY1, newY2)
+          x = Math.max(newX1, newX2);
+          y = Math.max(newY1, newY2);
 
-          const rowData = sheetCellData[y]
+          const rowData = sheetCellData[y];
 
           if (rowData) {
             const { maxX, maxY } = getShiftTabFreeSpot({
@@ -195,28 +191,28 @@ const TAB = (state, { shiftKey }) => {
               startX: Math.min(newX1, newX2),
               endX: Math.max(newX1, newX2),
               rowData,
-            })
+            });
 
-            y = maxY
-            x = maxX
+            y = maxY;
+            x = maxX;
           }
         } else {
-          y = Math.min(newY1, newY2)
-          x = Math.min(newX1, newX2)
+          y = Math.min(newY1, newY2);
+          x = Math.min(newX1, newX2);
         }
 
-        newState.activeCellSelectionAreaIndex = activeCellSelectionAreaIndex
+        newState.activeCellSelectionAreaIndex = activeCellSelectionAreaIndex;
       }
 
       newState = updateActiveCellPosition({
         newState,
         newY: y,
         newX: x,
-      })
+      });
     }
   } else {
     // ! This is not supposed to be here... move at the top
-    const currentRowData = sheetCellData[y]
+    const currentRowData = sheetCellData[y];
 
     if (stagnantSelectionAreas.length) {
       if (shiftKey) {
@@ -227,29 +223,29 @@ const TAB = (state, { shiftKey }) => {
             startX,
             y,
             rowData: currentRowData,
-          })
+          });
 
           // Found a merged cell - not supposed to go here
           if (currentMaxY !== y) {
-            y--
+            y--;
 
             // ! Verify
             // ? Row data cannot be null since merge cell occupies it
             // ? The free spot will either be the top left spot of the merge cell or a free cell from the range of the merge cell
-            const rowData = sheetCellData[y]
+            const rowData = sheetCellData[y];
 
             const { maxX, maxY } = getShiftTabFreeSpot({
               endX,
               startX,
               y,
               rowData,
-            })
+            });
 
-            x = maxX
-            y = maxY
+            x = maxX;
+            y = maxY;
           } else {
-            x = currentMaxX
-            y = currentMaxY
+            x = currentMaxX;
+            y = currentMaxY;
           }
         }
       }
@@ -259,10 +255,10 @@ const TAB = (state, { shiftKey }) => {
       newState,
       newY: y,
       newX: x,
-    })
+    });
   }
 
-  return newState
-}
+  return newState;
+};
 
-export default TAB
+export default TAB;

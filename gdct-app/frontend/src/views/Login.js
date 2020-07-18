@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react'
-import Avatar from '@material-ui/core/Avatar'
-import Button from '@material-ui/core/Button'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import TextField from '@material-ui/core/TextField'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
-import Link from '@material-ui/core/Link'
-import Box from '@material-ui/core/Box'
-import Grid from '@material-ui/core/Grid'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import Typography from '@material-ui/core/Typography'
-import { makeStyles } from '@material-ui/core/styles'
+import React, { useState, useEffect } from 'react';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Link from '@material-ui/core/Link';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 
-import { Container } from '@material-ui/core'
-import AuthController from '../controllers/Auth'
+import { Container } from '@material-ui/core';
+import AuthController from '../controllers/Auth';
 
 function Copyright() {
   return (
@@ -25,10 +25,10 @@ function Copyright() {
       {new Date().getFullYear()}
       {'.'}
     </Typography>
-  )
+  );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -52,57 +52,55 @@ const useStyles = makeStyles((theme) => ({
     marginRight: '5px',
     // lineHeight: '15px',
   },
-}))
+}));
 
-const validEmailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-const validateForm = (errors) => {
-  let valid = true
-  Object.values(errors).forEach((val) => val.length > 0 && (valid = false))
-  return valid
-}
+const validEmailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+const validateForm = errors => {
+  let valid = true;
+  Object.values(errors).forEach(val => val.length > 0 && (valid = false));
+  return valid;
+};
 
 export default function Login({ setLoggedIn }) {
-  const classes = useStyles()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [errors, setErrors] = useState({})
+  const classes = useStyles();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({});
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    let updatedErrors = { ...errors }
+  const handleChange = e => {
+    const { name, value } = e.target;
+    let updatedErrors = { ...errors };
 
     switch (name) {
       case 'password':
-        setPassword(value)
-        break
+        setPassword(value);
+        break;
       case 'email':
-        updatedErrors.email = !validEmailRegex.test(value)
-          ? 'Not a Valid Email'
-          : ''
-        setEmail(value)
-        setErrors(updatedErrors)
-        break
+        updatedErrors.email = !validEmailRegex.test(value) ? 'Not a Valid Email' : '';
+        setEmail(value);
+        setErrors(updatedErrors);
+        break;
     }
-  }
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  };
+  const handleSubmit = async e => {
+    e.preventDefault();
     try {
       if (email && validateForm(errors)) {
         // window.location.replace(
         //   `http://localhost:3000/auth/local?email=${email}&password=${password}`
         // )
-        await AuthController.login({ email, password }).then((data) => {
+        await AuthController.login({ email, password }).then(data => {
           if (data.user.token) {
-            setLoggedIn(true)
+            setLoggedIn(true);
           }
-        })
+        });
       }
       // TODO: decide if it is logged in
     } catch (err) {
-      console.log(err)
-      setLoggedIn(false)
+      console.log(err);
+      setLoggedIn(false);
     }
-  }
+  };
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -166,7 +164,7 @@ export default function Login({ setLoggedIn }) {
               marginBottom: 0,
             }}
             onClick={() => {
-              window.location.href = 'http://localhost:3000/auth/google/'
+              window.location.href = 'http://localhost:3000/auth/google/';
             }}
           >
             <div>
@@ -184,7 +182,7 @@ export default function Login({ setLoggedIn }) {
             color="primary"
             className={classes.submit}
             onClick={() => {
-              window.location.href = 'http://localhost:3000/auth/facebook/'
+              window.location.href = 'http://localhost:3000/auth/facebook/';
             }}
           >
             <div>
@@ -214,5 +212,5 @@ export default function Login({ setLoggedIn }) {
         <Copyright />
       </Box>
     </Container>
-  )
+  );
 }

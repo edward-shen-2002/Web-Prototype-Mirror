@@ -1,8 +1,8 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from 'redux';
 
-import isOnline from './isOnline'
-import shouldReconnect from './shouldReconnect'
+import isOnline from './isOnline';
+import shouldReconnect from './shouldReconnect';
 
-const appReducer = combineReducers({ isOnline, shouldReconnect })
+const appReducer = combineReducers({ isOnline, shouldReconnect });
 
-export default appReducer
+export default appReducer;

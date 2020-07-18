@@ -1,1 +1,1 @@
-export { default } from './GDCTMenu'
+export { default } from './GDCTMenu';

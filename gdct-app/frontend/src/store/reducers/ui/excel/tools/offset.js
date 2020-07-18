@@ -1,125 +1,116 @@
-import { isObjectEmpty } from '../../../../../tools/misc'
+import { isObjectEmpty } from '../../../../../tools/misc';
 
 export const offsetObjectAtIndex = (data, start, offset) => {
-  let newData = {}
-  let startData = data[start]
+  let newData = {};
+  let startData = data[start];
 
-  const end = start + offset
+  const end = start + offset;
 
   for (let offsetParam in data) {
-    const paramData = data[offsetParam]
+    const paramData = data[offsetParam];
     if (offsetParam >= start && paramData) {
-      const newOffsetParam = Number(offsetParam) + offset
-      newData[newOffsetParam] = paramData
+      const newOffsetParam = Number(offsetParam) + offset;
+      newData[newOffsetParam] = paramData;
     } else {
-      newData[offsetParam] = data[offsetParam]
+      newData[offsetParam] = data[offsetParam];
     }
   }
 
   if (startData !== undefined) {
-    for (let i = start; i < end; i++) newData[i] = startData
+    for (let i = start; i < end; i++) newData[i] = startData;
   }
 
-  return newData
-}
+  return newData;
+};
 
 export const offsetSheetCellRowDataAtIndex = (sheetCellData, start, offset) => {
-  let newData = {}
-  let startData = sheetCellData[start]
-  let template = {}
+  let newData = {};
+  let startData = sheetCellData[start];
+  let template = {};
 
-  const end = start + offset
+  const end = start + offset;
 
   for (let column in startData) {
     if (startData[column] && startData[column].styles)
       template[column] = {
         type: 'normal',
         styles: { ...startData[column].styles },
-      }
+      };
   }
 
   // Offset data downwards
   for (let row in sheetCellData) {
-    const rowData = sheetCellData[row]
+    const rowData = sheetCellData[row];
     if (start <= row && rowData) {
-      const newRowOffset = Number(row) + offset
-      newData[newRowOffset] = rowData
+      const newRowOffset = Number(row) + offset;
+      newData[newRowOffset] = rowData;
     } else {
-      newData[row] = { ...sheetCellData[row] }
+      newData[row] = { ...sheetCellData[row] };
     }
   }
 
   if (startData !== undefined) {
-    for (let i = start; i < end; i++) newData[i] = template
+    for (let i = start; i < end; i++) newData[i] = template;
   }
 
-  return newData
-}
+  return newData;
+};
 
-export const offsetSheetCellColumnDataAtIndex = (
-  sheetCellData,
-  start,
-  offset
-) => {
+export const offsetSheetCellColumnDataAtIndex = (sheetCellData, start, offset) => {
   // Get the template column data to apply to inserted columns
-  let template = {}
-  let newData = {}
+  let template = {};
+  let newData = {};
 
-  const end = start + offset
+  const end = start + offset;
 
   // Offset data rightwards
   for (let row in sheetCellData) {
-    const columns = sheetCellData[row]
+    const columns = sheetCellData[row];
 
-    if (newData[row] === undefined) newData[row] = {}
+    if (newData[row] === undefined) newData[row] = {};
 
     for (let column in columns) {
-      const columnData = columns[column]
+      const columnData = columns[column];
       if (start <= column && columnData) {
         if (start == column && columnData.styles)
-          template[row] = { styles: { ...columnData.styles } }
+          template[row] = { styles: { ...columnData.styles } };
 
-        const newColumnOffset = Number(column) + offset
-        newData[row][newColumnOffset] = sheetCellData[row][column]
+        const newColumnOffset = Number(column) + offset;
+        newData[row][newColumnOffset] = sheetCellData[row][column];
       } else {
-        newData[row][column] = sheetCellData[row][column]
+        newData[row][column] = sheetCellData[row][column];
       }
     }
   }
 
   if (!isObjectEmpty(template)) {
     for (let row in newData) {
-      for (let i = start; i < end; i++) newData[row][i] = template[row]
+      for (let i = start; i < end; i++) newData[row][i] = template[row];
     }
   }
 
-  return newData
-}
+  return newData;
+};
 
-export const getInsertData = (
-  parameterString,
-  stagnantSelectionAreas,
-  activeCellPosition
-) => {
-  let insertStart
-  let insertCount
+export const getInsertData = (parameterString, stagnantSelectionAreas, activeCellPosition) => {
+  let insertStart;
+  let insertCount;
 
-  const stagnantSelectionAreasLength = stagnantSelectionAreas.length
+  const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
 
   if (stagnantSelectionAreasLength) {
-    const {
-      [`${parameterString}1`]: pos1,
-      [`${parameterString}2`]: pos2,
-    } = stagnantSelectionAreas[stagnantSelectionAreasLength - 1]
+    const { [`${parameterString}1`]: pos1, [`${parameterString}2`]: pos2 } = stagnantSelectionAreas[
+      stagnantSelectionAreasLength - 1
+    ];
 
-    insertStart = Math.min(pos1, pos2)
-    insertCount = Math.abs(pos2 - pos1) + 1
+    insertStart = Math.min(pos1, pos2);
+    insertCount = Math.abs(pos2 - pos1) + 1;
   } else {
-    const { [parameterString]: pos } = activeCellPosition
+    const { [parameterString]: pos } = activeCellPosition;
 
-    insertStart = pos
-    insertCount = 1
+    insertStart = pos;
+    insertCount = 1;
   }
 
-  return { insertStart, insertCount }
-}
+  return { insertStart, insertCount };
+};

@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-import EditableCellContainer from './EditableCell'
-import RowHeaderCell from './RowHeaderCell'
-import ColumnHeaderCell from './ColumnHeaderCell'
-import RootHeaderCell from './RootHeaderCell'
+import EditableCellContainer from './EditableCell';
+import RowHeaderCell from './RowHeaderCell';
+import ColumnHeaderCell from './ColumnHeaderCell';
+import RootHeaderCell from './RootHeaderCell';
 
-import './Cell.scss'
+import './Cell.scss';
 
 const Cell = ({ style, data, columnIndex, rowIndex }) => {
   const {
@@ -13,16 +13,16 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
 
     columnCount,
     rowCount,
-  } = data
+  } = data;
 
-  let cellData
-  let Component
+  let cellData;
+  let Component;
 
   if (columnIndex && rowIndex) {
     cellData =
       sheetCellData[rowIndex] && sheetCellData[rowIndex][columnIndex]
         ? sheetCellData[rowIndex][columnIndex]
-        : undefined
+        : undefined;
 
     Component = (
       <EditableCellContainer
@@ -31,30 +31,16 @@ const Cell = ({ style, data, columnIndex, rowIndex }) => {
         columnIndex={columnIndex}
         rowIndex={rowIndex}
       />
-    )
+    );
   } else if (columnIndex) {
-    Component = (
-      <ColumnHeaderCell
-        style={style}
-        column={columnIndex}
-        rowCount={rowCount}
-      />
-    )
+    Component = <ColumnHeaderCell style={style} column={columnIndex} rowCount={rowCount} />;
   } else if (rowIndex) {
-    Component = (
-      <RowHeaderCell style={style} row={rowIndex} columnCount={columnCount} />
-    )
+    Component = <RowHeaderCell style={style} row={rowIndex} columnCount={columnCount} />;
   } else {
-    Component = (
-      <RootHeaderCell
-        style={style}
-        columnCount={columnCount}
-        rowCount={rowCount}
-      />
-    )
+    Component = <RootHeaderCell style={style} columnCount={columnCount} rowCount={rowCount} />;
   }
 
-  return Component
-}
+  return Component;
+};
 
-export default Cell
+export default Cell;

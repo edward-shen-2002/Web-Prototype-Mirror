@@ -1,16 +1,16 @@
-import React, { useState } from 'react'
-import { Formik } from 'formik'
-import * as Yup from 'yup'
+import React, { useState } from 'react';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
-import CssBaseline from '@material-ui/core/CssBaseline'
-import TextField from '@material-ui/core/TextField'
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
 
-import Link from '@material-ui/core/Link'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-import { makeStyles } from '@material-ui/core/styles'
-import Container from '@material-ui/core/Container'
-import { Button } from '@material-ui/core'
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import { Button } from '@material-ui/core';
 
 function Copyright() {
   return (
@@ -22,10 +22,10 @@ function Copyright() {
       {new Date().getFullYear()}
       {'.'}
     </Typography>
-  )
+  );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-}))
+}));
 
 export default function MandatoryInfo({
   parentHandleChange,
@@ -52,15 +52,15 @@ export default function MandatoryInfo({
   handleNext,
   handleBack,
 }) {
-  const classes = useStyles()
-  const [submitting, setSubmitting] = useState(false)
+  const classes = useStyles();
+  const [submitting, setSubmitting] = useState(false);
 
   const myFormSchema = Yup.object().shape({
     firstName: Yup.string().required('Required'),
     lastName: Yup.string().required('Required'),
     email: Yup.string().required('Required'),
     password: Yup.string().required('Required'),
-  })
+  });
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -74,12 +74,12 @@ export default function MandatoryInfo({
           }}
           validationSchema={myFormSchema}
           onSubmit={(values, { resetForm }) => {
-            console.log(values)
-            parentHandleChange('firstName', values.firstName)
-            parentHandleChange('lastName', values.lastName)
-            parentHandleChange('email', values.email)
-            parentHandleChange('password', values.password)
-            handleNext()
+            console.log(values);
+            parentHandleChange('firstName', values.firstName);
+            parentHandleChange('lastName', values.lastName);
+            parentHandleChange('email', values.email);
+            parentHandleChange('password', values.password);
+            handleNext();
             // setSubmitting({ submitting: true })
             // // submit to server
             // setTimeout(() => {
@@ -88,14 +88,7 @@ export default function MandatoryInfo({
             // }, 2000)
           }}
         >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-          }) => (
+          {({ values, errors, touched, handleChange, handleBlur, handleSubmit }) => (
             <form className={classes.form} onSubmit={handleSubmit}>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
@@ -176,10 +169,7 @@ export default function MandatoryInfo({
                   </Link>
                 </Grid>
               </Grid>
-              <div
-                className={classes.buttons}
-                style={{ marginTop: '2rem', textAlign: 'right' }}
-              >
+              <div className={classes.buttons} style={{ marginTop: '2rem', textAlign: 'right' }}>
                 {activeStep !== 0 && (
                   <Button onClick={handleBack} className={classes.button}>
                     Back
@@ -199,5 +189,5 @@ export default function MandatoryInfo({
         </Formik>
       </div>
     </Container>
-  )
+  );
 }

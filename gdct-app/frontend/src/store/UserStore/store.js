@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 export const UserStore = createSlice({
   name: 'USER',
@@ -13,6 +13,6 @@ export const UserStore = createSlice({
       },
     }),
   },
-})
+});
 
-export default UserStore
+export default UserStore;

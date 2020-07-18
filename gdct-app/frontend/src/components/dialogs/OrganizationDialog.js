@@ -1,46 +1,42 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react';
 
-import SelectableTableDialog from './SelectableTableDialog'
+import SelectableTableDialog from './SelectableTableDialog';
 
-import { getOrgsRequest } from '../../store/thunks/organization'
+import { getOrgsRequest } from '../../store/thunks/organization';
 
-import { useSelector, shallowEqual, useDispatch } from 'react-redux'
-import { useMemo } from 'react'
-import DialogsStore from '../../store/DialogsStore/store'
-import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
-import { selectOrgsStore } from '../../store/OrganizationsStore/selectors'
-import { selectIsOrganizationDialogOpen } from '../../store/DialogsStore/selectors'
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
+import { useMemo } from 'react';
+import DialogsStore from '../../store/DialogsStore/store';
+import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors';
+import { selectOrgsStore } from '../../store/OrganizationsStore/selectors';
+import { selectIsOrganizationDialogOpen } from '../../store/DialogsStore/selectors';
 
 const OrganizationDialog = ({ handleChange }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const { isOrganizationDialogOpen, templates } = useSelector(
-    (state) => ({
+    state => ({
       isOrganizationDialogOpen: selectIsOrganizationDialogOpen(state),
-      organizations: selectFactoryRESTResponseTableValues(selectOrgsStore)(
-        state
-      ),
+      organizations: selectFactoryRESTResponseTableValues(selectOrgsStore)(state),
     }),
-    shallowEqual
-  )
+    shallowEqual,
+  );
 
-  const handleClose = useCallback(
-    () => dispatch(DialogsStore.actions.CLOSE_TEMPLATE_DIALOG()),
-    [dispatch]
-  )
+  const handleClose = useCallback(() => dispatch(DialogsStore.actions.CLOSE_TEMPLATE_DIALOG()), [
+    dispatch,
+  ]);
 
   const handleSelect = useCallback(
-    (data) => {
-      handleChange(data._id)
-      handleClose()
+    data => {
+      handleChange(data._id);
+      handleClose();
     },
-    [dispatch]
-  )
+    [dispatch],
+  );
 
   useEffect(() => {
-    if (isOrganizationDialogOpen && !templates.length)
-      dispatch(getOrgsRequest())
-  }, [dispatch, isOrganizationDialogOpen])
+    if (isOrganizationDialogOpen && !templates.length) dispatch(getOrgsRequest());
+  }, [dispatch, isOrganizationDialogOpen]);
 
   const columns = useMemo(
     () => [
@@ -53,8 +49,8 @@ const OrganizationDialog = ({ handleChange }) => {
         field: 'name',
       },
     ],
-    []
-  )
+    [],
+  );
 
   return (
     <SelectableTableDialog
@@ -65,7 +61,7 @@ const OrganizationDialog = ({ handleChange }) => {
       handleClose={handleClose}
       handleSelect={handleSelect}
     />
-  )
-}
+  );
+};
 
-export default OrganizationDialog
+export default OrganizationDialog;

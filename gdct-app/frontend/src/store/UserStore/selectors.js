@@ -1,1 +1,1 @@
-export const selectUserStore = (state) => state.UserStore
+export const selectUserStore = state => state.UserStore;

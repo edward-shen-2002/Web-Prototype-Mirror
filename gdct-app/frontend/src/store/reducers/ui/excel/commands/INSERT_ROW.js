@@ -1,10 +1,6 @@
-import {
-  getInsertData,
-  offsetObjectAtIndex,
-  offsetSheetCellRowDataAtIndex,
-} from '../tools/offset'
+import { getInsertData, offsetObjectAtIndex, offsetSheetCellRowDataAtIndex } from '../tools/offset';
 
-const INSERT_ROW = (state) => {
+const INSERT_ROW = state => {
   const {
     activeCellPosition,
     sheetCellData,
@@ -12,34 +8,22 @@ const INSERT_ROW = (state) => {
     sheetHiddenRows,
     sheetRowCount,
     stagnantSelectionAreas,
-  } = state
+  } = state;
 
-  let newState = { ...state }
+  let newState = { ...state };
 
   const { insertCount, insertStart } = getInsertData(
     'y',
     stagnantSelectionAreas,
-    activeCellPosition
-  )
+    activeCellPosition,
+  );
 
-  newState.sheetRowCount = sheetRowCount + insertCount
-  newState.sheetCellData = offsetSheetCellRowDataAtIndex(
-    sheetCellData,
-    insertStart,
-    insertCount
-  )
-  newState.sheetRowHeights = offsetObjectAtIndex(
-    sheetRowHeights,
-    insertStart,
-    insertCount
-  )
-  newState.sheetHiddenRows = offsetObjectAtIndex(
-    sheetHiddenRows,
-    insertStart,
-    insertCount
-  )
+  newState.sheetRowCount = sheetRowCount + insertCount;
+  newState.sheetCellData = offsetSheetCellRowDataAtIndex(sheetCellData, insertStart, insertCount);
+  newState.sheetRowHeights = offsetObjectAtIndex(sheetRowHeights, insertStart, insertCount);
+  newState.sheetHiddenRows = offsetObjectAtIndex(sheetHiddenRows, insertStart, insertCount);
 
-  return newState
-}
+  return newState;
+};
 
-export default INSERT_ROW
+export default INSERT_ROW;

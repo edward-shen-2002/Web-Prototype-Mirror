@@ -2,9 +2,9 @@ import {
   getInsertData,
   offsetObjectAtIndex,
   offsetSheetCellColumnDataAtIndex,
-} from '../tools/offset'
+} from '../tools/offset';
 
-const INSERT_COLUMN = (state) => {
+const INSERT_COLUMN = state => {
   const {
     activeCellPosition,
     sheetCellData,
@@ -12,35 +12,27 @@ const INSERT_COLUMN = (state) => {
     sheetHiddenColumns,
     sheetColumnCount,
     stagnantSelectionAreas,
-  } = state
+  } = state;
 
-  let newState = { ...state }
+  let newState = { ...state };
 
   const { insertCount, insertStart } = getInsertData(
     'x',
     stagnantSelectionAreas,
-    activeCellPosition
-  )
+    activeCellPosition,
+  );
 
-  newState.sheetColumnCount = sheetColumnCount + insertCount
+  newState.sheetColumnCount = sheetColumnCount + insertCount;
 
   newState.sheetCellData = offsetSheetCellColumnDataAtIndex(
     sheetCellData,
     insertStart,
-    insertCount
-  )
-  newState.sheetColumnWidths = offsetObjectAtIndex(
-    sheetColumnWidths,
-    insertStart,
-    insertCount
-  )
-  newState.sheetHiddenColumns = offsetObjectAtIndex(
-    sheetHiddenColumns,
-    insertStart,
-    insertCount
-  )
+    insertCount,
+  );
+  newState.sheetColumnWidths = offsetObjectAtIndex(sheetColumnWidths, insertStart, insertCount);
+  newState.sheetHiddenColumns = offsetObjectAtIndex(sheetHiddenColumns, insertStart, insertCount);
 
-  return newState
-}
+  return newState;
+};
 
-export default INSERT_COLUMN
+export default INSERT_COLUMN;

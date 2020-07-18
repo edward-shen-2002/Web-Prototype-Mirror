@@ -1,9 +1,9 @@
 const SET_SCROLL_DATA = (state, { scrollData }) => {
-  let newState = { ...state }
+  let newState = { ...state };
 
-  newState.scrollData = { ...newState.scrollData, ...scrollData }
+  newState.scrollData = { ...newState.scrollData, ...scrollData };
 
-  return newState
-}
+  return newState;
+};
 
-export default SET_SCROLL_DATA
+export default SET_SCROLL_DATA;

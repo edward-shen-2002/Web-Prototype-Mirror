@@ -1,21 +1,15 @@
-import React from 'react'
-import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
-import navigationConfig from '../../components/AuthPage/config'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import navigationConfig from '../../components/AuthPage/config';
+import { Link } from 'react-router-dom';
 
 const MenuHeader = () => {
   return navigationConfig
-    .filter((item) => item.type !== 'divider')
+    .filter(item => item.type !== 'divider')
     .map((e, i) => {
-      const { name, type, url, icon, children } = e
+      const { name, type, url, icon, children } = e;
       return (
-        <ListItem
-          key={i}
-          component={url && Link}
-          button
-          to={url}
-          style={{ display: 'block' }}
-        >
+        <ListItem key={i} component={url && Link} button to={url} style={{ display: 'block' }}>
           <div
             style={{
               display: 'flex',
@@ -30,13 +24,11 @@ const MenuHeader = () => {
             </ListItemIcon>
             <ListItemText primary={name} />
           </div>
-          <ListItemText
-            secondary={'Simple description can be here about the menu'}
-          />
+          <ListItemText secondary={'Simple description can be here about the menu'} />
         </ListItem>
-      )
-    })
-}
+      );
+    });
+};
 
 const GDCTMenu = () => {
   return (
@@ -51,7 +43,7 @@ const GDCTMenu = () => {
     >
       <MenuHeader />
     </div>
-  )
-}
+  );
+};
 
-export default GDCTMenu
+export default GDCTMenu;

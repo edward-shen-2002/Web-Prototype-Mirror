@@ -1,6 +1,6 @@
-import AuthController from '../../controllers/Auth'
-import UserStore from '../UserStore/store'
+import AuthController from '../../controllers/Auth';
+import UserStore from '../UserStore/store';
 
-import { customRequestFactory } from './common/REST'
+import { customRequestFactory } from './common/REST';
 
-export const isSignInRequest = customRequestFactory(UserStore, AuthController)
+export const isSignInRequest = customRequestFactory(UserStore, AuthController);

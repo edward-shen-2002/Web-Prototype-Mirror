@@ -1,35 +1,29 @@
-import React, { useMemo, useCallback } from 'react'
+import React, { useMemo, useCallback } from 'react';
 
-import { useSelector, useDispatch, shallowEqual } from 'react-redux'
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
-import uniqid from 'uniqid'
+import uniqid from 'uniqid';
 
-import {
-  getCellInlineStyle,
-  getBlockStyle,
-  getAreaDimensions,
-} from '../../../../tools/excel'
+import { getCellInlineStyle, getBlockStyle, getAreaDimensions } from '../../../../tools/excel';
 
 import {
   mouseDown,
   doubleClickEditableCell,
   selectOver,
   rightClickCell,
-} from '../../../../store/actions/ui/excel/mouse'
+} from '../../../../store/actions/ui/excel/mouse';
 
-import topOffsetsSelector from '../../../../store/selectors/ui/excel/topOffsets'
-import leftOffsetsSelector from '../../../../store/selectors/ui/excel/leftOffsets'
+import topOffsetsSelector from '../../../../store/selectors/ui/excel/topOffsets';
+import leftOffsetsSelector from '../../../../store/selectors/ui/excel/leftOffsets';
 
-const RichTextCellContent = (richText) =>
+const RichTextCellContent = richText =>
   richText.map(({ styles, text }) => (
     <span key={uniqid()} style={styles}>
       {text}
     </span>
-  ))
+  ));
 
-const CellContent = ({ value, hyperlink, handleClickContent }) => (
-  <div>{value}</div>
-)
+const CellContent = ({ value, hyperlink, handleClickContent }) => <div>{value}</div>;
 
 const CellContents = ({
   style,
@@ -51,15 +45,11 @@ const CellContents = ({
     onContextMenu={handleRightClick}
   >
     {value && (
-      <CellContent
-        value={value}
-        hyperlink={hyperlink}
-        handleClickContent={handleClickContent}
-      />
+      <CellContent value={value} hyperlink={hyperlink} handleClickContent={handleClickContent} />
     )}
     {comments && comments.length && <div className="cell__comment" />}
   </div>
-)
+);
 
 const MergedCell = ({
   style,
@@ -72,21 +62,11 @@ const MergedCell = ({
   handleDoubleClick,
   handleRightClick,
 }) => {
-  const {
-    topOffsets,
-    leftOffsets,
-    sheetRowHeights,
-    sheetColumnWidths,
-  } = useSelector(
+  const { topOffsets, leftOffsets, sheetRowHeights, sheetColumnWidths } = useSelector(
     ({
       ui: {
         excel: {
-          present: {
-            sheetRowCount,
-            sheetColumnCount,
-            sheetRowHeights,
-            sheetColumnWidths,
-          },
+          present: { sheetRowCount, sheetColumnCount, sheetRowHeights, sheetColumnWidths },
         },
       },
     }) => ({
@@ -95,8 +75,8 @@ const MergedCell = ({
       sheetRowHeights,
       sheetColumnWidths,
     }),
-    shallowEqual
-  )
+    shallowEqual,
+  );
 
   // Compute merged height and width
   const dimensions = useMemo(
@@ -108,10 +88,10 @@ const MergedCell = ({
         sheetRowHeights,
         sheetColumnWidths,
       }),
-    [merged, topOffsets, leftOffsets, sheetRowHeights, sheetColumnWidths]
-  )
+    [merged, topOffsets, leftOffsets, sheetRowHeights, sheetColumnWidths],
+  );
 
-  style = { ...style, ...dimensions }
+  style = { ...style, ...dimensions };
 
   return (
     <CellContents
@@ -124,8 +104,8 @@ const MergedCell = ({
       handleDoubleClick={handleDoubleClick}
       handleRightClick={handleRightClick}
     />
-  )
-}
+  );
+};
 
 const EditableCell = ({
   style,
@@ -134,7 +114,7 @@ const EditableCell = ({
   columnIndex,
   rowIndex,
 }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const handleMouseDown = useCallback(
     ({ buttons, ctrlKey, shiftKey }) => {
@@ -145,11 +125,11 @@ const EditableCell = ({
             y1: rowIndex,
             ctrlKey,
             shiftKey,
-          })
-        )
+          }),
+        );
     },
-    [dispatch]
-  )
+    [dispatch],
+  );
 
   const handleMouseEnter = useCallback(
     ({ buttons, ctrlKey }) => {
@@ -159,42 +139,39 @@ const EditableCell = ({
             newX2: columnIndex,
             newY2: rowIndex,
             ctrlKey,
-          })
-        )
+          }),
+        );
     },
-    [dispatch]
-  )
+    [dispatch],
+  );
 
-  const handleDoubleClick = useCallback(
-    () => dispatch(doubleClickEditableCell()),
-    [dispatch]
-  )
+  const handleDoubleClick = useCallback(() => dispatch(doubleClickEditableCell()), [dispatch]);
 
   const handleRightClick = useCallback(
     () => dispatch(rightClickCell({ row: rowIndex, column: columnIndex })),
-    [dispatch]
-  )
+    [dispatch],
+  );
 
-  let merged
-  let value
-  let type
-  let comments
-  let hyperlink
+  let merged;
+  let value;
+  let type;
+  let comments;
+  let hyperlink;
 
   if (cellData) {
-    value = cellData.value
-    type = cellData.type
-    comments = cellData.comments
-    merged = cellData.merged
-    hyperlink = cellData.hyperlink
+    value = cellData.value;
+    type = cellData.type;
+    comments = cellData.comments;
+    merged = cellData.merged;
+    hyperlink = cellData.hyperlink;
 
     if (type === 'rich-text') {
-      const containerStyle = cellData.styles
-      value = RichTextCellContent(value)
+      const containerStyle = cellData.styles;
+      value = RichTextCellContent(value);
 
-      style = { ...style, ...containerStyle }
+      style = { ...style, ...containerStyle };
     } else {
-      style = { ...style, ...cellData.styles }
+      style = { ...style, ...cellData.styles };
     }
   }
 
@@ -221,16 +198,16 @@ const EditableCell = ({
       handleDoubleClick={handleDoubleClick}
       handleRightClick={handleRightClick}
     />
-  )
-}
+  );
+};
 
 // Do not display or have any event handlers for merged children
-const EditableCellContainer = (props) =>
+const EditableCellContainer = props =>
   props.cellData &&
   props.cellData.merged &&
   (props.cellData.merged.y1 !== props.rowIndex ||
     props.cellData.merged.x1 !== props.columnIndex) ? null : (
     <EditableCell {...props} />
-  )
+  );
 
-export default EditableCellContainer
+export default EditableCellContainer;

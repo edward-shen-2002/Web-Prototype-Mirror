@@ -1,26 +1,23 @@
-import React from 'react'
+import React from 'react';
 
-import InboxIcon from '@material-ui/icons/Inbox'
-import ExtensionIcon from '@material-ui/icons/Extension'
-import PhotoFilterIcon from '@material-ui/icons/PhotoFilter'
-import PeopleAltIcon from '@material-ui/icons/PeopleAlt'
-import DataUsageIcon from '@material-ui/icons/DataUsage'
-import GroupWorkIcon from '@material-ui/icons/GroupWork'
-import AccountTreeIcon from '@material-ui/icons/AccountTree'
-import DashboardIcon from '@material-ui/icons/Dashboard'
-import SendIcon from '@material-ui/icons/Send'
-import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
-import GridOnIcon from '@material-ui/icons/GridOn'
-import AllInclusiveIcon from '@material-ui/icons/AllInclusive'
-import SpaIcon from '@material-ui/icons/Spa'
-import AppsIcon from '@material-ui/icons/Apps'
-import AccountBalance from '@material-ui/icons/AccountBalance'
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
-import ExitToAppIcon from '@material-ui/icons/ExitToApp'
-import {
-  ROUTE_WORKFLOW_WORKFLOWS,
-  ROUTE_WORKFLOW_WORKFLOWS_CREATE,
-} from '../../constants/routes'
+import InboxIcon from '@material-ui/icons/Inbox';
+import ExtensionIcon from '@material-ui/icons/Extension';
+import PhotoFilterIcon from '@material-ui/icons/PhotoFilter';
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
+import DataUsageIcon from '@material-ui/icons/DataUsage';
+import GroupWorkIcon from '@material-ui/icons/GroupWork';
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import SendIcon from '@material-ui/icons/Send';
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
+import GridOnIcon from '@material-ui/icons/GridOn';
+import AllInclusiveIcon from '@material-ui/icons/AllInclusive';
+import SpaIcon from '@material-ui/icons/Spa';
+import AppsIcon from '@material-ui/icons/Apps';
+import AccountBalance from '@material-ui/icons/AccountBalance';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { ROUTE_WORKFLOW_WORKFLOWS, ROUTE_WORKFLOW_WORKFLOWS_CREATE } from '../../constants/routes';
 
 const createUserNavigation = () => {
   return [
@@ -209,9 +206,9 @@ const createUserNavigation = () => {
       url: '/logout',
       icon: <ExitToAppIcon />,
     },
-  ]
-}
+  ];
+};
 
-const config = [...createUserNavigation()]
+const config = [...createUserNavigation()];
 
-export default config
+export default config;

@@ -1,19 +1,19 @@
-import React from 'react'
-import { withStyles } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
-import Menu from '@material-ui/core/Menu'
-import MenuItem from '@material-ui/core/MenuItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
-import { ListItem } from '@material-ui/core'
-import IconItem from '../IconItem/IconItem'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import { ListItem } from '@material-ui/core';
+import IconItem from '../IconItem/IconItem';
+import { Link } from 'react-router-dom';
 
 const StyledMenu = withStyles({
   paper: {
     border: '1px solid #d3d4d5',
   },
-})((props) => (
+})(props => (
   <Menu
     elevation={0}
     getContentAnchorEl={null}
@@ -27,9 +27,9 @@ const StyledMenu = withStyles({
     }}
     {...props}
   />
-))
+));
 
-const StyledMenuItem = withStyles((theme) => ({
+const StyledMenuItem = withStyles(theme => ({
   root: {
     '&:focus': {
       backgroundColor: theme.palette.primary.main,
@@ -38,19 +38,19 @@ const StyledMenuItem = withStyles((theme) => ({
       },
     },
   },
-}))(MenuItem)
+}))(MenuItem);
 
 export default function DrawerItem(props) {
-  const { name, icon, url, children } = props
-  const [anchorEl, setAnchorEl] = React.useState(null)
-  const handleClick = (event) => {
-    console.log(event.currentTarget)
-    setAnchorEl(event.currentTarget)
-  }
+  const { name, icon, url, children } = props;
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleClick = event => {
+    console.log(event.currentTarget);
+    setAnchorEl(event.currentTarget);
+  };
 
   const handleClose = () => {
-    setAnchorEl(null)
-  }
+    setAnchorEl(null);
+  };
   return (
     <>
       <Button
@@ -68,16 +68,16 @@ export default function DrawerItem(props) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        {children.map((item) => {
-          const { name, type, url, icon } = item
+        {children.map(item => {
+          const { name, type, url, icon } = item;
           return (
             <ListItem key={name} component={url && Link} button to={url}>
               <ListItemIcon>{icon}</ListItemIcon>
               <ListItemText primary={name} />
             </ListItem>
-          )
+          );
         })}
       </StyledMenu>
     </>
-  )
+  );
 }

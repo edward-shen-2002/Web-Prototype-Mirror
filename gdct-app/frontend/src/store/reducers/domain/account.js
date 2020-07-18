@@ -1,4 +1,4 @@
-import { createReducer } from '../../tools/setup'
+import { createReducer } from '../../tools/setup';
 
 const defaultAccount = {
   username: '',
@@ -9,15 +9,15 @@ const defaultAccount = {
   phoneNumber: '',
   creationDate: '',
   roles: [],
-}
+};
 
-const updateAccount = (state, { account }) => ({ ...state, ...account })
+const updateAccount = (state, { account }) => ({ ...state, ...account });
 
-const resetAccount = () => ({ ...defaultAccount })
+const resetAccount = () => ({ ...defaultAccount });
 
 const accountReducer = createReducer(defaultAccount, {
   UPDATE_ACCOUNT: updateAccount,
   RESET_ACCOUNT: resetAccount,
-})
+});
 
-export default accountReducer
+export default accountReducer;
