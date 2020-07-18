@@ -21,7 +21,9 @@ export default class ProgramService {
 
   logout(req, res) {
     req.logout();
-    res.redirect('http://localhost:3003/'); // redirect to login page
+    res.cookie('token', '').json({
+      status: 'ok',
+    });
   }
 
   auto(req, res) {

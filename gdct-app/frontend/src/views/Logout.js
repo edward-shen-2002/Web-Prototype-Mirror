@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
-import UserController from '../controllers/User'
 import { useHistory } from 'react-router-dom'
+import AuthController from '../controllers/Auth'
 
 export default function Logout({ setLoggedIn }) {
   let history = useHistory()
 
   useEffect(() => {
-    UserController.logout().then((res) => {
-      if (res.status === 'success') {
+    AuthController.logout().then((res) => {
+      if (res.status === 'ok') {
         setLoggedIn(false)
         history.push('/')
       }

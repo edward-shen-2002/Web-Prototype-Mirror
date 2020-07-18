@@ -16,6 +16,7 @@ import compression from 'compression';
 import { Container } from 'typedi';
 import Database from './loaders/database';
 
+import auth from './middlewares/passport/passportAuth';
 import TemplateController from './controllers/Template';
 import StatusController from './controllers/Status';
 import ProgramController from './controllers/Program';
@@ -35,11 +36,10 @@ import SubmissionController from './controllers/Submission';
 import ColumnNameController from './controllers/ColumnName';
 import UserController from './controllers/User';
 import AuthController from './controllers/Auth';
-import ErrorController from './controllers/errorController';
-// import Auth from './interceptors';
 import AppRoleResourceController from './controllers/AppRoleResource/controller';
 import AppResourceController from './controllers/AppResource';
 import WorkflowController from './controllers/Workflow';
+import { errorHandler } from './middlewares/shared';
 
 dotenv.config();
 
@@ -81,11 +81,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use((req, res, next) => {
-  console.log('my middlewares:', req.user, req.cookies.connect_sid);
-  next();
-});
-
 app.use('/', Container.get(ProgramController));
 app.use('/', Container.get(ReportingPeriodController));
 app.use('/', Container.get(SheetNameController));
@@ -108,43 +103,39 @@ app.use('/COA_manager', Container.get(COAController));
 app.use('/COA_manager', Container.get(COATreeController));
 app.use('/COA_manager', Container.get(COAGroupController));
 
-app.use('/appsys_manager', Container.get(AppSysController));
-app.use('/approle_manager', Container.get(AppRoleController));
-app.use('/appsysrole_manager', Container.get(AppSysRoleController));
-
 app.use('/workflow_manager', Container.get(WorkflowController));
 
 app.use(
   '/role_manager',
-  // Container.get(Auth).authenticated,
+  auth.required,
   // Container.get(Auth).authorized,
   Container.get(AppSysController),
 );
 app.use(
   '/role_manager',
-  // Container.get(Auth).authenticated,
+  auth.required,
   // Container.get(Auth).authorized,
   Container.get(AppRoleController),
 );
 app.use(
   '/role_manager',
-  // Container.get(Auth).authenticated,
+  auth.required,
   // Container.get(Auth).authorized,
   Container.get(AppSysRoleController),
 );
 app.use(
   '/role_manager',
-  // Container.get(Auth).authenticated,
+  auth.required,
   // Container.get(Auth).authorized,
   Container.get(AppRoleResourceController),
 );
 app.use(
   '/role_manager',
-  // Container.get(Auth).authenticated,
+  auth.required,
   // Container.get(Auth).authorized,
   Container.get(AppResourceController),
 );
 
-app.use(Container.get(ErrorController).process);
+app.use(errorHandler);
 
 export default app;

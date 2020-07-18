@@ -59,7 +59,6 @@ const validEmailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 const validateForm = (errors) => {
   let valid = true
   Object.values(errors).forEach((val) => val.length > 0 && (valid = false))
-  console.log('valid:', valid)
   return valid
 }
 
@@ -69,15 +68,6 @@ export default function Login({ setLoggedIn }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({})
-
-  useEffect(() => {
-    AuthController.auto().then((auto) => {
-      if (auto) {
-        // TODO: not working yet
-        // setLoggedIn(false)
-      }
-    })
-  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -104,7 +94,7 @@ export default function Login({ setLoggedIn }) {
         //   `http://localhost:3000/auth/local?email=${email}&password=${password}`
         // )
         await AuthController.login({ email, password }).then((data) => {
-          if (data.token) {
+          if (data.user.token) {
             setLoggedIn(true)
           }
         })

@@ -1,4 +1,7 @@
+import dotenv from 'dotenv';
 import jwt from 'express-jwt';
+
+dotenv.config();
 
 const getTokenFromHeaders = req => {
   const {
