@@ -64,7 +64,7 @@ const App = () => {
   }, [])
   
   return (
-    <div className="appContainer">
+    /*<div className="appContainer">
       {isLoggedIn === null ? (
         <Grid
           container
@@ -83,7 +83,11 @@ const App = () => {
       ) : (
         <PublicRouter setLoggedIn={setLoggedIn} />
       )}
-    </div>
+    </div>*/
+    <AuthPage>
+        <PrivateRouter />
+    </AuthPage>
+
   )
 }
 
