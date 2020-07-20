@@ -1,11 +1,11 @@
-import React from 'react';
+import React from 'react'
 
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'
 
-import topOffsetsSelector from '../../../../../store/selectors/ui/excel/topOffsets';
-import leftOffsetsSelector from '../../../../../store/selectors/ui/excel/leftOffsets';
+import topOffsetsSelector from '../../../../../store/selectors/ui/excel/topOffsets'
+import leftOffsetsSelector from '../../../../../store/selectors/ui/excel/leftOffsets'
 
-import './ActiveSelectionArea.scss';
+import './ActiveSelectionArea.scss'
 
 const mapStateToProps = ({
   ui: {
@@ -35,7 +35,7 @@ const mapStateToProps = ({
   sheetRowCount,
   topOffsets: topOffsetsSelector({ sheetRowCount, sheetRowHeights }),
   leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths }),
-});
+})
 
 let ActiveSelectionArea = ({
   computeSelectionAreaStyle,
@@ -53,11 +53,14 @@ let ActiveSelectionArea = ({
   topOffsets,
   leftOffsets,
 }) => {
-  if (!isSelectionMode || !activeSelectionArea) return null;
+  if (!isSelectionMode || !activeSelectionArea) return null
 
-  const { x1, y1, x2, y2 } = activeSelectionArea;
+  const { x1, y1, x2, y2 } = activeSelectionArea
 
-  if (!isRelevantArea(x1, y1, x2, y2, sheetFreezeColumnCount, sheetFreezeRowCount)) return null;
+  if (
+    !isRelevantArea(x1, y1, x2, y2, sheetFreezeColumnCount, sheetFreezeRowCount)
+  )
+    return null
 
   const activeSelectionAreaStyle = computeSelectionAreaStyle(
     sheetColumnWidths,
@@ -67,12 +70,14 @@ let ActiveSelectionArea = ({
     activeSelectionArea,
     sheetFreezeColumnCount,
     sheetFreezeRowCount,
-    true,
-  );
+    true
+  )
 
-  return <div className="activeSelectionArea" style={activeSelectionAreaStyle} />;
-};
+  return (
+    <div className="activeSelectionArea" style={activeSelectionAreaStyle} />
+  )
+}
 
-ActiveSelectionArea = connect(mapStateToProps)(ActiveSelectionArea);
+ActiveSelectionArea = connect(mapStateToProps)(ActiveSelectionArea)
 
-export default ActiveSelectionArea;
+export default ActiveSelectionArea

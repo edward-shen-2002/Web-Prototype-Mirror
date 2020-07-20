@@ -1,21 +1,21 @@
-import BaseRepository from '../repository';
-import MasterValueModel from '../../models/MasterValue';
+import BaseRepository from '../repository'
+import MasterValueModel from '../../models/MasterValue'
 
 export default class MasterValueRepository extends BaseRepository {
+  
   constructor() {
-    super(MasterValueModel);
+    super(MasterValueModel)
   }
 
   async bulkUpdate(submissionId, masterValues) {
-    return MasterValueModel.deleteMany({ submissionId }).then(() =>
-      MasterValueModel.create(masterValues),
-    );
+    return MasterValueModel.deleteMany({ submissionId })
+      .then(() => MasterValueModel.create(masterValues))
   }
 
   // public async updateMany(submissionId: IId, masterValues: MasterValueEntity[]) {
   //   return MasterValueModel.updateMany(
   //     masterValues,
-
+      
   //   )
   // }
 }

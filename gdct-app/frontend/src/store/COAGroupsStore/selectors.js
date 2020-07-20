@@ -1,1 +1,1 @@
-export const selectCOAGroupsStore = state => state.COAGroupsStore;
+export const selectCOAGroupsStore = (state) => state.COAGroupsStore

@@ -4,4 +4,4 @@ export const REST_STATE = {
   },
   error: null,
   isCallInProgress: false,
-};
+}

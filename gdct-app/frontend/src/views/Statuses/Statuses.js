@@ -1,21 +1,21 @@
-import React, { useMemo, useEffect } from 'react';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import React, { useMemo, useEffect } from 'react'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import {
   getStatusesRequest,
   createStatusRequest,
   deleteStatusRequest,
   updateStatusRequest,
-} from '../../store/thunks/status';
+} from '../../store/thunks/status'
 
-import MaterialTable from 'material-table';
-import Paper from '@material-ui/core/Paper';
+import MaterialTable from 'material-table'
+import Paper from '@material-ui/core/Paper'
 
-import Typography from '@material-ui/core/Typography';
+import Typography from '@material-ui/core/Typography'
 
-import './Statuses.scss';
-import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors';
-import { selectStatusesStore } from '../../store/StatusesStore/selectors';
+import './Statuses.scss'
+import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
+import { selectStatusesStore } from '../../store/StatusesStore/selectors'
 
 const StatusHeader = () => {
   return (
@@ -23,18 +23,20 @@ const StatusHeader = () => {
       <Typography variant="h5">Statuses</Typography>
       {/* <HeaderActions/> */}
     </Paper>
-  );
-};
+  )
+}
 
 const StatusesTable = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const { statuses } = useSelector(
-    state => ({
-      statuses: selectFactoryRESTResponseTableValues(selectStatusesStore)(state),
+    (state) => ({
+      statuses: selectFactoryRESTResponseTableValues(selectStatusesStore)(
+        state
+      ),
     }),
-    shallowEqual,
-  );
+    shallowEqual
+  )
 
   const columns = useMemo(
     () => [
@@ -43,41 +45,51 @@ const StatusesTable = () => {
       { title: 'Description', field: 'description' },
       { title: 'Active', type: 'boolean', field: 'isActive' },
     ],
-    [],
-  );
+    []
+  )
 
-  const options = useMemo(() => ({ actionsColumnIndex: -1, search: false, showTitle: false }), []);
+  const options = useMemo(
+    () => ({ actionsColumnIndex: -1, search: false, showTitle: false }),
+    []
+  )
 
   const editable = useMemo(
     () => ({
-      onRowAdd: status =>
+      onRowAdd: (status) =>
         new Promise((resolve, reject) => {
-          dispatch(createStatusRequest(status, resolve, reject));
+          dispatch(createStatusRequest(status, resolve, reject))
         }),
-      onRowUpdate: status =>
+      onRowUpdate: (status) =>
         new Promise((resolve, reject) => {
-          dispatch(updateStatusRequest(status, resolve, reject));
+          dispatch(updateStatusRequest(status, resolve, reject))
         }),
-      onRowDelete: status =>
+      onRowDelete: (status) =>
         new Promise((resolve, reject) => {
-          dispatch(deleteStatusRequest(status._id, resolve, reject));
+          dispatch(deleteStatusRequest(status._id, resolve, reject))
         }),
     }),
-    [dispatch],
-  );
+    [dispatch]
+  )
 
   useEffect(() => {
-    dispatch(getStatusesRequest());
-  }, [dispatch]);
+    dispatch(getStatusesRequest())
+  }, [dispatch])
 
-  return <MaterialTable columns={columns} data={statuses} editable={editable} options={options} />;
-};
+  return (
+    <MaterialTable
+      columns={columns}
+      data={statuses}
+      editable={editable}
+      options={options}
+    />
+  )
+}
 
-const Status = props => (
+const Status = (props) => (
   <div className="statusesPage">
     <StatusHeader />
     <StatusesTable {...props} />
   </div>
-);
+)
 
-export default Status;
+export default Status

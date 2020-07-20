@@ -1,29 +1,29 @@
-import { Service } from 'typedi';
-import { Router } from 'express';
-import AppResourceService from '../../services/AppResource';
+import { Service } from "typedi";
+import { Router } from "express";
+import AppResourceService from "../../services/AppResource";
 
-const AppResourceController = Service([AppResourceService], service => {
+const AppResourceController = Service([AppResourceService], (service) => {
   const router = Router();
   return (() => {
-    router.get('/appResources', (req, res, next) => {
+    router.get("/appResources", (req, res, next) => {
       service
         .findAppResource({})
-        .then(AppResources => res.json({ AppResources }))
+        .then((AppResources) => res.json({ AppResources }))
         .catch(next);
     });
 
-    router.post('/appResources', (req, res, next) => {
+    router.post("/appResources", (req, res, next) => {
       service
         .createAppResource(req.body.AppResource)
-        .then(AppResource => res.json({ AppResource }))
-        .catch(error => {
+        .then((AppResource) => res.json({ AppResource }))
+        .catch((error) => {
           console.error(error);
           throw error;
         })
         .catch(next);
     });
 
-    router.put('/appResources/:_id', (req, res, next) => {
+    router.put("/appResources/:_id", (req, res, next) => {
       const { _id } = req.params;
       const { AppResource } = req.body;
 
@@ -33,7 +33,7 @@ const AppResourceController = Service([AppResourceService], service => {
         .catch(next);
     });
 
-    router.delete('/appResources/:_id', (req, res, next) => {
+    router.delete("/appResources/:_id", (req, res, next) => {
       const { _id } = req.params;
 
       service

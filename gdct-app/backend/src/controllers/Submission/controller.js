@@ -1,56 +1,78 @@
-import { Service } from 'typedi';
-import { Router } from 'express';
-import SubmissionService from '../../services/Submission';
+import { Service } from 'typedi'
 
-const SubmissionController = Service([SubmissionService], service => {
-  const router = Router();
-  return (() => {
-    router.get('/submissions', (req, res, next) => {
-      // Get query from middleware -- auth handler
+import Submission from '../../entities/Submission'
+import { Router } from 'express'
+import SubmissionService from '../../services/Submission'
 
-      service
-        .findSubmission({})
-        .then(submissions => res.json({ submissions }))
-        .catch(next);
-    });
+const SubmissionController = Service(
+  [SubmissionService],
+  (service) => {
+    const router = Router()
+    return (
+      () => {
+        router.get(
+          '/submissions',
+          (req, res, next) => {
+            // Get query from middleware -- auth handler
 
-    router.get('/submissions/:_id', (req, res, next) => {
-      const { _id } = req.params;
+            service
+              .findSubmission({})
+              .then((submissions) => res.json({ submissions }))
+              .catch(next)
+          }
+        )
 
-      service
-        .findSubmissionById(_id)
-        .then(submission => res.json({ submission }))
-        .catch(next);
-    });
+        router.get(
+          '/submissions/:_id',
+          (req, res, next) => {
+            const { _id } = req.params
 
-    router.post('/submissions', (req, res, next) => {
-      service
-        .createSubmission(req.body.submission)
-        .then(submission => res.json({ submission }))
-        .catch(next);
-    });
+            service
+              .findSubmissionById(_id)
+              .then((submission) => res.json({ submission }))
+              .catch(next)
+          }
+        )
 
-    router.put('/submissions/:_id', (req, res, next) => {
-      const { _id } = req.params;
-      const { submission } = req.body;
+        router.post(
+          '/submissions',
+          (req, res, next) => {
+            service
+              .createSubmission(req.body.submission)
+              .then((submission) => res.json({ submission }))
+              .catch(next)
+          }
+        )
 
-      service
-        .updateSubmission(_id, submission)
-        .then(() => res.end())
-        .catch(next);
-    });
+        router.put(
+          '/submissions/:_id',
+          (req, res, next) => {
+            const { _id } = req.params
+            const { submission } = req.body
 
-    router.delete('/submissions/:_id', (req, res, next) => {
-      const { _id } = req.params;
+            service
+              .updateSubmission(_id, submission)
+              .then(() => res.end())
+              .catch(next)
+          }
+        )
 
-      service
-        .deleteSubmission(_id)
-        .then(() => res.end())
-        .catch(next);
-    });
+        router.delete(
+          '/submissions/:_id',
+          (req, res, next) => {
+            const { _id } = req.params
 
-    return router;
-  })();
-});
+            service
+              .deleteSubmission(_id)
+              .then(() => res.end())
+              .catch(next)
+          }
+        )
 
-export default SubmissionController;
+        return router
+      }
+    )()
+  }
+)
+
+export default SubmissionController

@@ -1,1 +1,1 @@
-export { default } from './COAGroups';
+export { default } from './COAGroups'

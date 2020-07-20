@@ -1,1 +1,1 @@
-export const selectWorkflowsStore = state => state.WorkflowsStore;
+export const selectWorkflowsStore = (state) => state.WorkflowsStore

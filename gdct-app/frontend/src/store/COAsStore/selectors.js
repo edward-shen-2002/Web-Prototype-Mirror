@@ -1,1 +1,1 @@
-export const selectCOAsStore = state => state.COAsStore;
+export const selectCOAsStore = (state) => state.COAsStore

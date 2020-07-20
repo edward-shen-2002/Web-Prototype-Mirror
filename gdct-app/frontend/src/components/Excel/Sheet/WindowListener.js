@@ -1,5 +1,5 @@
-import { useCallback } from 'react';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { useCallback } from 'react'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import {
   selectEnd,
@@ -7,10 +7,10 @@ import {
   resizeColumn,
   resizeRowEnd,
   resizeColumnEnd,
-} from '../../../store/actions/ui/excel/mouse';
+} from '../../../store/actions/ui/excel/mouse'
 
-import topOffsetsSelector from '../../../store/selectors/ui/excel/topOffsets';
-import leftOffsetsSelector from '../../../store/selectors/ui/excel/leftOffsets';
+import topOffsetsSelector from '../../../store/selectors/ui/excel/topOffsets'
+import leftOffsetsSelector from '../../../store/selectors/ui/excel/leftOffsets'
 
 const WindowListener = () => {
   const {
@@ -41,39 +41,46 @@ const WindowListener = () => {
       isColumnResizeMode,
       isSelectionMode,
     }),
-    shallowEqual,
-  );
+    shallowEqual
+  )
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   window.onmouseup = useCallback(
     ({ ctrlKey }) => {
       if (isSelectionMode) {
-        dispatch(selectEnd({ ctrlKey }));
+        dispatch(selectEnd({ ctrlKey }))
       } else if (isColumnResizeMode) {
-        dispatch(resizeColumnEnd({ leftOffsets }));
+        dispatch(resizeColumnEnd({ leftOffsets }))
       } else if (isRowResizeMode) {
-        dispatch(resizeRowEnd({ topOffsets }));
+        dispatch(resizeRowEnd({ topOffsets }))
       }
 
       // dispatch(mouseUp({ ctrlKey, leftOffsets, topOffsets }));
     },
-    [dispatch, leftOffsets, topOffsets, isSelectionMode, isColumnResizeMode, isRowResizeMode],
-  );
+    [
+      dispatch,
+      leftOffsets,
+      topOffsets,
+      isSelectionMode,
+      isColumnResizeMode,
+      isRowResizeMode,
+    ]
+  )
 
   // ! Handle scroll when outside sheet grid
   window.onmousemove = useCallback(
     ({ clientX: xOffset, clientY: yOffset }) => {
       if (isColumnResizeMode) {
-        dispatch(resizeColumn({ xOffset, leftOffsets }));
+        dispatch(resizeColumn({ xOffset, leftOffsets }))
       } else if (isRowResizeMode) {
-        dispatch(resizeRow({ yOffset, topOffsets }));
+        dispatch(resizeRow({ yOffset, topOffsets }))
       }
     },
-    [dispatch, isColumnResizeMode, isRowResizeMode, topOffsets, leftOffsets],
-  );
+    [dispatch, isColumnResizeMode, isRowResizeMode, topOffsets, leftOffsets]
+  )
 
-  return null;
-};
+  return null
+}
 
-export default WindowListener;
+export default WindowListener

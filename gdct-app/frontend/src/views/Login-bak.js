@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'
 
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button'
+import Paper from '@material-ui/core/Paper'
+import TextField from '@material-ui/core/TextField'
 
-import { Formik } from 'formik';
+import { Formik } from 'formik'
 
 import {
   ROUTE_PUBLIC_PREREGISTER,
   ROUTE_PUBLIC_RECOVERY,
   ROUTE_USER_PROFILE,
-} from '../constants/routes';
+} from '../constants/routes'
 
 const RegisterButton = () => (
   <Link to={ROUTE_PUBLIC_PREREGISTER}>
@@ -26,7 +26,7 @@ const RegisterButton = () => (
       Register
     </Button>
   </Link>
-);
+)
 
 const MainButtons = () => (
   <div className="loginButtonsMain">
@@ -40,20 +40,20 @@ const MainButtons = () => (
     </Button>
     <RegisterButton />
   </div>
-);
+)
 
 const RecoveryButton = () => (
   <Link to={ROUTE_PUBLIC_RECOVERY}>
     <Button size="small">Forgot Password?</Button>
   </Link>
-);
+)
 
 const LoginButtons = () => (
   <div>
     <RecoveryButton />
     <MainButtons />
   </div>
-);
+)
 
 const LoginForm = ({ handleLogin }) => (
   <Formik
@@ -91,16 +91,16 @@ const LoginForm = ({ handleLogin }) => (
       </Paper>
     )}
   </Formik>
-);
+)
 
 let Login = ({ history }) => {
-  const handleLogin = () => history.push('/sheetNames');
+  const handleLogin = () => history.push("/sheetNames")
 
   return (
     <div className="login">
-      <LoginForm handleLogin={handleLogin} />
+      <LoginForm handleLogin={handleLogin}/>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

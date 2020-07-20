@@ -1,105 +1,112 @@
-import pako from 'pako';
 
-const getCellData = (sheetData, rowIndex, columnIndex) =>
-  sheetData[rowIndex] ? sheetData[rowIndex][columnIndex] : undefined;
+import pako from 'pako'
+
+const getCellData = (
+  sheetData,
+  rowIndex, 
+  columnIndex
+) => sheetData[rowIndex] ? sheetData[rowIndex][columnIndex] : undefined
 
 /**
- * Maps column with `Column` - which represents the column header
+ * Maps column with `Column` - which represents the column header  
  */
-export const extractColumnNameIds = sheetData => {
-  const columns = {};
-  const firstRow = sheetData[1];
+export const extractColumnNameIds = (sheetData) => {
+  const columns = {}
+  const firstRow = sheetData[1]
 
-  if (firstRow) {
-    for (const column in firstRow) {
-      const columnNumber = +column;
+  if(firstRow) {
+    for(let column in firstRow) {
+      const columnNumber = +column
 
-      if (columnNumber > 1) {
-        const categoryData = getCellData(sheetData, 1, columnNumber);
+      if(columnNumber > 1) {
+        const categoryData = getCellData(sheetData, 1, columnNumber)
 
-        if (categoryData && categoryData.value) {
-          columns[column] = categoryData.value;
+        if(categoryData && categoryData.value) {
+          columns[column] = categoryData.value
         }
       }
     }
   }
 
-  return columns;
-};
+  return columns
+}
 
 /**
- * Maps rows with COA data
+ * Maps rows with COA data 
  */
-export const extractCOAData = sheetData => {
-  const COAs = {};
+export const extractCOAData = (sheetData) => {
+  const COAs = {}
 
-  for (const row in sheetData) {
-    const rowNumber = +row;
+  for(let row in sheetData) {
+    const rowNumber = +row
 
-    if (rowNumber > 1) {
-      const COAIdData = getCellData(sheetData, rowNumber, 1);
-      const COATreeIdData = getCellData(sheetData, rowNumber, 2);
+    if(rowNumber > 1) {
+      const COAIdData = getCellData(sheetData, rowNumber, 1)
+      const COATreeIdData = getCellData(sheetData, rowNumber, 2)
 
       // ? Could be possible that COATreeId is not needed, ie no grouping
-      if (COAIdData && COAIdData.value) {
+      if(COAIdData && COAIdData.value) { 
         COAs[row] = {
           COAId: COAIdData.value,
-          COATreeId: COATreeIdData ? COATreeIdData.value : undefined,
-        };
+          COATreeId: COATreeIdData ? COATreeIdData.value : undefined
+        }
       }
     }
   }
 
-  return COAs;
-};
+  return COAs
+}
 
-export const extractCOAColumnPairs = sheetData => {
-  const masterValueGroups = [];
+export const extractCOAColumnPairs = (sheetData) => {
+  const masterValueGroups = []
+  
+  const columnIds = extractColumnNameIds(sheetData)
+  const COAIds = extractCOAData(sheetData)
 
-  const columnIds = extractColumnNameIds(sheetData);
-  const COAIds = extractCOAData(sheetData);
+  for(let row in COAIds) {
+    for(let column in columnIds) {
+      const cellData = getCellData(sheetData, +row, +column)
 
-  for (const row in COAIds) {
-    for (const column in columnIds) {
-      const cellData = getCellData(sheetData, +row, +column);
+      if(!masterValueGroups[row]) masterValueGroups[row] = {}
+      masterValueGroups[row][column] = cellData.value
 
-      if (!masterValueGroups[row]) masterValueGroups[row] = {};
-      masterValueGroups[row][column] = cellData.value;
-
-      masterValueGroups.push({
-        columnId: columnIds[column],
-        ...COAIds[row],
-      });
+      masterValueGroups.push(
+        {
+          columnId: columnIds[column],
+          ...COAIds[row]
+        }
+      )
     }
   }
 
-  return masterValueGroups;
-};
+  return masterValueGroups
+}
 
 export const extractWorkbookMasterValues = (workbookData, submissionId) => {
-  const masterValues = [];
+  const masterValues = []
 
-  for (const sheetName in workbookData.workbookData) {
-    const sheetData = JSON.parse(
-      pako.inflate(workbookData.workbookData[sheetName], { to: 'string' }),
-    ).sheetCellData;
-
-    const columns = extractColumnNameIds(sheetData);
-    const COAs = extractCOAData(sheetData);
-
-    for (const row in COAs) {
-      for (const column in columns) {
-        const cellData = getCellData(sheetData, +row, +column);
-
-        masterValues.push({
-          submissionId,
-          columnNameId: columns[column],
-          ...COAs[row],
-          value: cellData ? cellData.value : undefined,
-        });
+  for(let sheetName in workbookData.workbookData) {
+    
+    const sheetData = JSON.parse(pako.inflate(workbookData.workbookData[sheetName], { to: "string" })).sheetCellData;
+  
+    const columns = extractColumnNameIds(sheetData)
+    const COAs = extractCOAData(sheetData)
+  
+    for(let row in COAs) {
+      for(let column in columns) {
+        const cellData = getCellData(sheetData, +row, +column)
+        
+        masterValues.push(
+          {
+            submissionId,
+            columnNameId: columns[column],
+            ...COAs[row],
+            value: cellData ? cellData.value : undefined
+          }
+        )
       }
     }
   }
 
-  return masterValues;
-};
+  return masterValues
+}

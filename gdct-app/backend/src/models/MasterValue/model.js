@@ -1,6 +1,6 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose'
 
-const { ObjectId } = Schema.Types;
+const ObjectId = Schema.Types.ObjectId
 
 /**
  * Contains the values of successfully approved workbooks
@@ -36,7 +36,7 @@ const MasterValueModel = model(
   'MasterValue',
   new Schema(
     {
-      submissionId: { type: ObjectId, ref: 'Submission' },
+      submissionId: { type: ObjectId, ref: "Submission" },
       // COATreeId: { type: ObjectId, ref: "COATree" },
       // COAId: { type: ObjectId, ref: "COA" },
       // columnNameId: { type: ObjectId, ref: "ColumnName" },
@@ -45,11 +45,11 @@ const MasterValueModel = model(
       COAId: { type: String },
       columnNameId: { type: String },
 
-      value: { type: String },
+      value: { type: String }
     },
-    { minimize: false },
+    { minimize: false }
   ),
-  'MasterValue',
-);
+  'MasterValue'
+)
 
-export default MasterValueModel;
+export default MasterValueModel

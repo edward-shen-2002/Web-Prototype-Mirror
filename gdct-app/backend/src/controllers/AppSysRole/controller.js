@@ -1,51 +1,68 @@
-import { Service } from 'typedi';
-import { Router } from 'express';
-import AppSysRoleService from '../../services/AppSysRole';
+import { Service } from 'typedi'
+import { Router } from 'express'
+import AppSysRoleService from '../../services/AppSysRole'
 
-const AppSysRoleController = Service([AppSysRoleService], service => {
-  const router = Router();
-  return (() => {
-    router.get('/appSysRoles', (req, res, next) => {
-      // Get query from middleware -- auth handler
+const AppSysRoleController = Service(
+  [AppSysRoleService],
+  (service) => {
+    const router = Router()
+    return (
+      () => {
+        router.get(
+          '/appSysRoles',
+          (req, res, next) => {
+            // Get query from middleware -- auth handler
 
-      service
-        .findAppSysRole({})
-        .then(AppSysRoles => res.json({ AppSysRoles }))
-        .catch(next);
-    });
+            service
+              .findAppSysRole({})
+              .then((AppSysRoles) => res.json({ AppSysRoles }))
+              .catch(next)
+          }
+        )
 
-    router.post('/appSysRoles', (req, res, next) => {
-      service
-        .createAppSysRole(req.body.AppSysRole)
-        .then(AppSysRole => res.json({ AppSysRole }))
-        .catch(error => {
-          console.error(error);
-          throw error;
-        })
-        .catch(next);
-    });
+        router.post(
+          '/appSysRoles',
+          (req, res, next) => {
+            service
+              .createAppSysRole(req.body.AppSysRole)
+              .then((AppSysRole) => res.json({ AppSysRole }))
+              .catch((error) => {
+                console.error(error)
+                throw error
+              })
+              .catch(next)
+          }
+        )
 
-    router.put('/appSysRoles/:_id', (req, res, next) => {
-      const { _id } = req.params;
-      const { AppSysRole } = req.body;
+        router.put(
+          '/appSysRoles/:_id',
+          (req, res, next) => {
+            const { _id } = req.params
+            const { AppSysRole } = req.body
 
-      service
-        .updateAppSysRole(_id, AppSysRole)
-        .then(() => res.end())
-        .catch(next);
-    });
+            service
+              .updateAppSysRole(_id, AppSysRole)
+              .then(() => res.end())
+              .catch(next)
+          }
+        )
 
-    router.delete('/appSysRoles/:_id', (req, res, next) => {
-      const { _id } = req.params;
+        router.delete(
+          '/appSysRoles/:_id',
+          (req, res, next) => {
+            const { _id } = req.params
 
-      service
-        .deleteAppSysRole(_id)
-        .then(() => res.end())
-        .catch(next);
-    });
+            service
+              .deleteAppSysRole(_id)
+              .then(() => res.end())
+              .catch(next)
+          }
+        )
 
-    return router;
-  })();
-});
+        return router
+      }
+    )()
+  }
+)
 
-export default AppSysRoleController;
+export default AppSysRoleController

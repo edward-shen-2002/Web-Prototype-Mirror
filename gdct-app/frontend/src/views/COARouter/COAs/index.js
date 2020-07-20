@@ -1,1 +1,1 @@
-export { default } from './COAs';
+export { default } from './COAs'

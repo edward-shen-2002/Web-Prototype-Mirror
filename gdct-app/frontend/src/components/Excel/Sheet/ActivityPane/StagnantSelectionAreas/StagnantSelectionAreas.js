@@ -1,16 +1,18 @@
-import React from 'react';
+import React from 'react'
 
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'
 
-import topOffsetsSelector from '../../../../../store/selectors/ui/excel/topOffsets';
-import leftOffsetsSelector from '../../../../../store/selectors/ui/excel/leftOffsets';
+import topOffsetsSelector from '../../../../../store/selectors/ui/excel/topOffsets'
+import leftOffsetsSelector from '../../../../../store/selectors/ui/excel/leftOffsets'
 
-import './StagnantSelectionAreas.scss';
+import './StagnantSelectionAreas.scss'
 
-const StagnantSelectionAreasComponents = ({ relevantStagnantSelectionAreasStyles }) =>
+const StagnantSelectionAreasComponents = ({
+  relevantStagnantSelectionAreasStyles,
+}) =>
   relevantStagnantSelectionAreasStyles.map((style, index) => (
     <div key={index} className="stagnantSelectionArea" style={style} />
-  ));
+  ))
 
 const mapStateToProps = ({
   ui: {
@@ -39,7 +41,7 @@ const mapStateToProps = ({
 
   topOffsets: topOffsetsSelector({ sheetRowCount, sheetRowHeights }),
   leftOffsets: leftOffsetsSelector({ sheetColumnCount, sheetColumnWidths }),
-});
+})
 
 let StagnantSelectionAreas = ({
   stagnantSelectionAreas,
@@ -56,12 +58,20 @@ let StagnantSelectionAreas = ({
   isRelevantArea,
   computeSelectionAreaStyle,
 }) => {
-  const relevantStagnantSelectionAreas = stagnantSelectionAreas.filter(({ x1, y1, x2, y2 }) =>
-    isRelevantArea(x1, y1, x2, y2, sheetFreezeColumnCount, sheetFreezeRowCount),
-  );
+  const relevantStagnantSelectionAreas = stagnantSelectionAreas.filter(
+    ({ x1, y1, x2, y2 }) =>
+      isRelevantArea(
+        x1,
+        y1,
+        x2,
+        y2,
+        sheetFreezeColumnCount,
+        sheetFreezeRowCount
+      )
+  )
 
   const relevantStagnantSelectionAreasStyles = relevantStagnantSelectionAreas.map(
-    stagnantSelectionArea =>
+    (stagnantSelectionArea) =>
       computeSelectionAreaStyle(
         sheetColumnWidths,
         leftOffsets,
@@ -70,17 +80,19 @@ let StagnantSelectionAreas = ({
         stagnantSelectionArea,
         sheetFreezeColumnCount,
         sheetFreezeRowCount,
-        false,
-      ),
-  );
+        false
+      )
+  )
 
   return (
     <StagnantSelectionAreasComponents
-      relevantStagnantSelectionAreasStyles={relevantStagnantSelectionAreasStyles}
+      relevantStagnantSelectionAreasStyles={
+        relevantStagnantSelectionAreasStyles
+      }
     />
-  );
-};
+  )
+}
 
-StagnantSelectionAreas = connect(mapStateToProps)(StagnantSelectionAreas);
+StagnantSelectionAreas = connect(mapStateToProps)(StagnantSelectionAreas)
 
-export default StagnantSelectionAreas;
+export default StagnantSelectionAreas

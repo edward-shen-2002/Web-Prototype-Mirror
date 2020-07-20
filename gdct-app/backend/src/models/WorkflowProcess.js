@@ -1,6 +1,6 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose'
 
-const { ObjectId } = Schema.Types;
+const ObjectId = Schema.Types.ObjectId
 
 const WorkflowProcessModel = model(
   'WorkflowProcess',
@@ -13,13 +13,13 @@ const WorkflowProcessModel = model(
         type: Object,
         default: {
           x: 100,
-          y: 100,
-        },
-      },
+          y: 100
+        }
+      }
     },
-    { minimize: false, autoIndex: true },
+    { minimize: false, autoIndex: true }
   ),
-  'WorkflowProcess',
-);
+  'WorkflowProcess'
+)
 
-export default WorkflowProcessModel;
+export default WorkflowProcessModel

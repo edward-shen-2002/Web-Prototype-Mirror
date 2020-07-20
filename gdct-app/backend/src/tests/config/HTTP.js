@@ -1,3 +1,3 @@
-import app from '../../app';
+import app from '../../app'
 
-export const request = require('supertest')(app);
+export const request = require('supertest')(app)

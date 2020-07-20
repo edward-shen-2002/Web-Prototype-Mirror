@@ -1,1 +1,1 @@
-export { default } from './AppResources';
+export { default } from './AppResources'

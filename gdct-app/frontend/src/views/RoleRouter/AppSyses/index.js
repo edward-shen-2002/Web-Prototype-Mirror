@@ -1,1 +1,1 @@
-export { default } from './AppSyses';
+export { default } from './AppSyses'

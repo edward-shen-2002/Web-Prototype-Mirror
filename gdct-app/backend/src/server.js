@@ -1,8 +1,7 @@
 import dotenv from 'dotenv';
+dotenv.config();
 
 import app from './app';
-
-dotenv.config();
 
 const port = app.get('port');
 

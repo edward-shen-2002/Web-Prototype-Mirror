@@ -1,12 +1,12 @@
-import React from 'react';
+import React from 'react'
 
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom'
 
-import NotFound from '../../components/NotFound';
-import COATrees from './COATrees';
-import COATree from './COATree';
-import COAGroups from './COAGroups';
-import COAs from './COAs';
+import NotFound from '../../components/NotFound'
+import COATrees from './COATrees'
+import COATree from './COATree'
+import COAGroups from './COAGroups'
+import COAs from './COAs'
 
 const TemplateRouter = () => (
   <Switch>
@@ -17,6 +17,6 @@ const TemplateRouter = () => (
 
     <Route component={NotFound} />
   </Switch>
-);
+)
 
-export default TemplateRouter;
+export default TemplateRouter

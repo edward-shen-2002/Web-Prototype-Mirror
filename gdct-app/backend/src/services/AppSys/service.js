@@ -1,6 +1,6 @@
-import Container from 'typedi';
-import AppSysRepository from '../../repositories/AppSys';
-import AppSysRoleRepository from '../../repositories/AppSysRole';
+import Container, { Service } from "typedi";
+import AppSysRepository from "../../repositories/AppSys";
+import AppSysRoleRepository from "../../repositories/AppSysRole";
 
 // @Service()
 export default class AppSysService {
@@ -15,7 +15,7 @@ export default class AppSysService {
 
   async deleteAppSys(id) {
     if (await this.isRefered(id)) {
-      throw Error('existed appSysRole');
+      throw Error("existed appSysRole");
     }
     return this.AppSysRepository.delete(id);
   }
@@ -28,14 +28,16 @@ export default class AppSysService {
     return this.AppSysRepository.find(AppSys);
   }
 
-  async findAllAppSys() {
+  async findAllAppSys(){
     return this.AppSysRepository.findAll();
   }
 
   async isRefered(id) {
     const appSys = await this.AppSysRepository.findById(id);
-    console.log('code:', appSys.code);
-    const appSysRole = await this.AppSysRoleRepository.find({ appSys: appSys.code });
+    console.log("code:", appSys.code);
+    const appSysRole = await this.AppSysRoleRepository.find(
+      { appSys: appSys.code },
+    );
     return appSysRole.length !== 0;
   }
 }

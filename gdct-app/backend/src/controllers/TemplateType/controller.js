@@ -1,58 +1,80 @@
-import { Service } from 'typedi';
-import { Router } from 'express';
-import TemplateTypeService from '../../services/TemplateType';
+import { Service } from 'typedi'
 
-const TemplateTypeController = Service([TemplateTypeService], service => {
-  const router = Router();
-  return (() => {
-    router.get('/templateTypes', (req, res, next) => {
-      // Get query from middleware -- auth handler
+import TemplateType from '../../entities/TemplateType'
+import { Router } from 'express'
+import TemplateTypeService from '../../services/TemplateType'
 
-      service
-        .findTemplateType({})
-        .then(templateTypes => res.json({ templateTypes }))
-        .catch(next);
-    });
+const TemplateTypeController = Service(
+  [TemplateTypeService],
+  (service) => {
+    const router = Router()
+    return (
+      () => {
+        router.get(
+          '/templateTypes',
+          (req, res, next) => {
+            // Get query from middleware -- auth handler
 
-    router.post('/templateTypes', (req, res, next) => {
-      service
-        .createTemplateType(req.body.templateType)
-        .then(templateType => res.json({ templateType }))
-        .catch(next);
-    });
+            service
+              .findTemplateType({})
+              .then((templateTypes) => res.json({ templateTypes }))
+              .catch(next)
+          }
+        )
 
-    router.put('/templateTypes/:_id', (req, res, next) => {
-      const { _id } = req.params;
-      const { templateType } = req.body;
+        router.post(
+          '/templateTypes',
+          (req, res, next) => {
+            service
+              .createTemplateType(req.body.templateType)
+              .then((templateType) => res.json({ templateType }))
+              .catch(next)
+          }
+        )
 
-      service
-        .updateTemplateType(_id, templateType)
-        .then(() => res.end())
-        .catch(next);
-    });
+        router.put(
+          '/templateTypes/:_id',
+          (req, res, next) => {
+            const { _id } = req.params
+            const { templateType } = req.body
 
-    router.delete('/templateTypes/:_id', (req, res, next) => {
-      const { _id } = req.params;
 
-      service
-        .deleteTemplateType(_id)
-        .then(() => res.end())
-        .catch(next);
-    });
+            service
+              .updateTemplateType(_id, templateType)
+              .then(() => res.end())
+              .catch(next)
+          }
+        )
 
-    router.post('/templateTypes/searchTemplateTypeByProgramIds', (req, res, next) => {
-      const { programIds } = req.body;
+        router.delete(
+          '/templateTypes/:_id',
+          (req, res, next) => {
+            const { _id } = req.params
 
-      service
-        .findTemplateTypeByProgramIds(programIds)
-        .then(templateTypes => {
-          res.json({ templateTypes });
-        })
-        .catch(next);
-    });
+            service
+              .deleteTemplateType(_id)
+              .then(() => res.end())
+              .catch(next)
+          }
+        )
 
-    return router;
-  })();
-});
+        router.post(
+          '/templateTypes/searchTemplateTypeByProgramIds',
+          (req, res, next) => {
+            const { programIds } = req.body;
 
-export default TemplateTypeController;
+            service
+              .findTemplateTypeByProgramIds(programIds)
+              .then((templateTypes) => {
+                res.json({templateTypes});
+              })
+          }
+        )
+
+        return router
+      }
+    )()
+  }
+)
+
+export default TemplateTypeController

@@ -1,60 +1,77 @@
-import Container from 'typedi';
-import UserRepository from '../User';
-import BaseRepository from '../repository';
-import TemplateRepository from '../Template/repository';
-import SubmissionPeriodRepository from '../SubmissionPeriod';
-import TemplatePackageModel from '../../models/TemplatePackage';
-import TemplatePackageEntity from '../../entities/TemplatePackage';
-import StatusRepository from '../Status';
+import UserRepository from '../User'
+import Container, { Service } from 'typedi'
+import BaseRepository from '../repository'
+import TemplateRepository from '../Template/repository'
+import SubmissionPeriodRepository from '../SubmissionPeriod'
+import TemplatePackageModel from '../../models/TemplatePackage'
+import TemplatePackageEntity from '../../entities/TemplatePackage'
+import StatusRepository from '../Status'
 
 // MongoDB implementation
 // @Service()
 export default class TemplatePackageRepository extends BaseRepository {
   constructor() {
-    super(TemplatePackageModel);
+    super(TemplatePackageModel)
 
-    this.submissionPeriodRepository = Container.get(SubmissionPeriodRepository);
-    this.userRepository = Container.get(UserRepository);
-    this.templateRepository = Container.get(TemplateRepository);
-    this.statusRepository = Container.get(StatusRepository);
+    this.submissionPeriodRepository = Container.get(SubmissionPeriodRepository)
+    this.userRepository = Container.get(UserRepository)
+    this.templateRepository = Container.get(TemplateRepository)
+    this.statusRepository = Container.get(StatusRepository)
   }
 
-  async create({ name, submissionPeriodId, templateIds, statusId, creationDate, userCreatorId }) {
+  async create(
+    {
+      name,
+      submissionPeriodId,
+      templateIds,
+      statusId,
+      creationDate,
+      userCreatorId
+    }
+  ) {
     return (
-      this.submissionPeriodRepository
-        .validate(submissionPeriodId)
+      this.submissionPeriodRepository.validate(submissionPeriodId)
         .then(() => this.templateRepository.validateMany(templateIds))
         .then(() => this.statusRepository.validate(statusId))
         // .then(() => this.userRepository.validate(userCreatorId))
-        .then(() =>
-          TemplatePackageModel.create({
+        .then(() => TemplatePackageModel.create(
+          {
             name,
             submissionPeriodId,
             templateIds,
             statusId,
             creationDate,
-            userCreatorId,
-          }),
-        )
-        .then(templatePackage => new TemplatePackageEntity(templatePackage.toObject()))
-    );
+            userCreatorId
+          }
+        ))
+        .then((templatePackage) => new TemplatePackageEntity(templatePackage.toObject()))
+    )
   }
 
   async update(
     id,
-    { name, submissionPeriodId, templateIds, statusId, creationDate, userCreatorId },
+    {
+      name,
+      submissionPeriodId,
+      templateIds,
+      statusId,
+      creationDate,
+      userCreatorId
+    }
   ) {
     return (
-      (statusId ? this.statusRepository.validate(statusId) : new Promise(resolve => resolve()))
+      (statusId
+        ? this.statusRepository.validate(statusId)
+        : new Promise((resolve) => resolve())
+      )
         // .then(() => {
         //   if (userCreatorId) return this.userRepository.validate(userCreatorId)
         // })
         .then(() => {
-          if (templateIds) return this.templateRepository.validateMany(templateIds);
+          if(templateIds) return this.templateRepository.validateMany(templateIds)
         })
         .then(() => {
-          if (submissionPeriodId)
-            return this.submissionPeriodRepository.validate(submissionPeriodId);
+          if(submissionPeriodId) return this.submissionPeriodRepository.validate(submissionPeriodId)
         })
         .then(() =>
           TemplatePackageModel.findByIdAndUpdate(id, {
@@ -63,30 +80,29 @@ export default class TemplatePackageRepository extends BaseRepository {
             templateIds,
             statusId,
             creationDate,
-            userCreatorId,
-          }),
+            userCreatorId
+          })
         )
-        .then(templatePackage => new TemplatePackageEntity(templatePackage.toObject()))
-    );
+        .then((templatePackage) => new TemplatePackageEntity(templatePackage.toObject()))
+    )
   }
 
   async find(query) {
-    const realQuery = {};
+    const realQuery = {}
 
     for (const key in query) {
-      if (query[key]) realQuery[key] = query[key];
+      if (query[key]) realQuery[key] = query[key]
     }
 
-    return TemplatePackageModel.find(realQuery).then(templatePackages =>
-      templatePackages.map(
-        templatePackage => new TemplatePackageEntity(templatePackage.toObject()),
-      ),
-    );
+    return TemplatePackageModel.find(realQuery)
+      .then((templatePackages) =>
+        templatePackages.map((templatePackage) => new TemplatePackageEntity(templatePackage.toObject()))
+      )
   }
 
   async delete(id) {
     return TemplatePackageModel.findByIdAndDelete(id).then(
-      templatePackage => new TemplatePackageEntity(templatePackage.toObject()),
-    );
+      (templatePackage) => new TemplatePackageEntity(templatePackage.toObject())
+    )
   }
 }

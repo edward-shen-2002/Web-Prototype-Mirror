@@ -17,18 +17,20 @@ export default class AppSysRepository extends BaseRepository {
 
   async create(AppSys) {
     AppSys.isActive = true;
-    return AppSysModel.create(AppSys).then(AppSys => new AppSysEntity(AppSys.toObject()));
+    return AppSysModel.create(AppSys).then(
+      (AppSys) => new AppSysEntity(AppSys.toObject())
+    );
   }
 
   async update(id, AppSys) {
     return AppSysModel.findByIdAndUpdate(id, AppSys).then(
-      AppSys => new AppSysEntity(AppSys.toObject()),
+      (AppSys) => new AppSysEntity(AppSys.toObject())
     );
   }
 
   async find(query) {
-    return AppSysModel.find(query).then(AppSyses =>
-      AppSyses.map(AppSys => new AppSysEntity(AppSys.toObject())),
+    return AppSysModel.find(query).then((AppSyses) =>
+      AppSyses.map((AppSys) => new AppSysEntity(AppSys.toObject()))
     );
   }
 }

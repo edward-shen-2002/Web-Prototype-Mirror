@@ -1,1 +1,2 @@
-export const selectTemplatePackagesStore = state => state.TemplatePackagesStore;
+export const selectTemplatePackagesStore = (state) =>
+  state.TemplatePackagesStore

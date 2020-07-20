@@ -1,1 +1,1 @@
-export { default } from './AppSysRoles';
+export { default } from './AppSysRoles'

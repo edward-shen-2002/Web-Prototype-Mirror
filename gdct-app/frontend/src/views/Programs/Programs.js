@@ -1,21 +1,21 @@
-import React, { useMemo, useEffect } from 'react';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import React, { useMemo, useEffect } from 'react'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import {
   getProgramsRequest,
   createProgramsRequest,
   deleteProgramsRequest,
   updateProgramsRequest,
-} from '../../store/thunks/program';
+} from '../../store/thunks/program'
 
-import MaterialTable from 'material-table';
-import Paper from '@material-ui/core/Paper';
+import MaterialTable from 'material-table'
+import Paper from '@material-ui/core/Paper'
 
-import Typography from '@material-ui/core/Typography';
+import Typography from '@material-ui/core/Typography'
 
-import './Programs.scss';
-import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors';
-import { selectProgramsStore } from '../../store/ProgramsStore/selectors';
+import './Programs.scss'
+import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
+import { selectProgramsStore } from '../../store/ProgramsStore/selectors'
 
 const ProgramHeader = () => {
   return (
@@ -23,18 +23,20 @@ const ProgramHeader = () => {
       <Typography variant="h5">Programs</Typography>
       {/* <HeaderActions/> */}
     </Paper>
-  );
-};
+  )
+}
 
 const ProgramsTable = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const { programs } = useSelector(
-    state => ({
-      programs: selectFactoryRESTResponseTableValues(selectProgramsStore)(state),
+    (state) => ({
+      programs: selectFactoryRESTResponseTableValues(selectProgramsStore)(
+        state
+      ),
     }),
-    shallowEqual,
-  );
+    shallowEqual
+  )
 
   const columns = useMemo(
     () => [
@@ -42,41 +44,51 @@ const ProgramsTable = () => {
       { title: 'Code', field: 'code' },
       { title: 'Active', type: 'boolean', field: 'isActive' },
     ],
-    [],
-  );
+    []
+  )
 
-  const options = useMemo(() => ({ actionsColumnIndex: -1, search: true, showTitle: false }), []);
+  const options = useMemo(
+    () => ({ actionsColumnIndex: -1, search: true, showTitle: false }),
+    []
+  )
 
   const editable = useMemo(
     () => ({
-      onRowAdd: program =>
+      onRowAdd: (program) =>
         new Promise((resolve, reject) => {
-          dispatch(createProgramsRequest(program, resolve, reject));
+          dispatch(createProgramsRequest(program, resolve, reject))
         }),
-      onRowUpdate: program =>
+      onRowUpdate: (program) =>
         new Promise((resolve, reject) => {
-          dispatch(updateProgramsRequest(program, resolve, reject));
+          dispatch(updateProgramsRequest(program, resolve, reject))
         }),
-      onRowDelete: program =>
+      onRowDelete: (program) =>
         new Promise((resolve, reject) => {
-          dispatch(deleteProgramsRequest(program._id, resolve, reject));
+          dispatch(deleteProgramsRequest(program._id, resolve, reject))
         }),
     }),
-    [dispatch],
-  );
+    [dispatch]
+  )
 
   useEffect(() => {
-    dispatch(getProgramsRequest());
-  }, [dispatch]);
+    dispatch(getProgramsRequest())
+  }, [dispatch])
 
-  return <MaterialTable columns={columns} data={programs} editable={editable} options={options} />;
-};
+  return (
+    <MaterialTable
+      columns={columns}
+      data={programs}
+      editable={editable}
+      options={options}
+    />
+  )
+}
 
-const Program = props => (
+const Program = (props) => (
   <div className="programsPage">
     <ProgramHeader />
     <ProgramsTable {...props} />
   </div>
-);
+)
 
-export default Program;
+export default Program

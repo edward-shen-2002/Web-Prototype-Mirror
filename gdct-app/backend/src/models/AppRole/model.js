@@ -10,7 +10,7 @@ const AppRole = new Schema(
       select: false,
     },
   },
-  { minimize: false, autoIndex: true },
+  { minimize: false, autoIndex: true }
 );
 
 AppRole.pre(/^find/, function (next) {

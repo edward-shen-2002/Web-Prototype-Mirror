@@ -6,7 +6,6 @@ export default class AppSysRoleRepository extends BaseRepository {
   constructor() {
     super(AppSysRoleModel);
   }
-
   async delete(id) {
     const appSysRole = await AppSysRoleModel.findById(id);
     if (appSysRole) {
@@ -18,25 +17,27 @@ export default class AppSysRoleRepository extends BaseRepository {
   async create(AppSysRole) {
     AppSysRole.isActive = true;
     return AppSysRoleModel.create(AppSysRole).then(
-      AppSysRole => new AppSysRoleEntity(AppSysRole.toObject()),
+      (AppSysRole) => new AppSysRoleEntity(AppSysRole.toObject())
     );
   }
 
   async update(id, AppSysRole) {
     return AppSysRoleModel.findByIdAndUpdate(id, AppSysRole).then(
-      AppSysRole => new AppSysRoleEntity(AppSysRole.toObject()),
+      (AppSysRole) => new AppSysRoleEntity(AppSysRole.toObject())
     );
   }
 
   async find(query) {
-    // TODO: filter to be active
-    return AppSysRoleModel.find(query).then(AppSysRoles =>
-      AppSysRoles.map(AppSysRole => new AppSysRoleEntity(AppSysRole.toObject())),
+    //TODO: filter to be active
+    return AppSysRoleModel.find(query).then((AppSysRoles) =>
+      AppSysRoles.map(
+        (AppSysRole) => new AppSysRoleEntity(AppSysRole.toObject())
+      )
     );
   }
 
   async findById(id) {
-    return this._model.findById(id).then(result => {
+    return this._model.findById(id).then((result) => {
       if (!result) throw new Error('_id does not exist');
       return result.toObject();
     });

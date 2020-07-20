@@ -1,1 +1,1 @@
-export { default } from './COARouter';
+export { default } from './COARouter'

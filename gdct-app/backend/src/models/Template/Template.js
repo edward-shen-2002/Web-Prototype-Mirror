@@ -1,6 +1,6 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document } from 'mongoose'
 
-const { ObjectId } = Schema.Types;
+const ObjectId = Schema.Types.ObjectId
 
 const TemplateModel = model(
   'Template',
@@ -18,11 +18,11 @@ const TemplateModel = model(
 
       expirationDate: { type: Date },
 
-      statusId: { type: ObjectId, ref: 'Status' },
+      statusId: { type: ObjectId, ref: 'Status' }
     },
-    { minimize: false },
+    { minimize: false }
   ),
-  'Template',
-);
+  'Template'
+)
 
-export default TemplateModel;
+export default TemplateModel

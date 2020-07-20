@@ -1,13 +1,13 @@
-const saveFile = handleSave => (dispatch, getState) => {
-  dispatch(saveExcelRequest());
+const saveFile = (handleSave) => (dispatch, getState) => {
+  dispatch(saveExcelRequest())
 
-  const { ExcelStore } = getState();
+  const { ExcelStore } = getState()
 
   return handleSave(ExcelStore)
     .then(() => {
-      dispatch(finishSaveExcel());
+      dispatch(finishSaveExcel())
     })
-    .catch(error => {
-      dispatch(failSaveExcel(error));
-    });
-};
+    .catch((error) => {
+      dispatch(failSaveExcel(error))
+    })
+}

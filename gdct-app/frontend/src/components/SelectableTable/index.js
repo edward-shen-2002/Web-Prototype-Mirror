@@ -1,1 +1,1 @@
-export { default } from './SelectableTable';
+export { default } from './SelectableTable'

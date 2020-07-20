@@ -1,4 +1,4 @@
-import Container from 'typedi';
+import Container, { Service } from 'typedi';
 import AppSysRoleRepository from '../../repositories/AppSysRole';
 
 // @Service()

@@ -1,29 +1,29 @@
-import React, { useMemo, useEffect, useCallback } from 'react';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import React, { useMemo, useEffect, useCallback } from 'react'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import {
   getTemplatePackagesRequest,
   createTemplatePackageRequest,
   deleteTemplatePackageRequest,
   updateTemplatePackageRequest,
-} from '../../../store/thunks/templatePackage';
+} from '../../../store/thunks/templatePackage'
 
-import MaterialTable from 'material-table';
-import Paper from '@material-ui/core/Paper';
-import LaunchIcon from '@material-ui/icons/Launch';
+import MaterialTable from 'material-table'
+import Paper from '@material-ui/core/Paper'
+import LaunchIcon from '@material-ui/icons/Launch'
 
-import Typography from '@material-ui/core/Typography';
+import Typography from '@material-ui/core/Typography'
 
 import {
   UserIdButton,
   StatusIdButton,
   SubmissionPeriodIdButton,
-} from '../../../components/buttons';
+} from '../../../components/buttons'
 
-import './TemplatePackages.scss';
-import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors';
-import { selectTemplatePackagesStore } from '../../../store/TemplatePackagesStore/selectors';
-import DialogsStore from '../../../store/DialogsStore/store';
+import './TemplatePackages.scss'
+import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors'
+import { selectTemplatePackagesStore } from '../../../store/TemplatePackagesStore/selectors'
+import DialogsStore from '../../../store/DialogsStore/store'
 
 const TemplatePackageHeader = () => {
   return (
@@ -31,18 +31,20 @@ const TemplatePackageHeader = () => {
       <Typography variant="h5">Template Packages</Typography>
       {/* <HeaderActions/> */}
     </Paper>
-  );
-};
+  )
+}
 
 const TemplatePackage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const { templatePackages } = useSelector(
-    state => ({
-      templatePackages: selectFactoryRESTResponseTableValues(selectTemplatePackagesStore)(state),
+    (state) => ({
+      templatePackages: selectFactoryRESTResponseTableValues(
+        selectTemplatePackagesStore
+      )(state),
     }),
-    shallowEqual,
-  );
+    shallowEqual
+  )
 
   const actions = useMemo(
     () => [
@@ -52,8 +54,8 @@ const TemplatePackage = () => {
         onClick: () => dispatch(DialogsStore.actions.OPEN_COA_DIALOG()),
       },
     ],
-    [dispatch],
-  );
+    [dispatch]
+  )
 
   const columns = useMemo(
     () => [
@@ -73,8 +75,8 @@ const TemplatePackage = () => {
         editComponent: UserIdButton,
       },
     ],
-    [],
-  );
+    []
+  )
 
   const options = useMemo(
     () => ({
@@ -82,32 +84,38 @@ const TemplatePackage = () => {
       search: false,
       showTitle: false,
     }),
-    [],
-  );
+    []
+  )
 
   const editable = useMemo(
     () => ({
-      onRowAdd: templatePackage =>
+      onRowAdd: (templatePackage) =>
         new Promise((resolve, reject) => {
-          console.log(templatePackage);
-          templatePackage = { ...templatePackage, templateIds: [] };
-          dispatch(createTemplatePackageRequest(templatePackage, resolve, reject));
+          console.log(templatePackage)
+          templatePackage = { ...templatePackage, templateIds: [] }
+          dispatch(
+            createTemplatePackageRequest(templatePackage, resolve, reject)
+          )
         }),
-      onRowUpdate: templatePackage =>
+      onRowUpdate: (templatePackage) =>
         new Promise((resolve, reject) => {
-          dispatch(updateTemplatePackageRequest(templatePackage, resolve, reject));
+          dispatch(
+            updateTemplatePackageRequest(templatePackage, resolve, reject)
+          )
         }),
-      onRowDelete: templatePackage =>
+      onRowDelete: (templatePackage) =>
         new Promise((resolve, reject) => {
-          dispatch(deleteTemplatePackageRequest(templatePackage._id, resolve, reject));
+          dispatch(
+            deleteTemplatePackageRequest(templatePackage._id, resolve, reject)
+          )
         }),
     }),
-    [dispatch],
-  );
+    [dispatch]
+  )
 
   useEffect(() => {
-    dispatch(getTemplatePackagesRequest());
-  }, [dispatch]);
+    dispatch(getTemplatePackagesRequest())
+  }, [dispatch])
 
   return (
     <div>
@@ -120,7 +128,7 @@ const TemplatePackage = () => {
         actions={actions}
       />
     </div>
-  );
-};
+  )
+}
 
-export default TemplatePackage;
+export default TemplatePackage

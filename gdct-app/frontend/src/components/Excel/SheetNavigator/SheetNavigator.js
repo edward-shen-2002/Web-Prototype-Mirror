@@ -1,46 +1,50 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react'
 
-import { batch, useSelector, useDispatch, shallowEqual } from 'react-redux';
+import { batch, useSelector, useDispatch, shallowEqual } from 'react-redux'
 
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
-import InputBase from '@material-ui/core/InputBase';
+import Button from '@material-ui/core/Button'
+import AddIcon from '@material-ui/icons/Add'
+import InputBase from '@material-ui/core/InputBase'
 
-import {} from '../../../store/actions/ui/excel/commands';
+import {} from '../../../store/actions/ui/excel/commands'
 
-import { enableEditMode, disableEditMode } from '../../../store/actions/ui/excel/events';
+import {
+  enableEditMode,
+  disableEditMode,
+} from '../../../store/actions/ui/excel/events'
 
-import { setSheet } from '../../../store/actions/ui/excel/commands';
+import { setSheet } from '../../../store/actions/ui/excel/commands'
 
-import { DnDReorder } from '../../../tools/misc';
-import { generateNewSheetName, createBlankSheet } from '../../../tools/excel';
+import { DnDReorder } from '../../../tools/misc'
+import { generateNewSheetName, createBlankSheet } from '../../../tools/excel'
 
-import './SheetNavigator.scss';
+import './SheetNavigator.scss'
 
 const AddButton = ({ handleClick }) => (
   <Button onClick={handleClick}>
     <AddIcon fontSize="small" />
   </Button>
-);
+)
 
 const SheetNameEdit = ({ sheetName, setIsEditMode, handleChangeSheetName }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-  const handleBlur = () => useCallback(dispatch(setIsEditMode(false)), [dispatch]);
+  const handleBlur = () =>
+    useCallback(dispatch(setIsEditMode(false)), [dispatch])
 
   const handleKeyDown = ({ key, target }) => {
     if (key === 'Enter') {
       // Save value
-      const { value } = target;
-      handleChangeSheetName(sheetName, value);
-      target.blur();
+      const { value } = target
+      handleChangeSheetName(sheetName, value)
+      target.blur()
     } else if (key === 'Escape') {
       // Don't save value
-      target.blur();
+      target.blur()
     }
-  };
+  }
 
   return (
     <InputBase
@@ -50,21 +54,21 @@ const SheetNameEdit = ({ sheetName, setIsEditMode, handleChangeSheetName }) => {
       onKeyDown={handleKeyDown}
       autoFocus
     />
-  );
-};
+  )
+}
 
 const SheetNameNormal = ({ isActive, sheetName, setIsEditMode }) => {
   const handleMouseDown = () => {
-    if (!isActive) setIsEditMode(false);
-  };
-  const handleDoubleClick = () => setIsEditMode(true);
+    if (!isActive) setIsEditMode(false)
+  }
+  const handleDoubleClick = () => setIsEditMode(true)
 
   return (
     <div onDoubleClick={handleDoubleClick} onMouseDown={handleMouseDown}>
       {sheetName}
     </div>
-  );
-};
+  )
+}
 
 const SheetNameDraggable = ({
   isEditMode,
@@ -73,19 +77,21 @@ const SheetNameDraggable = ({
   sheetName,
   activeSheetName,
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-  const isActive = activeSheetName === sheetName;
+  const isActive = activeSheetName === sheetName
 
   const handleClick = useCallback(() => {
-    if (!isActive) dispatch(setSheet({ sheetName }));
-  }, [dispatch, isActive]);
+    if (!isActive) dispatch(setSheet({ sheetName }))
+  }, [dispatch, isActive])
 
   return (
     <div
       ref={provided.innerRef}
       className={`sheetNavigator__draggable ${
-        isActive ? 'sheetNavigator__draggable--active' : 'sheetNavigator__draggable--inactive'
+        isActive
+          ? 'sheetNavigator__draggable--active'
+          : 'sheetNavigator__draggable--inactive'
       }`}
       style={provided.draggableProps.style}
       onClick={handleClick}
@@ -95,16 +101,29 @@ const SheetNameDraggable = ({
       {isActive && isEditMode ? (
         <SheetNameEdit sheetName={sheetName} setIsEditMode={setIsEditMode} />
       ) : (
-        <SheetNameNormal isActive={isActive} sheetName={sheetName} setIsEditMode={setIsEditMode} />
+        <SheetNameNormal
+          isActive={isActive}
+          sheetName={sheetName}
+          setIsEditMode={setIsEditMode}
+        />
       )}
     </div>
-  );
-};
+  )
+}
 
-const SheetNamesDraggables = ({ isEditMode, setIsEditMode, sheetNames, activeSheetName }) =>
+const SheetNamesDraggables = ({
+  isEditMode,
+  setIsEditMode,
+  sheetNames,
+  activeSheetName,
+}) =>
   sheetNames.map((sheetName, index) => (
-    <Draggable key={`sheet-name-${sheetName}`} draggableId={sheetName} index={index}>
-      {provided => (
+    <Draggable
+      key={`sheet-name-${sheetName}`}
+      draggableId={sheetName}
+      index={index}
+    >
+      {(provided) => (
         <SheetNameDraggable
           isEditMode={isEditMode}
           setIsEditMode={setIsEditMode}
@@ -115,11 +134,16 @@ const SheetNamesDraggables = ({ isEditMode, setIsEditMode, sheetNames, activeShe
         />
       )}
     </Draggable>
-  ));
+  ))
 
-const SheetNamesDroppable = ({ isEditMode, setIsEditMode, sheetNames, activeSheetName }) => (
+const SheetNamesDroppable = ({
+  isEditMode,
+  setIsEditMode,
+  sheetNames,
+  activeSheetName,
+}) => (
   <Droppable droppableId="droppable" direction="horizontal">
-    {provided => (
+    {(provided) => (
       <div
         ref={provided.innerRef}
         className="sheetNavigator__droppable"
@@ -135,7 +159,7 @@ const SheetNamesDroppable = ({ isEditMode, setIsEditMode, sheetNames, activeShee
       </div>
     )}
   </Droppable>
-);
+)
 
 const SheetSelectionContext = ({
   isEditMode,
@@ -152,12 +176,12 @@ const SheetSelectionContext = ({
       activeSheetName={activeSheetName}
     />
   </DragDropContext>
-);
+)
 
 const SheetNavigator = () => {
-  const [isEditMode, setIsEditMode] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false)
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const { sheetNames, activeSheetName } = useSelector(
     ({
@@ -170,36 +194,41 @@ const SheetNavigator = () => {
       sheetNames,
       activeSheetName,
     }),
-    shallowEqual,
-  );
+    shallowEqual
+  )
 
   const handleAddSheet = useCallback(
     () =>
       batch(() => {
-        const sheetName = generateNewSheetName(sheetNames);
-        const sheetData = createBlankSheet();
+        const sheetName = generateNewSheetName(sheetNames)
+        const sheetData = createBlankSheet()
 
-        dispatch(addSheet({ sheetName, sheetData }));
-        dispatch(changeSheet({ sheetName }));
+        dispatch(addSheet({ sheetName, sheetData }))
+        dispatch(changeSheet({ sheetName }))
       }),
-    [dispatch],
-  );
+    [dispatch]
+  )
 
   const handleDragEnd = useCallback(
-    result => {
-      if (!result.destination) return;
+    (result) => {
+      if (!result.destination) return
 
-      const newSheetNames = DnDReorder(sheetNames, result.source.index, result.destination.index);
+      const newSheetNames = DnDReorder(
+        sheetNames,
+        result.source.index,
+        result.destination.index
+      )
 
-      dispatch(setSheetNames(newSheetNames));
+      dispatch(setSheetNames(newSheetNames))
     },
-    [dispatch],
-  );
+    [dispatch]
+  )
 
   const handleChangeSheetName = useCallback(
-    (sheetName, newSheetName) => dispatch(setSheetName({ sheetName, newSheetName })),
-    [dispatch],
-  );
+    (sheetName, newSheetName) =>
+      dispatch(setSheetName({ sheetName, newSheetName })),
+    [dispatch]
+  )
 
   return (
     <div className="sheetNavigator">
@@ -212,7 +241,7 @@ const SheetNavigator = () => {
         handleDragEnd={handleDragEnd}
       />
     </div>
-  );
-};
+  )
+}
 
-export default SheetNavigator;
+export default SheetNavigator

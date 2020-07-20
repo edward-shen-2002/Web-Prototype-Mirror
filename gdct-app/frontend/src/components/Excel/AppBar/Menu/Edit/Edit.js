@@ -1,8 +1,8 @@
-import React from 'react';
+import React from 'react'
 
-import MenuItems from '../../../commonComponents/MenuItems';
+import MenuItems from '../../../commonComponents/MenuItems'
 
-import AcUnitIcon from '@material-ui/icons/AcUnit';
+import AcUnitIcon from '@material-ui/icons/AcUnit'
 
 const Edit = ({ openedMenuName, handleClickMenu, handleHoverMenu }) => {
   const options = [
@@ -10,7 +10,7 @@ const Edit = ({ openedMenuName, handleClickMenu, handleHoverMenu }) => {
       icon: <AcUnitIcon />,
       label: 'LABEL',
     },
-  ];
+  ]
 
   return (
     <MenuItems
@@ -20,7 +20,7 @@ const Edit = ({ openedMenuName, handleClickMenu, handleHoverMenu }) => {
       handleClickMenu={handleClickMenu}
       handleHoverMenu={handleHoverMenu}
     />
-  );
-};
+  )
+}
 
-export default Edit;
+export default Edit

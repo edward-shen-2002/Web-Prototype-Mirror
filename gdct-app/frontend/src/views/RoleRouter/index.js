@@ -1,1 +1,1 @@
-export { default } from './RoleRouter';
+export { default } from './RoleRouter'

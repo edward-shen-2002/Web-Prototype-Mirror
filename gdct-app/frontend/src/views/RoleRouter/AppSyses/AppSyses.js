@@ -1,21 +1,21 @@
-import React, { useMemo, useEffect } from 'react';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import React, { useMemo, useEffect } from 'react'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import {
   getAppSysesRequest,
   createAppSysRequest,
   deleteAppSysRequest,
   updateAppSysRequest,
-} from '../../../store/thunks/AppSys';
+} from '../../../store/thunks/AppSys'
 
-import MaterialTable from 'material-table';
-import Paper from '@material-ui/core/Paper';
+import MaterialTable from 'material-table'
+import Paper from '@material-ui/core/Paper'
 
-import Typography from '@material-ui/core/Typography';
+import Typography from '@material-ui/core/Typography'
 
-import './AppSyses.scss';
-import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors';
-import { selectAppSysesStore } from '../../../store/AppSysesStore/selectors';
+import './AppSyses.scss'
+import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors'
+import { selectAppSysesStore } from '../../../store/AppSysesStore/selectors'
 
 const AppSysesHeader = () => {
   return (
@@ -23,59 +23,71 @@ const AppSysesHeader = () => {
       <Typography variant="h5">AppSyses</Typography>
       {/* <HeaderActions/> */}
     </Paper>
-  );
-};
+  )
+}
 
 const AppSysesTable = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const { appSyses } = useSelector(
-    state => ({
-      appSyses: selectFactoryRESTResponseTableValues(selectAppSysesStore)(state),
+    (state) => ({
+      appSyses: selectFactoryRESTResponseTableValues(selectAppSysesStore)(
+        state
+      ),
     }),
-    shallowEqual,
-  );
+    shallowEqual
+  )
 
   const columns = useMemo(
     () => [
       { title: 'Code', field: 'code' },
       { title: 'Name', field: 'name' },
     ],
-    [],
-  );
+    []
+  )
 
-  const options = useMemo(() => ({ actionsColumnIndex: -1, search: false, showTitle: false }), []);
+  const options = useMemo(
+    () => ({ actionsColumnIndex: -1, search: false, showTitle: false }),
+    []
+  )
 
   const editable = useMemo(
     () => ({
-      onRowAdd: appSys =>
+      onRowAdd: (appSys) =>
         new Promise((resolve, reject) => {
-          dispatch(createAppSysRequest(appSys, resolve, reject));
+          dispatch(createAppSysRequest(appSys, resolve, reject))
         }),
-      onRowUpdate: appSys =>
+      onRowUpdate: (appSys) =>
         new Promise((resolve, reject) => {
-          dispatch(updateAppSysRequest(appSys, resolve, reject));
+          dispatch(updateAppSysRequest(appSys, resolve, reject))
         }),
-      onRowDelete: appSys =>
+      onRowDelete: (appSys) =>
         new Promise((resolve, reject) => {
-          dispatch(deleteAppSysRequest(appSys._id, resolve, reject));
+          dispatch(deleteAppSysRequest(appSys._id, resolve, reject))
         }),
     }),
-    [dispatch],
-  );
+    [dispatch]
+  )
 
   useEffect(() => {
-    dispatch(getAppSysesRequest());
-  }, [dispatch]);
+    dispatch(getAppSysesRequest())
+  }, [dispatch])
 
-  return <MaterialTable columns={columns} data={appSyses} editable={editable} options={options} />;
-};
+  return (
+    <MaterialTable
+      columns={columns}
+      data={appSyses}
+      editable={editable}
+      options={options}
+    />
+  )
+}
 
-const AppSyses = props => (
+const AppSyses = (props) => (
   <div className="AppSyses">
     <AppSysesHeader />
     {/* <FileDropzone/> */}
     <AppSysesTable {...props} />
   </div>
-);
+)
 
-export default AppSyses;
+export default AppSyses

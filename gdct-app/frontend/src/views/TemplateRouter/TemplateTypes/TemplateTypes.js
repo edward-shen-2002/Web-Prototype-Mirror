@@ -1,22 +1,22 @@
-import React, { useCallback, useMemo, useEffect } from 'react';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import React, { useCallback, useMemo, useEffect } from 'react'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import {
   getTemplateTypesRequest,
   createTemplateTypeRequest,
   deleteTemplateTypeRequest,
   updateTemplateTypeRequest,
-} from '../../../store/thunks/templateType';
+} from '../../../store/thunks/templateType'
 
-import MaterialTable from 'material-table';
-import LaunchIcon from '@material-ui/icons/Launch';
-import Paper from '@material-ui/core/Paper';
+import MaterialTable from 'material-table'
+import LaunchIcon from '@material-ui/icons/Launch'
+import Paper from '@material-ui/core/Paper'
 
-import Typography from '@material-ui/core/Typography';
+import Typography from '@material-ui/core/Typography'
 
-import './TemplateTypes.scss';
-import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors';
-import { selectTemplateTypesStore } from '../../../store/TemplateTypesStore/selectors';
+import './TemplateTypes.scss'
+import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors'
+import { selectTemplateTypesStore } from '../../../store/TemplateTypesStore/selectors'
 
 const TemplateTypeHeader = () => {
   return (
@@ -24,18 +24,20 @@ const TemplateTypeHeader = () => {
       <Typography variant="h5">Template Types</Typography>
       {/* <HeaderActions/> */}
     </Paper>
-  );
-};
+  )
+}
 
 const TemplateTypesTable = ({ history }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const { templateTypes } = useSelector(
-    state => ({
-      templateTypes: selectFactoryRESTResponseTableValues(selectTemplateTypesStore)(state),
+    (state) => ({
+      templateTypes: selectFactoryRESTResponseTableValues(
+        selectTemplateTypesStore
+      )(state),
     }),
-    shallowEqual,
-  );
+    shallowEqual
+  )
 
   const columns = useMemo(
     () => [
@@ -48,47 +50,48 @@ const TemplateTypesTable = ({ history }) => {
       { title: 'Inputtable', type: 'boolean', field: 'isInputtable' },
       { title: 'Viewable', type: 'boolean', field: 'isViewable' },
       { title: 'Reportable', type: 'boolean', field: 'isReportable' },
-      { title: 'Active', type: 'boolean', field: 'isActive' },
+      { title: 'Active', type: 'boolean', field: 'isActive'}
     ],
-    [],
-  );
+    []
+  )
 
   const actions = useMemo(
     () => [
       {
         icon: LaunchIcon,
         tooltip: 'View Programs',
-        onClick: (_event, templateType) => {
-          history.push(`/template_manager/templateTypes/${templateType._id}`);
-        },
+        onClick: (_event, templateType) => {history.push(`/template_manager/templateTypes/${templateType._id}`)},
       },
     ],
-    [history],
-  );
+    [history]
+  )
 
-  const options = useMemo(() => ({ actionsColumnIndex: -1, search: true, showTitle: false }), []);
+  const options = useMemo(
+    () => ({ actionsColumnIndex: -1, search: true, showTitle: false }),
+    []
+  )
 
   const editable = useMemo(
     () => ({
-      onRowAdd: templateType =>
+      onRowAdd: (templateType) =>
         new Promise((resolve, reject) => {
-          dispatch(createTemplateTypeRequest(templateType, resolve, reject));
+          dispatch(createTemplateTypeRequest(templateType, resolve, reject))
         }),
-      onRowUpdate: templateType =>
+      onRowUpdate: (templateType) =>
         new Promise((resolve, reject) => {
-          dispatch(updateTemplateTypeRequest(templateType, resolve, reject));
+          dispatch(updateTemplateTypeRequest(templateType, resolve, reject))
         }),
-      onRowDelete: templateType =>
+      onRowDelete: (templateType) =>
         new Promise((resolve, reject) => {
-          dispatch(deleteTemplateTypeRequest(templateType._id, resolve, reject));
+          dispatch(deleteTemplateTypeRequest(templateType._id, resolve, reject))
         }),
     }),
-    [dispatch],
-  );
+    [dispatch]
+  )
 
   useEffect(() => {
-    dispatch(getTemplateTypesRequest());
-  }, [dispatch]);
+    dispatch(getTemplateTypesRequest())
+  }, [dispatch])
 
   return (
     <MaterialTable
@@ -98,15 +101,15 @@ const TemplateTypesTable = ({ history }) => {
       editable={editable}
       options={options}
     />
-  );
-};
+  )
+}
 
-const TemplateType = props => (
+const TemplateType = (props) => (
   <div className="templateTypesPage">
     <TemplateTypeHeader />
     {/* <FileDropzone/> */}
     <TemplateTypesTable {...props} />
   </div>
-);
+)
 
-export default TemplateType;
+export default TemplateType

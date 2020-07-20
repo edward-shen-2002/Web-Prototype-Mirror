@@ -1,59 +1,69 @@
-import { extractReactAndWorkbookState } from '@tools/excel';
+import { extractReactAndWorkbookState } from '@tools/excel'
 
-import { CustomEditor } from '@tools/slate';
+import { CustomEditor } from '@tools/slate'
 
-import { editorToRichTextMap, richTextToEditorMap } from '@constants/styles';
+import { editorToRichTextMap, richTextToEditorMap } from '@constants/styles'
 
-import { REST_ADMIN_TEMPLATES, REST_ADMIN_BUNDLES_WORKFLOW } from '@constants/rest';
+import {
+  REST_ADMIN_TEMPLATES,
+  REST_ADMIN_BUNDLES_WORKFLOW,
+} from '@constants/rest'
 
 class EventListener extends PureComponent {
   saveTemplate(commonProps) {
-    const { isTemplatePublished, templateId } = this.props;
+    const { isTemplatePublished, templateId } = this.props
 
-    commonProps.isTemplatePublished = isTemplatePublished;
+    commonProps.isTemplatePublished = isTemplatePublished
 
-    const fileStates = extractReactAndWorkbookState(commonProps, this.inactiveSheets);
+    const fileStates = extractReactAndWorkbookState(
+      commonProps,
+      this.inactiveSheets
+    )
 
     const newTemplate = {
       published: isTemplatePublished,
       fileStates,
       name: fileStates.name,
-    };
+    }
 
     // ! Add more checks
     adminTemplateRoleAxios
       .put(`${REST_ADMIN_TEMPLATES}/${templateId}`, { newTemplate })
-      .catch(error => console.error(error));
+      .catch((error) => console.error(error))
   }
 
   saveBundle(bundleAxiosRouter, commonProps) {
-    const { bundleId, templateId } = this.props;
+    const { bundleId, templateId } = this.props
 
-    const fileStates = extractReactAndWorkbookState(commonProps, this.inactiveSheets);
+    const fileStates = extractReactAndWorkbookState(
+      commonProps,
+      this.inactiveSheets
+    )
 
     bundleAxiosRouter
-      .put(`${REST_ADMIN_BUNDLES_WORKFLOW}/${bundleId}/workbook/${templateId}`, {
-        workbook: fileStates,
+      .put(
+        `${REST_ADMIN_BUNDLES_WORKFLOW}/${bundleId}/workbook/${templateId}`,
+        { workbook: fileStates }
+      )
+      .catch((error) => {
+        console.error(error)
       })
-      .catch(error => {
-        console.error(error);
-      });
   }
 
   saveEditBundle(commonProps) {
-    this.saveBundle(adminEditBundleRoleAxios, commonProps);
+    this.saveBundle(adminEditBundleRoleAxios, commonProps)
   }
 
   saveReviewBundle(commonProps) {
-    this.saveBundle(adminReviewBundleRoleAxios, commonProps);
+    this.saveBundle(adminReviewBundleRoleAxios, commonProps)
   }
 
   saveApproveBundle(commonProps) {
-    this.saveBundle(adminApproveBundleRoleAxios, commonProps);
+    this.saveBundle(adminApproveBundleRoleAxios, commonProps)
   }
 
   saveManagerBundle(commonProps) {
-    this.saveBundle(adminBundleRoleAxios, commonProps);
+    this.saveBundle(adminBundleRoleAxios, commonProps)
   }
 
   save() {
@@ -73,7 +83,7 @@ class EventListener extends PureComponent {
       sheetHiddenColumns,
       sheetHiddenRows,
       stagnantSelectionAreas,
-    } = this.props;
+    } = this.props
 
     let commonProps = {
       name,
@@ -90,16 +100,16 @@ class EventListener extends PureComponent {
       sheetHiddenColumns,
       sheetHiddenRows,
       stagnantSelectionAreas,
-    };
+    }
 
     if (type === 'template') {
-      this.saveTemplate(commonProps);
+      this.saveTemplate(commonProps)
     } else if (type === 'bundle_edit') {
-      this.saveEditBundle(commonProps);
+      this.saveEditBundle(commonProps)
     } else if (type === 'bundle_review') {
-      this.saveReviewBundle(commonProps);
+      this.saveReviewBundle(commonProps)
     } else if (type === 'bundle_approve') {
-      this.saveApproveBundle(commonProps);
+      this.saveApproveBundle(commonProps)
     }
   }
 
@@ -107,91 +117,98 @@ class EventListener extends PureComponent {
 
   // ! Make the active style be the focus of styles
   applyBlockStyle(property, propertyValue) {
-    let { sheetCellData, handleUpdateSheetCellData } = this.props;
+    let { sheetCellData, handleUpdateSheetCellData } = this.props
     // Get the rows/columns
     // ! Consider border enclosure -- is it by cell or by range?
-    let containedArea = this._getAllAreas();
+    let containedArea = this._getAllAreas()
 
     for (let row in containedArea) {
-      const rowArea = containedArea[row];
+      const rowArea = containedArea[row]
 
-      if (!sheetCellData[row]) sheetCellData[row] = {};
+      if (!sheetCellData[row]) sheetCellData[row] = {}
 
       for (let column in rowArea) {
-        if (!sheetCellData[row][column]) sheetCellData[row][column] = {};
+        if (!sheetCellData[row][column]) sheetCellData[row][column] = {}
 
-        const { property: blockProperty, style: blockPropertyStyle } = editorToRichTextMap[
-          property
-        ];
+        const {
+          property: blockProperty,
+          style: blockPropertyStyle,
+        } = editorToRichTextMap[property]
 
         if (blockProperty) {
           if (blockPropertyStyle) {
-            if (!sheetCellData[row][column].styles) sheetCellData[row][column].styles = {};
+            if (!sheetCellData[row][column].styles)
+              sheetCellData[row][column].styles = {}
 
-            let cellStyles = sheetCellData[row][column].styles;
+            let cellStyles = sheetCellData[row][column].styles
 
             if (cellStyles[blockProperty]) {
-              const potentialStyles = Object.values(richTextToEditorMap[blockProperty]).length;
+              const potentialStyles = Object.values(
+                richTextToEditorMap[blockProperty]
+              ).length
 
               if (potentialStyles > 1) {
-                let presentStyles = cellStyles[blockProperty].split(' ');
+                let presentStyles = cellStyles[blockProperty].split(' ')
 
                 const potentialIndex = presentStyles.findIndex(
-                  style => style === blockPropertyStyle,
-                );
+                  (style) => style === blockPropertyStyle
+                )
 
                 if (potentialIndex > -1) {
                   cellStyles[blockProperty] = presentStyles
                     .splice(blockPropertyStyle, potentialIndex)
-                    .join(' ');
+                    .join(' ')
                 } else {
-                  cellStyles[blockProperty] = `${cellStyles[blockProperty]} ${blockPropertyStyle}`;
+                  cellStyles[
+                    blockProperty
+                  ] = `${cellStyles[blockProperty]} ${blockPropertyStyle}`
                 }
               } else {
                 // Replace style
-                delete cellStyles[blockProperty];
+                delete cellStyles[blockProperty]
               }
             } else {
-              cellStyles[blockProperty] = blockPropertyStyle;
+              cellStyles[blockProperty] = blockPropertyStyle
             }
           } else {
             // ! Custom style - Make use of property value
           }
         } else {
-          console.error('Style not supported');
+          console.error('Style not supported')
         }
       }
     }
 
-    handleUpdateSheetCellData(sheetCellData);
+    handleUpdateSheetCellData(sheetCellData)
 
-    this.saveActiveCellInputData();
-    this.disableEditMode();
+    this.saveActiveCellInputData()
+    this.disableEditMode()
   }
 
   applyTextStyle(property, propertyValue) {
     const {
       isEditMode,
       activeCellInputData: { formulaEditor, cellEditor },
-    } = this.props;
+    } = this.props
 
     if (isEditMode) {
-      ReactEditor.focus(cellEditor);
-      Transforms.select(cellEditor, Editor.end(cellEditor, []));
+      ReactEditor.focus(cellEditor)
+      Transforms.select(cellEditor, Editor.end(cellEditor, []))
 
-      if (!propertyValue) {
-        CustomEditor.toggleMark(formulaEditor, property);
-        CustomEditor.toggleMark(cellEditor, property);
+      if (propertyValue) {
+      } else {
+        CustomEditor.toggleMark(formulaEditor, property)
+        CustomEditor.toggleMark(cellEditor, property)
       }
     } else {
       // Apply block style
-      this.applyBlockStyle(property, propertyValue);
+      this.applyBlockStyle(property, propertyValue)
     }
   }
 }
 
 EventListener = connect(mapStateToProps, mapDispatchToProps, null, {
   forwardRef: true,
-})(EventListener);
+})(EventListener)
 
-export default EventListener;
+export default EventListener

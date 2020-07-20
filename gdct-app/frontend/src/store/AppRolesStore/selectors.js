@@ -1,1 +1,1 @@
-export const selectAppRolesStore = state => state.AppRolesStore;
+export const selectAppRolesStore = (state) => state.AppRolesStore

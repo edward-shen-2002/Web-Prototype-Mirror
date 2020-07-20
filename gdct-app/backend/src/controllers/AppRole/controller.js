@@ -1,51 +1,68 @@
-import { Service } from 'typedi';
-import { Router } from 'express';
-import AppRoleService from '../../services/AppRole';
+import { Service } from 'typedi'
+import { Router } from 'express'
+import AppRoleService from '../../services/AppRole'
 
-const AppRoleController = Service([AppRoleService], service => {
-  const router = Router();
-  return (() => {
-    router.get('/appRoles', (req, res, next) => {
-      // Get query from middleware -- auth handler
+const AppRoleController = Service(
+  [AppRoleService],
+  (service) => {
+    const router = Router()
+    return (
+      () => {
+        router.get(
+          '/appRoles',
+          (req, res, next) => {
+            // Get query from middleware -- auth handler
 
-      service
-        .findAppRole({})
-        .then(AppRoles => res.json({ AppRoles }))
-        .catch(next);
-    });
+            service
+              .findAppRole({})
+              .then((AppRoles) => res.json({ AppRoles }))
+              .catch(next)
+          }
+        )
 
-    router.post('/appRoles', (req, res, next) => {
-      service
-        .createAppRole(req.body.AppRole)
-        .then(AppRole => res.json({ AppRole }))
-        .catch(error => {
-          console.error(error);
-          throw error;
-        })
-        .catch(next);
-    });
+        router.post(
+          '/appRoles',
+          (req, res, next) => {
+            service
+              .createAppRole(req.body.AppRole)
+              .then((AppRole) => res.json({ AppRole }))
+              .catch((error) => {
+                console.error(error)
+                throw error
+              })
+              .catch(next)
+          }
+        )
 
-    router.put('/appRoles/:_id', (req, res, next) => {
-      const { _id } = req.params;
-      const { AppRole } = req.body;
+        router.put(
+          '/appRoles/:_id',
+          (req, res, next) => {
+            const { _id } = req.params
+            const { AppRole } = req.body
 
-      service
-        .updateAppRole(_id, AppRole)
-        .then(() => res.end())
-        .catch(next);
-    });
+            service
+              .updateAppRole(_id, AppRole)
+              .then(() => res.end())
+              .catch(next)
+          }
+        )
 
-    router.delete('/appRoles/:_id', (req, res, next) => {
-      const { _id } = req.params;
+        router.delete(
+          '/appRoles/:_id',
+          (req, res, next) => {
+            const { _id } = req.params
 
-      service
-        .deleteAppRole(_id)
-        .then(() => res.end())
-        .catch(next);
-    });
+            service
+              .deleteAppRole(_id)
+              .then(() => res.end())
+              .catch(next)
+          }
+        )
 
-    return router;
-  })();
-});
+        return router
+      }
+    )()
+  }
+)
 
-export default AppRoleController;
+export default AppRoleController

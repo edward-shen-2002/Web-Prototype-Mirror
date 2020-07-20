@@ -1,46 +1,46 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react'
 
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
-import { VariableSizeGrid } from 'react-window';
+import { VariableSizeGrid } from 'react-window'
 
-import { ContextMenuTrigger } from 'react-contextmenu';
+import { ContextMenuTrigger } from 'react-contextmenu'
 
-import AutoSizer from 'react-virtualized-auto-sizer';
+import AutoSizer from 'react-virtualized-auto-sizer'
 
-import memoize from 'memoize-one';
+import memoize from 'memoize-one'
 
-import isHotkey from 'is-hotkey';
+import isHotkey from 'is-hotkey'
 
-import { inputCharacterRegex } from '../../..//tools/regex';
+import { inputCharacterRegex } from '../../..//tools/regex'
 
-import { getNormalRowHeight, getNormalColumnWidth } from '../../..//tools/excel';
+import { getNormalRowHeight, getNormalColumnWidth } from '../../..//tools/excel'
 
-import ContextMenu from './ContextMenu';
+import ContextMenu from './ContextMenu'
 
-import WindowListener from './WindowListener';
+import WindowListener from './WindowListener'
 
-import Cell from './Cell';
+import Cell from './Cell'
 
-import TopLeftActivityPane from './ActivityPane/TopLeftActivityPane';
-import TopRightActivityPane from './ActivityPane/TopRightActivityPane';
-import BottomLeftActivityPane from './ActivityPane/BottomLeftActivityPane';
-import BottomRightActivityPane from './ActivityPane/BottomRightActivityPane';
+import TopLeftActivityPane from './ActivityPane/TopLeftActivityPane'
+import TopRightActivityPane from './ActivityPane/TopRightActivityPane'
+import BottomLeftActivityPane from './ActivityPane/BottomLeftActivityPane'
+import BottomRightActivityPane from './ActivityPane/BottomRightActivityPane'
 
 import {
   DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER,
   DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
   EXCEL_WINDOW_OVERSCAN_COLUMN_COUNT,
   EXCEL_WINDOW_OVERSCAN_ROW_COUNT,
-} from '../../../constants/excel';
+} from '../../../constants/excel'
 
-import { HOTKEYS } from '../../../constants/input';
+import { HOTKEYS } from '../../../constants/input'
 
 import {
   setScrollData,
   enableEditMode,
   enableSheetFocus,
-} from '../../../store/actions/ui/excel/events';
+} from '../../../store/actions/ui/excel/events'
 import {
   keyArrowDown,
   keyArrowUp,
@@ -50,17 +50,17 @@ import {
   keyTab,
   keyEnter,
   keyDelete,
-} from '../../../store/actions/ui/excel/keyboard';
+} from '../../../store/actions/ui/excel/keyboard'
 
-import { selectAll, save } from '../../../store/actions/ui/excel/commands';
+import { selectAll, save } from '../../../store/actions/ui/excel/commands'
 
-import './Sheet.scss';
+import './Sheet.scss'
 
 // !Change this to spread instead of object?
-const createItemData = memoize(itemData => itemData);
+const createItemData = memoize((itemData) => itemData)
 
 const SheetWindow = ({ sheetGridRef }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const {
     sheetCellData,
@@ -94,36 +94,43 @@ const SheetWindow = ({ sheetGridRef }) => {
       sheetColumnWidths,
       sheetRowHeights,
     }),
-    shallowEqual,
-  );
+    shallowEqual
+  )
 
-  const tableFreezeRowCount = useMemo(() => sheetFreezeRowCount + 1, [sheetFreezeRowCount]);
+  const tableFreezeRowCount = useMemo(() => sheetFreezeRowCount + 1, [
+    sheetFreezeRowCount,
+  ])
   const tableFreezeColumnCount = useMemo(() => sheetFreezeColumnCount + 1, [
     sheetFreezeColumnCount,
-  ]);
+  ])
 
   const rowHeight = useCallback(
-    index =>
-      index ? getNormalRowHeight(sheetRowHeights[index]) : DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
-    [sheetRowHeights],
-  );
+    (index) =>
+      index
+        ? getNormalRowHeight(sheetRowHeights[index])
+        : DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
+    [sheetRowHeights]
+  )
 
   const columnWidth = useCallback(
-    index =>
+    (index) =>
       index
         ? getNormalColumnWidth(sheetColumnWidths[index])
         : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER,
-    [sheetColumnWidths],
-  );
+    [sheetColumnWidths]
+  )
 
-  const handleScroll = useCallback(scrollData => dispatch(setScrollData(scrollData)), [dispatch]);
+  const handleScroll = useCallback(
+    (scrollData) => dispatch(setScrollData(scrollData)),
+    [dispatch]
+  )
 
   const itemData = createItemData({
     sheetCellData,
 
     sheetColumnCount,
     sheetRowCount,
-  });
+  })
 
   return (
     <AutoSizer>
@@ -143,21 +150,29 @@ const SheetWindow = ({ sheetGridRef }) => {
             overscanColumnCount={EXCEL_WINDOW_OVERSCAN_COLUMN_COUNT}
             overscanRowCount={EXCEL_WINDOW_OVERSCAN_ROW_COUNT}
             onScroll={handleScroll}
-            extraTopLeftElement={<TopLeftActivityPane key="top-left-selection-pane" />}
-            extraTopRightElement={<TopRightActivityPane key="top-right-activity-pane" />}
-            extraBottomLeftElement={<BottomLeftActivityPane key="bottom-left-activity-pane" />}
-            extraBottomRightElement={<BottomRightActivityPane key="bottom-right-activity-pane" />}
+            extraTopLeftElement={
+              <TopLeftActivityPane key="top-left-selection-pane" />
+            }
+            extraTopRightElement={
+              <TopRightActivityPane key="top-right-activity-pane" />
+            }
+            extraBottomLeftElement={
+              <BottomLeftActivityPane key="bottom-left-activity-pane" />
+            }
+            extraBottomRightElement={
+              <BottomRightActivityPane key="bottom-right-activity-pane" />
+            }
           >
             {Cell}
           </VariableSizeGrid>
         </ContextMenuTrigger>
       )}
     </AutoSizer>
-  );
-};
+  )
+}
 
 let Sheet = ({ sheetGridRef, handleSave }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const {
     cursorType,
@@ -197,42 +212,42 @@ let Sheet = ({ sheetGridRef, handleSave }) => {
       sheetColumnWidths,
       sheetRowHeights,
     }),
-    shallowEqual,
-  );
+    shallowEqual
+  )
 
   const handleKeyDown = useCallback(
-    event => {
-      const { key, shiftKey, ctrlKey, altKey, metaKey } = event;
+    (event) => {
+      const { key, shiftKey, ctrlKey, altKey, metaKey } = event
 
-      let action;
+      let action
 
       if (key === 'ArrowUp') {
-        action = keyArrowUp({ shiftKey });
+        action = keyArrowUp({ shiftKey })
       } else if (key === 'ArrowDown') {
-        action = keyArrowDown({ shiftKey });
+        action = keyArrowDown({ shiftKey })
       } else if (key === 'ArrowLeft') {
-        action = keyArrowLeft({ shiftKey });
+        action = keyArrowLeft({ shiftKey })
       } else if (key === 'ArrowRight') {
-        action = keyArrowRight({ shiftKey });
+        action = keyArrowRight({ shiftKey })
       } else if (key === 'Tab') {
-        event.preventDefault();
-        action = keyTab({ shiftKey });
+        event.preventDefault()
+        action = keyTab({ shiftKey })
       } else if (key === 'Enter' && !(ctrlKey || metaKey) && !altKey) {
-        action = keyEnter({ shiftKey });
+        action = keyEnter({ shiftKey })
       } else if (key === 'Delete' || key === 'Backspace') {
-        action = keyDelete();
+        action = keyDelete()
       } else if (key === 'Escape') {
-        action = keyEscape({});
+        action = keyEscape({})
       } else if (key === 's' && (ctrlKey || metaKey)) {
         // ! save
-        handleSave();
+        handleSave()
         // action = save(handleSave);
       } else if (key === 'a' && (ctrlKey || metaKey)) {
-        event.preventDefault();
-        action = selectAll();
-        // } else if (ctrlKey || metaKey) {
+        event.preventDefault()
+        action = selectAll()
+      } else if (ctrlKey || metaKey) {
       } else if (inputCharacterRegex.test(key)) {
-        action = enableEditMode();
+        action = enableEditMode()
       }
 
       // for(let hotkey in HOTKEYS) {
@@ -242,48 +257,50 @@ let Sheet = ({ sheetGridRef, handleSave }) => {
       //   }
       // }
 
-      if (action) dispatch(action);
+      if (action) dispatch(action)
     },
-    [dispatch],
-  );
+    [dispatch]
+  )
 
-  const handleKeyDownCapture = event => {
-    const { key, shiftKey, ctrlKey, metaKey, altKey } = event;
+  const handleKeyDownCapture = (event) => {
+    const { key, shiftKey, ctrlKey, metaKey, altKey } = event
 
     if (key === 's' && (ctrlKey || metaKey)) {
-      event.preventDefault();
+      event.preventDefault()
     }
-  };
+  }
 
   // https://stackoverflow.com/questions/3169786/clear-text-selection-with-javascript
-  const handleDragStart = event => {
-    let selection = window.getSelection ? window.getSelection() : document.selection;
+  const handleDragStart = (event) => {
+    let selection = window.getSelection
+      ? window.getSelection()
+      : document.selection
 
     if (selection) {
       if (selection.removeAllRanges) {
-        selection.removeAllRanges();
+        selection.removeAllRanges()
       } else if (selection.empty) {
-        selection.empty();
+        selection.empty()
       }
 
-      event.preventDefault();
+      event.preventDefault()
     }
-  };
+  }
 
   // TODO
   const handlePaste = ({ clipboardData }) => {
-    let paste = (clipboardData || window.clipboardData).getData('text/html');
+    let paste = (clipboardData || window.clipboardData).getData('text/html')
 
     // console.log(paste);
-  };
+  }
 
   const handleClick = useCallback(() => {
-    dispatch(enableSheetFocus());
-  }, [dispatch]);
+    dispatch(enableSheetFocus())
+  }, [dispatch])
 
-  let style = {};
+  let style = {}
 
-  if (cursorType !== 'default') style.cursor = cursorType;
+  if (cursorType !== 'default') style.cursor = cursorType
 
   return (
     <div
@@ -311,7 +328,7 @@ let Sheet = ({ sheetGridRef, handleSave }) => {
       <ContextMenu />
       <WindowListener />
     </div>
-  );
-};
+  )
+}
 
-export default Sheet;
+export default Sheet

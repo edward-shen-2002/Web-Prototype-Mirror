@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose'
 
 const WorkflowModel = model(
   'Workflow',
@@ -6,9 +6,9 @@ const WorkflowModel = model(
     {
       name: { type: String },
     },
-    { minimize: false, autoIndex: true },
+    { minimize: false, autoIndex: true }
   ),
-  'Workflow',
-);
+  'Workflow'
+)
 
-export default WorkflowModel;
+export default WorkflowModel

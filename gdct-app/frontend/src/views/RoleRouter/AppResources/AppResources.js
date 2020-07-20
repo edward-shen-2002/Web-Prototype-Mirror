@@ -1,21 +1,21 @@
-import React, { useMemo, useEffect } from 'react';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import React, { useMemo, useEffect } from 'react'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import {
   getAppResourcesRequest,
   createAppResourceRequest,
   deleteAppResourceRequest,
   updateAppResourceRequest,
-} from '../../../store/thunks/AppResource';
+} from '../../../store/thunks/AppResource'
 
-import MaterialTable from 'material-table';
-import Paper from '@material-ui/core/Paper';
+import MaterialTable from 'material-table'
+import Paper from '@material-ui/core/Paper'
 
-import Typography from '@material-ui/core/Typography';
+import Typography from '@material-ui/core/Typography'
 
-import './AppResources.scss';
-import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors';
-import { selectAppResourcesStore } from '../../../store/AppResourcesStore/selectors';
+import './AppResources.scss'
+import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors'
+import { selectAppResourcesStore } from '../../../store/AppResourcesStore/selectors'
 
 const AppResourcesHeader = () => {
   return (
@@ -23,17 +23,19 @@ const AppResourcesHeader = () => {
       <Typography variant="h5">AppResources</Typography>
       {/* <HeaderActions/> */}
     </Paper>
-  );
-};
+  )
+}
 
 const AppResourcesTable = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const { appResources } = useSelector(
-    state => ({
-      appResources: selectFactoryRESTResponseTableValues(selectAppResourcesStore)(state),
+    (state) => ({
+      appResources: selectFactoryRESTResponseTableValues(
+        selectAppResourcesStore
+      )(state),
     }),
-    shallowEqual,
-  );
+    shallowEqual
+  )
 
   const columns = useMemo(
     () => [
@@ -41,47 +43,55 @@ const AppResourcesTable = () => {
       { title: 'Resource Path', field: 'resourcePath' },
       { title: 'Protection', field: 'isProtected' },
     ],
-    [],
-  );
+    []
+  )
 
-  const options = useMemo(() => ({ actionsColumnIndex: -1, search: false, showTitle: false }), []);
+  const options = useMemo(
+    () => ({ actionsColumnIndex: -1, search: false, showTitle: false }),
+    []
+  )
 
   const editable = useMemo(
     () => ({
-      onRowAdd: appResource =>
+      onRowAdd: (appResource) =>
         new Promise((resolve, reject) => {
-          dispatch(createAppResourceRequest(appResource, resolve, reject));
+          dispatch(createAppResourceRequest(appResource, resolve, reject))
         }),
-      onRowUpdate: appResource =>
+      onRowUpdate: (appResource) =>
         new Promise((resolve, reject) => {
-          dispatch(updateAppResourceRequest(appResource, resolve, reject));
+          dispatch(updateAppResourceRequest(appResource, resolve, reject))
         }),
-      onRowDelete: appResource =>
+      onRowDelete: (appResource) =>
         new Promise((resolve, reject) => {
-          dispatch(deleteAppResourceRequest(appResource._id, resolve, reject));
+          dispatch(deleteAppResourceRequest(appResource._id, resolve, reject))
         }),
     }),
-    [dispatch],
-  );
+    [dispatch]
+  )
 
   useEffect(() => {
-    dispatch(getAppResourcesRequest());
-  }, [dispatch]);
+    dispatch(getAppResourcesRequest())
+  }, [dispatch])
 
   return (
-    <MaterialTable columns={columns} data={appResources} editable={editable} options={options} />
-  );
-};
+    <MaterialTable
+      columns={columns}
+      data={appResources}
+      editable={editable}
+      options={options}
+    />
+  )
+}
 
-const AppResources = props => {
-  console.log('why not: ', props);
+const AppResources = (props) => {
+  console.log('why not: ', props)
   return (
     <div className="AppResources">
       <AppResourcesHeader />
       {/* <FileDropzone/> */}
       <AppResourcesTable {...props} />
     </div>
-  );
-};
+  )
+}
 
-export default AppResources;
+export default AppResources

@@ -1,1 +1,1 @@
-export { default } from './FormulaBar';
+export { default } from './FormulaBar'

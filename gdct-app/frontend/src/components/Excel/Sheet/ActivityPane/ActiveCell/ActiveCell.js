@@ -1,6 +1,6 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react'
 
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import {
   getNormalRowHeight,
@@ -8,25 +8,25 @@ import {
   isPrepopulateString,
   parsePrepopulateString,
   getAreaDimensions,
-} from '../../../../../tools/excel';
+} from '../../../../../tools/excel'
 
-import { resetActiveCellDialog } from '../../../../../store/actions/ui/excel/commands';
+import { resetActiveCellDialog } from '../../../../../store/actions/ui/excel/commands'
 
-import CellEditor from './CellEditor';
+import CellEditor from './CellEditor'
 
-import Popover, { ArrowContainer } from 'react-tiny-popover';
+import Popover, { ArrowContainer } from 'react-tiny-popover'
 
-import topOffsetsSelector from '../../../../../store/selectors/ui/excel/topOffsets';
-import leftOffsetsSelector from '../../../../../store/selectors/ui/excel/leftOffsets';
+import topOffsetsSelector from '../../../../../store/selectors/ui/excel/topOffsets'
+import leftOffsetsSelector from '../../../../../store/selectors/ui/excel/leftOffsets'
 
-import BusinessConceptPopup from './BusinessConceptPopup';
-import PrepopulatePopup from './PrepopulatePopup';
-import CommentPopup from './CommentPopup';
-import COAPopup from './COAPopup';
+import BusinessConceptPopup from './BusinessConceptPopup'
+import PrepopulatePopup from './PrepopulatePopup'
+import CommentPopup from './CommentPopup'
+import COAPopup from './COAPopup'
 
-import { getBlockStyle } from '../../../../../tools/excel';
+import { getBlockStyle } from '../../../../../tools/excel'
 
-import './ActiveCell.scss';
+import './ActiveCell.scss'
 
 const ActiveCellDialog = ({
   activeCellDialog,
@@ -36,8 +36,8 @@ const ActiveCellDialog = ({
   comments,
   value,
 }) => {
-  const handleKeyDownCapture = event => {
-    const { key, ctrlKey } = event;
+  const handleKeyDownCapture = (event) => {
+    const { key, ctrlKey } = event
 
     // if(
     //   key === "ArrowUp"
@@ -45,32 +45,32 @@ const ActiveCellDialog = ({
     //   || key === "ArrowRight"
     //   || key === "ArrowLeft"
     // ) {
-    event.stopPropagation();
+    event.stopPropagation()
     // }
-  };
+  }
 
-  const handleContextMenuCapture = event => event.stopPropagation();
+  const handleContextMenuCapture = (event) => event.stopPropagation()
 
-  let Children;
+  let Children
 
   if (activeCellDialog) {
-    const { dialog, category } = activeCellDialog;
+    const { dialog, category } = activeCellDialog
     if (dialog === 'comment') {
-      Children = <CommentPopup comments={comments} />;
+      Children = <CommentPopup comments={comments} />
     } else if (dialog === 'concept') {
-      Children = <BusinessConceptPopup type={category} />;
+      Children = <BusinessConceptPopup type={category} />
     } else if (dialog === 'prepopulate') {
-      let conceptParameters;
+      let conceptParameters
 
       if (typeof value === 'string' && isPrepopulateString(value)) {
-        conceptParameters = parsePrepopulateString(value);
+        conceptParameters = parsePrepopulateString(value)
       } else {
-        conceptParameters = {};
+        conceptParameters = {}
       }
 
-      Children = <PrepopulatePopup {...conceptParameters} />;
+      Children = <PrepopulatePopup {...conceptParameters} />
     } else if (dialog === 'group') {
-      Children = <COAPopup type={category} />;
+      Children = <COAPopup type={category} />
     }
   }
 
@@ -83,26 +83,29 @@ const ActiveCellDialog = ({
       arrowSize={10}
       arrowStyle={{ opacity: 0.7 }}
     >
-      <div onKeyDownCapture={handleKeyDownCapture} onContextMenuCapture={handleContextMenuCapture}>
+      <div
+        onKeyDownCapture={handleKeyDownCapture}
+        onContextMenuCapture={handleContextMenuCapture}
+      >
         {Children}
       </div>
     </ArrowContainer>
-  );
-};
+  )
+}
 
 const ActiveInputCell = ({ activeCellStyle, blockStyle, isSheetFocused }) => {
-  const handleReturn = event => {
-    const { key, ctrlKey, altKey } = event;
-    if (key === 'Escape') event.preventDefault();
-    return key === 'Enter' && !ctrlKey && !altKey ? 'handled' : 'not-handled';
-  };
+  const handleReturn = (event) => {
+    const { key, ctrlKey, altKey } = event
+    if (key === 'Escape') event.preventDefault()
+    return key === 'Enter' && !ctrlKey && !altKey ? 'handled' : 'not-handled'
+  }
 
-  const handleContextMenuCapture = event => event.stopPropagation();
-  const handleKeyDownCapture = event => {
-    const { key, ctrlKey } = event;
+  const handleContextMenuCapture = (event) => event.stopPropagation()
+  const handleKeyDownCapture = (event) => {
+    const { key, ctrlKey } = event
 
-    if (ctrlKey && key === 'a') event.stopPropagation();
-  };
+    if (ctrlKey && key === 'a') event.stopPropagation()
+  }
 
   return (
     <div
@@ -118,16 +121,21 @@ const ActiveInputCell = ({ activeCellStyle, blockStyle, isSheetFocused }) => {
         handleReturn={handleReturn}
       />
     </div>
-  );
-};
+  )
+}
 
-const ActiveNormalCell = ({ activeCellStyle, activeCellDialog, comments, value }) => {
+const ActiveNormalCell = ({
+  activeCellStyle,
+  activeCellDialog,
+  comments,
+  value,
+}) => {
   return activeCellDialog ? (
     <Popover
       isOpen={activeCellDialog}
       position="right"
       transitionDuration={0}
-      content={props => (
+      content={(props) => (
         <ActiveCellDialog
           {...props}
           activeCellDialog={activeCellDialog}
@@ -148,8 +156,8 @@ const ActiveNormalCell = ({ activeCellStyle, activeCellDialog, comments, value }
       className="activeCell activeCell--normalMode"
       style={activeCellStyle}
     />
-  );
-};
+  )
+}
 
 const ActiveCell = ({ computeActiveCellStyle, isActiveCellInCorrectPane }) => {
   const {
@@ -224,15 +232,23 @@ const ActiveCell = ({ computeActiveCellStyle, isActiveCellInCorrectPane }) => {
       topOffsets: topOffsetsSelector({ sheetRowHeights, sheetRowCount }),
       leftOffsets: leftOffsetsSelector({ sheetColumnWidths, sheetColumnCount }),
     }),
-    shallowEqual,
-  );
+    shallowEqual
+  )
 
-  if (!isActiveCellInCorrectPane(x, y, sheetFreezeColumnCount, sheetFreezeRowCount)) return null;
+  if (
+    !isActiveCellInCorrectPane(
+      x,
+      y,
+      sheetFreezeColumnCount,
+      sheetFreezeRowCount
+    )
+  )
+    return null
 
-  let activeCellStyle;
+  let activeCellStyle
 
-  let top = topOffsets[y];
-  let left = leftOffsets[x];
+  let top = topOffsets[y]
+  let left = leftOffsets[x]
 
   if (computeActiveCellStyle) {
     activeCellStyle = computeActiveCellStyle(
@@ -244,19 +260,19 @@ const ActiveCell = ({ computeActiveCellStyle, isActiveCellInCorrectPane }) => {
       topOffsets,
       sheetFreezeColumnCount,
       sheetFreezeRowCount,
-      sheetCellData,
-    );
-    activeCellStyle.minHeight = activeCellStyle.height;
-    activeCellStyle.minWidth = activeCellStyle.width;
+      sheetCellData
+    )
+    activeCellStyle.minHeight = activeCellStyle.height
+    activeCellStyle.minWidth = activeCellStyle.width
   } else {
-    let height = getNormalRowHeight(sheetRowHeights[y]);
-    let width = getNormalColumnWidth(sheetColumnWidths[x]);
+    let height = getNormalRowHeight(sheetRowHeights[y])
+    let width = getNormalColumnWidth(sheetColumnWidths[x])
 
     if (sheetCellData[y] && sheetCellData[y][x]) {
-      const { merged } = sheetCellData[y][x];
+      const { merged } = sheetCellData[y][x]
 
       if (merged) {
-        const { x1, y1, x2, y2 } = merged;
+        const { x1, y1, x2, y2 } = merged
         const mergeDimensions = getAreaDimensions({
           x1,
           y1,
@@ -266,13 +282,13 @@ const ActiveCell = ({ computeActiveCellStyle, isActiveCellInCorrectPane }) => {
           leftOffsets,
           sheetColumnWidths,
           sheetRowHeights,
-        });
+        })
 
-        height = mergeDimensions.height;
-        width = mergeDimensions.width;
+        height = mergeDimensions.height
+        width = mergeDimensions.width
 
-        top = topOffsets[y1];
-        left = leftOffsets[x1];
+        top = topOffsets[y1]
+        left = leftOffsets[x1]
       }
     }
 
@@ -283,28 +299,28 @@ const ActiveCell = ({ computeActiveCellStyle, isActiveCellInCorrectPane }) => {
       width,
       minHeight: height,
       minWidth: width,
-    };
+    }
   }
 
   activeCellStyle.maxWidth =
     leftOffsets[sheetColumnCount - 1] +
     getNormalColumnWidth(sheetColumnWidths[sheetColumnCount]) -
-    leftOffsets[x];
+    leftOffsets[x]
   activeCellStyle.maxHeight =
     topOffsets[sheetRowCount - 1] +
     getNormalRowHeight(sheetRowHeights[sheetRowCount]) -
-    topOffsets[y];
+    topOffsets[y]
 
-  let displayedComments = [];
-  let displayedValue = '';
-  let blockStyle = {};
+  let displayedComments = []
+  let displayedValue = ''
+  let blockStyle = {}
 
   if (sheetCellData[y] && sheetCellData[y][x]) {
-    const { comments, styles, value } = sheetCellData[y][x];
+    const { comments, styles, value } = sheetCellData[y][x]
 
-    if (styles) blockStyle = styles;
-    if (comments) displayedComments = comments;
-    if (value) displayedValue = value;
+    if (styles) blockStyle = styles
+    if (comments) displayedComments = comments
+    if (value) displayedValue = value
   }
 
   return isEditMode ? (
@@ -321,7 +337,7 @@ const ActiveCell = ({ computeActiveCellStyle, isActiveCellInCorrectPane }) => {
       comments={displayedComments}
       value={displayedValue}
     />
-  );
-};
+  )
+}
 
-export default ActiveCell;
+export default ActiveCell

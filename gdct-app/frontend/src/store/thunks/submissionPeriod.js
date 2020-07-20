@@ -1,26 +1,26 @@
-import submissionPeriodController from '../../controllers/submissionPeriod';
-import SubmissionPeriodsStore from '../SubmissionPeriodsStore/store';
+import submissionPeriodController from '../../controllers/submissionPeriod'
+import SubmissionPeriodsStore from '../SubmissionPeriodsStore/store'
 
 import {
   getRequestFactory,
   createRequestFactory,
   deleteRequestFactory,
   updateRequestFactory,
-} from './common/REST';
+} from './common/REST'
 
 export const getSubmissionPeriodsRequest = getRequestFactory(
   SubmissionPeriodsStore,
-  submissionPeriodController,
-);
+  submissionPeriodController
+)
 export const createSubmissionPeriodRequest = createRequestFactory(
   SubmissionPeriodsStore,
-  submissionPeriodController,
-);
+  submissionPeriodController
+)
 export const deleteSubmissionPeriodRequest = deleteRequestFactory(
   SubmissionPeriodsStore,
-  submissionPeriodController,
-);
+  submissionPeriodController
+)
 export const updateSubmissionPeriodRequest = updateRequestFactory(
   SubmissionPeriodsStore,
-  submissionPeriodController,
-);
+  submissionPeriodController
+)

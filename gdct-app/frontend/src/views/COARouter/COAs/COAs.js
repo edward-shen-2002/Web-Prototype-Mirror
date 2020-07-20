@@ -1,22 +1,22 @@
-import React, { useCallback, useMemo, useEffect } from 'react';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import React, { useCallback, useMemo, useEffect } from 'react'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import {
   getCOAsRequest,
   createCOARequest,
   deleteCOARequest,
   updateCOARequest,
-} from '../../../store/thunks/COA';
+} from '../../../store/thunks/COA'
 
-import MaterialTable from 'material-table';
-import LaunchIcon from '@material-ui/icons/Launch';
-import Paper from '@material-ui/core/Paper';
+import MaterialTable from 'material-table'
+import LaunchIcon from '@material-ui/icons/Launch'
+import Paper from '@material-ui/core/Paper'
 
-import Typography from '@material-ui/core/Typography';
+import Typography from '@material-ui/core/Typography'
 
-import './COAs.scss';
-import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors';
-import { selectCOAsStore } from '../../../store/COAsStore/selectors';
+import './COAs.scss'
+import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors'
+import { selectCOAsStore } from '../../../store/COAsStore/selectors'
 
 const COAsHeader = () => {
   return (
@@ -24,18 +24,18 @@ const COAsHeader = () => {
       <Typography variant="h5">COAs</Typography>
       {/* <HeaderActions/> */}
     </Paper>
-  );
-};
+  )
+}
 
 const COAs = ({ history }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const { COAs } = useSelector(
-    state => ({
+    (state) => ({
       COAs: selectFactoryRESTResponseTableValues(selectCOAsStore)(state),
     }),
-    shallowEqual,
-  );
+    shallowEqual
+  )
 
   const columns = useMemo(
     () => [
@@ -43,39 +43,47 @@ const COAs = ({ history }) => {
       { title: 'Name', field: 'name' },
       { title: 'COA', field: 'COA' },
     ],
-    [],
-  );
+    []
+  )
 
-  const options = useMemo(() => ({ actionsColumnIndex: -1, search: false, showTitle: false }), []);
+  const options = useMemo(
+    () => ({ actionsColumnIndex: -1, search: false, showTitle: false }),
+    []
+  )
 
   const editable = useMemo(
     () => ({
-      onRowAdd: COA =>
+      onRowAdd: (COA) =>
         new Promise((resolve, reject) => {
-          dispatch(createCOARequest(COA, resolve, reject));
+          dispatch(createCOARequest(COA, resolve, reject))
         }),
-      onRowUpdate: COA =>
+      onRowUpdate: (COA) =>
         new Promise((resolve, reject) => {
-          dispatch(updateCOARequest(COA, resolve, reject));
+          dispatch(updateCOARequest(COA, resolve, reject))
         }),
-      onRowDelete: COA =>
+      onRowDelete: (COA) =>
         new Promise((resolve, reject) => {
-          dispatch(deleteCOARequest(COA._id, resolve, reject));
+          dispatch(deleteCOARequest(COA._id, resolve, reject))
         }),
     }),
-    [dispatch],
-  );
+    [dispatch]
+  )
 
   useEffect(() => {
-    dispatch(getCOAsRequest());
-  }, [dispatch]);
+    dispatch(getCOAsRequest())
+  }, [dispatch])
 
   return (
     <div>
       <COAsHeader />
-      <MaterialTable columns={columns} data={COAs} editable={editable} options={options} />
+      <MaterialTable
+        columns={columns}
+        data={COAs}
+        editable={editable}
+        options={options}
+      />
     </div>
-  );
-};
+  )
+}
 
-export default COAs;
+export default COAs

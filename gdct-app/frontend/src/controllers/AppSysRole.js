@@ -1,18 +1,23 @@
-import axios from 'axios';
+import axios from 'axios'
 
 const AppSysRoleController = (() => {
   const AppSysRoleAxios = axios.create({
     baseURL: 'http://localhost:3000/role_manager/AppSysRoles',
     withCredentials: true,
-  });
+  })
   return {
-    fetchAppSysRole: async _id => AppSysRoleAxios.get(`/${_id}`).then(res => res.data.AppSysRole),
-    fetch: async _ => AppSysRoleAxios.get('').then(res => res.data.AppSysRoles),
-    create: async AppSysRole =>
-      AppSysRoleAxios.post('', { AppSysRole }).then(res => res.data.AppSysRole),
-    delete: async _id => AppSysRoleAxios.delete(`/${_id}`),
-    update: async AppSysRole => AppSysRoleAxios.put(`/${AppSysRole._id}`, { AppSysRole }),
-  };
-})();
+    fetchAppSysRole: async (_id) =>
+      AppSysRoleAxios.get(`/${_id}`).then((res) => res.data.AppSysRole),
+    fetch: async (_) =>
+      AppSysRoleAxios.get('').then((res) => res.data.AppSysRoles),
+    create: async (AppSysRole) =>
+      AppSysRoleAxios.post('', { AppSysRole }).then(
+        (res) => res.data.AppSysRole
+      ),
+    delete: async (_id) => AppSysRoleAxios.delete(`/${_id}`),
+    update: async (AppSysRole) =>
+      AppSysRoleAxios.put(`/${AppSysRole._id}`, { AppSysRole }),
+  }
+})()
 
-export default AppSysRoleController;
+export default AppSysRoleController

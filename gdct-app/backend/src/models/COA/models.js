@@ -1,14 +1,14 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose'
 
 const COAModel = model(
   'COA',
   new Schema(
     {
-      name: { type: String },
-    },
-    { minimize: false },
+      name: { type: String }
+    }, 
+    { minimize: false }
   ),
-  'COA',
-);
+  'COA'
+)
 
-export default COAModel;
+export default COAModel

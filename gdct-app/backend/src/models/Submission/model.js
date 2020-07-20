@@ -1,6 +1,6 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose'
 
-const { ObjectId } = Schema.Types;
+const ObjectId = Schema.Types.ObjectId
 
 const SubmissionModel = model(
   'Submission',
@@ -18,11 +18,11 @@ const SubmissionModel = model(
       // phase: { type: String, default: 'edit' },
       statusId: { type: ObjectId, ref: 'Status' },
 
-      isPublished: { type: Boolean, default: false },
+      isPublished: { type: Boolean, default: false }
     },
-    { minimize: false, timestamps: true },
+    { minimize: false, timestamps: true }
   ),
-  'Submission',
-);
+  'Submission'
+)
 
-export default SubmissionModel;
+export default SubmissionModel

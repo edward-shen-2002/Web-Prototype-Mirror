@@ -1,1 +1,1 @@
-export * from './HeaderSelection';
+export * from './HeaderSelection'

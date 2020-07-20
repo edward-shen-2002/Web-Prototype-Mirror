@@ -12,43 +12,43 @@ import {
   EXCEL_SELECT_END,
   EXCEL_RESIZE_ROW_END,
   EXCEL_RESIZE_COLUMN_END,
-} from '../../actionTypes';
+} from '../../actionTypes'
 
-export const resizeColumnStart = props => ({
+export const resizeColumnStart = (props) => ({
   type: EXCEL_RESIZE_COLUMN_START,
   ...props,
-});
-export const resizeRowStart = props => ({
+})
+export const resizeRowStart = (props) => ({
   type: EXCEL_RESIZE_ROW_START,
   ...props,
-});
+})
 
-export const mouseDown = props => ({ type: EXCEL_MOUSE_DOWN, ...props });
+export const mouseDown = (props) => ({ type: EXCEL_MOUSE_DOWN, ...props })
 
-export const doubleClickEditableCell = props => ({
+export const doubleClickEditableCell = (props) => ({
   type: EXCEL_DOUBLE_CLICK_EDITABLE_CELL,
   ...props,
-});
-export const rightClickCell = props => ({
+})
+export const rightClickCell = (props) => ({
   type: EXCEL_RIGHT_CLICK_CELL,
   ...props,
-});
+})
 
-export const selectOver = props => ({ type: EXCEL_SELECT_OVER, ...props });
+export const selectOver = (props) => ({ type: EXCEL_SELECT_OVER, ...props })
 
-export const selectRow = props => ({ type: EXCEL_SELECT_ROW, ...props });
-export const selectColumn = props => ({ type: EXCEL_SELECT_COLUMN, ...props });
+export const selectRow = (props) => ({ type: EXCEL_SELECT_ROW, ...props })
+export const selectColumn = (props) => ({ type: EXCEL_SELECT_COLUMN, ...props })
 
-export const resizeRow = props => ({ type: EXCEL_RESIZE_ROW, ...props });
-export const resizeColumn = props => ({ type: EXCEL_RESIZE_COLUMN, ...props });
+export const resizeRow = (props) => ({ type: EXCEL_RESIZE_ROW, ...props })
+export const resizeColumn = (props) => ({ type: EXCEL_RESIZE_COLUMN, ...props })
 
-export const selectEnd = props => ({ type: EXCEL_SELECT_END, ...props });
+export const selectEnd = (props) => ({ type: EXCEL_SELECT_END, ...props })
 
-export const resizeRowEnd = props => ({
+export const resizeRowEnd = (props) => ({
   type: EXCEL_RESIZE_ROW_END,
   ...props,
-});
-export const resizeColumnEnd = props => ({
+})
+export const resizeColumnEnd = (props) => ({
   type: EXCEL_RESIZE_COLUMN_END,
   ...props,
-});
+})

@@ -1,48 +1,48 @@
-import { createSelector } from 'reselect';
+import { createSelector } from 'reselect'
 
-const selectDialogsStore = store => store.DialogsStore;
+const selectDialogsStore = (store) => store.DialogsStore
 
 export const selectIsOrganizationDialogOpen = createSelector(
   [selectDialogsStore],
-  dialogsStore => dialogsStore.isOrganizationDialogOpen,
-);
+  (dialogsStore) => dialogsStore.isOrganizationDialogOpen
+)
 
 export const selectIsCOADialogOpen = createSelector(
   [selectDialogsStore],
-  dialogsStore => dialogsStore.isCOADialogOpen,
-);
+  (dialogsStore) => dialogsStore.isCOADialogOpen
+)
 export const selectIsCOAGroupDialogOpen = createSelector(
   [selectDialogsStore],
-  dialogsStore => dialogsStore.isCOAGroupDialogOpen,
-);
+  (dialogsStore) => dialogsStore.isCOAGroupDialogOpen
+)
 export const selectIsUserDialogOpen = createSelector(
   [selectDialogsStore],
-  dialogsStore => dialogsStore.isUserDialogOpen,
-);
+  (dialogsStore) => dialogsStore.isUserDialogOpen
+)
 export const selectIsStatusDialogOpen = createSelector(
   [selectDialogsStore],
-  dialogsStore => dialogsStore.isStatusDialogOpen,
-);
+  (dialogsStore) => dialogsStore.isStatusDialogOpen
+)
 export const selectIsProgramDialogOpen = createSelector(
   [selectDialogsStore],
-  dialogsStore => dialogsStore.isProgramDialogOpen,
-);
+  (dialogsStore) => dialogsStore.isProgramDialogOpen
+)
 export const selectIsSubmissionPeriodDialogOpen = createSelector(
   [selectDialogsStore],
-  dialogsStore => dialogsStore.isSubmissionPeriodDialogOpen,
-);
+  (dialogsStore) => dialogsStore.isSubmissionPeriodDialogOpen
+)
 export const selectIsTemplateTypeDialogOpen = createSelector(
   [selectDialogsStore],
-  dialogsStore => dialogsStore.isTemplateTypeDialogOpen,
-);
+  (dialogsStore) => dialogsStore.isTemplateTypeDialogOpen
+)
 export const selectIsReportingPeriodDialogOpen = createSelector(
   [selectDialogsStore],
-  dialogsStore => dialogsStore.isReportingPeriodDialogOpen,
-);
+  (dialogsStore) => dialogsStore.isReportingPeriodDialogOpen
+)
 export const selectIsTemplateDialogOpen = createSelector(
   [selectDialogsStore],
-  dialogsStore => dialogsStore.isTemplateDialogOpen,
-);
+  (dialogsStore) => dialogsStore.isTemplateDialogOpen
+)
 // isCOADialogOpen: false,
 // isCOAGroupDialogOpen: false,
 // isUserDialogOpen: false,

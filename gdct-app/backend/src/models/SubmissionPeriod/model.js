@@ -1,20 +1,20 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose'
 
-const { ObjectId } = Schema.Types;
+const ObjectId = Schema.Types.ObjectId
 
 const SubmissionPeriodModel = model(
   'SubmissionPeriod',
   new Schema(
     {
-      reportingPeriodId: { type: ObjectId, ref: 'ReportingPeriod' },
-      programId: { type: ObjectId, ref: 'Program' },
+      reportingPeriodId: { type: ObjectId, ref: "ReportingPeriod" },
+      programId: { type: ObjectId, ref: "Program" },
       name: { type: String },
       startDate: { type: Date },
-      endDate: { type: Date },
+      endDate: { type: Date }
     },
-    { minimize: false, autoIndex: true },
+    { minimize: false, autoIndex: true }
   ),
-  'SubmissionPeriod',
-);
+  'SubmissionPeriod'
+)
 
-export default SubmissionPeriodModel;
+export default SubmissionPeriodModel

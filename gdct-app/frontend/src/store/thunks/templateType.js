@@ -1,26 +1,26 @@
-import templateTypeController from '../../controllers/templateType';
-import TemplateTypesStore from '../TemplateTypesStore/store';
+import templateTypeController from '../../controllers/templateType'
+import TemplateTypesStore from '../TemplateTypesStore/store'
 
 import {
   getRequestFactory,
   createRequestFactory,
   deleteRequestFactory,
   updateRequestFactory,
-} from './common/REST';
+} from './common/REST'
 
 export const getTemplateTypesRequest = getRequestFactory(
   TemplateTypesStore,
-  templateTypeController,
-);
+  templateTypeController
+)
 export const createTemplateTypeRequest = createRequestFactory(
   TemplateTypesStore,
-  templateTypeController,
-);
+  templateTypeController
+)
 export const deleteTemplateTypeRequest = deleteRequestFactory(
   TemplateTypesStore,
-  templateTypeController,
-);
+  templateTypeController
+)
 export const updateTemplateTypeRequest = updateRequestFactory(
   TemplateTypesStore,
-  templateTypeController,
-);
+  templateTypeController
+)

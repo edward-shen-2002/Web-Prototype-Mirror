@@ -1,18 +1,19 @@
-import organizationController from '../../controllers/organization';
-import AppSysController from '../../controllers/AppSys';
-import organizationGroupController from '../../controllers/organizationGroup';
-import programController from '../../controllers/program';
-import templateTypeController from '../../controllers/templateType';
-import userController from '../../controllers/user';
-import userRegistrationStore from '../userRegistrationStore/store';
-import COATreesStore from '../COATreesStore/store';
+import organizationController from '../../controllers/organization'
+import AppSysController from '../../controllers/AppSys'
+import organizationGroupController from '../../controllers/organizationGroup'
+import programController from '../../controllers/program'
+import templateTypeController from '../../controllers/templateType'
+import userController from '../../controllers/user'
+import userRegistrationStore from '../userRegistrationStore/store'
+import COATreesStore from "../COATreesStore/store";
+
 
 const handleInputTemplate = (templateSet, submission) => {
-  let templateType = {
-    templateTypeId: '',
-    templateCode: '',
-  };
-  let templateSelected = templateSet.find(function (element) {
+  let templateType= {
+    templateTypeId: "",
+    templateCode: "",
+  }
+  let templateSelected = templateSet.find(function(element){
     return element.templateTypeId == submission.submission._id;
   });
 
@@ -22,15 +23,15 @@ const handleInputTemplate = (templateSet, submission) => {
     templateSelected = templateType;
     templateSet.push(templateSelected);
   }
-};
+}
 
 const handleInputProgram = (programSet, submission) => {
-  let program = {
-    programId: '',
-    programCode: '',
+  let program= {
+    programId: "",
+    programCode: "",
     template: [],
-  };
-  let programSelected = programSet.find(function (element) {
+  }
+  let programSelected = programSet.find(function(element){
     return element.programId == submission.program.code;
   });
 
@@ -42,15 +43,15 @@ const handleInputProgram = (programSet, submission) => {
   }
 
   handleInputTemplate(programSelected.template, submission);
-};
+}
 
 const handleInputOrg = (organization, submission) => {
-  let org = {
-    orgId: '',
+  let org= {
+    orgId: "",
     program: [],
   };
 
-  let organizationSelected = organization.find(function (element) {
+  let organizationSelected = organization.find(function(element){
     return element.orgId == submission.organization.id;
   });
   if (organizationSelected == undefined) {
@@ -64,160 +65,111 @@ const handleInputOrg = (organization, submission) => {
   }
 
   handleInputProgram(organizationSelected.program, submission);
-};
+}
 
-const checkPerission = submission => {
+const checkPerission = (submission) => {
   let permission = [];
-  if (submission.approve) permission.push('approve');
-  if (submission.review) permission.push('review');
-  if (submission.submit) permission.push('submit');
-  if (submission.input) permission.push('input');
-  if (submission.view) permission.push('view');
-  if (submission.viewCongos) permission.push('viewCongos');
+  if(submission.approve) permission.push("approve");
+  if(submission.review) permission.push("review");
+  if(submission.submit) permission.push("submit");
+  if(submission.input) permission.push("input");
+  if(submission.view) permission.push("view");
+  if(submission.viewCongos) permission.push("viewCongos");
   return permission;
-};
+}
+
 
 export default class RegisterService {
+
   getAppSys() {
-    return AppSysController.fetch()
-      .then(
-        ({
-          data: {
-            data: { appSys },
-          },
-        }) => {
+    return(
+      AppSysController.fetch()
+        .then(({data: {data: {appSys}}}) => {
           let options = [];
           appSys.forEach(appSysOptions => {
-            options.push({
-              label: appSysOptions.name,
-              value: { name: appSysOptions.name, _id: appSysOptions._id },
-            });
+            options.push({label: appSysOptions.name, value: {name: appSysOptions.name, _id: appSysOptions._id}});
           });
 
           return options;
-        },
-      )
-      .catch(error => console.error(error));
+        })
+        .catch((error) => console.error(error))
+    )
   }
 
   getOrgGroup() {
-    return organizationGroupController
-      .fetch()
-      .then(
-        ({
-          data: {
-            data: { organizationGroups },
-          },
-        }) => {
+    return(organizationGroupController.fetch()
+        .then(({data: {data: {organizationGroups}}}) => {
           let options = [];
           organizationGroups.forEach(orgGroup => {
-            options.push({
-              label: orgGroup.name,
-              value: { name: orgGroup.name, _id: orgGroup._id },
-            });
+            options.push({label: orgGroup.name, value: {name: orgGroup.name, _id: orgGroup._id}});
           });
 
           return options;
-        },
-      )
-      .catch(error => console.error(error));
+        })
+        .catch((error) => console.error(error))
+    )
   }
 
   getOrg(orgGroup) {
-    return organizationController
-      .fetchByOrgGroupId(orgGroup)
-      .then(
-        ({
-          data: {
-            data: { organizations },
-          },
-        }) => {
-          let options = [];
+
+    return(organizationController.fetchByOrgGroupId(orgGroup)
+        .then(({data: {data: {organizations}}}) => {
+          let options = []
           organizations.forEach(org => {
-            options.push({
-              label: '(' + org.id + ')' + org.name,
-              value: org.id,
-              information: {
-                _id: org._id,
-                name: org.name,
-                id: org.id,
-                orgGroupId: orgGroup,
-                programId: org.programId,
-                authorizedPerson: org.authorizedPerson,
-              },
-            });
+            options.push({label: "(" + org.id + ")" + org.name,
+              value: org.id, information: {_id: org._id, name: org.name,  id: org.id, orgGroupId: orgGroup,
+                programId: org.programId, authorizedPerson: org.authorizedPerson}});
           });
           return options;
-          // dispatch(userRegistrationStore.actions.setUserOrganizations())
-        },
-      )
-      .catch(error => console.error(error));
+          dispatch(userRegistrationStore.actions.setUserOrganizations())
+        })
+        .catch((error) => console.error(error))
+    )
   }
 
-  searchOrg(searchKey, reference, options) {
-    return options[searchKey] == reference;
+  searchOrg (searchKey, reference, options) {
+    return options[searchKey]==reference;
   }
+
 
   getProgram(programInfo) {
     let programId = [];
     programInfo.forEach(program => {
-      programId.push(program.id);
-    });
+      programId.push(program.id)
+    })
 
-    return programController
-      .fetchByIds(programId)
-      .then(
-        ({
-          data: {
-            data: { programs },
-          },
-        }) => {
+    return(programController.fetchByIds(programId)
+        .then(({data: {data: {programs}}}) => {
           let options = [];
           programs.forEach(program => {
             const option = programInfo.find(element => element.id == program._id);
-            options.push({
-              label: '(' + program.code + ')' + program.name,
-              value: program._id,
-              information: {
-                _id: program._id,
-                name: program.name,
-                code: program.code,
-                org: option.org,
-              },
-            });
+            options.push({label: "(" + program.code + ")" + program.name, value: program._id,
+              information: {_id: program._id, name: program.name,  code: program.code, org: option.org}});
           });
 
           return options;
-        },
-      )
-      .catch(error => console.error(error));
+        })
+        .catch((error) => console.error(error))
+    )
   }
 
-  getTemplateType(userPrograms) {
+  getTemplateType (userPrograms) {
     let programList = [];
     userPrograms.forEach(userProgram => {
       programList.push(userProgram._id);
-    });
-    return templateTypeController
-      .fetchByProgramIds(programList)
-      .then(
-        ({
-          data: {
-            data: { templateTypes },
-          },
-        }) => {
+    })
+    return(templateTypeController.fetchByProgramIds(programList)
+        .then(({data: {data: {templateTypes}}}) => {
           let submissionList = [];
           let index = 0;
 
           templateTypes.forEach(templateType => {
-            const submission = userPrograms.find(element =>
-              templateType.programId.includes(element._id),
-            );
+            const submission = userPrograms.find(element => templateType.programId.includes(element._id));
             console.log(submission);
             submissionList.push({
               organization: submission.org,
-              program: { name: submission.name, code: submission.code, _id: submission._id },
-              submission: { name: templateType.name, _id: templateType._id },
+              program: {name: submission.name, code: submission.code, _id: submission._id},
+              submission: {name: templateType.name, _id: templateType._id},
               approveAvailable: templateType.isApprovable,
               reviewAvailable: templateType.isReviewable,
               submitAvailable: templateType.isSubmittable,
@@ -235,20 +187,22 @@ export default class RegisterService {
             index++;
           });
           return submissionList;
-        },
-      )
-      .catch(error => console.error(error));
+        })
+        .catch((error) => console.error(error))
+    )
   }
 
   sendRegistrationData(registerData) {
-    return userController.create(registerData).catch(error => console.error(error));
+    return(userController.create(registerData)
+        .catch((error) => console.error(error))
+    )
   }
 
-  submissionChange(userSubmissions) {
+  submissionChange (userSubmissions) {
     let permissionList = [];
     userSubmissions.forEach(submission => {
       const permission = checkPerission(submission);
-      permission.forEach(permission => {
+      permission.forEach(permission=> {
         permissionList.push({
           organization: submission.organization,
           program: submission.program,
@@ -260,20 +214,22 @@ export default class RegisterService {
           view: submission.view,
           viewCongos: submission.viewCongos,
           input: submission.input,
-        });
-      });
+        })
+      })
+
     });
     return permissionList;
   }
 
-  handleInputSysRole(data, permission, submission, userAppSys) {
-    let sysRole = {
-      appSys: '',
-      role: '',
+
+  handleInputSysRole (data, permission, submission, userAppSys) {
+    let sysRole= {
+      appSys: "",
+      role: "",
       org: [],
     };
-    if (submission[permission]) {
-      let sysRoleSelected = data.sysRole.find(function (element) {
+    if (submission[permission]){
+      let sysRoleSelected = data.sysRole.find(function(element){
         return element.role == permission;
       });
       if (sysRoleSelected == undefined) {

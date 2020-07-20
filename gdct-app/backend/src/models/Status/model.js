@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose'
 
 const StatusModel = model(
   'Status',
@@ -6,11 +6,11 @@ const StatusModel = model(
     {
       name: { type: String, required: true },
       description: { type: String },
-      isActive: { type: Boolean },
+      isActive: { type: Boolean }
     },
-    { minimize: false, timestamps: true },
+    { minimize: false, timestamps: true }
   ),
-  'Status',
-);
+  'Status'
+)
 
-export default StatusModel;
+export default StatusModel

@@ -1,26 +1,26 @@
-import appRoleResourceController from '../../controllers/AppRoleResource';
-import AppRoleResourcesStore from '../AppRoleResourcesStore/store';
+import appRoleResourceController from '../../controllers/AppRoleResource'
+import AppRoleResourcesStore from '../AppRoleResourcesStore/store'
 
 import {
   getRequestFactory,
   createRequestFactory,
   deleteRequestFactory,
   updateRequestFactory,
-} from './common/REST';
+} from './common/REST'
 
 export const getAppRoleResourcesRequest = getRequestFactory(
   AppRoleResourcesStore,
-  appRoleResourceController,
-);
+  appRoleResourceController
+)
 export const createAppRoleResourceRequest = createRequestFactory(
   AppRoleResourcesStore,
-  appRoleResourceController,
-);
+  appRoleResourceController
+)
 export const deleteAppRoleResourceRequest = deleteRequestFactory(
   AppRoleResourcesStore,
-  appRoleResourceController,
-);
+  appRoleResourceController
+)
 export const updateAppRoleResourceRequest = updateRequestFactory(
   AppRoleResourcesStore,
-  appRoleResourceController,
-);
+  appRoleResourceController
+)

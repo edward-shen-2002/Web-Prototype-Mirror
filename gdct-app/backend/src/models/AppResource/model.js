@@ -9,9 +9,9 @@ const AppResourceModel = model(
       contextRoot: { type: String },
       isProtected: { type: Boolean },
     },
-    { minimize: false, autoIndex: true },
+    { minimize: false, autoIndex: true }
   ),
-  'AppResource',
+  'AppResource'
 );
 
 export default AppResourceModel;

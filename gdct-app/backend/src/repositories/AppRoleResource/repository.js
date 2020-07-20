@@ -6,7 +6,6 @@ export default class AppRoleResourceRepository extends BaseRepository {
   constructor() {
     super(AppRoleResourceModel);
   }
-
   async delete(id) {
     const appRoleResource = await AppRoleResourceModel.findById(id);
     if (appRoleResource) {
@@ -18,20 +17,21 @@ export default class AppRoleResourceRepository extends BaseRepository {
   async create(appRoleResource) {
     appRoleResource.isActive = true;
     return AppRoleResourceModel.create(appRoleResource).then(
-      appRoleResource => new AppRoleResouceEntity(appRoleResource.toObject()),
+      (appRoleResource) => new AppRoleResouceEntity(appRoleResource.toObject())
     );
   }
 
   async update(id, appRoleResource) {
     return AppRoleResourceModel.findByIdAndUpdate(id, appRoleResource).then(
-      appRoleResource => new AppRoleResouceEntity(appRoleResource.toObject()),
+      (appRoleResource) => new AppRoleResouceEntity(appRoleResource.toObject())
     );
   }
 
   async find(query) {
-    return AppRoleResourceModel.find(query).then(appRoleResources => {
+    return AppRoleResourceModel.find(query).then((appRoleResources) => {
       return appRoleResources.map(
-        appRoleResource => new AppRoleResouceEntity(appRoleResource.toObject()),
+        (appRoleResource) =>
+          new AppRoleResouceEntity(appRoleResource.toObject())
       );
     });
   }
