@@ -5,9 +5,6 @@ import NotFound from '../../components/NotFound';
 import Organizations from './Organizations';
 import CreateOrganization from './CreateOrganization';
 import EditOrganization from './EditOrganization';
-/*
-List Child views here
-*/
 
 const OrgRouter = () => (
   <Switch>

@@ -30,15 +30,15 @@ const PrivateRouter = ({ setLoggedIn }) => {
     <Switch>
       <Route path={ROUTE_WORKFLOW} component={WorkflowRouter} />
       <Route exact path="/" component={GDCTMenu} />
-      <Route exact path="/template_manager" component={TemplateRouter} />
-      <Route exact path="/COA_manager" component={COARouter} />
-      <Route exact path="/role_manager" component={RoleRouter} />
-      <Route exact path="/statuses" component={Statuses} />
-      <Route exact path="/programs" component={Programs} />
-      <Route exact path="/submission_manager" component={SubmissionRouter} />
-      <Route exact path="/reportingPeriods" component={ReportingPeriods} />
-      <Route exact path="/sheetNames" component={SheetNames} />
-      <Route exact path="/organizations" component={OrgRouter} />
+      <Route path="/template_manager" component={TemplateRouter} />
+      <Route path="/COA_manager" component={COARouter} />
+      <Route path="/role_manager" component={RoleRouter} />
+      <Route path="/statuses" component={Statuses} />
+      <Route path="/programs" component={Programs} />
+      <Route path="/submission_manager" component={SubmissionRouter} />
+      <Route path="/reportingPeriods" component={ReportingPeriods} />
+      <Route path="/sheetNames" component={SheetNames} />
+      <Route path="/organizations" component={OrgRouter} />
       <Route path="/logout" render={props => <Logout {...props} setLoggedIn={setLoggedIn} />} />
       <Redirect from="*" to="/" />
     </Switch>
