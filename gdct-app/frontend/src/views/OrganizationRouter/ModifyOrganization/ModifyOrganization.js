@@ -290,6 +290,8 @@ class ModifyOrganization extends React.Component {
     const temp = Object.assign({}, props.object);
     delete temp._id;
     this.state = temp;
+    this.updateState = this.updateState.bind(this);
+    this.handleChanges = this.handleChanges.bind(this);
   }
 
   updateState(name, value) {

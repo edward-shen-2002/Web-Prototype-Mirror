@@ -40,6 +40,14 @@ export default class ProgramService {
     });
   }
 
+  profile(req, res){
+    if (req.user.token !== null) {
+      res.json({ status: "success" })
+    } else {
+      res.json({ status: "fail" })
+    }
+  }
+
   createUser(req, res) {
     const {
       body: { username, email, password },
