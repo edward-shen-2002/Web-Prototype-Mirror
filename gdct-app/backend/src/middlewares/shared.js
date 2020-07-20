@@ -1,3 +1,5 @@
+import e from 'express';
+
 export const addTokenToCookie = (res, token) => {
   const cookieOptions = {
     expires: new Date(
@@ -9,16 +11,20 @@ export const addTokenToCookie = (res, token) => {
   res.cookie('token', token, cookieOptions);
 };
 
-export const errorHandler = (err, req, res) => {
-  console.log(err.stack);
-
-  err.statusCode = err.statusCode || 500;
-  err.status = err.status || 'error';
-
-  res.status(err.statusCode).json({
-    status: err.status,
-    error: err,
-    message: err.message,
-    stack: err.stack,
-  });
+export const errorHandler = (err, req, res, next) => {
+  if (err) {
+    err.statusCode = err.statusCode || 500;
+    err.status = err.status || 'error';
+    const stack = process.env.NODE_ENV === 'production' ? {} : err.stack;
+    res.status(err.statusCode).json({
+      status: err.status,
+      data: {},
+      errors: {
+        message: err.message,
+        stack,
+      },
+    });
+  } else {
+    next();
+  }
 };

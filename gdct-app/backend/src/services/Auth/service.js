@@ -77,7 +77,7 @@ export default class ProgramService {
       .then(user => {
         const token = user.generateJWT();
         addTokenToCookie(res, token);
-        res.json({ user: user.returnAuthUserJson() });
+        res.json({ user: user.returnAuthUserJson(token) });
       })
       .catch(err => res.json({ error: err }));
   }

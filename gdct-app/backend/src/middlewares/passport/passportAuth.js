@@ -13,7 +13,7 @@ const getTokenFromHeaders = req => {
     if (authArray[0] === 'Bearer') {
       return authArray[1];
     }
-  } else if (req.cookies.token) {
+  } else if (req.cookies && req.cookies.token) {
     return req.cookies.token;
   }
   return null;
