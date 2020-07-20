@@ -65,7 +65,7 @@ app.use(compression());
 
 app.use(logger('dev'));
 
-require('./middlewares/passport')();
+require('./middlewares/passport/index')();
 
 const CookieStore = mongoStore(session);
 app.use(

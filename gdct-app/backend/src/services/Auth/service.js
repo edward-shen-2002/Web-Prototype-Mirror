@@ -5,18 +5,18 @@ import UserModel from '../../models/User/model';
 import { addTokenToCookie } from '../../middlewares/shared';
 
 export default class ProgramService {
-  authenticate(req, res) {
+  authenticate(req, res, next) {
     const { method } = req.params;
-    passport.authenticate(method, { scope: 'email' })(req, res);
+    passport.authenticate(method, { scope: 'email' })(req, res, next);
   }
 
-  authenticateCallback(req, res) {
+  authenticateCallback(req, res, next) {
     const { method } = req.params;
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3003');
     passport.authenticate(method, {
       successRedirect: 'http://localhost:3003/', // redirect to home page
       failureRedirect: 'http://localhost:3003/auth/error', // redirect to error page
-    })(req, res);
+    })(req, res, next);
   }
 
   logout(req, res) {
@@ -34,12 +34,9 @@ export default class ProgramService {
       user1.forEach(obj => {
         if (obj.username === uname) {
           found = true;
-          res.send(true);
+          res.json({ status: "success" })
         }
       });
-      if (!found) {
-        res.send(false);
-      }
     });
   }
 
@@ -103,7 +100,7 @@ export default class ProgramService {
       });
     }
 
-    return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
+    return passport.authenticate(['local', 'google', 'facebook'], { session: false }, (err, passportUser, info) => {
       console.log('info:', info);
       if (err) {
         return next(err);

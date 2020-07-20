@@ -5,6 +5,8 @@ import { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt-nodejs';
 import jwt from 'jsonwebtoken';
 
+const ObjectId = Schema.Types.ObjectId;
+
 dotenv.config();
 
 const User = new Schema(
@@ -17,8 +19,26 @@ const User = new Schema(
     phoneNumber: { type: String, default: '' },
     sysRole: [
       {
-        type: Schema.ObjectId,
-        ref: 'AppSysRole',
+        appSys: { type: String, default: '' },
+        role: { type: String, default: '' },
+        org: [
+          {
+            orgId: { type: String, default: '' },
+            IsActive: { type: Boolean },
+            program: [
+              {
+                programId: { type: ObjectId, ref: 'program' },
+                programCode: { type: String, default: '' },
+                template: [
+                  {
+                    templateTypeId: { type: ObjectId, ref: 'templateType' },
+                    templateCode: { type: String, default: '' },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
       },
     ],
     facebook: {
@@ -54,6 +74,13 @@ User.methods.setHashedPassword = function (password) {
 
 User.methods.validatePassword = function (password) {
   return bcrypt.compareSync(password, this.password);
+};
+
+User.methods.generateAuthToken = async (user) => {
+  const token = jwt.sign({ _id: user._id.toString() }, 'authenticationsecret');
+  user.token = 'Bearer ' + token;
+  await user.save();
+  return token;
 };
 
 User.methods.generateJWT = function () {

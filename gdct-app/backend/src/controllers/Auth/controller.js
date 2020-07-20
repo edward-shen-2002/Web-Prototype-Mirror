@@ -15,10 +15,12 @@ const AuthController = Service([AuthService], service => {
 
     // POST login route (optional, everyone has access)
     router.post('/login', auth.optional, service.processLogin);
-    router.get('/profile', auth.required, (req, res) => {
-      res.json({
-        status: 'success',
-      });
+    router.get('/profile', (req, res) => {
+      if (req.user.token !== null) {
+        res.json({ status: "success" })
+      } else {
+        res.json({ status: "fail" })
+      }
     });
     return router;
   })();
