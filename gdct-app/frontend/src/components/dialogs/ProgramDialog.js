@@ -1,45 +1,42 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react';
 
-import SelectableTableDialog from './SelectableTableDialog'
+import SelectableTableDialog from './SelectableTableDialog';
 
-import { getProgramsRequest } from '../../store/thunks/program'
+import { getProgramsRequest } from '../../store/thunks/program';
 
-import { useSelector, shallowEqual, useDispatch } from 'react-redux'
-import { useMemo } from 'react'
-import { selectIsProgramDialogOpen } from '../../store/DialogsStore/selectors'
-import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
-import { selectProgramsStore } from '../../store/ProgramsStore/selectors'
-import DialogsStore from '../../store/DialogsStore/store'
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
+import { useMemo } from 'react';
+import { selectIsProgramDialogOpen } from '../../store/DialogsStore/selectors';
+import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors';
+import { selectProgramsStore } from '../../store/ProgramsStore/selectors';
+import DialogsStore from '../../store/DialogsStore/store';
 
 const ProgramDialog = ({ handleChange }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const { isProgramDialogOpen, programs } = useSelector(
-    (state) => ({
-        isProgramDialogOpen: selectIsProgramDialogOpen(state),
-        programs: selectFactoryRESTResponseTableValues(selectProgramsStore)(
-        state
-      ),
+    state => ({
+      isProgramDialogOpen: selectIsProgramDialogOpen(state),
+      programs: selectFactoryRESTResponseTableValues(selectProgramsStore)(state),
     }),
-    shallowEqual
-  )
+    shallowEqual,
+  );
 
-  const handleClose = useCallback(
-    () => dispatch(DialogsStore.actions.CLOSE_PROGRAM_DIALOG()),
-    [dispatch]
-  )
+  const handleClose = useCallback(() => dispatch(DialogsStore.actions.CLOSE_PROGRAM_DIALOG()), [
+    dispatch,
+  ]);
 
   const handleSelect = useCallback(
-    (data) => {
-      handleChange(data._id)
-      handleClose()
+    data => {
+      handleChange(data._id);
+      handleClose();
     },
-    [dispatch]
-  )
+    [dispatch],
+  );
 
   useEffect(() => {
-    if (isProgramDialogOpen && !programs.length) dispatch(getProgramsRequest())
-  }, [dispatch, isProgramDialogOpen])
+    if (isProgramDialogOpen && !programs.length) dispatch(getProgramsRequest());
+  }, [dispatch, isProgramDialogOpen]);
 
   const columns = useMemo(
     () => [
@@ -52,8 +49,8 @@ const ProgramDialog = ({ handleChange }) => {
         field: 'name',
       },
     ],
-    []
-  )
+    [],
+  );
 
   return (
     <SelectableTableDialog
@@ -64,7 +61,7 @@ const ProgramDialog = ({ handleChange }) => {
       handleClose={handleClose}
       handleSelect={handleSelect}
     />
-  )
-}
+  );
+};
 
-export default ProgramDialog
+export default ProgramDialog;

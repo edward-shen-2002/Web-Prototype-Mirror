@@ -8,5 +8,8 @@
   "scripts": {
     "install": "yarn --cwd slate && yarn --cwd gdct-app",
     "start": "yarn --cwd gdct-app start"
+  },
+  "dependencies": {
+    "passport-google-oauth": "^2.0.0"
   }
 }

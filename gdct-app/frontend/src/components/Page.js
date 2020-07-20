@@ -1,6 +1,5 @@
-  
-import * as React from 'react'
-import styled, { createGlobalStyle } from 'styled-components'
+import * as React from 'react';
+import styled, { createGlobalStyle } from 'styled-components';
 
 const PageContent = styled.div`
   display: flex;
@@ -8,10 +7,6 @@ const PageContent = styled.div`
   flex: 1;
   max-width: 80vw;
   max-height: 80vh;
-`
+`;
 
-export const Page = ({ children }) => (
-  <PageContent>
-    {children}
-  </PageContent>
-)
+export const Page = ({ children }) => <PageContent>{children}</PageContent>;

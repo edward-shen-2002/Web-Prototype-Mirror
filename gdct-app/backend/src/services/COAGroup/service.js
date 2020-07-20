@@ -1,25 +1,25 @@
-import Container, { Service } from 'typedi'
-import COAGroupRepository from '../../repositories/COAGroup'
+import Container from 'typedi';
+import COAGroupRepository from '../../repositories/COAGroup';
 
 // @Service()
 export default class COAGroupService {
   constructor() {
-    this.COAGroupRepository = Container.get(COAGroupRepository)
+    this.COAGroupRepository = Container.get(COAGroupRepository);
   }
 
   async createCOAGroup(COAGroup) {
-    return this.COAGroupRepository.create(COAGroup)
+    return this.COAGroupRepository.create(COAGroup);
   }
 
   async deleteCOAGroup(id) {
-    return this.COAGroupRepository.delete(id)
+    return this.COAGroupRepository.delete(id);
   }
 
   async updateCOAGroup(id, COAGroup) {
-    return this.COAGroupRepository.update(id, COAGroup)
+    return this.COAGroupRepository.update(id, COAGroup);
   }
 
   async findCOAGroup(COAGroup) {
-    return this.COAGroupRepository.find(COAGroup)
+    return this.COAGroupRepository.find(COAGroup);
   }
 }

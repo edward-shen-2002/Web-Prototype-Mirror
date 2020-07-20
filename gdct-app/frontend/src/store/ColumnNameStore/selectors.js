@@ -1,1 +1,1 @@
-export const selectColumnNamesStore = (state) => state.ColumnNamesStore
+export const selectColumnNamesStore = state => state.ColumnNamesStore;

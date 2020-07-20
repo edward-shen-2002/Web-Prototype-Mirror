@@ -1,14 +1,14 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model } from 'mongoose';
 
 const ColumnNameModel = model(
   'ColumnName',
   new Schema(
     {
-      value: { type: String, required: true }
+      value: { type: String, required: true },
     },
-    { minimize: false }
+    { minimize: false },
   ),
-  'ColumnName'
-)
+  'ColumnName',
+);
 
-export default ColumnNameModel
+export default ColumnNameModel;

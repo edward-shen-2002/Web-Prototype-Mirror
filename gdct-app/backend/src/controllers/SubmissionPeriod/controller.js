@@ -1,67 +1,47 @@
-import { Service } from 'typedi'
+import { Service } from 'typedi';
+import { Router } from 'express';
+import SubmissionPeriodService from '../../services/SubmissionPeriod';
 
-import SubmissionPeriod from '../../entities/SubmissionPeriod'
-import { Router } from 'express'
-import SubmissionPeriodService from '../../services/SubmissionPeriod'
+const SubmissionPeriodController = Service([SubmissionPeriodService], service => {
+  const router = Router();
+  return (() => {
+    router.get('/submissionPeriods', (req, res, next) => {
+      // Get query from middleware -- auth handler
 
-const SubmissionPeriodController = Service(
-  [SubmissionPeriodService],
-  (service) => {
-    const router = Router()
-    return (
-      () => {
-        router.get(
-          '/submissionPeriods',
-          (req, res, next) => {
-            // Get query from middleware -- auth handler
+      service
+        .findSubmissionPeriod({})
+        .then(submissionPeriods => res.json({ submissionPeriods }))
+        .catch(next);
+    });
 
-            service
-              .findSubmissionPeriod({})
-              .then((submissionPeriods) => res.json({ submissionPeriods }))
-              .catch(next)
-          }
-        )
+    router.post('/submissionPeriods', (req, res, next) => {
+      service
+        .createSubmissionPeriod(req.body.submissionPeriod)
+        .then(submissionPeriod => res.json({ submissionPeriod }))
+        .catch(next);
+    });
 
-        router.post(
-          '/submissionPeriods',
-          (req, res, next) => {
-            service
-              .createSubmissionPeriod(req.body.submissionPeriod)
-              .then((submissionPeriod) => res.json({ submissionPeriod }))
-              .catch(next)
-          }
-        )
+    router.put('/submissionPeriods/:_id', (req, res, next) => {
+      const { _id } = req.params;
+      const { submissionPeriod } = req.body;
 
-        router.put(
-          '/submissionPeriods/:_id',
-          (req, res, next) => {
-            const { _id } = req.params
-            const { submissionPeriod } = req.body
+      service
+        .updateSubmissionPeriod(_id, submissionPeriod)
+        .then(() => res.end())
+        .catch(next);
+    });
 
+    router.delete('/submissionPeriods/:_id', (req, res, next) => {
+      const { _id } = req.params;
 
-            service
-              .updateSubmissionPeriod(_id, submissionPeriod)
-              .then(() => res.end())
-              .catch(next)
-          }
-        )
+      service
+        .deleteSubmissionPeriod(_id)
+        .then(() => res.end())
+        .catch(next);
+    });
 
-        router.delete(
-          '/submissionPeriods/:_id',
-          (req, res, next) => {
-            const { _id } = req.params
+    return router;
+  })();
+});
 
-            service
-              .deleteSubmissionPeriod(_id)
-              .then(() => res.end())
-              .catch(next)
-          }
-        )
-
-        return router
-      }
-    )()
-  }
-)
-
-export default SubmissionPeriodController
+export default SubmissionPeriodController;

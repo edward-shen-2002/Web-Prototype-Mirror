@@ -1,135 +1,114 @@
-import { batch } from 'react-redux'
+import { batch } from 'react-redux';
 
-import COATreeController from '../../controllers/COATree'
-import COATreesStore from '../COATreesStore/store'
-import COATreeStore from '../COATreeStore/store'
-import DialogsStore from '../DialogsStore/store'
-import {
-  deleteRequestFactory,
-  updateRequestFactory,
-  getRequestFactory,
-} from './common/REST'
+import COATreeController from '../../controllers/COATree';
+import COATreesStore from '../COATreesStore/store';
+import COATreeStore from '../COATreeStore/store';
+import DialogsStore from '../DialogsStore/store';
+import { deleteRequestFactory, updateRequestFactory, getRequestFactory } from './common/REST';
 
-const normalizeTrees = (denormalizedCOATrees) => {
-  let stack = [...denormalizedCOATrees]
+const normalizeTrees = denormalizedCOATrees => {
+  let stack = [...denormalizedCOATrees];
 
-  let normalizedTrees = denormalizedCOATrees.map((COATree) => ({
+  let normalizedTrees = denormalizedCOATrees.map(COATree => ({
     ...COATree.content,
     parentId: undefined,
     content: undefined,
-  }))
+  }));
 
   while (stack.length) {
-    const node = stack.pop()
+    const node = stack.pop();
 
-    const { children } = node
+    const { children } = node;
 
-    const parentId = node.content._id
+    const parentId = node.content._id;
 
     if (children) {
-      children.forEach((child) => {
-        const childContent = child.content
+      children.forEach(child => {
+        const childContent = child.content;
 
-        normalizedTrees.push({ ...childContent, parentId, content: undefined })
+        normalizedTrees.push({ ...childContent, parentId, content: undefined });
 
-        stack.push(child)
-      })
+        stack.push(child);
+      });
     }
   }
 
-  return normalizedTrees
-}
+  return normalizedTrees;
+};
 
-export const getCOATreesRequest = getRequestFactory(
-  COATreesStore,
-  COATreeController
-)
-export const deleteCOATreeRequest = deleteRequestFactory(
-  COATreesStore,
-  COATreeController
-)
-export const updateCOATreeRequest = updateRequestFactory(
-  COATreesStore,
-  COATreeController
-)
+export const getCOATreesRequest = getRequestFactory(COATreesStore, COATreeController);
+export const deleteCOATreeRequest = deleteRequestFactory(COATreesStore, COATreeController);
+export const updateCOATreeRequest = updateRequestFactory(COATreesStore, COATreeController);
 
-export const getCOATreeRequest = (_id) => (dispatch) => {
-  dispatch(COATreesStore.actions.REQUEST())
+export const getCOATreeRequest = _id => dispatch => {
+  dispatch(COATreesStore.actions.REQUEST());
 
   COATreeController.fetchCOATree(_id)
-    .then((COATree) => {
-      dispatch(COATreeStore.actions.LOAD_COA_TREE_UI({ treeList: [COATree] }))
+    .then(COATree => {
+      dispatch(COATreeStore.actions.LOAD_COA_TREE_UI({ treeList: [COATree] }));
     })
-    .catch((error) => {
-      dispatch(COATreesStore.actions.FAIL_REQUEST(error))
-    })
-}
+    .catch(error => {
+      dispatch(COATreesStore.actions.FAIL_REQUEST(error));
+    });
+};
 
 export const createCOATreeRequest = (
   COAGroup,
   sheetNameId,
-  isTreeComponent = false
-) => (dispatch) => {
+  isTreeComponent = false,
+) => dispatch => {
   const COATree = {
     sheetNameId,
     COAGroupId: COAGroup,
-  }
+  };
 
-  dispatch(COATreesStore.actions.REQUEST())
+  dispatch(COATreesStore.actions.REQUEST());
 
   COATreeController.create(COATree)
-    .then((COATree) => {
+    .then(COATree => {
       batch(() => {
-        dispatch(COATreesStore.actions.CREATE(COATree))
+        dispatch(COATreesStore.actions.CREATE(COATree));
         if (isTreeComponent) {
-          dispatch(COATreeStore.actions.ADD_ROOT_COA_TREE_UI({ tree: COATree }))
-          dispatch(DialogsStore.actions.CLOSE_COA_GROUP_DIALOG())
+          dispatch(COATreeStore.actions.ADD_ROOT_COA_TREE_UI({ tree: COATree }));
+          dispatch(DialogsStore.actions.CLOSE_COA_GROUP_DIALOG());
         }
-      })
+      });
     })
-    .catch((error) => {
-      dispatch(COATreesStore.actions.FAIL_REQUEST(error))
-    })
-}
+    .catch(error => {
+      dispatch(COATreesStore.actions.FAIL_REQUEST(error));
+    });
+};
 
-export const getCOATreesBySheetNameRequest = (
-  sheetName,
-  isTreeComponent = false
-) => (dispatch) => {
-  dispatch(COATreesStore.actions.REQUEST())
+export const getCOATreesBySheetNameRequest = (sheetName, isTreeComponent = false) => dispatch => {
+  dispatch(COATreesStore.actions.REQUEST());
 
   COATreeController.fetchBySheetName(sheetName)
-    .then((COATrees) => {
+    .then(COATrees => {
       batch(() => {
-        dispatch(COATreesStore.actions.RECEIVE(COATrees))
+        dispatch(COATreesStore.actions.RECEIVE(COATrees));
         if (isTreeComponent)
-          dispatch(
-            COATreeStore.actions.LOAD_COA_TREE_UI({ treeList: COATrees })
-          )
-      })
+          dispatch(COATreeStore.actions.LOAD_COA_TREE_UI({ treeList: COATrees }));
+      });
     })
-    .catch((error) => {
-      dispatch(COATreesStore.actions.FAIL_REQUEST(error))
-    })
-}
+    .catch(error => {
+      dispatch(COATreesStore.actions.FAIL_REQUEST(error));
+    });
+};
 
-export const updateCOATreesBySheetNameRequest = (sheetNameId) => (
-  dispatch,
-  getState
-) => {
+export const updateCOATreesBySheetNameRequest = sheetNameId => (dispatch, getState) => {
   const {
     COATreeStore: { localTree },
-  } = getState()
+  } = getState();
 
-  dispatch(COATreesStore.actions.REQUEST())
+  dispatch(COATreesStore.actions.REQUEST());
 
-  const normalizedTrees = normalizeTrees(localTree)
+  const normalizedTrees = normalizeTrees(localTree);
 
   COATreeController.updateBySheetName(normalizedTrees, sheetNameId)
-    .then((_COATrees) => {
-      dispatch(COATreeStore.actions.UPDATE_ORIGINAL_COA_TREE_UI())
+    .then(_COATrees => {
+      dispatch(COATreeStore.actions.UPDATE_ORIGINAL_COA_TREE_UI());
     })
-    .catch((error) => {
-      dispatch(COATreesStore.actions.FAIL_REQUEST(error))
-    })
-}
+    .catch(error => {
+      dispatch(COATreesStore.actions.FAIL_REQUEST(error));
+    });
+};

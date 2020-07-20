@@ -6,14 +6,14 @@ export default class TemplatePackageEntity {
     templateIds,
     statusId,
     creationDate,
-    userCreatorId
+    userCreatorId,
   }) {
-    this._id = _id
-    this.name = name
-    this.submissionPeriodId = submissionPeriodId
-    this.templateIds = templateIds
-    this.statusId = statusId
-    this.creationDate = creationDate
-    this.userCreatorId = userCreatorId 
+    this._id = _id;
+    this.name = name;
+    this.submissionPeriodId = submissionPeriodId;
+    this.templateIds = templateIds;
+    this.statusId = statusId;
+    this.creationDate = creationDate;
+    this.userCreatorId = userCreatorId;
   }
 }

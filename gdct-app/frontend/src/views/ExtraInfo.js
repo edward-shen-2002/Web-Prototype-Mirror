@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from 'react'
-import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 
-import CssBaseline from '@material-ui/core/CssBaseline'
-import TextField from '@material-ui/core/TextField'
-import Link from '@material-ui/core/Link'
-import Grid from '@material-ui/core/Grid'
-import Input from '@material-ui/core/Input'
-import Select from '@material-ui/core/Select'
-import Chip from '@material-ui/core/Chip'
-import MenuItem from '@material-ui/core/MenuItem'
-import Typography from '@material-ui/core/Typography'
-import { makeStyles, useTheme } from '@material-ui/core/styles'
-import Container from '@material-ui/core/Container'
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import Input from '@material-ui/core/Input';
+import Select from '@material-ui/core/Select';
+import Chip from '@material-ui/core/Chip';
+import MenuItem from '@material-ui/core/MenuItem';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
 
-import { getAppSysRolesRequest } from '../store/thunks/AppSysRole'
-import { selectFactoryRESTResponseTableValues } from '../store/common/REST/selectors'
-import { selectAppSysRolesStore } from '../store/AppSysRolesStore/selectors'
+import { getAppSysRolesRequest } from '../store/thunks/AppSysRole';
+import { selectFactoryRESTResponseTableValues } from '../store/common/REST/selectors';
+import { selectAppSysRolesStore } from '../store/AppSysRolesStore/selectors';
+import { Button } from '@material-ui/core';
 
 function Copyright() {
   return (
@@ -27,10 +28,10 @@ function Copyright() {
       {new Date().getFullYear()}
       {'.'}
     </Typography>
-  )
+  );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -55,10 +56,10 @@ const useStyles = makeStyles((theme) => ({
   chip: {
     margin: 2,
   },
-}))
+}));
 
-const ITEM_HEIGHT = 48
-const ITEM_PADDING_TOP = 8
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
 const MenuProps = {
   PaperProps: {
     style: {
@@ -66,7 +67,7 @@ const MenuProps = {
       width: 250,
     },
   },
-}
+};
 
 function getStyles(sysRole, sysRoles, theme) {
   return {
@@ -74,53 +75,51 @@ function getStyles(sysRole, sysRoles, theme) {
       sysRoles.indexOf(sysRole) === -1
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium,
-  }
+  };
 }
 
-export default function SignUp({ parentHandleChange }) {
-  const dispatch = useDispatch()
+export default function SignUp({ parentHandleChange, steps, activeStep, handleNext, handleBack }) {
+  const dispatch = useDispatch();
   const { appSysRoles } = useSelector(
-    (state) => ({
-      appSysRoles: selectFactoryRESTResponseTableValues(selectAppSysRolesStore)(
-        state
-      ),
+    state => ({
+      appSysRoles: selectFactoryRESTResponseTableValues(selectAppSysRolesStore)(state),
     }),
-    shallowEqual
-  )
-  const classes = useStyles()
-  const theme = useTheme()
-  const [title, setTitle] = useState('')
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [ext, setExt] = useState('')
-  const [sysRoles, setSysRoles] = useState([])
-  const handleChange = (e) => {
-    const { name, value } = e.target
+    shallowEqual,
+  );
+  const classes = useStyles();
+  const theme = useTheme();
+  const [title, setTitle] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [ext, setExt] = useState('');
+  const [sysRoles, setSysRoles] = useState([]);
+  const handleChange = e => {
+    const { name, value } = e.target;
     switch (name) {
       case 'title':
-        setTitle(value)
-        parentHandleChange(name, value)
-        break
+        setTitle(value);
+        parentHandleChange(name, value);
+        break;
       case 'phoneNumber':
-        setPhoneNumber(value)
-        parentHandleChange(name, value)
-        break
+        setPhoneNumber(value);
+        parentHandleChange(name, value);
+        break;
       case 'ext':
-        setExt(value)
-        parentHandleChange(name, value)
-        break
+        setExt(value);
+        parentHandleChange(name, value);
+        break;
       case 'sysRoles':
-        setSysRoles(value)
-        parentHandleChange(name, sysRoles)
-        break
+        setSysRoles(value);
+        parentHandleChange(name, sysRoles);
+        break;
     }
-    parentHandleChange(name, value)
-  }
+    parentHandleChange(name, value);
+  };
 
-  console.log('sysRoles:', sysRoles)
+  console.log('sysRoles:', sysRoles);
 
   useEffect(() => {
-    dispatch(getAppSysRolesRequest())
-  }, [dispatch])
+    dispatch(getAppSysRolesRequest());
+  }, [dispatch]);
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -173,21 +172,17 @@ export default function SignUp({ parentHandleChange }) {
                 value={sysRoles}
                 onChange={handleChange}
                 input={<Input id="select-multiple-chip" />}
-                renderValue={(selected) => (
+                renderValue={selected => (
                   <div className={classes.chips}>
-                    {selected.map((value) => (
-                      <Chip
-                        key={value}
-                        label={value}
-                        className={classes.chip}
-                      />
+                    {selected.map(value => (
+                      <Chip key={value} label={value} className={classes.chip} />
                     ))}
                   </div>
                 )}
                 MenuProps={MenuProps}
               >
                 {appSysRoles.length !== 0 &&
-                  appSysRoles.map((sysRole) => (
+                  appSysRoles.map(sysRole => (
                     <MenuItem
                       key={sysRole._id}
                       value={sysRole.appSys + '-' + sysRole.role}
@@ -206,8 +201,24 @@ export default function SignUp({ parentHandleChange }) {
               </Link>
             </Grid>
           </Grid>
+          <div className={classes.buttons} style={{ marginTop: '2rem', textAlign: 'right' }}>
+            {activeStep !== 0 && (
+              <Button onClick={handleBack} className={classes.button}>
+                Back
+              </Button>
+            )}
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleNext}
+              className={classes.button}
+              type="submit"
+            >
+              {activeStep === steps.length - 1 ? 'Confirm' : 'Next'}
+            </Button>
+          </div>
         </form>
       </div>
     </Container>
-  )
+  );
 }

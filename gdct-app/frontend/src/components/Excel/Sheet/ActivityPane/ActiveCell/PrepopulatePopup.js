@@ -1,26 +1,26 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback } from 'react';
 
-import { useDispatch } from 'react-redux'
-import Typography from '@material-ui/core/Typography'
+import { useDispatch } from 'react-redux';
+import Typography from '@material-ui/core/Typography';
 
-import { LabeledTextField } from './components'
-import { DialogActions } from './components'
+import { LabeledTextField } from './components';
+import { DialogActions } from './components';
 
 import {
   setPrepopulate,
   resetActiveCellDialog,
-} from '../../../../../store/actions/ui/excel/commands'
+} from '../../../../../store/actions/ui/excel/commands';
 
 const PrepopulatePopup = ({ type, quarter, year }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const [newType, setNewType] = useState(type ? type : '')
-  const [newQuarter, setNewQuarter] = useState(quarter ? quarter : '')
-  const [newYear, setNewYear] = useState(year ? year : '')
+  const [newType, setNewType] = useState(type ? type : '');
+  const [newQuarter, setNewQuarter] = useState(quarter ? quarter : '');
+  const [newYear, setNewYear] = useState(year ? year : '');
 
-  const handleChangeType = ({ target: { value } }) => setNewType(value)
-  const handleChangeQuarter = ({ target: { value } }) => setNewQuarter(value)
-  const handleChangeYear = ({ target: { value } }) => setNewYear(value)
+  const handleChangeType = ({ target: { value } }) => setNewType(value);
+  const handleChangeQuarter = ({ target: { value } }) => setNewQuarter(value);
+  const handleChangeYear = ({ target: { value } }) => setNewYear(value);
 
   const handleChangePrepopulate = useCallback(
     () =>
@@ -29,38 +29,25 @@ const PrepopulatePopup = ({ type, quarter, year }) => {
         quarter: newQuarter,
         year: newYear,
       }),
-    [dispatch]
-  )
+    [dispatch],
+  );
 
-  const handleCloseActiveCellDialog = useCallback(
-    () => dispatch(resetActiveCellDialog()),
-    [dispatch]
-  )
+  const handleCloseActiveCellDialog = useCallback(() => dispatch(resetActiveCellDialog()), [
+    dispatch,
+  ]);
 
   return (
     <div className="dialog prepopulate">
       <Typography variant="h6">Prepopulate</Typography>
-      <LabeledTextField
-        label="Type"
-        text={newType}
-        handleChange={handleChangeType}
-      />
-      <LabeledTextField
-        label="Quarter"
-        text={newQuarter}
-        handleChange={handleChangeQuarter}
-      />
-      <LabeledTextField
-        label="Year"
-        text={newYear}
-        handleChange={handleChangeYear}
-      />
+      <LabeledTextField label="Type" text={newType} handleChange={handleChangeType} />
+      <LabeledTextField label="Quarter" text={newQuarter} handleChange={handleChangeQuarter} />
+      <LabeledTextField label="Year" text={newYear} handleChange={handleChangeYear} />
       <DialogActions
         handleAdd={handleChangePrepopulate}
         handleCancel={handleCloseActiveCellDialog}
       />
     </div>
-  )
-}
+  );
+};
 
-export default PrepopulatePopup
+export default PrepopulatePopup;

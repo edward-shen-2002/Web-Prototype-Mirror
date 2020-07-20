@@ -1,6 +1,6 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model } from 'mongoose';
 
-const ObjectId = Schema.Types.ObjectId
+const { ObjectId } = Schema.Types;
 
 const TemplateTypeModel = model(
   'TemplateType',
@@ -17,11 +17,11 @@ const TemplateTypeModel = model(
       isInputtable: { type: Boolean },
       isViewable: { type: Boolean },
       isReportable: { type: Boolean },
-      isActive: { type: Boolean }
+      isActive: { type: Boolean },
     },
-    { minimize: false, timestamps: true }
+    { minimize: false, timestamps: true },
   ),
-  'TemplateType'
-)
+  'TemplateType',
+);
 
-export default TemplateTypeModel
+export default TemplateTypeModel;

@@ -6,7 +6,7 @@ const AppSysRole = new Schema(
     role: { type: String },
     isActive: { type: Boolean },
   },
-  { minimize: false }
+  { minimize: false },
 );
 
 AppSysRole.pre(/^find/, function (next) {

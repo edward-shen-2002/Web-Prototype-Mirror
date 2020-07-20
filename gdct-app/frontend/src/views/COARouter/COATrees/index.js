@@ -1,1 +1,1 @@
-export { default } from './COATrees'
+export { default } from './COATrees';

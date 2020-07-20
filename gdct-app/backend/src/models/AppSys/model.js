@@ -10,7 +10,7 @@ const AppSys = new Schema(
       select: false,
     },
   },
-  { minimize: false }
+  { minimize: false },
 );
 
 AppSys.pre(/^find/, function (next) {

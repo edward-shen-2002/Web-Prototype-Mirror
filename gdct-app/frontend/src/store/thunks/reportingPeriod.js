@@ -1,26 +1,26 @@
-import reportingPeriodController from '../../controllers/reportingPeriod'
-import ReportingPeriodsStore from '../ReportingPeriodsStore/store'
+import reportingPeriodController from '../../controllers/reportingPeriod';
+import ReportingPeriodsStore from '../ReportingPeriodsStore/store';
 
 import {
   getRequestFactory,
   createRequestFactory,
   deleteRequestFactory,
   updateRequestFactory,
-} from './common/REST'
+} from './common/REST';
 
 export const getReportingPeriodsRequest = getRequestFactory(
   ReportingPeriodsStore,
-  reportingPeriodController
-)
+  reportingPeriodController,
+);
 export const createReportingPeriodRequest = createRequestFactory(
   ReportingPeriodsStore,
-  reportingPeriodController
-)
+  reportingPeriodController,
+);
 export const deleteReportingPeriodRequest = deleteRequestFactory(
   ReportingPeriodsStore,
-  reportingPeriodController
-)
+  reportingPeriodController,
+);
 export const updateReportingPeriodRequest = updateRequestFactory(
   ReportingPeriodsStore,
-  reportingPeriodController
-)
+  reportingPeriodController,
+);

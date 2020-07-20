@@ -1,45 +1,42 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react';
 
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   showAppNavigation,
   hideAppNavigation,
-} from '../../../store/actions/ui/isAppNavigationOpen'
-import Loading from '../../../components/Loading/Loading'
+} from '../../../store/actions/ui/isAppNavigationOpen';
+import Loading from '../../../components/Loading/Loading';
 
-import {
-  updateTemplateExcelRequest,
-  getTemplateRequest,
-} from '../../../store/thunks/template'
-import { Excel } from '../../../components/Excel'
+import { updateTemplateExcelRequest, getTemplateRequest } from '../../../store/thunks/template';
+import { Excel } from '../../../components/Excel';
 
-import './Template.scss'
+import './Template.scss';
 
 const Template = ({
   match: {
     params: { _id },
   },
 }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const isCallInProgress = useSelector(
-    ({ TemplatesStore: { isCallInProgress } }) => isCallInProgress
-  )
+    ({ TemplatesStore: { isCallInProgress } }) => isCallInProgress,
+  );
 
   const handleSaveTemplate = useCallback(() => {
-    dispatch(updateTemplateExcelRequest())
-  }, [])
+    dispatch(updateTemplateExcelRequest());
+  }, []);
 
   useEffect(() => {
     // If fetch fails, push back to /tempaltes
-    dispatch(getTemplateRequest(_id))
-    dispatch(hideAppNavigation())
+    dispatch(getTemplateRequest(_id));
+    dispatch(hideAppNavigation());
 
     return () => {
-      dispatch(showAppNavigation())
-    }
-  }, [])
+      dispatch(showAppNavigation());
+    };
+  }, []);
 
   return isCallInProgress ? (
     <Loading />
@@ -49,7 +46,7 @@ const Template = ({
       returnLink="/template_manager/templates"
       handleSave={handleSaveTemplate}
     />
-  )
-}
+  );
+};
 
-export default Template
+export default Template;

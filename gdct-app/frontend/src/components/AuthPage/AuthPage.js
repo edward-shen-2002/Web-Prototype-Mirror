@@ -1,59 +1,54 @@
-import React, { useState, Fragment } from 'react'
-import clsx from 'clsx'
-import { makeStyles, useTheme } from '@material-ui/core/styles'
-import Drawer from '@material-ui/core/Drawer'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import List from '@material-ui/core/List'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import Typography from '@material-ui/core/Typography'
-import Divider from '@material-ui/core/Divider'
-import IconButton from '@material-ui/core/IconButton'
-import MenuIcon from '@material-ui/icons/Menu'
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
-import ChevronRightIcon from '@material-ui/icons/ChevronRight'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
-import InboxIcon from '@material-ui/icons/MoveToInbox'
-import MailIcon from '@material-ui/icons/Mail'
-import Collapse from '@material-ui/core/Collapse'
-import ExpandMore from '@material-ui/icons/ExpandMore'
-import ExpandLess from '@material-ui/icons/ExpandLess'
+import React, { useState, Fragment, useEffect } from 'react';
+import clsx from 'clsx';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import List from '@material-ui/core/List';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Collapse from '@material-ui/core/Collapse';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
-import navigationConfig from './config'
-import { useCallback } from 'react'
+import navigationConfig from './config';
+import { useCallback } from 'react';
+import TopItemList from '../TopItemList/TopItemList';
 
-const drawerWidth = 240
-const headerHeight = 55
+const drawerWidth = 240;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
-    width: '100vw',
-    height: '100vh',
-    overflow: 'auto'
   },
   appBar: {
-    height: headerHeight,
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
+    transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
   },
   appBarShift: {
-    marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
+    marginLeft: drawerWidth,
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
   menuButton: {
-    marginRight: 36,
+    marginRight: theme.spacing(2),
   },
   hide: {
     display: 'none',
@@ -61,125 +56,160 @@ const useStyles = makeStyles((theme) => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
-    whiteSpace: 'nowrap',
   },
-  drawerOpen: {
+  drawerPaper: {
     width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
   },
-  drawerClose: {
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: 'hidden',
-    width: theme.spacing(8),
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(7),
-    },
-  },
-  toolbarTitle: {
-    marginLeft: 15,
-  },
-  toolbarHandle: {},
-  toolbar: {
+  drawerHeader: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between',
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
-    minHeight: `${headerHeight}px !important`,
+    justifyContent: 'flex-end',
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(5),
-    width: `calc(100% - ${drawerWidth}px)`,
-    height: `calc(100% - ${headerHeight}px) !important`,
-    marginTop: headerHeight,
-    overflow: 'auto'
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
   },
-}))
+  contentShift: {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: 0,
+  },
+  toolbar: {
+    display: 'flex',
+    marginLeft: '1rem',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  flex: {
+    display: 'flex',
+  },
+  flexItem: {
+    marginLeft: 'auto',
+    margin: '0',
+  },
+  title: {
+    color: 'white',
+    '&:hover': {
+      color: 'white',
+      textDecoration: 'none',
+    },
+  },
+}));
 
-const HeaderHandle = ({ open, classes, handleDrawerOpen }) => (
-  <IconButton
-    color="inherit"
-    aria-label="open drawer"
-    onClick={handleDrawerOpen}
-    edge="start"
-    className={clsx(classes.menuButton, {
-      [classes.hide]: open,
-    })}
-  >
-    <MenuIcon />
-  </IconButton>
-)
+const HeaderHandle = ({ open, classes, handleDrawerOpen, isTopMenu }) => {
+  return (
+    !isTopMenu && (
+      <IconButton
+        color="inherit"
+        aria-label="open drawer"
+        onClick={handleDrawerOpen}
+        edge="start"
+        className={clsx(classes.menuButton, open && classes.hide)}
+      >
+        <MenuIcon />
+      </IconButton>
+    )
+  );
+};
 
 const HeaderTitle = ({ title }) => (
   <Typography variant="h6" noWrap>
     {title}
   </Typography>
-)
+);
 
-const Header = ({ title, classes, open, handleDrawerOpen }) => (
+const Header = ({
+  title,
+  classes,
+  config,
+  open,
+  setOpen,
+  handleDrawerOpen,
+  isTopMenu,
+  setTopMenu,
+  isMobile,
+}) => (
   <AppBar
     position="fixed"
     className={clsx(classes.appBar, {
       [classes.appBarShift]: open,
     })}
   >
-    <Toolbar>
+    <Toolbar className={classes.flex}>
       <HeaderHandle
         open={open}
         classes={classes}
         handleDrawerOpen={handleDrawerOpen}
+        isTopMenu={isTopMenu}
       />
-      <HeaderTitle title={title} />
+      <Link to="/" className={classes.title}>
+        <HeaderTitle title={title} />
+      </Link>
+      {isTopMenu && <TopItemList config={config} classes={classes} isMobile={isMobile} />}
+      <FormControlLabel
+        className={classes.flexItem}
+        control={
+          <Switch
+            checked={isTopMenu}
+            onChange={() => {
+              setTopMenu(!isTopMenu);
+              setOpen(false);
+            }}
+            aria-label="login switch"
+          />
+        }
+        label={isTopMenu ? 'Top' : 'Left'}
+      />
     </Toolbar>
   </AppBar>
-)
+);
 
 const DrawerHandle = ({ title, classes, handleDrawerClose, theme }) => (
   <div className={classes.toolbar}>
     <Typography className={classes.toolbarTitle}>{title}</Typography>
-    <IconButton className={classes.toolbarHandle} onClick={handleDrawerClose}>
-      {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-    </IconButton>
+    <div className={classes.drawerHeader}>
+      <IconButton onClick={handleDrawerClose}>
+        {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+      </IconButton>
+    </div>
   </div>
-)
+);
 
-const MenuItemIcon = ({ icon }) => <ListItemIcon>{icon}</ListItemIcon>
+const MenuItemIcon = ({ icon }) => <ListItemIcon>{icon}</ListItemIcon>;
 
 const MenuItemLink = ({ name, icon, url }) => (
   <ListItem component={url && Link} button to={url}>
     <MenuItemIcon icon={icon} />
     <ListItemText primary={name} />
   </ListItem>
-)
+);
 
 const MenuItems = ({ menuItems }) => {
   return menuItems.map((menuItem, index) => (
-    <MenuItemLink
-      key={`${menuItem.type}-${menuItem.name}-${index}`}
-      {...menuItem}
-    />
-  ))
-}
+    <MenuItemLink key={`${menuItem.type}-${menuItem.name}-${index}`} {...menuItem} />
+  ));
+};
 
 const MenuItemsList = ({ menuItems }) => (
   <List component="div" disablePadding>
     <MenuItems menuItems={menuItems} />
   </List>
-)
+);
 
 const MenuDrawerItems = ({ menuItems, open }) => (
   <Collapse in={open} timeout="auto" unmountOnExit>
     <MenuItemsList menuItems={menuItems} />
   </Collapse>
-)
+);
 
 const MenuDrawerTitle = ({ button = true, name, icon, open, handleClick }) => (
   <ListItem button={button} onClick={handleClick}>
@@ -187,66 +217,55 @@ const MenuDrawerTitle = ({ button = true, name, icon, open, handleClick }) => (
     <ListItemText primary={name} />
     {open ? <ExpandLess /> : <ExpandMore />}
   </ListItem>
-)
+);
 
 const MenuDrawer = ({ name, icon, children }) => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
-  const handleToggle = useCallback(() => setOpen(!open), [open])
+  const handleToggle = useCallback(() => setOpen(!open), [open]);
 
   return (
     <Fragment>
       <MenuDrawerTitle name={name} icon={icon} handleClick={handleToggle} />
       <MenuDrawerItems open={open} menuItems={children} />
     </Fragment>
-  )
-}
+  );
+};
 
 const NavigationContent = ({ config }) => {
   return config.map((item, index) => {
-    let Component
+    let Component;
 
-    const { type, name } = item
+    const { type, name } = item;
 
     switch (type) {
       case 'drawer':
-        Component = MenuDrawer
-        break
+        Component = MenuDrawer;
+        break;
 
       case 'divider':
-        Component = Divider
-        break
+        Component = Divider;
+        break;
 
       case 'title':
       case 'menu':
       default:
-        Component = MenuItemLink
-        break
+        Component = MenuItemLink;
+        break;
     }
 
-    return <Component key={`${type}-${name}-${index}`} {...item} />
-  })
-}
+    return <Component key={`${type}-${name}-${index}`} {...item} />;
+  });
+};
 
-const NavigationDrawer = ({
-  title,
-  open,
-  theme,
-  config,
-  classes,
-  handleDrawerClose,
-}) => (
+const NavigationDrawer = ({ title, open, theme, config, classes, handleDrawerClose }) => (
   <Drawer
-    variant="permanent"
-    className={clsx(classes.drawer, {
-      [classes.drawerOpen]: open,
-      [classes.drawerClose]: !open,
-    })}
+    className={classes.drawer}
+    variant="persistent"
+    anchor="left"
+    open={open}
     classes={{
-      paper: clsx({
-        [classes.drawerOpen]: open,
-        [classes.drawerClose]: !open,
-      }),
+      paper: classes.drawerPaper,
     }}
   >
     <DrawerHandle
@@ -258,11 +277,7 @@ const NavigationDrawer = ({
     <Divider />
     <NavigationContent config={config} />
   </Drawer>
-)
-
-const PageContent = ({ classes, children }) => (
-  <div className={classes.content}>{children}</div>
-)
+);
 
 const AuthPage = ({
   headerTitle = 'MOHLTC - Generic Data Collection Tool',
@@ -270,14 +285,24 @@ const AuthPage = ({
   config = navigationConfig,
   children,
 }) => {
-  const classes = useStyles()
-  const theme = useTheme()
-  const [open, setOpen] = useState(true)
+  const classes = useStyles();
+  const theme = useTheme();
+  const [open, setOpen] = useState(false);
+  const [isTopMenu, setTopMenu] = useState(true);
+  const [isMobile, setMobile] = useState(window.matchMedia('(max-width: 1000px)').matches);
 
-  const handleDrawerOpen = () => setOpen(true)
+  useEffect(() => {
+    const handler = e => setMobile(e.matches);
+    window.matchMedia('(max-width: 1000px)').addListener(handler);
+    setTopMenu(!isMobile);
+  }, [isMobile]);
 
-  const handleDrawerClose = () => setOpen(false)
+  const handleDrawerOpen = () => setOpen(true);
+  const handleDrawerClose = () => setOpen(false);
 
+  const style = open
+    ? { paddingTop: '5.7rem' }
+    : { paddingTop: '5.7rem', marginLeft: `-${drawerWidth}px` };
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -285,7 +310,11 @@ const AuthPage = ({
         title={headerTitle}
         classes={classes}
         open={open}
+        setOpen={setOpen}
         handleDrawerOpen={handleDrawerOpen}
+        config={config}
+        isTopMenu={isTopMenu}
+        setTopMenu={setTopMenu}
       />
       <NavigationDrawer
         title={drawerTitle}
@@ -295,9 +324,16 @@ const AuthPage = ({
         config={config}
         handleDrawerClose={handleDrawerClose}
       />
-      <PageContent classes={classes} children={children} />
+      <main
+        style={style}
+        className={clsx(classes.content, {
+          [classes.contentShift]: open,
+        })}
+      >
+        {children}
+      </main>
     </div>
-  )
-}
+  );
+};
 
-export default AuthPage
+export default AuthPage;
