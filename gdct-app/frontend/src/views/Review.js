@@ -1,10 +1,11 @@
-import React from "react";
+import React from 'react';
 
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import { Button } from '@material-ui/core';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   listItem: {
     padding: theme.spacing(1, 0),
   },
@@ -16,17 +17,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Review(
-  {
-    firstName,
-    lastName,
-    email,
-    title,
-    phoneNumber,
-    ext,
-    sysRoles,
-  },
-) {
+export default function Review({
+  firstName,
+  lastName,
+  email,
+  title,
+  phoneNumber,
+  ext,
+  sysRoles,
+  steps,
+  activeStep,
+  handleNext,
+  handleBack,
+}) {
   const classes = useStyles();
   return (
     <React.Fragment>
@@ -74,14 +77,12 @@ export default function Review(
               <Typography gutterBottom>phoneNumber</Typography>
             </Grid>
             <Grid item xs={6}>
-              <Typography gutterBottom>{phoneNumber + " " + ext}</Typography>
+              <Typography gutterBottom>{phoneNumber + ' ' + ext}</Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography gutterBottom>Roles</Typography>
             </Grid>
-            {sysRoles.map((
-              appSys,
-            ) => (
+            {sysRoles.map(appSys => (
               <React.Fragment key={appSys._id}>
                 <Grid item xs={6}>
                   <Typography gutterBottom>{appSys.appSys}</Typography>
@@ -94,6 +95,22 @@ export default function Review(
           </Grid>
         </Grid>
       </Grid>
+      <div className={classes.buttons} style={{ marginTop: '2rem', textAlign: 'right' }}>
+        {activeStep !== 0 && (
+          <Button onClick={handleBack} className={classes.button}>
+            Back
+          </Button>
+        )}
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleNext}
+          className={classes.button}
+          type="submit"
+        >
+          {activeStep === steps.length - 1 ? 'Confirm' : 'Next'}
+        </Button>
+      </div>
     </React.Fragment>
   );
 }

@@ -1,14 +1,14 @@
-import React, { useMemo } from 'react'
+import React, { useMemo } from 'react';
 
-import { useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux';
 
-import MenuItems from '../../../commonComponents/MenuItems'
+import MenuItems from '../../../commonComponents/MenuItems';
 
-import SaveIcon from '@material-ui/icons/Save'
+import SaveIcon from '@material-ui/icons/Save';
 
-import GetAppIcon from '@material-ui/icons/GetApp'
+import GetAppIcon from '@material-ui/icons/GetApp';
 
-import { save, download } from '../../../../../store/actions/ui/excel/commands'
+import { save, download } from '../../../../../store/actions/ui/excel/commands';
 
 const File = ({
   openedMenuName,
@@ -17,7 +17,7 @@ const File = ({
   handleHoverMenu,
   handleSave,
 }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const options = useMemo(
     () => [
@@ -32,8 +32,8 @@ const File = ({
         handleClick: () => dispatch(download()),
       },
     ],
-    [dispatch]
-  )
+    [dispatch],
+  );
 
   return (
     <MenuItems
@@ -43,7 +43,7 @@ const File = ({
       handleClickMenu={handleClickMenu}
       handleHoverMenu={handleHoverMenu}
     />
-  )
-}
+  );
+};
 
-export default File
+export default File;

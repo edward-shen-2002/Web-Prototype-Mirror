@@ -1,38 +1,38 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
-import File from './File'
-import Edit from './Edit'
+import File from './File';
+import Edit from './Edit';
 
-import ClickAwayListener from '@material-ui/core/ClickAwayListener'
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 const Menu = ({ handleSave }) => {
-  const [isMenuOpenable, setIsMenuOpenable] = useState(false)
-  const [openedMenuName, setOpenedMenuName] = useState(null)
+  const [isMenuOpenable, setIsMenuOpenable] = useState(false);
+  const [openedMenuName, setOpenedMenuName] = useState(null);
 
-  const handleHoverMenu = (menuName) => {
-    if (isMenuOpenable) setOpenedMenuName(menuName)
-  }
+  const handleHoverMenu = menuName => {
+    if (isMenuOpenable) setOpenedMenuName(menuName);
+  };
 
-  const handleClickMenu = (menuName) => {
+  const handleClickMenu = menuName => {
     if (isMenuOpenable) {
-      setIsMenuOpenable(false)
-      if (openedMenuName) setOpenedMenuName(null)
+      setIsMenuOpenable(false);
+      if (openedMenuName) setOpenedMenuName(null);
     } else {
-      setIsMenuOpenable(true)
-      setOpenedMenuName(menuName)
+      setIsMenuOpenable(true);
+      setOpenedMenuName(menuName);
     }
-  }
+  };
 
   const handleClickAway = () => {
-    if (isMenuOpenable) setIsMenuOpenable(false)
-    if (openedMenuName) setOpenedMenuName(null)
-  }
+    if (isMenuOpenable) setIsMenuOpenable(false);
+    if (openedMenuName) setOpenedMenuName(null);
+  };
 
   const commonMenuItemProps = {
     openedMenuName,
     handleClickMenu,
     handleHoverMenu,
-  }
+  };
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
@@ -41,7 +41,7 @@ const Menu = ({ handleSave }) => {
         <Edit {...commonMenuItemProps} />
       </div>
     </ClickAwayListener>
-  )
-}
+  );
+};
 
-export default Menu
+export default Menu;

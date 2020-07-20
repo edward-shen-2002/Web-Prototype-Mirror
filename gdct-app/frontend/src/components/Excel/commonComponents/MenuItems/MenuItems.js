@@ -1,20 +1,20 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, Fragment } from 'react';
 
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
-import Divider from '@material-ui/core/Divider'
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
 
-import Button from '@material-ui/core/Button'
+import Button from '@material-ui/core/Button';
 
-import Popper from '@material-ui/core/Popper'
+import Popper from '@material-ui/core/Popper';
 
-import './MenuItems.scss'
+import './MenuItems.scss';
 
-const MenuOptionItemIcon = ({ icon }) => <ListItemIcon>{icon}</ListItemIcon>
+const MenuOptionItemIcon = ({ icon }) => <ListItemIcon>{icon}</ListItemIcon>;
 
-const MenuOptionItemLabel = ({ label }) => <ListItemText>{label}</ListItemText>
+const MenuOptionItemLabel = ({ label }) => <ListItemText>{label}</ListItemText>;
 
 // ! Recurse here when menu item has children
 const MenuOption = ({ icon, label, handleClick }) => (
@@ -24,25 +24,21 @@ const MenuOption = ({ icon, label, handleClick }) => (
 
     {/* RECURSE */}
   </ListItem>
-)
+);
 
 // ! Could be a divider! There could be children too!
 const MenuOptionsItems = ({ options }) =>
   options.map(({ isDivider, icon, label, children, handleClick }, index) => (
     <Fragment key={index}>
-      {isDivider ? (
-        <Divider />
-      ) : (
-        <MenuOption icon={icon} label={label} handleClick={handleClick} />
-      )}
+      {isDivider ? <Divider /> : <MenuOption icon={icon} label={label} handleClick={handleClick} />}
     </Fragment>
-  ))
+  ));
 
 const MenuOptionsContainer = ({ options }) => (
   <List>
     <MenuOptionsItems options={options} />
   </List>
-)
+);
 
 export const MenuOptions = ({ isOpen, options, anchorEl }) => (
   <Popper
@@ -53,14 +49,9 @@ export const MenuOptions = ({ isOpen, options, anchorEl }) => (
   >
     <MenuOptionsContainer options={options} />
   </Popper>
-)
+);
 
-const MenuLabel = ({
-  isOpen,
-  label,
-  handleClickMenuLabel,
-  handleHoverMenuLabel,
-}) => (
+const MenuLabel = ({ isOpen, label, handleClickMenuLabel, handleHoverMenuLabel }) => (
   <Button
     className={isOpen ? 'menuOption__label--active' : ''}
     onClick={handleClickMenuLabel}
@@ -70,28 +61,22 @@ const MenuLabel = ({
   >
     {label}
   </Button>
-)
+);
 
-const Menu = ({
-  openedMenuName,
-  label,
-  options,
-  handleClickMenu,
-  handleHoverMenu,
-}) => {
-  const [anchorEl, setAnchorEl] = useState(null)
+const Menu = ({ openedMenuName, label, options, handleClickMenu, handleHoverMenu }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClickMenuLabel = ({ currentTarget }) => {
-    setAnchorEl(currentTarget)
-    handleClickMenu(label)
-  }
+    setAnchorEl(currentTarget);
+    handleClickMenu(label);
+  };
 
   const handleHoverMenuLabel = ({ currentTarget }) => {
-    setAnchorEl(currentTarget)
-    handleHoverMenu(label)
-  }
+    setAnchorEl(currentTarget);
+    handleHoverMenu(label);
+  };
 
-  const isOpen = label === openedMenuName
+  const isOpen = label === openedMenuName;
 
   return (
     <div>
@@ -103,7 +88,7 @@ const Menu = ({
       />
       <MenuOptions isOpen={isOpen} options={options} anchorEl={anchorEl} />
     </div>
-  )
-}
+  );
+};
 
-export default Menu
+export default Menu;

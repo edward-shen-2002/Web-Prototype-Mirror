@@ -1,1 +1,1 @@
-export * from './HeaderResize'
+export * from './HeaderResize';

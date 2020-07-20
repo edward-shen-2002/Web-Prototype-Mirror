@@ -1,6 +1,4 @@
-import { Schema, model } from 'mongoose'
-
-const ObjectId = Schema.Types.ObjectId
+import { Schema, model } from 'mongoose';
 
 const SheetNameModel = model(
   'SheetName',
@@ -8,11 +6,11 @@ const SheetNameModel = model(
     {
       // templateId: { type: ObjectId, ref: "Template" },
       name: { type: String },
-      isActive: { type: Boolean }
-    }, 
-    { minimize: false }
+      isActive: { type: Boolean },
+    },
+    { minimize: false },
   ),
-  'SheetName'
-)
+  'SheetName',
+);
 
-export default SheetNameModel
+export default SheetNameModel;

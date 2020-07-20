@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Fade from '@material-ui/core/Fade'
-import Typography from '@material-ui/core/Typography'
-import Paper from '@material-ui/core/Paper'
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Fade from '@material-ui/core/Fade';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
 
-import './Loading.scss'
+import './Loading.scss';
 
 const LoadingContent = ({ message }) => (
   <Paper className="loadingContent">
@@ -14,7 +14,7 @@ const LoadingContent = ({ message }) => (
       {message ? message : 'Loading Components...'}
     </Typography>
   </Paper>
-)
+);
 
 const Loading = ({ message }) => (
   <Fade in>
@@ -22,6 +22,6 @@ const Loading = ({ message }) => (
       <LoadingContent message={message} />
     </div>
   </Fade>
-)
+);
 
-export default Loading
+export default Loading;

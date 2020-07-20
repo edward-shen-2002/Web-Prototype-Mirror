@@ -1,25 +1,25 @@
-import Container, { Service, Inject } from 'typedi'
-import SheetNameRepository from '../../repositories/SheetName'
+import Container from 'typedi';
+import SheetNameRepository from '../../repositories/SheetName';
 
 // @Service()
 export default class SheetNameService {
   constructor() {
-    this.sheetNameRepository = Container.get(SheetNameRepository)
+    this.sheetNameRepository = Container.get(SheetNameRepository);
   }
 
   async createSheetName(sheetName) {
-    return this.sheetNameRepository.create(sheetName)
+    return this.sheetNameRepository.create(sheetName);
   }
 
   async deleteSheetName(id) {
-    return this.sheetNameRepository.delete(id)
+    return this.sheetNameRepository.delete(id);
   }
 
   async updateSheetName(id, sheetName) {
-    return this.sheetNameRepository.update(id, sheetName)
+    return this.sheetNameRepository.update(id, sheetName);
   }
 
   async findSheetName(sheetName) {
-    return this.sheetNameRepository.find(sheetName)
+    return this.sheetNameRepository.find(sheetName);
   }
 }

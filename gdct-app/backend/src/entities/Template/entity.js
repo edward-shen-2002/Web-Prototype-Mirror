@@ -8,15 +8,15 @@ export default class TemplateEntity {
     userCreatorId,
     creationDate,
     expirationDate,
-    statusId
+    statusId,
   }) {
-    this._id = _id
-    this.name = name
-    this.templateData = templateData
-    this.templateTypeId = templateTypeId
-    this.userCreatorId = userCreatorId
-    this.creationDate = creationDate
-    this.expirationDate = expirationDate
-    this.statusId = statusId
+    this._id = _id;
+    this.name = name;
+    this.templateData = templateData;
+    this.templateTypeId = templateTypeId;
+    this.userCreatorId = userCreatorId;
+    this.creationDate = creationDate;
+    this.expirationDate = expirationDate;
+    this.statusId = statusId;
   }
 }
