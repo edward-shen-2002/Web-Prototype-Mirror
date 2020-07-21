@@ -26,19 +26,23 @@ export default class ProgramService {
     });
   }
 
-  auto(req, res) {
-    const temp = mongoose.Types.ObjectId('5efb8b638464c20f646049a6');
-    const uname = os.userInfo().username;
+  auto = (req, res) => {
+    var temp = mongoose.Types.ObjectId('5efb8b638464c20f646049a6');
+    var uname = os.userInfo().username;
     UserModel.find({ AppConfig: temp }, function (err, user1) {
-      let found = false;
-      user1.forEach(obj => {
+      var found = false;
+      user1.forEach((obj) => {
         if (obj.username === uname) {
           found = true;
-          res.json({ status: "success" })
+          req.session.user = user1
+          res.send(true);
         }
       });
+      if (!found) {
+        res.send(false);
+      }
     });
-  }
+  };
 
   profile(req, res){
     if (req.user.token !== null) {
