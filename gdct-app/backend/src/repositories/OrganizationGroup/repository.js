@@ -10,6 +10,5 @@ export default class OrgGroupRepository extends BaseRepository {
 
   async findAll() {
     return OrgGroupModel.find()
-    )
   }
 }

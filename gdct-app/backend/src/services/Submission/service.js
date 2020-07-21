@@ -71,9 +71,9 @@ export default class SubmissionService {
     return this.submissionRepository.findById(id)
   }
 
-  async findOrganizationById(id) {
-    return this.organizationRepository.findById(id)
-  }
+  // async findOrganizationById(id) {
+  //   return this.organizationRepository.findById(id)
+  // }
 
   async findProgramById(id) {
     return this.programRepository.findById(id)
