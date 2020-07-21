@@ -1,11 +1,8 @@
 module.exports = function (api) {
-  api.cache(false)
+  api.cache(false);
 
-  const presets = ['@babel/preset-env', '@babel/preset-react']
-  const plugins = [
-    '@babel/plugin-proposal-class-properties',
-    '@babel/plugin-transform-runtime',
-  ]
+  const presets = ['@babel/preset-env', '@babel/preset-react'];
+  const plugins = ['@babel/plugin-proposal-class-properties', '@babel/plugin-transform-runtime'];
 
-  return { presets, plugins }
-}
+  return { presets, plugins };
+};

@@ -1,8 +1,8 @@
-import React from 'react'
+import React from 'react';
 
-import { useSelector, shallowEqual } from 'react-redux'
+import { useSelector, shallowEqual } from 'react-redux';
 
-import SortableTree from 'react-sor'
+import SortableTree from 'react-sor';
 
 const GroupHierarchy = () => {
   const { sheetCellData } = useSelector(
@@ -15,10 +15,10 @@ const GroupHierarchy = () => {
     }) => ({
       sheetCellData,
     }),
-    shallowEqual
-  )
+    shallowEqual,
+  );
 
-  return <div></div>
-}
+  return <div></div>;
+};
 
-export default GroupHierarchy
+export default GroupHierarchy;

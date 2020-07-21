@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model } from 'mongoose';
 
 const ReportingPeriodModel = model(
   'ReportingPeriod',
@@ -7,11 +7,11 @@ const ReportingPeriodModel = model(
       name: { type: String },
       startDate: { type: Date },
       endDate: { type: Date },
-      application: { type: String }
+      application: { type: String },
     },
-    { minimize: false }
+    { minimize: false },
   ),
-  'ReportingPeriod'
-)
+  'ReportingPeriod',
+);
 
-export default ReportingPeriodModel
+export default ReportingPeriodModel;

@@ -1,45 +1,30 @@
-import { Service } from 'typedi'
-import { Router } from 'express'
-import UserService from '../../services/User'
+import { Service } from 'typedi';
+import { Router } from 'express';
+import UserService from '../../services/User';
 
-const UserController = Service(
-  [UserService],
-  (service) => {
-    const router = Router()
-    return (
-      () => {
+const UserController = Service([UserService], service => {
+  const router = Router();
 
-        router.get(
-          `/users/registerUser`,
-          (req, res, next) => {
-            const {registerData} = req.body;
-            service
-              .register(registerData)
-          }
-        )
+  return (function () {
+    router.get(`/users/registerUser`, req => {
+      const { registerData } = req.body;
+      service.register(registerData);
+    });
 
-        router.get(
-          `/users/verifyUser`,
-          (req, res, next) => {
-            const { approve, _id, hashedUsername, orgId } = req.query;
-            service
-              .sendActiveEmail(approve, _id, orgId)
-          }
-        )
+    router.get(`/users/verifyUser`, req => {
+      const { approve, _id, hashedUsername, orgId } = req.query;
+      console.log(hashedUsername);
+      service.sendActiveEmail(approve, _id, orgId);
+    });
 
-        router.get(
-          `/users/activeUser`,
-          (req, res, next) => {
-            const { _id, hashedUsername} = req.query;
-            service
-              .activeUser(_id)
-          }
-        )
+    router.get(`/users/activeUser`, req => {
+      const { _id, hashedUsername } = req.query;
+      console.log(hashedUsername);
+      service.activeUser(_id);
+    });
 
-        return router
-      }
-    )()
-  }
-)
+    return router;
+  })();
+});
 
-export default UserController
+export default UserController;

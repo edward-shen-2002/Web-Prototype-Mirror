@@ -1,30 +1,28 @@
-import ProgramEntity from '../../entities/Program'
-import BaseRepository from '../repository'
-import ProgramModel from '../../models/Program'
+import ProgramEntity from '../../entities/Program';
+import BaseRepository from '../repository';
+import ProgramModel from '../../models/Program';
 
-import OrgModel from '../../models/Organization'
+import OrgModel from '../../models/Organization';
 
-import TemplateTypeModel from '../../models/TemplateType'
+import TemplateTypeModel from '../../models/TemplateType';
 
 export default class ProgramRepository extends BaseRepository {
   constructor() {
-    super(ProgramModel)
+    super(ProgramModel);
   }
 
   async delete(id) {
-    var mongoose = require('mongoose')
-    var temp = mongoose.Types.ObjectId(id)
+    const mongoose = require('mongoose');
+    const temp = mongoose.Types.ObjectId(id);
 
-    OrgModel.find({ 'programId': temp }, function (err, program1) {
-
-      TemplateTypeModel.find({ 'programId': temp }, function (err, program2) {
+    OrgModel.find({ programId: temp }, function (err, program1) {
+      TemplateTypeModel.find({ programId: temp }, function (err, program2) {
         if (program1.length > 0 || program2.length > 0) {
           return ProgramModel;
-        } else {
-          return ProgramModel.findByIdAndDelete(id).then(() => { });
         }
-      })
-    })
+        return ProgramModel.findByIdAndDelete(id).then(() => {});
+      });
+    });
   }
 
   async create(program) {
@@ -36,17 +34,17 @@ export default class ProgramRepository extends BaseRepository {
   }
 
   async find(query) {
-    const realQuery = {}
+    const realQuery = {};
 
     for (const key in query) {
-      if (query[key]) realQuery[key] = query[key]
+      if (query[key]) realQuery[key] = query[key];
     }
     return ProgramModel.find(realQuery);
   }
-  
-  async findByIds(ids) {
-    return ProgramModel.find({_id: {$in: ids}}, {isActive: true})
-      .then((programs) => new ProgramEntity(programs.toObject()))
-  }
 
+  async findByIds(ids) {
+    return ProgramModel.find({ _id: { $in: ids } }, { isActive: true }).then(
+      programs => new ProgramEntity(programs.toObject()),
+    );
+  }
 }

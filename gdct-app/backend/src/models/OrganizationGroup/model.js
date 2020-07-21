@@ -1,16 +1,16 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model } from 'mongoose';
 
-const OrganizationGroupModel = model(
+const OrgGroupModel = model(
   'OrganizationGroup',
   new Schema(
     {
-      id : {type: String, required: true, unique: true },
-      name: { type: String},
-      isActive: {type: Boolean}
+      id: { type: String, required: true, unique: true },
+      name: { type: String },
+      isActive: { type: Boolean },
     },
-    { minimize: false }
+    { minimize: false },
   ),
-  'OrganizationGroup'
-)
+  'OrganizationGroup',
+);
 
-export default OrganizationGroupModel
+export default OrgGroupModel;

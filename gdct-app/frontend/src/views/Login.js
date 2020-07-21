@@ -1,106 +1,216 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Link from '@material-ui/core/Link';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 
-import { connect } from 'react-redux'
+import { Container } from '@material-ui/core';
+import AuthController from '../controllers/Auth';
 
-import { Link } from 'react-router-dom'
-
-import Button from '@material-ui/core/Button'
-import Paper from '@material-ui/core/Paper'
-import TextField from '@material-ui/core/TextField'
-
-import { Formik } from 'formik'
-
-import {
-  ROUTE_PUBLIC_PREREGISTER,
-  ROUTE_PUBLIC_RECOVERY,
-  ROUTE_USER_PROFILE,
-} from '../constants/routes'
-
-const RegisterButton = () => (
-  <Link to={ROUTE_PUBLIC_PREREGISTER}>
-    <Button
-      className="loginButtonsMain__button loginButtonsMain__register"
-      variant="contained"
-      color="primary"
-    >
-      Register
-    </Button>
-  </Link>
-)
-
-const MainButtons = () => (
-  <div className="loginButtonsMain">
-    <Button
-      className="loginButtonsMain__button loginButtonsMain__login"
-      variant="contained"
-      color="primary"
-      type="submit"
-    >
-      Login
-    </Button>
-    <RegisterButton />
-  </div>
-)
-
-const RecoveryButton = () => (
-  <Link to={ROUTE_PUBLIC_RECOVERY}>
-    <Button size="small">Forgot Password?</Button>
-  </Link>
-)
-
-const LoginButtons = () => (
-  <div>
-    <RecoveryButton />
-    <MainButtons />
-  </div>
-)
-
-const LoginForm = ({ handleLogin }) => (
-  <Formik
-    initialValues={{ username: 'sampleuser', password: 'password123@' }}
-    onSubmit={(values, { setSubmitting }) => handleLogin(values, setSubmitting)}
-  >
-    {({ handleSubmit, handleChange, values }) => (
-      <Paper className="login__container">
-        <form className="login__form" onSubmit={handleSubmit}>
-          <h1>Login</h1>
-          <p className="text-muted">Sign In to your account</p>
-          <TextField
-            className="login__field"
-            label="Username"
-            id="username"
-            name="username"
-            type="username"
-            autoComplete="username"
-            autoFocus={true}
-            value={values.username}
-            onChange={handleChange}
-          />
-          <TextField
-            className="login__field"
-            label="Password"
-            id="password"
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            value={values.password}
-            onChange={handleChange}
-          />
-          <LoginButtons />
-        </form>
-      </Paper>
-    )}
-  </Formik>
-)
-
-let Login = ({ history }) => {
-  const handleLogin = () => history.push("/sheetNames")
-
+function Copyright() {
   return (
-    <div className="login">
-      <LoginForm handleLogin={handleLogin}/>
-    </div>
-  )
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © '}
+      <Link color="inherit" href="#">
+        GDCT
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
 }
 
-export default Login
+const useStyles = makeStyles(theme => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+  authImg: {
+    width: '25px',
+    height: '25px',
+    marginRight: '5px',
+    // lineHeight: '15px',
+  },
+}));
+
+const validEmailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+const validateForm = errors => {
+  let valid = true;
+  Object.values(errors).forEach(val => val.length > 0 && (valid = false));
+  return valid;
+};
+
+export default function Login({ setLoggedIn }) {
+  const classes = useStyles();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({});
+
+  const handleChange = e => {
+    const { name, value } = e.target;
+    let updatedErrors = { ...errors };
+
+    switch (name) {
+      case 'password':
+        setPassword(value);
+        break;
+      case 'email':
+        updatedErrors.email = !validEmailRegex.test(value) ? 'Not a Valid Email' : '';
+        setEmail(value);
+        setErrors(updatedErrors);
+        break;
+    }
+  };
+  const handleSubmit = async e => {
+    e.preventDefault();
+    try {
+      if (email && validateForm(errors)) {
+        // window.location.replace(
+        //   `http://localhost:3000/auth/local?email=${email}&password=${password}`
+        // )
+        await AuthController.login({ email, password }).then(data => {
+          if (data.user.token) {
+            setLoggedIn(true);
+          }
+        });
+      }
+      // TODO: decide if it is logged in
+    } catch (err) {
+      console.log(err);
+      setLoggedIn(false);
+    }
+  };
+  return (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Sign in
+        </Typography>
+        <form onSubmit={handleSubmit} className={classes.form} noValidate>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            value={email}
+            autoComplete="email"
+            autoFocus
+            onChange={handleChange}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            value={password}
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="password"
+            onChange={handleChange}
+          />
+          <FormControlLabel
+            control={<Checkbox value="remember" color="primary" />}
+            label="Remember me"
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="secondary"
+            className={classes.submit}
+            style={{
+              marginBottom: '24px',
+            }}
+          >
+            Sign In
+          </Button>
+          <Button
+            fullWidth
+            variant="outlined"
+            color="default"
+            className={classes.submit}
+            style={{
+              marginTop: 0,
+              marginBottom: 0,
+            }}
+            onClick={() => {
+              window.location.href = 'http://localhost:3000/auth/google/';
+            }}
+          >
+            <div>
+              <img
+                className={classes.authImg}
+                src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+                alt=""
+              />
+              Sign in with Google
+            </div>
+          </Button>
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={() => {
+              window.location.href = 'http://localhost:3000/auth/facebook/';
+            }}
+          >
+            <div>
+              <img
+                className={classes.authImg}
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/F_icon.svg/267px-F_icon.svg.png"
+                alt=""
+              />
+              Sign in with Facebook
+            </div>
+          </Button>
+          <Grid container>
+            <Grid item xs>
+              <Link href="#" variant="body2">
+                Forgot password?
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link href="/signup" variant="body2">
+                {"Don't have an account? Sign Up"}
+              </Link>
+            </Grid>
+          </Grid>
+        </form>
+      </div>
+      <Box mt={5}>
+        <Copyright />
+      </Box>
+    </Container>
+  );
+}

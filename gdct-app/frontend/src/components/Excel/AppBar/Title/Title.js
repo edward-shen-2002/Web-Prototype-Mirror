@@ -1,15 +1,15 @@
-import React, { useCallback } from 'react'
+import React, { useCallback } from 'react';
 
-import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 
-import { setName } from '../../../../store/actions/ui/excel/commands'
+import { setName } from '../../../../store/actions/ui/excel/commands';
 
-import InputBase from '@material-ui/core/InputBase'
+import InputBase from '@material-ui/core/InputBase';
 
 // TODO : Make input width contain text - react virtualized
 // TODO : Events handler: blur, key down (escape), ...
 let Title = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const name = useSelector(
     ({
@@ -19,17 +19,14 @@ let Title = () => {
         },
       },
     }) => name,
-    shallowEqual
-  )
+    shallowEqual,
+  );
 
-  const handleChange = useCallback(
-    ({ target: { value } }) => dispatch(setName(value)),
-    [dispatch]
-  )
+  const handleChange = useCallback(({ target: { value } }) => dispatch(setName(value)), [dispatch]);
 
   const handleKeyDown = ({ key, target }) => {
-    if (key === 'Enter') target.blur()
-  }
+    if (key === 'Enter') target.blur();
+  };
 
   return (
     <InputBase
@@ -40,7 +37,7 @@ let Title = () => {
       onChange={handleChange}
       fullWidth
     />
-  )
-}
+  );
+};
 
-export default Title
+export default Title;

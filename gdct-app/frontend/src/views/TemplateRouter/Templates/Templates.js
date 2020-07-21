@@ -1,27 +1,24 @@
-import React, { useCallback, useMemo, useEffect } from 'react'
-import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import React, { useCallback, useMemo, useEffect } from 'react';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 
 import {
   getTemplatesRequest,
   createTemplateRequest,
   deleteTemplateRequest,
   updateTemplateRequest,
-} from '../../../store/thunks/template'
+} from '../../../store/thunks/template';
 
-import MaterialTable from 'material-table'
-import LaunchIcon from '@material-ui/icons/Launch'
-import Paper from '@material-ui/core/Paper'
+import MaterialTable from 'material-table';
+import LaunchIcon from '@material-ui/icons/Launch';
+import Paper from '@material-ui/core/Paper';
 
-import Typography from '@material-ui/core/Typography'
+import Typography from '@material-ui/core/Typography';
 
-import {
-  StatusIdButton,
-  TemplateTypeIdButton,
-} from '../../../components/buttons'
+import { StatusIdButton, TemplateTypeIdButton } from '../../../components/buttons';
 
-import './Templates.scss'
-import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors'
-import { selectTemplatesStore } from '../../../store/TemplatesStore/selectors'
+import './Templates.scss';
+import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors';
+import { selectTemplatesStore } from '../../../store/TemplatesStore/selectors';
 
 // const TemplateFileDropzone = () => {}
 
@@ -32,20 +29,18 @@ const TemplateHeader = () => {
       <Typography variant="h5">Templates</Typography>
       {/* <HeaderActions/> */}
     </Paper>
-  )
-}
+  );
+};
 
 const TemplatesTable = ({ history }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const { templates } = useSelector(
-    (state) => ({
-      templates: selectFactoryRESTResponseTableValues(selectTemplatesStore)(
-        state
-      ),
+    state => ({
+      templates: selectFactoryRESTResponseTableValues(selectTemplatesStore)(state),
     }),
-    shallowEqual
-  )
+    shallowEqual,
+  );
 
   const columns = useMemo(
     () => [
@@ -61,47 +56,43 @@ const TemplatesTable = ({ history }) => {
       { title: 'ExpirationDate', type: 'date', field: 'expirationDate' },
       { title: 'StatusId', field: 'statusId', editComponent: StatusIdButton },
     ],
-    []
-  )
+    [],
+  );
 
   const actions = useMemo(
     () => [
       {
         icon: LaunchIcon,
         tooltip: 'Open Template',
-        onClick: (_event, template) =>
-          history.push(`/template_manager/templates/${template._id}`),
+        onClick: (_event, template) => history.push(`/template_manager/templates/${template._id}`),
       },
     ],
-    [history]
-  )
+    [history],
+  );
 
-  const options = useMemo(
-    () => ({ actionsColumnIndex: -1, search: false, showTitle: false }),
-    []
-  )
+  const options = useMemo(() => ({ actionsColumnIndex: -1, search: false, showTitle: false }), []);
 
   const editable = useMemo(
     () => ({
-      onRowAdd: (template) =>
+      onRowAdd: template =>
         new Promise((resolve, reject) => {
-          dispatch(createTemplateRequest(template, resolve, reject))
+          dispatch(createTemplateRequest(template, resolve, reject));
         }),
-      onRowUpdate: (template) =>
+      onRowUpdate: template =>
         new Promise((resolve, reject) => {
-          dispatch(updateTemplateRequest(template, resolve, reject))
+          dispatch(updateTemplateRequest(template, resolve, reject));
         }),
-      onRowDelete: (template) =>
+      onRowDelete: template =>
         new Promise((resolve, reject) => {
-          dispatch(deleteTemplateRequest(template._id, resolve, reject))
+          dispatch(deleteTemplateRequest(template._id, resolve, reject));
         }),
     }),
-    [dispatch]
-  )
+    [dispatch],
+  );
 
   useEffect(() => {
-    dispatch(getTemplatesRequest())
-  }, [dispatch])
+    dispatch(getTemplatesRequest());
+  }, [dispatch]);
 
   return (
     <MaterialTable
@@ -111,15 +102,15 @@ const TemplatesTable = ({ history }) => {
       editable={editable}
       options={options}
     />
-  )
-}
+  );
+};
 
-const Template = (props) => (
+const Template = props => (
   <div className="templatesPage">
     <TemplateHeader />
     {/* <FileDropzone/> */}
     <TemplatesTable {...props} />
   </div>
-)
+);
 
-export default Template
+export default Template;

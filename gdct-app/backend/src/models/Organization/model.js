@@ -1,6 +1,6 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model } from 'mongoose';
 
-const ObjectId = Schema.Types.ObjectId
+const { ObjectId } = Schema.Types;
 
 const OrgModel = model(
   'Organization',
@@ -26,13 +26,13 @@ const OrgModel = model(
       authorizedUserId: { type: ObjectId, ref: 'User' },
 
       programId: [{ type: ObjectId, ref: 'Program' }],
-      
-      effectiveDate: { type: Date, required: true },
-      expiryDate: { type: Date, default: null }
-    },
-    { minimize: false }
-  ),
-  'Organization'
-)
 
-export default OrgModel
+      effectiveDate: { type: Date, required: true },
+      expiryDate: { type: Date, default: null },
+    },
+    { minimize: false },
+  ),
+  'Organization',
+);
+
+export default OrgModel;
