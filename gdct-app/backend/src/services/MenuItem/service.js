@@ -1,5 +1,6 @@
 import Container from 'typedi';
 import MenuItemRepository from '../../repositories/MenuItem';
+import MenuItemController from '../../controllers/MenuItem';
 
 export default class MenuItemService {
   constructor() {

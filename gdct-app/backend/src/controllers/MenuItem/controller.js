@@ -1,23 +1,23 @@
 import { Service } from 'typedi';
 import { Router } from 'express';
-import MenuItemService from '../../services/Menu';
+import MenuItemService from '../../services/MenuItem';
 
-const MenuItemController = Service([MenuService], service => {
+const MenuItemController = Service([MenuItemService], service => {
   const router = Router();
   return (() => {
     router.get('/menuitems', (req, res, next) => {
       // Get query from middleware -- auth handler
 
       service
-        .findMenu({})
-        .then(Menus => res.json({ MenuItems }))
+        .findMenuItem({})
+        .then(MenuItems => res.json({ MenuItems }))
         .catch(next);
     });
 
     router.post('/menuitems', (req, res, next) => {
       service
-        .createMenu(req.body.Menu)
-        .then(Menu => res.json({ MenuItem }))
+        .createMenuItem(req.body.MenuItem)
+        .then(MenuItem => res.json({ MenuItem }))
         .catch(error => {
           console.error(error);
           throw error;
@@ -30,7 +30,7 @@ const MenuItemController = Service([MenuService], service => {
       const { MenuItem } = req.body;
 
       service
-        .updateMenu(_id, MenuItem)
+        .updateMenuItem(_id, MenuItem)
         .then(() => res.end())
         .catch(next);
     });
@@ -39,14 +39,14 @@ const MenuItemController = Service([MenuService], service => {
       const { _id } = req.params;
 
       service
-        .deleteMenu(_id)
+        .deleteMenuItem(_id)
         .then(() => res.end())
         .catch(next);
     });
 
-    router.get('/menuitems/searchAllMenus', (req, res, next) => {
+    router.get('/menuitems/searchAllMenuitems', (req, res, next) => {
       service
-        .findAllMenu()
+        .findAllMenuItem()
         .then(menuitems => {
           res.json({ menuitems });
         })

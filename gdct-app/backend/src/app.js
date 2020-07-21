@@ -39,6 +39,8 @@ import AppRoleResourceController from './controllers/AppRoleResource/controller'
 import AppResourceController from './controllers/AppResource';
 import WorkflowController from './controllers/Workflow';
 import { errorHandler } from './middlewares/shared';
+import MenuItemController from './controllers/MenuItem';
+import MenuController from './controllers/Menu';
 
 dotenv.config();
 
@@ -134,6 +136,9 @@ app.use(
   // Container.get(Auth).authorized,
   Container.get(AppResourceController),
 );
+
+app.use('/', Container.get(MenuController));
+app.use('/', Container.get(MenuItemController));
 
 app.use(errorHandler);
 

@@ -1,14 +1,14 @@
 import MenuEntity from '../../entities/Menu';
 import BaseRepository from '../repository';
-import MenuModel from '../../models/Menu';
+import MenuItemModel from '../../models/MenuItem';
 
 export default class MenuRepository extends BaseRepository {
   constructor() {
-    super(MenuModel);
+    super(MenuItemModel);
   }
 
   async delete(id) {
-    const menu = await MenuModel.findById(id);
+    const menu = await MenuItemModel.findById(id);
     if (menu) {
       menu.isActive = false;
     }
@@ -16,14 +16,16 @@ export default class MenuRepository extends BaseRepository {
   }
 
   async create(Menu) {
-    return MenuModel.create(Menu).then(Menu => new MenuEntity(Menu.toObject()));
+    return MenuItemModel.create(Menu).then(Menu => new MenuEntity(Menu.toObject()));
   }
 
   async update(id, Menu) {
-    return MenuModel.findByIdAndUpdate(id, Menu).then(Menu => new MenuEntity(Menu.toObject()));
+    return MenuItemModel.findByIdAndUpdate(id, Menu).then(Menu => new MenuEntity(Menu.toObject()));
   }
 
   async find(query) {
-    return MenuModel.find(query).then(Menus => Menus.map(Menu => new MenuEntity(Menu.toObject())));
+    return MenuItemModel.find(query).then(Menus =>
+      Menus.map(Menu => new MenuEntity(Menu.toObject())),
+    );
   }
 }
