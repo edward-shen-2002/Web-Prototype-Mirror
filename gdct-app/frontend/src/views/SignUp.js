@@ -200,8 +200,8 @@ export default function SignUp() {
       title,
       phoneNumber,
       ext,
-      sysRoles,
-    }).then(res => {
+      sysRoles: sysRoles.map(e => e._id),
+    }).then(() => {
       setTimeout(() => {
         history.push('/');
       }, 1000);

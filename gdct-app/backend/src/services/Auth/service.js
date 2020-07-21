@@ -10,7 +10,7 @@ export default class ProgramService {
     passport.authenticate(method, { scope: 'email' })(req, res, next);
   }
 
-  authenticateCallback(req, res, next) {
+  authenticateCallback = (req, res, next) => {
     const { method } = req.params;
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3003');
     passport.authenticate(method, {
@@ -19,7 +19,7 @@ export default class ProgramService {
     })(req, res, next);
   }
 
-  logout(req, res) {
+  logout = (req, res) => {
     req.logout();
     res.cookie('token', '').json({
       status: 'ok',
@@ -54,7 +54,7 @@ export default class ProgramService {
 
   createUser(req, res) {
     const {
-      body: { username, email, password },
+      body: { email, password, firstName, lastName, username, title, phoneNumber, ext, sysRoles },
     } = req;
 
     if (!email) {
