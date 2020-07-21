@@ -23,7 +23,7 @@ const OrgController = Service([OrgService], service => {
         .catch(next);
     });
 
-    router.put('/organizations/:_id/update', (req, res, next) => {
+    router.put('/organizations/update/:_id/', (req, res, next) => {
       const { _id } = req.params;
       service
         .updateOrg(_id, req.body)
@@ -31,7 +31,7 @@ const OrgController = Service([OrgService], service => {
         .catch(next);
     });
 
-    router.delete('/organizations/:_id/delete', (req, res, next) => {
+    router.delete('/organizations/delete/:_id/', (req, res, next) => {
       const { _id } = req.params;
       service
         .deleteOrg(_id)
