@@ -11,7 +11,7 @@ const WorkflowController = Service(
     return (
       () => {
         router.get(
-          '/workflows',
+          '/workflows/fetch',
           (req, res, next) => {
             // Get query from middleware -- auth handler
 
@@ -23,7 +23,7 @@ const WorkflowController = Service(
         )
 
         router.get(
-          '/workflows/:_id',
+          '/workflows/fetch/:_id',
           (req, res, next) => {
             const { _id } = req.params
 
@@ -35,7 +35,7 @@ const WorkflowController = Service(
         )
 
         router.post(
-          '/workflows',
+          '/workflows/create',
           (req, res, next) => {
             service
               .createWorkflow(req.body.data)
@@ -45,7 +45,7 @@ const WorkflowController = Service(
         )
 
         router.put(
-          '/workflows/:_id',
+          '/workflows/update/:_id',
           (req, res, next) => {
             const { _id } = req.params
 
@@ -57,7 +57,7 @@ const WorkflowController = Service(
         )
 
         router.delete(
-          '/workflows/:_id',
+          '/workflows/delete/:_id',
           (req, res, next) => {
             const { _id } = req.params
 
@@ -68,7 +68,7 @@ const WorkflowController = Service(
           }
         )
 
-        router.get('/workflows/workflowProcessId/:_id', (req, res, next) => {
+        router.get('/workflows/fetchByWorkflowProcessId/:_id', (req, res, next) => {
           const { _id } = req.params
 
           service.findOutwardProcessesPopulated(_id)
