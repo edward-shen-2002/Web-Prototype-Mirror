@@ -47,7 +47,6 @@ const SubmissionDashboard = ({ history }) => {
     shallowEqual
   )
 
-  console.log(submissions)
   if (submissions[0] !== undefined)
     submissions.forEach((submission) => {
       if (submission !== undefined)
@@ -72,9 +71,6 @@ const SubmissionDashboard = ({ history }) => {
             break
         }
     })
-
-  console.log(unsubmittedSubmission)
-  console.log(approvedSubmission)
 
   const checkBoxColumns = useMemo(
     () => [

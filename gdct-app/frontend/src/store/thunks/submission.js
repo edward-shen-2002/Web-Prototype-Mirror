@@ -31,10 +31,15 @@ export const createSubmissionRequest = (
   workbookData,
   submission
 ) => (dispatch) => {
+
   dispatch(SubmissionsStore.actions.REQUEST())
-  console.log(submissionNote, submission)
+  const newSubmission = {
+    ...submission,
+    workbookData: workbookData
+  }
+
   submissionController
-    .create(submission, submissionNote)
+    .create(newSubmission, submissionNote)
     .then((value) => {
       dispatch(SubmissionsStore.actions.CREATE(value))
     })
@@ -88,8 +93,8 @@ export const updateSubmissionExcelRequest = () => (dispatch, getState) => {
 
   const newSubmission = {
     ...submission,
-    //   name: present.name,
-    isLatest: false,
+ //   name: present.name,
+    isLatest: true,
     workbookData: extractReactAndWorkbookState(present, present.inactiveSheets),
   }
 

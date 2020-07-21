@@ -1,7 +1,7 @@
 import Container, { Service } from 'typedi'
 import SubmissionRepository from '../../repositories/Submission'
 import SubmissionNoteRepository from "../../repositories/SubmissionNote";
-import { extractCOAData, extractColumnNameIds, extractWorkbookMasterValues } from '../../utils/excel/COA'
+import { extractSubmissionMasterValues, extractWorkbookMasterValues } from '../../utils/excel/COA'
 import TemplateRepository from '../../repositories/Template'
 import StatusRepository from '../../repositories/Status'
 import TemplatePackageRepository from '../../repositories/TemplatePackage'
@@ -42,10 +42,11 @@ export default class SubmissionService {
     submission.version = submission.version + 1
     submission.isLatest = true;
     submission.updatedDate = new Date();
+    submission.parentId = submission.parentId? submission.parentId: submission._id;
 
     const submissionNotes = {
       note: submissionNote,
-      submissionId: submission._id,
+      submissionId: submission.parentId,
       updatedDate: submission.updatedDate,
       role: "Submitted"
     }
@@ -70,12 +71,20 @@ export default class SubmissionService {
     return this.submissionRepository.findById(id)
   }
 
+  async findOrganizationById(id) {
+    return this.organizationRepository.findById(id)
+  }
+
+  async findProgramById(id) {
+    return this.programRepository.findById(id)
+  }
+
   async phaseSubmission(id) {
     return this.findSubmissionById(id)
       .then((submission) => {
         if(!submission) throw 'Submission id does not exist'
 
-        const masterValues = extractWorkbookMasterValues(submission.workbookData, submission._id)
+        const masterValues = extractSubmissionMasterValues(submission)
         console.log(masterValues)
 
         return this.masterValueRepository.bulkUpdate(id, masterValues)        
@@ -97,7 +106,7 @@ export default class SubmissionService {
   async updateStatus(submission, submissionNote, role) {
     const submissionNotes = {
       note: submissionNote,
-      submissionId: submission._id,
+      submissionId: submission.parentId,
       updatedDate: new Date(),
       role: role
     }
@@ -122,6 +131,7 @@ export default class SubmissionService {
                 })
             }
             else {
+              submission.isLatest = true;
               return this.submissionRepository.update(submission._id, submission)
                 .then((submission) => {
                   if(role === "Approved") return this.phaseSubmission(submission._id)
@@ -129,20 +139,6 @@ export default class SubmissionService {
             }
           })
       })
-  }
-
-
-  // async updateSubmission(id, submission) {
-  //   return this.submissionRepository.update(id, submission)
-  //     .then(() => this.statusRepository.findById(submission.statusId))
-  //     .then((status) => {
-  //       if(status.name === "Approved") return this.phaseSubmission(id)
-  //     })
-  // }
-
-  async showStatusInSubmissions(submissions) {
-
-    return;
   }
 
   async findSubmission(orgId, programIds) {
@@ -199,29 +195,14 @@ export default class SubmissionService {
                           .then((status) => {
                             return this.programRepository.findById(submission.programId)
                               .then((program) => {
-                                let changedSubmission = {}
-                                changedSubmission._id = submission._id
-                                changedSubmission.id = submission.id
-                                changedSubmission.name = submission.name
-                                changedSubmission.orgId = submission.orgId
-                                changedSubmission.templateId = submission.templateId
-                                changedSubmission.templatePackageId = submission.templatePackageId
-                                changedSubmission.programName = program.name
-                                changedSubmission.programId = program._id
-                                changedSubmission.workbookData = submission.workbookData
-                                changedSubmission.submittedDate = submission.submittedDate
-                                changedSubmission.year = submission.year
-                                changedSubmission.submissionPeriodId = submission.submissionPeriodId
-                                changedSubmission.phase = submission.phase
-                                changedSubmission.statusId = submission.statusId
-                                changedSubmission.createdAt = submission.createdAt
-                                changedSubmission.updatedAt = submission.updatedAt
-                                changedSubmission.updatedBy = submission.updatedBy
-                                changedSubmission.isPublished = submission.isPublished
-                                changedSubmission.phase = status.name
-                                changedSubmission.parentId = (submission.parentId)? submission.parentId: submission._id
-                                changedSubmission.version = submission.version
-                                changedSubmission.isLatest = submission.isLatest
+                                let changedSubmission = {
+                                  ...submission._doc,
+                                  programName: program.name,
+                                  programId : program._id,
+                                  phase : status.name,
+                                  parentId : (submission.parentId)? submission.parentId: submission._id
+                                }
+
                                 changedSubmissions.push(cloneDeep(changedSubmission))
                               })
                           })

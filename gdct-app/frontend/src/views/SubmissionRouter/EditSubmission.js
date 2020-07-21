@@ -87,12 +87,10 @@ const EditSubmission = ({ history }) => {
     }),
     shallowEqual
   )
-  console.log(submission)
   useEffect(() => {
-    console.log(location.state)
     dispatch(SubmissionNoteStore.actions.RECEIVE(''))
     dispatch(getSubmissionByIdRequest(location.state.detail._id))
-    dispatch(getSubmissionNoteRequest(location.state.detail._id))
+    dispatch(getSubmissionNoteRequest(location.state.detail.parentId));
   }, [location])
 
   if (submissionNoteHistory[0] !== undefined) {

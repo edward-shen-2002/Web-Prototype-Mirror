@@ -110,8 +110,8 @@ export default class TemplateTypeRepository extends BaseRepository {
     )
   }
 
-  findOne(id) {
-    throw new Error('Method not implemented.')
+  async findById(id) {
+    return TemplateTypeModel.findById(id)
   }
 
   async delete(id) {

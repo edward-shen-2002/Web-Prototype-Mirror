@@ -46,7 +46,10 @@ export default class ProgramRepository extends BaseRepository {
   
   async findByIds(ids) {
     return ProgramModel.find({_id: {$in: ids}}, {isActive: true})
-      .then((programs) => new ProgramEntity(programs.toObject()))
+  }
+
+  async findById(id) {
+    return ProgramModel.findById(id)
   }
 
 }

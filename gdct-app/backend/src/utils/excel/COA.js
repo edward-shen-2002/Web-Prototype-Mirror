@@ -86,19 +86,55 @@ export const extractWorkbookMasterValues = (workbookData, submissionId) => {
   const masterValues = []
 
   for(let sheetName in workbookData.workbookData) {
-    
+
     const sheetData = JSON.parse(pako.inflate(workbookData.workbookData[sheetName], { to: "string" })).sheetCellData;
-  
+
     const columns = extractColumnNameIds(sheetData)
     const COAs = extractCOAData(sheetData)
-  
+
     for(let row in COAs) {
       for(let column in columns) {
         const cellData = getCellData(sheetData, +row, +column)
-        
+
         masterValues.push(
           {
             submissionId,
+            columnNameId: columns[column],
+            ...COAs[row],
+            value: cellData ? cellData.value : undefined
+          }
+        )
+      }
+    }
+  }
+
+  return masterValues
+}
+
+export const extractSubmissionMasterValues = (submission) => {
+  const workbookData = submission.workbookData;
+  const submissionId = submission._id;
+
+  const masterValues = []
+
+  for(let sheetName in workbookData.workbookData) {
+
+    const sheetData = JSON.parse(pako.inflate(workbookData.workbookData[sheetName], { to: "string" })).sheetCellData;
+
+    const columns = extractColumnNameIds(sheetData)
+    const COAs = extractCOAData(sheetData)
+
+    for(let row in COAs) {
+      for(let column in columns) {
+        const cellData = getCellData(sheetData, +row, +column)
+
+        masterValues.push(
+          {
+            submissionId,
+            orgId: submission.orgId,
+            programId: submission.programId,
+            templateId: submission.templateId,
+            submissionName: submission.name,
             columnNameId: columns[column],
             ...COAs[row],
             value: cellData ? cellData.value : undefined

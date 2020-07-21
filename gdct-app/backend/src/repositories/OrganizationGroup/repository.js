@@ -9,8 +9,7 @@ export default class OrgGroupRepository extends BaseRepository {
   }
 
   async findAll() {
-    return OrgGroupModel.find().then(
-      (organizationGroups) => new OrgGroupEntity(organizationGroups.toObject())
+    return OrgGroupModel.find()
     )
   }
 }
