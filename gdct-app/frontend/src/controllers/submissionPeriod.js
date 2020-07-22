@@ -1,19 +1,23 @@
 import axios from 'axios'
 
+import { host } from '../constants/domain'
+
 const submissionPeriodController = (() => {
   const submissionPeriodAxios = axios.create({
-    baseURL: 'http://localhost:3000/submission_manager/submissionPeriods',
+    baseURL: `${host}/submission_manager/submissionPeriods`,
   })
   return {
     fetch: async (query) =>
-      submissionPeriodAxios.get('').then((res) => res.data.submissionPeriods),
+      submissionPeriodAxios
+        .get('/fetchSubmissionPeriods')
+        .then((res) => res.data.submissionPeriods),
     create: async (submissionPeriod) =>
       submissionPeriodAxios
-        .post('', { submissionPeriod })
+        .post('/createSubmissionPeriod', { submissionPeriod })
         .then((res) => res.data.submissionPeriod),
-    delete: async (_id) => submissionPeriodAxios.delete(`/${_id}`),
+    delete: async (_id) => submissionPeriodAxios.delete(`/deleteSubmissionPeriod/${_id}`),
     update: async (submissionPeriod) =>
-      submissionPeriodAxios.put(`/${submissionPeriod._id}`, {
+      submissionPeriodAxios.put(`/updateSubmissionPeriod/${submissionPeriod._id}`, {
         submissionPeriod,
       }),
   }

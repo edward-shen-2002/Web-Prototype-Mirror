@@ -47,12 +47,7 @@ const COADialog = () => {
     [dispatch]
   )
 
-  const columns = useMemo(
-    () => [
-      { title: 'Name', field: 'name' },
-    ],
-    []
-  )
+  const columns = useMemo(() => [{ title: 'Name', field: 'name' }], [])
 
   return (
     <SelectableTableDialog

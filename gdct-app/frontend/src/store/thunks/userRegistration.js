@@ -5,9 +5,9 @@ import programController from '../../controllers/Program'
 import templateTypeController from '../../controllers/templateType'
 import userController from '../../controllers/User'
 import userRegistrationStore from '../UserRegistrationStore/store'
+import COATreesStore from '../COATreesStore/store'
 
 const hash = require('object-hash')
-import COATreesStore from '../COATreesStore/store'
 
 const handleInputTemplate = (templateSet, submission) => {
   const templateType = {
@@ -82,7 +82,7 @@ const checkPerission = (submission) => {
 const getAppSys = () => {
   return AppSysController.fetch().then((appSys) => {
     console.log(appSys)
-    let options = []
+    const options = []
     appSys
       .forEach((appSysOptions) => {
         options.push({
@@ -98,7 +98,7 @@ const getAppSys = () => {
 
 const getOrgGroup = () => {
   return organizationGroupController.fetch().then((organizationGroups) => {
-    let options = []
+    const options = []
     organizationGroups
       .forEach((orgGroup) => {
         options.push({
@@ -116,10 +116,10 @@ const getOrg = (orgGroup) => {
   return organizationController
     .fetchByOrgGroupId(orgGroup)
     .then((organizations) => {
-      let options = []
+      const options = []
       organizations.forEach((org) => {
         options.push({
-          label: '(' + org.id + ')' + org.name,
+          label: `(${org.id})${org.name}`,
           value: org.id,
           information: {
             _id: org._id,
@@ -149,11 +149,11 @@ const getProgram = (programInfo) => {
   return programController
     .fetchByIds(programId)
     .then((programs) => {
-      let options = []
+      const options = []
       programs.forEach((program) => {
         const option = programInfo.find((element) => element.id == program._id)
         options.push({
-          label: '(' + program.code + ')' + program.name,
+          label: `(${program.code})${program.name}`,
           value: program._id,
           information: {
             _id: program._id,
@@ -177,7 +177,7 @@ const getTemplateType = (userPrograms) => {
   return templateTypeController
     .fetchByProgramIds(programList)
     .then((templateTypes) => {
-      let submissionList = []
+      const submissionList = []
       let index = 0
 
       templateTypes.forEach((templateType) => {
@@ -205,7 +205,7 @@ const getTemplateType = (userPrograms) => {
           input: false,
           view: false,
           viewCognos: false,
-          index: index,
+          index,
         })
         index++
       })

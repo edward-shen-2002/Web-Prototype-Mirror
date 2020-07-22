@@ -10,7 +10,7 @@ const StatusController = Service(
     return (
       () => {
         router.get(
-          '/statuses',
+          '/statuses/fetchStatuses',
           (req, res, next) => {
             // Get query from middleware -- auth handler
 
@@ -22,7 +22,7 @@ const StatusController = Service(
         )
 
         router.post(
-          '/statuses',
+          '/statuses/createStatus',
           (req, res, next) => {
             service
               .createStatus(req.body.status)
@@ -36,7 +36,7 @@ const StatusController = Service(
         )
 
         router.put(
-          '/statuses/:_id',
+          '/statuses/updateStatus/:_id',
           (req, res, next) => {
             const { _id } = req.params
             const { status } = req.body
@@ -50,7 +50,7 @@ const StatusController = Service(
         )
 
         router.delete(
-          '/statuses/:_id',
+          '/statuses/deleteStatus/:_id',
           (req, res, next) => {
             const { _id } = req.params
 

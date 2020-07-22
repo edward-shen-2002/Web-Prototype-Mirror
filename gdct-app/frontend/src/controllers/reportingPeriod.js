@@ -1,19 +1,21 @@
 import axios from 'axios'
 
+import { host } from '../constants/domain'
+
 const reportingPeriodController = (() => {
   const reportingPeriodAxios = axios.create({
-    baseURL: 'http://localhost:3000/reportingPeriods',
+    baseURL: host + '/reportingPeriods',
   })
   return {
     fetch: async (query) =>
-      reportingPeriodAxios.get('').then((res) => res.data.reportingPeriods),
+      reportingPeriodAxios.get('/fetchReportingPeriods').then((res) => res.data.reportingPeriods),
     create: async (reportingPeriod) =>
       reportingPeriodAxios
-        .post('', { reportingPeriod })
+        .post('/createReportingPeriods', { reportingPeriod })
         .then((res) => res.data.reportingPeriod),
-    delete: async (_id) => reportingPeriodAxios.delete(`/${_id}`),
+    delete: async (_id) => reportingPeriodAxios.delete(`/deleteReportingPeriods/${_id}`),
     update: async (reportingPeriod) =>
-      reportingPeriodAxios.put(`/${reportingPeriod._id}`, { reportingPeriod }),
+      reportingPeriodAxios.put(`/updateReportingPeriod/${reportingPeriod._id}`, { reportingPeriod }),
   }
 })()
 

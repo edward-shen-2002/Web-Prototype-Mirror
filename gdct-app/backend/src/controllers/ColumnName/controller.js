@@ -9,7 +9,7 @@ const ColumnNameController = Service(
     return (
       () => {
         router.get(
-          '/columnNames',
+          '/columnNames/fetchColumnNames',
           (req, res, next) => {
             // Get query from middleware -- auth handler
 
@@ -21,7 +21,7 @@ const ColumnNameController = Service(
         )
 
         router.post(
-          '/columnNames',
+          '/columnNames/createColumnName',
           (req, res, next) => {
             service
               .createColumnName(req.body.columnName)
@@ -31,7 +31,7 @@ const ColumnNameController = Service(
         )
 
         router.put(
-          '/columnNames/:_id',
+          '/columnNames/updateColumnName/:_id',
           (req, res, next) => {
             const { _id } = req.params
             const { columnName } = req.body
@@ -45,7 +45,7 @@ const ColumnNameController = Service(
         )
 
         router.delete(
-          '/columnNames/:_id',
+          '/columnNames/deleteColumnName/:_id',
           (req, res, next) => {
             const { _id } = req.params
 

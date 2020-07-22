@@ -13,7 +13,10 @@ import { Excel } from '../../../components/Excel'
 
 import './Template.scss'
 import { selectTemplatesStore } from '../../../store/TemplatesStore/selectors'
-import { selectFactoryRESTIsCallInProgress, selectFactoryValueById } from '../../../store/common/REST/selectors'
+import {
+  selectFactoryRESTIsCallInProgress,
+  selectFactoryValueById,
+} from '../../../store/common/REST/selectors'
 import workflowController from '../../../controllers/workflow'
 import { Button, Chip } from '@material-ui/core'
 
@@ -23,7 +26,8 @@ const TemplatePhases = ({ template }) => {
 
   useEffect(() => {
     if (template)
-      workflowController.fetchProcess(template.workflowProcessId)
+      workflowController
+        .fetchProcess(template.workflowProcessId)
         .then((workflowProcess) => setWorkflowProcess(workflowProcess))
   }, [template])
 
@@ -36,18 +40,18 @@ const TemplatePhases = ({ template }) => {
 
   return (
     <div className="mb-3 d-flex justify-content-end">
-      <Chip className="rounded" color="primary" label="Phase Actions:"/>
+      <Chip className="rounded" color="primary" label="Phase Actions:" />
       {workflowProcess && workflowProcess.to.length ? 
         
           workflowProcess.to.map(
             (outwardProcess) => (
               <Button key={outwardProcess._id} onClick={() => handleClickWorkflow(outwardProcess._id)}>
-                {outwardProcess.statusId.name}
-              </Button>
-            )
+              {outwardProcess.statusId.name}
+            </Button>
           )
-        : <Chip className="rounded" color="secondary" label="Finalized"/>
-      }
+      ) : (
+        <Chip className="rounded" color="secondary" label="Finalized" />
+      )}
     </div>
   )
 }
@@ -61,8 +65,10 @@ const Template = ({
 
   const { isCallInProgress, template } = useSelector(
     (state) => ({
-      isCallInProgress: selectFactoryRESTIsCallInProgress(selectTemplatesStore)(state),
-      template: selectFactoryValueById(selectTemplatesStore)(_id)(state)
+      isCallInProgress: selectFactoryRESTIsCallInProgress(selectTemplatesStore)(
+        state
+      ),
+      template: selectFactoryValueById(selectTemplatesStore)(_id)(state),
     }),
     shallowEqual
   )
@@ -80,7 +86,7 @@ const Template = ({
     <Loading />
   ) : (
     <div>
-      <TemplatePhases template={template}/>
+      <TemplatePhases template={template} />
       <Excel
         type="template"
         returnLink="/template_manager/templates"

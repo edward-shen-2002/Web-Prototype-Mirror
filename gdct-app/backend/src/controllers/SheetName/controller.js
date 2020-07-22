@@ -11,7 +11,7 @@ const SheetNameController = Service(
     return (
       () => {
         router.get(
-          '/sheetNames',
+          '/sheetNames/fetchSheetNames',
           (req, res, next) => {
             // Get query from middleware -- auth handler
 
@@ -23,7 +23,7 @@ const SheetNameController = Service(
         )
 
         router.post(
-          '/sheetNames',
+          '/sheetNames/createSheetName',
           (req, res, next) => {
             service
               .createSheetName(req.body.sheetName)
@@ -33,7 +33,7 @@ const SheetNameController = Service(
         )
 
         router.put(
-          '/sheetNames/:_id',
+          '/sheetNames/updateSheetName/:_id',
           (req, res, next) => {
             const { _id } = req.params
             const { sheetName } = req.body
@@ -47,7 +47,7 @@ const SheetNameController = Service(
         )
 
         router.delete(
-          '/sheetNames/:_id',
+          '/sheetNames/deleteSheetName/:_id',
           (req, res, next) => {
             const { _id } = req.params
 

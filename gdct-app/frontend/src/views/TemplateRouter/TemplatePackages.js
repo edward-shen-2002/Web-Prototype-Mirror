@@ -133,10 +133,10 @@ const TemplatePackage = () => {
   // HOTFIX
   const isPopulated = useMemo(
     () =>
-      templatePackages.length &&
-      typeof templatePackages[0].submissionPeriodId === 'object'
-        ? true
-        : false,
+      !!(
+        templatePackages.length &&
+        typeof templatePackages[0].submissionPeriodId === 'object'
+      ),
     [templatePackages]
   )
 

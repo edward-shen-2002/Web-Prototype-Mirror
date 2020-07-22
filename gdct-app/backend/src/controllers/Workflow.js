@@ -11,7 +11,7 @@ const WorkflowController = Service(
     return (
       () => {
         router.get(
-          '/workflows/fetch',
+          '/workflows/fetchWorkflows',
           (req, res, next) => {
             // Get query from middleware -- auth handler
 
@@ -23,7 +23,7 @@ const WorkflowController = Service(
         )
 
         router.get(
-          '/workflows/fetch/:_id',
+          '/workflows/fetchWorkflow/:_id',
           (req, res, next) => {
             const { _id } = req.params
 
@@ -35,7 +35,7 @@ const WorkflowController = Service(
         )
 
         router.post(
-          '/workflows/create',
+          '/workflows/createWorkflow',
           (req, res, next) => {
             service
               .createWorkflow(req.body.data)
@@ -45,7 +45,7 @@ const WorkflowController = Service(
         )
 
         router.put(
-          '/workflows/update/:_id',
+          '/workflows/updateWorkflow/:_id',
           (req, res, next) => {
             const { _id } = req.params
 
@@ -57,7 +57,7 @@ const WorkflowController = Service(
         )
 
         router.delete(
-          '/workflows/delete/:_id',
+          '/workflows/deleteWorkflow/:_id',
           (req, res, next) => {
             const { _id } = req.params
 

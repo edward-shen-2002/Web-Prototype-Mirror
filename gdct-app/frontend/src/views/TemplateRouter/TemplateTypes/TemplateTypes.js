@@ -41,19 +41,22 @@ const TemplateTypesTable = ({ history }) => {
   )
 
   const columns = [
-      { title: 'Name', field: 'name' },
-      { title: 'Description', field: 'description' },
-      { title: 'Template Workflow', field: 'templateWorkflowId', editComponent: WorkflowIdButton },
-      // { title: 'Submission Workflow', field: 'submissionWorkflowId', editComponent: WorkflowIdButton },
-      { title: 'Approvable', type: 'boolean', field: 'isApprovable' },
-      { title: 'Reviewable', type: 'boolean', field: 'isReviewable' },
-      { title: 'Submittable', type: 'boolean', field: 'isSubmittable' },
-      { title: 'Inputtable', type: 'boolean', field: 'isInputtable' },
-      { title: 'Viewable', type: 'boolean', field: 'isViewable' },
-      { title: 'Reportable', type: 'boolean', field: 'isReportable' },
-      { title: 'Active', type: 'boolean', field: 'isActive' },
-    ]
-
+    { title: 'Name', field: 'name' },
+    { title: 'Description', field: 'description' },
+    {
+      title: 'Template Workflow',
+      field: 'templateWorkflowId',
+      editComponent: WorkflowIdButton,
+    },
+    // { title: 'Submission Workflow', field: 'submissionWorkflowId', editComponent: WorkflowIdButton },
+    { title: 'Approvable', type: 'boolean', field: 'isApprovable' },
+    { title: 'Reviewable', type: 'boolean', field: 'isReviewable' },
+    { title: 'Submittable', type: 'boolean', field: 'isSubmittable' },
+    { title: 'Inputtable', type: 'boolean', field: 'isInputtable' },
+    { title: 'Viewable', type: 'boolean', field: 'isViewable' },
+    { title: 'Reportable', type: 'boolean', field: 'isReportable' },
+    { title: 'Active', type: 'boolean', field: 'isActive' },
+  ]
 
   const actions = useMemo(
     () => [

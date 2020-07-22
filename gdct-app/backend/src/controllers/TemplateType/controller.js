@@ -11,7 +11,7 @@ const TemplateTypeController = Service(
     return (
       () => {
         router.get(
-          '/templateTypes',
+          '/templateTypes/fetchTemplateTypes',
           (req, res, next) => {
             // Get query from middleware -- auth handler
 
@@ -23,7 +23,7 @@ const TemplateTypeController = Service(
         )
 
         router.post(
-          '/templateTypes',
+          '/templateTypes/createTemplateType',
           (req, res, next) => {
             service
               .createTemplateType(req.body.templateType)
@@ -33,7 +33,7 @@ const TemplateTypeController = Service(
         )
 
         router.put(
-          '/templateTypes/:_id',
+          '/templateTypes/updateTemplateType/:_id',
           (req, res, next) => {
             const { _id } = req.params
             const { templateType } = req.body
@@ -47,7 +47,7 @@ const TemplateTypeController = Service(
         )
 
         router.delete(
-          '/templateTypes/:_id',
+          '/templateTypes/deleteTemplateType/:_id',
           (req, res, next) => {
             const { _id } = req.params
 

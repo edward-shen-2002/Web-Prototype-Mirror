@@ -39,8 +39,7 @@ const WorkflowDialog = ({
   }
 
   useEffect(() => {
-    if (isWorkflowDialogOpen)
-      dispatch(getWorkflowsRequest())
+    if (isWorkflowDialogOpen) dispatch(getWorkflowsRequest())
   }, [dispatch, isWorkflowDialogOpen])
 
   const columns = useMemo(

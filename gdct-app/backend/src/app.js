@@ -9,7 +9,7 @@ import passport from 'passport'
 import compression from 'compression'
 
 import { Container } from 'typedi'
-import { PORT } from './configs/host'
+// import { PORT } from './configs/host'
 import Database from './loaders/database'
 
 import TemplateController from './controllers/Template'
@@ -46,15 +46,14 @@ const logger = require('morgan');
 
 const app = express();
 const cookieParser = require('cookie-parser');
-
-app.set('port', process.env.PORT || PORT);
+app.set('port', process.env.PORT)
 
 app.use(cookieParser());
 app.use(json({ limit: '50mb' }));
 app.use(urlencoded({ extended: true }));
 
 // app.use(cors());
-app.use(cors({ credentials: true, origin: 'http://localhost:3003' }));
+app.use(cors({ credentials: true, origin: process.env.CLIENT_SERVER }));
 
 app.use(compression());
 

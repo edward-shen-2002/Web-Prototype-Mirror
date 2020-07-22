@@ -9,7 +9,7 @@ const COAController = Service(
     return (
       () => {
         router.get(
-          '/COAs',
+          '/categories/fetchCategories',
           (req, res, next) => {
             // Get query from middleware -- auth handler
 
@@ -21,7 +21,7 @@ const COAController = Service(
         )
 
         router.post(
-          '/COAs',
+          '/categories/createCategory',
           (req, res, next) => {
             service
               .createCOA(req.body.COA)
@@ -31,7 +31,7 @@ const COAController = Service(
         )
 
         router.put(
-          '/COAs/:_id',
+          '/categories/fetchCategory/:_id',
           (req, res, next) => {
             const { _id } = req.params
             const { COA } = req.body
@@ -44,7 +44,7 @@ const COAController = Service(
         )
 
         router.delete(
-          '/COAs/:_id',
+          '/categories/deleteCategory/:_id',
           (req, res, next) => {
             const { _id } = req.params
 

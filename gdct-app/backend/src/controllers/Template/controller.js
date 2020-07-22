@@ -11,7 +11,7 @@ const TemplateController = Service(
       (
         () => {
           router.get(
-            '/templates',
+            '/templates/fetchTemplate',
             (req, res, next) => {
               // Get query from middleware -- auth handler
               service
@@ -22,7 +22,7 @@ const TemplateController = Service(
           )
 
           router.get(
-            '/templates/:_id',
+            '/templates/fetchTemplate/:_id',
             (req, res, next) => {
               // Get query from middleware -- auth handler
 
@@ -34,7 +34,7 @@ const TemplateController = Service(
           )
 
           router.post(
-            '/templates',
+            '/templates/createTemplate',
             (req, res, next) => {
               service
                 .createTemplate(req.body.template)
@@ -44,7 +44,7 @@ const TemplateController = Service(
           )
 
           router.put(
-            '/templates/:_id',
+            '/templates/updateTemplate/:_id',
             (req, res, next) => {
               const { _id } = req.params
               const { template } = req.body
@@ -58,7 +58,7 @@ const TemplateController = Service(
           )
 
           router.put(
-            '/templates/:_id/workflowProcess/:workflowProcessId',
+            '/templates/updateTemplate/:_id/workflowProcess/:workflowProcessId',
             (req, res, next) => {
               const { _id, workflowProcessId } = req.params
 
@@ -71,7 +71,7 @@ const TemplateController = Service(
           )
 
           router.delete(
-            '/templates/:_id',
+            '/templates/deleteTemplate/:_id',
             (req, res, next) => {
               const { _id } = req.params
 

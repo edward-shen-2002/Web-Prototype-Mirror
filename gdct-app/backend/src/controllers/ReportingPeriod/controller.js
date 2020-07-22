@@ -10,7 +10,7 @@ const ReportingPeriodController = Service(
     return (
       () => {
         router.get(
-          '/reportingPeriods',
+          '/reportingPeriods/fetchReportingPeriods',
           (req, res, next) => {
             // Get query from middleware -- auth handler
 
@@ -22,7 +22,7 @@ const ReportingPeriodController = Service(
         )
 
         router.post(
-          '/reportingPeriods',
+          '/reportingPeriods/createReportingPeriods',
           (req, res, next) => {
             service
               .createReportingPeriod(req.body.reportingPeriod)
@@ -36,7 +36,7 @@ const ReportingPeriodController = Service(
         )
 
         router.put(
-          '/reportingPeriods/:_id',
+          '/reportingPeriods/updateReportingPeriod/:_id',
           (req, res, next) => {
             const { _id } = req.params
             const { reportingPeriod } = req.body
@@ -50,7 +50,7 @@ const ReportingPeriodController = Service(
         )
 
         router.delete(
-          '/reportingPeriods/:_id',
+          '/reportingPeriods/deleteReportingPeriods/:_id',
           (req, res, next) => {
             const { _id } = req.params
 

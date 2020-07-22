@@ -10,7 +10,7 @@ const COATreeController = Service(
     return (
       () => {
         router.get(
-          '/COATrees',
+          '/categoryTrees/fetchCOATrees',
           (req, res, next) => {
             // Get query from middleware -- auth 
 
@@ -22,7 +22,7 @@ const COATreeController = Service(
         )
 
         router.get(
-          '/COATrees/sheetName/:_id',
+          '/categoryTrees/fetchCOATreeBySheetName/:_id',
           (req, res, next) => {
             // Get query from middleware -- auth 
             const { _id: sheetNameId } = req.params
@@ -35,7 +35,7 @@ const COATreeController = Service(
         )
 
         router.get(
-          '/COATrees/:_id',
+          '/categoryTrees/:_id',
           (req, res, next) => {
             // Get query from middleware -- auth handler
             const sheetNameId = req.params._id
@@ -48,7 +48,7 @@ const COATreeController = Service(
         )
 
         router.post(
-          '/COATrees',
+          '/categoryTrees',
           (req, res, next) => {
             service
               .createCOATree(req.body.COATree)
@@ -58,7 +58,7 @@ const COATreeController = Service(
         )
 
         router.put(
-          '/COATrees/:_id',
+          '/categoryTrees/:_id',
           (req, res, next) => {
             const { _id } = req.params
             const { COATree } = req.body
@@ -71,7 +71,7 @@ const COATreeController = Service(
         )
 
         router.put(
-          '/COATrees/sheetName/:_id',
+          '/categoryTrees/sheetName/:_id',
           (req, res, next) => {
             const { _id: sheetNameId } = req.params
             const { COATrees } = req.body
@@ -85,7 +85,7 @@ const COATreeController = Service(
         )
 
         router.delete(
-          '/COATrees/:_id',
+          '/categoryTrees/:_id',
           (req, res, next) => {
             const { _id } = req.params
 

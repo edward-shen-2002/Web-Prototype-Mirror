@@ -3,7 +3,7 @@ import { Schema, model } from 'mongoose'
 const ObjectId = Schema.Types.ObjectId
 
 const COATreeModel = model(
-  'COATree',
+  'CategoryTree',
   new Schema(
     {
       parentId: { type: ObjectId, ref: "COATree" },
@@ -13,7 +13,7 @@ const COATreeModel = model(
     }, 
     { minimize: false }
   ),
-  'COATree'
+  'CategoryTree'
 )
 
 export default COATreeModel

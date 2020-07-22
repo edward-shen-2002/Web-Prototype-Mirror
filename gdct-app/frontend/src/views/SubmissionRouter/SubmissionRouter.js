@@ -13,45 +13,49 @@ import EditSubmission from './EditSubmission'
 
 const SubmissionRouter = () => {
   return (
-  <Switch>
-    <Route
-      exact
-      path="/submission_manager/submissionPeriods"
-      component={SubmissionPeriods}
-    />
-    <Route
-      exact
-      path="/submission_manager/submissions"
-      component={Submissions}
-    />
-    <Route
-      exact
-      path="/submission_manager/submissions/:_id"
-      component={Submission}
-    />
-    <Route exact path="/submission_manager/submission" component={Submission} />
+    <Switch>
+      <Route
+        exact
+        path="/submission_manager/submissionPeriods"
+        component={SubmissionPeriods}
+      />
+      <Route
+        exact
+        path="/submission_manager/submissions"
+        component={Submissions}
+      />
+      <Route
+        exact
+        path="/submission_manager/submissions/:_id"
+        component={Submission}
+      />
+      <Route
+        exact
+        path="/submission_manager/submission"
+        component={Submission}
+      />
 
-    <Route
-      exact
-      path="/submission_manager/dashboard"
-      component={SubmissionDashboard}
-    />
+      <Route
+        exact
+        path="/submission_manager/dashboard"
+        component={SubmissionDashboard}
+      />
 
-    <Route
-      exact
-      path="/submission_manager/createSubmission/:id"
-      component={CreateSubmission}
-    />
+      <Route
+        exact
+        path="/submission_manager/createSubmission/:id"
+        component={CreateSubmission}
+      />
 
-    <Route
-      exact
-      path="/submission_manager/editSubmission/:id"
-      component={EditSubmission}
-    />
+      <Route
+        exact
+        path="/submission_manager/editSubmission/:id"
+        component={EditSubmission}
+      />
 
-    <Route component={NotFound} />
-  </Switch>
-)
-  }
+      <Route component={NotFound} />
+    </Switch>
+  )
+}
 
 export default SubmissionRouter

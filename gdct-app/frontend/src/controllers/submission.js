@@ -1,8 +1,10 @@
 import axios from 'axios'
 
+import { host } from '../constants/domain'
+
 const submissionController = (() => {
   const submissionAxios = axios.create({
-    baseURL: 'http://localhost:3000/submission_manager/submissions',
+    baseURL: `${host}/submission_manager/submissions`,
   })
   return {
     fetchAndCreate: async (orgId, programIds) =>
@@ -24,11 +26,11 @@ const submissionController = (() => {
         role,
       }),
     fetchSubmission: async (_id) =>
-      submissionAxios.get(`/${_id}`).then((res) => res.data.submission),
+      submissionAxios.get(`/fetchSubmission/${_id}`).then((res) => res.data.submission),
     fetch: async (query) =>
-      submissionAxios.get('').then((res) => res.data.submissions),
+      submissionAxios.get('/fetchSubmission').then((res) => res.data.submissions),
 
-    delete: async (_id) => submissionAxios.delete(`/${_id}`),
+    delete: async (_id) => submissionAxios.delete(`/deleteSubmission/${_id}`),
   }
 })()
 

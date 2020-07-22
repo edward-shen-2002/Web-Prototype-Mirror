@@ -10,7 +10,7 @@ const TemplatePackageController = Service(
     return (
       () => {
         router.get(
-          '/templatePackages',
+          '/templatePackages/fetchTemplatePackage',
           (req, res, next) => {
             // Get query from middleware -- auth handler
             service
@@ -21,7 +21,7 @@ const TemplatePackageController = Service(
         )
 
         router.get(
-          '/templatePackages/:_id',
+          '/templatePackages/fetchTemplatePackage/:_id',
           (req, res, next) => {
             // Get query from middleware -- auth handler
 
@@ -33,7 +33,7 @@ const TemplatePackageController = Service(
         )
 
         router.get(
-          '/templatePackages/populated/:_id',
+          '/templatePackages/fetchPopulatedTemplatePackage/:_id',
           (req, res, next) => {
             // Get query from middleware -- auth handler
 
@@ -45,7 +45,7 @@ const TemplatePackageController = Service(
         )
 
         router.post(
-          '/templatePackages',
+          '/templatePackages/createTemplatePackage',
           (req, res, next) => {
             service
               .createTemplatePackage(req.body.templatePackage)
@@ -55,7 +55,7 @@ const TemplatePackageController = Service(
         )
 
         router.put(
-          '/templatePackages/:_id',
+          '/templatePackages/updateTemplatePackage/:_id',
           (req, res, next) => {
             const { _id } = req.params
             const { templatePackage } = req.body
@@ -69,7 +69,7 @@ const TemplatePackageController = Service(
         )
 
         router.put(
-          '/templatePackages/populated/:_id',
+          '/templatePackages/updatePopulatedTemplatePackage/:_id',
           (req, res, next) => {
             const { _id } = req.params
             const { templatePackage } = req.body
@@ -83,7 +83,7 @@ const TemplatePackageController = Service(
         )
 
         router.delete(
-          '/templatePackages/:_id',
+          '/templatePackages/deleteTemplatePackage/:_id',
           (req, res, next) => {
             const { _id } = req.params
 

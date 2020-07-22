@@ -124,7 +124,7 @@ const SecondSection = ({ values, handleRemoveTemplate }) => {
   )
 }
 
-const ThirdSection = () => <div className="mb-2 mt-3"></div>
+const ThirdSection = () => <div className="mb-2 mt-3" />
 
 const Sections = ({
   values,
@@ -244,7 +244,7 @@ const TemplatePackage = ({
   const handleSubmit = useCallback(
     (t) => {
       const formattedTemplatePackage = {
-        _id: _id,
+        _id,
         name: t.name,
         statusId: t.statusId._id,
         submissionPeriodId: t.submissionPeriodId._id,

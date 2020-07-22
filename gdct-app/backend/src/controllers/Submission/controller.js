@@ -60,7 +60,7 @@ const SubmissionController = Service(
 
 
         router.get(
-          '/submissions',
+          '/submissions/fetchSubmission',
           (req, res, next) => {
             // Get query from middleware -- auth handler
 
@@ -72,7 +72,7 @@ const SubmissionController = Service(
         )
 
         router.get(
-          '/submissions/:_id',
+          '/submissions/fetchSubmission/:_id',
           (req, res, next) => {
             const { _id } = req.params
 
@@ -94,7 +94,7 @@ const SubmissionController = Service(
         )
 
         router.put(
-          '/submissions/:_id',
+          '/submissions/createSubmission/:_id',
           (req, res, next) => {
             const { _id } = req.params
             const { submission } = req.body
@@ -107,7 +107,7 @@ const SubmissionController = Service(
         )
 
         router.delete(
-          '/submissions/:_id',
+          '/submissions/deleteSubmission/:_id',
           (req, res, next) => {
             const { _id } = req.params
 

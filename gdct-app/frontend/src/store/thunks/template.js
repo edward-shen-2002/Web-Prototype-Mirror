@@ -95,12 +95,18 @@ export const updateTemplateExcelRequest = () => (dispatch, getState) => {
     })
 }
 
-export const updateTemplateWorkflowProcess = (_id, workflowProcessId) => (dispatch, getState) => {
-  const template = cloneDeep(selectFactoryValueById(selectTemplatesStore)(_id)(getState()))
+export const updateTemplateWorkflowProcess = (_id, workflowProcessId) => (
+  dispatch,
+  getState
+) => {
+  const template = cloneDeep(
+    selectFactoryValueById(selectTemplatesStore)(_id)(getState())
+  )
 
   template.workflowProcessId = workflowProcessId
 
-  templateController.updateTemplateWorkflowProcess(_id, workflowProcessId)
+  templateController
+    .updateTemplateWorkflowProcess(_id, workflowProcessId)
     .then(() => {
       dispatch(TemplatesStore.actions.UPDATE(template))
     })

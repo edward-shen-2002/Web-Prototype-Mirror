@@ -11,7 +11,7 @@ const SubmissionPeriodController = Service(
     return (
       () => {
         router.get(
-          '/submissionPeriods',
+          '/fetchSubmissionPeriods',
           (req, res, next) => {
             // Get query from middleware -- auth handler
 
@@ -23,7 +23,7 @@ const SubmissionPeriodController = Service(
         )
 
         router.post(
-          '/submissionPeriods',
+          '/createSubmissionPeriod',
           (req, res, next) => {
             service
               .createSubmissionPeriod(req.body.submissionPeriod)
@@ -33,7 +33,7 @@ const SubmissionPeriodController = Service(
         )
 
         router.put(
-          '/submissionPeriods/:_id',
+          '/updateSubmissionPeriod/:_id',
           (req, res, next) => {
             const { _id } = req.params
             const { submissionPeriod } = req.body
@@ -47,7 +47,7 @@ const SubmissionPeriodController = Service(
         )
 
         router.delete(
-          '/submissionPeriods/:_id',
+          '/deleteSubmissionPeriod/:_id',
           (req, res, next) => {
             const { _id } = req.params
 

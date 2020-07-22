@@ -1,19 +1,21 @@
 import axios from 'axios'
 
+import { host } from '../constants/domain'
+
 const columnNameController = (() => {
   const columnNameAxios = axios.create({
-    baseURL: 'http://localhost:3000/columnNames',
+    baseURL: `${host}/columnNames`,
   })
   return {
     fetch: async (query) =>
-      columnNameAxios.get('').then((res) => res.data.columnNames),
+      columnNameAxios.get('/fetchColumnNames').then((res) => res.data.columnNames),
     create: async (columnName) =>
       columnNameAxios
-        .post('', { columnName })
+        .post('/createColumnName', { columnName })
         .then((res) => res.data.columnName),
-    delete: async (_id) => columnNameAxios.delete(`/${_id}`),
+    delete: async (_id) => columnNameAxios.delete(`/deleteColumnName/${_id}`),
     update: async (columnName) =>
-      columnNameAxios.put(`/${columnName._id}`, { columnName }),
+      columnNameAxios.put(`/updateColumnName${columnName._id}`, { columnName }),
   }
 })()
 
