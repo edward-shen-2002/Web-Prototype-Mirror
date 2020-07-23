@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { host } from '../constants/domain'
+import { host } from '../constants/domain';
 
 const AppResourceController = (() => {
   const AppResourceAxios = axios.create({

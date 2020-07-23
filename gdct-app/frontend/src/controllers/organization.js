@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-import { host } from '../constants/domain'
+import { host } from '../constants/domain';
 
 const orgController = (() => {
   const orgAxios = axios.create({
     baseURL: host + '/organizations',
-  })
+  });
   return {
     fetchOrg: async _id => orgAxios.get(`/fetchOrganization/${_id}`).then(res => res.data.Org),
     fetch: async () => orgAxios.get('/fetchOrganizations').then(res => res.data.Orgs),

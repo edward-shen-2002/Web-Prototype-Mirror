@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-import { host } from '../constants/domain'
+import { host } from '../constants/domain';
 
 const templatePackageController = (() => {
   const templateAxios = axios.create({
     baseURL: host + '/template_manager/templatePackages',
-  })
+  });
   return {
     fetchTemplatePackage: async _id =>
       templateAxios.get(`/${_id}`).then(res => res.data.templatePackage),

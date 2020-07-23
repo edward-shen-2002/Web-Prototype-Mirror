@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-import { host } from '../constants/domain'
+import { host } from '../constants/domain';
 
 const sheetNameController = (() => {
   const sheetNameAxios = axios.create({
     baseURL: host + '/sheetNames',
-  })
+  });
   return {
     fetch: async query => sheetNameAxios.get('').then(res => res.data.sheetNames),
     create: async sheetName =>

@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-import { host } from '../constants/domain'
+import { host } from '../constants/domain';
 
 const AppRoleController = (() => {
   const AppRoleAxios = axios.create({
     baseURL: host + '/role_manager/approles',
     withCredentials: true,
-  })
+  });
   return {
     fetchAppRole: async _id => AppRoleAxios.get(`/${_id}`).then(res => res.data.AppRole),
     fetch: async _ => AppRoleAxios.get('').then(res => res.data.AppRoles),
