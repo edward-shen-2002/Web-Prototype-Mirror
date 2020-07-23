@@ -15,7 +15,7 @@ export default class ProgramService {
     res.setHeader('Access-Control-Allow-Origin', process.env.CLIENT_SERVER);
     passport.authenticate(method, {
       successRedirect: process.env.CLIENT_SERVER, // redirect to home page
-      failureRedirect: process.env.CLIENT_SERVER + '/auth/error', // redirect to error page
+      failureRedirect: `${process.env.CLIENT_SERVER}/auth/error`, // redirect to error page
     })(req, res);
   }
 
@@ -27,10 +27,10 @@ export default class ProgramService {
   }
 
   auto(req, res) {
-    var temp = mongoose.Types.ObjectId('5efb8b638464c20f646049a6');
-    var uname = os.userInfo().username;
+    const temp = mongoose.Types.ObjectId('5efb8b638464c20f646049a6');
+    const uname = os.userInfo().username;
     UserModel.find({ AppConfig: temp }, function (err, user1) {
-      var found = false;
+      let found = false;
       user1.forEach(obj => {
         if (obj.username === uname) {
           found = true;

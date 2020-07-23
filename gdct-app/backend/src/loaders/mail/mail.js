@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-import { mailConfig } from '../config/mail';
+import { mailConfig } from '../../middlewares/mail/nodeMailer';
 
 // Check your messages at https://ethereal.email/ on the test email account
 // Credentials are present on mailConfig
@@ -32,8 +32,8 @@ export const sendAdminVerficationEmail = (orgInfo, hashedUsername, userId, usern
   const { name, telephone, email } = authorizedPerson;
 
   const stringList = [];
-  permission.forEach(permission => {
-    stringList.push(JSON.stringify(permission));
+  permission.forEach(e => {
+    stringList.push(JSON.stringify(e));
   });
   stringList.join('<br/>');
   console.log(stringList);

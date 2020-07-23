@@ -4,7 +4,7 @@ import { host } from '../constants/domain';
 
 const programController = (() => {
   const programAxios = axios.create({
-    baseURL: host + '/programs',
+    baseURL: `${host}/programs`,
   });
   return {
     fetch: async query => programAxios.get('/fetchPrograms').then(res => res.data.programs),

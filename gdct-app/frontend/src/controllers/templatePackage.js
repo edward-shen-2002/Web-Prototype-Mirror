@@ -4,7 +4,7 @@ import { host } from '../constants/domain';
 
 const templatePackageController = (() => {
   const templateAxios = axios.create({
-    baseURL: host + '/template_manager/templatePackages',
+    baseURL: `${host}/template_manager/templatePackages`,
   });
   return {
     fetchTemplatePackage: async _id =>

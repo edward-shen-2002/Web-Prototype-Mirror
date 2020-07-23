@@ -4,7 +4,7 @@ import { host } from '../constants/domain';
 
 const COAController = (() => {
   const COAAxios = axios.create({
-    baseURL: host + '/COA_manager/COAs',
+    baseURL: `${host}/COA_manager/COAs`,
   });
 
   return {

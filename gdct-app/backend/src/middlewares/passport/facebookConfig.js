@@ -33,7 +33,7 @@ module.exports = () => {
               return done(null, user);
             }
           } else {
-            done(null);
+            return done(null);
           }
         });
       });

@@ -4,7 +4,7 @@ import { host } from '../constants/domain';
 
 const statusController = (() => {
   const statusAxios = axios.create({
-    baseURL: host + '/designer/statuses',
+    baseURL: `${host}/designer/statuses`,
   });
   return {
     fetch: async query => statusAxios.get('').then(res => res.data.statuses),

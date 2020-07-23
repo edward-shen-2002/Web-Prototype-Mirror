@@ -27,7 +27,7 @@ class signupComponent extends Component {
 
   handleInputChange(event) {
     const { name, value } = event.target;
-    let errors = this.state.errors;
+    const { errors } = this.state;
 
     switch (name) {
       case 'email':

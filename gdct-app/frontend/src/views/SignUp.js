@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
+import { useHistory } from 'react-router-dom';
 import MandatoryInfo from './MandatoryInfo';
 import ExtraInfo from './ExtraInfo';
 import Review from './Review';
@@ -21,7 +22,6 @@ import { selectFactoryRESTResponseTableValues } from '../store/common/REST/selec
 import { selectAppSysRolesStore } from '../store/AppSysRolesStore/selectors';
 
 import AuthController from '../controllers/Auth';
-import { useHistory } from 'react-router-dom';
 
 function Copyright() {
   return (

@@ -4,7 +4,7 @@ import { host } from '../constants/domain';
 
 const AppResourceController = (() => {
   const AppResourceAxios = axios.create({
-    baseURL: host + '/role_manager/appresources',
+    baseURL: `${host}/role_manager/appresources`,
     withCredentials: true,
   });
   return {

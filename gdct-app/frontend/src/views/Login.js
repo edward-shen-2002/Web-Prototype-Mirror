@@ -78,7 +78,7 @@ export default function Login({ setLoggedIn }) {
 
   const handleChange = e => {
     const { name, value } = e.target;
-    let updatedErrors = { ...errors };
+    const updatedErrors = { ...errors };
 
     switch (name) {
       case 'password':
@@ -173,7 +173,7 @@ export default function Login({ setLoggedIn }) {
               marginBottom: 0,
             }}
             onClick={() => {
-              window.location.href = host + '/auth/google/';
+              window.location.href = `${host}/auth/google/`;
             }}
           >
             <div>
@@ -191,7 +191,7 @@ export default function Login({ setLoggedIn }) {
             color="primary"
             className={classes.submit}
             onClick={() => {
-              window.location.href = host + '/auth/facebook/';
+              window.location.href = `${host}/auth/facebook/`;
             }}
           >
             <div>

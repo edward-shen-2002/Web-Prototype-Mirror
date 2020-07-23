@@ -4,7 +4,7 @@ import { host } from '../constants/domain';
 
 const submissionPeriodController = (() => {
   const submissionPeriodAxios = axios.create({
-    baseURL: host + '/submission_manager/submissionPeriods',
+    baseURL: `${host}/submission_manager/submissionPeriods`,
   });
   return {
     fetch: async query => submissionPeriodAxios.get('').then(res => res.data.submissionPeriods),

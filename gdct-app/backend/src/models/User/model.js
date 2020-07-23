@@ -5,7 +5,7 @@ import { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt-nodejs';
 import jwt from 'jsonwebtoken';
 
-const ObjectId = Schema.Types.ObjectId;
+const { ObjectId } = Schema.Types;
 
 dotenv.config();
 
@@ -78,7 +78,7 @@ User.methods.validatePassword = function (password) {
 
 User.methods.generateAuthToken = async user => {
   const token = jwt.sign({ _id: user._id.toString() }, 'authenticationsecret');
-  user.token = 'Bearer ' + token;
+  user.token = `Bearer ${token}`;
   await user.save();
   return token;
 };
