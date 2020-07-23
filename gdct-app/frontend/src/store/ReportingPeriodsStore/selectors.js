@@ -1,2 +1,1 @@
-export const selectReportingPeriodsStore = (state) =>
-  state.ReportingPeriodsStore
+export const selectReportingPeriodsStore = state => state.ReportingPeriodsStore;

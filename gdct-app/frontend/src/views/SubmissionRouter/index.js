@@ -1,1 +1,1 @@
-export { default } from './SubmissionRouter'
+export { default } from './SubmissionRouter';

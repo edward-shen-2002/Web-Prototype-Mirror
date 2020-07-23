@@ -1,16 +1,16 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react';
 
-import { useSelector, shallowEqual, useDispatch } from 'react-redux'
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 
-import { getCOAGroupsRequest } from '../../../store/thunks/COAGroup'
+import { getCOAGroupsRequest } from '../../../store/thunks/COAGroup';
 
-import { createCOATreeRequest } from '../../../store/thunks/COATree'
+import { createCOATreeRequest } from '../../../store/thunks/COATree';
 
-import SelectableTableDialog from '../../../components/dialogs/SelectableTableDialog'
-import DialogsStore from '../../../store/DialogsStore/store'
+import SelectableTableDialog from '../../../components/dialogs/SelectableTableDialog';
+import DialogsStore from '../../../store/DialogsStore/store';
 
 const COAGroupDialog = ({ sheetNameId }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const { isCOAGroupDialogOpen, COAGroups } = useSelector(
     ({
@@ -22,23 +22,23 @@ const COAGroupDialog = ({ sheetNameId }) => {
       isCOAGroupDialogOpen,
       COAGroups: Values,
     }),
-    shallowEqual
-  )
+    shallowEqual,
+  );
 
   const handleClose = useCallback(() => {
-    dispatch(DialogsStore.actions.CLOSE_COA_GROUP_DIALOG())
-  }, [dispatch])
+    dispatch(DialogsStore.actions.CLOSE_COA_GROUP_DIALOG());
+  }, [dispatch]);
 
   const handleSelect = useCallback(
-    (COAGroup) => {
-      dispatch(createCOATreeRequest(COAGroup, sheetNameId, true))
+    COAGroup => {
+      dispatch(createCOATreeRequest(COAGroup, sheetNameId, true));
     },
-    [dispatch]
-  )
+    [dispatch],
+  );
 
   useEffect(() => {
-    if (isCOAGroupDialogOpen) dispatch(getCOAGroupsRequest())
-  }, [dispatch, isCOAGroupDialogOpen])
+    if (isCOAGroupDialogOpen) dispatch(getCOAGroupsRequest());
+  }, [dispatch, isCOAGroupDialogOpen]);
 
   const columns = useMemo(
     () => [
@@ -46,8 +46,8 @@ const COAGroupDialog = ({ sheetNameId }) => {
       { title: 'Name', field: 'name' },
       { title: 'Code', field: 'code' },
     ],
-    []
-  )
+    [],
+  );
 
   return (
     <SelectableTableDialog
@@ -58,7 +58,7 @@ const COAGroupDialog = ({ sheetNameId }) => {
       handleClose={handleClose}
       handleSelect={handleSelect}
     />
-  )
-}
+  );
+};
 
-export default COAGroupDialog
+export default COAGroupDialog;

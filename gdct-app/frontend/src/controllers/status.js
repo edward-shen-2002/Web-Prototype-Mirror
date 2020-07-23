@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from 'axios';
 
 import { host } from '../constants/domain'
 
@@ -7,13 +7,11 @@ const statusController = (() => {
     baseURL: host + '/designer/statuses',
   })
   return {
-    fetch: async (query) =>
-      statusAxios.get('').then((res) => res.data.statuses),
-    create: async (status) =>
-      statusAxios.post('', { status }).then((res) => res.data.status),
-    delete: async (_id) => statusAxios.delete(`/${_id}`),
-    update: async (status) => statusAxios.put(`/${status._id}`, { status }),
-  }
-})()
+    fetch: async query => statusAxios.get('').then(res => res.data.statuses),
+    create: async status => statusAxios.post('', { status }).then(res => res.data.status),
+    delete: async _id => statusAxios.delete(`/${_id}`),
+    update: async status => statusAxios.put(`/${status._id}`, { status }),
+  };
+})();
 
-export default statusController
+export default statusController;

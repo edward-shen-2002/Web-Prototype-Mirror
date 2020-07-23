@@ -1,16 +1,17 @@
-import TemplateTypeEntity from '../../entities/TemplateType'
-import Container, { Service } from 'typedi'
-import BaseRepository from '../repository'
-import TemplateTypeModel from '../../models/TemplateType/model'
-import ProgramRepository from '../Program'
+import Container from 'typedi';
+import TemplateTypeEntity from '../../entities/TemplateType';
+import BaseRepository from '../repository';
+import TemplateTypeModel from '../../models/TemplateType/model';
+import ProgramRepository from '../Program';
 
 // @Service()
 export default class TemplateTypeRepository extends BaseRepository {
   constructor() {
-    super(TemplateTypeModel)
+    super(TemplateTypeModel);
 
-    this.programRepository = Container.get(ProgramRepository)
+    this.programRepository = Container.get(ProgramRepository);
   }
+
   async create({
     name,
     description,
@@ -20,7 +21,8 @@ export default class TemplateTypeRepository extends BaseRepository {
     isSubmittable,
     isInputtable,
     isViewable,
-    isReportable
+    isReportable,
+    isActive,
   }) {
     return this.programRepository
       .validateMany(programIds)
@@ -36,79 +38,76 @@ export default class TemplateTypeRepository extends BaseRepository {
           isSubmittable,
           isInputtable,
           isViewable,
-          isReportable
-        })
+          isReportable,
+          isActive,
+        }),
       )
-      .then((templateType) => new TemplateTypeEntity(templateType))
+      .then(templateType => new TemplateTypeEntity(templateType));
   }
 
   async findByProgramIds(programIds) {
-    return TemplateTypeModel.find({programId: {$in: programIds}})
-      .then((templateTypes) => new TemplateTypeEntity(templateTypes.toObject()))
+    return TemplateTypeModel.find({ programId: { $in: programIds } }).then(
+      templateTypes => new TemplateTypeEntity(templateTypes.toObject()),
+    );
   }
 
   async update(
-    id, 
+    id,
     {
       name,
       description,
-  
+
       programIds,
-  
+
       isApprovable,
       isReviewable,
       isSubmittable,
       isInputtable,
       isViewable,
-      isReportable
-    }
+      isReportable,
+      isActive,
+    },
   ) {
-    return (
-      this.programRepository.validateMany(programIds)
-        .then(
-          () => TemplateTypeModel.findByIdAndUpdate(
-            id, 
-            {
-              name,
-              description,
-          
-              programIds,
-          
-              isApprovable,
-              isReviewable,
-              isSubmittable,
-              isInputtable,
-              isViewable,
-              isReportable
-            }
-          )
-        )
-        .then(
-          (templateType) => new TemplateTypeEntity(templateType.toObject())
-        )
+    return this.programRepository
+      .validateMany(programIds)
+      .then(() =>
+        TemplateTypeModel.findByIdAndUpdate(id, {
+          name,
+          description,
 
-    )
+          programIds,
+
+          isApprovable,
+          isReviewable,
+          isSubmittable,
+          isInputtable,
+          isViewable,
+          isReportable,
+          isActive,
+        }),
+      )
+      .then(templateType => new TemplateTypeEntity(templateType.toObject()));
   }
 
   async find(query) {
-    const realQuery = {}
+    const realQuery = {};
 
     for (const key in query) {
-      if (query[key]) realQuery[key] = query[key]
+      if (query[key]) realQuery[key] = query[key];
     }
 
-    return TemplateTypeModel.find(realQuery).then((templateTypes) =>
-      templateTypes.map((templateType) => new TemplateTypeEntity(templateType))
-    )
+    return TemplateTypeModel.find(realQuery).then(templateTypes =>
+      templateTypes.map(templateType => new TemplateTypeEntity(templateType)),
+    );
   }
 
   findOne(id) {
-    throw new Error('Method not implemented.')
+    throw new Error('Method not implemented.', id);
   }
 
   async delete(id) {
     return TemplateTypeModel.findByIdAndDelete(id).then(
-      (templateType) => new TemplateTypeEntity(templateType)
-    )
+      templateType => new TemplateTypeEntity(templateType),
+    );
   }
 }

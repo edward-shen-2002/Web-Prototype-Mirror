@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/greylemon/Web-Prototype.git",
-  "author": "Alfred Lemon <alfred.lemon@mail.utoronto.ca>",
+  "author": "Bill Hu <william.hu@ontario.ca>",
   "license": "MIT",
   "scripts": {
     "install": "yarn --cwd slate && yarn --cwd gdct-app",
     "start": "yarn --cwd gdct-app start"
+  },
+  "dependencies": {
+    "passport-google-oauth": "^2.0.0"
   }
 }

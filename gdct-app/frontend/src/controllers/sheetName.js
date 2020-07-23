@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from 'axios';
 
 import { host } from '../constants/domain'
 
@@ -7,14 +7,12 @@ const sheetNameController = (() => {
     baseURL: host + '/sheetNames',
   })
   return {
-    fetch: async (query) =>
-      sheetNameAxios.get('').then((res) => res.data.sheetNames),
-    create: async (sheetName) =>
-      sheetNameAxios.post('', { sheetName }).then((res) => res.data.sheetName),
-    delete: async (_id) => sheetNameAxios.delete(`/${_id}`),
-    update: async (sheetName) =>
-      sheetNameAxios.put(`/${sheetName._id}`, { sheetName }),
-  }
-})()
+    fetch: async query => sheetNameAxios.get('').then(res => res.data.sheetNames),
+    create: async sheetName =>
+      sheetNameAxios.post('', { sheetName }).then(res => res.data.sheetName),
+    delete: async _id => sheetNameAxios.delete(`/${_id}`),
+    update: async sheetName => sheetNameAxios.put(`/${sheetName._id}`, { sheetName }),
+  };
+})();
 
-export default sheetNameController
+export default sheetNameController;

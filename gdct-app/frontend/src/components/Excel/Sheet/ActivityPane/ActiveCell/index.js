@@ -1,1 +1,1 @@
-export { default } from './ActiveCell'
+export { default } from './ActiveCell';

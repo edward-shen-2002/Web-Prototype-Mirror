@@ -1,16 +1,16 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model } from 'mongoose';
 
 const ProgramModel = model(
   'Program',
   new Schema(
     {
-      name: { type: String, required: true},
+      name: { type: String, required: true },
       code: { type: String, required: true, unique: true },
-      isActive: {type: Boolean}
+      isActive: { type: Boolean },
     },
-    { minimize: false }
+    { minimize: false, timestamps: true },
   ),
-  'Program'
-)
+  'Program',
+);
 
-export default ProgramModel
+export default ProgramModel;

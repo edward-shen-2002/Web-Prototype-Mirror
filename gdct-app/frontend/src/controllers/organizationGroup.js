@@ -1,15 +1,17 @@
-import axios from 'axios'
+import axios from 'axios';
 
 import { host } from '../constants/domain'
 
 const organizationGroupController = (() => {
   const organizationGroupAxios = axios.create({
-    baseURL: host + '/organizationGroup',
+    baseURL: host + '/orgGroups',
   })
   return {
-    fetch: async (_id) =>
-      organizationGroupAxios.get(`/searchOrganizationGroup`).then((res) => res.data.organizationGroup),
-  }
-})()
+    fetch: async () =>
+      organizationGroupAxios
+        .get(`/searchOrganizationGroup`)
+        .then(res => res.data.organizationGroup),
+  };
+})();
 
-export default organizationGroupController
+export default organizationGroupController;

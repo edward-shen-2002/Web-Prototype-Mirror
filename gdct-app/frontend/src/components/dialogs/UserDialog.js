@@ -1,44 +1,41 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react';
 
-import { closeUserDialog } from '../../store/actions/DialogsStore'
+import SelectableTableDialog from './SelectableTableDialog';
 
-import SelectableTableDialog from './SelectableTableDialog'
+import { getUsersRequest } from '../../store/thunks/user';
 
-import { getUsersRequest } from '../../store/thunks/user'
-
-import { useSelector, shallowEqual, useDispatch } from 'react-redux'
-import { useMemo } from 'react'
-import { selectIsUserDialogOpen } from '../../store/DialogsStore/selectors'
-import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
-import DialogsStore from '../../store/DialogsStore/store'
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
+import { useMemo } from 'react';
+import { selectIsUserDialogOpen } from '../../store/DialogsStore/selectors';
+import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors';
+import DialogsStore from '../../store/DialogsStore/store';
 
 const UserDialog = ({ handleChange }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const { isUserDialogOpen, users } = useSelector(
-    (state) => ({
+    state => ({
       isUserDialogOpen: selectIsUserDialogOpen(state),
       users: selectFactoryRESTResponseTableValues(selectUsersStore)(state),
     }),
-    shallowEqual
-  )
+    shallowEqual,
+  );
 
-  const handleClose = useCallback(
-    () => dispatch(DialogsStore.actions.CLOSE_USER_DIALOG()),
-    [dispatch]
-  )
+  const handleClose = useCallback(() => dispatch(DialogsStore.actions.CLOSE_USER_DIALOG()), [
+    dispatch,
+  ]);
 
   const handleSelect = useCallback(
-    (data) => {
-      handleChange(data._id)
-      handleClose()
+    data => {
+      handleChange(data._id);
+      handleClose();
     },
-    [dispatch]
-  )
+    [dispatch],
+  );
 
   useEffect(() => {
-    if (isUserDialogOpen && !users.length) dispatch(getUsersRequest())
-  }, [dispatch, isUserDialogOpen])
+    if (isUserDialogOpen && !users.length) dispatch(getUsersRequest());
+  }, [dispatch, isUserDialogOpen]);
 
   const columns = useMemo(
     () => [
@@ -51,8 +48,8 @@ const UserDialog = ({ handleChange }) => {
         field: 'username',
       },
     ],
-    []
-  )
+    [],
+  );
 
   return (
     <SelectableTableDialog
@@ -63,7 +60,7 @@ const UserDialog = ({ handleChange }) => {
       handleClose={handleClose}
       handleSelect={handleSelect}
     />
-  )
-}
+  );
+};
 
-export default UserDialog
+export default UserDialog;

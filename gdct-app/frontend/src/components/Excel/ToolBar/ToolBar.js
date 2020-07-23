@@ -1,51 +1,35 @@
-import React, { useCallback } from 'react'
+import React, { useCallback } from 'react';
 
-import { useSelector, shallowEqual, useDispatch } from 'react-redux'
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 
-import Button from '@material-ui/core/Button'
-import Divider from '@material-ui/core/Divider'
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 
-import FormatBoldIcon from '@material-ui/icons/FormatBold'
-import FormatItalicIcon from '@material-ui/icons/FormatItalic'
-import FormatUnderlinedIcon from '@material-ui/icons/FormatUnderlined'
-import FormatStrikeThroguhIcon from '@material-ui/icons/StrikethroughS'
-import FormatColorFillIcon from '@material-ui/icons/FormatColorFill'
-import FormatColorTextIcon from '@material-ui/icons/FormatColorText'
-import MergeTypeIcon from '@material-ui/icons/MergeType'
-import PublishIcon from '@material-ui/icons/Publish'
+import FormatBoldIcon from '@material-ui/icons/FormatBold';
+import FormatItalicIcon from '@material-ui/icons/FormatItalic';
+import FormatUnderlinedIcon from '@material-ui/icons/FormatUnderlined';
+import FormatStrikeThroguhIcon from '@material-ui/icons/StrikethroughS';
+import FormatColorFillIcon from '@material-ui/icons/FormatColorFill';
+import FormatColorTextIcon from '@material-ui/icons/FormatColorText';
+import MergeTypeIcon from '@material-ui/icons/MergeType';
+import PublishIcon from '@material-ui/icons/Publish';
 
-import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft'
-import FormatAlignCenterIcon from '@material-ui/icons/FormatAlignLeft'
-import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight'
+import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft';
+import FormatAlignCenterIcon from '@material-ui/icons/FormatAlignLeft';
+import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
 
-import { getMainFontStylesStates } from '../../../tools/styles'
-import { getMainFontStyleEditorStates } from '../../../tools/slate'
+import { getMainFontStylesStates } from '../../../tools/styles';
+import { getMainFontStyleEditorStates } from '../../../tools/slate';
 
-import {
-  mergeCells,
-  unmergeCells,
-  setExcelData,
-} from '../../../store/actions/ui/excel/commands'
+import { mergeCells, unmergeCells, setExcelData } from '../../../store/actions/ui/excel/commands';
 
-import './ToolBar.scss'
-import {
-  convertExcelFileToState,
-  convertStateToReactState,
-} from '../../../tools/excel'
+import './ToolBar.scss';
+import { convertExcelFileToState, convertStateToReactState } from '../../../tools/excel';
 
-const ToolBarButton = ({
-  id,
-  children,
-  state,
-  disabled,
-  className,
-  handleClick,
-}) => (
+const ToolBarButton = ({ id, children, state, disabled, className, handleClick }) => (
   <Button
     id={id}
-    className={`toolBar__button ${
-      state ? 'toolBar__button--active' : ''
-    } ${className}`}
+    className={`toolBar__button ${state ? 'toolBar__button--active' : ''} ${className}`}
     disableRipple={true}
     disableFocusRipple={true}
     onClick={handleClick}
@@ -53,31 +37,31 @@ const ToolBarButton = ({
   >
     {children}
   </Button>
-)
+);
 
 const LeftAlignButton = ({ handleClick }) => (
   <ToolBarButton id="align-left" handleClick={handleClick}>
     <FormatAlignLeftIcon />
   </ToolBarButton>
-)
+);
 
 const CenterAlignButton = ({ handleClick }) => (
   <ToolBarButton id="align-center" handleClick={handleClick}>
     <FormatAlignCenterIcon />
   </ToolBarButton>
-)
+);
 
 const RightAlignButton = ({ handleClick }) => (
   <ToolBarButton id="align-right" handleClick={handleClick}>
     <FormatAlignRightIcon />
   </ToolBarButton>
-)
+);
 
 const MergeCellButton = ({ disabled, handleClick }) => (
   <ToolBarButton disabled={disabled} handleClick={handleClick}>
     <MergeTypeIcon />
   </ToolBarButton>
-)
+);
 
 const AlignStyles = ({ handleApplyBlockStyle }) => {
   return (
@@ -86,103 +70,92 @@ const AlignStyles = ({ handleApplyBlockStyle }) => {
       <CenterAlignButton handleClick={handleApplyBlockStyle} />
       <RightAlignButton handleClick={handleApplyBlockStyle} />
     </div>
-  )
-}
+  );
+};
 
-const BoldButton = (props) => (
+const BoldButton = props => (
   <ToolBarButton id="bold" {...props}>
     <FormatBoldIcon />
   </ToolBarButton>
-)
+);
 
-const ItalicButton = (props) => (
+const ItalicButton = props => (
   <ToolBarButton id="italic" {...props}>
     <FormatItalicIcon />
   </ToolBarButton>
-)
+);
 
-const UnderlineButton = (props) => (
+const UnderlineButton = props => (
   <ToolBarButton id="underline" {...props}>
     <FormatUnderlinedIcon />
   </ToolBarButton>
-)
+);
 
-const StrikethroughButton = (props) => (
+const StrikethroughButton = props => (
   <ToolBarButton id="strikethrough" {...props}>
     <FormatStrikeThroguhIcon />
   </ToolBarButton>
-)
+);
 
 const FileUpload = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const handleChange = useCallback(
     async ({ target }) => {
-      const fileData = target.files[0]
+      const fileData = target.files[0];
 
-      const name = fileData.name
+      const name = fileData.name;
 
-      const extension = name.split('.').pop()
+      const extension = name.split('.').pop();
 
       if (extension === 'xlsx') {
         // !unoptimized function... since straight conversion to react state doesn't exist at the moment.
         // ! TODO: implement straight conversion from file to react state
-        let fileStates = await convertExcelFileToState(fileData)
-        const excelReactState = convertStateToReactState(fileStates)
+        let fileStates = await convertExcelFileToState(fileData);
+        const excelReactState = convertStateToReactState(fileStates);
 
-        dispatch(setExcelData(excelReactState))
+        dispatch(setExcelData(excelReactState));
       }
     },
-    [dispatch]
-  )
+    [dispatch],
+  );
 
   return (
     <Button component="label">
       <PublishIcon />
       <input type="file" style={{ display: 'none' }} onChange={handleChange} />
     </Button>
-  )
-}
+  );
+};
 
 const CellStyles = ({ isMergeButtonEnabled, isCellMergeable }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const handleMerge = useCallback(
-    () => dispatch(isCellMergeable ? mergeCells() : unmergeCells()),
-    [dispatch, isCellMergeable]
-  )
+  const handleMerge = useCallback(() => dispatch(isCellMergeable ? mergeCells() : unmergeCells()), [
+    dispatch,
+    isCellMergeable,
+  ]);
 
   return (
     <div>
-      <MergeCellButton
-        disabled={!isMergeButtonEnabled}
-        handleClick={handleMerge}
-      />
+      <MergeCellButton disabled={!isMergeButtonEnabled} handleClick={handleMerge} />
     </div>
-  )
-}
+  );
+};
 
-const MainFontStyles = ({
-  cellStyles,
-  cellEditor,
-  isEditMode,
-  handleTextStyle,
-}) => {
+const MainFontStyles = ({ cellStyles, cellEditor, isEditMode, handleTextStyle }) => {
   let { bold, italic, underline, strikethrough } = isEditMode
     ? getMainFontStyleEditorStates(cellEditor)
-    : getMainFontStylesStates(cellStyles)
+    : getMainFontStylesStates(cellStyles);
 
   return (
     <div>
       <BoldButton state={bold} handleClick={handleTextStyle} />
       <ItalicButton state={italic} handleClick={handleTextStyle} />
       <UnderlineButton state={underline} handleClick={handleTextStyle} />
-      <StrikethroughButton
-        state={strikethrough}
-        handleClick={handleTextStyle}
-      />
+      <StrikethroughButton state={strikethrough} handleClick={handleTextStyle} />
     </div>
-  )
-}
+  );
+};
 
 const ToolBar = () => {
   const {
@@ -216,8 +189,7 @@ const ToolBar = () => {
           sheetCellData[y][x].merged &&
           !activeSelectionArea &&
           !stagnantSelectionAreas.length),
-      isCellMergeable:
-        stagnantSelectionAreas.length === 1 || activeSelectionArea,
+      isCellMergeable: stagnantSelectionAreas.length === 1 || activeSelectionArea,
       isEditMode,
       isSheetFocused,
       cellEditor,
@@ -226,11 +198,11 @@ const ToolBar = () => {
           ? sheetCellData[y][x].styles
           : {},
     }),
-    shallowEqual
-  )
+    shallowEqual,
+  );
 
-  const handleApplyBlockStyle = ({ currentTarget: { id } }) => {}
-  const handleTextStyle = ({ currentTarget: { id } }) => {}
+  const handleApplyBlockStyle = ({ currentTarget: { id } }) => {};
+  const handleTextStyle = ({ currentTarget: { id } }) => {};
 
   return (
     <div className="toolBar">
@@ -241,19 +213,13 @@ const ToolBar = () => {
         handleTextStyle={handleTextStyle}
       />
       <Divider orientation="vertical" />
-      <AlignStyles
-        handleApplyBlockStyle={handleApplyBlockStyle}
-        cellStyles={cellStyles}
-      />
+      <AlignStyles handleApplyBlockStyle={handleApplyBlockStyle} cellStyles={cellStyles} />
       <Divider orientation="vertical" />
-      <CellStyles
-        isMergeButtonEnabled={isMergeButtonEnabled}
-        isCellMergeable={isCellMergeable}
-      />
+      <CellStyles isMergeButtonEnabled={isMergeButtonEnabled} isCellMergeable={isCellMergeable} />
       <Divider orientation="vertical" />
       <FileUpload />
     </div>
-  )
-}
+  );
+};
 
-export default ToolBar
+export default ToolBar;

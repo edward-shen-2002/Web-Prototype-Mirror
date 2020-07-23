@@ -1,7 +1,7 @@
-export const STYLE_SELECTION_BORDER_COLOR = 'rgba(75, 135, 255, 0.95)'
-export const STYLE_SELECTION_BORDER_WIDTH = '1px'
-export const STYLE_ACTIVE_SELECTION_BORDER_STYLE = 'dashed'
-export const STYLE_STAGNANT_SELECTION_BORDER_STYLE = 'solid'
+export const STYLE_SELECTION_BORDER_COLOR = 'rgba(75, 135, 255, 0.95)';
+export const STYLE_SELECTION_BORDER_WIDTH = '1px';
+export const STYLE_ACTIVE_SELECTION_BORDER_STYLE = 'dashed';
+export const STYLE_STAGNANT_SELECTION_BORDER_STYLE = 'solid';
 
 export const themes = [
   '#FFFFFF',
@@ -14,14 +14,14 @@ export const themes = [
   '#FFC000',
   '#4472C4',
   '#70AD47',
-]
+];
 
 export const borderFragmentMap = {
   left: 'borderLeft',
   right: 'borderRight',
   bottom: 'borderBottom',
   top: 'borderTop',
-}
+};
 
 const supportedBorderStyleMap = {
   thin: {
@@ -45,7 +45,7 @@ const supportedBorderStyleMap = {
   double: {
     Style: 'double',
   },
-}
+};
 
 export const completeBorderStyleMap = {
   ...supportedBorderStyleMap,
@@ -57,7 +57,7 @@ export const completeBorderStyleMap = {
   mediumDashDot: supportedBorderStyleMap.dashed,
   mediumDashDotDot: supportedBorderStyleMap.dashed,
   slantDashDot: supportedBorderStyleMap.dashed,
-}
+};
 
 export const richTextToEditorMap = {
   fontWeight: {
@@ -77,7 +77,7 @@ export const richTextToEditorMap = {
   color: {},
   fontSize: {},
   fontFamily: {},
-}
+};
 
 export const editorToRichTextMap = {
   // Boolean behaviours
@@ -92,4 +92,4 @@ export const editorToRichTextMap = {
   color: { property: 'color' },
   fontSize: { property: 'fontSize' },
   fontFamily: { property: 'fontFamily' },
-}
+};

@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from 'axios';
 
 import { host } from '../constants/domain'
 
@@ -7,16 +7,12 @@ const columnNameController = (() => {
     baseURL: host + '/columnNames',
   })
   return {
-    fetch: async (query) =>
-      columnNameAxios.get('').then((res) => res.data.columnNames),
-    create: async (columnName) =>
-      columnNameAxios
-        .post('', { columnName })
-        .then((res) => res.data.columnName),
-    delete: async (_id) => columnNameAxios.delete(`/${_id}`),
-    update: async (columnName) =>
-      columnNameAxios.put(`/${columnName._id}`, { columnName }),
-  }
-})()
+    fetch: async query => columnNameAxios.get('').then(res => res.data.columnNames),
+    create: async columnName =>
+      columnNameAxios.post('', { columnName }).then(res => res.data.columnName),
+    delete: async _id => columnNameAxios.delete(`/${_id}`),
+    update: async columnName => columnNameAxios.put(`/${columnName._id}`, { columnName }),
+  };
+})();
 
-export default columnNameController
+export default columnNameController;

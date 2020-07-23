@@ -1,1 +1,1 @@
-export { default } from './StagnantSelectionAreas'
+export { default } from './StagnantSelectionAreas';

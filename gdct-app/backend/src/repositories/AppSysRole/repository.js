@@ -1,46 +1,44 @@
-import AppSysRoleEntity from "../../entities/AppSysRole";
-import BaseRepository from "../repository";
-import AppSysRoleModel from "../../models/AppSysRole";
+import AppSysRoleEntity from '../../entities/AppSysRole';
+import BaseRepository from '../repository';
+import AppSysRoleModel from '../../models/AppSysRole';
 
-export default class ReportPeriodRepository
-  extends BaseRepository {
+export default class AppSysRoleRepository extends BaseRepository {
   constructor() {
-    super(AppSysRoleModel)
+    super(AppSysRoleModel);
   }
+
   async delete(id) {
     const appSysRole = await AppSysRoleModel.findById(id);
-    appSysRole.isActive = false;
+    if (appSysRole) {
+      appSysRole.isActive = false;
+    }
     return this.update(id, appSysRole);
   }
 
   async create(AppSysRole) {
     AppSysRole.isActive = true;
-    return AppSysRoleModel.create(AppSysRole).then((AppSysRole) =>
-      new AppSysRoleEntity(AppSysRole.toObject())
+    return AppSysRoleModel.create(AppSysRole).then(
+      AppSysRole => new AppSysRoleEntity(AppSysRole.toObject()),
     );
   }
 
-  async update(
-    id,
-    AppSysRole,
-  ) {
+  async update(id, AppSysRole) {
     return AppSysRoleModel.findByIdAndUpdate(id, AppSysRole).then(
-      (AppSysRole) => new AppSysRoleEntity(AppSysRole.toObject()),
+      AppSysRole => new AppSysRoleEntity(AppSysRole.toObject()),
     );
   }
 
   async find(query) {
-    const realQuery = { isActive: true };
-
-    for (const key in query) {
-      if (query[key]) realQuery[key] = query[key];
-    }
-
-    //TODO: filter to be active
-    return AppSysRoleModel.find(realQuery).then((AppSysRoles) =>
-      AppSysRoles.filter((AppSysRole) => AppSysRole).map((AppSysRole) =>
-        new AppSysRoleEntity(AppSysRole.toObject())
-      )
+    // TODO: filter to be active
+    return AppSysRoleModel.find(query).then(AppSysRoles =>
+      AppSysRoles.map(AppSysRole => new AppSysRoleEntity(AppSysRole.toObject())),
     );
+  }
+
+  async findById(id) {
+    return this._model.findById(id).then(result => {
+      if (!result) throw new Error('_id does not exist');
+      return result.toObject();
+    });
   }
 }

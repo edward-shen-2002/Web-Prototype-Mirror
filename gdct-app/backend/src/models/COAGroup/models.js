@@ -1,16 +1,16 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model } from 'mongoose';
 
 const COAGroupModel = model(
-  'COAGroup',
+  'CategoryGroup',
   new Schema(
     {
       name: { type: String },
       code: { type: String },
-      isActive: { type: Boolean }
-    }, 
-    { minimize: false }
+      isActive: { type: Boolean },
+    },
+    { minimize: false },
   ),
-  'COAGroup'
-)
+  'CategoryGroup',
+);
 
-export default COAGroupModel
+export default COAGroupModel;

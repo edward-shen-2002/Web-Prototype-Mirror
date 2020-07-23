@@ -1,27 +1,38 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model } from 'mongoose';
 
-const ObjectId = Schema.Types.ObjectId
+const { ObjectId } = Schema.Types;
 
 const OrgModel = model(
   'Organization',
   new Schema(
     {
-        name: { type: String, required: true },
-        id: { type: String, required: true, unique: true },
-        address: { type: String, default: "" },
+      id: { type: Number, required: true, min: 0 },
+      IFISNum: { type: String, required: true, unique: true },
+      code: { type: String, default: '' },
+      name: { type: String, required: true },
+      legalName: { type: String, default: '' },
+      address: { type: String, default: '' },
+      province: { type: String, default: '' },
+      city: { type: String, default: '' },
+      postalCode: { type: String, default: '' },
+      location: [{ type: String, default: '' }],
 
-        organizationGroupId: [ {type: ObjectId, ref: "OrganizationGroup"}],
-        programId: [ {type: ObjectId, ref: "Program"}],
-        users: [ { type: ObjectId, ref: "User" } ],
-        authorizedPerson: {
-              name: { type: String, default: "" },
-              telephone: { type: String, default: "" },
-              email: { type: String, default: ""}
-        },
-        locationName: { type: String, default: "" }
-    }, { minimize: false }
+      organizationGroupId: [{ type: ObjectId, ref: 'OrganizationGroup' }],
+
+      active: { type: Boolean, default: true },
+
+      managerUserIds: [{ type: ObjectId, ref: 'User' }],
+      contactUserId: { type: ObjectId, ref: 'User' },
+      authorizedUserId: { type: ObjectId, ref: 'User' },
+
+      programId: [{ type: ObjectId, ref: 'Program' }],
+
+      effectiveDate: { type: Date, required: true },
+      expiryDate: { type: Date, default: null },
+    },
+    { minimize: false },
   ),
-  'Organization'
-)
+  'Organization',
+);
 
-export default OrgModel
+export default OrgModel;
