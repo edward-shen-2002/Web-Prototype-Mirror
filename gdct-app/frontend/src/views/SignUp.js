@@ -200,11 +200,11 @@ export default function SignUp() {
       title,
       phoneNumber,
       ext,
-      sysRoles,
-    }).then(res => {
+      sysRoles: sysRoles.map(e => e._id),
+    }).then(() => {
       setTimeout(() => {
         history.push('/');
-      }, 1000);
+      }, 2000);
     });
   };
   return (
@@ -230,7 +230,7 @@ export default function SignUp() {
                 Thank you for sign up in GDCT.
               </Typography>
               <Typography variant="subtitle1">
-                You will be redirected to authorized pages. Please wait in 3 sec.
+                You will be redirected to authorized pages. Please wait in 2 sec.
               </Typography>
               {processSignUp()}
             </React.Fragment>

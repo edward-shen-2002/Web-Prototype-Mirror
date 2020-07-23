@@ -45,7 +45,7 @@ export default class ProgramService {
 
   createUser(req, res) {
     const {
-      body: { username, email, password },
+      body: { email, password, firstName, lastName, username, title, phoneNumber, ext, sysRoles },
     } = req;
 
     if (!email) {
@@ -65,9 +65,15 @@ export default class ProgramService {
     }
 
     const finalUser = new UserModel({
-      username,
       email,
       password,
+      firstName,
+      lastName,
+      username,
+      title,
+      phoneNumber,
+      ext,
+      sysRoles,
     });
 
     finalUser.setHashedPassword(password);
