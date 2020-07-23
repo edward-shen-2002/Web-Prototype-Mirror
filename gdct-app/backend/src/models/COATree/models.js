@@ -6,7 +6,7 @@ const COATreeModel = model(
   'CategoryTree',
   new Schema(
     {
-      parentId: { type: ObjectId, ref: 'Tree' },
+      parentId: { type: ObjectId, ref: 'CategoryTree' },
       COAGroupId: { type: ObjectId, ref: 'CategoryGroup' },
       COAIds: [{ type: ObjectId, ref: 'Category' }],
       sheetNameId: { type: ObjectId, ref: 'SheetName' },

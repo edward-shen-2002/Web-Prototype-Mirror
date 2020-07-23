@@ -68,6 +68,14 @@ export default function Login({ setLoggedIn }) {
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
 
+  useEffect(() => {
+    AuthController.auto().then(auto => {
+      if (auto.data === true) {
+        setLoggedIn(true);
+      }
+    });
+  }, []);
+
   const handleChange = e => {
     const { name, value } = e.target;
     let updatedErrors = { ...errors };

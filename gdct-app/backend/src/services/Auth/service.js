@@ -5,9 +5,9 @@ import UserModel from '../../models/User/model';
 import { addTokenToCookie } from '../../middlewares/shared';
 
 export default class ProgramService {
-  authenticate(req, res) {
+  authenticate(req, res, next) {
     const { method } = req.params;
-    passport.authenticate(method, { scope: 'email' })(req, res);
+    passport.authenticate(method, { scope: 'email' })(req, res, next);
   }
 
   authenticateCallback(req, res) {
@@ -27,13 +27,14 @@ export default class ProgramService {
   }
 
   auto(req, res) {
-    const temp = mongoose.Types.ObjectId('5efb8b638464c20f646049a6');
-    const uname = os.userInfo().username;
+    var temp = mongoose.Types.ObjectId('5efb8b638464c20f646049a6');
+    var uname = os.userInfo().username;
     UserModel.find({ AppConfig: temp }, function (err, user1) {
-      let found = false;
+      var found = false;
       user1.forEach(obj => {
         if (obj.username === uname) {
           found = true;
+          req.session.user = user1;
           res.send(true);
         }
       });
@@ -41,6 +42,14 @@ export default class ProgramService {
         res.send(false);
       }
     });
+  }
+
+  profile(req, res) {
+    if (req.user.token !== null) {
+      res.json({ status: 'success' });
+    } else {
+      res.json({ status: 'fail' });
+    }
   }
 
   createUser(req, res) {
@@ -109,20 +118,24 @@ export default class ProgramService {
       });
     }
 
-    return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
-      console.log('info:', info);
-      if (err) {
-        return next(err);
-      }
+    return passport.authenticate(
+      ['local', 'google', 'facebook'],
+      { session: false },
+      (err, passportUser, info) => {
+        console.log('info:', info);
+        if (err) {
+          return next(err);
+        }
 
-      if (passportUser) {
-        const authUser = passportUser;
-        const token = passportUser.generateJWT();
-        addTokenToCookie(res, token);
-        return res.json({ user: authUser.returnAuthUserJson(token) });
-      }
+        if (passportUser) {
+          const authUser = passportUser;
+          const token = passportUser.generateJWT();
+          addTokenToCookie(res, token);
+          return res.json({ user: authUser.returnAuthUserJson(token) });
+        }
 
-      return res.status(400).info;
-    })(req, res, next);
+        return res.status(400).info;
+      },
+    )(req, res, next);
   }
 }
