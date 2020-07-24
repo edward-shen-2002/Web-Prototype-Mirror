@@ -1,6 +1,8 @@
+
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   entry: path.join(__dirname, '/src/index.js'),
@@ -38,6 +40,7 @@ module.exports = {
     fs: 'empty',
   },
   plugins: [
+    new Dotenv({ path: path.join(__dirname, './.env') }),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, '/public/index.html'),
@@ -48,4 +51,4 @@ module.exports = {
       favicon: path.join(__dirname, '/public/favicon.ico'),
     }),
   ],
-}
+};

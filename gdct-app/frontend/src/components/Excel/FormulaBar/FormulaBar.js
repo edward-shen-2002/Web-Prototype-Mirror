@@ -39,7 +39,6 @@ const InputField = () => {
         dispatch(keyTab());
       } else if (key === 'Escape') {
         dispatch(keyEscape());
-      } else {
       }
     },
     [dispatch],

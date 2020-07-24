@@ -1,4 +1,4 @@
-import Container, { Service, Inject } from 'typedi';
+import Container from 'typedi';
 import TemplateRepository from '../../repositories/Template';
 import TemplateTypeRepository from '../../repositories/TemplateType';
 import WorkflowProcessRepository from '../../repositories/WorkflowProcess';

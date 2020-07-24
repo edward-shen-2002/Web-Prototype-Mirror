@@ -1,4 +1,4 @@
-import Container, { Service } from 'typedi';
+import Container from 'typedi';
 import COATreeRepository from '../../repositories/COATree';
 
 // @Service()

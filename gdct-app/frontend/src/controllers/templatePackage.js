@@ -1,8 +1,10 @@
 import axios from 'axios';
 
+import { host } from '../constants/domain';
+
 const templatePackageController = (() => {
   const templatePackageAxios = axios.create({
-    baseURL: 'http://localhost:3000/template_manager/templatePackages',
+    baseURL: `${host}/template_manager/templatePackages`,
   });
   return {
     fetchPopulated: async _id =>
@@ -21,7 +23,7 @@ const templatePackageController = (() => {
         .then(res => {
           console.log('d', res.data.templatePackage);
           return [res.data.templatePackage];
-        }),
+        })
   };
 })();
 

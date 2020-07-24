@@ -1,4 +1,4 @@
-import Container, { Service } from 'typedi';
+import Container from 'typedi';
 import UserRepository from '../User';
 import BaseRepository from '../repository';
 import TemplateRepository from '../Template/repository';

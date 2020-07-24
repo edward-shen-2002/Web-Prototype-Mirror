@@ -1,7 +1,5 @@
 import { Service } from 'typedi';
-
 import { Router } from 'express';
-import TemplateType from '../../entities/TemplateType';
 import TemplateTypeService from '../../services/TemplateType';
 
 const TemplateTypeController = Service([TemplateTypeService], service => {
@@ -45,9 +43,12 @@ const TemplateTypeController = Service([TemplateTypeService], service => {
     router.post('/templateTypes/searchTemplateTypeByProgramIds', (req, res, next) => {
       const { programIds } = req.body;
 
-      service.findTemplateTypeByProgramIds(programIds).then(templateTypes => {
-        res.json({ templateTypes });
-      });
+      service
+        .findTemplateTypeByProgramIds(programIds)
+        .then(templateTypes => {
+          res.json({ templateTypes });
+        })
+        .catch(next);
     });
 
     return router;

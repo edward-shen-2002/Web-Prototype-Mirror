@@ -6,9 +6,12 @@ const OrgGroupController = Service([OrgGroupService], service => {
   const router = Router();
   return (() => {
     router.get('/orgGroups/searchAllOrgGroups', (req, res, next) => {
-      service.findAllOrgGroup().then(orgGroups => {
-        res.json({ orgGroups });
-      });
+      service
+        .findAllOrgGroup()
+        .then(orgGroups => {
+          res.json({ orgGroups });
+        })
+        .catch(next);
     });
 
     return router;

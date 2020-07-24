@@ -1,4 +1,4 @@
-import Container, { Service } from 'typedi';
+import Container from 'typedi';
 import OrgGroupRepository from '../../repositories/OrganizationGroup';
 
 // @Service()

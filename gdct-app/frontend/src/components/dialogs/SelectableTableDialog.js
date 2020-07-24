@@ -18,7 +18,7 @@ const SelectableTableDialogActions = ({ handleClose }) => (
 );
 
 const SelectableTableDialogContent = ({ data, columns, selectedKeys, getKey, handleSelect }) => (
-  <DialogContent style={{ width: 400 }}>
+  <DialogContent>
     <SelectableTable
       columns={columns}
       data={data}
@@ -38,20 +38,18 @@ const SelectableTableDialog = ({
   data,
   handleClose,
   handleSelect,
-}) => {
-  return (
-    <Dialog open={isOpen} onClose={handleClose}>
-      <DialogTitle>{title}</DialogTitle>
-      <SelectableTableDialogContent
-        columns={columns}
-        data={data}
-        handleSelect={handleSelect}
-        selectedKeys={selectedKeys}
-        getKey={getKey}
-      />
-      <SelectableTableDialogActions handleClose={handleClose} />
-    </Dialog>
-  );
-};
+}) => (
+  <Dialog open={isOpen} onClose={handleClose}>
+    <DialogTitle>{title}</DialogTitle>
+    <SelectableTableDialogContent
+      columns={columns}
+      data={data}
+      handleSelect={handleSelect}
+      selectedKeys={selectedKeys}
+      getKey={getKey}
+    />
+    <SelectableTableDialogActions handleClose={handleClose} />
+  </Dialog>
+);
 
 export default SelectableTableDialog;

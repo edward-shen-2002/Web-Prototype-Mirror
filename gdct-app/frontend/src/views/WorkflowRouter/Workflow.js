@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import List from '@material-ui/core/List';
 import Listitem from '@material-ui/core/ListItem';
 import { mapValues } from 'lodash';
-import { Typography, Button } from '@material-ui/core';
+import { Typography, Button, ButtonGroup } from '@material-ui/core';
 import { useRouteMatch } from 'react-router-dom';
 import { selectFactoryRESTResponseValues } from '../../store/common/REST/selectors';
 import { selectStatusesStore } from '../../store/StatusesStore/selectors';
@@ -50,7 +50,7 @@ const StatusItems = ({ statuses }) => (
         className="statuses__status"
         key={_id}
         button
-        draggable
+        draggable={true}
         onDragStart={event => {
           event.dataTransfer.setData(REACT_FLOW_CHART, createNodeDragData(_id, name));
         }}

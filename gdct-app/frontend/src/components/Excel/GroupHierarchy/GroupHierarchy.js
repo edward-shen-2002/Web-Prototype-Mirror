@@ -18,7 +18,7 @@ const GroupHierarchy = () => {
     shallowEqual,
   );
 
-  return <div />;
+  return <div></div>;
 };
 
 export default GroupHierarchy;

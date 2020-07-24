@@ -1,7 +1,6 @@
 import { Service } from 'typedi';
 
 import { Router } from 'express';
-import Submission from '../../entities/Submission';
 import SubmissionService from '../../services/Submission';
 
 const SubmissionController = Service([SubmissionService], service => {

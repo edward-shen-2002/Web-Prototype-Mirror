@@ -13,19 +13,25 @@ import SheetNames from './views/SheetNames';
 import RoleRouter from './views/RoleRouter';
 import SubmissionRouter from './views/SubmissionRouter';
 import ReportingPeriods from './views/ReportingPeriods';
-import UserController from './controllers/User';
 
-import './App.scss';
-import Login from './views/Login';
 import { ROUTE_WORKFLOW, ROUTE_COLUMN_NAMES } from './constants/routes';
-import WorkflowRouter from './views/WorkflowRouter/WorkflowRouter';
-import SignUp from './views/SignUp';
 import ColumnNames from './views/ColumnNames';
+import Error from './views/authError';
+// import Signup from './views/authSignup'
+import Login from './views/Login';
+import SignUp from './views/SignUp';
 
-const PrivateRouter = () => {
+import WorkflowRouter from './views/WorkflowRouter/WorkflowRouter';
+import GDCTMenu from './views/GDCTMenu';
+import Logout from './views/Logout';
+import AuthController from './controllers/Auth';
+import './App.scss';
+
+const PrivateRouter = ({ setLoggedIn }) => {
   return (
     <Switch>
       <Route path={ROUTE_WORKFLOW} component={WorkflowRouter} />
+      <Route exact path="/" component={GDCTMenu} />
       <Route path="/template_manager" component={TemplateRouter} />
       <Route path="/COA_manager" component={COARouter} />
       <Route path="/role_manager" component={RoleRouter} />
@@ -36,15 +42,21 @@ const PrivateRouter = () => {
       <Route path="/sheetNames" component={SheetNames} />
       <Route path={ROUTE_COLUMN_NAMES} component={ColumnNames} />
       <Route path="/organizations" component={OrgRouter} />
-      <Redirect from="*" to="/sheetNames" />
+      <Route path="/logout" render={props => <Logout {...props} setLoggedIn={setLoggedIn} />} />
+      <Redirect from="*" to="/" />
     </Switch>
   );
 };
 const PublicRouter = ({ setLoggedIn }) => {
   return (
     <Switch>
-      <Route path="/login" render={props => <Login {...props} setLoggedIn={setLoggedIn} />} />
-      <Route path="/signup" component={SignUp} />
+      <Route exact path="/login" render={props => <Login {...props} setLoggedIn={setLoggedIn} />} />
+      <Route exact path="/signup" component={SignUp} />
+      <Route exact path="/auth/error" component={Error} />
+      {/* <Route
+        path="/login"
+        render={(props) => <Login {...props} setLoggedIn={setLoggedIn} />}
+      /> */}
       <Redirect from="*" to="/login" />
     </Switch>
   );
@@ -53,8 +65,9 @@ const PublicRouter = ({ setLoggedIn }) => {
 const App = () => {
   const [isLoggedIn, setLoggedIn] = useState(null);
   useEffect(() => {
-    UserController.profile()
+    AuthController.profile()
       .then(res => {
+        console.log(res);
         setLoggedIn(res.status === 'success');
       })
       .catch(() => {
@@ -72,7 +85,7 @@ const App = () => {
         </Grid>
       ) : isLoggedIn ? (
         <AuthPage>
-          <PrivateRouter />
+          <PrivateRouter setLoggedIn={setLoggedIn} />
         </AuthPage>
       ) : (
         <PublicRouter setLoggedIn={setLoggedIn} />

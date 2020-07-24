@@ -4,15 +4,15 @@ export default class BaseRepository {
   }
 
   find(item) {
-    throw new Error('Method not implemented.');
+    throw new Error('Method not implemented.', item);
   }
 
   create(item) {
-    throw new Error('Method not implemented.');
+    throw new Error('Method not implemented.', item);
   }
 
   update(id, item) {
-    throw new Error('Method not implemented.');
+    throw new Error('Method not implemented.', id, item);
   }
 
   async findAll() {

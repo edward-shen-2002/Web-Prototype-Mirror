@@ -1,31 +1,19 @@
-import React, { useCallback, useMemo, useEffect, useState } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 
 import MaterialTable from 'material-table';
-import LaunchIcon from '@material-ui/icons/Launch';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import { List } from '@material-ui/core';
 import {
   getTemplateTypesRequest,
-  createTemplateTypeRequest,
-  deleteTemplateTypeRequest,
   updateTemplateTypeRequest,
 } from '../../../store/thunks/templateType';
 import Loading from '../../../components/Loading/Loading';
 import ProgramList from '../../OrganizationRouter/ProgramList';
 
-import {
-  getProgramsRequest,
-  createProgramsRequest,
-  deleteProgramsRequest,
-  updateProgramsRequest,
-} from '../../../store/thunks/program';
-
 import './TemplateType.scss';
 import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors';
 import { selectTemplateTypesStore } from '../../../store/TemplateTypesStore/selectors';
-import { selectProgramsStore } from '../../../store/ProgramsStore/selectors';
 
 const TemplateTypeHeader = () => {
   return (
@@ -37,7 +25,6 @@ const TemplateTypeHeader = () => {
 };
 
 const TemplateTypeTable = ({
-  history,
   match: {
     params: { _id },
   },
@@ -47,7 +34,7 @@ const TemplateTypeTable = ({
   const { templateType } = useSelector(
     state => ({
       templateType: selectFactoryRESTResponseTableValues(selectTemplateTypesStore)(state).filter(
-        elem => elem._id == _id,
+        elem => elem._id === _id,
       ) || [{}],
     }),
     shallowEqual,
@@ -70,12 +57,7 @@ const TemplateTypeTable = ({
   );
 
   const options = useMemo(
-    () => ({
-      actionsColumnIndex: -1,
-      search: false,
-      showTitle: true,
-      paging: false,
-    }),
+    () => ({ actionsColumnIndex: -1, search: false, showTitle: true, paging: false }),
     [],
   );
 
@@ -94,7 +76,6 @@ const TemplateTypeTable = ({
 };
 
 const LinkProgramTable = ({
-  history,
   match: {
     params: { _id },
   },
@@ -103,7 +84,7 @@ const LinkProgramTable = ({
   const { templateType } = useSelector(
     state => ({
       templateType: (selectFactoryRESTResponseTableValues(selectTemplateTypesStore)(state).filter(
-        elem => elem._id == _id,
+        elem => elem._id === _id,
       ) || [{}])[0],
     }),
     shallowEqual,
@@ -127,15 +108,16 @@ const LinkProgramTable = ({
     dispatch(updateTemplateTypeRequest(templateType), accept, reject);
   };
   const onClickDelete = (_event, program) => {
-    templateType.programIds = templateType.programIds.filter(elem => elem != program._id);
+    templateType.programIds = templateType.programIds.filter(elem => elem !== program._id);
     dispatch(updateTemplateTypeRequest(templateType), accept, reject);
   };
+  console.log(templateType);
   return !templateType || isCallInProgress ? (
     <Loading />
   ) : (
     <ProgramList
       programIds={templateType.programIds}
-      isEditable
+      isEditable={true}
       onClickAdd={onClickAdd}
       onClickDelete={onClickDelete}
     />

@@ -511,8 +511,8 @@ export const convertXlsxStyleToInlineStyle = xlsxStyle => {
   } = xlsxStyle;
 
   if (borderColor) inlineStyle.borderColor = convertXlsxColorToCss(borderColor);
-  if (borderStyle) {
-  }
+  // if (borderStyle) {
+  // }
   if (border) {
     for (const borderFragment in border) {
       const { style, color } = border[borderFragment];

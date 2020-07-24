@@ -45,9 +45,12 @@ const AppSysController = Service([AppSysService], service => {
     });
 
     router.get('/appSyses/searchAllAppSyses', (req, res, next) => {
-      service.findAllAppSys().then(appSyses => {
-        res.json({ appSyses });
-      });
+      service
+        .findAllAppSys()
+        .then(appSyses => {
+          res.json({ appSyses });
+        })
+        .catch(next);
     });
 
     return router;

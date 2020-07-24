@@ -40,11 +40,11 @@ const AppRoleResourcesTable = () => {
     }),
     shallowEqual,
   );
-  const lookupSysRoles = appSysRoles.reduce((acc, sysRoles) => {
+  const lookupSysRoles = appSysRoles.reduce(function (acc, sysRoles) {
     acc[sysRoles._id] = `${sysRoles.appSys} - ${sysRoles.role}`;
     return acc;
   }, {});
-  const lookupResources = appResources.reduce((acc, resource) => {
+  const lookupResources = appResources.reduce(function (acc, resource) {
     acc[resource._id] = resource.resourcePath;
     return acc;
   }, {});

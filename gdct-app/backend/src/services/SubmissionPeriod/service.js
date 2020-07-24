@@ -1,4 +1,4 @@
-import Container, { Service } from 'typedi';
+import Container from 'typedi';
 import SubmissionPeriodRepository from '../../repositories/SubmissionPeriod';
 
 // @Service()

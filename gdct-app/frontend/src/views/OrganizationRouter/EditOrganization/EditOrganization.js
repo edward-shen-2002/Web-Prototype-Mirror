@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import ModifyOrganization from '../ModifyOrganization';
@@ -25,7 +26,7 @@ const EditOrganization = ({
 
   const { object, isOrgsCallInProgress } = useSelector(state => ({
     object: (selectFactoryRESTResponseTableValues(selectOrgsStore)(state).filter(
-      elem => elem._id == _id,
+      elem => elem._id === _id,
     ) || [{}])[0],
     isOrgsCallInProgress: selectFactoryRESTIsCallInProgress(selectOrgsStore)(state) || false,
   }));
@@ -34,11 +35,11 @@ const EditOrganization = ({
     history.push('/organizations');
   };
 
-  const accept = result => {
+  const accept = () => {
     redirect();
   };
 
-  const reject = error => {
+  const reject = () => {
     // reflect error message on form somehow o.O
     alert('Missing or invalid parameters');
   };
@@ -65,6 +66,10 @@ const EditOrganization = ({
       cancel={cancel}
     />
   );
+};
+
+EditOrganization.propTypes = {
+  match: PropTypes.object,
 };
 
 export default EditOrganization;

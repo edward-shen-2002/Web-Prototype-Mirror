@@ -21,6 +21,7 @@ import {
   ROUTE_COLUMN_NAMES,
   ROUTE_TEMPLATE_PCKGS_PCKGS,
 } from '../../constants/routes';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const createUserNavigation = () => {
   return [
@@ -208,6 +209,12 @@ const createUserNavigation = () => {
       type: 'menu',
       url: ROUTE_COLUMN_NAMES,
       icon: <GridOnIcon />,
+    },
+    {
+      name: 'Logout',
+      type: 'menu',
+      url: '/logout',
+      icon: <ExitToAppIcon />,
     },
   ];
 };

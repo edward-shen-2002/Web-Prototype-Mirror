@@ -1,18 +1,14 @@
 import axios from 'axios';
 
-const UserController = (() => {
-  const UserAxios = axios.create({
-    baseURL: 'http://localhost:3000/public/',
-    withCredentials: true,
+import { host } from '../constants/domain';
+
+const userController = (() => {
+  const userAxios = axios.create({
+    baseURL: `${host}/user`,
   });
   return {
-    login: async data => UserAxios.post('/login', { ...data }).then(res => res.data),
-    signup: async data =>
-      UserAxios.post('/register', { ...data }).then(res => {
-        console.log(res.data);
-      }),
-    profile: async () => UserAxios.get('/profile').then(res => res.data),
+    create: async user => userAxios.post(`/createUser`, user).then(res => res.data.user),
   };
 })();
 
-export default UserController;
+export default userController;

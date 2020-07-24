@@ -1,10 +1,7 @@
-import React, { useMemo, useEffect, useState } from 'react';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
-import MaterialTable from 'material-table';
 import Paper from '@material-ui/core/Paper';
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import AppBar from '@material-ui/core/AppBar';
@@ -15,8 +12,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 
 import './ModifyOrganization.scss';
-import PropTypes, { object } from 'prop-types';
-import { userIdButton } from '../../../components/buttons';
 import ProgList from '../ProgramList';
 
 const OrganizationHeader = ({ title }) => {
@@ -28,14 +23,24 @@ const OrganizationHeader = ({ title }) => {
   );
 };
 
+OrganizationHeader.propTypes = {
+  title: PropTypes.string,
+};
+
 const Label = ({ attribute, text }) => (
   <label htmlFor={attribute}>
     <Typography variant="subtitle2">{text}</Typography>
   </label>
 );
 
+Label.propTypes = {
+  attribute: PropTypes.string,
+  text: PropTypes.string,
+};
+
 const getValue = (object, attribute) => {
   let value;
+  let tmp;
   switch (typeof object[attribute]) {
     case 'undefined':
       value = '';
@@ -45,10 +50,15 @@ const getValue = (object, attribute) => {
   }
   switch (attribute) {
     case 'effectiveDate':
-      const tmp = new Date(value);
+      tmp = new Date(value);
       value = tmp.toString();
   }
   return { value };
+};
+
+getValue.propTypes = {
+  object: PropTypes.object,
+  attribute: PropTypes.string,
 };
 
 const Input = ({ object, attribute, text, handleChanges, type, cannotEdit }) => (
@@ -59,10 +69,19 @@ const Input = ({ object, attribute, text, handleChanges, type, cannotEdit }) => 
     {...getValue(object, attribute)}
     variant="outlined"
     onChange={handleChanges}
-    fullWidth
+    fullWidth={true}
     disabled={!object.active || cannotEdit}
   />
 );
+
+Input.propTypes = {
+  object: PropTypes.object,
+  attribute: PropTypes.string,
+  text: PropTypes.string,
+  handleChanges: PropTypes.func,
+  type: PropTypes.string,
+  cannotEdit: PropTypes.bool,
+};
 
 const TextGroup = props => (
   <div className="InputGroup" style={{ width: props.fullWidth ? '100%' : '23%' }}>
@@ -71,6 +90,10 @@ const TextGroup = props => (
     <Input {...props} type={'text'} />
   </div>
 );
+
+TextGroup.propTypes = {
+  fullWidth: PropTypes.bool,
+};
 
 // NOT a generic button group, DO NOT REUSE for other purposes
 const ButtonGroup = props => (
@@ -85,6 +108,12 @@ const ButtonGroup = props => (
   </div>
 );
 
+ButtonGroup.propTypes = {
+  attribute: PropTypes.string,
+  object: PropTypes.object,
+  handleChanges: PropTypes.func,
+};
+
 const NumberGroup = props => (
   <div className="InputGroup" style={{ width: '23%' }}>
     <Label {...props} />
@@ -93,20 +122,24 @@ const NumberGroup = props => (
   </div>
 );
 
+NumberGroup.propTypes = {
+  props: PropTypes.object,
+};
+
 const OrgInfo = props => (
   <div>
     <div align="right">
       <ButtonGroup {...props} attribute={'active'} text={'Expire Organization'} />
     </div>
 
-    <TextGroup {...props} attribute={'name'} text={'Organization Name*'} fullWidth />
-    <TextGroup {...props} attribute={'legalName'} text={'Legal Name'} fullWidth />
+    <TextGroup {...props} attribute={'name'} text={'Organization Name*'} fullWidth={true} />
+    <TextGroup {...props} attribute={'legalName'} text={'Legal Name'} fullWidth={true} />
 
     <div className="formRow" id="basicInfo">
       <NumberGroup {...props} attribute={'id'} text={'Organization ID*'} />
       <TextGroup {...props} attribute={'code'} text={'Organization Code'} />
       <TextGroup {...props} attribute={'IFISNum'} text={'IFIS Number*'} />
-      <TextGroup {...props} attribute={'effectiveDate'} text={'Effective Date'} cannotEdit />
+      <TextGroup {...props} attribute={'effectiveDate'} text={'Effective Date'} cannotEdit={true} />
     </div>
 
     <div className="formRow" id="locationInfo">
@@ -126,6 +159,10 @@ const OrgInfo = props => (
   </div>
 );
 
+OrgInfo.propTypes = {
+  props: PropTypes.object,
+};
+
 const TabPanel = props => {
   const { children, value, index, ...other } = props;
 
@@ -144,10 +181,21 @@ const TabPanel = props => {
   );
 };
 
+TabPanel.propTypes = {
+  children: PropTypes.object,
+  value: PropTypes.number,
+  index: PropTypes.number,
+  other: PropTypes.object,
+};
+
 const makeIdentifier = index => ({
   id: `tab-${index}`,
   'aria-controls': `tabpanel-${index}`,
 });
+
+makeIdentifier.propTypes = {
+  index: PropTypes.any,
+};
 
 const OrganizationForm = props => {
   const [current, setCurrent] = useState(0);
@@ -222,26 +270,35 @@ const OrganizationForm = props => {
   );
 };
 
+OrganizationForm.propTypes = {
+  updateState: PropTypes.func,
+  object: PropTypes.object,
+  cancel: PropTypes.func,
+  submit: PropTypes.func,
+};
+
 const currentTime = () => {
   const now = new Date();
   return now.toISOString();
 };
 
 class ModifyOrganization extends React.Component {
-  state = {};
+  // state = {};
 
   constructor(props) {
     super(props);
-    const temp = Object.assign({}, props.object);
+    const temp = { ...props.object };
     delete temp._id;
     this.state = temp;
+    this.updateState = this.updateState.bind(this);
+    this.handleChanges = this.handleChanges.bind(this);
   }
 
-  updateState = (name, value) => {
-    this.setState(state => Object.assign({}, state, { [name]: value }));
-  };
+  updateState(name, value) {
+    this.setState(state => ({ ...state, [name]: value }));
+  }
 
-  handleChanges = e => {
+  handleChanges(e) {
     const { name, value, checked, type } = e.target;
     let updateValue;
 
@@ -265,20 +322,22 @@ class ModifyOrganization extends React.Component {
     }
 
     this.updateState(name, updateValue);
-  };
+  }
 
-  render = () => (
-    <div>
-      <OrganizationHeader title={this.props.title} />
-      <OrganizationForm
-        object={this.state}
-        submit={() => this.props.submit(this.state)}
-        cancel={this.props.cancel}
-        handleChanges={this.handleChanges}
-        updateState={this.updateState}
-      />
-    </div>
-  );
+  render() {
+    return (
+      <div>
+        <OrganizationHeader title={this.props.title} />
+        <OrganizationForm
+          object={this.state}
+          submit={() => this.props.submit(this.state)}
+          cancel={this.props.cancel}
+          handleChanges={this.handleChanges}
+          updateState={this.updateState}
+        />
+      </div>
+    );
+  }
 }
 
 // createOrg passes in empty object, editOrg passes in pre-existing object

@@ -1,7 +1,6 @@
 import { Service } from 'typedi';
 
 import { Router } from 'express';
-import Workflow from '../entities/Workflow';
 import WorkflowService from '../services/Workflow';
 
 const WorkflowController = Service([WorkflowService], service => {

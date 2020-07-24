@@ -1,5 +1,6 @@
 import React, { useMemo, useEffect } from 'react';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import MaterialTable from 'material-table';
 import Paper from '@material-ui/core/Paper';
@@ -12,12 +13,7 @@ import { useHistory } from 'react-router-dom';
 import EditIcon from '@material-ui/icons/Edit';
 import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors';
 import { selectOrgsStore } from '../../../store/OrganizationsStore/selectors';
-import {
-  getOrgsRequest,
-  createOrgsRequest,
-  deleteOrgsRequest,
-  updateOrgsRequest,
-} from '../../../store/thunks/organization';
+import { getOrgsRequest } from '../../../store/thunks/organization';
 
 const HeaderActions = () => {
   const history = useHistory();
@@ -83,6 +79,10 @@ const Organizations = ({ history }) => {
       <MaterialTable columns={columns} data={Orgs} actions={actions} options={options} />
     </div>
   );
+};
+
+Organizations.propTypes = {
+  history: PropTypes.object,
 };
 
 export default Organizations;

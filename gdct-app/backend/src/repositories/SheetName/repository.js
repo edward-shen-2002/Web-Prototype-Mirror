@@ -1,4 +1,4 @@
-import Container, { Service } from 'typedi';
+import Container from 'typedi';
 import BaseRepository from '../repository';
 import SheetNameModel from '../../models/SheetName';
 import TemplateRepository from '../Template';
@@ -76,7 +76,7 @@ export default class SheetNameRepository extends BaseRepository {
   }
 
   findOne(id) {
-    throw new Error('Method not implemented.');
+    throw new Error('Method not implemented.', id);
   }
 
   async delete(id) {

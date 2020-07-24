@@ -1,7 +1,6 @@
 import { Service } from 'typedi';
 
 import { Router } from 'express';
-import SheetName from '../../entities/SheetName';
 import SheetNameService from '../../services/SheetName';
 
 const SheetNameController = Service([SheetNameService], service => {

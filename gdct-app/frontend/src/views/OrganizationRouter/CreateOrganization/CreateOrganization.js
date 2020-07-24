@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import ModifyOrganization, { currentTime } from '../ModifyOrganization';
@@ -20,11 +20,11 @@ const CreateOrganization = () => {
     history.push('/organizations');
   };
 
-  const accept = result => {
+  const accept = () => {
     redirect();
   };
 
-  const reject = error => {
+  const reject = () => {
     // reflect error message on form somehow o.O
     alert('Missing or invalid parameters');
   };

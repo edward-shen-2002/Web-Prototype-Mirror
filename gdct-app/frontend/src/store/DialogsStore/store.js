@@ -25,10 +25,7 @@ const OPEN_USER_DIALOG = state => ({ ...state, isUserDialogOpen: true });
 const OPEN_STATUS_DIALOG = state => ({ ...state, isStatusDialogOpen: true });
 const CLOSE_STATUS_DIALOG = state => ({ ...state, isStatusDialogOpen: false });
 const OPEN_PROGRAM_DIALOG = state => ({ ...state, isProgramDialogOpen: true });
-const CLOSE_PROGRAM_DIALOG = state => ({
-  ...state,
-  isProgramDialogOpen: false,
-});
+const CLOSE_PROGRAM_DIALOG = state => ({ ...state, isProgramDialogOpen: false });
 const OPEN_SUBMISSION_PERIOD_DIALOG = state => ({
   ...state,
   isSubmissionPeriodDialogOpen: true,

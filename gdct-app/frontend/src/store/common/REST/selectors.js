@@ -25,5 +25,5 @@ export const selectFactoryRESTResponseTableValues = memoizeFunction(storeSelecto
   }),
 );
 
-export const selectFactoryValueById = storeSelector => _id => state =>
-  selectFactoryRESTResponseValues(storeSelector)(state).find(({ _id: valueId }) => _id === valueId);
+export const selectFactoryValueById = (storeSelector) => _id => state =>
+  selectFactoryRESTResponseValues(storeSelector)(state).find(({ _id: valueId }) => _id === valueId)

@@ -30,8 +30,8 @@ const ToolBarButton = ({ id, children, state, disabled, className, handleClick }
   <Button
     id={id}
     className={`toolBar__button ${state ? 'toolBar__button--active' : ''} ${className}`}
-    disableRipple
-    disableFocusRipple
+    disableRipple={true}
+    disableFocusRipple={true}
     onClick={handleClick}
     disabled={disabled}
   >

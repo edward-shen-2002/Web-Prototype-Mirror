@@ -1,4 +1,4 @@
-import Container, { Service, Inject } from 'typedi';
+import Container from 'typedi';
 import ColumnNameRepository from '../../repositories/ColumnName';
 
 // @Service()

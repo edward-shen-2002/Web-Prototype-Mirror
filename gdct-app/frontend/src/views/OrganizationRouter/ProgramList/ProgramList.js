@@ -1,5 +1,5 @@
-import React, { useMemo, useEffect, useState } from 'react';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import React, { useMemo, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import MaterialTable from 'material-table';
 import AddIcon from '@material-ui/icons/Add';

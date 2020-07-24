@@ -5,6 +5,7 @@ import WorkflowProcessRepository from '../repositories/WorkflowProcess';
 
 const objectId = mongoose.Types.ObjectId;
 
+// eslint-disable-next-line no-unused-vars
 const markVisitableNodes = (startingNode, linkMapSet, visited) => {
   visited.add(startingNode);
   const adjacentNodes = linkMapSet[startingNode];

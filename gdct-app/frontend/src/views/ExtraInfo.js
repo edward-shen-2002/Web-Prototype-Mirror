@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+import { Button } from '@material-ui/core';
 import { getAppSysRolesRequest } from '../store/thunks/AppSysRole';
 import { selectFactoryRESTResponseTableValues } from '../store/common/REST/selectors';
 import { selectAppSysRolesStore } from '../store/AppSysRolesStore/selectors';
@@ -77,7 +78,7 @@ function getStyles(sysRole, sysRoles, theme) {
   };
 }
 
-export default function SignUp({ parentHandleChange }) {
+export default function SignUp({ parentHandleChange, steps, activeStep, handleNext, handleBack }) {
   const dispatch = useDispatch();
   const { appSysRoles } = useSelector(
     state => ({
@@ -200,6 +201,22 @@ export default function SignUp({ parentHandleChange }) {
               </Link>
             </Grid>
           </Grid>
+          <div className={classes.buttons} style={{ marginTop: '2rem', textAlign: 'right' }}>
+            {activeStep !== 0 && (
+              <Button onClick={handleBack} className={classes.button}>
+                Back
+              </Button>
+            )}
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleNext}
+              className={classes.button}
+              type="submit"
+            >
+              {activeStep === steps.length - 1 ? 'Confirm' : 'Next'}
+            </Button>
+          </div>
         </form>
       </div>
     </Container>

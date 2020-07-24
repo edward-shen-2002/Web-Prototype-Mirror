@@ -4,19 +4,17 @@ import organizationGroupController from '../../controllers/organizationGroup';
 import programController from '../../controllers/program';
 import templateTypeController from '../../controllers/templateType';
 import userController from '../../controllers/user';
-import userRegistrationStore from '../userRegistrationStore/store';
-import COATreesStore from '../COATreesStore/store';
 
 const handleInputTemplate = (templateSet, submission) => {
   const templateType = {
     templateTypeId: '',
     templateCode: '',
   };
-  let templateSelected = templateSet.find(element => {
-    return element.templateTypeId == submission.submission._id;
+  let templateSelected = templateSet.find(function (element) {
+    return element.templateTypeId === submission.submission._id;
   });
 
-  if (templateSelected == undefined) {
+  if (templateSelected === undefined) {
     templateType.templateCode = submission.submission.name;
     templateType.templateTypeId = submission.submission._id;
     templateSelected = templateType;
@@ -30,11 +28,11 @@ const handleInputProgram = (programSet, submission) => {
     programCode: '',
     template: [],
   };
-  let programSelected = programSet.find(element => {
-    return element.programId == submission.program.code;
+  let programSelected = programSet.find(function (element) {
+    return element.programId === submission.program.code;
   });
 
-  if (programSelected == undefined) {
+  if (programSelected === undefined) {
     program.programCode = submission.program.code;
     program.programId = submission.program._id;
     programSelected = program;
@@ -50,10 +48,10 @@ const handleInputOrg = (organization, submission) => {
     program: [],
   };
 
-  let organizationSelected = organization.find(element => {
-    return element.orgId == submission.organization.id;
+  let organizationSelected = organization.find(function (element) {
+    return element.orgId === submission.organization.id;
   });
-  if (organizationSelected == undefined) {
+  if (organizationSelected === undefined) {
     org.IsActive = false;
     org.orgId = submission.organization.id;
     org.name = submission.organization.name;
@@ -148,14 +146,14 @@ export default class RegisterService {
             });
           });
           return options;
-          dispatch(userRegistrationStore.actions.setUserOrganizations());
+          // dispatch(userRegistrationStore.actions.setUserOrganizations())
         },
       )
       .catch(error => console.error(error));
   }
 
   searchOrg(searchKey, reference, options) {
-    return options[searchKey] == reference;
+    return options[searchKey] === reference;
   }
 
   getProgram(programInfo) {
@@ -174,7 +172,7 @@ export default class RegisterService {
         }) => {
           const options = [];
           programs.forEach(program => {
-            const option = programInfo.find(element => element.id == program._id);
+            const option = programInfo.find(element => element.id === program._id);
             options.push({
               label: `(${program.code})${program.name}`,
               value: program._id,
@@ -216,11 +214,7 @@ export default class RegisterService {
             console.log(submission);
             submissionList.push({
               organization: submission.org,
-              program: {
-                name: submission.name,
-                code: submission.code,
-                _id: submission._id,
-              },
+              program: { name: submission.name, code: submission.code, _id: submission._id },
               submission: { name: templateType.name, _id: templateType._id },
               approveAvailable: templateType.isApprovable,
               reviewAvailable: templateType.isReviewable,
@@ -277,10 +271,10 @@ export default class RegisterService {
       org: [],
     };
     if (submission[permission]) {
-      let sysRoleSelected = data.sysRole.find(element => {
-        return element.role == permission;
+      let sysRoleSelected = data.sysRole.find(function (element) {
+        return element.role === permission;
       });
-      if (sysRoleSelected == undefined) {
+      if (sysRoleSelected === undefined) {
         sysRoleSelected = sysRole;
         sysRoleSelected.role = permission;
         sysRoleSelected.appSys = userAppSys.code;

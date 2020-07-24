@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
 
-import { DATABASE_KEY } from '../../configs/database';
-
 const logTag = '[DB][MongoDB]: ';
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -26,7 +24,7 @@ export default class Database {
   initializeMongoose() {
     console.log(logTag, 'Connecting...');
 
-    mongoose.connect(DATABASE_KEY, {
+    mongoose.connect(process.env.DATABASE_KEY, {
       useNewUrlParser: true,
       useCreateIndex: true,
       useFindAndModify: false,

@@ -116,10 +116,10 @@ export const ColumnHeaderIndicator = ({ isRelevantColumnOffset }) => {
   return <div style={indicatorStyle} className="resizeHeader resizeHeader__headerIndicator" />;
 };
 
-export const RowContentIndicator = ({}) => {
-  return <div />;
+export const RowContentIndicator = () => {
+  return <div></div>;
 };
 
-export const ColumnContentIndicator = ({}) => {
-  return <div />;
+export const ColumnContentIndicator = () => {
+  return <div></div>;
 };

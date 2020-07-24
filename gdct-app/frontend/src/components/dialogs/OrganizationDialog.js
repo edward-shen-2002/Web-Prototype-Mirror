@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
+import PropTypes from 'prop-types';
 
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import SelectableTableDialog from './SelectableTableDialog';
@@ -13,7 +14,7 @@ import { selectIsOrganizationDialogOpen } from '../../store/DialogsStore/selecto
 const OrganizationDialog = ({ handleChange }) => {
   const dispatch = useDispatch();
 
-  const { isOrganizationDialogOpen, templates } = useSelector(
+  const { isOrganizationDialogOpen, organizations } = useSelector(
     state => ({
       isOrganizationDialogOpen: selectIsOrganizationDialogOpen(state),
       organizations: selectFactoryRESTResponseTableValues(selectOrgsStore)(state),
@@ -34,7 +35,7 @@ const OrganizationDialog = ({ handleChange }) => {
   );
 
   useEffect(() => {
-    if (isOrganizationDialogOpen && !templates.length) dispatch(getOrgsRequest());
+    if (isOrganizationDialogOpen && !organizations.length) dispatch(getOrgsRequest());
   }, [dispatch, isOrganizationDialogOpen]);
 
   const columns = useMemo(
@@ -61,6 +62,10 @@ const OrganizationDialog = ({ handleChange }) => {
       handleSelect={handleSelect}
     />
   );
+};
+
+OrganizationDialog.propTypes = {
+  handleChange: PropTypes.func,
 };
 
 export default OrganizationDialog;

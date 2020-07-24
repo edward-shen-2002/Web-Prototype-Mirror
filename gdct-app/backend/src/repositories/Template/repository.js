@@ -1,4 +1,4 @@
-import Container, { Service } from 'typedi';
+import Container from 'typedi';
 import TemplateEntity from '../../entities/Template';
 import TemplateModel from '../../models/Template';
 import StatusRepository from '../Status';

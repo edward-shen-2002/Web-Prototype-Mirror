@@ -1,7 +1,6 @@
 import { Service } from 'typedi';
 import { Router } from 'express';
 import ReportingPeriodService from '../../services/ReportingPeriod';
-import ReportingPeriod from '../../entities/ReportingPeriod';
 
 const ReportingPeriodController = Service([ReportingPeriodService], service => {
   const router = Router();

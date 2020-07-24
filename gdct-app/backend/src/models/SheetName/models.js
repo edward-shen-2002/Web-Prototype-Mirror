@@ -1,7 +1,5 @@
 import { Schema, model } from 'mongoose';
 
-const { ObjectId } = Schema.Types;
-
 const SheetNameModel = model(
   'SheetName',
   new Schema(

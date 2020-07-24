@@ -1,4 +1,4 @@
-import Container, { Service } from 'typedi';
+import Container from 'typedi';
 import AppSysRepository from '../../repositories/AppSys';
 import AppSysRoleRepository from '../../repositories/AppSysRole';
 

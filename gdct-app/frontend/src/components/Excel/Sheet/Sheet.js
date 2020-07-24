@@ -230,7 +230,7 @@ const Sheet = ({ sheetGridRef, handleSave }) => {
       } else if (key === 'a' && (ctrlKey || metaKey)) {
         event.preventDefault();
         action = selectAll();
-      } else if (ctrlKey || metaKey) {
+        // } else if (ctrlKey || metaKey) {
       } else if (inputCharacterRegex.test(key)) {
         action = enableEditMode();
       }
