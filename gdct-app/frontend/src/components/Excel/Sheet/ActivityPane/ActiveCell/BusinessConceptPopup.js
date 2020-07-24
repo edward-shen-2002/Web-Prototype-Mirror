@@ -14,7 +14,7 @@ import { selectColumnNamesStore } from '../../../../../store/ColumnNamesStore/se
 
 const DialogActions = ({ handleClick }) => (
   <Button fullWidth onClick={handleClick}>
-    Cancel
+    Finish
   </Button>
 );
 
