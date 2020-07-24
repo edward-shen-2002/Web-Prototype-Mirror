@@ -40,7 +40,7 @@ export default class TemplateService {
 
     template.workflowProcessId = initialNode;
 
-    return await this.templateRepository.create(template);
+    return this.templateRepository.create(template);
   }
 
   async deleteTemplate(id) {

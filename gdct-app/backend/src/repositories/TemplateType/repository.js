@@ -106,7 +106,7 @@ export default class TemplateTypeRepository extends BaseRepository {
     );
   }
 
-  findOne(id) {
+  findOne() {
     throw new Error('Method not implemented.');
   }
 

@@ -16,12 +16,12 @@ import SpaIcon from '@material-ui/icons/Spa';
 import AppsIcon from '@material-ui/icons/Apps';
 import AccountBalance from '@material-ui/icons/AccountBalance';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import {
   ROUTE_WORKFLOW_WORKFLOWS,
   ROUTE_COLUMN_NAMES,
   ROUTE_TEMPLATE_PCKGS_PCKGS,
 } from '../../constants/routes';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const createUserNavigation = () => {
   return [

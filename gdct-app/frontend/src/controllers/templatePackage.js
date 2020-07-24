@@ -23,7 +23,7 @@ const templatePackageController = (() => {
         .then(res => {
           console.log('d', res.data.templatePackage);
           return [res.data.templatePackage];
-        })
+        }),
   };
 })();
 

@@ -57,7 +57,7 @@ export default class WorkflowProcessRepository extends BaseRepository {
     return WorkflowProcessModel.deleteMany({ workflowId });
   }
 
-  async find(query, isPopulated = false) {
+  async find(query) {
     const realQuery = {};
 
     for (const key in query) {
@@ -65,7 +65,7 @@ export default class WorkflowProcessRepository extends BaseRepository {
     }
 
     return WorkflowProcessModel.find(realQuery)
-      .populate(isPopulated ? populatedFields : 'statusId')
+      .populate('statusId')
       .then(workflowProcesss =>
         workflowProcesss.map(
           workflowProcess => new WorkflowProcessEntity(workflowProcess.toObject()),
