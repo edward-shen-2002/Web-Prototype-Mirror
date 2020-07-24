@@ -1,12 +1,13 @@
 import React, { useState, useMemo, useEffect, Component } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import { useHistory } from 'react-router-dom';
 
 import {
   getUsersRequest,
   createUsersRequest,
   deleteUsersRequest,
   updateUsersRequest,
-} from '../../store/thunks/users'
+} from '../../../store/thunks/users'
 
 import MaterialTable from 'material-table'
 import Paper from '@material-ui/core/Paper'
@@ -14,9 +15,10 @@ import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 
 import './Users.scss'
-import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
-import { selectUsersStore } from '../../store/UsersStore/selectors'
+import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors'
+import { selectUsersStore } from '../../../store/UsersStore/selectors'
 import { Button } from '@material-ui/core'
+import VisibilityIcon from '@material-ui/icons/Visibility'
 
 const UsersHeader = () => {
   return (
@@ -44,6 +46,7 @@ const TestButton2 = () => {
 const UsersTable = () => {
 
   const dispatch = useDispatch()
+  const history = useHistory();
 
   const [userName, setUserName] = useState( '' );  
   const [lastName, setLastName] = useState( '' );
@@ -117,6 +120,16 @@ const UsersTable = () => {
     [dispatch]
   )
 
+  const actions = useMemo(
+    () => [
+      {
+        icon: VisibilityIcon,
+        tooltip: 'View User Information',
+        onClick: (_event, user) => history.push(`/users/${user._id}`),
+      }
+    ]
+  )
+
   useEffect(() => {
     dispatch(getUsersRequest())
   }, [dispatch])
@@ -175,6 +188,7 @@ const UsersTable = () => {
         data={users}
         editable={editable}
         options={options}
+        actions={actions}
         localization ={localization}
       />
     </div>

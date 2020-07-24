@@ -23,7 +23,7 @@ import WorkflowRouter from './views/WorkflowRouter/WorkflowRouter';
 import GDCTMenu from './views/GDCTMenu';
 import Logout from './views/Logout';
 import AuthController from './controllers/Auth';
-import Users from './views/Users';
+import UserRouter from './views/UserRouter';
 import './App.scss';
 
 const PrivateRouter = ({ setLoggedIn }) => {
@@ -40,7 +40,7 @@ const PrivateRouter = ({ setLoggedIn }) => {
       <Route path="/reportingPeriods" component={ReportingPeriods} />
       <Route path="/sheetNames" component={SheetNames} />
       <Route path="/organizations" component={OrgRouter} />
-      <Route path="/users" component={Users} />
+      <Route path="/users" component={UserRouter} />
       <Route path="/logout" render={props => <Logout {...props} setLoggedIn={setLoggedIn} />} />
       <Redirect from="*" to="/" />
     </Switch>
