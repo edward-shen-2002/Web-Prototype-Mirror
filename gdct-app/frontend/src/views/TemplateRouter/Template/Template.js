@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback, useState } from 'react';
 
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { Button, Chip } from '@material-ui/core';
 
 import Loading from '../../../components/Loading/Loading';
 
@@ -18,7 +19,6 @@ import {
   selectFactoryValueById,
 } from '../../../store/common/REST/selectors';
 import workflowController from '../../../controllers/workflow';
-import { Button, Chip } from '@material-ui/core';
 
 const TemplatePhases = ({ template }) => {
   const [workflowProcess, setWorkflowProcess] = useState();
