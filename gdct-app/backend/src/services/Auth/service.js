@@ -45,7 +45,7 @@ export default class ProgramService {
   }
 
   profile(req, res) {
-    if (req.user.token !== null) {
+    if (req.user !== null) {
       res.json({ status: 'success' });
     } else {
       res.json({ status: 'fail' });
