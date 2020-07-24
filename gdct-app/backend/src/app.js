@@ -38,6 +38,7 @@ import AuthController from './controllers/Auth';
 import AppRoleResourceController from './controllers/AppRoleResource/controller';
 import AppResourceController from './controllers/AppResource';
 import WorkflowController from './controllers/Workflow';
+import UsersController from './controllers/Users/controller'
 import { errorHandler } from './middlewares/shared';
 
 dotenv.config();
@@ -103,6 +104,8 @@ app.use('/COA_manager', Container.get(COATreeController));
 app.use('/COA_manager', Container.get(COAGroupController));
 
 app.use('/workflow_manager', Container.get(WorkflowController));
+
+app.use('/', Container.get(UsersController))
 
 app.use(
   '/role_manager',

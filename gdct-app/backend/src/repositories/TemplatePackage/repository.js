@@ -6,6 +6,7 @@ import SubmissionPeriodRepository from '../SubmissionPeriod';
 import TemplatePackageModel from '../../models/TemplatePackage';
 import TemplatePackageEntity from '../../entities/TemplatePackage';
 import StatusRepository from '../Status';
+import UsersRepository from '../Users'
 
 // MongoDB implementation
 // @Service()
@@ -15,6 +16,7 @@ export default class TemplatePackageRepository extends BaseRepository {
 
     this.submissionPeriodRepository = Container.get(SubmissionPeriodRepository);
     this.userRepository = Container.get(UserRepository);
+    this.usersRepository = Container.get(UsersRepository)
     this.templateRepository = Container.get(TemplateRepository);
     this.statusRepository = Container.get(StatusRepository);
   }
