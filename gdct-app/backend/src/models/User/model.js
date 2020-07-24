@@ -15,12 +15,13 @@ const User = new Schema(
     firstName: { type: String, default: '' },
     lastName: { type: String, default: '' },
     phoneNumber: { type: String, default: '' },
-    sysRole: [
-      {
-        type: Schema.ObjectId,
-        ref: 'AppSysRole',
-      },
-    ],
+    // sysRole: [
+    //   {
+    //     type: Schema.ObjectId,
+    //     ref: 'AppSysRole',
+    //   },
+    // ],
+    sysRole: [{type: Object, default: '' }],
     facebook: {
       id: String,
       token: String,

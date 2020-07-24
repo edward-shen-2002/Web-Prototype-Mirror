@@ -1,6 +1,6 @@
 
 import BaseRepository from '../repository'
-import UserModel from '../../models/Users'
+import UserModel from '../../models/User'
 import TemplateRepository from '../Template'
 import Container, { Service } from 'typedi'
 import UserEntity from '../../entities/Users'

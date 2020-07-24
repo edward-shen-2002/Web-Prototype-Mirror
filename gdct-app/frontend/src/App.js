@@ -23,7 +23,7 @@ import WorkflowRouter from './views/WorkflowRouter/WorkflowRouter';
 import GDCTMenu from './views/GDCTMenu';
 import Logout from './views/Logout';
 import AuthController from './controllers/Auth';
-import Users from './views/Users'
+import Users from './views/Users';
 import './App.scss';
 
 const PrivateRouter = ({ setLoggedIn }) => {
