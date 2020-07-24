@@ -1,4 +1,5 @@
 import { Service } from 'typedi';
+
 import { Router } from 'express';
 import SubmissionService from '../../services/Submission';
 

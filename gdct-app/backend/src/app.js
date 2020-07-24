@@ -96,6 +96,7 @@ app.use('/designer', Container.get(StatusController));
 app.use('/submission_manager', Container.get(SubmissionPeriodController));
 app.use('/submission_manager', Container.get(SubmissionController));
 
+app.use('/workflow_manager', Container.get(WorkflowController));
 app.use('/COA_manager', Container.get(COAController));
 app.use('/COA_manager', Container.get(COATreeController));
 app.use('/COA_manager', Container.get(COAGroupController));
