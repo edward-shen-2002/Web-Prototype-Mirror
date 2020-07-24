@@ -1,47 +1,38 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react';
 
-import SelectableTableDialog from './SelectableTableDialog'
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
+import SelectableTableDialog from './SelectableTableDialog';
 
-import { getWorkflowsRequest } from '../../store/thunks/workflow'
+import { getWorkflowsRequest } from '../../store/thunks/workflow';
 
-import { useSelector, shallowEqual, useDispatch } from 'react-redux'
-import { useMemo } from 'react'
-import DialogsStore from '../../store/DialogsStore/store'
-import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
-import { selectWorkflowsStore } from '../../store/WorkflowsStore/selectors'
-import { selectIsWorkflowDialogOpen } from '../../store/DialogsStore/selectors'
+import DialogsStore from '../../store/DialogsStore/store';
+import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors';
+import { selectWorkflowsStore } from '../../store/WorkflowsStore/selectors';
+import { selectIsWorkflowDialogOpen } from '../../store/DialogsStore/selectors';
 
-const WorkflowDialog = ({
-  selectedWorkflows,
-  handleChange,
-  shouldClose = true,
-}) => {
-  const dispatch = useDispatch()
+const WorkflowDialog = ({ selectedWorkflows, handleChange, shouldClose = true }) => {
+  const dispatch = useDispatch();
 
   const { isWorkflowDialogOpen, workflows } = useSelector(
-    (state) => ({
+    state => ({
       isWorkflowDialogOpen: selectIsWorkflowDialogOpen(state),
-      workflows: selectFactoryRESTResponseTableValues(selectWorkflowsStore)(
-        state
-      ),
+      workflows: selectFactoryRESTResponseTableValues(selectWorkflowsStore)(state),
     }),
-    shallowEqual
-  )
+    shallowEqual,
+  );
 
-  const handleClose = useCallback(
-    () => dispatch(DialogsStore.actions.CLOSE_WORKFLOW_DIALOG()),
-    [dispatch]
-  )
+  const handleClose = useCallback(() => dispatch(DialogsStore.actions.CLOSE_WORKFLOW_DIALOG()), [
+    dispatch,
+  ]);
 
-  const handleSelect = (data) => {
-    handleChange(data)
-    if (shouldClose) handleClose()
-  }
+  const handleSelect = data => {
+    handleChange(data);
+    if (shouldClose) handleClose();
+  };
 
   useEffect(() => {
-    if (isWorkflowDialogOpen)
-      dispatch(getWorkflowsRequest())
-  }, [dispatch, isWorkflowDialogOpen])
+    if (isWorkflowDialogOpen) dispatch(getWorkflowsRequest());
+  }, [dispatch, isWorkflowDialogOpen]);
 
   const columns = useMemo(
     () => [
@@ -50,10 +41,10 @@ const WorkflowDialog = ({
         field: 'name',
       },
     ],
-    []
-  )
+    [],
+  );
 
-  const getKey = selectedWorkflows ? (t) => t._id : undefined
+  const getKey = selectedWorkflows ? t => t._id : undefined;
 
   return (
     <SelectableTableDialog
@@ -66,7 +57,7 @@ const WorkflowDialog = ({
       handleClose={handleClose}
       handleSelect={handleSelect}
     />
-  )
-}
+  );
+};
 
-export default WorkflowDialog
+export default WorkflowDialog;

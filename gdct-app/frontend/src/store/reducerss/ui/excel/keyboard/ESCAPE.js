@@ -2,52 +2,51 @@ import {
   convertTextToEditorValue,
   convertRichTextToEditorValue,
   CustomEditor,
-} from '../../../../../tools/slate'
+} from '../../../../../tools/slate';
 
-const ESCAPE = (state) => {
+const ESCAPE = state => {
   const {
     isEditMode,
     // isSheetFocused,
     activeCellInputData: { cellEditor, formulaEditor },
     sheetCellData,
     activeCellPosition: { x, y },
-  } = state
+  } = state;
 
-  if (!isEditMode) return state
+  if (!isEditMode) return state;
 
-  const newState = { ...state }
+  const newState = { ...state };
 
-  newState.isEditMode = false
+  newState.isEditMode = false;
 
-  const cellData =
-    sheetCellData[y] && sheetCellData[y][x] ? sheetCellData[y][x] : undefined
+  const cellData = sheetCellData[y] && sheetCellData[y][x] ? sheetCellData[y][x] : undefined;
 
-  const type = cellData ? cellData.type : undefined
-  const value = cellData ? cellData.value : undefined
+  const type = cellData ? cellData.type : undefined;
+  const value = cellData ? cellData.value : undefined;
 
-  let cellValue
-  let formulaValue
+  let cellValue;
+  let formulaValue;
 
   if (type === 'rich-text') {
-    cellValue = convertRichTextToEditorValue(value)
-    formulaValue = convertRichTextToEditorValue(value)
+    cellValue = convertRichTextToEditorValue(value);
+    formulaValue = convertRichTextToEditorValue(value);
   } else {
-    cellValue = convertTextToEditorValue(value)
-    formulaValue = convertTextToEditorValue(value)
+    cellValue = convertTextToEditorValue(value);
+    formulaValue = convertTextToEditorValue(value);
   }
 
-  CustomEditor.clearEditor(formulaEditor)
-  CustomEditor.clearEditor(cellEditor)
+  CustomEditor.clearEditor(formulaEditor);
+  CustomEditor.clearEditor(cellEditor);
 
   newState.activeCellInputData = {
     ...newState.activeCellInputData,
     cellValue,
     formulaValue,
-  }
+  };
 
-  window.sheetContainerRef.current.focus()
+  window.sheetContainerRef.current.focus();
 
-  return newState
-}
+  return newState;
+};
 
-export default ESCAPE
+export default ESCAPE;

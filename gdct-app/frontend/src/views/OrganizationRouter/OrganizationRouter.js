@@ -1,10 +1,10 @@
-import React from 'react'
-import { Switch, Route } from 'react-router-dom'
+import React from 'react';
+import { Switch, Route } from 'react-router-dom';
 
-import NotFound from '../../components/NotFound'
-import Organizations from './Organizations'
-import CreateOrganization from './CreateOrganization'
-import EditOrganization from './EditOrganization'
+import NotFound from '../../components/NotFound';
+import Organizations from './Organizations';
+import CreateOrganization from './CreateOrganization';
+import EditOrganization from './EditOrganization';
 /*
 List Child views here
 */
@@ -17,6 +17,6 @@ const OrgRouter = () => (
 
     <Route component={NotFound} />
   </Switch>
-)
+);
 
-export default OrgRouter
+export default OrgRouter;

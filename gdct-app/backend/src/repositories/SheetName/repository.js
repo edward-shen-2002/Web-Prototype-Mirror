@@ -1,20 +1,21 @@
-import Container, { Service } from 'typedi'
-import BaseRepository from '../repository'
-import SheetNameModel from '../../models/SheetName'
-import TemplateRepository from '../Template'
-import SheetNameEntity from '../../entities/SheetName'
+import Container, { Service } from 'typedi';
+import BaseRepository from '../repository';
+import SheetNameModel from '../../models/SheetName';
+import TemplateRepository from '../Template';
+import SheetNameEntity from '../../entities/SheetName';
 
 // @Service()
 export default class SheetNameRepository extends BaseRepository {
   constructor() {
-    super(SheetNameModel)
+    super(SheetNameModel);
 
-    this.templateRepository = Container.get(TemplateRepository)
+    this.templateRepository = Container.get(TemplateRepository);
   }
+
   async create({
     // templateId,
     name,
-    isActive
+    isActive,
   }) {
     return (
       // this.templateRepository
@@ -29,25 +30,24 @@ export default class SheetNameRepository extends BaseRepository {
       SheetNameModel.create({
         // templateId,
         name,
-        isActive
-      })
-      .then((sheetName) => new SheetNameEntity(sheetName))
-    )
+        isActive,
+      }).then(sheetName => new SheetNameEntity(sheetName))
+    );
   }
 
   async update(
-    id, 
+    id,
     {
       // templateId,
       name,
-      isActive
-    }
+      isActive,
+    },
   ) {
     return (
       // this.templateRepository.validate(templateId)
       //   .then(
       //     () => SheetNameModel.findByIdAndUpdate(
-      //       id, 
+      //       id,
       //       {
       //         templateId,
       //         name,
@@ -55,40 +55,31 @@ export default class SheetNameRepository extends BaseRepository {
       //       }
       //     )
       //   )
-        SheetNameModel.findByIdAndUpdate(
-          id, 
-          {
-            // templateId,
-            name,
-            isActive
-          }
-        )
-        .then(
-          (sheetName) => new SheetNameEntity(sheetName.toObject())
-        )
-
-    )
+      SheetNameModel.findByIdAndUpdate(id, {
+        // templateId,
+        name,
+        isActive,
+      }).then(sheetName => new SheetNameEntity(sheetName.toObject()))
+    );
   }
 
   async find(query) {
-    const realQuery = {}
+    const realQuery = {};
 
     for (const key in query) {
-      if (query[key]) realQuery[key] = query[key]
+      if (query[key]) realQuery[key] = query[key];
     }
 
-    return SheetNameModel.find(realQuery).then((sheetNames) =>
-      sheetNames.map((sheetName) => new SheetNameEntity(sheetName))
-    )
+    return SheetNameModel.find(realQuery).then(sheetNames =>
+      sheetNames.map(sheetName => new SheetNameEntity(sheetName)),
+    );
   }
 
   findOne(id) {
-    throw new Error('Method not implemented.')
+    throw new Error('Method not implemented.');
   }
 
   async delete(id) {
-    return SheetNameModel.findByIdAndDelete(id).then(
-      (sheetName) => new SheetNameEntity(sheetName)
-    )
+    return SheetNameModel.findByIdAndDelete(id).then(sheetName => new SheetNameEntity(sheetName));
   }
 }

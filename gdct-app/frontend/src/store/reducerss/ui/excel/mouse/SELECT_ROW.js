@@ -1,7 +1,4 @@
-import {
-  saveActiveCellInputData,
-  updateActiveCellPosition,
-} from '../tools/cell'
+import { saveActiveCellInputData, updateActiveCellPosition } from '../tools/cell';
 
 const SELECT_ROW = (state, { row, ctrlKey }) => {
   const {
@@ -9,41 +6,41 @@ const SELECT_ROW = (state, { row, ctrlKey }) => {
     sheetColumnCount,
     activeCellSelectionAreaIndex,
     stagnantSelectionAreas,
-  } = state
+  } = state;
 
-  let newState = { ...state }
+  let newState = { ...state };
 
-  newState = saveActiveCellInputData({ newState })
+  newState = saveActiveCellInputData({ newState });
 
   newState = updateActiveCellPosition({
     newState,
     newY: row,
     newX: 1,
-  })
+  });
 
-  const rowArea = { x1: 1, y1: row, x2: sheetColumnCount - 1, y2: row }
+  const rowArea = { x1: 1, y1: row, x2: sheetColumnCount - 1, y2: row };
 
   if (ctrlKey) {
-    const { x, y } = activeCellPosition
+    const { x, y } = activeCellPosition;
 
-    let newStagnantSelectionAreas = []
+    let newStagnantSelectionAreas = [];
 
     if (stagnantSelectionAreas.length) {
-      newStagnantSelectionAreas = [...stagnantSelectionAreas]
+      newStagnantSelectionAreas = [...stagnantSelectionAreas];
     } else if (y !== row) {
-      newStagnantSelectionAreas.push({ x1: x, x2: x, y1: y, y2: y })
+      newStagnantSelectionAreas.push({ x1: x, x2: x, y1: y, y2: y });
     }
 
-    newStagnantSelectionAreas.push(rowArea)
+    newStagnantSelectionAreas.push(rowArea);
 
-    newState.activeCellSelectionAreaIndex = activeCellSelectionAreaIndex + 1
-    newState.stagnantSelectionAreas = newStagnantSelectionAreas
+    newState.activeCellSelectionAreaIndex = activeCellSelectionAreaIndex + 1;
+    newState.stagnantSelectionAreas = newStagnantSelectionAreas;
   } else {
-    newState.activeCellSelectionAreaIndex = 0
-    newState.stagnantSelectionAreas = [rowArea]
+    newState.activeCellSelectionAreaIndex = 0;
+    newState.stagnantSelectionAreas = [rowArea];
   }
 
-  return newState
-}
+  return newState;
+};
 
-export default SELECT_ROW
+export default SELECT_ROW;

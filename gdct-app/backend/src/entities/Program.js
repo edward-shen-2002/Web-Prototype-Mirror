@@ -1,13 +1,8 @@
 export default class ProgramEntity {
-  constructor({
-    _id,
-    code,
-    name,
-    isActive
-  }) {
-    this._id = _id
-    this.code = code
-    this.name = name
-    this.isActive = isActive
+  constructor({ _id, code, name, isActive }) {
+    this._id = _id;
+    this.code = code;
+    this.name = name;
+    this.isActive = isActive;
   }
 }

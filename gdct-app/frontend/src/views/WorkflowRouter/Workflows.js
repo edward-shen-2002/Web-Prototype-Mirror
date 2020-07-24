@@ -1,29 +1,22 @@
-import React, { useMemo, useEffect } from 'react'
-import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import React, { useMemo, useEffect } from 'react';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 
-import {
-  getWorkflowsRequest,
-  deleteWorkflowRequest,
-} from '../../store/thunks/workflow'
+import MaterialTable from 'material-table';
+import Paper from '@material-ui/core/Paper';
+import LaunchIcon from '@material-ui/icons/Launch';
 
-import MaterialTable from 'material-table'
-import Paper from '@material-ui/core/Paper'
-import LaunchIcon from '@material-ui/icons/Launch'
+import Typography from '@material-ui/core/Typography';
 
-import Typography from '@material-ui/core/Typography'
-
-import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
-import { selectWorkflowsStore } from '../../store/WorkflowsStore/selectors'
-import { useHistory } from 'react-router-dom'
-import {
-  ROUTE_WORKFLOW_WORKFLOWS_CREATE,
-  ROUTE_WORKFLOW_WORKFLOWS,
-} from '../../constants/routes'
-import { Button } from '@material-ui/core'
+import { useHistory } from 'react-router-dom';
+import { Button } from '@material-ui/core';
+import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors';
+import { selectWorkflowsStore } from '../../store/WorkflowsStore/selectors';
+import { ROUTE_WORKFLOW_WORKFLOWS_CREATE, ROUTE_WORKFLOW_WORKFLOWS } from '../../constants/routes';
+import { getWorkflowsRequest, deleteWorkflowRequest } from '../../store/thunks/workflow';
 
 const WorkflowHeader = () => {
-  const history = useHistory()
-  const handleCreate = () => history.push(ROUTE_WORKFLOW_WORKFLOWS_CREATE)
+  const history = useHistory();
+  const handleCreate = () => history.push(ROUTE_WORKFLOW_WORKFLOWS_CREATE);
 
   return (
     <Paper className="header">
@@ -32,53 +25,47 @@ const WorkflowHeader = () => {
         Create
       </Button>
     </Paper>
-  )
-}
+  );
+};
 
 const Workflows = () => {
-  const dispatch = useDispatch()
-  const history = useHistory()
+  const dispatch = useDispatch();
+  const history = useHistory();
   const { workflows } = useSelector(
-    (state) => ({
-      workflows: selectFactoryRESTResponseTableValues(selectWorkflowsStore)(
-        state
-      ),
+    state => ({
+      workflows: selectFactoryRESTResponseTableValues(selectWorkflowsStore)(state),
     }),
-    shallowEqual
-  )
+    shallowEqual,
+  );
 
-  const columns = useMemo(() => [{ title: 'Name', field: 'name' }], [])
+  const columns = useMemo(() => [{ title: 'Name', field: 'name' }], []);
 
-  const options = useMemo(
-    () => ({ actionsColumnIndex: -1, search: false, showTitle: false }),
-    []
-  )
+  const options = useMemo(() => ({ actionsColumnIndex: -1, search: false, showTitle: false }), []);
 
   const editable = useMemo(
     () => ({
-      onRowDelete: (workflow) =>
+      onRowDelete: workflow =>
         new Promise((resolve, reject) => {
-          dispatch(deleteWorkflowRequest(workflow._id, resolve, reject))
+          dispatch(deleteWorkflowRequest(workflow._id, resolve, reject));
         }),
     }),
-    [dispatch]
-  )
+    [dispatch],
+  );
 
   const actions = useMemo(
     () => [
       {
         icon: LaunchIcon,
         tooltip: 'Open Workflow',
-        onClick: (_event, workflow) =>
-          history.push(`${ROUTE_WORKFLOW_WORKFLOWS}/${workflow._id}`),
+        onClick: (_event, workflow) => history.push(`${ROUTE_WORKFLOW_WORKFLOWS}/${workflow._id}`),
       },
     ],
-    [history]
-  )
+    [history],
+  );
 
   useEffect(() => {
-    dispatch(getWorkflowsRequest())
-  }, [dispatch])
+    dispatch(getWorkflowsRequest());
+  }, [dispatch]);
 
   return (
     <div>
@@ -91,7 +78,7 @@ const Workflows = () => {
         actions={actions}
       />
     </div>
-  )
-}
+  );
+};
 
-export default Workflows
+export default Workflows;

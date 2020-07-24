@@ -1,21 +1,20 @@
-import React, { useMemo, useEffect } from 'react'
-import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import React, { useMemo, useEffect } from 'react';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 
+import MaterialTable from 'material-table';
+import Paper from '@material-ui/core/Paper';
+
+import Typography from '@material-ui/core/Typography';
 import {
   getColumnNamesRequest,
   createColumnNameRequest,
   deleteColumnNameRequest,
   updateColumnNameRequest,
-} from '../store/thunks/columnName'
+} from '../store/thunks/columnName';
 
-import MaterialTable from 'material-table'
-import Paper from '@material-ui/core/Paper'
-
-import Typography from '@material-ui/core/Typography'
-
-import { selectFactoryRESTResponseTableValues } from '../store/common/REST/selectors'
-import { selectColumnNamesStore } from '../store/ColumnNamesStore/selectors'
-import { ColumnNamesActions } from '../store/ColumnNamesStore/store'
+import { selectFactoryRESTResponseTableValues } from '../store/common/REST/selectors';
+import { selectColumnNamesStore } from '../store/ColumnNamesStore/selectors';
+import { ColumnNamesActions } from '../store/ColumnNamesStore/store';
 
 const ColumnNameHeader = () => {
   return (
@@ -23,20 +22,18 @@ const ColumnNameHeader = () => {
       <Typography variant="h5">Column Names</Typography>
       {/* <HeaderActions/> */}
     </Paper>
-  )
-}
+  );
+};
 
 const ColumnNamesTable = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const { columnNames } = useSelector(
-    (state) => ({
-      columnNames: selectFactoryRESTResponseTableValues(selectColumnNamesStore)(
-        state
-      ),
+    state => ({
+      columnNames: selectFactoryRESTResponseTableValues(selectColumnNamesStore)(state),
     }),
-    shallowEqual
-  )
+    shallowEqual,
+  );
 
   const columns = useMemo(
     () => [
@@ -44,55 +41,47 @@ const ColumnNamesTable = () => {
       { title: 'Description', field: 'description' },
       { title: 'Active', type: 'boolean', field: 'isActive' },
     ],
-    []
-  )
+    [],
+  );
 
-  const options = useMemo(
-    () => ({ actionsColumnIndex: -1, showTitle: false }),
-    []
-  )
+  const options = useMemo(() => ({ actionsColumnIndex: -1, showTitle: false }), []);
 
   const editable = useMemo(
     () => ({
-      onRowAdd: (columnName) =>
+      onRowAdd: columnName =>
         new Promise((resolve, reject) => {
-          dispatch(createColumnNameRequest(columnName, resolve, reject))
+          dispatch(createColumnNameRequest(columnName, resolve, reject));
         }),
-      onRowUpdate: (columnName) =>
+      onRowUpdate: columnName =>
         new Promise((resolve, reject) => {
-          dispatch(updateColumnNameRequest(columnName, resolve, reject))
+          dispatch(updateColumnNameRequest(columnName, resolve, reject));
         }),
-      onRowDelete: (columnName) =>
+      onRowDelete: columnName =>
         new Promise((resolve, reject) => {
-          dispatch(deleteColumnNameRequest(columnName._id, resolve, reject))
+          dispatch(deleteColumnNameRequest(columnName._id, resolve, reject));
         }),
     }),
-    [dispatch]
-  )
+    [dispatch],
+  );
 
   useEffect(() => {
-    dispatch(getColumnNamesRequest())
+    dispatch(getColumnNamesRequest());
 
     return () => {
-      dispatch(ColumnNamesActions.RESET())
-    }
-  }, [dispatch])
+      dispatch(ColumnNamesActions.RESET());
+    };
+  }, [dispatch]);
 
   return (
-    <MaterialTable
-      columns={columns}
-      data={columnNames}
-      editable={editable}
-      options={options}
-    />
-  )
-}
+    <MaterialTable columns={columns} data={columnNames} editable={editable} options={options} />
+  );
+};
 
-const ColumnName = (props) => (
+const ColumnName = props => (
   <div className="columnNamesPage">
     <ColumnNameHeader />
     <ColumnNamesTable {...props} />
   </div>
-)
+);
 
-export default ColumnName
+export default ColumnName;

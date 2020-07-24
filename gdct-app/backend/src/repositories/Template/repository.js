@@ -1,22 +1,22 @@
-import TemplateEntity from '../../entities/Template'
-import TemplateModel from '../../models/Template'
-import StatusRepository from '../Status'
-import UserRepository from '../User'
-import Container, { Service } from 'typedi'
-import TemplateTypeRepository from '../TemplateType'
-import BaseRepository from '../repository'
-import WorkflowProcessRepository from '../WorkflowProcess'
+import Container, { Service } from 'typedi';
+import TemplateEntity from '../../entities/Template';
+import TemplateModel from '../../models/Template';
+import StatusRepository from '../Status';
+import UserRepository from '../User';
+import TemplateTypeRepository from '../TemplateType';
+import BaseRepository from '../repository';
+import WorkflowProcessRepository from '../WorkflowProcess';
 
 // MongoDB implementation
 // @Service()
 export default class TemplateRepository extends BaseRepository {
   constructor() {
-    super(TemplateModel)
+    super(TemplateModel);
 
-    this.statusRepository = Container.get(StatusRepository)
-    this.userRepository = Container.get(UserRepository)
-    this.templateTypeRepository = Container.get(TemplateTypeRepository)
-    this.workflowProcessRepository = Container.get(WorkflowProcessRepository)
+    this.statusRepository = Container.get(StatusRepository);
+    this.userRepository = Container.get(UserRepository);
+    this.templateTypeRepository = Container.get(TemplateTypeRepository);
+    this.workflowProcessRepository = Container.get(WorkflowProcessRepository);
   }
 
   async create({
@@ -27,7 +27,7 @@ export default class TemplateRepository extends BaseRepository {
     creationDate,
     expirationDate,
     workflowProcessId,
-    statusId
+    statusId,
   }) {
     return (
       this.statusRepository
@@ -43,11 +43,11 @@ export default class TemplateRepository extends BaseRepository {
             creationDate,
             expirationDate,
             workflowProcessId,
-            statusId
-          })
+            statusId,
+          }),
         )
-        .then((template) => new TemplateEntity(template.toObject()))
-    )
+        .then(template => new TemplateEntity(template.toObject()))
+    );
   }
 
   async update(
@@ -60,14 +60,11 @@ export default class TemplateRepository extends BaseRepository {
       creationDate,
       expirationDate,
       workflowProcessId,
-      statusId
-    }
+      statusId,
+    },
   ) {
     return (
-      (statusId
-        ? this.statusRepository.validate(statusId)
-        : new Promise((resolve) => resolve())
-      )
+      (statusId ? this.statusRepository.validate(statusId) : new Promise(resolve => resolve()))
         // .then(() => {
         //   if (userCreatorId) return this.userRepository.validate(userCreatorId)
         // })
@@ -80,30 +77,29 @@ export default class TemplateRepository extends BaseRepository {
             creationDate,
             expirationDate,
             workflowProcessId,
-            statusId
-          })
+            statusId,
+          }),
         )
-        .then((template) => new TemplateEntity(template.toObject()))
-    )
+        .then(template => new TemplateEntity(template.toObject()))
+    );
   }
 
   async updateWorkflowProcess(_id, workflowProcessId) {
-    return this.workflowProcessRepository.validate(workflowProcessId)
+    return this.workflowProcessRepository
+      .validate(workflowProcessId)
       .then(() => TemplateModel.findByIdAndUpdate(_id, { workflowProcessId }))
-      .then((template) => new TemplateEntity(template.toObject()))
+      .then(template => new TemplateEntity(template.toObject()));
   }
 
   async find(query) {
-    const realQuery = {}
+    const realQuery = {};
 
     for (const key in query) {
-      if (query[key]) realQuery[key] = query[key]
+      if (query[key]) realQuery[key] = query[key];
     }
-    
+
     return TemplateModel.find(realQuery)
-      .select("-templateData")
-      .then((templates) =>
-        templates.map((template) => new TemplateEntity(template.toObject()))
-      )
+      .select('-templateData')
+      .then(templates => templates.map(template => new TemplateEntity(template.toObject())));
   }
 }

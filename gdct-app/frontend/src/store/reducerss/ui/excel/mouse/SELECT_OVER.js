@@ -1,24 +1,19 @@
-import { getWholeArea } from '../tools/merge'
+import { getWholeArea } from '../tools/merge';
 
 const SELECT_OVER = (state, { newX2, newY2, ctrlKey }) => {
-  const {
-    sheetCellData,
-    isSelectionMode,
-    activeCellPosition,
-    stagnantSelectionAreas,
-  } = state
+  const { sheetCellData, isSelectionMode, activeCellPosition, stagnantSelectionAreas } = state;
 
-  if (!isSelectionMode) return state
+  if (!isSelectionMode) return state;
 
-  const newState = { ...state }
+  const newState = { ...state };
 
-  if (!ctrlKey) newState.stagnantSelectionAreas = []
+  if (!ctrlKey) newState.stagnantSelectionAreas = [];
 
-  const { x, y } = activeCellPosition
+  const { x, y } = activeCellPosition;
 
   if (x === newX2 && y === newY2 && !ctrlKey) {
-    newState.activeSelectionArea = null
-    newState.activeSelectionAreaIndex = -1
+    newState.activeSelectionArea = null;
+    newState.activeSelectionAreaIndex = -1;
   } else {
     newState.activeSelectionArea = getWholeArea({
       minY: Math.min(y, newY2),
@@ -26,12 +21,12 @@ const SELECT_OVER = (state, { newX2, newY2, ctrlKey }) => {
       maxY: Math.max(y, newY2),
       maxX: Math.max(x, newX2),
       sheetCellData,
-    })
+    });
 
-    newState.activeCellSelectionAreaIndex = stagnantSelectionAreas.length
+    newState.activeCellSelectionAreaIndex = stagnantSelectionAreas.length;
   }
 
-  return newState
-}
+  return newState;
+};
 
-export default SELECT_OVER
+export default SELECT_OVER;

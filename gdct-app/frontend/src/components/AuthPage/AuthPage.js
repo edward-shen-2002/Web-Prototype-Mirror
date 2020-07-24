@@ -1,35 +1,34 @@
-import React, { useState, Fragment } from 'react'
-import clsx from 'clsx'
-import { makeStyles, useTheme } from '@material-ui/core/styles'
-import Drawer from '@material-ui/core/Drawer'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import List from '@material-ui/core/List'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import Typography from '@material-ui/core/Typography'
-import Divider from '@material-ui/core/Divider'
-import IconButton from '@material-ui/core/IconButton'
-import MenuIcon from '@material-ui/icons/Menu'
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
-import ChevronRightIcon from '@material-ui/icons/ChevronRight'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
-import InboxIcon from '@material-ui/icons/MoveToInbox'
-import MailIcon from '@material-ui/icons/Mail'
-import Collapse from '@material-ui/core/Collapse'
-import ExpandMore from '@material-ui/icons/ExpandMore'
-import ExpandLess from '@material-ui/icons/ExpandLess'
+import React, { useState, Fragment, useCallback } from 'react';
+import clsx from 'clsx';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import List from '@material-ui/core/List';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import MailIcon from '@material-ui/icons/Mail';
+import Collapse from '@material-ui/core/Collapse';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import ExpandLess from '@material-ui/icons/ExpandLess';
 
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
-import navigationConfig from './config'
-import { useCallback } from 'react'
+import navigationConfig from './config';
 
-const drawerWidth = 240
-const headerHeight = 55
+const drawerWidth = 240;
+const headerHeight = 55;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     width: '100vw',
@@ -102,7 +101,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: headerHeight,
     overflow: 'auto',
   },
-}))
+}));
 
 const HeaderHandle = ({ open, classes, handleDrawerOpen }) => (
   <IconButton
@@ -116,13 +115,13 @@ const HeaderHandle = ({ open, classes, handleDrawerOpen }) => (
   >
     <MenuIcon />
   </IconButton>
-)
+);
 
 const HeaderTitle = ({ title }) => (
   <Typography variant="h6" noWrap>
     {title}
   </Typography>
-)
+);
 
 const Header = ({ title, classes, open, handleDrawerOpen }) => (
   <AppBar
@@ -132,15 +131,11 @@ const Header = ({ title, classes, open, handleDrawerOpen }) => (
     })}
   >
     <Toolbar>
-      <HeaderHandle
-        open={open}
-        classes={classes}
-        handleDrawerOpen={handleDrawerOpen}
-      />
+      <HeaderHandle open={open} classes={classes} handleDrawerOpen={handleDrawerOpen} />
       <HeaderTitle title={title} />
     </Toolbar>
   </AppBar>
-)
+);
 
 const DrawerHandle = ({ title, classes, handleDrawerClose, theme }) => (
   <div className={classes.toolbar}>
@@ -149,37 +144,34 @@ const DrawerHandle = ({ title, classes, handleDrawerClose, theme }) => (
       {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
     </IconButton>
   </div>
-)
+);
 
-const MenuItemIcon = ({ icon }) => <ListItemIcon>{icon}</ListItemIcon>
+const MenuItemIcon = ({ icon }) => <ListItemIcon>{icon}</ListItemIcon>;
 
 const MenuItemLink = ({ name, icon, url }) => (
   <ListItem component={url && Link} button to={url}>
     <MenuItemIcon icon={icon} />
     <ListItemText primary={name} />
   </ListItem>
-)
+);
 
 const MenuItems = ({ menuItems }) => {
   return menuItems.map((menuItem, index) => (
-    <MenuItemLink
-      key={`${menuItem.type}-${menuItem.name}-${index}`}
-      {...menuItem}
-    />
-  ))
-}
+    <MenuItemLink key={`${menuItem.type}-${menuItem.name}-${index}`} {...menuItem} />
+  ));
+};
 
 const MenuItemsList = ({ menuItems }) => (
   <List component="div" disablePadding>
     <MenuItems menuItems={menuItems} />
   </List>
-)
+);
 
 const MenuDrawerItems = ({ menuItems, open }) => (
   <Collapse in={open} timeout="auto" unmountOnExit>
     <MenuItemsList menuItems={menuItems} />
   </Collapse>
-)
+);
 
 const MenuDrawerTitle = ({ button = true, name, icon, open, handleClick }) => (
   <ListItem button={button} onClick={handleClick}>
@@ -187,55 +179,48 @@ const MenuDrawerTitle = ({ button = true, name, icon, open, handleClick }) => (
     <ListItemText primary={name} />
     {open ? <ExpandLess /> : <ExpandMore />}
   </ListItem>
-)
+);
 
 const MenuDrawer = ({ name, icon, children }) => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
-  const handleToggle = useCallback(() => setOpen(!open), [open])
+  const handleToggle = useCallback(() => setOpen(!open), [open]);
 
   return (
     <Fragment>
       <MenuDrawerTitle name={name} icon={icon} handleClick={handleToggle} />
       <MenuDrawerItems open={open} menuItems={children} />
     </Fragment>
-  )
-}
+  );
+};
 
 const NavigationContent = ({ config }) => {
   return config.map((item, index) => {
-    let Component
+    let Component;
 
-    const { type, name } = item
+    const { type, name } = item;
 
     switch (type) {
       case 'drawer':
-        Component = MenuDrawer
-        break
+        Component = MenuDrawer;
+        break;
 
       case 'divider':
-        Component = Divider
-        break
+        Component = Divider;
+        break;
 
       case 'title':
       case 'menu':
       default:
-        Component = MenuItemLink
-        break
+        Component = MenuItemLink;
+        break;
     }
 
-    return <Component key={`${type}-${name}-${index}`} {...item} />
-  })
-}
+    return <Component key={`${type}-${name}-${index}`} {...item} />;
+  });
+};
 
-const NavigationDrawer = ({
-  title,
-  open,
-  theme,
-  config,
-  classes,
-  handleDrawerClose,
-}) => (
+const NavigationDrawer = ({ title, open, theme, config, classes, handleDrawerClose }) => (
   <Drawer
     variant="permanent"
     className={clsx(classes.drawer, {
@@ -258,11 +243,9 @@ const NavigationDrawer = ({
     <Divider />
     <NavigationContent config={config} />
   </Drawer>
-)
+);
 
-const PageContent = ({ classes, children }) => (
-  <div className={classes.content}>{children}</div>
-)
+const PageContent = ({ classes, children }) => <div className={classes.content}>{children}</div>;
 
 const AuthPage = ({
   headerTitle = 'MOHLTC - Generic Data Collection Tool',
@@ -270,13 +253,13 @@ const AuthPage = ({
   config = navigationConfig,
   children,
 }) => {
-  const classes = useStyles()
-  const theme = useTheme()
-  const [open, setOpen] = useState(true)
+  const classes = useStyles();
+  const theme = useTheme();
+  const [open, setOpen] = useState(true);
 
-  const handleDrawerOpen = () => setOpen(true)
+  const handleDrawerOpen = () => setOpen(true);
 
-  const handleDrawerClose = () => setOpen(false)
+  const handleDrawerClose = () => setOpen(false);
 
   return (
     <div className={classes.root}>
@@ -297,7 +280,7 @@ const AuthPage = ({
       />
       <PageContent classes={classes} children={children} />
     </div>
-  )
-}
+  );
+};
 
-export default AuthPage
+export default AuthPage;

@@ -1,101 +1,95 @@
-import { createSelector } from 'reselect'
+import { createSelector } from 'reselect';
 
-export const selectWorkflowStore = (state) => state.WorkflowStore
+export const selectWorkflowStore = state => state.WorkflowStore;
 
 // BASE SELECTORS
 
 export const selectWorkflowChart = createSelector(
   [selectWorkflowStore],
-  (workflowStore) => workflowStore.chart
-)
+  workflowStore => workflowStore.chart,
+);
 
 export const selectWorkflowFilter = createSelector(
   [selectWorkflowStore],
-  (workflowStore) => workflowStore.filter
-)
+  workflowStore => workflowStore.filter,
+);
 
 export const selectWorkflowError = createSelector(
   [selectWorkflowStore],
-  (workflowStore) => workflowStore.error
-)
+  workflowStore => workflowStore.error,
+);
 
 export const selectWorkflowName = createSelector(
   [selectWorkflowStore],
-  (workflowStore) => workflowStore.name
-)
+  workflowStore => workflowStore.name,
+);
 
 export const selectWorkflowId = createSelector(
   [selectWorkflowStore],
-  (workflowStore) => workflowStore._id
-)
+  workflowStore => workflowStore._id,
+);
 
 // CHART FILTER
 
 export const selectSelectedWorkflowNode = createSelector(
   [selectWorkflowChart],
-  (workflowChart) => workflowChart.selected
-)
+  workflowChart => workflowChart.selected,
+);
 
-export const selectSelectedNodeId = createSelector(
-  [selectSelectedWorkflowNode],
-  (workflowNode) => (workflowNode ? workflowNode.id : undefined)
-)
+export const selectSelectedNodeId = createSelector([selectSelectedWorkflowNode], workflowNode =>
+  workflowNode ? workflowNode.id : undefined,
+);
 
-export const selectSelectedNodetype = createSelector(
-  [selectSelectedWorkflowNode],
-  (workflowNode) => (workflowNode ? workflowNode.type : undefined)
-)
+export const selectSelectedNodetype = createSelector([selectSelectedWorkflowNode], workflowNode =>
+  workflowNode ? workflowNode.type : undefined,
+);
 
 export const selectWorkflowNodes = createSelector(
   [selectWorkflowChart],
-  (workflowChart) => workflowChart.nodes
-)
+  workflowChart => workflowChart.nodes,
+);
 
 export const selectWorkflowLinks = createSelector(
   [selectWorkflowChart],
-  (workflowChart) => workflowChart.links
-)
+  workflowChart => workflowChart.links,
+);
 
 export const selectSelectedWorkflowLink = createSelector(
   [selectSelectedNodeId, selectWorkflowLinks],
-  (selectedNodeId, workflowLinks) => workflowLinks[selectedNodeId]
-)
+  (selectedNodeId, workflowLinks) => workflowLinks[selectedNodeId],
+);
 
 export const selectSelectedWorkflowNodeContent = createSelector(
   [selectWorkflowNodes, selectSelectedNodeId],
-  (workflowNodes, selectedNodeId) => workflowNodes[selectedNodeId]
-)
+  (workflowNodes, selectedNodeId) => workflowNodes[selectedNodeId],
+);
 
 export const selectedLinkConnection = createSelector(
   [selectSelectedWorkflowLink, selectWorkflowNodes],
   (link, nodes) => {
     if (link) {
-      const { from, to } = link
+      const { from, to } = link;
 
-      const fromValue = nodes[from.nodeId].type.name
-      const toValue = nodes[to.nodeId].type.name
+      const fromValue = nodes[from.nodeId].type.name;
+      const toValue = nodes[to.nodeId].type.name;
 
-      return `${fromValue} -> ${toValue}`
+      return `${fromValue} -> ${toValue}`;
     }
-  }
-)
+  },
+);
 
 export const selectSelectedNodeValue = createSelector(
-  [
-    selectSelectedNodetype,
-    selectSelectedWorkflowNodeContent,
-    selectedLinkConnection,
-  ],
+  [selectSelectedNodetype, selectSelectedWorkflowNodeContent, selectedLinkConnection],
   (type, selectedNode, selectedLinkString) => {
     if (selectSelectedNodetype) {
-      let value = 'Selected '
+      let value = 'Selected ';
       if (type === 'node') {
-        value += `node: ${selectedNode.type.name}`
+        value += `node: ${selectedNode.type.name}`;
       } else {
-        value += `link: ${selectedLinkString}`
+        value += `link: ${selectedLinkString}`;
       }
 
-      return value
+      return value;
     }
-  }
-)
+  },
+);

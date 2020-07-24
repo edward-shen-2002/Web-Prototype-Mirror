@@ -1,34 +1,34 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from 'redux';
 
-import ui from './reducerss/ui'
+import ui from './reducerss/ui';
 
-import TemplatesStore from './TemplatesStore/store'
-import TemplateTypesStore from './TemplateTypesStore/store'
-import TemplatePackagesStore from './TemplatePackagesStore/store'
-import COAGroupsStore from './COAGroupsStore/store'
-import COAsStore from './COAsStore/store'
-import AppRolesStore from './AppRolesStore/store'
-import AppResourcesStore from './AppResourcesStore/store'
-import AppRoleResourcesStore from './AppRoleResourcesStore/store'
-import AppSysesStore from './AppSysesStore/store'
-import AppSysRolesStore from './AppSysRolesStore/store'
-import DialogsStore from './DialogsStore/store'
-import ReportingPeriodsStore from './ReportingPeriodsStore/store'
+import TemplatesStore from './TemplatesStore/store';
+import TemplateTypesStore from './TemplateTypesStore/store';
+import TemplatePackagesStore from './TemplatePackagesStore/store';
+import COAGroupsStore from './COAGroupsStore/store';
+import COAsStore from './COAsStore/store';
+import AppRolesStore from './AppRolesStore/store';
+import AppResourcesStore from './AppResourcesStore/store';
+import AppRoleResourcesStore from './AppRoleResourcesStore/store';
+import AppSysesStore from './AppSysesStore/store';
+import AppSysRolesStore from './AppSysRolesStore/store';
+import DialogsStore from './DialogsStore/store';
+import ReportingPeriodsStore from './ReportingPeriodsStore/store';
 
-import StatusesStore from './StatusesStore/store'
-import SubmissionPeriodsStore from './SubmissionPeriodsStore/store'
-import ProgramsStore from './ProgramsStore/store'
-import SubmissionsStore from './SubmissionsStore/store'
-import COATreeStore from './COATreeStore/store'
-import COATreesStore from './COATreesStore/store'
-import SheetNamesStore from './SheetNamesStore/store'
+import StatusesStore from './StatusesStore/store';
+import SubmissionPeriodsStore from './SubmissionPeriodsStore/store';
+import ProgramsStore from './ProgramsStore/store';
+import SubmissionsStore from './SubmissionsStore/store';
+import COATreeStore from './COATreeStore/store';
+import COATreesStore from './COATreesStore/store';
+import SheetNamesStore from './SheetNamesStore/store';
 
-import ColumnNamesStore from './ColumnNamesStore/store'
+import ColumnNamesStore from './ColumnNamesStore/store';
 
-import OrgsStore from './OrganizationsStore/store'
+import OrgsStore from './OrganizationsStore/store';
 
-import WorkflowStore from './WorkflowStore/store'
-import WorkflowsStore from './WorkflowsStore/store'
+import WorkflowStore from './WorkflowStore/store';
+import WorkflowsStore from './WorkflowsStore/store';
 
 export const root = combineReducers({
   StatusesStore: StatusesStore.reducer,
@@ -59,6 +59,6 @@ export const root = combineReducers({
   WorkflowsStore: WorkflowsStore.reducer,
 
   ui,
-})
+});
 
-export default root
+export default root;

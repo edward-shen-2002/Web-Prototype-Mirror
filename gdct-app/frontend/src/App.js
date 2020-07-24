@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 
-import { Route, Switch, Redirect } from 'react-router-dom'
+import { Route, Switch, Redirect } from 'react-router-dom';
 
-import { CircularProgress, Grid } from '@material-ui/core'
-import TemplateRouter from './views/TemplateRouter'
-import COARouter from './views/COARouter'
-import OrgRouter from './views/OrganizationRouter'
-import AuthPage from './components/AuthPage'
-import Statuses from './views/Statuses'
-import Programs from './views/Programs'
-import SheetNames from './views/SheetNames'
-import RoleRouter from './views/RoleRouter'
-import SubmissionRouter from './views/SubmissionRouter'
-import ReportingPeriods from './views/ReportingPeriods'
-import UserController from './controllers/User'
+import { CircularProgress, Grid } from '@material-ui/core';
+import TemplateRouter from './views/TemplateRouter';
+import COARouter from './views/COARouter';
+import OrgRouter from './views/OrganizationRouter';
+import AuthPage from './components/AuthPage';
+import Statuses from './views/Statuses';
+import Programs from './views/Programs';
+import SheetNames from './views/SheetNames';
+import RoleRouter from './views/RoleRouter';
+import SubmissionRouter from './views/SubmissionRouter';
+import ReportingPeriods from './views/ReportingPeriods';
+import UserController from './controllers/User';
 
-import './App.scss'
-import Login from './views/Login'
-import { ROUTE_WORKFLOW, ROUTE_COLUMN_NAMES } from './constants/routes'
-import WorkflowRouter from './views/WorkflowRouter/WorkflowRouter'
-import SignUp from './views/SignUp'
-import ColumnNames from './views/ColumnNames'
+import './App.scss';
+import Login from './views/Login';
+import { ROUTE_WORKFLOW, ROUTE_COLUMN_NAMES } from './constants/routes';
+import WorkflowRouter from './views/WorkflowRouter/WorkflowRouter';
+import SignUp from './views/SignUp';
+import ColumnNames from './views/ColumnNames';
 
 const PrivateRouter = () => {
   return (
@@ -38,42 +38,34 @@ const PrivateRouter = () => {
       <Route path="/organizations" component={OrgRouter} />
       <Redirect from="*" to="/sheetNames" />
     </Switch>
-  )
-}
+  );
+};
 const PublicRouter = ({ setLoggedIn }) => {
   return (
     <Switch>
-      <Route
-        path="/login"
-        render={(props) => <Login {...props} setLoggedIn={setLoggedIn} />}
-      />
+      <Route path="/login" render={props => <Login {...props} setLoggedIn={setLoggedIn} />} />
       <Route path="/signup" component={SignUp} />
       <Redirect from="*" to="/login" />
     </Switch>
-  )
-}
+  );
+};
 
 const App = () => {
-  const [isLoggedIn, setLoggedIn] = useState(null)
+  const [isLoggedIn, setLoggedIn] = useState(null);
   useEffect(() => {
     UserController.profile()
-      .then((res) => {
-        setLoggedIn(res.status === 'success')
+      .then(res => {
+        setLoggedIn(res.status === 'success');
       })
       .catch(() => {
-        setLoggedIn(false)
-      })
-  }, [])
+        setLoggedIn(false);
+      });
+  }, []);
 
   return (
     <div className="appContainer">
       {isLoggedIn === null ? (
-        <Grid
-          container
-          style={{ height: '100vh' }}
-          justify="center"
-          alignContent="center"
-        >
+        <Grid container style={{ height: '100vh' }} justify="center" alignContent="center">
           <Grid item>
             <CircularProgress color="secondary" />
           </Grid>
@@ -86,7 +78,7 @@ const App = () => {
         <PublicRouter setLoggedIn={setLoggedIn} />
       )}
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;

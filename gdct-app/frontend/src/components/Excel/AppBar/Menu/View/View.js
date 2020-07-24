@@ -1,8 +1,7 @@
-import React from 'react'
+import React from 'react';
 
-import Menu from '../Menu'
-
-import AcUnitIcon from '@material-ui/icons/AcUnit'
+import AcUnitIcon from '@material-ui/icons/AcUnit';
+import Menu from '../Menu';
 
 const View = ({ openedMenuName, handleClickMenu, handleHoverMenu }) => {
   const options = [
@@ -10,7 +9,7 @@ const View = ({ openedMenuName, handleClickMenu, handleHoverMenu }) => {
       icon: <AcUnitIcon />,
       label: 'LABEL',
     },
-  ]
+  ];
 
   return (
     <Menu
@@ -20,7 +19,7 @@ const View = ({ openedMenuName, handleClickMenu, handleHoverMenu }) => {
       handleClickMenu={handleClickMenu}
       handleHoverMenu={handleHoverMenu}
     />
-  )
-}
+  );
+};
 
-export default View
+export default View;

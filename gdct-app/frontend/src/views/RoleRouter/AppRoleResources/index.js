@@ -1,1 +1,1 @@
-export { default } from './AppRoleResources'
+export { default } from './AppRoleResources';

@@ -1,49 +1,46 @@
-import {
-  getNormalColumnWidth,
-  getExcelColumnWidth,
-} from '../../../../../tools/excel'
-import { DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER } from '../../../../../constants/excel'
+import { getNormalColumnWidth, getExcelColumnWidth } from '../../../../../tools/excel';
+import { DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER } from '../../../../../constants/excel';
 
 const RESIZE_COLUMN_END = (state, { leftOffsets }) => {
-  const newState = { ...state }
+  const newState = { ...state };
   const {
     columnResizeData,
     sheetFreezeColumnCount,
     sheetColumnWidths,
 
     scrollData,
-  } = newState
+  } = newState;
 
-  const { column, offset } = columnResizeData
-  const { scrollLeft } = scrollData
+  const { column, offset } = columnResizeData;
+  const { scrollLeft } = scrollData;
 
   const sheetFreezeColumnEndOffset =
     leftOffsets[sheetFreezeColumnCount] +
     (sheetFreezeColumnCount
       ? getNormalColumnWidth(sheetColumnWidths[sheetFreezeColumnCount])
-      : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER)
+      : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER);
 
-  const columnLeftOffset = leftOffsets[column]
-  const columnWidth = getNormalColumnWidth(sheetColumnWidths[column])
-  const currentOffset = columnLeftOffset + columnWidth
+  const columnLeftOffset = leftOffsets[column];
+  const columnWidth = getNormalColumnWidth(sheetColumnWidths[column]);
+  const currentOffset = columnLeftOffset + columnWidth;
 
-  let newColumnWidth = offset - columnLeftOffset
+  let newColumnWidth = offset - columnLeftOffset;
 
   if (column <= sheetFreezeColumnCount && offset > sheetFreezeColumnEndOffset)
-    newColumnWidth -= scrollLeft
+    newColumnWidth -= scrollLeft;
 
   if (offset !== currentOffset) {
     newState.columnWidths = {
       ...sheetColumnWidths,
       [column]: getExcelColumnWidth(newColumnWidth),
-    }
-    window.sheetGridRef.current.resetAfterColumnIndex(column)
+    };
+    window.sheetGridRef.current.resetAfterColumnIndex(column);
   }
 
-  newState.isColumnResizeMode = false
-  newState.columnResizeData = null
+  newState.isColumnResizeMode = false;
+  newState.columnResizeData = null;
 
-  return newState
-}
+  return newState;
+};
 
-export default RESIZE_COLUMN_END
+export default RESIZE_COLUMN_END;

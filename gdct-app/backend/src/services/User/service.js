@@ -1,6 +1,6 @@
+import Container, { Service } from 'typedi';
 import UserRepository from '../../repositories/User';
 import AppSysRoleRepository from '../../repositories/AppSysRole';
-import Container, { Service } from 'typedi';
 // import {
 //   sendUserVerficationEmail,
 //   sendAdminVerficationEmail,
@@ -18,14 +18,14 @@ export default class UserService {
 
   register(registerData) {
     // JS User object
-    this.UserRepository.create(registerData).then((registerRecord) => {
+    this.UserRepository.create(registerData).then(registerRecord => {
       sendUserVerficationEmail(registerData);
-      const hashedUsername = registerRecord.hashedUsername;
-      const username = registerRecord.username;
+      const { hashedUsername } = registerRecord;
+      const { username } = registerRecord;
       const userId = registerRecord._id;
-      let orgList = [];
-      registerData.sysRole.forEach((sysRole) => {
-        sysRole.org.forEach((org) => {
+      const orgList = [];
+      registerData.sysRole.forEach(sysRole => {
+        sysRole.org.forEach(org => {
           let orgInfo = orgList.find(function (element) {
             return element.orgId == org.orgId;
           });
@@ -39,8 +39,8 @@ export default class UserService {
             orgInfo = orgData;
             orgList.push(orgInfo);
           }
-          org.program.forEach((program) => {
-            program.template.forEach((template) => {
+          org.program.forEach(program => {
+            program.template.forEach(template => {
               orgInfo.permission.push({
                 template: template.templateCode,
                 role: sysRole.role,
@@ -50,7 +50,7 @@ export default class UserService {
         });
       });
 
-      orgList.forEach((orgInfo) => {
+      orgList.forEach(orgInfo => {
         sendAdminVerficationEmail(orgInfo, hashedUsername, userId, username);
       });
     });
@@ -66,10 +66,10 @@ export default class UserService {
     let checkActive = true;
 
     this.UserRepository.findById(_id)
-      .then((user) => {
+      .then(user => {
         if (approve == 'true') {
-          user.sysRole.forEach((sysRole) => {
-            sysRole.org.forEach((org) => {
+          user.sysRole.forEach(sysRole => {
+            sysRole.org.forEach(org => {
               if (org.orgId == orgId) org.IsActive = true;
               checkActive = checkActive && org.IsActive;
             });
@@ -78,27 +78,26 @@ export default class UserService {
             sendUserActiveEmail(user).catch(next);
           }
           this.UserRepository.updateSysRole(_id, user.sysRole)
-            .then((model) => {
+            .then(model => {
               console.log(model.sysRole[0].org);
             })
             .catch(next);
           return 'You have approved the user. The user will active the account by email.';
-        } else {
-          sendUserRejectEmail(user).catch(next);
-          return 'You have rejected the user. The user will be notified by email.';
         }
+        sendUserRejectEmail(user).catch(next);
+        return 'You have rejected the user. The user will be notified by email.';
       })
       .catch(next);
   }
 
   activeUser(_id) {
     this.UserRepository.findById({ _id })
-      .then((model) => {
+      .then(model => {
         console.log(model);
       })
       .catch(next);
     this.UserRepository.activeUser({ _id })
-      .then((model) => {
+      .then(model => {
         console.log(model);
         return 'The account active';
       })
@@ -106,9 +105,10 @@ export default class UserService {
   }
 
   changePassword() {}
+
   async processSignUp(user) {
     if (user.sysRole) {
-      user.sysRole.forEach(async (id) => {
+      user.sysRole.forEach(async id => {
         await this.AppSysRoleReposiotry.findById(id);
       });
     }

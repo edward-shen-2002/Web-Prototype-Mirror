@@ -1,54 +1,41 @@
-import React, { useMemo, useEffect, useState } from 'react'
-import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import React, { useMemo, useEffect, useState } from 'react';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 
-import { getProgramsRequest } from '../../../store/thunks/program'
+import MaterialTable from 'material-table';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
 
-import MaterialTable from 'material-table'
-import AddIcon from '@material-ui/icons/Add'
-import DeleteIcon from '@material-ui/icons/Delete'
+import PropTypes from 'prop-types';
+import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors';
+import { selectProgramsStore } from '../../../store/ProgramsStore/selectors';
+import { getProgramsRequest } from '../../../store/thunks/program';
+import Loading from '../../../components/Loading/Loading';
 
-import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors'
-import { selectProgramsStore } from '../../../store/ProgramsStore/selectors'
-import PropTypes from 'prop-types'
-import Loading from '../../../components/Loading/Loading'
+const ProgList = ({ programIds, isEditable = true, onClickAdd, onClickDelete }) => {
+  const dispatch = useDispatch();
 
-const ProgList = ({
-  programIds,
-  isEditable = true,
-  onClickAdd,
-  onClickDelete,
-}) => {
-  const dispatch = useDispatch()
+  const { programList } = useSelector(state => ({
+    programList: selectFactoryRESTResponseTableValues(selectProgramsStore)(state),
+  }));
 
-  const { programList } = useSelector((state) => ({
-    programList: selectFactoryRESTResponseTableValues(selectProgramsStore)(
-      state
-    ),
-  }))
-
-  const { isProgramsCallInProgress } = useSelector((state) => ({
+  const { isProgramsCallInProgress } = useSelector(state => ({
     isProgramsCallInProgress: state.ProgramsStore.isCallInProgress,
-  }))
+  }));
 
   useEffect(() => {
-    dispatch(getProgramsRequest())
-  }, [])
+    dispatch(getProgramsRequest());
+  }, []);
 
-  const OrgProgs = () =>
-    programList.filter((elem) => programIds.includes(elem._id))
-  const nonOrgProgs = () =>
-    programList.filter((elem) => !programIds.includes(elem._id))
+  const OrgProgs = () => programList.filter(elem => programIds.includes(elem._id));
+  const nonOrgProgs = () => programList.filter(elem => !programIds.includes(elem._id));
 
   const columns = useMemo(() => [
     { title: 'Name', field: 'name' },
     { title: 'Code', field: 'code' },
     { title: 'Active', type: 'boolean', field: 'isActive' },
-  ])
+  ]);
 
-  const options = useMemo(
-    () => ({ actionsColumnIndex: -1, search: false, showTitle: true }),
-    []
-  )
+  const options = useMemo(() => ({ actionsColumnIndex: -1, search: false, showTitle: true }), []);
 
   const left_actions = useMemo(() => [
     {
@@ -56,7 +43,7 @@ const ProgList = ({
       tooltip: 'Remove from Organization',
       onClick: onClickDelete,
     },
-  ])
+  ]);
 
   const right_actions = useMemo(() => [
     {
@@ -64,7 +51,7 @@ const ProgList = ({
       tooltip: 'Add to Organization',
       onClick: onClickAdd,
     },
-  ])
+  ]);
 
   return isProgramsCallInProgress ? (
     <Loading />
@@ -89,14 +76,14 @@ const ProgList = ({
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
 ProgList.propTypes = {
   programIds: PropTypes.array.isRequired,
   isEditable: PropTypes.bool,
   onClickAdd: PropTypes.func.isRequired,
   onClickDelete: PropTypes.func.isRequired,
-}
+};
 
-export default ProgList
+export default ProgList;

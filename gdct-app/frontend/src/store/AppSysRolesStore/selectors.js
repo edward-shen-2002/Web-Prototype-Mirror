@@ -1,1 +1,1 @@
-export const selectAppSysRolesStore = (state) => state.AppSysRolesStore
+export const selectAppSysRolesStore = state => state.AppSysRolesStore;

@@ -1,6 +1,6 @@
 // ! TODO : Add parameters here for hyperlinks?
 const SET_SHEET = (state, { sheetName }) => {
-  let newState = { ...state }
+  let newState = { ...state };
 
   const {
     activeCellPosition,
@@ -18,7 +18,7 @@ const SET_SHEET = (state, { sheetName }) => {
     sheetHiddenRows,
     stagnantSelectionAreas,
     inactiveSheets,
-  } = newState
+  } = newState;
 
   const currentSheetData = {
     activeCellPosition,
@@ -33,15 +33,15 @@ const SET_SHEET = (state, { sheetName }) => {
     sheetHiddenRows,
     stagnantSelectionAreas,
     activeCellSelectionAreaIndex,
-  }
+  };
 
-  const newActiveSheetData = newState.inactiveSheets[sheetName]
+  const newActiveSheetData = newState.inactiveSheets[sheetName];
 
   newState.inactiveSheets = {
     ...inactiveSheets,
     [activeSheetName]: currentSheetData,
     [sheetName]: undefined,
-  }
+  };
 
   // ! Need to updae active cell input data!
   newState = {
@@ -77,11 +77,11 @@ const SET_SHEET = (state, { sheetName }) => {
     isFreezeColumnResizeMode: false,
     isRowResizeMode: false,
     isFreezeRowResizeMode: false,
-  }
+  };
 
-  window.sheetGridRef.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 })
+  window.sheetGridRef.current.resetAfterIndices({ columnIndex: 0, rowIndex: 0 });
 
-  return newState
-}
+  return newState;
+};
 
-export default SET_SHEET
+export default SET_SHEET;

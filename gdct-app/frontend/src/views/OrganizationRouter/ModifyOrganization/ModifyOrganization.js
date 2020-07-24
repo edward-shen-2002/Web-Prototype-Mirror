@@ -1,23 +1,23 @@
-import React, { useMemo, useEffect, useState } from 'react'
-import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import React, { useMemo, useEffect, useState } from 'react';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 
-import MaterialTable from 'material-table'
-import Paper from '@material-ui/core/Paper'
-import AddIcon from '@material-ui/icons/Add'
-import DeleteIcon from '@material-ui/icons/Delete'
-import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
-import AppBar from '@material-ui/core/AppBar'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
-import Checkbox from '@material-ui/core/Checkbox'
+import MaterialTable from 'material-table';
+import Paper from '@material-ui/core/Paper';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Checkbox from '@material-ui/core/Checkbox';
 
-import Typography from '@material-ui/core/Typography'
+import Typography from '@material-ui/core/Typography';
 
-import './ModifyOrganization.scss'
-import PropTypes, { object } from 'prop-types'
-import { userIdButton } from '../../../components/buttons'
-import ProgList from '../ProgramList'
+import './ModifyOrganization.scss';
+import PropTypes, { object } from 'prop-types';
+import { userIdButton } from '../../../components/buttons';
+import ProgList from '../ProgramList';
 
 const OrganizationHeader = ({ title }) => {
   return (
@@ -25,40 +25,33 @@ const OrganizationHeader = ({ title }) => {
       <Typography variant="h5">{title}</Typography>
       {/* <HeaderActions/> */}
     </Paper>
-  )
-}
+  );
+};
 
 const Label = ({ attribute, text }) => (
   <label htmlFor={attribute}>
     <Typography variant="subtitle2">{text}</Typography>
   </label>
-)
+);
 
 const getValue = (object, attribute) => {
-  let value
+  let value;
   switch (typeof object[attribute]) {
     case 'undefined':
-      value = ''
-      break
+      value = '';
+      break;
     default:
-      value = object[attribute]
+      value = object[attribute];
   }
   switch (attribute) {
     case 'effectiveDate':
-      const tmp = new Date(value)
-      value = tmp.toString()
+      const tmp = new Date(value);
+      value = tmp.toString();
   }
-  return { value }
-}
+  return { value };
+};
 
-const Input = ({
-  object,
-  attribute,
-  text,
-  handleChanges,
-  type,
-  cannotEdit,
-}) => (
+const Input = ({ object, attribute, text, handleChanges, type, cannotEdit }) => (
   <TextField
     name={attribute}
     type={type}
@@ -69,21 +62,18 @@ const Input = ({
     fullWidth
     disabled={!object.active || cannotEdit}
   />
-)
+);
 
-const TextGroup = (props) => (
-  <div
-    className="InputGroup"
-    style={{ width: props.fullWidth ? '100%' : '23%' }}
-  >
+const TextGroup = props => (
+  <div className="InputGroup" style={{ width: props.fullWidth ? '100%' : '23%' }}>
     <Label {...props} />
     <br />
     <Input {...props} type={'text'} />
   </div>
-)
+);
 
 // NOT a generic button group, DO NOT REUSE for other purposes
-const ButtonGroup = (props) => (
+const ButtonGroup = props => (
   <div className="InputGroup">
     <Label {...props} />
     <Checkbox
@@ -93,49 +83,30 @@ const ButtonGroup = (props) => (
       onChange={props.handleChanges}
     />
   </div>
-)
+);
 
-const NumberGroup = (props) => (
+const NumberGroup = props => (
   <div className="InputGroup" style={{ width: '23%' }}>
     <Label {...props} />
     <br />
     <Input {...props} type="number" />
   </div>
-)
+);
 
-const OrgInfo = (props) => (
+const OrgInfo = props => (
   <div>
     <div align="right">
-      <ButtonGroup
-        {...props}
-        attribute={'active'}
-        text={'Expire Organization'}
-      />
+      <ButtonGroup {...props} attribute={'active'} text={'Expire Organization'} />
     </div>
 
-    <TextGroup
-      {...props}
-      attribute={'name'}
-      text={'Organization Name*'}
-      fullWidth
-    />
-    <TextGroup
-      {...props}
-      attribute={'legalName'}
-      text={'Legal Name'}
-      fullWidth
-    />
+    <TextGroup {...props} attribute={'name'} text={'Organization Name*'} fullWidth />
+    <TextGroup {...props} attribute={'legalName'} text={'Legal Name'} fullWidth />
 
     <div className="formRow" id="basicInfo">
       <NumberGroup {...props} attribute={'id'} text={'Organization ID*'} />
       <TextGroup {...props} attribute={'code'} text={'Organization Code'} />
       <TextGroup {...props} attribute={'IFISNum'} text={'IFIS Number*'} />
-      <TextGroup
-        {...props}
-        attribute={'effectiveDate'}
-        text={'Effective Date'}
-        cannotEdit
-      />
+      <TextGroup {...props} attribute={'effectiveDate'} text={'Effective Date'} cannotEdit />
     </div>
 
     <div className="formRow" id="locationInfo">
@@ -146,21 +117,17 @@ const OrgInfo = (props) => (
     </div>
 
     <div className="formRow" id="userInfo">
-      <TextGroup
-        {...props}
-        attribute={'authorizedUserId'}
-        text={'Authorized User'}
-      />
+      <TextGroup {...props} attribute={'authorizedUserId'} text={'Authorized User'} />
       {/*
                 <userIdButton onChange={props.handleChanges}/>
             */}
       <TextGroup {...props} attribute={'contactUserId'} text={'Contact User'} />
     </div>
   </div>
-)
+);
 
-const TabPanel = (props) => {
-  const { children, value, index, ...other } = props
+const TabPanel = props => {
+  const { children, value, index, ...other } = props;
 
   return (
     <div
@@ -174,28 +141,28 @@ const TabPanel = (props) => {
     >
       {children}
     </div>
-  )
-}
+  );
+};
 
-const makeIdentifier = (index) => ({
+const makeIdentifier = index => ({
   id: `tab-${index}`,
   'aria-controls': `tabpanel-${index}`,
-})
+});
 
-const OrganizationForm = (props) => {
-  const [current, setCurrent] = useState(0)
-  const handleChange = (event, value) => setCurrent(value)
+const OrganizationForm = props => {
+  const [current, setCurrent] = useState(0);
+  const handleChange = (event, value) => setCurrent(value);
 
   const onClickAdd = (_event, program) => {
-    props.updateState('programId', props.object.programId.concat(program._id))
-  }
+    props.updateState('programId', props.object.programId.concat(program._id));
+  };
 
   const onClickDelete = (_event, program) => {
     props.updateState(
       'programId',
-      props.object.programId.filter((elem) => elem !== program._id)
-    )
-  }
+      props.object.programId.filter(elem => elem !== program._id),
+    );
+  };
 
   return (
     <Paper>
@@ -252,53 +219,53 @@ const OrganizationForm = (props) => {
         </div>
       </form>
     </Paper>
-  )
-}
+  );
+};
 
 const currentTime = () => {
-  const now = new Date()
-  return now.toISOString()
-}
+  const now = new Date();
+  return now.toISOString();
+};
 
 class ModifyOrganization extends React.Component {
-  state = {}
+  state = {};
 
   constructor(props) {
-    super(props)
-    const temp = Object.assign({}, props.object)
-    delete temp._id
-    this.state = temp
+    super(props);
+    const temp = Object.assign({}, props.object);
+    delete temp._id;
+    this.state = temp;
   }
 
   updateState = (name, value) => {
-    this.setState((state) => Object.assign({}, state, { [name]: value }))
-  }
+    this.setState(state => Object.assign({}, state, { [name]: value }));
+  };
 
-  handleChanges = (e) => {
-    const { name, value, checked, type } = e.target
-    let updateValue
+  handleChanges = e => {
+    const { name, value, checked, type } = e.target;
+    let updateValue;
 
     switch (type) {
       case 'checkbox':
-        updateValue = !checked
-        break
+        updateValue = !checked;
+        break;
       case 'number':
-        updateValue = parseInt(value)
-        break
+        updateValue = parseInt(value);
+        break;
       default:
-        updateValue = value
+        updateValue = value;
     }
 
     if (name === 'active') {
       if (updateValue) {
-        this.updateState('expiryDate', null)
+        this.updateState('expiryDate', null);
       } else {
-        this.updateState('expiryDate', currentTime())
+        this.updateState('expiryDate', currentTime());
       }
     }
 
-    this.updateState(name, updateValue)
-  }
+    this.updateState(name, updateValue);
+  };
 
   render = () => (
     <div>
@@ -311,7 +278,7 @@ class ModifyOrganization extends React.Component {
         updateState={this.updateState}
       />
     </div>
-  )
+  );
 }
 
 // createOrg passes in empty object, editOrg passes in pre-existing object
@@ -320,6 +287,6 @@ ModifyOrganization.propTypes = {
   title: PropTypes.string,
   submit: PropTypes.func,
   cancel: PropTypes.func,
-}
+};
 
-export { currentTime, ModifyOrganization as default }
+export { currentTime, ModifyOrganization as default };

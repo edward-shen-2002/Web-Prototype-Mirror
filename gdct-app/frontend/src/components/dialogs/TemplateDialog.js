@@ -1,50 +1,41 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react';
 
-import SelectableTableDialog from './SelectableTableDialog'
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
+import SelectableTableDialog from './SelectableTableDialog';
 
-import { getTemplatesRequest } from '../../store/thunks/template'
+import { getTemplatesRequest } from '../../store/thunks/template';
 
-import { useSelector, shallowEqual, useDispatch } from 'react-redux'
-import { useMemo } from 'react'
-import DialogsStore from '../../store/DialogsStore/store'
-import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
-import { selectTemplatesStore } from '../../store/TemplatesStore/selectors'
-import { selectIsTemplateDialogOpen } from '../../store/DialogsStore/selectors'
+import DialogsStore from '../../store/DialogsStore/store';
+import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors';
+import { selectTemplatesStore } from '../../store/TemplatesStore/selectors';
+import { selectIsTemplateDialogOpen } from '../../store/DialogsStore/selectors';
 
-const TemplateDialog = ({
-  selectedTemplates,
-  handleChange,
-  shouldClose = true,
-}) => {
-  const dispatch = useDispatch()
+const TemplateDialog = ({ selectedTemplates, handleChange, shouldClose = true }) => {
+  const dispatch = useDispatch();
 
   const { isTemplateDialogOpen, templates } = useSelector(
-    (state) => ({
+    state => ({
       isTemplateDialogOpen: selectIsTemplateDialogOpen(state),
-      templates: selectFactoryRESTResponseTableValues(selectTemplatesStore)(
-        state
-      ),
+      templates: selectFactoryRESTResponseTableValues(selectTemplatesStore)(state),
     }),
-    shallowEqual
-  )
+    shallowEqual,
+  );
 
-  const handleClose = useCallback(
-    () => dispatch(DialogsStore.actions.CLOSE_TEMPLATE_DIALOG()),
-    [dispatch]
-  )
+  const handleClose = useCallback(() => dispatch(DialogsStore.actions.CLOSE_TEMPLATE_DIALOG()), [
+    dispatch,
+  ]);
 
   const handleSelect = useCallback(
-    (data) => {
-      handleChange(data)
-      if (shouldClose) handleClose()
+    data => {
+      handleChange(data);
+      if (shouldClose) handleClose();
     },
-    [dispatch, shouldClose, handleChange]
-  )
+    [dispatch, shouldClose, handleChange],
+  );
 
   useEffect(() => {
-    if (isTemplateDialogOpen && !templates.length)
-      dispatch(getTemplatesRequest())
-  }, [dispatch, isTemplateDialogOpen])
+    if (isTemplateDialogOpen && !templates.length) dispatch(getTemplatesRequest());
+  }, [dispatch, isTemplateDialogOpen]);
 
   const columns = useMemo(
     () => [
@@ -53,10 +44,10 @@ const TemplateDialog = ({
         field: 'name',
       },
     ],
-    []
-  )
+    [],
+  );
 
-  const getKey = selectedTemplates ? (t) => t._id : undefined
+  const getKey = selectedTemplates ? t => t._id : undefined;
 
   return (
     <SelectableTableDialog
@@ -69,7 +60,7 @@ const TemplateDialog = ({
       handleClose={handleClose}
       handleSelect={handleSelect}
     />
-  )
-}
+  );
+};
 
-export default TemplateDialog
+export default TemplateDialog;

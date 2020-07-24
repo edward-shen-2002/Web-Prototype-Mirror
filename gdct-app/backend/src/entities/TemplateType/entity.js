@@ -15,20 +15,20 @@ export default class TemplateTypeEntity {
     isInputtable,
     isViewable,
     isReportable,
-    isActive
+    isActive,
   }) {
-    this._id = _id
-    this.name = name
-    this.templateWorkflowId = templateWorkflowId
-    this.submissionWorkflowId = submissionWorkflowId
-    this.description = description
-    this.programIds = programIds
-    this.isApprovable = isApprovable
-    this.isReviewable = isReviewable
-    this.isSubmittable = isSubmittable
-    this.isInputtable = isInputtable
-    this.isViewable = isViewable
-    this.isReportable = isReportable
-    this.isActive = isActive
+    this._id = _id;
+    this.name = name;
+    this.templateWorkflowId = templateWorkflowId;
+    this.submissionWorkflowId = submissionWorkflowId;
+    this.description = description;
+    this.programIds = programIds;
+    this.isApprovable = isApprovable;
+    this.isReviewable = isReviewable;
+    this.isSubmittable = isSubmittable;
+    this.isInputtable = isInputtable;
+    this.isViewable = isViewable;
+    this.isReportable = isReportable;
+    this.isActive = isActive;
   }
 }

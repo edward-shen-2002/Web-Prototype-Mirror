@@ -9,15 +9,13 @@ export default class UserRepository extends BaseRepository {
   }
 
   async create(user) {
-    return UserModel.create(user).then(
-      (user) => new UserEntity(user.toObject())
-    );
+    return UserModel.create(user).then(user => new UserEntity(user.toObject()));
   }
 
   async checkAuthenticate(email, password) {
     return UserModel.findOne({ email })
       .select('+password')
-      .then(async (user) => {
+      .then(async user => {
         if (!user || !(await user.checkPassword(password, user.password))) {
           throw new ErrorGDCT('Incorrect email or password', 400);
         }
@@ -26,19 +24,17 @@ export default class UserRepository extends BaseRepository {
   }
 
   async create(User) {
-    return UserModel.create(User).then(
-      (user) => new UserEntity(user.toObject())
-    );
+    return UserModel.create(User).then(user => new UserEntity(user.toObject()));
   }
 
   async findById(_id) {
-    return UserModel.findOne({ _id }).then((user) => {
+    return UserModel.findOne({ _id }).then(user => {
       return new UserEntity(user.toObject());
     });
   }
 
   async updateSysRole(_id, sysRole) {
-    return UserModel.findOneAndUpdate({ _id }, { sysRole: sysRole });
+    return UserModel.findOneAndUpdate({ _id }, { sysRole });
   }
 
   async activeUser(_id) {

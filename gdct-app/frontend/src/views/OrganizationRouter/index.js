@@ -1,1 +1,1 @@
-export { default } from './OrganizationRouter'
+export { default } from './OrganizationRouter';

@@ -1,1 +1,1 @@
-export { default } from './EditOrganization'
+export { default } from './EditOrganization';

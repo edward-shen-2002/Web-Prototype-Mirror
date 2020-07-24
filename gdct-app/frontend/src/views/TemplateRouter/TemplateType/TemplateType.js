@@ -1,33 +1,31 @@
-import React, { useCallback, useMemo, useEffect, useState } from 'react'
-import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import React, { useCallback, useMemo, useEffect, useState } from 'react';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 
+import MaterialTable from 'material-table';
+import LaunchIcon from '@material-ui/icons/Launch';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import { List } from '@material-ui/core';
 import {
   getTemplateTypesRequest,
   createTemplateTypeRequest,
   deleteTemplateTypeRequest,
   updateTemplateTypeRequest,
-} from '../../../store/thunks/templateType'
-import Loading from '../../../components/Loading/Loading'
-import ProgramList from '../../../views/OrganizationRouter/ProgramList'
+} from '../../../store/thunks/templateType';
+import Loading from '../../../components/Loading/Loading';
+import ProgramList from '../../OrganizationRouter/ProgramList';
 
 import {
   getProgramsRequest,
   createProgramsRequest,
   deleteProgramsRequest,
   updateProgramsRequest,
-} from '../../../store/thunks/program'
+} from '../../../store/thunks/program';
 
-import MaterialTable from 'material-table'
-import LaunchIcon from '@material-ui/icons/Launch'
-import Paper from '@material-ui/core/Paper'
-
-import Typography from '@material-ui/core/Typography'
-
-import './TemplateType.scss'
-import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors'
-import { selectTemplateTypesStore } from '../../../store/TemplateTypesStore/selectors'
-import { selectProgramsStore } from '../../../store/ProgramsStore/selectors'
-import { List } from '@material-ui/core'
+import './TemplateType.scss';
+import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors';
+import { selectTemplateTypesStore } from '../../../store/TemplateTypesStore/selectors';
+import { selectProgramsStore } from '../../../store/ProgramsStore/selectors';
 
 const TemplateTypeHeader = () => {
   return (
@@ -35,8 +33,8 @@ const TemplateTypeHeader = () => {
       <Typography variant="h5">Template Type Viewer</Typography>
       {/* <HeaderActions/> */}
     </Paper>
-  )
-}
+  );
+};
 
 const TemplateTypeTable = ({
   history,
@@ -44,16 +42,16 @@ const TemplateTypeTable = ({
     params: { _id },
   },
 }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const { templateType } = useSelector(
-    (state) => ({
-      templateType: selectFactoryRESTResponseTableValues(
-        selectTemplateTypesStore
-      )(state).filter((elem) => elem._id == _id) || [{}],
+    state => ({
+      templateType: selectFactoryRESTResponseTableValues(selectTemplateTypesStore)(state).filter(
+        elem => elem._id == _id,
+      ) || [{}],
     }),
-    shallowEqual
-  )
+    shallowEqual,
+  );
 
   const columns = useMemo(
     () => [
@@ -68,8 +66,8 @@ const TemplateTypeTable = ({
       { title: 'Reportable', type: 'boolean', field: 'isReportable' },
       { title: 'Active', type: 'boolean', field: 'isActive' },
     ],
-    []
-  )
+    [],
+  );
 
   const options = useMemo(
     () => ({
@@ -78,12 +76,12 @@ const TemplateTypeTable = ({
       showTitle: true,
       paging: false,
     }),
-    []
-  )
+    [],
+  );
 
   useEffect(() => {
-    dispatch(getTemplateTypesRequest())
-  }, [dispatch])
+    dispatch(getTemplateTypesRequest());
+  }, [dispatch]);
 
   return (
     <MaterialTable
@@ -92,8 +90,8 @@ const TemplateTypeTable = ({
       data={templateType}
       options={options}
     />
-  )
-}
+  );
+};
 
 const LinkProgramTable = ({
   history,
@@ -101,40 +99,37 @@ const LinkProgramTable = ({
     params: { _id },
   },
 }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const { templateType } = useSelector(
-    (state) => ({
-      templateType: (selectFactoryRESTResponseTableValues(
-        selectTemplateTypesStore
-      )(state).filter((elem) => elem._id == _id) || [{}])[0],
+    state => ({
+      templateType: (selectFactoryRESTResponseTableValues(selectTemplateTypesStore)(state).filter(
+        elem => elem._id == _id,
+      ) || [{}])[0],
     }),
-    shallowEqual
-  )
+    shallowEqual,
+  );
   const isTemplateTypesCallInProgress = useSelector(
-    ({ TemplateTypesStore: { isCallInProgress } }) => isCallInProgress
-  )
+    ({ TemplateTypesStore: { isCallInProgress } }) => isCallInProgress,
+  );
   const isProgramsCallInProgress = useSelector(
-    ({ ProgramsStore: { isCallInProgress } }) => isCallInProgress
-  )
-  const isCallInProgress =
-    isTemplateTypesCallInProgress && isProgramsCallInProgress
-  const accept = (result) => {
-    redirect()
-  }
-  const reject = (error) => {
+    ({ ProgramsStore: { isCallInProgress } }) => isCallInProgress,
+  );
+  const isCallInProgress = isTemplateTypesCallInProgress && isProgramsCallInProgress;
+  const accept = result => {
+    redirect();
+  };
+  const reject = error => {
     // reflect error message on form somehow o.O
-    alert('Missing or invalid parameters')
-  }
+    alert('Missing or invalid parameters');
+  };
   const onClickAdd = (_event, program) => {
-    templateType.programIds.push(program._id)
-    dispatch(updateTemplateTypeRequest(templateType), accept, reject)
-  }
+    templateType.programIds.push(program._id);
+    dispatch(updateTemplateTypeRequest(templateType), accept, reject);
+  };
   const onClickDelete = (_event, program) => {
-    templateType.programIds = templateType.programIds.filter(
-      (elem) => elem != program._id
-    )
-    dispatch(updateTemplateTypeRequest(templateType), accept, reject)
-  }
+    templateType.programIds = templateType.programIds.filter(elem => elem != program._id);
+    dispatch(updateTemplateTypeRequest(templateType), accept, reject);
+  };
   return !templateType || isCallInProgress ? (
     <Loading />
   ) : (
@@ -144,16 +139,16 @@ const LinkProgramTable = ({
       onClickAdd={onClickAdd}
       onClickDelete={onClickDelete}
     />
-  )
-}
+  );
+};
 
-const TemplateType = (props) => (
+const TemplateType = props => (
   <div className="templateTypePage">
     <TemplateTypeHeader />
     {/* <FileDropzone/> */}
     <TemplateTypeTable {...props} />
     <LinkProgramTable {...props} />
   </div>
-)
+);
 
-export default TemplateType
+export default TemplateType;

@@ -1,41 +1,38 @@
-import React, { useMemo, useEffect } from 'react'
-import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import React, { useMemo, useEffect } from 'react';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 
+import MaterialTable from 'material-table';
+import Paper from '@material-ui/core/Paper';
+
+import Typography from '@material-ui/core/Typography';
 import {
   getSubmissionPeriodsRequest,
   createSubmissionPeriodRequest,
   deleteSubmissionPeriodRequest,
   updateSubmissionPeriodRequest,
-} from '../../store/thunks/submissionPeriod'
+} from '../../store/thunks/submissionPeriod';
 
-import MaterialTable from 'material-table'
-import Paper from '@material-ui/core/Paper'
-
-import Typography from '@material-ui/core/Typography'
-
-import { ReportingPeriodIdButton } from '../../components/buttons'
-import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
-import { selectSubmissionPeriodsStore } from '../../store/SubmissionPeriodsStore/selectors'
+import { ReportingPeriodIdButton } from '../../components/buttons';
+import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors';
+import { selectSubmissionPeriodsStore } from '../../store/SubmissionPeriodsStore/selectors';
 
 const SubmissionPeriodHeader = () => {
   return (
     <Paper className="header">
       <Typography variant="h5">Submission Periods</Typography>
     </Paper>
-  )
-}
+  );
+};
 
 const SubmissionPeriod = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const { submissionPeriods } = useSelector(
-    (state) => ({
-      submissionPeriods: selectFactoryRESTResponseTableValues(
-        selectSubmissionPeriodsStore
-      )(state),
+    state => ({
+      submissionPeriods: selectFactoryRESTResponseTableValues(selectSubmissionPeriodsStore)(state),
     }),
-    shallowEqual
-  )
+    shallowEqual,
+  );
 
   const columns = useMemo(
     () => [
@@ -49,41 +46,32 @@ const SubmissionPeriod = () => {
         editComponent: ReportingPeriodIdButton,
       },
     ],
-    []
-  )
+    [],
+  );
 
-  const options = useMemo(
-    () => ({ actionsColumnIndex: -1, search: false, showTitle: false }),
-    []
-  )
+  const options = useMemo(() => ({ actionsColumnIndex: -1, search: false, showTitle: false }), []);
 
   const editable = useMemo(
     () => ({
-      onRowAdd: (submissionPeriod) =>
+      onRowAdd: submissionPeriod =>
         new Promise((resolve, reject) => {
-          dispatch(
-            createSubmissionPeriodRequest(submissionPeriod, resolve, reject)
-          )
+          dispatch(createSubmissionPeriodRequest(submissionPeriod, resolve, reject));
         }),
-      onRowUpdate: (submissionPeriod) =>
+      onRowUpdate: submissionPeriod =>
         new Promise((resolve, reject) => {
-          dispatch(
-            updateSubmissionPeriodRequest(submissionPeriod, resolve, reject)
-          )
+          dispatch(updateSubmissionPeriodRequest(submissionPeriod, resolve, reject));
         }),
-      onRowDelete: (submissionPeriod) =>
+      onRowDelete: submissionPeriod =>
         new Promise((resolve, reject) => {
-          dispatch(
-            deleteSubmissionPeriodRequest(submissionPeriod._id, resolve, reject)
-          )
+          dispatch(deleteSubmissionPeriodRequest(submissionPeriod._id, resolve, reject));
         }),
     }),
-    [dispatch]
-  )
+    [dispatch],
+  );
 
   useEffect(() => {
-    dispatch(getSubmissionPeriodsRequest())
-  }, [dispatch])
+    dispatch(getSubmissionPeriodsRequest());
+  }, [dispatch]);
 
   return (
     <div>
@@ -95,7 +83,7 @@ const SubmissionPeriod = () => {
         options={options}
       />
     </div>
-  )
-}
+  );
+};
 
-export default SubmissionPeriod
+export default SubmissionPeriod;

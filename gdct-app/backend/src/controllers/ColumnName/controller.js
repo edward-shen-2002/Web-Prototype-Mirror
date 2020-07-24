@@ -1,65 +1,47 @@
-import { Service } from 'typedi'
-import { Router } from 'express'
-import ColumnNameService from '../../services/ColumnName'
+import { Service } from 'typedi';
+import { Router } from 'express';
+import ColumnNameService from '../../services/ColumnName';
 
-const ColumnNameController = Service(
-  [ColumnNameService],
-  (service) => {
-    const router = Router()
-    return (
-      () => {
-        router.get(
-          '/columnNames',
-          (req, res, next) => {
-            // Get query from middleware -- auth handler
+const ColumnNameController = Service([ColumnNameService], service => {
+  const router = Router();
+  return (() => {
+    router.get('/columnNames', (req, res, next) => {
+      // Get query from middleware -- auth handler
 
-            service
-              .findColumnName({})
-              .then((columnNames) => res.json({ columnNames }))
-              .catch(next)
-          }
-        )
+      service
+        .findColumnName({})
+        .then(columnNames => res.json({ columnNames }))
+        .catch(next);
+    });
 
-        router.post(
-          '/columnNames',
-          (req, res, next) => {
-            service
-              .createColumnName(req.body.columnName)
-              .then((columnName) => res.json({ columnName }))
-              .catch(next)
-          }
-        )
+    router.post('/columnNames', (req, res, next) => {
+      service
+        .createColumnName(req.body.columnName)
+        .then(columnName => res.json({ columnName }))
+        .catch(next);
+    });
 
-        router.put(
-          '/columnNames/:_id',
-          (req, res, next) => {
-            const { _id } = req.params
-            const { columnName } = req.body
+    router.put('/columnNames/:_id', (req, res, next) => {
+      const { _id } = req.params;
+      const { columnName } = req.body;
 
+      service
+        .updateColumnName(_id, columnName)
+        .then(() => res.end())
+        .catch(next);
+    });
 
-            service
-              .updateColumnName(_id, columnName)
-              .then(() => res.end())
-              .catch(next)
-          }
-        )
+    router.delete('/columnNames/:_id', (req, res, next) => {
+      const { _id } = req.params;
 
-        router.delete(
-          '/columnNames/:_id',
-          (req, res, next) => {
-            const { _id } = req.params
+      service
+        .deleteColumnName(_id)
+        .then(() => res.end())
+        .catch(next);
+    });
 
-            service
-              .deleteColumnName(_id)
-              .then(() => res.end())
-              .catch(next)
-          }
-        )
+    return router;
+  })();
+});
 
-        return router
-      }
-    )()
-  }
-)
-
-export default ColumnNameController
+export default ColumnNameController;

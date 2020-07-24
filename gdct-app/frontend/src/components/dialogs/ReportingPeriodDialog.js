@@ -1,46 +1,43 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react';
 
-import SelectableTableDialog from './SelectableTableDialog'
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
+import SelectableTableDialog from './SelectableTableDialog';
 
-import { getReportingPeriodsRequest } from '../../store/thunks/reportingPeriod'
+import { getReportingPeriodsRequest } from '../../store/thunks/reportingPeriod';
 
-import { useSelector, shallowEqual, useDispatch } from 'react-redux'
-import { useMemo } from 'react'
-import DialogsStore from '../../store/DialogsStore/store'
-import { selectIsReportingPeriodDialogOpen } from '../../store/DialogsStore/selectors'
-import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
-import { selectReportingPeriodsStore } from '../../store/ReportingPeriodsStore/selectors'
+import DialogsStore from '../../store/DialogsStore/store';
+import { selectIsReportingPeriodDialogOpen } from '../../store/DialogsStore/selectors';
+import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors';
+import { selectReportingPeriodsStore } from '../../store/ReportingPeriodsStore/selectors';
 
 const ReportingPeriodDialog = ({ handleChange }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const { isReportingPeriodDialogOpen, reportingPeriods } = useSelector(
-    (state) => ({
+    state => ({
       isReportingPeriodDialogOpen: selectIsReportingPeriodDialogOpen(state),
-      reportingPeriods: selectFactoryRESTResponseTableValues(
-        selectReportingPeriodsStore
-      )(state),
+      reportingPeriods: selectFactoryRESTResponseTableValues(selectReportingPeriodsStore)(state),
     }),
-    shallowEqual
-  )
+    shallowEqual,
+  );
 
   const handleClose = useCallback(
     () => dispatch(DialogsStore.actions.CLOSE_REPORTING_PERIOD_DIALOG()),
-    [dispatch]
-  )
+    [dispatch],
+  );
 
   const handleSelect = useCallback(
-    (data) => {
-      handleChange(data._id)
-      handleClose()
+    data => {
+      handleChange(data._id);
+      handleClose();
     },
-    [dispatch]
-  )
+    [dispatch],
+  );
 
   useEffect(() => {
     if (isReportingPeriodDialogOpen && !reportingPeriods.length)
-      dispatch(getReportingPeriodsRequest())
-  }, [dispatch, isReportingPeriodDialogOpen])
+      dispatch(getReportingPeriodsRequest());
+  }, [dispatch, isReportingPeriodDialogOpen]);
 
   const columns = useMemo(
     () => [
@@ -53,8 +50,8 @@ const ReportingPeriodDialog = ({ handleChange }) => {
         field: 'name',
       },
     ],
-    []
-  )
+    [],
+  );
 
   return (
     <SelectableTableDialog
@@ -65,7 +62,7 @@ const ReportingPeriodDialog = ({ handleChange }) => {
       handleClose={handleClose}
       handleSelect={handleSelect}
     />
-  )
-}
+  );
+};
 
-export default ReportingPeriodDialog
+export default ReportingPeriodDialog;

@@ -1,26 +1,20 @@
-import XlsxPopulate, { RichText, Range, FormulaError } from 'xlsx-populate'
+import XlsxPopulate, { RichText, Range, FormulaError } from 'xlsx-populate';
 
-import { sheetNameRegex } from './regex'
+import pako from 'pako';
+import Color from 'color';
+import { Parser } from 'hot-formula-parser';
+import uniqid from 'uniqid';
+import { sheetNameRegex } from './regex';
 
 import {
   convertTextToEditorValue,
   convertRichTextToEditorValue,
   createEmptyEditor,
   createEmptyEditorValue,
-} from '../tools/slate'
-import { isObjectEmpty } from '../tools/misc'
+} from './slate';
+import { isObjectEmpty } from './misc';
 
-import pako from 'pako'
-
-import Color from 'color'
-
-import {
-  themes,
-  borderFragmentMap,
-  completeBorderStyleMap,
-} from '../constants/styles'
-
-import { Parser } from 'hot-formula-parser'
+import { themes, borderFragmentMap, completeBorderStyleMap } from '../constants/styles';
 
 import {
   EXCEL_ROW_HEIGHT_SCALE,
@@ -35,257 +29,251 @@ import {
   DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER,
   DEFAULT_EXCEL_SHEET_FREEZE_ROW_COUNT,
   DEFAULT_EXCEL_SHEET_FREEZE_COLUMN_COUNT,
-} from '../constants/excel'
+} from '../constants/excel';
 
-import uniqid from 'uniqid'
+const parser = new Parser();
 
-const parser = new Parser()
+const groupRegex = /[a-z]+[1-9][0-9]*:[a-z]+[1-9][0-9]*/gi;
+const invidualRegex = /[a-z]+[1-9][0-9]*/gi;
 
-const groupRegex = /[a-z]+[1-9][0-9]*:[a-z]+[1-9][0-9]*/gi
-const invidualRegex = /[a-z]+[1-9][0-9]*/gi
+const convertColumnToNumber = column => {
+  column = column.toUpperCase();
 
-const convertColumnToNumber = (column) => {
-  column = column.toUpperCase()
+  let sum = 0;
 
-  let sum = 0
+  const columnCharCount = column.length;
 
-  const columnCharCount = column.length
-
-  const initialColumnCode = 'A'.charCodeAt(0)
+  const initialColumnCode = 'A'.charCodeAt(0);
 
   for (let i = 0; i < columnCharCount; i++) {
-    sum *= 26
-    sum += column.charCodeAt(i) - initialColumnCode + 1
+    sum *= 26;
+    sum += column.charCodeAt(i) - initialColumnCode + 1;
   }
 
-  return sum
-}
+  return sum;
+};
 
-const convertNumberToColumn = (number) => {
-  let temp,
-    letter = ''
+const convertNumberToColumn = number => {
+  let temp;
+  let letter = '';
   while (number > 0) {
-    temp = (number - 1) % 26
-    letter = String.fromCharCode(temp + 65) + letter
-    number = (number - temp - 1) / 26
+    temp = (number - 1) % 26;
+    letter = String.fromCharCode(temp + 65) + letter;
+    number = (number - temp - 1) / 26;
   }
 
-  return letter
-}
+  return letter;
+};
 
-const getCellLocationFromString = (string) => {
-  const rowIndex = string.search(/\d/)
+const getCellLocationFromString = string => {
+  const rowIndex = string.search(/\d/);
 
-  const row = string.substring(rowIndex, string.length)
-  const column = string.substring(0, rowIndex)
+  const row = string.substring(rowIndex, string.length);
+  const column = string.substring(0, rowIndex);
 
-  return [column, row]
-}
+  return [column, row];
+};
 
 const getColumnRange = (start, end) => {
-  const startNumber = convertColumnToNumber(start)
-  const endNumber = convertColumnToNumber(end)
-  if (startNumber > endNumber) throw 'Start must be less than or equal to end'
+  const startNumber = convertColumnToNumber(start);
+  const endNumber = convertColumnToNumber(end);
+  if (startNumber > endNumber) throw 'Start must be less than or equal to end';
 
   const range = new Array(endNumber - startNumber + 1)
     .fill(null)
-    .map((_val, index) => startNumber + index)
+    .map((_val, index) => startNumber + index);
 
-  return range
-}
+  return range;
+};
 
 const getRowRange = (start, end) => {
-  if (start > end) throw 'Start must be less than or equal to end'
-  start = +start
-  end = +end
+  if (start > end) throw 'Start must be less than or equal to end';
+  start = +start;
+  end = +end;
 
-  const range = []
-  for (let i = start; i <= end; i++) range.push(i)
+  const range = [];
+  for (let i = start; i <= end; i++) range.push(i);
 
-  return range
-}
+  return range;
+};
 
 const getGroupFormula = (data, formula) => {
-  const matches = formula.match(groupRegex)
-  if (!matches) return formula
+  const matches = formula.match(groupRegex);
+  if (!matches) return formula;
 
-  matches.forEach((group) => {
-    const [start, end] = group.split(':')
-    const [startColumn, startRow] = getCellLocationFromString(start)
-    const [endColumn, endRow] = getCellLocationFromString(end)
+  matches.forEach(group => {
+    const [start, end] = group.split(':');
+    const [startColumn, startRow] = getCellLocationFromString(start);
+    const [endColumn, endRow] = getCellLocationFromString(end);
 
     // Get all letters from start to end
-    const columnRange = getColumnRange(startColumn, endColumn)
-    const rowRange = getRowRange(startRow, endRow)
+    const columnRange = getColumnRange(startColumn, endColumn);
+    const rowRange = getRowRange(startRow, endRow);
 
-    const columnCount = columnRange.length
-    const rowCount = rowRange.length
-    const wholeRange = []
+    const columnCount = columnRange.length;
+    const rowCount = rowRange.length;
+    const wholeRange = [];
 
     for (let j = 0; j < rowCount; j++) {
-      const row = rowRange[j]
-      const rowData = data[row]
+      const row = rowRange[j];
+      const rowData = data[row];
 
       for (let i = 0; i < columnCount; i++) {
-        const column = columnRange[i]
+        const column = columnRange[i];
 
         if (
           rowData === undefined ||
           rowData[column] === undefined ||
           rowData[column].value === undefined
         ) {
-          wholeRange.push(undefined)
+          wholeRange.push(undefined);
         } else {
-          const { value } = rowData[column]
+          const { value } = rowData[column];
 
           // ! Value/Formulas cannot be richtext
-          wholeRange.push(value)
+          wholeRange.push(value);
         }
       }
     }
 
-    const rangeStrings = wholeRange.join()
-    formula = formula.replace(group, rangeStrings)
-  })
+    const rangeStrings = wholeRange.join();
+    formula = formula.replace(group, rangeStrings);
+  });
 
-  return formula
-}
+  return formula;
+};
 
 const getIndividualFormula = (data, formula) => {
-  const matches = formula.match(invidualRegex)
-  if (!matches) return formula
+  const matches = formula.match(invidualRegex);
+  if (!matches) return formula;
 
-  matches.forEach((individual) => {
-    let [column, row] = getCellLocationFromString(individual)
+  matches.forEach(individual => {
+    let [column, row] = getCellLocationFromString(individual);
 
-    const rowData = data[row]
+    const rowData = data[row];
 
-    column = convertColumnToNumber(column)
+    column = convertColumnToNumber(column);
 
     if (
       rowData === undefined ||
       rowData[column] === undefined ||
       rowData[column].value === undefined
     ) {
-      formula = formula.replace(individual, 'undefined')
+      formula = formula.replace(individual, 'undefined');
     } else {
-      const { value } = rowData[column]
+      const { value } = rowData[column];
 
-      formula = formula.replace(individual, value)
+      formula = formula.replace(individual, value);
     }
-  })
+  });
 
-  return formula
-}
+  return formula;
+};
 
 const calculateFormula = (data, formula) => {
-  formula = getGroupFormula(data, formula)
-  formula = getIndividualFormula(data, formula)
+  formula = getGroupFormula(data, formula);
+  formula = getIndividualFormula(data, formula);
 
-  return parser.parse(formula)
-}
+  return parser.parse(formula);
+};
 
 export const getScrollbarSize = (() => {
-  let size = -1
+  let size = -1;
 
   return (recalculate = false) => {
     if (size === -1 || recalculate) {
-      const div = document.createElement('div')
-      const style = div.style
-      style.width = '50px'
-      style.height = '50px'
-      style.overflow = 'scroll'
+      const div = document.createElement('div');
+      const { style } = div;
+      style.width = '50px';
+      style.height = '50px';
+      style.overflow = 'scroll';
 
-      document.body.appendChild(div)
+      document.body.appendChild(div);
 
-      size = div.offsetWidth - div.clientWidth
+      size = div.offsetWidth - div.clientWidth;
 
-      document.body.removeChild(div)
+      document.body.removeChild(div);
     }
 
-    return size
-  }
-})()
+    return size;
+  };
+})();
 
 // Copied from react-window
 export const getEstimatedTotalHeight = (
   { rowCount },
-  { rowMetadataMap, estimatedRowHeight, lastMeasuredRowIndex }
+  { rowMetadataMap, estimatedRowHeight, lastMeasuredRowIndex },
 ) => {
-  let totalSizeOfMeasuredRows = 0
+  let totalSizeOfMeasuredRows = 0;
 
   // Edge case check for when the number of items decreases while a scroll is in progress.
   // https://github.com/bvaughn/react-window/pull/138
   if (lastMeasuredRowIndex >= rowCount) {
-    lastMeasuredRowIndex = rowCount - 1
+    lastMeasuredRowIndex = rowCount - 1;
   }
 
   if (lastMeasuredRowIndex >= 0) {
-    const itemMetadata = rowMetadataMap[lastMeasuredRowIndex]
-    totalSizeOfMeasuredRows = itemMetadata.offset + itemMetadata.size
+    const itemMetadata = rowMetadataMap[lastMeasuredRowIndex];
+    totalSizeOfMeasuredRows = itemMetadata.offset + itemMetadata.size;
   }
 
-  const numUnmeasuredItems = rowCount - lastMeasuredRowIndex - 1
-  const totalSizeOfUnmeasuredItems = numUnmeasuredItems * estimatedRowHeight
+  const numUnmeasuredItems = rowCount - lastMeasuredRowIndex - 1;
+  const totalSizeOfUnmeasuredItems = numUnmeasuredItems * estimatedRowHeight;
 
-  return totalSizeOfMeasuredRows + totalSizeOfUnmeasuredItems
-}
+  return totalSizeOfMeasuredRows + totalSizeOfUnmeasuredItems;
+};
 
 // Copied from react-window
 export const getEstimatedTotalWidth = (
   { columnCount },
-  { columnMetadataMap, estimatedColumnWidth, lastMeasuredColumnIndex }
+  { columnMetadataMap, estimatedColumnWidth, lastMeasuredColumnIndex },
 ) => {
-  let totalSizeOfMeasuredRows = 0
+  let totalSizeOfMeasuredRows = 0;
 
   // Edge case check for when the number of items decreases while a scroll is in progress.
   // https://github.com/bvaughn/react-window/pull/138
   if (lastMeasuredColumnIndex >= columnCount) {
-    lastMeasuredColumnIndex = columnCount - 1
+    lastMeasuredColumnIndex = columnCount - 1;
   }
 
   if (lastMeasuredColumnIndex >= 0) {
-    const itemMetadata = columnMetadataMap[lastMeasuredColumnIndex]
-    totalSizeOfMeasuredRows = itemMetadata.offset + itemMetadata.size
+    const itemMetadata = columnMetadataMap[lastMeasuredColumnIndex];
+    totalSizeOfMeasuredRows = itemMetadata.offset + itemMetadata.size;
   }
 
-  const numUnmeasuredItems = columnCount - lastMeasuredColumnIndex - 1
-  const totalSizeOfUnmeasuredItems = numUnmeasuredItems * estimatedColumnWidth
+  const numUnmeasuredItems = columnCount - lastMeasuredColumnIndex - 1;
+  const totalSizeOfUnmeasuredItems = numUnmeasuredItems * estimatedColumnWidth;
 
-  return totalSizeOfMeasuredRows + totalSizeOfUnmeasuredItems
-}
+  return totalSizeOfMeasuredRows + totalSizeOfUnmeasuredItems;
+};
 
-export const generateNewSheetName = (sheetNames) => {
-  let uniqueSheetNumber = sheetNames.length + 1
+export const generateNewSheetName = sheetNames => {
+  let uniqueSheetNumber = sheetNames.length + 1;
 
-  sheetNames.forEach((name) => {
-    const match = name.match(sheetNameRegex)
+  sheetNames.forEach(name => {
+    const match = name.match(sheetNameRegex);
 
-    if (match && uniqueSheetNumber <= match[1]) uniqueSheetNumber++
-  })
+    if (match && uniqueSheetNumber <= match[1]) uniqueSheetNumber++;
+  });
 
-  return `Sheet${uniqueSheetNumber}`
-}
+  return `Sheet${uniqueSheetNumber}`;
+};
 
 export const isPositionEqualArea = ({ x, y }, { x1, y1, x2, y2 }) =>
-  x === x1 && x === x2 && y === y1 && y === y2
+  x === x1 && x === x2 && y === y1 && y === y2;
 
-export const getNormalRowHeight = (rowHeight) =>
-  rowHeight
-    ? rowHeight * EXCEL_ROW_HEIGHT_SCALE
-    : DEFAULT_EXCEL_SHEET_ROW_HEIGHT
-export const getNormalColumnWidth = (columnWidth) =>
-  columnWidth
-    ? columnWidth * EXCEL_COLUMN_WIDTH_SCALE
-    : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH
-export const getExcelColumnWidth = (columnWidth) =>
-  columnWidth ? columnWidth / EXCEL_COLUMN_WIDTH_SCALE : columnWidth
-export const getExcelRowHeight = (rowHeight) =>
-  rowHeight ? rowHeight / EXCEL_ROW_HEIGHT_SCALE : rowHeight
+export const getNormalRowHeight = rowHeight =>
+  rowHeight ? rowHeight * EXCEL_ROW_HEIGHT_SCALE : DEFAULT_EXCEL_SHEET_ROW_HEIGHT;
+export const getNormalColumnWidth = columnWidth =>
+  columnWidth ? columnWidth * EXCEL_COLUMN_WIDTH_SCALE : DEFAULT_EXCEL_SHEET_COLUMN_WIDTH;
+export const getExcelColumnWidth = columnWidth =>
+  columnWidth ? columnWidth / EXCEL_COLUMN_WIDTH_SCALE : columnWidth;
+export const getExcelRowHeight = rowHeight =>
+  rowHeight ? rowHeight / EXCEL_ROW_HEIGHT_SCALE : rowHeight;
 
 export const getWorkbookInstance = async (activeSheetName, sheets) => {
-  const Workbook = await XlsxPopulate.fromBlankAsync()
-  let defaultSheetFound = false
+  const Workbook = await XlsxPopulate.fromBlankAsync();
+  let defaultSheetFound = false;
 
   for (const sheetName in sheets) {
     const {
@@ -300,201 +288,189 @@ export const getWorkbookInstance = async (activeSheetName, sheets) => {
       sheetHiddenRows,
 
       activeCellPosition: { x, y },
-    } = sheets[sheetName]
+    } = sheets[sheetName];
 
     // May be a default sheet
-    let sheet
+    let sheet;
 
     if (sheetName === 'Sheet1') {
-      sheet = await Workbook.sheet(sheetName)
-      defaultSheetFound = true
+      sheet = await Workbook.sheet(sheetName);
+      defaultSheetFound = true;
     } else {
-      sheet = await Workbook.addSheet(sheetName)
+      sheet = await Workbook.addSheet(sheetName);
     }
 
     for (let row in sheetCellData) {
-      const rowData = sheetCellData[row]
+      const rowData = sheetCellData[row];
 
-      row = parseInt(row)
+      row = parseInt(row);
 
       for (let column in rowData) {
-        const { value, formula, hyperlink, styles } = sheetCellData[row][column]
+        const { value, formula, hyperlink, styles } = sheetCellData[row][column];
 
-        column = parseInt(column)
+        column = parseInt(column);
 
-        const sheetCell = sheet.row(row).cell(column)
-        if (value !== undefined) sheetCell.setValue(value)
+        const sheetCell = sheet.row(row).cell(column);
+        if (value !== undefined) sheetCell.setValue(value);
 
-        if (formula) sheetCell.formula(formula)
+        if (formula) sheetCell.formula(formula);
 
-        if (hyperlink) sheetCell.hyperlink(hyperlink)
+        if (hyperlink) sheetCell.hyperlink(hyperlink);
       }
     }
 
-    sheet.freezePanes(sheetFreezeColumnCount, sheetFreezeRowCount)
+    sheet.freezePanes(sheetFreezeColumnCount, sheetFreezeRowCount);
 
-    for (const row in sheetHiddenRows) sheet.row(row).hidden(true)
+    for (const row in sheetHiddenRows) sheet.row(row).hidden(true);
 
-    for (const column in sheetHiddenColumns) sheet.column(column).hidden(true)
+    for (const column in sheetHiddenColumns) sheet.column(column).hidden(true);
 
     // Set row heights
-    for (const row in sheetRowHeights)
-      sheet.row(row).height(sheetRowHeights[row])
+    for (const row in sheetRowHeights) sheet.row(row).height(sheetRowHeights[row]);
 
     // Set column widths
-    for (const column in sheetColumnWidths)
-      sheet.column(column).width(sheetColumnWidths[column])
+    for (const column in sheetColumnWidths) sheet.column(column).width(sheetColumnWidths[column]);
 
-    sheet.activeCell(x, y)
+    sheet.activeCell(x, y);
   }
 
-  if (!defaultSheetFound) Workbook.deleteSheet('Sheet1')
+  if (!defaultSheetFound) Workbook.deleteSheet('Sheet1');
 
   // Set active sheet
-  Workbook.activeSheet(activeSheetName)
+  Workbook.activeSheet(activeSheetName);
 
-  return Workbook
-}
+  return Workbook;
+};
 
 export const downloadWorkbook = async (fileName, activeSheetName, sheets) => {
-  const xlsxInstance = await getWorkbookInstance(activeSheetName, sheets)
+  const xlsxInstance = await getWorkbookInstance(activeSheetName, sheets);
 
-  const blob = await xlsxInstance.outputAsync()
+  const blob = await xlsxInstance.outputAsync();
 
   if (window.navigator && window.navigator.msSaveOrOpenBlob) {
     // If IE, you must uses a different method.
-    window.navigator.msSaveOrOpenBlob(blob, fileName)
+    window.navigator.msSaveOrOpenBlob(blob, fileName);
   } else {
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    document.body.appendChild(a)
-    a.href = url
-    a.download = `${fileName}.xlsx`
-    a.click()
-    window.URL.revokeObjectURL(url)
-    document.body.removeChild(a)
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    document.body.appendChild(a);
+    a.href = url;
+    a.download = `${fileName}.xlsx`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
   }
-}
+};
 
 export const getCellData = (sheetCellData, row, column) =>
   sheetCellData[row] && sheetCellData[row][column] !== undefined
     ? sheetCellData[row][column]
-    : undefined
+    : undefined;
 
-export const getSheetHeaderCount = (sheet) => {
-  const sheetUsedRange = sheet.usedRange()
+export const getSheetHeaderCount = sheet => {
+  const sheetUsedRange = sheet.usedRange();
 
-  const headerCount = {}
+  const headerCount = {};
 
-  let maxColumnNumber = 1
-  let maxRowNumber = 1
+  let maxColumnNumber = 1;
+  let maxRowNumber = 1;
 
   if (sheetUsedRange) {
-    const { _maxColumnNumber, _maxRowNumber } = sheetUsedRange
+    const { _maxColumnNumber, _maxRowNumber } = sheetUsedRange;
 
-    maxColumnNumber = Math.min(
-      _maxColumnNumber + 1,
-      EXCEL_SHEET_MAX_COLUMN_COUNT
-    )
-    maxRowNumber = Math.min(_maxRowNumber + 1, EXCEL_SHEET_MAX_ROW_COUNT)
+    maxColumnNumber = Math.min(_maxColumnNumber + 1, EXCEL_SHEET_MAX_COLUMN_COUNT);
+    maxRowNumber = Math.min(_maxRowNumber + 1, EXCEL_SHEET_MAX_ROW_COUNT);
   }
 
-  headerCount.sheetColumnCount = Math.max(
-    maxColumnNumber,
-    DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1
-  )
-  headerCount.sheetRowCount = Math.max(
-    maxRowNumber,
-    DEFAULT_EXCEL_SHEET_ROW_COUNT + 1
-  )
+  headerCount.sheetColumnCount = Math.max(maxColumnNumber, DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1);
+  headerCount.sheetRowCount = Math.max(maxRowNumber, DEFAULT_EXCEL_SHEET_ROW_COUNT + 1);
 
-  return headerCount
-}
+  return headerCount;
+};
 
 export const getSheetColumnsData = (sheet, columnCount) => {
-  const sheetColumnWidths = {}
+  const sheetColumnWidths = {};
 
-  const sheetHiddenColumns = {}
+  const sheetHiddenColumns = {};
 
   for (let column = 1; column < columnCount; column++) {
-    let width
+    let width;
 
-    const sheetColumn = sheet.column(column)
+    const sheetColumn = sheet.column(column);
 
-    if (sheetColumn.hidden()) sheetHiddenColumns[column] = true
+    if (sheetColumn.hidden()) sheetHiddenColumns[column] = true;
 
-    width = sheetColumn.width()
+    width = sheetColumn.width();
 
-    if (width) sheetColumnWidths[column] = width
+    if (width) sheetColumnWidths[column] = width;
   }
 
-  return { sheetColumnWidths, sheetHiddenColumns }
-}
+  return { sheetColumnWidths, sheetHiddenColumns };
+};
 
 export const getSheetRowsData = (sheet, rowCount) => {
-  const sheetRowHeights = {}
+  const sheetRowHeights = {};
 
-  const sheetHiddenRows = {}
+  const sheetHiddenRows = {};
 
   for (let row = 1; row < rowCount; row++) {
-    let height
-    const sheetRow = sheet.row(row)
+    let height;
+    const sheetRow = sheet.row(row);
 
-    if (sheetRow.hidden()) sheetHiddenRows[row] = true
+    if (sheetRow.hidden()) sheetHiddenRows[row] = true;
 
-    height = sheetRow.height()
-    if (height) sheetRowHeights[row] = height
+    height = sheetRow.height();
+    if (height) sheetRowHeights[row] = height;
   }
 
-  return { sheetRowHeights, sheetHiddenRows }
-}
+  return { sheetRowHeights, sheetHiddenRows };
+};
 
 const convertXlsxColorToCss = ({ rgb, theme, tint }) => {
-  let convertedStyle
+  let convertedStyle;
 
   if (rgb) {
     if (rgb === 'System Foreground') {
-      convertedStyle = '#000000'
+      convertedStyle = '#000000';
     } else if (rgb === 'System Background') {
-      convertedStyle = '#FFFFFF'
+      convertedStyle = '#FFFFFF';
     } else if (rgb.length === 6) {
-      convertedStyle = `#${rgb}`
+      convertedStyle = `#${rgb}`;
     } else {
-      convertedStyle = `#${rgb.substring(2)}`
+      convertedStyle = `#${rgb.substring(2)}`;
     }
   } else if (theme !== undefined) {
-    convertedStyle = themes[theme]
+    convertedStyle = themes[theme];
 
-    if (tint) convertedStyle = applyTintToColour(convertedStyle, tint)
+    if (tint) convertedStyle = applyTintToColour(convertedStyle, tint);
   }
 
-  return convertedStyle
-}
+  return convertedStyle;
+};
 
 // ! From https://github.com/Qix-/color/issues/53#issuecomment-487822576
 const lightenBy = (color, ratio) => {
-  const lightness = color.lightness()
-  return color.lightness(lightness + (100 - lightness) * ratio)
-}
+  const lightness = color.lightness();
+  return color.lightness(lightness + (100 - lightness) * ratio);
+};
 
-const darkenBy = (color, ratio) =>
-  color.lightness(color.lightness() * (1 - ratio))
+const darkenBy = (color, ratio) => color.lightness(color.lightness() * (1 - ratio));
 
 const applyTintToColour = (color, tint) => {
-  color = Color(color)
+  color = Color(color);
 
   if (tint >= 0) {
-    color = lightenBy(color, tint)
+    color = lightenBy(color, tint);
   } else {
-    color = darkenBy(color, -tint)
+    color = darkenBy(color, -tint);
   }
 
-  return color.hex()
-}
+  return color.hex();
+};
 
 // TODO
-export const convertXlsxStyleToInlineStyle = (xlsxStyle) => {
-  const inlineStyle = {}
+export const convertXlsxStyleToInlineStyle = xlsxStyle => {
+  const inlineStyle = {};
 
   const {
     bold,
@@ -532,65 +508,64 @@ export const convertXlsxStyleToInlineStyle = (xlsxStyle) => {
     diagonalBorder,
     diagonalBorderDirection,
     numberFormat,
-  } = xlsxStyle
+  } = xlsxStyle;
 
-  if (borderColor) inlineStyle.borderColor = convertXlsxColorToCss(borderColor)
+  if (borderColor) inlineStyle.borderColor = convertXlsxColorToCss(borderColor);
   if (borderStyle) {
   }
   if (border) {
     for (const borderFragment in border) {
-      const { style, color } = border[borderFragment]
-      const borderProperty = borderFragmentMap[borderFragment]
+      const { style, color } = border[borderFragment];
+      const borderProperty = borderFragmentMap[borderFragment];
 
-      const fragmentStyles = completeBorderStyleMap[style]
+      const fragmentStyles = completeBorderStyleMap[style];
 
       // ! TODO: Need to keep non-supported styles as meta deta!
       for (const fragmentProperty in fragmentStyles) {
-        const fragmentStyle = fragmentStyles[fragmentProperty]
-        const fullProperty = `${borderProperty}${fragmentProperty}`
-        inlineStyle[fullProperty] = fragmentStyle
+        const fragmentStyle = fragmentStyles[fragmentProperty];
+        const fullProperty = `${borderProperty}${fragmentProperty}`;
+        inlineStyle[fullProperty] = fragmentStyle;
       }
 
-      inlineStyle[`${borderProperty}Color`] = convertXlsxColorToCss(color)
+      inlineStyle[`${borderProperty}Color`] = convertXlsxColorToCss(color);
     }
   }
   // ! Font styles
-  if (bold) inlineStyle.fontWeight = 'bold'
-  if (italic) inlineStyle.fontStyle = 'italic'
-  if (underline) inlineStyle.textDecoration = 'underline'
+  if (bold) inlineStyle.fontWeight = 'bold';
+  if (italic) inlineStyle.fontStyle = 'italic';
+  if (underline) inlineStyle.textDecoration = 'underline';
   if (strikethrough)
     inlineStyle.textDecoration = underline
       ? `${inlineStyle.textDecoration} line-through`
-      : 'line-through'
-  if (subscript) inlineStyle.verticalAlign = 'sub'
-  if (superscript) inlineStyle.verticalAlign = 'super'
-  if (fontSize) inlineStyle.fontSize = fontSize
-  if (fontFamily) inlineStyle.fontFamily = fontFamily
-  if (fontColor) inlineStyle.color = convertXlsxColorToCss(fontColor)
+      : 'line-through';
+  if (subscript) inlineStyle.verticalAlign = 'sub';
+  if (superscript) inlineStyle.verticalAlign = 'super';
+  if (fontSize) inlineStyle.fontSize = fontSize;
+  if (fontFamily) inlineStyle.fontFamily = fontFamily;
+  if (fontColor) inlineStyle.color = convertXlsxColorToCss(fontColor);
 
   // ! Block styles
   if (fill) {
-    const { type, color } = fill
+    const { type, color } = fill;
 
-    if (type === 'solid')
-      inlineStyle.backgroundColor = convertXlsxColorToCss(color)
+    if (type === 'solid') inlineStyle.backgroundColor = convertXlsxColorToCss(color);
   }
 
-  if (horizontalAlignment) inlineStyle.textAlign = horizontalAlignment
+  if (horizontalAlignment) inlineStyle.textAlign = horizontalAlignment;
 
   // if(verticalAlignment) inlineStyle.verticalAlign = verticalAlignment;
 
   // if(bottomBorder) console.log(bottomBorder)
 
-  return inlineStyle
-}
+  return inlineStyle;
+};
 
 // TODO
-export const convertInlineStyleToXlsxStyle = (inlineStyle) => {
-  const xlsxStyle = {}
-}
+export const convertInlineStyleToXlsxStyle = inlineStyle => {
+  const xlsxStyle = {};
+};
 
-export const extractCellStyle = (cellData) => {
+export const extractCellStyle = cellData => {
   const cellStyles = cellData
     ? cellData.style([
         // Can be block style or rich text
@@ -633,24 +608,22 @@ export const extractCellStyle = (cellData) => {
         'diagonalBorderDirection',
         'numberFormat',
       ])
-    : {}
+    : {};
 
   for (const styleName in cellStyles) {
-    const styleValue = cellStyles[styleName]
+    const styleValue = cellStyles[styleName];
 
-    if (!styleValue) delete cellStyles[styleName]
+    if (!styleValue) delete cellStyles[styleName];
   }
 
-  if (cellStyles.numberFormat === 'General') delete cellStyles.numberFormat
+  if (cellStyles.numberFormat === 'General') delete cellStyles.numberFormat;
 
-  if (isObjectEmpty(cellStyles.border)) delete cellStyles.border
+  if (isObjectEmpty(cellStyles.border)) delete cellStyles.border;
 
-  return isObjectEmpty(cellStyles)
-    ? undefined
-    : convertXlsxStyleToInlineStyle(cellStyles)
-}
+  return isObjectEmpty(cellStyles) ? undefined : convertXlsxStyleToInlineStyle(cellStyles);
+};
 
-export const extractCellRichTextStyle = (cellData) => {
+export const extractCellRichTextStyle = cellData => {
   const cellStyles = cellData
     ? cellData.style([
         'bold',
@@ -664,31 +637,22 @@ export const extractCellRichTextStyle = (cellData) => {
         'fontScheme',
         'fontColor',
       ])
-    : {}
+    : {};
 
   for (const styleName in cellStyles) {
-    const styleValue = cellStyles[styleName]
+    const styleValue = cellStyles[styleName];
 
-    if (!styleValue) delete cellStyles[styleName]
+    if (!styleValue) delete cellStyles[styleName];
   }
 
-  return isObjectEmpty(cellStyles)
-    ? undefined
-    : convertXlsxStyleToInlineStyle(cellStyles)
-}
+  return isObjectEmpty(cellStyles) ? undefined : convertXlsxStyleToInlineStyle(cellStyles);
+};
 
 // ! TODO - missing some styles
-export const getCellInlineStyle = (cellSyles) => {
-  if (cellSyles === undefined) return undefined
+export const getCellInlineStyle = cellSyles => {
+  if (cellSyles === undefined) return undefined;
 
-  const {
-    fontWeight,
-    fontStyle,
-    textDecoration,
-    verticalAlign,
-    fontSize,
-    fontFamily,
-  } = cellSyles
+  const { fontWeight, fontStyle, textDecoration, verticalAlign, fontSize, fontFamily } = cellSyles;
 
   return {
     fontWeight,
@@ -697,160 +661,159 @@ export const getCellInlineStyle = (cellSyles) => {
     verticalAlign,
     fontSize,
     fontFamily,
-  }
-}
+  };
+};
 
 // ! TODO - missing some styles
-export const getBlockStyle = (cellStyles) => {
-  if (cellStyles === undefined) return undefined
+export const getBlockStyle = cellStyles => {
+  if (cellStyles === undefined) return undefined;
 
-  const { backgroundColor } = cellStyles
+  const { backgroundColor } = cellStyles;
 
   return {
     backgroundColor,
-  }
-}
+  };
+};
 
-export const isPrepopulateString = (string) =>
-  string && typeof string === 'string' && string.charAt(0) === '|'
+export const isPrepopulateString = string =>
+  string && typeof string === 'string' && string.charAt(0) === '|';
 
-export const parsePrepopulateString = (string) =>
+export const parsePrepopulateString = string =>
   string
     .substring(1)
     .split('&')
     .reduce((acc, parameter) => {
-      const [group, value] = parameter.split('=')
+      const [group, value] = parameter.split('=');
 
       if (group && value) {
         try {
-          acc[group] = JSON.parse(value)
+          acc[group] = JSON.parse(value);
         } catch (error) {
-          acc[group] = value
+          acc[group] = value;
         }
       }
 
-      return acc
-    }, {})
+      return acc;
+    }, {});
 
-const extractRichTextData = (richText) => {
-  const plainRichTextObject = []
+const extractRichTextData = richText => {
+  const plainRichTextObject = [];
 
-  const richTextLength = richText.length
+  const richTextLength = richText.length;
 
   for (let fragmentIndex = 0; fragmentIndex < richTextLength; fragmentIndex++) {
-    const fragment = richText.get(fragmentIndex)
+    const fragment = richText.get(fragmentIndex);
 
-    const styles = extractCellRichTextStyle(fragment)
-    const text = fragment.value()
+    const styles = extractCellRichTextStyle(fragment);
+    const text = fragment.value();
 
-    plainRichTextObject.push({ styles, text })
+    plainRichTextObject.push({ styles, text });
   }
 
-  return plainRichTextObject
-}
+  return plainRichTextObject;
+};
 
 const extractCellData = (cellData, row, column) => {
-  const extractedCellData = {}
+  const extractedCellData = {};
 
-  const value = cellData.value()
+  const value = cellData.value();
 
-  const formula = cellData.formula()
+  const formula = cellData.formula();
 
   // !! TODO May be internal - ie in another sheet
-  const hyperlinkData = cellData.hyperlink()
+  const hyperlinkData = cellData.hyperlink();
 
-  const merged = cellData.merged()
+  const merged = cellData.merged();
 
   if (merged) {
     const {
       _data: [y1, x1, y2, x2],
-    } = merged
+    } = merged;
 
-    extractedCellData.merged = { x1, y1, x2, y2 }
+    extractedCellData.merged = { x1, y1, x2, y2 };
   }
 
   if (hyperlinkData) {
-    const { hyperlink, _sheet, _data } = hyperlinkData
+    const { hyperlink, _sheet, _data } = hyperlinkData;
 
-    extractedCellData.hyperlink = {}
+    extractedCellData.hyperlink = {};
 
     // Internal - Could it be from another workbook?
     if (_sheet) {
-      const [y, x] = _data
+      const [y, x] = _data;
 
-      extractedCellData.hyperlink.type = 'internal'
-      extractedCellData.hyperlink.sheet = _sheet
-      extractedCellData.hyperlink.cell = { x, y }
+      extractedCellData.hyperlink.type = 'internal';
+      extractedCellData.hyperlink.sheet = _sheet;
+      extractedCellData.hyperlink.cell = { x, y };
       // External -- Potentially unsafe
     } else {
-      extractedCellData.hyperlink.type = 'external'
-      extractedCellData.hyperlink.link = hyperlink
+      extractedCellData.hyperlink.type = 'external';
+      extractedCellData.hyperlink.link = hyperlink;
     }
   }
 
   // TODO : Add error field in cellData!!
   if (value !== undefined) {
     if (value instanceof RichText) {
-      extractedCellData.type = 'rich-text'
-      extractedCellData.value = extractRichTextData(value)
+      extractedCellData.type = 'rich-text';
+      extractedCellData.value = extractRichTextData(value);
     } else {
       if (formula) {
-        extractedCellData.type = 'formula'
-        extractedCellData.formula = formula
+        extractedCellData.type = 'formula';
+        extractedCellData.formula = formula;
       } else if (typeof value === 'string' && isPrepopulateString(value)) {
-        extractedCellData.type = 'prepopulate'
+        extractedCellData.type = 'prepopulate';
       } else {
-        extractedCellData.type = 'normal'
+        extractedCellData.type = 'normal';
       }
 
       // ! possibly more conditions but not discovered yet
-      extractedCellData.value =
-        value instanceof FormulaError ? value._error : value
+      extractedCellData.value = value instanceof FormulaError ? value._error : value;
     }
   }
 
-  const cellStyles = extractCellStyle(cellData)
+  const cellStyles = extractCellStyle(cellData);
   if (cellStyles) {
-    extractedCellData.styles = cellStyles
+    extractedCellData.styles = cellStyles;
   }
 
-  return isObjectEmpty(extractedCellData) ? undefined : extractedCellData
-}
+  return isObjectEmpty(extractedCellData) ? undefined : extractedCellData;
+};
 
 export const getSheetCellData = (sheet, columnCount, rowCount) => {
-  const sheetCellData = {}
+  const sheetCellData = {};
 
   for (let row = 1; row < rowCount; row++) {
-    const rowData = sheet.row(row)
+    const rowData = sheet.row(row);
     for (let column = 1; column < columnCount; column++) {
-      const cellData = extractCellData(rowData.cell(column), row, column)
+      const cellData = extractCellData(rowData.cell(column), row, column);
 
       if (cellData) {
-        if (!sheetCellData[row]) sheetCellData[row] = {}
+        if (!sheetCellData[row]) sheetCellData[row] = {};
 
-        sheetCellData[row][column] = cellData
+        sheetCellData[row][column] = cellData;
       }
     }
   }
 
-  return sheetCellData
-}
+  return sheetCellData;
+};
 
-export const getSheetFreezeHeader = (sheet) => {
-  const freezeHeader = {}
+export const getSheetFreezeHeader = sheet => {
+  const freezeHeader = {};
 
-  const panes = sheet.panes()
+  const panes = sheet.panes();
 
   if (panes && panes.state === 'frozen') {
-    freezeHeader.sheetFreezeRowCount = panes.ySplit
-    freezeHeader.sheetFreezeColumnCount = panes.xSplit
+    freezeHeader.sheetFreezeRowCount = panes.ySplit;
+    freezeHeader.sheetFreezeColumnCount = panes.xSplit;
   } else {
-    freezeHeader.sheetFreezeRowCount = DEFAULT_EXCEL_SHEET_FREEZE_ROW_COUNT
-    freezeHeader.sheetFreezeColumnCount = DEFAULT_EXCEL_SHEET_FREEZE_COLUMN_COUNT
+    freezeHeader.sheetFreezeRowCount = DEFAULT_EXCEL_SHEET_FREEZE_ROW_COUNT;
+    freezeHeader.sheetFreezeColumnCount = DEFAULT_EXCEL_SHEET_FREEZE_COLUMN_COUNT;
   }
 
-  return freezeHeader
-}
+  return freezeHeader;
+};
 
 // export const convertTextToEditorState = (text) => {
 //   if(text !== undefined && typeof text !== "string") text = text.toString();
@@ -865,58 +828,51 @@ export const getSheetFreezeHeader = (sheet) => {
 // };
 
 export const getTopOffsets = (rowHeights, rowCount) => {
-  let topOffsetsTotal = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER
-  const topOffsets = [0, DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER]
+  let topOffsetsTotal = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER;
+  const topOffsets = [0, DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER];
 
   for (let row = 2; row < rowCount; row++) {
-    const rowHeight = getNormalRowHeight(rowHeights[row - 1])
+    const rowHeight = getNormalRowHeight(rowHeights[row - 1]);
 
-    topOffsetsTotal += rowHeight
-    topOffsets.push(topOffsetsTotal)
+    topOffsetsTotal += rowHeight;
+    topOffsets.push(topOffsetsTotal);
   }
 
-  return topOffsets
-}
+  return topOffsets;
+};
 
 export const getLeftOffsets = (columnWidths, columnCount) => {
-  let leftOffsetTotal = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER
-  const leftOffsets = [0, DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER]
+  let leftOffsetTotal = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER;
+  const leftOffsets = [0, DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER];
 
   for (let column = 2; column < columnCount; column++) {
-    const columnWidth = getNormalColumnWidth(columnWidths[column - 1])
+    const columnWidth = getNormalColumnWidth(columnWidths[column - 1]);
 
-    leftOffsetTotal += columnWidth
-    leftOffsets.push(leftOffsetTotal)
+    leftOffsetTotal += columnWidth;
+    leftOffsets.push(leftOffsetTotal);
   }
 
-  return leftOffsets
-}
+  return leftOffsets;
+};
 
-export const getActiveCellInputData = (
-  sheetCellData,
-  activeRow,
-  activeColumn
-) => {
+export const getActiveCellInputData = (sheetCellData, activeRow, activeColumn) => {
   const activeCellInputValueData =
     sheetCellData &&
     sheetCellData[activeRow] &&
     sheetCellData[activeRow][activeColumn] !== undefined
       ? sheetCellData[activeRow][activeColumn]
-      : undefined
+      : undefined;
 
-  let cellValue
-  let formulaValue
+  let cellValue;
+  let formulaValue;
 
-  if (
-    activeCellInputValueData &&
-    activeCellInputValueData.type === 'rich-text'
-  ) {
-    cellValue = convertRichTextToEditorValue(activeCellInputValueData.value)
-    formulaValue = convertRichTextToEditorValue(activeCellInputValueData.value)
+  if (activeCellInputValueData && activeCellInputValueData.type === 'rich-text') {
+    cellValue = convertRichTextToEditorValue(activeCellInputValueData.value);
+    formulaValue = convertRichTextToEditorValue(activeCellInputValueData.value);
   } else {
-    const value = activeCellInputValueData ? activeCellInputValueData.value : ''
-    cellValue = convertTextToEditorValue(value)
-    formulaValue = convertTextToEditorValue(value)
+    const value = activeCellInputValueData ? activeCellInputValueData.value : '';
+    cellValue = convertTextToEditorValue(value);
+    formulaValue = convertTextToEditorValue(value);
   }
 
   return {
@@ -924,41 +880,41 @@ export const getActiveCellInputData = (
     cellEditor: createEmptyEditor(),
     cellValue,
     formulaValue,
-  }
-}
+  };
+};
 
-const getMaxSheetRange = (sheetCellData) => {
-  let maxColumnRange = DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1
-  let maxRowRange = DEFAULT_EXCEL_SHEET_ROW_COUNT + 1
+const getMaxSheetRange = sheetCellData => {
+  let maxColumnRange = DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1;
+  let maxRowRange = DEFAULT_EXCEL_SHEET_ROW_COUNT + 1;
 
   for (const row in sheetCellData) {
-    const rowNumber = parseInt(row)
-    if (rowNumber + 1 > maxRowRange) maxRowRange = rowNumber + 1
+    const rowNumber = parseInt(row);
+    if (rowNumber + 1 > maxRowRange) maxRowRange = rowNumber + 1;
 
-    const columns = sheetCellData[row]
+    const columns = sheetCellData[row];
 
     for (const column in columns) {
-      const columnNumber = parseInt(column)
+      const columnNumber = parseInt(column);
       if (columnNumber + 1 > maxColumnRange) {
-        maxColumnRange = columnNumber + 1
+        maxColumnRange = columnNumber + 1;
       }
     }
   }
 
-  return { maxRowRange, maxColumnRange }
-}
+  return { maxRowRange, maxColumnRange };
+};
 
 export const createBlankSheet = () => {
-  const activeCellPosition = { x: 1, y: 1 }
-  const sheetCellData = {}
-  const sheetColumnCount = DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1
-  const sheetRowCount = DEFAULT_EXCEL_SHEET_ROW_COUNT + 1
-  const sheetColumnWidths = {}
-  const sheetRowHeights = {}
-  const sheetFreezeColumnCount = 0
-  const sheetFreezeRowCount = 0
-  const sheetHiddenColumns = {}
-  const sheetHiddenRows = {}
+  const activeCellPosition = { x: 1, y: 1 };
+  const sheetCellData = {};
+  const sheetColumnCount = DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1;
+  const sheetRowCount = DEFAULT_EXCEL_SHEET_ROW_COUNT + 1;
+  const sheetColumnWidths = {};
+  const sheetRowHeights = {};
+  const sheetFreezeColumnCount = 0;
+  const sheetFreezeRowCount = 0;
+  const sheetHiddenColumns = {};
+  const sheetHiddenRows = {};
 
   return {
     activeCellPosition,
@@ -971,96 +927,83 @@ export const createBlankSheet = () => {
     sheetRowHeights,
     sheetHiddenColumns,
     sheetHiddenRows,
-  }
-}
+  };
+};
 
 export const createBlankReactState = () => {
-  const name = uniqid()
+  const name = uniqid();
 
-  const sheetName = 'Sheet1'
+  const sheetName = 'Sheet1';
 
-  const sheetContent = createBlankSheet()
+  const sheetContent = createBlankSheet();
 
   const workbookData = {
     [sheetName]: pako.deflate(JSON.stringify(sheetContent), { to: 'string' }),
-  }
+  };
 
-  const sheetNames = [sheetName]
-  const activeSheetName = sheetName
+  const sheetNames = [sheetName];
+  const activeSheetName = sheetName;
 
   return {
     name,
     workbookData,
     activeSheetName,
     sheetNames,
-  }
-}
+  };
+};
 
-export const convertExcelFileToState = async (excelFile) => {
-  const WorkbookInstance = await XlsxPopulate.fromDataAsync(excelFile)
-  const name = excelFile.name
+export const convertExcelFileToState = async excelFile => {
+  const WorkbookInstance = await XlsxPopulate.fromDataAsync(excelFile);
+  const { name } = excelFile;
 
-  const sheetNames = WorkbookInstance.sheets().map((sheet) => sheet.name())
+  const sheetNames = WorkbookInstance.sheets().map(sheet => sheet.name());
 
-  const activeSheet = WorkbookInstance.activeSheet()
-  const activeSheetName = activeSheet.name()
+  const activeSheet = WorkbookInstance.activeSheet();
+  const activeSheetName = activeSheet.name();
 
-  const workbookData = {}
-  sheetNames.forEach((name) => {
-    const sheet = WorkbookInstance.sheet(name)
+  const workbookData = {};
+  sheetNames.forEach(name => {
+    const sheet = WorkbookInstance.sheet(name);
 
-    let { sheetColumnCount, sheetRowCount } = getSheetHeaderCount(sheet)
+    let { sheetColumnCount, sheetRowCount } = getSheetHeaderCount(sheet);
 
-    const sheetCellData = getSheetCellData(
-      sheet,
-      sheetColumnCount,
-      sheetRowCount
-    )
+    const sheetCellData = getSheetCellData(sheet, sheetColumnCount, sheetRowCount);
 
     // Make sure to set about enough column/rows for the used cells
-    const { maxColumnRange, maxRowRange } = getMaxSheetRange(sheetCellData)
+    const { maxColumnRange, maxRowRange } = getMaxSheetRange(sheetCellData);
 
-    sheetColumnCount = maxColumnRange
-    sheetRowCount = maxRowRange
+    sheetColumnCount = maxColumnRange;
+    sheetRowCount = maxRowRange;
 
-    const { sheetColumnWidths, sheetHiddenColumns } = getSheetColumnsData(
-      sheet,
-      sheetColumnCount
-    )
-    const { sheetRowHeights, sheetHiddenRows } = getSheetRowsData(
-      sheet,
-      sheetRowCount
-    )
-    const {
-      sheetFreezeRowCount,
-      sheetFreezeColumnCount,
-    } = getSheetFreezeHeader(sheet)
+    const { sheetColumnWidths, sheetHiddenColumns } = getSheetColumnsData(sheet, sheetColumnCount);
+    const { sheetRowHeights, sheetHiddenRows } = getSheetRowsData(sheet, sheetRowCount);
+    const { sheetFreezeRowCount, sheetFreezeColumnCount } = getSheetFreezeHeader(sheet);
 
-    let activeRow
-    let activeColumn
+    let activeRow;
+    let activeColumn;
 
     // Hot-fix for saved multi-selection (not implemeneted in xlsx-populate)
     try {
-      const activeCell = sheet.activeCell()
+      const activeCell = sheet.activeCell();
 
       if (activeCell instanceof Range) {
-        activeRow = activeCell._minRowNumber
-        activeColumn = activeCell._minColumnNumber
+        activeRow = activeCell._minRowNumber;
+        activeColumn = activeCell._minColumnNumber;
       } else {
-        activeRow = activeCell.rowNumber()
-        activeColumn = activeCell.columnNumber()
+        activeRow = activeCell.rowNumber();
+        activeColumn = activeCell.columnNumber();
       }
 
-      if (activeColumn > sheetColumnCount) activeColumn = sheetColumnCount - 1
-      if (activeRow > sheetRowCount) activeRow = sheetRowCount - 1
+      if (activeColumn > sheetColumnCount) activeColumn = sheetColumnCount - 1;
+      if (activeRow > sheetRowCount) activeRow = sheetRowCount - 1;
     } catch (error) {
-      activeRow = 1
-      activeColumn = 1
+      activeRow = 1;
+      activeColumn = 1;
     }
 
-    const stagnantSelectionAreas = []
+    const stagnantSelectionAreas = [];
 
-    const activeCellPosition = { x: activeColumn, y: activeRow }
+    const activeCellPosition = { x: activeColumn, y: activeRow };
 
     // ! Fill other params
     const sheetContent = {
@@ -1075,42 +1018,36 @@ export const convertExcelFileToState = async (excelFile) => {
       sheetHiddenColumns,
       sheetHiddenRows,
       stagnantSelectionAreas,
-    }
+    };
 
     workbookData[name] = pako.deflate(JSON.stringify(sheetContent), {
       to: 'string',
-    })
-  })
+    });
+  });
 
   return {
     name,
     workbookData,
     activeSheetName,
     sheetNames,
-  }
-}
+  };
+};
 
-export const convertStateToReactState = (state) => {
-  const workbookData = state.workbookData
+export const convertStateToReactState = state => {
+  const { workbookData } = state;
 
-  const data = {}
+  const data = {};
 
   for (const sheetName in workbookData)
-    data[sheetName] = JSON.parse(
-      pako.inflate(workbookData[sheetName], { to: 'string' })
-    )
+    data[sheetName] = JSON.parse(pako.inflate(workbookData[sheetName], { to: 'string' }));
 
-  const activeSheetName = state.activeSheetName
-  const activeSheetData = data[activeSheetName]
+  const { activeSheetName } = state;
+  const activeSheetData = data[activeSheetName];
   const {
     activeCellPosition: { x, y },
-  } = activeSheetData
+  } = activeSheetData;
 
-  const activeCellInputData = getActiveCellInputData(
-    activeSheetData.sheetCellData,
-    y,
-    x
-  )
+  const activeCellInputData = getActiveCellInputData(activeSheetData.sheetCellData, y, x);
 
   return {
     ...state,
@@ -1118,32 +1055,24 @@ export const convertStateToReactState = (state) => {
     activeCellInputData,
     inactiveSheets: { ...data, [activeSheetName]: undefined },
     workbookData: undefined,
-  }
-}
+  };
+};
 
-export const getWorkbookData = (
-  activeSheetName,
-  activeSheetData,
-  inactiveSheets
-) => {
-  const workbookData = {}
+export const getWorkbookData = (activeSheetName, activeSheetData, inactiveSheets) => {
+  const workbookData = {};
 
   Object.keys(inactiveSheets)
-    .filter((sheetName) => sheetName !== activeSheetName)
-    .forEach((sheetName) => {
-      workbookData[sheetName] = pako.deflate(
-        JSON.stringify(inactiveSheets[sheetName]),
-        { to: 'string' }
-      )
-    })
+    .filter(sheetName => sheetName !== activeSheetName)
+    .forEach(sheetName => {
+      workbookData[sheetName] = pako.deflate(JSON.stringify(inactiveSheets[sheetName]), {
+        to: 'string',
+      });
+    });
 
-  workbookData[activeSheetName] = pako.deflate(
-    JSON.stringify(activeSheetData),
-    { to: 'string' }
-  )
+  workbookData[activeSheetName] = pako.deflate(JSON.stringify(activeSheetData), { to: 'string' });
 
-  return workbookData
-}
+  return workbookData;
+};
 
 export const extractReactAndWorkbookState = (state, inactiveSheets) => {
   const {
@@ -1162,7 +1091,7 @@ export const extractReactAndWorkbookState = (state, inactiveSheets) => {
     sheetHiddenColumns,
     sheetHiddenRows,
     stagnantSelectionAreas,
-  } = state
+  } = state;
 
   const workbookData = getWorkbookData(
     activeSheetName,
@@ -1179,32 +1108,32 @@ export const extractReactAndWorkbookState = (state, inactiveSheets) => {
       sheetHiddenRows,
       stagnantSelectionAreas,
     },
-    inactiveSheets
-  )
+    inactiveSheets,
+  );
 
   return {
     name,
     activeSheetName,
     sheetNames,
     workbookData,
-  }
-}
+  };
+};
 
-export const getCellDataText = (cellData) => {
-  if (!cellData) return ''
+export const getCellDataText = cellData => {
+  if (!cellData) return '';
 
-  const { type, value } = cellData
+  const { type, value } = cellData;
 
-  let text
+  let text;
 
   if (type === 'rich-text') {
-    text = value.reduce((resultText, { text }) => resultText + text)
+    text = value.reduce((resultText, { text }) => resultText + text);
   } else {
-    text = value === undefined ? '' : value
+    text = value === undefined ? '' : value;
   }
 
-  return text
-}
+  return text;
+};
 
 export const getAreaDimensions = ({
   x1,
@@ -1216,15 +1145,11 @@ export const getAreaDimensions = ({
   sheetColumnWidths,
   sheetRowHeights,
 }) => {
-  const height =
-    topOffsets[y2] + getNormalRowHeight(sheetRowHeights[y2]) - topOffsets[y1]
-  const width =
-    leftOffsets[x2] +
-    getNormalColumnWidth(sheetColumnWidths[x2]) -
-    leftOffsets[x1]
+  const height = topOffsets[y2] + getNormalRowHeight(sheetRowHeights[y2]) - topOffsets[y1];
+  const width = leftOffsets[x2] + getNormalColumnWidth(sheetColumnWidths[x2]) - leftOffsets[x1];
 
-  return { height, width }
-}
+  return { height, width };
+};
 
 // export const extractScrollToData = ({
 //   scrollTo,

@@ -1,46 +1,43 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react';
 
-import SelectableTableDialog from './SelectableTableDialog'
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
+import SelectableTableDialog from './SelectableTableDialog';
 
-import { getSubmissionPeriodsRequest } from '../../store/thunks/submissionPeriod'
+import { getSubmissionPeriodsRequest } from '../../store/thunks/submissionPeriod';
 
-import { useSelector, shallowEqual, useDispatch } from 'react-redux'
-import { useMemo } from 'react'
-import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors'
-import { selectIsSubmissionPeriodDialogOpen } from '../../store/DialogsStore/selectors'
-import DialogsStore from '../../store/DialogsStore/store'
-import { selectSubmissionPeriodsStore } from '../../store/SubmissionPeriodsStore/selectors'
+import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors';
+import { selectIsSubmissionPeriodDialogOpen } from '../../store/DialogsStore/selectors';
+import DialogsStore from '../../store/DialogsStore/store';
+import { selectSubmissionPeriodsStore } from '../../store/SubmissionPeriodsStore/selectors';
 
 const SubmissionPeriodDialog = ({ handleChange }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const { isSubmissionPeriodDialogOpen, submissionPeriods } = useSelector(
-    (state) => ({
+    state => ({
       isSubmissionPeriodDialogOpen: selectIsSubmissionPeriodDialogOpen(state),
-      submissionPeriods: selectFactoryRESTResponseTableValues(
-        selectSubmissionPeriodsStore
-      )(state),
+      submissionPeriods: selectFactoryRESTResponseTableValues(selectSubmissionPeriodsStore)(state),
     }),
-    shallowEqual
-  )
+    shallowEqual,
+  );
 
   const handleClose = useCallback(
     () => dispatch(DialogsStore.actions.CLOSE_SUBMISSION_PERIOD_DIALOG()),
-    [dispatch]
-  )
+    [dispatch],
+  );
 
   const handleSelect = useCallback(
-    (data) => {
-      handleChange(data)
-      handleClose()
+    data => {
+      handleChange(data);
+      handleClose();
     },
-    [dispatch]
-  )
+    [dispatch],
+  );
 
   useEffect(() => {
     if (isSubmissionPeriodDialogOpen && !submissionPeriods.length)
-      dispatch(getSubmissionPeriodsRequest())
-  }, [dispatch, isSubmissionPeriodDialogOpen])
+      dispatch(getSubmissionPeriodsRequest());
+  }, [dispatch, isSubmissionPeriodDialogOpen]);
 
   const columns = useMemo(
     () => [
@@ -49,8 +46,8 @@ const SubmissionPeriodDialog = ({ handleChange }) => {
         field: 'name',
       },
     ],
-    []
-  )
+    [],
+  );
 
   return (
     <SelectableTableDialog
@@ -61,7 +58,7 @@ const SubmissionPeriodDialog = ({ handleChange }) => {
       handleClose={handleClose}
       handleSelect={handleSelect}
     />
-  )
-}
+  );
+};
 
-export default SubmissionPeriodDialog
+export default SubmissionPeriodDialog;

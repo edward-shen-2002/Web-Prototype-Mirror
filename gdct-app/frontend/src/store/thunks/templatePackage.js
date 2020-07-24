@@ -1,42 +1,42 @@
-import templatePackageController from '../../controllers/templatePackage'
+import templatePackageController from '../../controllers/templatePackage';
 import {
   TemplatePackagesStore,
   TemplatePackagesStoreActions,
-} from '../TemplatePackagesStore/store'
+} from '../TemplatePackagesStore/store';
 
 import {
   getRequestFactory,
   createRequestFactory,
   deleteRequestFactory,
   updateRequestFactory,
-} from './common/REST'
+} from './common/REST';
 
 export const getTemplatePackagesRequest = getRequestFactory(
   TemplatePackagesStore,
-  templatePackageController
-)
+  templatePackageController,
+);
 export const createTemplatePackageRequest = createRequestFactory(
   TemplatePackagesStore,
-  templatePackageController
-)
+  templatePackageController,
+);
 export const deleteTemplatePackageRequest = deleteRequestFactory(
   TemplatePackagesStore,
-  templatePackageController
-)
+  templatePackageController,
+);
 export const updateTemplatePackageRequest = updateRequestFactory(
   TemplatePackagesStore,
-  templatePackageController
-)
+  templatePackageController,
+);
 
-export const getTemplatePackagePopulatedRequest = (_id) => (dispatch) => {
-  dispatch(TemplatePackagesStoreActions.REQUEST())
+export const getTemplatePackagePopulatedRequest = _id => dispatch => {
+  dispatch(TemplatePackagesStoreActions.REQUEST());
 
   templatePackageController
     .fetchPopulated(_id)
-    .then((templatePackage) => {
-      dispatch(TemplatePackagesStoreActions.RECEIVE([templatePackage]))
+    .then(templatePackage => {
+      dispatch(TemplatePackagesStoreActions.RECEIVE([templatePackage]));
     })
-    .catch((error) => {
-      dispatch(TemplatePackagesStoreActions.FAIL_REQUEST(error))
-    })
-}
+    .catch(error => {
+      dispatch(TemplatePackagesStoreActions.FAIL_REQUEST(error));
+    });
+};

@@ -1,34 +1,29 @@
-import React, { useMemo, useEffect } from 'react'
-import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import React, { useMemo, useEffect } from 'react';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 
+import Paper from '@material-ui/core/Paper';
+import LaunchIcon from '@material-ui/icons/Launch';
+
+import Typography from '@material-ui/core/Typography';
+import MaterialTable from 'material-table';
+
+import { useHistory } from 'react-router-dom';
+import { UserIdButton, StatusIdButton, SubmissionPeriodIdButton } from '../../components/buttons';
+
+import {
+  selectFactoryRESTResponseTableValues,
+  selectFactoryRESTIsCallInProgress,
+} from '../../store/common/REST/selectors';
+import { selectTemplatePackagesStore } from '../../store/TemplatePackagesStore/selectors';
 import {
   getTemplatePackagesRequest,
   createTemplatePackageRequest,
   deleteTemplatePackageRequest,
   updateTemplatePackageRequest,
-} from '../../store/thunks/templatePackage'
-
-import Paper from '@material-ui/core/Paper'
-import LaunchIcon from '@material-ui/icons/Launch'
-
-import Typography from '@material-ui/core/Typography'
-import MaterialTable from 'material-table'
-
-import {
-  UserIdButton,
-  StatusIdButton,
-  SubmissionPeriodIdButton,
-} from '../../components/buttons'
-
-import {
-  selectFactoryRESTResponseTableValues,
-  selectFactoryRESTIsCallInProgress,
-} from '../../store/common/REST/selectors'
-import { selectTemplatePackagesStore } from '../../store/TemplatePackagesStore/selectors'
-import { useHistory } from 'react-router-dom'
-import { ROUTE_TEMPLATE_PCKGS_PCKGS } from '../../constants/routes'
-import { TemplatePackagesStoreActions } from '../../store/TemplatePackagesStore/store'
-import Loading from '../../components/Loading'
+} from '../../store/thunks/templatePackage';
+import { ROUTE_TEMPLATE_PCKGS_PCKGS } from '../../constants/routes';
+import { TemplatePackagesStoreActions } from '../../store/TemplatePackagesStore/store';
+import Loading from '../../components/Loading';
 
 const TemplatePackageHeader = () => {
   return (
@@ -36,36 +31,31 @@ const TemplatePackageHeader = () => {
       <Typography variant="h5">Template Packages</Typography>
       {/* <HeaderActions/> */}
     </Paper>
-  )
-}
+  );
+};
 
 const TemplatePackage = () => {
-  const dispatch = useDispatch()
-  const history = useHistory()
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   const { templatePackages, isCallInProgress } = useSelector(
-    (state) => ({
-      isCallInProgress: selectFactoryRESTIsCallInProgress(
-        selectTemplatePackagesStore
-      )(state),
-      templatePackages: selectFactoryRESTResponseTableValues(
-        selectTemplatePackagesStore
-      )(state),
+    state => ({
+      isCallInProgress: selectFactoryRESTIsCallInProgress(selectTemplatePackagesStore)(state),
+      templatePackages: selectFactoryRESTResponseTableValues(selectTemplatePackagesStore)(state),
     }),
-    shallowEqual
-  )
+    shallowEqual,
+  );
 
   const actions = useMemo(
     () => [
       {
         icon: LaunchIcon,
         tooltip: 'Open Package',
-        onClick: (_event, pckg) =>
-          history.push(`${ROUTE_TEMPLATE_PCKGS_PCKGS}${pckg._id}`),
+        onClick: (_event, pckg) => history.push(`${ROUTE_TEMPLATE_PCKGS_PCKGS}${pckg._id}`),
       },
     ],
-    [dispatch]
-  )
+    [dispatch],
+  );
 
   const columns = useMemo(
     () => [
@@ -84,8 +74,8 @@ const TemplatePackage = () => {
         editComponent: UserIdButton,
       },
     ],
-    []
-  )
+    [],
+  );
 
   const options = useMemo(
     () => ({
@@ -93,52 +83,42 @@ const TemplatePackage = () => {
       search: false,
       showTitle: false,
     }),
-    []
-  )
+    [],
+  );
 
   const editable = useMemo(
     () => ({
-      onRowAdd: (templatePackage) =>
+      onRowAdd: templatePackage =>
         new Promise((resolve, reject) => {
-          console.log(templatePackage)
-          templatePackage = { ...templatePackage, templateIds: [] }
-          dispatch(
-            createTemplatePackageRequest(templatePackage, resolve, reject)
-          )
+          console.log(templatePackage);
+          templatePackage = { ...templatePackage, templateIds: [] };
+          dispatch(createTemplatePackageRequest(templatePackage, resolve, reject));
         }),
-      onRowUpdate: (templatePackage) =>
+      onRowUpdate: templatePackage =>
         new Promise((resolve, reject) => {
-          dispatch(
-            updateTemplatePackageRequest(templatePackage, resolve, reject)
-          )
+          dispatch(updateTemplatePackageRequest(templatePackage, resolve, reject));
         }),
-      onRowDelete: (templatePackage) =>
+      onRowDelete: templatePackage =>
         new Promise((resolve, reject) => {
-          dispatch(
-            deleteTemplatePackageRequest(templatePackage._id, resolve, reject)
-          )
+          dispatch(deleteTemplatePackageRequest(templatePackage._id, resolve, reject));
         }),
     }),
-    [dispatch]
-  )
+    [dispatch],
+  );
 
   useEffect(() => {
-    dispatch(getTemplatePackagesRequest())
+    dispatch(getTemplatePackagesRequest());
 
     return () => {
-      dispatch(TemplatePackagesStoreActions.RESET())
-    }
-  }, [dispatch])
+      dispatch(TemplatePackagesStoreActions.RESET());
+    };
+  }, [dispatch]);
 
   // HOTFIX
   const isPopulated = useMemo(
-    () =>
-      templatePackages.length &&
-      typeof templatePackages[0].submissionPeriodId === 'object'
-        ? true
-        : false,
-    [templatePackages]
-  )
+    () => !!(templatePackages.length && typeof templatePackages[0].submissionPeriodId === 'object'),
+    [templatePackages],
+  );
 
   return isCallInProgress || isPopulated ? (
     <Loading />
@@ -153,7 +133,7 @@ const TemplatePackage = () => {
         actions={actions}
       />
     </div>
-  )
-}
+  );
+};
 
-export default TemplatePackage
+export default TemplatePackage;

@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import TextField from '@material-ui/core/TextField'
+import React, { useState } from 'react';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
 
-import Link from '@material-ui/core/Link'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-import { makeStyles } from '@material-ui/core/styles'
-import Container from '@material-ui/core/Container'
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
 
 function Copyright() {
   return (
@@ -18,10 +18,10 @@ function Copyright() {
       {new Date().getFullYear()}
       {'.'}
     </Typography>
-  )
+  );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -39,32 +39,32 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-}))
+}));
 
 export default function MandatoryInfo({ parentHandleChange }) {
-  const classes = useStyles()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    parentHandleChange(name, value)
+  const classes = useStyles();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const handleChange = e => {
+    const { name, value } = e.target;
+    parentHandleChange(name, value);
     switch (name) {
       case 'firstName':
-        setFirstName(value)
-        break
+        setFirstName(value);
+        break;
       case 'password':
-        setPassword(value)
-        break
+        setPassword(value);
+        break;
       case 'lastName':
-        setLastName(value)
-        break
+        setLastName(value);
+        break;
       case 'email':
-        setEmail(value)
-        break
+        setEmail(value);
+        break;
     }
-  }
+  };
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -140,5 +140,5 @@ export default function MandatoryInfo({ parentHandleChange }) {
         </form>
       </div>
     </Container>
-  )
+  );
 }

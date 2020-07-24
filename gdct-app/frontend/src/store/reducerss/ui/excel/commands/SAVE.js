@@ -3,8 +3,8 @@
 
 const SAVE = (state, { handleSave }) => {
   // Consider type of workbook then route properly
-  handleSave(state)
-  return state
-}
+  handleSave(state);
+  return state;
+};
 
-export default SAVE
+export default SAVE;

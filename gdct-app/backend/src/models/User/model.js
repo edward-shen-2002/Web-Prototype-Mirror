@@ -3,7 +3,7 @@ import { Schema, model, Model } from 'mongoose';
 
 import PassportLocalMongoose from 'passport-local-mongoose';
 
-const ObjectId = Schema.Types.ObjectId;
+const { ObjectId } = Schema.Types;
 
 // TODO : Replace with https://github.com/dropbox/zxcvbn
 const passwordValidator = (password, cb) => {
@@ -70,7 +70,7 @@ const User = new Schema(
     startDate: { type: Date },
     endDate: { type: Date },
   },
-  { minimize: false }
+  { minimize: false },
 );
 // TODO: Hoanan
 // const User = new Schema(

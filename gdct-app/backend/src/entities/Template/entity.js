@@ -9,16 +9,16 @@ export default class TemplateEntity {
     creationDate,
     expirationDate,
     workflowProcessId,
-    statusId
+    statusId,
   }) {
-    this._id = _id
-    this.name = name
-    this.templateData = templateData
-    this.templateTypeId = templateTypeId
-    this.userCreatorId = userCreatorId
-    this.creationDate = creationDate
-    this.expirationDate = expirationDate
-    this.workflowProcessId = workflowProcessId
-    this.statusId = statusId
+    this._id = _id;
+    this.name = name;
+    this.templateData = templateData;
+    this.templateTypeId = templateTypeId;
+    this.userCreatorId = userCreatorId;
+    this.creationDate = creationDate;
+    this.expirationDate = expirationDate;
+    this.workflowProcessId = workflowProcessId;
+    this.statusId = statusId;
   }
 }
