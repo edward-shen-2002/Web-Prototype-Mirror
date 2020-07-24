@@ -1,14 +1,14 @@
 import { Schema, model } from 'mongoose';
 
 const ColumnNameModel = model(
-  'ColumnName',
+  'Attribute',
   new Schema(
     {
       value: { type: String, required: true },
     },
     { minimize: false },
   ),
-  'ColumnName',
+  'Attribute',
 );
 
 export default ColumnNameModel;
