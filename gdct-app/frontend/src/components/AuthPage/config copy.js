@@ -23,12 +23,6 @@ import {
 } from '../../constants/routes';
 
 const createUserNavigation = () => {
-  useEffect(() => {
-    effect;
-    return () => {
-      cleanup;
-    };
-  }, [input]);
   return [
     {
       name: 'User',

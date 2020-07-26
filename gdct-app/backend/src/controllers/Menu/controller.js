@@ -17,7 +17,10 @@ const MenuController = Service([MenuService], service => {
     router.post('/menus', (req, res, next) => {
       service
         .createMenu(req.body.Menu)
-        .then(Menu => res.json({ Menu }))
+        .then(Menu => {
+          console.log(Menu);
+          res.json({ Menu });
+        })
         .catch(error => {
           console.error(error);
           throw error;
