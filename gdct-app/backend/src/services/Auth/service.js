@@ -13,7 +13,6 @@ export default class ProgramService {
   authenticateCallback(req, res) {
     const { method } = req.params;
     res.setHeader('Access-Control-Allow-Origin', process.env.CLIENT_SERVER);
-    res.setHeader('authorization', req.session.user.token);
     passport.authenticate(method, {
       successRedirect: process.env.CLIENT_SERVER, // redirect to home page
       failureRedirect: `${process.env.CLIENT_SERVER}/auth/error`, // redirect to error page
@@ -46,7 +45,7 @@ export default class ProgramService {
   }
 
   profile(req, res) {
-    if (req.token !== null || req.user !== null) {
+    if (req.user !== null) {
       res.json({ status: 'success' });
     } else {
       res.json({ status: 'fail' });
@@ -93,7 +92,7 @@ export default class ProgramService {
       .then(user => {
         const token = user.generateJWT();
         addTokenToCookie(res, token);
-        res.json(user.returnAuthUserJson(token));
+        res.json({ user: user.returnAuthUserJson(token) });
       })
       .catch(err => res.json({ error: err }));
   }
@@ -132,7 +131,7 @@ export default class ProgramService {
           const authUser = passportUser;
           const token = passportUser.generateJWT();
           addTokenToCookie(res, token);
-          return res.json(authUser.returnAuthUserJson(token));
+          return res.json({ user: authUser.returnAuthUserJson(token) });
         }
 
         return res.status(400).info;
