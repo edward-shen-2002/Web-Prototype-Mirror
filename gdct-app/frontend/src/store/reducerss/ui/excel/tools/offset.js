@@ -72,7 +72,7 @@ export const offsetSheetCellColumnDataAtIndex = (sheetCellData, start, offset) =
     for (const column in columns) {
       const columnData = columns[column];
       if (start <= column && columnData) {
-        if (start === column && columnData.styles)
+        if (start == column && columnData.styles)
           template[row] = { styles: { ...columnData.styles } };
 
         const newColumnOffset = Number(column) + offset;

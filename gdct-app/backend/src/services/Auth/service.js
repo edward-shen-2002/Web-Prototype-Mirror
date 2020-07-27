@@ -46,7 +46,7 @@ export default class ProgramService {
   }
 
   profile(req, res) {
-    if (req.token !== null || req.user !== null) {
+    if (req.user.token !== null) {
       res.json({ status: 'success' });
     } else {
       res.json({ status: 'fail' });
@@ -93,7 +93,7 @@ export default class ProgramService {
       .then(user => {
         const token = user.generateJWT();
         addTokenToCookie(res, token);
-        res.json(user.returnAuthUserJson(token));
+        res.json({ user: user.returnAuthUserJson(token) });
       })
       .catch(err => res.json({ error: err }));
   }
@@ -132,7 +132,7 @@ export default class ProgramService {
           const authUser = passportUser;
           const token = passportUser.generateJWT();
           addTokenToCookie(res, token);
-          return res.json(authUser.returnAuthUserJson(token));
+          return res.json({ user: authUser.returnAuthUserJson(token) });
         }
 
         return res.status(400).info;
