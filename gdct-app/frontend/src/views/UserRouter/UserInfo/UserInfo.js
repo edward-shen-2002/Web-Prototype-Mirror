@@ -88,9 +88,7 @@ const UserInfo = ({
 
   const [data, updateData] = useState([]);
 
-  // extract data from User object
   useEffect(() => {
-    // CONVERT _ID TO STRING FOR NOW ----------------------------------------------------------------------------------------------
     if(userObject){
         const extracted_data = dfs(userObject, 0, {});
         let organizations_map = {},
