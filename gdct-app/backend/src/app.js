@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+
 import express from 'express';
 
 import 'reflect-metadata';
@@ -38,8 +40,8 @@ import AppResourceController from './controllers/AppResource';
 import WorkflowController from './controllers/Workflow';
 import UsersController from './controllers/Users/controller'
 import { errorHandler } from './middlewares/shared';
-import MenuItemController from './controllers/MenuItem';
-import MenuController from './controllers/Menu';
+
+dotenv.config();
 
 // https://www.digitalocean.com/community/tutorials/how-to-use-winston-to-log-node-js-applications
 const logger = require('morgan');
@@ -58,13 +60,13 @@ app.use(json({ limit: '50mb' }));
 app.use(urlencoded({ extended: true }));
 
 // app.use(cors());
-app.use(cors({ credentials: true, origin: process.env.CLIENT_SERVER }));
+app.use(cors({ credentials: true, origin: 'http://localhost:3003' }));
 
 app.use(compression());
 
 app.use(logger('dev'));
 
-require('./middlewares/passport/index')();
+require('./middlewares/passport')();
 
 const CookieStore = mongoStore(session);
 app.use(
@@ -97,7 +99,6 @@ app.use('/designer', Container.get(StatusController));
 app.use('/submission_manager', Container.get(SubmissionPeriodController));
 app.use('/submission_manager', Container.get(SubmissionController));
 
-app.use('/workflow_manager', Container.get(WorkflowController));
 app.use('/COA_manager', Container.get(COAController));
 app.use('/COA_manager', Container.get(COATreeController));
 app.use('/COA_manager', Container.get(COAGroupController));
@@ -136,9 +137,6 @@ app.use(
   // Container.get(Auth).authorized,
   Container.get(AppResourceController),
 );
-
-app.use('/', Container.get(MenuController));
-app.use('/', Container.get(MenuItemController));
 
 app.use(errorHandler);
 

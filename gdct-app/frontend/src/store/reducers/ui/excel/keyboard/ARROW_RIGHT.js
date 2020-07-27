@@ -4,7 +4,7 @@ import { isPositionEqualArea } from '../../../../../tools/excel';
 import { updateActiveCellPosition } from '../tools/cell';
 
 const ARROW_RIGHT = (state, { shiftKey }) => {
-  const { isEditMode } = state;
+  let { isEditMode } = state;
 
   if (isEditMode) return state;
 

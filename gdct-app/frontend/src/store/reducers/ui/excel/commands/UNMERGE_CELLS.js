@@ -1,5 +1,5 @@
 const UNMERGE_CELLS = state => {
-  const newState = { ...state };
+  let newState = { ...state };
 
   const {
     stagnantSelectionAreas,
@@ -17,7 +17,7 @@ const UNMERGE_CELLS = state => {
 
   const { x1, y1, x2, y2 } = sheetCellData[y][x].merged;
 
-  const newSheetCellData = { ...sheetCellData };
+  let newSheetCellData = { ...sheetCellData };
 
   const topLeftStyles = sheetCellData[y][x].styles;
 

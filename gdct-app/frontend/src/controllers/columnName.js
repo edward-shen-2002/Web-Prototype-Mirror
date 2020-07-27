@@ -1,10 +1,8 @@
 import axios from 'axios';
 
-import { host } from '../constants/domain';
-
 const columnNameController = (() => {
   const columnNameAxios = axios.create({
-    baseURL: `${host}/columnNames`,
+    baseURL: 'http://localhost:3000/columnNames',
   });
   return {
     fetch: async query => columnNameAxios.get('').then(res => res.data.columnNames),

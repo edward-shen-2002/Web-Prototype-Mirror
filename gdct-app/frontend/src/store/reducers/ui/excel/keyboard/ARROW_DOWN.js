@@ -4,7 +4,7 @@ import { isPositionEqualArea } from '../../../../../tools/excel';
 import { updateActiveCellPosition } from '../tools/cell';
 
 const ARROW_DOWN = (state, { shiftKey }) => {
-  const { isEditMode } = state;
+  let { isEditMode } = state;
 
   if (isEditMode) return state;
 
@@ -30,7 +30,7 @@ const ARROW_DOWN = (state, { shiftKey }) => {
         ...stagnantSelectionAreas[activeCellSelectionAreaIndex],
       };
 
-      const { x1, y1, x2, y2 } = focusedStagnantSelectionArea;
+      let { x1, y1, x2, y2 } = focusedStagnantSelectionArea;
 
       const minY = Math.min(y1, y2);
       const minX = Math.min(x1, x2);

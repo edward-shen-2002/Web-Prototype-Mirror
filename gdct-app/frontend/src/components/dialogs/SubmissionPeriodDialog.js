@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect } from 'react';
 
-import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import SelectableTableDialog from './SelectableTableDialog';
 
 import { getSubmissionPeriodsRequest } from '../../store/thunks/submissionPeriod';
 
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
+import { useMemo } from 'react';
 import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors';
 import { selectIsSubmissionPeriodDialogOpen } from '../../store/DialogsStore/selectors';
 import DialogsStore from '../../store/DialogsStore/store';
@@ -28,7 +29,7 @@ const SubmissionPeriodDialog = ({ handleChange }) => {
 
   const handleSelect = useCallback(
     data => {
-      handleChange(data);
+      handleChange(data._id);
       handleClose();
     },
     [dispatch],
@@ -41,6 +42,10 @@ const SubmissionPeriodDialog = ({ handleChange }) => {
 
   const columns = useMemo(
     () => [
+      {
+        title: '_id',
+        field: '_id',
+      },
       {
         title: 'Name',
         field: 'name',

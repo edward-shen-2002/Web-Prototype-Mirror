@@ -1,16 +1,17 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect } from 'react';
 
-import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import SelectableTableDialog from './SelectableTableDialog';
 
 import { getTemplatesRequest } from '../../store/thunks/template';
 
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
+import { useMemo } from 'react';
 import DialogsStore from '../../store/DialogsStore/store';
 import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors';
 import { selectTemplatesStore } from '../../store/TemplatesStore/selectors';
 import { selectIsTemplateDialogOpen } from '../../store/DialogsStore/selectors';
 
-const TemplateDialog = ({ selectedTemplates, handleChange, shouldClose = true }) => {
+const TemplateDialog = ({ handleChange }) => {
   const dispatch = useDispatch();
 
   const { isTemplateDialogOpen, templates } = useSelector(
@@ -27,10 +28,10 @@ const TemplateDialog = ({ selectedTemplates, handleChange, shouldClose = true })
 
   const handleSelect = useCallback(
     data => {
-      handleChange(data);
-      if (shouldClose) handleClose();
+      handleChange(data._id);
+      handleClose();
     },
-    [dispatch, shouldClose, handleChange],
+    [dispatch],
   );
 
   useEffect(() => {
@@ -40,6 +41,10 @@ const TemplateDialog = ({ selectedTemplates, handleChange, shouldClose = true })
   const columns = useMemo(
     () => [
       {
+        title: '_id',
+        field: '_id',
+      },
+      {
         title: 'Name',
         field: 'name',
       },
@@ -47,16 +52,12 @@ const TemplateDialog = ({ selectedTemplates, handleChange, shouldClose = true })
     [],
   );
 
-  const getKey = selectedTemplates ? t => t._id : undefined;
-
   return (
     <SelectableTableDialog
       title="Template Type"
       columns={columns}
       isOpen={isTemplateDialogOpen}
       data={templates}
-      selectedKeys={selectedTemplates}
-      getKey={getKey}
       handleClose={handleClose}
       handleSelect={handleSelect}
     />

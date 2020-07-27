@@ -72,7 +72,7 @@ const LoginForm = ({ handleLogin }) => (
             name="username"
             type="username"
             autoComplete="username"
-            autoFocus
+            autoFocus={true}
             value={values.username}
             onChange={handleChange}
           />
@@ -93,7 +93,7 @@ const LoginForm = ({ handleLogin }) => (
   </Formik>
 );
 
-const Login = ({ history }) => {
+let Login = ({ history }) => {
   const handleLogin = () => history.push('/sheetNames');
 
   return (

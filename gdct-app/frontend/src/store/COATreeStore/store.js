@@ -3,8 +3,7 @@ import cloneDeep from 'clone-deep';
 import { removeNode, changeNodeAtPath } from 'react-sortable-tree';
 import { createSlice } from '@reduxjs/toolkit';
 
-const generateTitle = ({ categoryGroupId }) =>
-  `${categoryGroupId ? `${categoryGroupId.name}` : ''}`;
+const generateTitle = ({ COAGroupId }) => `${COAGroupId ? `${COAGroupId.name}` : ''}`;
 
 const getNodeKey = ({ treeIndex }) => treeIndex;
 
@@ -14,12 +13,12 @@ const UPDATE_ORIGINAL_COA_TREE_UI = state => ({
 });
 
 const LOAD_COA_TREE_UI = (state, { payload }) => {
-  const dependencyMap = {};
+  let dependencyMap = {};
 
   // Hash table of the tree
-  const normalizedTreeMap = {};
+  let normalizedTreeMap = {};
 
-  const parentNodes = [];
+  let parentNodes = [];
 
   payload.treeList.forEach(node => {
     const { _id, parentId } = node;
@@ -34,11 +33,11 @@ const LOAD_COA_TREE_UI = (state, { payload }) => {
     normalizedTreeMap[_id] = node;
   });
 
-  const originalTree = parentNodes.map(parentNode =>
+  let originalTree = parentNodes.map(parentNode =>
     createTreeBranch(parentNode._id, normalizedTreeMap, dependencyMap),
   );
 
-  const localTree = cloneDeep(originalTree);
+  let localTree = cloneDeep(originalTree);
 
   return {
     ...state,
@@ -50,7 +49,7 @@ const LOAD_COA_TREE_UI = (state, { payload }) => {
 };
 
 const createTreeBranch = (rootId, normalizedTreeMap, dependencyMap) => {
-  const children = dependencyMap[rootId];
+  let children = dependencyMap[rootId];
   const content = normalizedTreeMap[rootId];
 
   return {
@@ -77,8 +76,6 @@ const ADD_ROOT_COA_TREE_UI = (state, { payload }) => {
     content: payload.tree,
     title: generateTitle(payload.tree),
   };
-
-  console.log('pl', payload);
 
   return {
     ...state,
@@ -112,11 +109,9 @@ const SELECT_COA_COA_TREE_UI = (state, { payload }) => {
       ...state.selectedNodeProps.node,
       content: {
         ...state.selectedNodeProps.node.content,
-        categoryId: state.selectedNodeProps.node.content.categoryId.includes(payload._id)
-          ? state.selectedNodeProps.node.content.categoryId.filter(
-              curCOAId => curCOAId !== payload._id,
-            )
-          : [...state.selectedNodeProps.node.content.categoryId, payload._id],
+        COAIds: state.selectedNodeProps.node.content.COAIds.includes(payload._id)
+          ? state.selectedNodeProps.node.content.COAIds.filter(curCOAId => curCOAId !== payload._id)
+          : [...state.selectedNodeProps.node.content.COAIds, payload._id],
       },
     },
   };

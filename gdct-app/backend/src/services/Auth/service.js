@@ -5,17 +5,17 @@ import UserModel from '../../models/User/model';
 import { addTokenToCookie } from '../../middlewares/shared';
 
 export default class ProgramService {
-  authenticate(req, res, next) {
+  authenticate(req, res) {
     const { method } = req.params;
-    passport.authenticate(method, { scope: 'email' })(req, res, next);
+    passport.authenticate(method, { scope: 'email' })(req, res);
   }
 
   authenticateCallback(req, res) {
     const { method } = req.params;
-    res.setHeader('Access-Control-Allow-Origin', process.env.CLIENT_SERVER);
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3003');
     passport.authenticate(method, {
-      successRedirect: process.env.CLIENT_SERVER, // redirect to home page
-      failureRedirect: `${process.env.CLIENT_SERVER}/auth/error`, // redirect to error page
+      successRedirect: 'http://localhost:3003/', // redirect to home page
+      failureRedirect: 'http://localhost:3003/auth/error', // redirect to error page
     })(req, res);
   }
 
@@ -34,7 +34,6 @@ export default class ProgramService {
       user1.forEach(obj => {
         if (obj.username === uname) {
           found = true;
-          req.session.user = user1;
           res.send(true);
         }
       });
@@ -44,17 +43,9 @@ export default class ProgramService {
     });
   }
 
-  profile(req, res) {
-    if (req.token !== null) {
-      res.json({ status: 'success' });
-    } else {
-      res.json({ status: 'fail' });
-    }
-  }
-
   createUser(req, res) {
     const {
-      body: { email, password, firstName, lastName, username, title, phoneNumber, ext, sysRoles },
+      body: { username, email, password },
     } = req;
 
     if (!email) {
@@ -74,15 +65,9 @@ export default class ProgramService {
     }
 
     const finalUser = new UserModel({
+      username,
       email,
       password,
-      firstName,
-      lastName,
-      username,
-      title,
-      phoneNumber,
-      ext,
-      sysRoles,
     });
 
     finalUser.setHashedPassword(password);
@@ -92,7 +77,7 @@ export default class ProgramService {
       .then(user => {
         const token = user.generateJWT();
         addTokenToCookie(res, token);
-        res.json(user.returnAuthUserJson(token));
+        res.json({ user: user.returnAuthUserJson(token) });
       })
       .catch(err => res.json({ error: err }));
   }
@@ -118,24 +103,20 @@ export default class ProgramService {
       });
     }
 
-    return passport.authenticate(
-      ['local', 'google', 'facebook'],
-      { session: false },
-      (err, passportUser, info) => {
-        console.log('info:', info);
-        if (err) {
-          return next(err);
-        }
+    return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
+      console.log('info:', info);
+      if (err) {
+        return next(err);
+      }
 
-        if (passportUser) {
-          const authUser = passportUser;
-          const token = passportUser.generateJWT();
-          addTokenToCookie(res, token);
-          return res.json(authUser.returnAuthUserJson(token));
-        }
+      if (passportUser) {
+        const authUser = passportUser;
+        const token = passportUser.generateJWT();
+        addTokenToCookie(res, token);
+        return res.json({ user: authUser.returnAuthUserJson(token) });
+      }
 
-        return res.status(400).info;
-      },
-    )(req, res, next);
+      return res.status(400).info;
+    })(req, res, next);
   }
 }

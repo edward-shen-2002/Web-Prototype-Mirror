@@ -3,17 +3,17 @@ import { Schema, model } from 'mongoose';
 const { ObjectId } = Schema.Types;
 
 const COATreeModel = model(
-  'CategoryTree',
+  'COATree',
   new Schema(
     {
-      parentId: { type: ObjectId, ref: 'CategoryTree' },
-      categoryGroupId: { type: ObjectId, ref: 'CategoryGroup' },
-      categoryId: [{ type: ObjectId, ref: 'Category' }],
+      parentId: { type: ObjectId, ref: 'COATree' },
+      COAGroupId: { type: ObjectId, ref: 'COAGroup' },
+      COAIds: [{ type: ObjectId, ref: 'COA' }],
       sheetNameId: { type: ObjectId, ref: 'SheetName' },
     },
     { minimize: false },
   ),
-  'CategoryTree',
+  'COATree',
 );
 
 export default COATreeModel;

@@ -1,4 +1,4 @@
-import programController from '../../controllers/program';
+import programController from '../../controllers/Program';
 import ProgramsStore from '../ProgramsStore/store';
 
 import {

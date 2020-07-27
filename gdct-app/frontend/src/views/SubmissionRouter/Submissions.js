@@ -1,6 +1,13 @@
 import React, { useMemo, useEffect } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 
+import {
+  getSubmissionsRequest,
+  createSubmissionRequest,
+  deleteSubmissionRequest,
+  updateSubmissionRequest,
+} from '../../store/thunks/submission';
+
 import MaterialTable from 'material-table';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
@@ -8,12 +15,6 @@ import LaunchIcon from '@material-ui/icons/Launch';
 
 import Typography from '@material-ui/core/Typography';
 import { useHistory } from 'react-router-dom';
-import {
-  getSubmissionsRequest,
-  createSubmissionRequest,
-  deleteSubmissionRequest,
-  updateSubmissionRequest,
-} from '../../store/thunks/submission';
 import { selectSubmissionsStore } from '../../store/SubmissionsStore/selectors';
 import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors';
 import { TemplateIdButton, StatusIdButton } from '../../components/buttons';

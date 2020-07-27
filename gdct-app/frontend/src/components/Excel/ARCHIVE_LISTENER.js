@@ -75,7 +75,7 @@ class EventListener extends PureComponent {
       stagnantSelectionAreas,
     } = this.props;
 
-    const commonProps = {
+    let commonProps = {
       name,
       activeSheetName,
       sheetNames,
@@ -107,17 +107,17 @@ class EventListener extends PureComponent {
 
   // ! Make the active style be the focus of styles
   applyBlockStyle(property, propertyValue) {
-    const { sheetCellData, handleUpdateSheetCellData } = this.props;
+    let { sheetCellData, handleUpdateSheetCellData } = this.props;
     // Get the rows/columns
     // ! Consider border enclosure -- is it by cell or by range?
-    const containedArea = this._getAllAreas();
+    let containedArea = this._getAllAreas();
 
-    for (const row in containedArea) {
+    for (let row in containedArea) {
       const rowArea = containedArea[row];
 
       if (!sheetCellData[row]) sheetCellData[row] = {};
 
-      for (const column in rowArea) {
+      for (let column in rowArea) {
         if (!sheetCellData[row][column]) sheetCellData[row][column] = {};
 
         const { property: blockProperty, style: blockPropertyStyle } = editorToRichTextMap[
@@ -128,13 +128,13 @@ class EventListener extends PureComponent {
           if (blockPropertyStyle) {
             if (!sheetCellData[row][column].styles) sheetCellData[row][column].styles = {};
 
-            const cellStyles = sheetCellData[row][column].styles;
+            let cellStyles = sheetCellData[row][column].styles;
 
             if (cellStyles[blockProperty]) {
               const potentialStyles = Object.values(richTextToEditorMap[blockProperty]).length;
 
               if (potentialStyles > 1) {
-                const presentStyles = cellStyles[blockProperty].split(' ');
+                let presentStyles = cellStyles[blockProperty].split(' ');
 
                 const potentialIndex = presentStyles.findIndex(
                   style => style === blockPropertyStyle,

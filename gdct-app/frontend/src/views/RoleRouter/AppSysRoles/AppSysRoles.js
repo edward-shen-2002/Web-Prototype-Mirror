@@ -1,9 +1,6 @@
 import React, { useMemo, useEffect } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 
-import MaterialTable from 'material-table';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import {
   getAppSysRolesRequest,
   createAppSysRoleRequest,
@@ -14,6 +11,11 @@ import {
 import { getAppRolesRequest } from '../../../store/thunks/AppRole';
 
 import { getAppSysesRequest } from '../../../store/thunks/AppSys';
+
+import MaterialTable from 'material-table';
+import Paper from '@material-ui/core/Paper';
+
+import Typography from '@material-ui/core/Typography';
 
 import './AppSysRoles.scss';
 import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors';
@@ -40,11 +42,11 @@ const AppSysRolesTable = props => {
     }),
     shallowEqual,
   );
-  const lookupSysRoles = appSyses.reduce((acc, appSys) => {
+  const lookupSysRoles = appSyses.reduce(function (acc, appSys) {
     acc[appSys.code] = appSys.name;
     return acc;
   }, {});
-  const lookupAppRoles = appRoles.reduce((acc, appRole) => {
+  const lookupAppRoles = appRoles.reduce(function (acc, appRole) {
     acc[appRole.code] = appRole.name;
     return acc;
   }, {});

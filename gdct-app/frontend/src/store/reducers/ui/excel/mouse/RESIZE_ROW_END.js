@@ -3,7 +3,7 @@ import { getNormalRowHeight, getExcelRowHeight } from '../../../../../tools/exce
 import { DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER } from '../../../../../constants/excel';
 
 const RESIZE_ROW_END = (state, { topOffsets }) => {
-  const newState = { ...state };
+  let newState = { ...state };
 
   const {
     rowResizeData,

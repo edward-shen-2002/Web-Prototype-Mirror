@@ -3,7 +3,7 @@ import { getScrollbarSize, getNormalColumnWidth } from '../../../../../tools/exc
 import { DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER } from '../../../../../constants/excel';
 
 const RESIZE_COLUMN = (state, { xOffset, leftOffsets }) => {
-  const newState = { ...state };
+  let newState = { ...state };
 
   const {
     sheetColumnWidths,
@@ -27,7 +27,7 @@ const RESIZE_COLUMN = (state, { xOffset, leftOffsets }) => {
   const scrollbarSize = getScrollbarSize();
 
   // Do not consider scroll offset when freeze
-  const adjustedScrollOffset = column <= sheetFreezeColumnCount ? 0 : scrollLeft;
+  let adjustedScrollOffset = column <= sheetFreezeColumnCount ? 0 : scrollLeft;
 
   const minScrollOffset = adjustedScrollOffset;
   const maxScrollOffset = adjustedScrollOffset + clientWidth - scrollbarSize;

@@ -79,7 +79,7 @@ const ENTER = (state, { shiftKey }) => {
   const startX = Math.min(x1, x2);
   const endX = Math.max(x1, x2);
 
-  const merged = getMergedData(sheetCellData, y, x);
+  let merged = getMergedData(sheetCellData, y, x);
 
   if (shiftKey) {
     if (merged) {
@@ -88,31 +88,35 @@ const ENTER = (state, { shiftKey }) => {
     } else {
       y--;
     }
-  } else if (stagnantSelectionAreas.length) {
-    for (let row = y + 1; row <= endY; row++) {
-      const rowData = sheetCellData[row];
+  } else {
+    if (stagnantSelectionAreas.length) {
+      for (let row = y + 1; row <= endY; row++) {
+        const rowData = sheetCellData[row];
 
-      if (rowData && rowData[x] && rowData[x].merged) {
-        const { x1: mergedX1, y1: mergedY1, y2: mergedY2 } = rowData[x].merged;
+        if (rowData && rowData[x] && rowData[x].merged) {
+          const { x1: mergedX1, y1: mergedY1, y2: mergedY2 } = rowData[x].merged;
 
-        if (mergedY1 === row && mergedX1 === x) {
+          if (mergedY1 === row && mergedX1 === x) {
+            y = row - 1;
+            break;
+          } else {
+            y = mergedY2;
+          }
+        } else {
           y = row - 1;
           break;
-        } else {
-          y = mergedY2;
         }
+      }
+
+      y++;
+    } else {
+      if (merged) {
+        const { y2 } = merged;
+        y = y2 + 1;
       } else {
-        y = row - 1;
-        break;
+        y++;
       }
     }
-
-    y++;
-  } else if (merged) {
-    const { y2 } = merged;
-    y = y2 + 1;
-  } else {
-    y++;
   }
 
   // Check for bounds -- do not update when isbounded and tab goes out bounds
@@ -166,7 +170,7 @@ const ENTER = (state, { shiftKey }) => {
             : (activeCellSelectionAreaIndex = stagnantSelectionAreasLength - 1);
         }
 
-        const newSelectionArea =
+        let newSelectionArea =
           activeCellSelectionAreaIndex === stagnantSelectionAreasLength
             ? activeSelectionArea
             : stagnantSelectionAreas[activeCellSelectionAreaIndex];

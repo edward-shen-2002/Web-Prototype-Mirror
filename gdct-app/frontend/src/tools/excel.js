@@ -1,9 +1,5 @@
 import XlsxPopulate, { RichText, Range, FormulaError } from 'xlsx-populate';
 
-import pako from 'pako';
-import Color from 'color';
-import { Parser } from 'hot-formula-parser';
-import uniqid from 'uniqid';
 import { sheetNameRegex } from './regex';
 
 import {
@@ -11,10 +7,16 @@ import {
   convertRichTextToEditorValue,
   createEmptyEditor,
   createEmptyEditorValue,
-} from './slate';
-import { isObjectEmpty } from './misc';
+} from '../tools/slate';
+import { isObjectEmpty } from '../tools/misc';
+
+import pako from 'pako';
+
+import Color from 'color';
 
 import { themes, borderFragmentMap, completeBorderStyleMap } from '../constants/styles';
+
+import { Parser } from 'hot-formula-parser';
 
 import {
   EXCEL_ROW_HEIGHT_SCALE,
@@ -31,7 +33,9 @@ import {
   DEFAULT_EXCEL_SHEET_FREEZE_COLUMN_COUNT,
 } from '../constants/excel';
 
-const parser = new Parser();
+import uniqid from 'uniqid';
+
+var parser = new Parser();
 
 const groupRegex = /[a-z]+[1-9][0-9]*:[a-z]+[1-9][0-9]*/gi;
 const invidualRegex = /[a-z]+[1-9][0-9]*/gi;
@@ -54,8 +58,8 @@ const convertColumnToNumber = column => {
 };
 
 const convertNumberToColumn = number => {
-  let temp;
-  let letter = '';
+  var temp,
+    letter = '';
   while (number > 0) {
     temp = (number - 1) % 26;
     letter = String.fromCharCode(temp + 65) + letter;
@@ -75,11 +79,11 @@ const getCellLocationFromString = string => {
 };
 
 const getColumnRange = (start, end) => {
-  const startNumber = convertColumnToNumber(start);
-  const endNumber = convertColumnToNumber(end);
+  let startNumber = convertColumnToNumber(start);
+  let endNumber = convertColumnToNumber(end);
   if (startNumber > endNumber) throw 'Start must be less than or equal to end';
 
-  const range = new Array(endNumber - startNumber + 1)
+  let range = new Array(endNumber - startNumber + 1)
     .fill(null)
     .map((_val, index) => startNumber + index);
 
@@ -91,7 +95,7 @@ const getRowRange = (start, end) => {
   start = +start;
   end = +end;
 
-  const range = [];
+  let range = [];
   for (let i = start; i <= end; i++) range.push(i);
 
   return range;
@@ -112,7 +116,7 @@ const getGroupFormula = (data, formula) => {
 
     const columnCount = columnRange.length;
     const rowCount = rowRange.length;
-    const wholeRange = [];
+    let wholeRange = [];
 
     for (let j = 0; j < rowCount; j++) {
       const row = rowRange[j];
@@ -183,7 +187,7 @@ export const getScrollbarSize = (() => {
   return (recalculate = false) => {
     if (size === -1 || recalculate) {
       const div = document.createElement('div');
-      const { style } = div;
+      const style = div.style;
       style.width = '50px';
       style.height = '50px';
       style.overflow = 'scroll';
@@ -272,10 +276,10 @@ export const getExcelRowHeight = rowHeight =>
   rowHeight ? rowHeight / EXCEL_ROW_HEIGHT_SCALE : rowHeight;
 
 export const getWorkbookInstance = async (activeSheetName, sheets) => {
-  const Workbook = await XlsxPopulate.fromBlankAsync();
+  let Workbook = await XlsxPopulate.fromBlankAsync();
   let defaultSheetFound = false;
 
-  for (const sheetName in sheets) {
+  for (let sheetName in sheets) {
     const {
       sheetCellData,
 
@@ -321,15 +325,15 @@ export const getWorkbookInstance = async (activeSheetName, sheets) => {
 
     sheet.freezePanes(sheetFreezeColumnCount, sheetFreezeRowCount);
 
-    for (const row in sheetHiddenRows) sheet.row(row).hidden(true);
+    for (let row in sheetHiddenRows) sheet.row(row).hidden(true);
 
-    for (const column in sheetHiddenColumns) sheet.column(column).hidden(true);
+    for (let column in sheetHiddenColumns) sheet.column(column).hidden(true);
 
     // Set row heights
-    for (const row in sheetRowHeights) sheet.row(row).height(sheetRowHeights[row]);
+    for (let row in sheetRowHeights) sheet.row(row).height(sheetRowHeights[row]);
 
     // Set column widths
-    for (const column in sheetColumnWidths) sheet.column(column).width(sheetColumnWidths[column]);
+    for (let column in sheetColumnWidths) sheet.column(column).width(sheetColumnWidths[column]);
 
     sheet.activeCell(x, y);
   }
@@ -343,7 +347,7 @@ export const getWorkbookInstance = async (activeSheetName, sheets) => {
 };
 
 export const downloadWorkbook = async (fileName, activeSheetName, sheets) => {
-  const xlsxInstance = await getWorkbookInstance(activeSheetName, sheets);
+  let xlsxInstance = await getWorkbookInstance(activeSheetName, sheets);
 
   const blob = await xlsxInstance.outputAsync();
 
@@ -370,7 +374,7 @@ export const getCellData = (sheetCellData, row, column) =>
 export const getSheetHeaderCount = sheet => {
   const sheetUsedRange = sheet.usedRange();
 
-  const headerCount = {};
+  let headerCount = {};
 
   let maxColumnNumber = 1;
   let maxRowNumber = 1;
@@ -389,9 +393,9 @@ export const getSheetHeaderCount = sheet => {
 };
 
 export const getSheetColumnsData = (sheet, columnCount) => {
-  const sheetColumnWidths = {};
+  let sheetColumnWidths = {};
 
-  const sheetHiddenColumns = {};
+  let sheetHiddenColumns = {};
 
   for (let column = 1; column < columnCount; column++) {
     let width;
@@ -409,9 +413,9 @@ export const getSheetColumnsData = (sheet, columnCount) => {
 };
 
 export const getSheetRowsData = (sheet, rowCount) => {
-  const sheetRowHeights = {};
+  let sheetRowHeights = {};
 
-  const sheetHiddenRows = {};
+  let sheetHiddenRows = {};
 
   for (let row = 1; row < rowCount; row++) {
     let height;
@@ -470,7 +474,7 @@ const applyTintToColour = (color, tint) => {
 
 // TODO
 export const convertXlsxStyleToInlineStyle = xlsxStyle => {
-  const inlineStyle = {};
+  let inlineStyle = {};
 
   const {
     bold,
@@ -514,16 +518,16 @@ export const convertXlsxStyleToInlineStyle = xlsxStyle => {
   // if (borderStyle) {
   // }
   if (border) {
-    for (const borderFragment in border) {
-      const { style, color } = border[borderFragment];
+    for (let borderFragment in border) {
+      let { style, color } = border[borderFragment];
       const borderProperty = borderFragmentMap[borderFragment];
 
       const fragmentStyles = completeBorderStyleMap[style];
 
       // ! TODO: Need to keep non-supported styles as meta deta!
-      for (const fragmentProperty in fragmentStyles) {
-        const fragmentStyle = fragmentStyles[fragmentProperty];
-        const fullProperty = `${borderProperty}${fragmentProperty}`;
+      for (let fragmentProperty in fragmentStyles) {
+        let fragmentStyle = fragmentStyles[fragmentProperty];
+        let fullProperty = `${borderProperty}${fragmentProperty}`;
         inlineStyle[fullProperty] = fragmentStyle;
       }
 
@@ -536,7 +540,7 @@ export const convertXlsxStyleToInlineStyle = xlsxStyle => {
   if (underline) inlineStyle.textDecoration = 'underline';
   if (strikethrough)
     inlineStyle.textDecoration = underline
-      ? `${inlineStyle.textDecoration} line-through`
+      ? inlineStyle.textDecoration + ' line-through'
       : 'line-through';
   if (subscript) inlineStyle.verticalAlign = 'sub';
   if (superscript) inlineStyle.verticalAlign = 'super';
@@ -546,7 +550,7 @@ export const convertXlsxStyleToInlineStyle = xlsxStyle => {
 
   // ! Block styles
   if (fill) {
-    const { type, color } = fill;
+    let { type, color } = fill;
 
     if (type === 'solid') inlineStyle.backgroundColor = convertXlsxColorToCss(color);
   }
@@ -562,11 +566,11 @@ export const convertXlsxStyleToInlineStyle = xlsxStyle => {
 
 // TODO
 export const convertInlineStyleToXlsxStyle = inlineStyle => {
-  const xlsxStyle = {};
+  let xlsxStyle = {};
 };
 
 export const extractCellStyle = cellData => {
-  const cellStyles = cellData
+  let cellStyles = cellData
     ? cellData.style([
         // Can be block style or rich text
         // If cell is richtext, this is the data that is on the first fragment
@@ -610,21 +614,21 @@ export const extractCellStyle = cellData => {
       ])
     : {};
 
-  for (const styleName in cellStyles) {
+  for (let styleName in cellStyles) {
     const styleValue = cellStyles[styleName];
 
     if (!styleValue) delete cellStyles[styleName];
   }
 
-  if (cellStyles.numberFormat === 'General') delete cellStyles.numberFormat;
+  if (cellStyles.numberFormat === 'General') delete cellStyles['numberFormat'];
 
-  if (isObjectEmpty(cellStyles.border)) delete cellStyles.border;
+  if (isObjectEmpty(cellStyles.border)) delete cellStyles['border'];
 
   return isObjectEmpty(cellStyles) ? undefined : convertXlsxStyleToInlineStyle(cellStyles);
 };
 
 export const extractCellRichTextStyle = cellData => {
-  const cellStyles = cellData
+  let cellStyles = cellData
     ? cellData.style([
         'bold',
         'italic',
@@ -639,7 +643,7 @@ export const extractCellRichTextStyle = cellData => {
       ])
     : {};
 
-  for (const styleName in cellStyles) {
+  for (let styleName in cellStyles) {
     const styleValue = cellStyles[styleName];
 
     if (!styleValue) delete cellStyles[styleName];
@@ -697,7 +701,7 @@ export const parsePrepopulateString = string =>
     }, {});
 
 const extractRichTextData = richText => {
-  const plainRichTextObject = [];
+  let plainRichTextObject = [];
 
   const richTextLength = richText.length;
 
@@ -714,7 +718,7 @@ const extractRichTextData = richText => {
 };
 
 const extractCellData = (cellData, row, column) => {
-  const extractedCellData = {};
+  let extractedCellData = {};
 
   const value = cellData.value();
 
@@ -781,7 +785,7 @@ const extractCellData = (cellData, row, column) => {
 };
 
 export const getSheetCellData = (sheet, columnCount, rowCount) => {
-  const sheetCellData = {};
+  let sheetCellData = {};
 
   for (let row = 1; row < rowCount; row++) {
     const rowData = sheet.row(row);
@@ -829,10 +833,10 @@ export const getSheetFreezeHeader = sheet => {
 
 export const getTopOffsets = (rowHeights, rowCount) => {
   let topOffsetsTotal = DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER;
-  const topOffsets = [0, DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER];
+  let topOffsets = [0, DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER];
 
   for (let row = 2; row < rowCount; row++) {
-    const rowHeight = getNormalRowHeight(rowHeights[row - 1]);
+    let rowHeight = getNormalRowHeight(rowHeights[row - 1]);
 
     topOffsetsTotal += rowHeight;
     topOffsets.push(topOffsetsTotal);
@@ -843,10 +847,10 @@ export const getTopOffsets = (rowHeights, rowCount) => {
 
 export const getLeftOffsets = (columnWidths, columnCount) => {
   let leftOffsetTotal = DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER;
-  const leftOffsets = [0, DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER];
+  let leftOffsets = [0, DEFAULT_EXCEL_SHEET_COLUMN_WIDTH_HEADER];
 
   for (let column = 2; column < columnCount; column++) {
-    const columnWidth = getNormalColumnWidth(columnWidths[column - 1]);
+    let columnWidth = getNormalColumnWidth(columnWidths[column - 1]);
 
     leftOffsetTotal += columnWidth;
     leftOffsets.push(leftOffsetTotal);
@@ -870,7 +874,7 @@ export const getActiveCellInputData = (sheetCellData, activeRow, activeColumn) =
     cellValue = convertRichTextToEditorValue(activeCellInputValueData.value);
     formulaValue = convertRichTextToEditorValue(activeCellInputValueData.value);
   } else {
-    const value = activeCellInputValueData ? activeCellInputValueData.value : '';
+    let value = activeCellInputValueData ? activeCellInputValueData.value : '';
     cellValue = convertTextToEditorValue(value);
     formulaValue = convertTextToEditorValue(value);
   }
@@ -887,13 +891,13 @@ const getMaxSheetRange = sheetCellData => {
   let maxColumnRange = DEFAULT_EXCEL_SHEET_COLUMN_COUNT + 1;
   let maxRowRange = DEFAULT_EXCEL_SHEET_ROW_COUNT + 1;
 
-  for (const row in sheetCellData) {
+  for (let row in sheetCellData) {
     const rowNumber = parseInt(row);
     if (rowNumber + 1 > maxRowRange) maxRowRange = rowNumber + 1;
 
-    const columns = sheetCellData[row];
+    let columns = sheetCellData[row];
 
-    for (const column in columns) {
+    for (let column in columns) {
       const columnNumber = parseInt(column);
       if (columnNumber + 1 > maxColumnRange) {
         maxColumnRange = columnNumber + 1;
@@ -954,14 +958,14 @@ export const createBlankReactState = () => {
 
 export const convertExcelFileToState = async excelFile => {
   const WorkbookInstance = await XlsxPopulate.fromDataAsync(excelFile);
-  const { name } = excelFile;
+  const name = excelFile.name;
 
   const sheetNames = WorkbookInstance.sheets().map(sheet => sheet.name());
 
   const activeSheet = WorkbookInstance.activeSheet();
   const activeSheetName = activeSheet.name();
 
-  const workbookData = {};
+  let workbookData = {};
   sheetNames.forEach(name => {
     const sheet = WorkbookInstance.sheet(name);
 
@@ -984,7 +988,7 @@ export const convertExcelFileToState = async excelFile => {
 
     // Hot-fix for saved multi-selection (not implemeneted in xlsx-populate)
     try {
-      const activeCell = sheet.activeCell();
+      let activeCell = sheet.activeCell();
 
       if (activeCell instanceof Range) {
         activeRow = activeCell._minRowNumber;
@@ -1003,7 +1007,7 @@ export const convertExcelFileToState = async excelFile => {
 
     const stagnantSelectionAreas = [];
 
-    const activeCellPosition = { x: activeColumn, y: activeRow };
+    let activeCellPosition = { x: activeColumn, y: activeRow };
 
     // ! Fill other params
     const sheetContent = {
@@ -1034,14 +1038,14 @@ export const convertExcelFileToState = async excelFile => {
 };
 
 export const convertStateToReactState = state => {
-  const { workbookData } = state;
+  const workbookData = state.workbookData;
 
-  const data = {};
+  let data = {};
 
-  for (const sheetName in workbookData)
+  for (let sheetName in workbookData)
     data[sheetName] = JSON.parse(pako.inflate(workbookData[sheetName], { to: 'string' }));
 
-  const { activeSheetName } = state;
+  const activeSheetName = state.activeSheetName;
   const activeSheetData = data[activeSheetName];
   const {
     activeCellPosition: { x, y },
@@ -1122,7 +1126,7 @@ export const extractReactAndWorkbookState = (state, inactiveSheets) => {
 export const getCellDataText = cellData => {
   if (!cellData) return '';
 
-  const { type, value } = cellData;
+  let { type, value } = cellData;
 
   let text;
 

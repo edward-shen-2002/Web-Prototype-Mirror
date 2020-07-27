@@ -1,14 +1,14 @@
 const SET_READ_ONLY = state => {
-  const newState = { ...state };
+  let newState = { ...state };
 
   const { sheetCellData, stagnantSelectionAreas, activeCellPosition } = newState;
 
   const stagnantSelectionAreasLength = stagnantSelectionAreas.length;
 
-  const newSheetCellData = { ...sheetCellData };
+  let newSheetCellData = { ...sheetCellData };
 
   if (stagnantSelectionAreasLength) {
-    const areaPositionSet = {};
+    let areaPositionSet = {};
 
     stagnantSelectionAreas.forEach(({ x1, x2, y1, y2 }) => {
       const minX = Math.min(x1, x2);
@@ -24,12 +24,12 @@ const SET_READ_ONLY = state => {
       }
     });
 
-    for (const row in areaPositionSet) {
+    for (let row in areaPositionSet) {
       const columns = areaPositionSet[row];
 
       if (!newSheetCellData[row]) newSheetCellData[row] = {};
 
-      for (const column in columns)
+      for (let column in columns)
         newSheetCellData[row][column] = {
           ...newSheetCellData[row][column],
           isReadOnly: true,

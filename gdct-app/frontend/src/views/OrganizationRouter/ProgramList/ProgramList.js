@@ -1,14 +1,15 @@
 import React, { useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { getProgramsRequest } from '../../../store/thunks/program';
+
 import MaterialTable from 'material-table';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import PropTypes from 'prop-types';
 import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors';
 import { selectProgramsStore } from '../../../store/ProgramsStore/selectors';
-import { getProgramsRequest } from '../../../store/thunks/program';
+import PropTypes from 'prop-types';
 import Loading from '../../../components/Loading/Loading';
 
 const ProgList = ({ programIds, isEditable = true, onClickAdd, onClickDelete }) => {

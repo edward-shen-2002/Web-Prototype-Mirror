@@ -6,7 +6,7 @@ const SET_SHEET_NAME = (state, { sheetName, newSheetName }) => {
     return state;
   }
 
-  const newState = { ...state };
+  let newState = { ...state };
 
   newState.sheetNames = sheetNames.map(name => (name === sheetName ? newSheetName : name));
 

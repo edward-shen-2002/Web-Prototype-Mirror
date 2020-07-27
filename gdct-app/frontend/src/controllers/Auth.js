@@ -1,10 +1,8 @@
 import axios from 'axios';
 
-import { host } from '../constants/domain';
-
 const AuthController = (() => {
   const AuthAxios = axios.create({
-    baseURL: host,
+    baseURL: 'http://localhost:3000/',
     withCredentials: true,
   });
   return {
@@ -16,7 +14,7 @@ const AuthController = (() => {
       AuthAxios.post('/register', data)
         .then(res => res.data)
         .catch(err => console.log(err)),
-    auto: async data => AuthAxios.get('/windows_auto_login'),
+    auto: async data => AuthAxios.get('/auto'),
     profile: async () => AuthAxios.get('/profile').then(res => res.data),
     logout: async data => AuthAxios.get('/logout').then(res => res.data),
   };

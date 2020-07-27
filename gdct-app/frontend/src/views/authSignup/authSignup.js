@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Form, FormGroup, Label, Input, Col, Alert } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
-import { host } from '../../constants/domain';
 
 const validEmailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(.\w{2,3})+$/;
 const validateForm = errors => {
@@ -27,7 +26,7 @@ class signupComponent extends Component {
 
   handleInputChange(event) {
     const { name, value } = event.target;
-    const { errors } = this.state;
+    let errors = this.state.errors;
 
     switch (name) {
       case 'email':
@@ -47,7 +46,7 @@ class signupComponent extends Component {
 
     if (validateForm(this.state.errors)) {
       window.location.replace(
-        `${host}/auth/signup/callback?email=${this.state.email}&password=${this.state.password}`,
+        `http://localhost:3000/auth/signup/callback?email=${this.state.email}&password=${this.state.password}`,
       );
     }
   }

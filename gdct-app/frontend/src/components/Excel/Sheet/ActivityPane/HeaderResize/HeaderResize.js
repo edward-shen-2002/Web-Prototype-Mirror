@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useSelector, shallowEqual } from 'react-redux';
 
-import { getNormalRowHeight, getNormalColumnWidth } from '../../../../../tools/excel';
+import { getNormalRowHeight, getNormalColumnWidth } from '../../../../..//tools/excel';
 
 import {
   DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
@@ -116,10 +116,10 @@ export const ColumnHeaderIndicator = ({ isRelevantColumnOffset }) => {
   return <div style={indicatorStyle} className="resizeHeader resizeHeader__headerIndicator" />;
 };
 
-export const RowContentIndicator = () => {
+export let RowContentIndicator = () => {
   return <div></div>;
 };
 
-export const ColumnContentIndicator = () => {
+export let ColumnContentIndicator = () => {
   return <div></div>;
 };

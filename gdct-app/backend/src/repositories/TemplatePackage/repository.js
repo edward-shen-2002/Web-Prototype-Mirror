@@ -8,8 +8,6 @@ import TemplatePackageEntity from '../../entities/TemplatePackage';
 import StatusRepository from '../Status';
 import UsersRepository from '../Users'
 
-const populatedParams = 'submissionPeriodId templateIds statusId';
-
 // MongoDB implementation
 // @Service()
 export default class TemplatePackageRepository extends BaseRepository {
@@ -47,48 +45,44 @@ export default class TemplatePackageRepository extends BaseRepository {
   async update(
     id,
     { name, submissionPeriodId, templateIds, statusId, creationDate, userCreatorId },
-    isPopulated,
   ) {
-    return (statusId ? this.statusRepository.validate(statusId) : new Promise(resolve => resolve()))
-      .then(() => {
-        if (templateIds) return this.templateRepository.validateMany(templateIds);
-      })
-      .then(() => {
-        if (submissionPeriodId) return this.submissionPeriodRepository.validate(submissionPeriodId);
-      })
-      .then(() =>
-        TemplatePackageModel.findByIdAndUpdate(
-          id,
-          {
+    return (
+      (statusId ? this.statusRepository.validate(statusId) : new Promise(resolve => resolve()))
+        // .then(() => {
+        //   if (userCreatorId) return this.userRepository.validate(userCreatorId)
+        // })
+        .then(() => {
+          if (templateIds) return this.templateRepository.validateMany(templateIds);
+        })
+        .then(() => {
+          if (submissionPeriodId)
+            return this.submissionPeriodRepository.validate(submissionPeriodId);
+        })
+        .then(() =>
+          TemplatePackageModel.findByIdAndUpdate(id, {
             name,
             submissionPeriodId,
             templateIds,
             statusId,
             creationDate,
             userCreatorId,
-          },
-          { upsert: true, new: true },
-        ).populate(isPopulated ? populatedParams : ''),
-      )
-      .then(templatePackage => {
-        console.log(templatePackage, isPopulated);
-        return new TemplatePackageEntity(templatePackage.toObject());
-      });
+          }),
+        )
+        .then(templatePackage => new TemplatePackageEntity(templatePackage.toObject()))
+    );
   }
 
-  async find(query, isPopulated) {
+  async find(query) {
     const realQuery = {};
 
     for (const key in query) {
       if (query[key]) realQuery[key] = query[key];
     }
 
-    const templatePackages = await TemplatePackageModel.find(realQuery).populate(
-      isPopulated ? populatedParams : '',
-    );
-
-    return templatePackages.map(
-      templatePackage => new TemplatePackageEntity(templatePackage.toObject()),
+    return TemplatePackageModel.find(realQuery).then(templatePackages =>
+      templatePackages.map(
+        templatePackage => new TemplatePackageEntity(templatePackage.toObject()),
+      ),
     );
   }
 
