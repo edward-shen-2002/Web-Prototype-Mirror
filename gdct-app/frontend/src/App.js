@@ -24,6 +24,7 @@ import SignUp from './views/SignUp';
 import WorkflowRouter from './views/WorkflowRouter/WorkflowRouter';
 import GDCTMenu from './views/GDCTMenu';
 import Logout from './views/Logout';
+import Users from './views/Users'
 import AuthController from './controllers/Auth';
 import './App.scss';
 
@@ -40,6 +41,7 @@ const PrivateRouter = ({ setLoggedIn }) => {
       <Route path="/submission_manager" component={SubmissionRouter} />
       <Route path="/reportingPeriods" component={ReportingPeriods} />
       <Route path="/sheetNames" component={SheetNames} />
+      <Route path="/users" component={Users} />
       <Route path={ROUTE_COLUMN_NAMES} component={ColumnNames} />
       <Route path="/organizations" component={OrgRouter} />
       <Route path="/logout" render={props => <Logout {...props} setLoggedIn={setLoggedIn} />} />
