@@ -13,6 +13,7 @@ export default class ProgramService {
   authenticateCallback(req, res) {
     const { method } = req.params;
     res.setHeader('Access-Control-Allow-Origin', process.env.CLIENT_SERVER);
+    res.setHeader('authorization', req.session.user.token);
     passport.authenticate(method, {
       successRedirect: process.env.CLIENT_SERVER, // redirect to home page
       failureRedirect: `${process.env.CLIENT_SERVER}/auth/error`, // redirect to error page

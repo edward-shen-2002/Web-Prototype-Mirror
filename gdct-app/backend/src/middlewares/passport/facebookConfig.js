@@ -21,15 +21,15 @@ module.exports = () => {
                 if (err) {
                   return done(err);
                 }
-                user.generateAuthToken(user);
+                var tkn = user.generateAuthToken(user);
                 req.session.user = user;
-                req.session.token = token;
+                req.session.token = tkn;
                 return done(null, user);
               });
             } else {
-              user.generateAuthToken(user);
+              var tkn = user.generateAuthToken(user);
               req.session.user = user;
-              req.session.token = token;
+              req.session.token = tkn;
               return done(null, user);
             }
           } else {
