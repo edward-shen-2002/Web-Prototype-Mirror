@@ -14,6 +14,15 @@ const MenuController = Service([MenuService], service => {
         .catch(next);
     });
 
+    router.get('/menus/:name', (req, res, next) => {
+      // Get query from middleware -- auth handler
+      console.log('working');
+      service
+        .findMenu(req.params.name)
+        .then(Menus => res.json({ Menus }))
+        .catch(next);
+    });
+
     router.post('/menus', (req, res, next) => {
       service
         .createMenu(req.body.Menu)

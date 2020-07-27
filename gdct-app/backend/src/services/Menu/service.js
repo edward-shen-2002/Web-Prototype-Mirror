@@ -24,8 +24,8 @@ export default class MenuService {
     return this.MenuRepository.update(id, Menu);
   }
 
-  async findMenu() {
-    return this.MenuRepository.populate();
+  async findMenu(id) {
+    return this.MenuRepository.populate(id);
   }
 
   async findAllMenu() {
