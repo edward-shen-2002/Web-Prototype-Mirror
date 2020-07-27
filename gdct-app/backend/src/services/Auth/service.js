@@ -21,6 +21,8 @@ export default class ProgramService {
 
   logout(req, res) {
     req.logout();
+    req.session.user = null
+    req.session.token = null
     res.cookie('token', '').json({
       status: 'ok',
     });
@@ -45,7 +47,9 @@ export default class ProgramService {
   }
 
   profile(req, res) {
-    if (req.token !== null) {
+    console.log(req.session.token)
+    console.log(req.session.user)
+    if ((req.session.token !== null && req.session.token !== undefined) || (req.session.user !== null && req.session.user !== undefined)) {
       res.json({ status: 'success' });
     } else {
       res.json({ status: 'fail' });
