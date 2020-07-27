@@ -6,6 +6,11 @@ const MenuSchema = new Schema(
   {
     name: { type: String, unique: true },
     items: [{ type: ObjectId, ref: 'MenuItem' }],
+    isSubMenu: {
+      type: Boolean,
+      default: false,
+    },
+    subMenus: [{ type: ObjectId, ref: 'Menu' }],
     isActive: {
       type: Boolean,
       default: true,

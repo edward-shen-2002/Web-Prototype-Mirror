@@ -29,4 +29,10 @@ export default class MenuRepository extends BaseRepository {
   async find(query) {
     return MenuModel.find(query).then(Menus => Menus.map(Menu => new MenuEntity(Menu.toObject())));
   }
+
+  async populate() {
+    return await MenuModel.find()
+      .populate('items subMenus')
+      .then(Menus => Menus.map(Menu => new MenuEntity(Menu.toObject())));
+  }
 }
