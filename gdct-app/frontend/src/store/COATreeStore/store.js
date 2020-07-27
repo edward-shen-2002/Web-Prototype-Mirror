@@ -13,12 +13,12 @@ const UPDATE_ORIGINAL_COA_TREE_UI = state => ({
 });
 
 const LOAD_COA_TREE_UI = (state, { payload }) => {
-  const dependencyMap = {};
+  let dependencyMap = {};
 
   // Hash table of the tree
-  const normalizedTreeMap = {};
+  let normalizedTreeMap = {};
 
-  const parentNodes = [];
+  let parentNodes = [];
 
   payload.treeList.forEach(node => {
     const { _id, parentId } = node;
@@ -33,11 +33,11 @@ const LOAD_COA_TREE_UI = (state, { payload }) => {
     normalizedTreeMap[_id] = node;
   });
 
-  const originalTree = parentNodes.map(parentNode =>
+  let originalTree = parentNodes.map(parentNode =>
     createTreeBranch(parentNode._id, normalizedTreeMap, dependencyMap),
   );
 
-  const localTree = cloneDeep(originalTree);
+  let localTree = cloneDeep(originalTree);
 
   return {
     ...state,
@@ -49,7 +49,7 @@ const LOAD_COA_TREE_UI = (state, { payload }) => {
 };
 
 const createTreeBranch = (rootId, normalizedTreeMap, dependencyMap) => {
-  const children = dependencyMap[rootId];
+  let children = dependencyMap[rootId];
   const content = normalizedTreeMap[rootId];
 
   return {

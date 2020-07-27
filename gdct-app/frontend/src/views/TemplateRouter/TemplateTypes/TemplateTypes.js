@@ -1,17 +1,18 @@
 import React, { useCallback, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 
-import MaterialTable from 'material-table';
-import LaunchIcon from '@material-ui/icons/Launch';
-import Paper from '@material-ui/core/Paper';
-
-import Typography from '@material-ui/core/Typography';
 import {
   getTemplateTypesRequest,
   createTemplateTypeRequest,
   deleteTemplateTypeRequest,
   updateTemplateTypeRequest,
 } from '../../../store/thunks/templateType';
+
+import MaterialTable from 'material-table';
+import LaunchIcon from '@material-ui/icons/Launch';
+import Paper from '@material-ui/core/Paper';
+
+import Typography from '@material-ui/core/Typography';
 
 import './TemplateTypes.scss';
 import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors';
@@ -38,7 +39,11 @@ const TemplateTypesTable = ({ history }) => {
 
   const columns = useMemo(
     () => [
+<<<<<<< HEAD
       // { title: '_id', field: '_id', editable: 'never' },
+=======
+      //{ title: '_id', field: '_id', editable: 'never' },
+>>>>>>> 9c3220b0b7cd82e2a65ab21362bd75fd073597ee
       { title: 'Name', field: 'name' },
       { title: 'Description', field: 'description' },
       { title: 'Approvable', type: 'boolean', field: 'isApprovable' },

@@ -1,10 +1,8 @@
 import axios from 'axios';
 
-import { host } from '../constants/domain';
-
 const AppRoleController = (() => {
   const AppRoleAxios = axios.create({
-    baseURL: `${host}/role_manager/approles`,
+    baseURL: 'http://localhost:3000/role_manager/approles',
     withCredentials: true,
   });
   return {

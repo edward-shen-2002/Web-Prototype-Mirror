@@ -1,12 +1,9 @@
 import axios from 'axios';
 
-import { host } from '../constants/domain';
-
 const COAController = (() => {
   const COAAxios = axios.create({
-    baseURL: `${host}/COA_manager/COAs`,
+    baseURL: 'http://localhost:3000/COA_manager/COAs',
   });
-
   return {
     fetchCOA: async _id => COAAxios.get(`/${_id}`).then(res => res.data.COA),
     fetch: async () => COAAxios.get('').then(res => res.data.COAs),

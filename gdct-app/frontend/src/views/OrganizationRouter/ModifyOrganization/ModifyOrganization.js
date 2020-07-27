@@ -287,7 +287,7 @@ class ModifyOrganization extends React.Component {
 
   constructor(props) {
     super(props);
-    const temp = { ...props.object };
+    const temp = Object.assign({}, props.object);
     delete temp._id;
     this.state = temp;
     this.updateState = this.updateState.bind(this);
@@ -295,7 +295,7 @@ class ModifyOrganization extends React.Component {
   }
 
   updateState(name, value) {
-    this.setState(state => ({ ...state, [name]: value }));
+    this.setState(state => Object.assign({}, state, { [name]: value }));
   }
 
   handleChanges(e) {
@@ -304,7 +304,7 @@ class ModifyOrganization extends React.Component {
 
     switch (type) {
       case 'checkbox':
-        updateValue = !checked;
+        updateValue = checked ? false : true;
         break;
       case 'number':
         updateValue = parseInt(value);

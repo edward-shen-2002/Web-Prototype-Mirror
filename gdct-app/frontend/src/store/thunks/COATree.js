@@ -7,9 +7,9 @@ import DialogsStore from '../DialogsStore/store';
 import { deleteRequestFactory, updateRequestFactory, getRequestFactory } from './common/REST';
 
 const normalizeTrees = denormalizedCOATrees => {
-  const stack = [...denormalizedCOATrees];
+  let stack = [...denormalizedCOATrees];
 
-  const normalizedTrees = denormalizedCOATrees.map(COATree => ({
+  let normalizedTrees = denormalizedCOATrees.map(COATree => ({
     ...COATree.content,
     parentId: undefined,
     content: undefined,

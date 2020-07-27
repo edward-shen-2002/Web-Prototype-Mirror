@@ -12,9 +12,9 @@ import memoize from 'memoize-one';
 
 import isHotkey from 'is-hotkey';
 
-import { inputCharacterRegex } from '../../../tools/regex';
+import { inputCharacterRegex } from '../../..//tools/regex';
 
-import { getNormalRowHeight, getNormalColumnWidth } from '../../../tools/excel';
+import { getNormalRowHeight, getNormalColumnWidth } from '../../..//tools/excel';
 
 import ContextMenu from './ContextMenu';
 
@@ -156,7 +156,7 @@ const SheetWindow = ({ sheetGridRef }) => {
   );
 };
 
-const Sheet = ({ sheetGridRef, handleSave }) => {
+let Sheet = ({ sheetGridRef, handleSave }) => {
   const dispatch = useDispatch();
 
   const {
@@ -257,7 +257,7 @@ const Sheet = ({ sheetGridRef, handleSave }) => {
 
   // https://stackoverflow.com/questions/3169786/clear-text-selection-with-javascript
   const handleDragStart = event => {
-    const selection = window.getSelection ? window.getSelection() : document.selection;
+    let selection = window.getSelection ? window.getSelection() : document.selection;
 
     if (selection) {
       if (selection.removeAllRanges) {
@@ -272,7 +272,7 @@ const Sheet = ({ sheetGridRef, handleSave }) => {
 
   // TODO
   const handlePaste = ({ clipboardData }) => {
-    const paste = (clipboardData || window.clipboardData).getData('text/html');
+    let paste = (clipboardData || window.clipboardData).getData('text/html');
 
     // console.log(paste);
   };
@@ -281,7 +281,7 @@ const Sheet = ({ sheetGridRef, handleSave }) => {
     dispatch(enableSheetFocus());
   }, [dispatch]);
 
-  const style = {};
+  let style = {};
 
   if (cursorType !== 'default') style.cursor = cursorType;
 

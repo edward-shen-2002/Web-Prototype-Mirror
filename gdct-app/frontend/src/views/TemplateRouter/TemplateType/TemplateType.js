@@ -1,10 +1,13 @@
 import React, { useCallback, useMemo, useEffect, useState } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 
+<<<<<<< HEAD
 import MaterialTable from 'material-table';
 import LaunchIcon from '@material-ui/icons/Launch';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+=======
+>>>>>>> 9c3220b0b7cd82e2a65ab21362bd75fd073597ee
 import {
   getTemplateTypesRequest,
   createTemplateTypeRequest,
@@ -12,7 +15,20 @@ import {
   updateTemplateTypeRequest,
 } from '../../../store/thunks/templateType';
 import Loading from '../../../components/Loading/Loading';
-import ProgramList from '../../OrganizationRouter/ProgramList';
+import ProgramList from '../../../views/OrganizationRouter/ProgramList';
+
+import {
+  getProgramsRequest,
+  createProgramsRequest,
+  deleteProgramsRequest,
+  updateProgramsRequest,
+} from '../../../store/thunks/program';
+
+import MaterialTable from 'material-table';
+import LaunchIcon from '@material-ui/icons/Launch';
+import Paper from '@material-ui/core/Paper';
+
+import Typography from '@material-ui/core/Typography';
 
 import {
   getProgramsRequest,
@@ -46,7 +62,7 @@ const TemplateTypeTable = ({
   const { templateType } = useSelector(
     state => ({
       templateType: selectFactoryRESTResponseTableValues(selectTemplateTypesStore)(state).filter(
-        elem => elem._id === _id,
+        elem => elem._id == _id,
       ) || [{}],
     }),
     shallowEqual,
@@ -54,7 +70,7 @@ const TemplateTypeTable = ({
 
   const columns = useMemo(
     () => [
-      // { title: '_id', field: '_id', editable: 'never' },
+      //{ title: '_id', field: '_id', editable: 'never' },
       { title: 'Name', field: 'name' },
       { title: 'Description', field: 'description' },
       { title: 'Approvable', type: 'boolean', field: 'isApprovable' },
@@ -97,7 +113,7 @@ const LinkProgramTable = ({
   const { templateType } = useSelector(
     state => ({
       templateType: (selectFactoryRESTResponseTableValues(selectTemplateTypesStore)(state).filter(
-        elem => elem._id === _id,
+        elem => elem._id == _id,
       ) || [{}])[0],
     }),
     shallowEqual,
@@ -121,7 +137,7 @@ const LinkProgramTable = ({
     dispatch(updateTemplateTypeRequest(templateType), accept, reject);
   };
   const onClickDelete = (_event, program) => {
-    templateType.programIds = templateType.programIds.filter(elem => elem !== program._id);
+    templateType.programIds = templateType.programIds.filter(elem => elem != program._id);
     dispatch(updateTemplateTypeRequest(templateType), accept, reject);
   };
   console.log(templateType);

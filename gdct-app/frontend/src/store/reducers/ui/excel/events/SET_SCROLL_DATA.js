@@ -1,5 +1,5 @@
 const SET_SCROLL_DATA = (state, { scrollData }) => {
-  const newState = { ...state };
+  let newState = { ...state };
 
   newState.scrollData = { ...newState.scrollData, ...scrollData };
 

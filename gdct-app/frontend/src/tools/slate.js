@@ -57,7 +57,7 @@ export const convertEditorValueToText = elements => {
 };
 
 export const convertEditorValueToRichText = elements => {
-  const richText = [];
+  let richText = [];
 
   let blockFound = false;
 
@@ -65,18 +65,18 @@ export const convertEditorValueToRichText = elements => {
     // console.log(type in TYPE_TEXT_ELEMENTS, type, TYPE_TEXT_ELEMENTS)
     if (TYPE_TEXT_ELEMENTS.includes(type)) {
       children.forEach((data, childIndex) => {
-        const styles = {};
+        let styles = {};
         let { text } = data;
 
         if (!childIndex && blockFound) text = `\n${text}`;
 
         data = { ...data, text: undefined };
 
-        for (const valueStyle in data) {
+        for (let valueStyle in data) {
           const styleData = data[valueStyle];
 
           if (styleData) {
-            const { property, style } = editorToRichTextMap[valueStyle];
+            let { property, style } = editorToRichTextMap[valueStyle];
 
             // data[valueStyle] is the dynamic value (colour, font family) when the rich text style doesn't have a style key
             if (style) {
@@ -106,10 +106,10 @@ export const convertRichTextToEditorValue = richText => [
   {
     type: 'paragraph',
     children: richText.map(({ text, styles }) => {
-      const childContent = { text: text === undefined ? '' : text };
+      let childContent = { text: text === undefined ? '' : text };
 
-      for (const property in styles) {
-        const style = styles[property];
+      for (let property in styles) {
+        let style = styles[property];
 
         const propertyContents = richTextToEditorMap[property];
 

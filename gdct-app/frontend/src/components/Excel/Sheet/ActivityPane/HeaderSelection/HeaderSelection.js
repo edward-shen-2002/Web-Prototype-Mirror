@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 
 import { connect } from 'react-redux';
 
-import { getNormalColumnWidth, getNormalRowHeight } from '../../../../../tools/excel';
+import { getNormalColumnWidth, getNormalRowHeight } from '../../../../..//tools/excel';
 
 import {
   DEFAULT_EXCEL_SHEET_ROW_HEIGHT_HEADER,
@@ -19,19 +19,19 @@ const mergeSegments = segments => {
 
   segments.sort((segment1, segment2) => segment1[0] - segment2[0]);
 
-  const merged = [segments[0]];
+  let merged = [segments[0]];
   let lastIndex = 0;
 
   const segmentsCount = segments.length;
 
   for (let segmentIndex = 1; segmentIndex < segmentsCount; segmentIndex++) {
-    const segment = segments[segmentIndex];
-    const currentSegmentStart = segment[0];
-    const previousSegmentEnd = merged[lastIndex][1];
+    let segment = segments[segmentIndex];
+    let currentSegmentStart = segment[0];
+    let previousSegmentEnd = merged[lastIndex][1];
 
     // Possible overlap case
     if (currentSegmentStart <= previousSegmentEnd) {
-      const currentSegmentEnd = segment[1];
+      let currentSegmentEnd = segment[1];
 
       // Extend previous segment
       if (currentSegmentEnd > previousSegmentEnd) merged[lastIndex][1] = currentSegmentEnd;
@@ -104,17 +104,17 @@ export let HeaderSelection = ({
     activeCellPositionArea = { x1: x, y1: y, x2: x, y2: y };
   }
 
-  const combinedAreas = [activeCellPositionArea, ...stagnantSelectionAreas];
+  let combinedAreas = [activeCellPositionArea, ...stagnantSelectionAreas];
 
   if (activeSelectionArea) combinedAreas.push(activeSelectionArea);
 
-  const xSegments = [];
-  const ySegments = [];
+  let xSegments = [];
+  let ySegments = [];
 
   // Sort points in each segment
   combinedAreas.forEach(({ x1, y1, x2, y2 }) => {
-    const ySegment = [Math.min(y1, y2), Math.max(y1, y2)];
-    const xSegment = [Math.min(x1, x2), Math.max(x1, x2)];
+    let ySegment = [Math.min(y1, y2), Math.max(y1, y2)];
+    let xSegment = [Math.min(x1, x2), Math.max(x1, x2)];
 
     if (ySegment[0] <= sheetFreezeRowCount) {
       if (ySegment[1] > sheetFreezeRowCount) ySegment[1] = sheetFreezeRowCount;
@@ -222,15 +222,15 @@ export let ColumnHeaderSelection = ({
     activeCellPositionArea = { x1: x, x2: x };
   }
 
-  const combinedAreas = [activeCellPositionArea, ...stagnantSelectionAreas];
+  let combinedAreas = [activeCellPositionArea, ...stagnantSelectionAreas];
 
   if (activeSelectionArea) combinedAreas.push(activeSelectionArea);
 
-  const xSegments = [];
+  let xSegments = [];
 
   // Sort points in each segment
   combinedAreas.forEach(({ x1, x2 }) => {
-    const xSegment = [Math.min(x1, x2), Math.max(x1, x2)];
+    let xSegment = [Math.min(x1, x2), Math.max(x1, x2)];
 
     if (xSegment[1] > sheetFreezeColumnCount) {
       if (xSegment[0] <= sheetFreezeColumnCount) xSegment[0] = sheetFreezeColumnCount + 1;
@@ -311,15 +311,15 @@ export let RowHeaderSelection = ({
     activeCellPositionArea = { y1: y, y2: y };
   }
 
-  const combinedAreas = [activeCellPositionArea, ...stagnantSelectionAreas];
+  let combinedAreas = [activeCellPositionArea, ...stagnantSelectionAreas];
 
   if (activeSelectionArea) combinedAreas.push(activeSelectionArea);
 
-  const ySegments = [];
+  let ySegments = [];
 
   // Sort points in each segment
   combinedAreas.forEach(({ y1, y2 }) => {
-    const ySegment = [Math.min(y1, y2), Math.max(y1, y2)];
+    let ySegment = [Math.min(y1, y2), Math.max(y1, y2)];
 
     if (ySegment[1] > sheetFreezeRowCount) {
       if (ySegment[0] <= sheetFreezeRowCount) ySegment[0] = sheetFreezeRowCount + 1;

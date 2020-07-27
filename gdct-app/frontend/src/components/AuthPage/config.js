@@ -23,8 +23,8 @@ const createUserNavigation = () => {
   return [
     {
       name: 'User',
-      button: false,
-      type: 'title',
+      type: 'menu',
+      url: '/users',
       icon: <PeopleAltIcon />,
     },
     {

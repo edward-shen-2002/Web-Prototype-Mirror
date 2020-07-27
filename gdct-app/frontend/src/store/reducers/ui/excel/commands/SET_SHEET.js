@@ -20,7 +20,7 @@ const SET_SHEET = (state, { sheetName }) => {
     inactiveSheets,
   } = newState;
 
-  const currentSheetData = {
+  let currentSheetData = {
     activeCellPosition,
     sheetCellData,
     sheetColumnCount,
@@ -35,7 +35,7 @@ const SET_SHEET = (state, { sheetName }) => {
     activeCellSelectionAreaIndex,
   };
 
-  const newActiveSheetData = newState.inactiveSheets[sheetName];
+  let newActiveSheetData = newState.inactiveSheets[sheetName];
 
   newState.inactiveSheets = {
     ...inactiveSheets,

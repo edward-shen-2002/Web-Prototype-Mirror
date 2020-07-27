@@ -1,5 +1,5 @@
 const MERGE_CELLS = state => {
-  const newState = { ...state };
+  let newState = { ...state };
 
   const { stagnantSelectionAreas, sheetCellData } = newState;
 
@@ -13,12 +13,12 @@ const MERGE_CELLS = state => {
   const minY = Math.min(y1, y2);
   const maxY = Math.max(y1, y2);
 
-  const newSheetCellData = { ...sheetCellData };
+  let newSheetCellData = { ...sheetCellData };
 
   for (let row = minY; row <= maxY; row++) {
     newSheetCellData[row] = { ...newSheetCellData[row] };
 
-    const rowData = newSheetCellData[row];
+    let rowData = newSheetCellData[row];
 
     for (let column = minX; column <= maxX; column++) {
       const merged = { x1: minX, y1: minY, x2: maxX, y2: maxY };

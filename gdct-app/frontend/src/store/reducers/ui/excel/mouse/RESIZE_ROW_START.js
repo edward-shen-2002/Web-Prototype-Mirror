@@ -1,7 +1,7 @@
 import { getNormalRowHeight } from '../../../../../tools/excel';
 
 const RESIZE_ROW_START = (state, { row, topOffsets }) => {
-  const newState = { ...state };
+  let newState = { ...state };
 
   const { sheetRowHeights } = newState;
 

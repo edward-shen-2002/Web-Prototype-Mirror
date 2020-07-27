@@ -6,19 +6,19 @@ const SET_PREPOPULATE = (state, { type, quarter, year }) => {
     return state;
   }
 
-  const prepopulateArray = [];
+  let prepopulateArray = [];
 
   if (type) prepopulateArray.push(`type=${type}`);
   if (quarter) prepopulateArray.push(`quarter=${quarter}`);
   if (year) prepopulateArray.push(`year=${year}`);
 
-  const newState = { ...state };
+  let newState = { ...state };
 
   const prepopulateString = `|${prepopulateArray.join('&')}`;
 
   const { x, y } = activeCellPosition;
 
-  const newSheetCellData = { ...sheetCellData };
+  let newSheetCellData = { ...sheetCellData };
 
   if (!newSheetCellData[y]) newSheetCellData[y] = {};
 

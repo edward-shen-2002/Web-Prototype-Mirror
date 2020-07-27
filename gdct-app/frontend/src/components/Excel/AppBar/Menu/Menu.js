@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import File from './File';
 import Edit from './Edit';
+
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 const Menu = ({ handleSave }) => {
   const [isMenuOpenable, setIsMenuOpenable] = useState(false);

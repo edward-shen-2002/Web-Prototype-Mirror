@@ -93,7 +93,7 @@ const LoginForm = ({ handleLogin }) => (
   </Formik>
 );
 
-const Login = ({ history }) => {
+let Login = ({ history }) => {
   const handleLogin = () => history.push('/sheetNames');
 
   return (

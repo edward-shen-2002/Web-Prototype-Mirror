@@ -1,10 +1,12 @@
 import axios from 'axios';
 
-import { host } from '../constants/domain';
-
 const templatePackageController = (() => {
   const templateAxios = axios.create({
+<<<<<<< HEAD
     baseURL: `${host}/template_manager/templatePackages`,
+=======
+    baseURL: 'http://localhost:3000/template_manager/templatePackages',
+>>>>>>> 9c3220b0b7cd82e2a65ab21362bd75fd073597ee
   });
   return {
     fetchTemplatePackage: async _id =>

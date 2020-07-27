@@ -103,14 +103,14 @@ const FileUpload = () => {
     async ({ target }) => {
       const fileData = target.files[0];
 
-      const { name } = fileData;
+      const name = fileData.name;
 
       const extension = name.split('.').pop();
 
       if (extension === 'xlsx') {
         // !unoptimized function... since straight conversion to react state doesn't exist at the moment.
         // ! TODO: implement straight conversion from file to react state
-        const fileStates = await convertExcelFileToState(fileData);
+        let fileStates = await convertExcelFileToState(fileData);
         const excelReactState = convertStateToReactState(fileStates);
 
         dispatch(setExcelData(excelReactState));
@@ -143,7 +143,7 @@ const CellStyles = ({ isMergeButtonEnabled, isCellMergeable }) => {
 };
 
 const MainFontStyles = ({ cellStyles, cellEditor, isEditMode, handleTextStyle }) => {
-  const { bold, italic, underline, strikethrough } = isEditMode
+  let { bold, italic, underline, strikethrough } = isEditMode
     ? getMainFontStyleEditorStates(cellEditor)
     : getMainFontStylesStates(cellStyles);
 
