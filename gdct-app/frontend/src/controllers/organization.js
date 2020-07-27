@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const orgController = (() => {
   const orgAxios = axios.create({
-    baseURL: `https://localhost:3000/organizations`,
+    baseURL: `http://localhost:3000/organizations`, // `${host}/organizations`
     withCredentials: true,
   });
   return {

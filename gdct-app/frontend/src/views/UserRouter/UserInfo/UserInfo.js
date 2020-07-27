@@ -108,8 +108,6 @@ const UserInfo = ({
                 appsys: `Phone: ${row.phoneNumber}\nEmail: ${row.email}`,
             })),
         );
-        console.log(userObject.creationDate);
-        console.log(extracted_data);
     }
   }, [userObject, organizations, programs, templateTypes]);
 
