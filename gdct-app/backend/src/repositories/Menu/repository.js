@@ -32,7 +32,8 @@ export default class MenuRepository extends BaseRepository {
 
   async populate() {
     return await MenuModel.find()
-      .populate('items subMenus')
+      .populate('items')
+      .populate('subMenus')
       .then(Menus => Menus.map(Menu => new MenuEntity(Menu.toObject())));
   }
 }

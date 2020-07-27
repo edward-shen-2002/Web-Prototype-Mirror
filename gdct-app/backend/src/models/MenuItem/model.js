@@ -11,6 +11,10 @@ const MenuItemSchema = new Schema(
       enum: ['USER', 'ADMIN'],
       default: 'USER',
     },
+    type: {
+      type: String,
+      default: 'menu',
+    },
     isActive: {
       type: Boolean,
       default: true,

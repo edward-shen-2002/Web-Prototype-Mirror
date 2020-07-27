@@ -11,6 +11,10 @@ const MenuSchema = new Schema(
       default: false,
     },
     subMenus: [{ type: ObjectId, ref: 'Menu' }],
+    type: {
+      type: String,
+      default: 'drawer',
+    },
     isActive: {
       type: Boolean,
       default: true,

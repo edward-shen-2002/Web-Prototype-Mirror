@@ -282,11 +282,12 @@ const NavigationDrawer = ({ title, open, theme, config, classes, handleDrawerClo
 const AuthPage = ({
   headerTitle = 'MOHLTC - Generic Data Collection Tool',
   drawerTitle = 'MOHLTC - GDCT',
-  config = navigationConfig,
+  // config = [navigationConfig],
   children,
 }) => {
   const classes = useStyles();
   const theme = useTheme();
+  const [config, setConfig] = useState([]);
   const [open, setOpen] = useState(false);
   const [isTopMenu, setTopMenu] = useState(true);
   const [isMobile, setMobile] = useState(window.matchMedia('(max-width: 1000px)').matches);
@@ -295,6 +296,10 @@ const AuthPage = ({
     const handler = e => setMobile(e.matches);
     window.matchMedia('(max-width: 1000px)').addListener(handler);
     setTopMenu(!isMobile);
+    navigationConfig().then(res => {
+      console.log('res:', res);
+      setConfig(res);
+    });
   }, [isMobile]);
 
   const handleDrawerOpen = () => setOpen(true);
