@@ -7,9 +7,9 @@ import DialogsStore from '../DialogsStore/store';
 import { deleteRequestFactory, updateRequestFactory, getRequestFactory } from './common/REST';
 
 const normalizeTrees = denormalizedCOATrees => {
-  let stack = [...denormalizedCOATrees];
+  const stack = [...denormalizedCOATrees];
 
-  let normalizedTrees = denormalizedCOATrees.map(COATree => ({
+  const normalizedTrees = denormalizedCOATrees.map(COATree => ({
     ...COATree.content,
     parentId: undefined,
     content: undefined,
@@ -59,7 +59,7 @@ export const createCOATreeRequest = (
 ) => dispatch => {
   const COATree = {
     sheetNameId,
-    COAGroupId: COAGroup,
+    categoryGroupId: COAGroup._id,
   };
 
   dispatch(COATreesStore.actions.REQUEST());

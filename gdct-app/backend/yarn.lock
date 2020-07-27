@@ -3847,9 +3847,15 @@ lint-staged@^10.2.11:
     stringify-object "^3.3.0"
 
 listr2@^2.1.0:
+<<<<<<< HEAD
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/listr2/-/listr2-2.3.2.tgz#918dabaad2def14246abc7d54d607f03c59ec407"
+  integrity sha512-/KxSjXQzkMkeVT3Tl2gPwmQPLmOv81l29p+a0+I3mLHs1PjOjgkWuc6Y6d1oGBGXWj57/IVeVMbZ+9Hlr3P/pQ==
+=======
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/listr2/-/listr2-2.2.0.tgz#cb88631258abc578c7fb64e590fe5742f28e4aac"
   integrity sha512-Q8qbd7rgmEwDo1nSyHaWQeztfGsdL6rb4uh7BA+Q80AZiDET5rVntiU1+13mu2ZTDVaBVbvAD1Db11rnu3l9sg==
+>>>>>>> master
   dependencies:
     chalk "^4.0.0"
     cli-truncate "^2.1.0"
@@ -4152,9 +4158,15 @@ mongoose-legacy-pluralize@1.0.2:
   integrity sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
 
 mongoose@^5.9.22:
+<<<<<<< HEAD
+  version "5.9.25"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.9.25.tgz#620da737ec9a667f84404ad4f35bb60338dd0b4b"
+  integrity sha512-vz/DqJ3mrHqEIlfRbKmDZ9TzQ1a0hCtSQpjHScIxr4rEtLs0tjsXDeEWcJ/vEEc3oLfP6vRx9V+uYSprXDUvFQ==
+=======
   version "5.9.22"
   resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.9.22.tgz#4f1542f037a552b43f547ebfc72ddaf9f88c5ecf"
   integrity sha512-nwH2LwrGN/jR0Qi8TqSog0MWZRtxdpQxVFcPNjs+CUyCMaxKqFJYrkPILTPKPMMzwrAv1cCQqrvoLl+ggklvbg==
+>>>>>>> master
   dependencies:
     bson "^1.1.4"
     kareem "2.3.1"
@@ -4680,6 +4692,28 @@ passport-facebook@^3.0.0:
   dependencies:
     passport-oauth2 "1.x.x"
 
+passport-google-oauth1@1.x.x:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/passport-google-oauth1/-/passport-google-oauth1-1.0.0.tgz#af74a803df51ec646f66a44d82282be6f108e0cc"
+  integrity sha1-r3SoA99R7GRvZqRNgigr5vEI4Mw=
+  dependencies:
+    passport-oauth1 "1.x.x"
+
+passport-google-oauth20@2.x.x:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/passport-google-oauth20/-/passport-google-oauth20-2.0.0.tgz#0d241b2d21ebd3dc7f2b60669ec4d587e3a674ef"
+  integrity sha512-KSk6IJ15RoxuGq7D1UKK/8qKhNfzbLeLrG3gkLZ7p4A6DBCcv7xpyQwuXtWdpyR0+E0mwkpjY1VfPOhxQrKzdQ==
+  dependencies:
+    passport-oauth2 "1.x.x"
+
+passport-google-oauth@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/passport-google-oauth/-/passport-google-oauth-2.0.0.tgz#f6eb4bc96dd6c16ec0ecfdf4e05ec48ca54d4dae"
+  integrity sha512-JKxZpBx6wBQXX1/a1s7VmdBgwOugohH+IxCy84aPTZNq/iIPX6u7Mqov1zY7MKRz3niFPol0KJz8zPLBoHKtYA==
+  dependencies:
+    passport-google-oauth1 "1.x.x"
+    passport-google-oauth20 "2.x.x"
+
 passport-local-mongoose@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/passport-local-mongoose/-/passport-local-mongoose-6.0.1.tgz#4980b1435c2dc97cc4094bbb6612999b1640fe2a"
@@ -4696,6 +4730,15 @@ passport-local@^1.0.0:
   integrity sha1-H+YyaMkudWBmJkN+O5BmYsFbpu4=
   dependencies:
     passport-strategy "1.x.x"
+
+passport-oauth1@1.x.x:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/passport-oauth1/-/passport-oauth1-1.1.0.tgz#a7de988a211f9cf4687377130ea74df32730c918"
+  integrity sha1-p96YiiEfnPRoc3cTDqdN8ycwyRg=
+  dependencies:
+    oauth "0.9.x"
+    passport-strategy "1.x.x"
+    utils-merge "1.x.x"
 
 passport-oauth2@1.x.x:
   version "1.5.0"

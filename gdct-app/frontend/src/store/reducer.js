@@ -61,8 +61,6 @@ export const root = combineReducers({
   WorkflowStore: WorkflowStore.reducer,
   WorkflowsStore: WorkflowsStore.reducer,
 
-  app,
-  domain,
   ui,
 });
 

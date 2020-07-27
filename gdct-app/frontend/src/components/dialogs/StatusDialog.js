@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import SelectableTableDialog from './SelectableTableDialog';
 
 import { getStatusesRequest } from '../../store/thunks/status';
 
-import { useSelector, shallowEqual, useDispatch } from 'react-redux';
-import { useMemo } from 'react';
 import { selectIsStatusDialogOpen } from '../../store/DialogsStore/selectors';
 import { selectFactoryRESTResponseTableValues } from '../../store/common/REST/selectors';
 import { selectStatusesStore } from '../../store/StatusesStore/selectors';
@@ -28,7 +27,7 @@ const StatusDialog = ({ handleChange }) => {
 
   const handleSelect = useCallback(
     data => {
-      handleChange(data._id);
+      handleChange(data);
       handleClose();
     },
     [dispatch],
@@ -40,10 +39,6 @@ const StatusDialog = ({ handleChange }) => {
 
   const columns = useMemo(
     () => [
-      {
-        title: '_id',
-        field: '_id',
-      },
       {
         title: 'Name',
         field: 'name',

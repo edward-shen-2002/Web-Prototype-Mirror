@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-import { mailConfig } from '../config/mail';
+import { mailConfig } from '../../middlewares/mail/nodeMailer';
 
 // Check your messages at https://ethereal.email/ on the test email account
 // Credentials are present on mailConfig
@@ -32,8 +32,8 @@ export const sendAdminVerficationEmail = (orgInfo, hashedUsername, userId, usern
   const { name, telephone, email } = authorizedPerson;
 
   const stringList = [];
-  permission.forEach(permission => {
-    stringList.push(JSON.stringify(permission));
+  permission.forEach(e => {
+    stringList.push(JSON.stringify(e));
   });
   stringList.join('<br/>');
   console.log(stringList);
@@ -52,9 +52,9 @@ export const sendAdminVerficationEmail = (orgInfo, hashedUsername, userId, usern
         <br/> Phone:        ${telephone},
         <br/> Email:        ${email},
         <br/> To approve this request, click the link below: 
-        <br/> <a>http://localhost:3000/public/verification/admin?approve=true&hashedUsername=${hashedUsername}&_id=${userId}&orgId=${orgId}</a>
+        <br/> <a>${process.env.HOST}/public/verification/admin?approve=true&hashedUsername=${hashedUsername}&_id=${userId}&orgId=${orgId}</a>
         <br/> To reject this request, click the link below:
-        <br/> <a>http://localhost:3000/public/verification/admin?approve=false&hashedUsername=${hashedUsername}&_id=${userId}&orgId=${orgId}</a>
+        <br/> <a>${process.env.HOST}/public/verification/admin?approve=false&hashedUsername=${hashedUsername}&_id=${userId}&orgId=${orgId}</a>
         </p>`,
   };
 
@@ -74,7 +74,7 @@ export const sendUserActiveEmail = user => {
         <br/>Your request has been processed.
         <br/>In order to access the site, you need activate your account.
         <br/>To activate your account, click the link below:
-        <br/> <a>http://localhost:3000/public/verification/user?hashedUsername=${hashedUsername}&_id=${_id}</a></p>`,
+        <br/> <a>${process.env.HOST}/public/verification/user?hashedUsername=${hashedUsername}&_id=${_id}</a></p>`,
   };
 
   return transporter
