@@ -56,8 +56,8 @@ const MenuLabel = ({ isOpen, label, handleClickMenuLabel, handleHoverMenuLabel }
     className={isOpen ? 'menuOption__label--active' : ''}
     onClick={handleClickMenuLabel}
     onMouseEnter={handleHoverMenuLabel}
-    disableFocusRipple={true}
-    disableRipple={true}
+    disableFocusRipple
+    disableRipple
   >
     {label}
   </Button>

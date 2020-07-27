@@ -13,12 +13,14 @@ import SheetNames from './views/SheetNames';
 import RoleRouter from './views/RoleRouter';
 import SubmissionRouter from './views/SubmissionRouter';
 import ReportingPeriods from './views/ReportingPeriods';
+
+import { ROUTE_WORKFLOW, ROUTE_COLUMN_NAMES } from './constants/routes';
+import ColumnNames from './views/ColumnNames';
 import Error from './views/authError';
 // import Signup from './views/authSignup'
 import Login from './views/Login';
 import SignUp from './views/SignUp';
 
-import { ROUTE_WORKFLOW } from './constants/routes';
 import WorkflowRouter from './views/WorkflowRouter/WorkflowRouter';
 import GDCTMenu from './views/GDCTMenu';
 import Logout from './views/Logout';
@@ -38,6 +40,7 @@ const PrivateRouter = ({ setLoggedIn }) => {
       <Route path="/submission_manager" component={SubmissionRouter} />
       <Route path="/reportingPeriods" component={ReportingPeriods} />
       <Route path="/sheetNames" component={SheetNames} />
+      <Route path={ROUTE_COLUMN_NAMES} component={ColumnNames} />
       <Route path="/organizations" component={OrgRouter} />
       <Route path="/logout" render={props => <Logout {...props} setLoggedIn={setLoggedIn} />} />
       <Redirect from="*" to="/" />

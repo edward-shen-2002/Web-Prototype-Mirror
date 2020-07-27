@@ -17,7 +17,11 @@ import AppsIcon from '@material-ui/icons/Apps';
 import AccountBalance from '@material-ui/icons/AccountBalance';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { ROUTE_WORKFLOW_WORKFLOWS, ROUTE_WORKFLOW_WORKFLOWS_CREATE } from '../../constants/routes';
+import {
+  ROUTE_WORKFLOW_WORKFLOWS,
+  ROUTE_COLUMN_NAMES,
+  ROUTE_TEMPLATE_PCKGS_PCKGS,
+} from '../../constants/routes';
 
 const createUserNavigation = () => {
   return [
@@ -72,7 +76,7 @@ const createUserNavigation = () => {
         {
           name: 'Template Packages',
           type: 'menu',
-          url: '/template_manager/templatePackages',
+          url: ROUTE_TEMPLATE_PCKGS_PCKGS,
           icon: <DashboardIcon />,
         },
       ],
@@ -199,6 +203,12 @@ const createUserNavigation = () => {
       type: 'menu',
       url: ROUTE_WORKFLOW_WORKFLOWS,
       icon: <AllInclusiveIcon />,
+    },
+    {
+      name: 'Column Names',
+      type: 'menu',
+      url: ROUTE_COLUMN_NAMES,
+      icon: <GridOnIcon />,
     },
     {
       name: 'Logout',

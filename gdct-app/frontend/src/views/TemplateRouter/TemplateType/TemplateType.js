@@ -1,30 +1,19 @@
-import React, { useCallback, useMemo, useEffect, useState } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 
 import MaterialTable from 'material-table';
-import LaunchIcon from '@material-ui/icons/Launch';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import {
   getTemplateTypesRequest,
-  createTemplateTypeRequest,
-  deleteTemplateTypeRequest,
   updateTemplateTypeRequest,
 } from '../../../store/thunks/templateType';
 import Loading from '../../../components/Loading/Loading';
 import ProgramList from '../../OrganizationRouter/ProgramList';
 
-import {
-  getProgramsRequest,
-  createProgramsRequest,
-  deleteProgramsRequest,
-  updateProgramsRequest,
-} from '../../../store/thunks/program';
-
 import './TemplateType.scss';
 import { selectFactoryRESTResponseTableValues } from '../../../store/common/REST/selectors';
 import { selectTemplateTypesStore } from '../../../store/TemplateTypesStore/selectors';
-import { selectProgramsStore } from '../../../store/ProgramsStore/selectors';
 
 const TemplateTypeHeader = () => {
   return (
@@ -36,7 +25,6 @@ const TemplateTypeHeader = () => {
 };
 
 const TemplateTypeTable = ({
-  history,
   match: {
     params: { _id },
   },
@@ -88,7 +76,6 @@ const TemplateTypeTable = ({
 };
 
 const LinkProgramTable = ({
-  history,
   match: {
     params: { _id },
   },
