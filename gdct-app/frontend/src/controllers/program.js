@@ -1,10 +1,8 @@
 import axios from 'axios';
 
-import { host } from '../constants/domain';
-
 const programController = (() => {
   const programAxios = axios.create({
-    baseURL: `${host}/programs`,
+    baseURL: 'http://localhost:3000/programs',
   });
   return {
     fetch: async query => programAxios.get('/fetchPrograms').then(res => res.data.programs),
