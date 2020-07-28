@@ -1,4 +1,5 @@
 import { Service } from 'typedi';
+
 import { Router } from 'express';
 import WorkflowService from '../services/Workflow';
 
@@ -45,6 +46,15 @@ const WorkflowController = Service([WorkflowService], service => {
       service
         .deleteWorkflow(_id)
         .then(() => res.end())
+        .catch(next);
+    });
+
+    router.get('/workflows/workflowProcessId/:_id', (req, res, next) => {
+      const { _id } = req.params;
+
+      service
+        .findOutwardProcessesPopulated(_id)
+        .then(workflowProcess => res.json({ data: workflowProcess }))
         .catch(next);
     });
 

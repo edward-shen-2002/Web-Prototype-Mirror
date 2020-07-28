@@ -4,19 +4,17 @@ import organizationGroupController from '../../controllers/organizationGroup';
 import programController from '../../controllers/program';
 import templateTypeController from '../../controllers/templateType';
 import userController from '../../controllers/user';
-import userRegistrationStore from '../userRegistrationStore/store';
-import COATreesStore from '../COATreesStore/store';
 
 const handleInputTemplate = (templateSet, submission) => {
-  let templateType = {
+  const templateType = {
     templateTypeId: '',
     templateCode: '',
   };
   let templateSelected = templateSet.find(function (element) {
-    return element.templateTypeId == submission.submission._id;
+    return element.templateTypeId === submission.submission._id;
   });
 
-  if (templateSelected == undefined) {
+  if (templateSelected === undefined) {
     templateType.templateCode = submission.submission.name;
     templateType.templateTypeId = submission.submission._id;
     templateSelected = templateType;
@@ -25,16 +23,16 @@ const handleInputTemplate = (templateSet, submission) => {
 };
 
 const handleInputProgram = (programSet, submission) => {
-  let program = {
+  const program = {
     programId: '',
     programCode: '',
     template: [],
   };
   let programSelected = programSet.find(function (element) {
-    return element.programId == submission.program.code;
+    return element.programId === submission.program.code;
   });
 
-  if (programSelected == undefined) {
+  if (programSelected === undefined) {
     program.programCode = submission.program.code;
     program.programId = submission.program._id;
     programSelected = program;
@@ -45,15 +43,15 @@ const handleInputProgram = (programSet, submission) => {
 };
 
 const handleInputOrg = (organization, submission) => {
-  let org = {
+  const org = {
     orgId: '',
     program: [],
   };
 
   let organizationSelected = organization.find(function (element) {
-    return element.orgId == submission.organization.id;
+    return element.orgId === submission.organization.id;
   });
-  if (organizationSelected == undefined) {
+  if (organizationSelected === undefined) {
     org.IsActive = false;
     org.orgId = submission.organization.id;
     org.name = submission.organization.name;
@@ -67,7 +65,7 @@ const handleInputOrg = (organization, submission) => {
 };
 
 const checkPerission = submission => {
-  let permission = [];
+  const permission = [];
   if (submission.approve) permission.push('approve');
   if (submission.review) permission.push('review');
   if (submission.submit) permission.push('submit');
@@ -86,7 +84,7 @@ export default class RegisterService {
             data: { appSys },
           },
         }) => {
-          let options = [];
+          const options = [];
           appSys.forEach(appSysOptions => {
             options.push({
               label: appSysOptions.name,
@@ -109,7 +107,7 @@ export default class RegisterService {
             data: { organizationGroups },
           },
         }) => {
-          let options = [];
+          const options = [];
           organizationGroups.forEach(orgGroup => {
             options.push({
               label: orgGroup.name,
@@ -132,10 +130,10 @@ export default class RegisterService {
             data: { organizations },
           },
         }) => {
-          let options = [];
+          const options = [];
           organizations.forEach(org => {
             options.push({
-              label: '(' + org.id + ')' + org.name,
+              label: `(${org.id})${org.name}`,
               value: org.id,
               information: {
                 _id: org._id,
@@ -155,11 +153,11 @@ export default class RegisterService {
   }
 
   searchOrg(searchKey, reference, options) {
-    return options[searchKey] == reference;
+    return options[searchKey] === reference;
   }
 
   getProgram(programInfo) {
-    let programId = [];
+    const programId = [];
     programInfo.forEach(program => {
       programId.push(program.id);
     });
@@ -172,11 +170,11 @@ export default class RegisterService {
             data: { programs },
           },
         }) => {
-          let options = [];
+          const options = [];
           programs.forEach(program => {
-            const option = programInfo.find(element => element.id == program._id);
+            const option = programInfo.find(element => element.id === program._id);
             options.push({
-              label: '(' + program.code + ')' + program.name,
+              label: `(${program.code})${program.name}`,
               value: program._id,
               information: {
                 _id: program._id,
@@ -194,7 +192,7 @@ export default class RegisterService {
   }
 
   getTemplateType(userPrograms) {
-    let programList = [];
+    const programList = [];
     userPrograms.forEach(userProgram => {
       programList.push(userProgram._id);
     });
@@ -206,7 +204,7 @@ export default class RegisterService {
             data: { templateTypes },
           },
         }) => {
-          let submissionList = [];
+          const submissionList = [];
           let index = 0;
 
           templateTypes.forEach(templateType => {
@@ -230,7 +228,7 @@ export default class RegisterService {
               input: false,
               view: false,
               viewCognos: false,
-              index: index,
+              index,
             });
             index++;
           });
@@ -245,7 +243,7 @@ export default class RegisterService {
   }
 
   submissionChange(userSubmissions) {
-    let permissionList = [];
+    const permissionList = [];
     userSubmissions.forEach(submission => {
       const permission = checkPerission(submission);
       permission.forEach(permission => {
@@ -253,7 +251,7 @@ export default class RegisterService {
           organization: submission.organization,
           program: submission.program,
           submission: submission.submission,
-          permission: permission,
+          permission,
           approve: submission.approve,
           review: submission.review,
           submit: submission.submit,
@@ -267,16 +265,16 @@ export default class RegisterService {
   }
 
   handleInputSysRole(data, permission, submission, userAppSys) {
-    let sysRole = {
+    const sysRole = {
       appSys: '',
       role: '',
       org: [],
     };
     if (submission[permission]) {
       let sysRoleSelected = data.sysRole.find(function (element) {
-        return element.role == permission;
+        return element.role === permission;
       });
-      if (sysRoleSelected == undefined) {
+      if (sysRoleSelected === undefined) {
         sysRoleSelected = sysRole;
         sysRoleSelected.role = permission;
         sysRoleSelected.appSys = userAppSys.code;

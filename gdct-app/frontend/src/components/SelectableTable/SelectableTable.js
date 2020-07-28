@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React from 'react';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -25,11 +25,11 @@ const CustomTableCells = ({ columns, item, props }) =>
 
 const CustomListItems = ({ columns, data, selectedKeys, getKey, handleSelect }) =>
   data.map(item => {
-    const handleClick = useCallback(() => handleSelect(item), [handleSelect]);
+    const handleClick = () => handleSelect(item);
 
-    const isSelected = useMemo(() => getKey && selectedKeys[getKey(item)], [selectedKeys, getKey]);
+    const isSelected = getKey && selectedKeys[getKey(item)];
 
-    const key = useMemo(() => (getKey ? getKey(item) : uniqid()), [getKey, item]);
+    const key = getKey ? getKey(item) : uniqid();
 
     return (
       <TableRow

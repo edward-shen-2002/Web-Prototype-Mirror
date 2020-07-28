@@ -1,7 +1,7 @@
 import React from 'react';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import navigationConfig from '../../components/AuthPage/config';
 import { Link } from 'react-router-dom';
+import navigationConfig from '../../components/AuthPage/config';
 
 const MenuHeader = () => {
   return navigationConfig

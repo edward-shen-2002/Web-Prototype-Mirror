@@ -1,8 +1,10 @@
 import axios from 'axios';
 
+import { host } from '../constants/domain';
+
 const templateController = (() => {
   const templateAxios = axios.create({
-    baseURL: 'http://localhost:3000/template_manager/templates',
+    baseURL: `${host}/template_manager/templates`,
   });
   return {
     fetchTemplate: async _id => templateAxios.get(`/${_id}`).then(res => res.data.template),
@@ -10,6 +12,8 @@ const templateController = (() => {
     create: async template => templateAxios.post('', { template }).then(res => res.data.template),
     delete: async _id => templateAxios.delete(`/${_id}`),
     update: async template => templateAxios.put(`/${template._id}`, { template }),
+    updateTemplateWorkflowProcess: async (_id, workflowProcessId) =>
+      templateAxios.put(`/${_id}/workflowProcess/${workflowProcessId}`),
   };
 })();
 

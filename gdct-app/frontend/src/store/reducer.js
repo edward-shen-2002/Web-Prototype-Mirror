@@ -29,10 +29,8 @@ import OrgsStore from './OrganizationsStore/store';
 import WorkflowStore from './WorkflowStore/store';
 import WorkflowsStore from './WorkflowsStore/store';
 import UserStore from './UserStore/store';
-import UsersStore from './UsersStore/store';
 
 export const root = combineReducers({
-  UsersStore: UsersStore.reducer,
   UserStore: UserStore.reducer,
   StatusesStore: StatusesStore.reducer,
   ProgramsStore: ProgramsStore.reducer,
@@ -61,8 +59,6 @@ export const root = combineReducers({
   WorkflowStore: WorkflowStore.reducer,
   WorkflowsStore: WorkflowsStore.reducer,
 
-  app,
-  domain,
   ui,
 });
 
